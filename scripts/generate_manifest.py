@@ -11,6 +11,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from api.core.content_policy import is_private_path  # noqa: E402
 from api.settings.content import (  # noqa: E402
     ManifestSettings,
     get_instance_config,
@@ -36,7 +37,9 @@ def normalize_path(path: Path) -> str:
 
 def should_ignore(relative_path: str, ignored_prefixes: list[str]) -> bool:
     """Проверить, начинается ли путь с одного из игнорируемых префиксов."""
-    return any(relative_path.startswith(prefix) for prefix in ignored_prefixes)
+    return is_private_path(relative_path) or any(
+        relative_path.startswith(prefix) for prefix in ignored_prefixes
+    )
 
 
 def build_manifest(
@@ -60,6 +63,12 @@ def build_manifest(
             continue
 
         if should_ignore(relative_path, ignored_prefixes):
+            continue
+        try:
+            target = path.resolve().relative_to(source_root.resolve()).as_posix()
+        except ValueError:
+            continue
+        if is_private_path(target):
             continue
 
         file_size = path.stat().st_size

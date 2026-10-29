@@ -7,6 +7,7 @@
 - Upload classic/slim skins, change passwords and revoke all sessions after password confirmation.
 - Keep network requests off the UI thread and preserve issued passwords across request failures.
 - Block simultaneous windows using the same session file; write sessions atomically.
+- Exclude private runtime files from manifests/staging and deny their direct CDN download.
 - Exercise real widgets against disposable Drasl; verify genuine token expiry separately.
 - Test account/UI code on Windows, Linux and macOS in CI.
 
