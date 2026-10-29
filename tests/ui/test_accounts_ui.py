@@ -43,7 +43,7 @@ def test_registration_requires_saved_password_before_server_request(
     assert len(issued) >= 32
     assert not window.register_button.isEnabled()
     assert window.service.client.calls == []
-    qtbot.mouseClick(window.saved_password, Qt.MouseButton.LeftButton)
+    qtbot.keyClick(window.saved_password, Qt.Key.Key_Space)
     click(qtbot, window, "registerButton")
     wait_idle(qtbot, window)
     assert window.pages.currentWidget() == window.home_page
@@ -80,7 +80,7 @@ def test_network_error_keeps_issued_password_for_retry(
         raise TimeoutError("sensitive server details must not appear")
 
     monkeypatch.setattr(window.service.client, "register", lost_response)
-    qtbot.mouseClick(window.saved_password, Qt.MouseButton.LeftButton)
+    qtbot.keyClick(window.saved_password, Qt.Key.Key_Space)
     click(qtbot, window, "registerButton")
     wait_idle(qtbot, window)
     assert window.pages.currentWidget() == window.password_page

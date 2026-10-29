@@ -104,7 +104,7 @@ def _registration_control(
     registration = window.pending
     if registration is None or window.register_button.isEnabled():
         raise RuntimeError("Password acknowledgement is missing")
-    QTest.mouseClick(window.saved_password, Qt.MouseButton.LeftButton)
+    QTest.keyClick(window.saved_password, Qt.Key.Key_Space)
     _click(window, "registerButton")
     _wait(app, lambda: not window.busy)
     _assert_home(window)
