@@ -12,6 +12,8 @@ __pycache__/
 data/
 client/
 launcher/
+userdata/
+.local/
 .pytest_cache/
 .pytest-local-*/
 build/

@@ -1,18 +1,23 @@
 """Real, disposable Drasl integration checks. No existing accounts are used."""
 
 import base64
+import os
 import re
 import secrets
 import struct
 import subprocess
+import tempfile
 import time
 import zlib
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 from urllib.error import URLError
 from urllib.parse import urlencode
 from uuid import uuid4
 
+from launcher.accounts import AccountService, Registration
+from launcher.storage import FileSessionStore
 from omk.drasl import DraslClient, DraslError
 from omk.profiles import PROJECT_ROOT
 
@@ -168,11 +173,167 @@ def _session_checks(
     passed("revoked_session_rejected")
 
 
-def auth_smoke() -> dict[str, Any]:
+def _launcher_revocation_checks(
+    client: DraslClient,
+    service: AccountService,
+    registration: Registration,
+    passed: Callable[[str], None],
+) -> None:
+    old = service.current
+    if old is None:
+        raise RuntimeError("No launcher session")
+    management = client.login(registration.username, registration.password)["apiToken"]
+    other = client.authenticate(
+        registration.username, registration.password, uuid4().hex
+    )
+    new_password = secrets.token_urlsafe(24)
+    changed = service.change_password(registration.password, new_password)
+    _expect_denied(lambda: client.user(management), {401, 403})
+    for game in [
+        other,
+        {"accessToken": old.access_token, "clientToken": old.client_token},
+    ]:
+        _expect_denied(
+            lambda game=game: client.request("POST", "/auth/validate", game), {400, 403}
+        )
+    _expect_denied(
+        lambda: client.login(registration.username, registration.password),
+        {400, 401, 403},
+    )
+    passed("launcher_password_change_revokes_old_sessions_and_management_token")
+    service.revoke_all(new_password)
+    _expect_denied(
+        lambda: client.refresh(
+            changed.session.access_token, changed.session.client_token
+        ),
+        {400, 403},
+    )
+    if service.store.load() is not None:
+        raise RuntimeError("Revoked launcher session remains on disk")
+    passed("launcher_all_sessions_revoked")
+
+
+def _launcher_checks(
+    client: DraslClient, admin: dict[str, Any], passed: Callable[[str], None]
+) -> None:
+    local = PROJECT_ROOT / ".local"
+    local.mkdir(exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="launcher-auth-", dir=local) as folder:
+        store = FileSessionStore(Path(folder) / "session.json")
+        service = AccountService(client, store)
+        invite = client.request("POST", "/drasl/api/v3/invites", {}, admin["apiToken"])[
+            "code"
+        ]
+        registration = service.prepare_registration("omk_launcher", invite)
+        result = service.register(registration)
+        if not result.remembered or registration.password in store.path.read_text():
+            raise RuntimeError("Portable registration storage check failed")
+        passed("launcher_registration_with_portable_game_session")
+        # The persisted game token must not authorize account-management requests.
+        _expect_denied(
+            lambda: client.update_user(
+                result.session.access_token, {"password": secrets.token_urlsafe(24)}
+            ),
+            {401, 403},
+        )
+        passed("portable_game_token_cannot_change_account_password")
+        restored = AccountService(client, store).restore()
+        if (
+            restored is None
+            or restored.session.player_uuid != result.session.player_uuid
+        ):
+            raise RuntimeError("Portable automatic login check failed")
+        passed("launcher_auto_login_without_password")
+        service.current = restored.session
+        service.upload_skin(skin_fixture(), "classic")
+        service.upload_skin(skin_fixture(), "slim")
+        player = client.request(
+            "GET",
+            f"/drasl/api/v3/players/{restored.session.player_uuid}",
+            token=admin["apiToken"],
+        )
+        if not player.get("skinUrl") or player.get("skinModel") != "slim":
+            raise RuntimeError("Game-token skin upload did not update the profile")
+        passed("launcher_skin_upload_with_game_token_classic_and_slim")
+        _launcher_revocation_checks(client, service, registration, passed)
+
+
+def _launcher_expiry_checks(
+    client: DraslClient, admin: dict[str, Any], passed: Callable[[str], None]
+) -> None:
+    local = PROJECT_ROOT / ".local"
+    local.mkdir(exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="session-expiry-", dir=local) as folder:
+        store = FileSessionStore(Path(folder) / "session.json")
+        service = AccountService(client, store)
+        invite = client.request("POST", "/drasl/api/v3/invites", {}, admin["apiToken"])[
+            "code"
+        ]
+        result = service.register(service.prepare_registration("omk_expiry", invite))
+        client.request(
+            "POST",
+            "/auth/validate",
+            {
+                "accessToken": result.session.access_token,
+                "clientToken": result.session.client_token,
+            },
+        )
+        passed("game_session_valid_before_expiry")
+        time.sleep(2.2)
+        if (
+            AccountService(client, store).restore() is not None
+            or store.load() is not None
+        ):
+            raise RuntimeError("Expired game session was restored")
+        passed("expired_game_session_requires_reauthentication")
+
+
+def _exercise_lab(
+    docker: Callable[..., subprocess.CompletedProcess[str]],
+    report: dict[str, Any],
+    passed: Callable[[str], None],
+    *,
+    with_gui: bool,
+    expiry_only: bool,
+) -> None:
+    client = DraslClient("http://127.0.0.1:25586")
+    metadata = None
+    for _ in range(40):
+        try:
+            metadata = client.request("GET", "/authlib-injector")
+            break
+        except URLError, TimeoutError, ConnectionError:
+            time.sleep(0.25)
+    if metadata is None:
+        raise RuntimeError("Drasl did not become ready")
+    report["drasl_version"] = metadata["meta"]["implementationVersion"]
+    logs = docker("logs", "--no-color", "drasl").stdout
+    if "unknown config option" in logs:
+        raise RuntimeError("Drasl rejected a configuration option")
+    match = re.search(r"invite=([A-Za-z0-9_-]+)", logs)
+    if match is None:
+        raise RuntimeError("No bootstrap invitation in the disposable lab")
+    admin, user, password = _registration_checks(client, match[1], passed)
+    if expiry_only:
+        _launcher_expiry_checks(client, admin, passed)
+    else:
+        _profile_checks(client, admin, user, passed)
+        _session_checks(client, user, password, passed)
+        _launcher_checks(client, admin, passed)
+    if with_gui and not expiry_only:
+        from omk.gui_lab import launcher_checks  # noqa: PLC0415 - Qt is optional
+
+        launcher_checks(client, admin, passed)
+
+
+def auth_smoke(*, with_gui: bool = False, expiry_only: bool = False) -> dict[str, Any]:
     """Start a unique Compose project and always remove only that project's state."""
     project = f"omk-auth-smoke-{uuid4().hex[:10]}"
     compose = PROJECT_ROOT / "deploy" / "auth-lab" / "compose.yaml"
     command = ["docker", "compose", "--project-name", project, "--file", str(compose)]
+    config = compose.parent / "config.toml"
+    environment = {**os.environ, "OMK_AUTH_LAB_CONFIG": str(config)}
+    temporary_config: tempfile.TemporaryDirectory[str] | None = None
     report: dict[str, Any] = {
         "project": project,
         "checks": [],
@@ -182,38 +343,39 @@ def auth_smoke() -> dict[str, Any]:
 
     def docker(*args: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
-            [*command, *args], capture_output=True, text=True, timeout=60, check=False
+            [*command, *args],
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+            env=environment,
         )
 
     def passed(name: str) -> None:
         report["checks"].append(name)
 
     try:
+        if expiry_only:
+            local = PROJECT_ROOT / ".local"
+            local.mkdir(exist_ok=True)
+            temporary_config = tempfile.TemporaryDirectory(
+                prefix="drasl-expiry-", dir=local
+            )
+            short_config = Path(temporary_config.name) / "config.toml"
+            short_config.write_text(
+                config.read_text().replace(
+                    "TokenExpireSec = 3600", "TokenExpireSec = 2"
+                )
+            )
+            environment["OMK_AUTH_LAB_CONFIG"] = str(short_config)
         started = docker("up", "--detach", "--pull", "never")
         if started.returncode:
             raise RuntimeError(
                 "Cannot start the lab; check Docker, the pinned image and free port 25586"
             )
-        client = DraslClient("http://127.0.0.1:25586")
-        metadata = None
-        for _ in range(40):
-            try:
-                metadata = client.request("GET", "/authlib-injector")
-                break
-            except URLError, TimeoutError, ConnectionError:
-                time.sleep(0.25)
-        if metadata is None:
-            raise RuntimeError("Drasl did not become ready")
-        report["drasl_version"] = metadata["meta"]["implementationVersion"]
-        logs = docker("logs", "--no-color", "drasl").stdout
-        if "unknown config option" in logs:
-            raise RuntimeError("Drasl rejected a configuration option")
-        match = re.search(r"invite=([A-Za-z0-9_-]+)", logs)
-        if match is None:
-            raise RuntimeError("No bootstrap invitation in the disposable lab")
-        admin, user, password = _registration_checks(client, match[1], passed)
-        _profile_checks(client, admin, user, passed)
-        _session_checks(client, user, password, passed)
+        _exercise_lab(
+            docker, report, passed, with_gui=with_gui, expiry_only=expiry_only
+        )
         report["ok"] = True
     except (
         RuntimeError,
@@ -233,4 +395,6 @@ def auth_smoke() -> dict[str, Any]:
         except OSError, subprocess.SubprocessError:
             report["cleanup"] = False
         report["ok"] = report["ok"] and report["cleanup"]
+        if temporary_config is not None and report["cleanup"]:
+            temporary_config.cleanup()
     return report

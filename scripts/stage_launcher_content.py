@@ -10,6 +10,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from api.core.content_policy import is_private_path  # noqa: E402
 from api.settings.content import (  # noqa: E402
     get_instance_config,
     get_instance_manifest_settings,
@@ -22,8 +23,25 @@ from scripts.generate_manifest import write_manifest  # noqa: E402
 
 def copy_path(source: Path, destination: Path) -> None:
     """Скопировать файл или каталог, сохраняя метаданные где возможно."""
+    if is_private_path(source.name) or is_private_path(source.resolve().name):
+        return
     if source.is_dir():
-        shutil.copytree(source, destination, dirs_exist_ok=True)
+        boundary = source.resolve()
+
+        def ignore_private(folder: str, names: list[str]) -> set[str]:
+            excluded: set[str] = set()
+            for name in names:
+                path = Path(folder) / name
+                try:
+                    target = path.resolve().relative_to(boundary).as_posix()
+                except ValueError:
+                    excluded.add(name)
+                    continue
+                if is_private_path(name) or is_private_path(target):
+                    excluded.add(name)
+            return excluded
+
+        shutil.copytree(source, destination, dirs_exist_ok=True, ignore=ignore_private)
         return
 
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -36,6 +54,8 @@ def copy_existing_paths(
     """Скопировать указанные относительные пути, которые существуют в source-корне."""
     for relative_path in relative_paths:
         normalized = relative_path.rstrip("/")
+        if is_private_path(normalized):
+            continue
         source = source_root / normalized
         if not source.exists():
             print(f"Skip missing path: {source}")

@@ -7,6 +7,7 @@ from typing import Any
 
 from litestar.exceptions import HTTPException
 
+from api.core.content_policy import is_private_path
 from api.settings.config import settings
 
 
@@ -86,4 +87,8 @@ def safe_resolve(base: Path, relative_path: str) -> Path:
     except ValueError as exc:
         raise HTTPException(status_code=400, detail="Invalid path") from exc
 
+    if is_private_path(normalized_relative_path) or is_private_path(
+        candidate.relative_to(base_resolved).as_posix()
+    ):
+        raise HTTPException(status_code=404, detail="File not found")
     return candidate
