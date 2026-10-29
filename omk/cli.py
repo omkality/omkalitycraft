@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from api.settings.content import get_instance_config, get_launcher_manifest_settings
+from launcher.paths import default_data_dir
 from omk.lab import auth_smoke
 from omk.profiles import PROJECT_ROOT, load_profiles
 
@@ -71,7 +72,7 @@ def main(argv: list[str] | None = None) -> int:
         required=True,
         help="Trusted Drasl origin (HTTPS outside loopback)",
     )
-    launcher.add_argument("--data-dir", type=Path, default=PROJECT_ROOT / "userdata")
+    launcher.add_argument("--data-dir", type=Path, default=default_data_dir())
     server = sub.add_parser("server", help="Inspect configured server profiles")
     server.add_subparsers(dest="action", required=True).add_parser("list")
     lab = sub.add_parser("lab", help="Disposable integration tests")
