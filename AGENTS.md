@@ -6,6 +6,10 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
   `master` is for tested milestones. No force pushes or automatic production deployments.
 - Keep the launcher simple: invitation, nickname, issued password once, remembered revocable session.
   Authentication belongs to Drasl + authlib-injector. Do not restore Telegram or custom password security.
+- Target Windows, Linux and macOS. Keep portable session files in the launcher's data directory;
+  never assume Windows-only paths, Java executables or UI behavior in shared code.
+- Session files may contain game bearer tokens, never account passwords or Drasl management tokens.
+  Do not claim that portable files are encrypted or protected from the user's own processes.
 - Python owns launcher/API/operations; version-specific Forge integration uses adapters and Java as needed.
   Use FTB/ServerUtilities for claims and available commands. Keep pack logic outside GUI code.
 - Never commit `.env`, session tokens, keys, account databases, worlds, modpack payloads or OmkalityCore.
