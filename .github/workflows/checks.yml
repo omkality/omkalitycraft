@@ -27,9 +27,37 @@ jobs:
         with:
           version: "0.11.12"
       - run: uv sync --locked --no-default-groups --group shared --group api --group dev
-      - run: uv run --no-sync ruff check api omk scripts tests app.py
-      - run: uv run --no-sync black --check api omk scripts tests app.py
-      - run: uv run --no-sync pytest -q
+      - run: uv run --no-sync ruff check api omk launcher scripts tests app.py
+      - run: uv run --no-sync black --check api omk launcher scripts tests app.py
+      - run: uv run --no-sync pytest tests/unit -q
+
+  desktop:
+    name: Desktop UI (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2025, ubuntu-24.04, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
+        with:
+          version: "0.11.12"
+      - if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libopengl0
+      - run: uv sync --locked --all-groups
+      - run: uv run --no-sync pytest tests/unit tests/ui -q
+      - if: runner.os == 'Linux'
+        run: docker compose -f deploy/auth-lab/compose.yaml pull
+      - if: runner.os == 'Linux'
+        run: uv run --no-sync omk lab launcher smoke
 
   drasl:
     name: Real Drasl authentication protocol
@@ -45,3 +73,4 @@ jobs:
       - run: uv sync --locked --no-default-groups --group shared
       - run: docker compose -f deploy/auth-lab/compose.yaml pull
       - run: uv run --no-sync omk lab auth smoke
+      - run: uv run --no-sync omk lab auth expiry

@@ -201,7 +201,8 @@ class AccountService:
         self.client.update_user(
             api_token, {"resetApiToken": True, "resetMinecraftToken": True}
         )
-        self.forget()
+        self.current = None
+        self.store.clear()
 
     def forget(self) -> None:
         self.store.clear()
