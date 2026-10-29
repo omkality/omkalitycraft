@@ -424,7 +424,7 @@ wheels = [
 
 [[package]]
 name = "omkalitycraft-api"
-version = "0.2.0.dev0"
+version = "0.2.0.dev1"
 source = { editable = "." }
 
 [package.dev-dependencies]

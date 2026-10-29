@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.0.dev1 — portable launcher accounts
+
+- Add Qt registration, issued-password acknowledgement, login and automatic session restore.
+- Save only game-scoped tokens in the launcher's own data folder, without OS keyring dependencies.
+- Upload classic/slim skins, change passwords and revoke all sessions after password confirmation.
+- Keep network requests off the UI thread and preserve issued passwords across request failures.
+- Block simultaneous windows using the same session file; write sessions atomically.
+- Exercise real widgets against disposable Drasl; verify genuine token expiry separately.
+- Test account/UI code on Windows, Linux and macOS in CI.
+
+Game installation, real Forge login and standalone platform distributions remain next steps.
+
 ## 0.2.0.dev0 — development foundation
 
 - Start a `dev` branch for small, reviewable development steps.
