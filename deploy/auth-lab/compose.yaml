@@ -1,0 +1,11 @@
+services:
+  drasl:
+    # Official 4.0.0 image, locked to the digest verified on 2026-10-30.
+    image: unmojang/drasl:4.0.0@sha256:d02f57bda0f0840ab6a2d6c9e167b923c71d4c7d7c9ef322c8ffce44854df6ad
+    ports:
+      - "127.0.0.1:25586:25585"
+    volumes:
+      - ./config.toml:/etc/drasl/config.toml:ro
+    # Disposable accounts only. No production database or existing game directory.
+    tmpfs:
+      - /var/lib/drasl:mode=1777
