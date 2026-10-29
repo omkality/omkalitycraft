@@ -1,7 +1,7 @@
 {
   "id": "divinejourney2",
   "display_name": "Divine Journey 2",
-  "description": "Divine Journey 2 modpack with OmkalityCore",
+  "description": "Existing Divine Journey 2 RU pack; pending launcher integration tests",
   "ignored_paths": [
     "crash-reports/",
     "dumps/",

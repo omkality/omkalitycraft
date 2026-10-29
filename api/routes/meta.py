@@ -1,22 +1,23 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from litestar import get
 from litestar.response import Redirect
 
-from src.core.project import get_project_info
-from src.core.storage import content_root, instances_root
-from src.settings.config import settings
+from api.core.project import get_project_info
+from api.core.storage import content_root, instances_root
+from api.settings.config import settings
 
 
 @get("/", sync_to_thread=True)
 def docs_redirect() -> Redirect:
+    """Перенаправить корневой endpoint на Swagger-документацию."""
     return Redirect("/docs")
 
 
 @get("/version", sync_to_thread=True)
 def version() -> dict[str, str]:
+    """Вернуть метаданные проекта из `pyproject.toml`."""
     project_info = get_project_info()
-
     return {
         "name": project_info["name"],
         "version": project_info["version"],
@@ -26,6 +27,7 @@ def version() -> dict[str, str]:
 
 @get("/health", sync_to_thread=True)
 def health() -> dict[str, object]:
+    """Вернуть базовый health-check API и диагностику контент-корня."""
     root = content_root()
     instances = instances_root()
 

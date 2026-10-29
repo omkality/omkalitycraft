@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import hashlib
@@ -11,7 +11,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.settings.content import (  # noqa: E402
+from api.settings.content import (  # noqa: E402
     ManifestSettings,
     get_instance_config,
     get_instance_manifest_settings,
@@ -21,6 +21,7 @@ from src.settings.content import (  # noqa: E402
 
 
 def sha256_of_file(path: Path) -> str:
+    """Посчитать SHA256-хеш файла."""
     digest = hashlib.sha256()
     with path.open("rb") as file:
         for chunk in iter(lambda: file.read(1024 * 1024), b""):
@@ -29,10 +30,12 @@ def sha256_of_file(path: Path) -> str:
 
 
 def normalize_path(path: Path) -> str:
+    """Преобразовать путь в относительный POSIX-формат."""
     return path.as_posix()
 
 
 def should_ignore(relative_path: str, ignored_prefixes: list[str]) -> bool:
+    """Проверить, начинается ли путь с одного из игнорируемых префиксов."""
     return any(relative_path.startswith(prefix) for prefix in ignored_prefixes)
 
 
@@ -43,6 +46,7 @@ def build_manifest(
     content_id: str,
     kind: str,
 ) -> dict:
+    """Собрать payload манифеста для заданного source-корня."""
     files: dict[str, dict] = {}
     total_size = 0
 
@@ -77,6 +81,7 @@ def build_manifest(
 
 
 def get_manifest_settings(kind: str, instance_id: str | None) -> ManifestSettings:
+    """Получить настройки манифеста для лаунчера или конкретного инстанса."""
     if kind == "launcher":
         return get_launcher_manifest_settings()
 
@@ -87,6 +92,7 @@ def get_manifest_settings(kind: str, instance_id: str | None) -> ManifestSetting
 
 
 def get_ignored_paths(kind: str, instance_id: str | None) -> list[str]:
+    """Получить игнорируемые префиксы путей для манифеста инстанса."""
     if kind == "launcher":
         return []
 
@@ -109,6 +115,7 @@ def write_manifest(
     managed_roots: list[str],
     ignored_paths: list[str],
 ) -> None:
+    """Сгенерировать и сохранить JSON-манифест."""
     manifest = build_manifest(
         source_root=source_root,
         ignored_prefixes=ignored_paths,
@@ -128,6 +135,7 @@ def write_manifest(
 
 
 def main() -> None:
+    """Точка входа CLI для генерации манифеста."""
     parser = argparse.ArgumentParser()
     parser.add_argument("kind", choices=["launcher", "instance"])
     parser.add_argument("instance_id", nargs="?")

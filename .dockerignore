@@ -10,6 +10,10 @@ __pycache__/
 !.env.example
 
 data/
+client/
+launcher/
+.pytest_cache/
+.pytest-local-*/
 build/
 dist/
 *.egg-info/

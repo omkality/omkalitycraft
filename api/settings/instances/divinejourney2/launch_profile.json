@@ -68,7 +68,7 @@
     "--uuid",
     "{uuid}",
     "--accessToken",
-    "0",
+    "{access_token}",
     "--userType",
     "mojang",
     "--versionType",
@@ -76,7 +76,10 @@
     "--tweakClass",
     "net.minecraftforge.fml.common.launcher.FMLTweaker"
   ],
-  "system_properties": {
-    "omkality.password": "{password}"
+  "system_properties": {},
+  "integration_status": "requires_authlib_injector_and_game_test",
+  "authentication": {
+    "provider": "drasl",
+    "requires_authlib_injector": true
   }
 }

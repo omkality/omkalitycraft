@@ -16,6 +16,7 @@ env/
 # Tool caches
 .mypy_cache/
 .pytest_cache/
+.pytest-local-*/
 .ruff_cache/
 .coverage
 htmlcov/
@@ -43,3 +44,10 @@ Thumbs.db
 
 # custom
 client/
+launcher/auth_token.json
+omkalitycore/
+*.sqlite
+*.sqlite3
+*.db
+*.pem
+*.key

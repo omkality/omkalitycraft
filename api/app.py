@@ -1,16 +1,16 @@
 from litestar import Litestar
 from litestar.openapi import OpenAPIConfig
 
-from src.core.project import get_project_info
-from src.routes.download import download_instance_file, download_launcher_file
-from src.routes.instances import (
+from api.core.project import get_project_info
+from api.routes.download import download_instance_file, download_launcher_file
+from api.routes.instances import (
     get_instance_config,
     get_instance_manifest,
     get_launch_profile,
     list_instances,
 )
-from src.routes.launcher import get_launcher_manifest
-from src.routes.meta import docs_redirect, health, version
+from api.routes.launcher import get_launcher_manifest
+from api.routes.meta import docs_redirect, health, version
 
 project_info = get_project_info()
 
@@ -28,10 +28,9 @@ app = Litestar(
         download_instance_file,
     ],
     openapi_config=OpenAPIConfig(
-        title="OmkalityCraft API",
+        title="OmkalityCraft CDN API",
         version=project_info["version"],
         description=project_info["description"],
         path="/docs",
-        root_schema_site="swagger",
     ),
 )

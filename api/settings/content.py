@@ -20,7 +20,7 @@ def get_project_root() -> Path:
 
 
 def settings_root() -> Path:
-    return get_project_root() / "src" / "settings"
+    return Path(__file__).resolve().parent
 
 
 def read_json(path: Path) -> dict[str, Any]:
