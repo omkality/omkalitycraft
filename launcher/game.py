@@ -3,6 +3,7 @@
 import os
 import subprocess
 import threading
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from uuid import UUID, uuid4
@@ -21,6 +22,7 @@ from omk.diagnostics import (
     failure,
 )
 from omk.fs import resolved
+from omk.incidents import capture_incident, crash_fingerprints, submit_pending
 
 
 @dataclass
@@ -38,11 +40,30 @@ class GameProcess:
 
 
 class GameRunner:
-    def __init__(self, root: Path, *, memory_mb: int = 6144) -> None:
+    def __init__(
+        self, root: Path, *, memory_mb: int = 6144, reports_url: str | None = None
+    ) -> None:
         if not 1024 <= memory_mb <= 16384:
             raise ValueError("Invalid memory setting")
         self.root = resolved(root)
         self.memory_mb = memory_mb
+        self.reports_url = reports_url
+        self._report_lock = threading.Lock()
+
+    def send_reports(self, session, *, background=True):
+        def send():
+            if self._report_lock.acquire(blocking=False):
+                try:
+                    submit_pending(self.root, self.reports_url, session)
+                finally:
+                    self._report_lock.release()
+
+        if background:
+            threading.Thread(
+                target=send, daemon=True, name="client-incident-send"
+            ).start()
+        else:
+            send()
 
     def command(
         self,
@@ -138,6 +159,8 @@ class GameRunner:
         environment.pop("JAVA_TOOL_OPTIONS", None)
         environment.pop("_JAVA_OPTIONS", None)
         environment.pop("JDK_JAVA_OPTIONS", None)
+        started_at = time.time()
+        baseline = crash_fingerprints(self.root, folder)
         try:
             process = subprocess.Popen(
                 command,
@@ -169,7 +192,8 @@ class GameRunner:
         def collect() -> None:
             try:
                 writer.write(
-                    f"\n--- run {run_id}: {release.pack_id} {release.version} ---\n"
+                    f"\n--- run {run_id}: {release.pack_id} {release.version} ---\n",
+                    rotate=True,
                 )
             except OSError:
                 result.logging_failed.set()
@@ -189,6 +213,23 @@ class GameRunner:
                     exit_code=code,
                     logging_failed=result.logging_failed.is_set(),
                 )
+                try:
+                    capture_incident(
+                        self.root,
+                        folder,
+                        release,
+                        session,
+                        run_id=run_id,
+                        started_at=started_at,
+                        exit_code=code,
+                        memory_mb=self.memory_mb if memory_mb is None else memory_mb,
+                        launcher=VERSION,
+                        stdout_current=not result.logging_failed.is_set(),
+                        baseline=baseline,
+                    )
+                except (ValueError, TypeError) as error:
+                    failure(self.root, "incident_capture", error)
+                self.send_reports(session, background=False)
                 prune_game_logs(self.root, folder)
             except OSError as error:
                 result.logging_failed.set()

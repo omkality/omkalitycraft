@@ -139,7 +139,11 @@ def main() -> int:
             FileSessionStore(root / "userdata/session.json"),
         )
         installer = Installer(root, ReleaseClient(config["api_url"], keys))
-        window = LauncherWindow(service, installer=installer, runner=GameRunner(root))
+        window = LauncherWindow(
+            service,
+            installer=installer,
+            runner=GameRunner(root, reports_url=config["api_url"]),
+        )
         window.setWindowTitle(f"OmkalityCraft · {VERSION}")
         if update_warning:
             window.centralWidget().layout().addWidget(QLabel(update_warning))

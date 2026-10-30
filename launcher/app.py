@@ -48,7 +48,7 @@ from launcher.storage import FileSessionStore
 from launcher.tasks import Task
 from launcher.theme import ASSETS, STYLE, install_font
 from launcher.widgets import BusyButton
-from omk.diagnostics import event, export_bundle, failure
+from omk.diagnostics import event, failure
 from omk.drasl import DraslClient, DraslError
 
 
@@ -129,6 +129,7 @@ class LauncherWindow(QMainWindow):
     ) -> None:
         super().__init__()
         self.service = service
+        self.report_runner = runner
         self.diagnostic_root = runner.root if runner is not None else None
         store_path = getattr(service.store, "path", None)
         self.preferences = Preferences(
@@ -176,23 +177,8 @@ class LauncherWindow(QMainWindow):
         layout.addWidget(SocialFooter())
         self.setCentralWidget(root)
         self._setup_installation(installer, runner)
-        self._setup_diagnostics()
         if auto_restore:
             QTimer.singleShot(0, self._restore)
-
-    def _setup_diagnostics(self) -> None:
-        if self.diagnostic_root is not None:
-            self.help_menu = self.menuBar().addMenu("Помощь")
-            self.help_menu_action = self.help_menu.menuAction()
-            for profile in self.home_page.cards.values():
-                action = self.help_menu.addAction(
-                    "Сохранить диагностику · " + profile.profile.name
-                )
-                action.triggered.connect(
-                    lambda checked=False, pack=profile.profile.id: self._export_diagnostics(
-                        pack
-                    )
-                )
 
     def _setup_installation(
         self, installer: Installer | None, runner: GameRunner | None
@@ -225,6 +211,12 @@ class LauncherWindow(QMainWindow):
         self.invitation = field("invitationCode", "Код от владельца сервера")
         signup_layout.addRow("Ник", self.signup_name)
         signup_layout.addRow("Приглашение", self.invitation)
+        signup_layout.addRow(
+            label(
+                "При сбое лаунчер может автоматически передать владельцу технический отчёт об ошибке.",
+                muted=True,
+            )
+        )
         signup_layout.addRow(
             label(
                 "Пароль создадим автоматически. Его нужно будет сохранить один раз.",
@@ -391,7 +383,7 @@ class LauncherWindow(QMainWindow):
             return
         if not self.game.diagnostics_done.is_set():
             return
-        code, log = self.game.poll(), self.game.log_path
+        code = self.game.poll()
         logging_failed = self.game.logging_failed.is_set()
         card = self.home_page.cards[self.game_pack]
         self.game, self.game_pack = None, None
@@ -400,9 +392,7 @@ class LauncherWindow(QMainWindow):
         card.finished(success=True)
         self.skin_preview.animation.resume()
         if code:
-            self.status.setText(
-                f"Игра завершилась с ошибкой. Журнал: {log}. Диагностика — в меню «Помощь»."
-            )
+            self.status.setText("Игра завершилась с ошибкой. Можно запустить её снова.")
         elif logging_failed:
             self.status.setText(
                 "Не удалось записать журнал игры. Проверьте свободное место и доступ к папке лаунчера."
@@ -410,22 +400,6 @@ class LauncherWindow(QMainWindow):
         if self.isHidden():
             self.close()
             QApplication.instance().quit()
-
-    def _export_diagnostics(self, pack_id: str) -> None:
-        if self.diagnostic_root is None:
-            return
-        self._start(
-            lambda: export_bundle(self.diagnostic_root, pack_id),
-            lambda report: QMessageBox.information(
-                self,
-                "Диагностика сохранена",
-                "Архив: "
-                + report["archive"]
-                + "\n\nПеред передачей просмотрите содержимое: там могут быть ники, чат и координаты. "
-                "Ничего автоматически не отправлялось.",
-            ),
-            "diagnostics",
-        )
 
     def _prepare_registration(self) -> None:
         try:
@@ -488,6 +462,8 @@ class LauncherWindow(QMainWindow):
             self.pages.setCurrentWidget(self.auth_page)
 
     def _authenticated(self, result: AuthResult) -> None:
+        if self.report_runner is not None:
+            self.report_runner.send_reports(result.session)
         self.pending = None
         self.issued_password.clear()
         self.login_password.clear()
@@ -563,9 +539,7 @@ class LauncherWindow(QMainWindow):
             event(self.diagnostic_root, "operation_started", context=context)
         self.pages.setEnabled(False)
         self.progress.show()
-        self.status.setText(
-            "Собираем диагностику…" if context == "diagnostics" else "Соединяемся…"
-        )
+        self.status.setText("Соединяемся…")
         names = {
             "login": "loginButton",
             "register": "registerButton",
@@ -698,7 +672,9 @@ def run_launcher(
     if api_url is not None:
         keys = json.loads((ASSETS / "release-keys.json").read_text(encoding="utf-8"))
         installer = Installer(root, ReleaseClient(api_url, keys))
-    window = LauncherWindow(service, installer=installer, runner=GameRunner(root))
+    window = LauncherWindow(
+        service, installer=installer, runner=GameRunner(root, reports_url=api_url)
+    )
     window.show()
     try:
         return app.exec()
