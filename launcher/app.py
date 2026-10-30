@@ -1,25 +1,23 @@
-"""Portable desktop account prototype; game installation is a later milestone."""
+"""Portable desktop launcher with account and installation workflows."""
 
+import json
 import sys
 from collections.abc import Callable
+from dataclasses import replace
 from pathlib import Path
 from typing import Any, override
 
 from PySide6.QtCore import QLockFile, Qt, QThreadPool, QTimer
-from PySide6.QtGui import QCloseEvent, QPixmap
+from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
-    QComboBox,
     QDialog,
     QDialogButtonBox,
     QFileDialog,
     QFormLayout,
-    QHBoxLayout,
-    QInputDialog,
     QLabel,
     QLineEdit,
-    QListWidget,
     QMainWindow,
     QMessageBox,
     QProgressBar,
@@ -36,32 +34,19 @@ from launcher.accounts import (
     AuthResult,
     PasswordChanged,
     Registration,
-    validate_skin,
 )
+from launcher.controller import InstallationResult, InstallController
+from launcher.dashboard import Dashboard
+from launcher.game import GameProcess, GameRunner
+from launcher.install import Installer, ReleaseClient
+from launcher.releases import ReleaseError
 from launcher.session import SessionStoreError
+from launcher.skins import MAX_SKIN_BYTES, SkinError, decode_skin
 from launcher.storage import FileSessionStore
 from launcher.tasks import Task
+from launcher.theme import ASSETS, STYLE, install_font
+from launcher.widgets import BusyButton
 from omk.drasl import DraslClient, DraslError
-from omk.profiles import load_profiles
-
-STYLE = """
-QWidget { background: #141b22; color: #e5edf3; font-size: 14px; }
-QLineEdit, QListWidget, QComboBox { background: #202b36; border: 1px solid #3d4c5b; border-radius: 7px; padding: 9px; }
-QPushButton { background: #263646; border: 1px solid #43576a; border-radius: 7px; padding: 10px 16px; }
-QPushButton:hover { background: #354b60; }
-QPushButton:disabled { color: #7b8b98; background: #202b36; border-color: #2e3a46; }
-QPushButton[primary="true"] { background: #3bbf89; color: #10251d; font-weight: bold; border: none; }
-QPushButton[primary="true"]:disabled { background: #275d48; color: #9cafaa; }
-QLabel[title="true"] { font-size: 28px; font-weight: bold; }
-QLabel[muted="true"] { color: #a5b6c4; }
-QLabel[error="true"] { color: #ffbb9a; }
-QTabWidget::pane { border: none; }
-QTabBar::tab { background: #202b36; padding: 10px 22px; margin-right: 5px; border-radius: 6px; }
-QTabBar::tab:selected { background: #354b60; }
-QCheckBox { padding: 7px 0; }
-QProgressBar { border: none; background: #263646; height: 3px; }
-QProgressBar::chunk { background: #3bbf89; }
-"""
 
 
 def label(text: str, *, muted: bool = False) -> QLabel:
@@ -85,7 +70,7 @@ def field(name: str, placeholder: str = "", *, password: bool = False) -> QLineE
 def button(
     text: str, name: str, action: Callable[[], Any], *, primary: bool = False
 ) -> QPushButton:
-    widget = QPushButton(text)
+    widget = BusyButton(text)
     widget.setObjectName(name)
     widget.setProperty("primary", primary)
     widget.clicked.connect(action)
@@ -131,9 +116,22 @@ class PasswordDialog(QDialog):
 
 
 class LauncherWindow(QMainWindow):
-    def __init__(self, service: AccountService, *, auto_restore: bool = True) -> None:
+    def __init__(
+        self,
+        service: AccountService,
+        *,
+        auto_restore: bool = True,
+        installer: Installer | None = None,
+        runner: GameRunner | None = None,
+    ) -> None:
         super().__init__()
         self.service = service
+        install_font(QApplication.instance())
+        self.installation: InstallController | None = None
+        self.game: GameProcess | None = None
+        self.game_pack: str | None = None
+        self._close_after_install = False
+        self._busy_button: BusyButton | None = None
         self.pending: Registration | None = None
         self.busy = False
         self._task: Task | None = None
@@ -142,8 +140,8 @@ class LauncherWindow(QMainWindow):
         self.pool = QThreadPool(self)
         self.pool.setMaxThreadCount(1)
         self.setWindowTitle("OmkalityCraft · разработка")
-        self.resize(900, 650)
-        self.setMinimumSize(760, 600)
+        self.resize(1200, 820)
+        self.setMinimumSize(1060, 760)
         self.setStyleSheet(STYLE)
         root = QWidget()
         layout = QVBoxLayout(root)
@@ -167,9 +165,30 @@ class LauncherWindow(QMainWindow):
         self.progress.setRange(0, 0)
         self.progress.hide()
         layout.addWidget(self.progress)
+        layout.addWidget(label("Все файлы игры и Java — в папке лаунчера", muted=True))
         self.setCentralWidget(root)
+        self._setup_installation(installer, runner)
         if auto_restore:
             QTimer.singleShot(0, self._restore)
+
+    def _setup_installation(
+        self, installer: Installer | None, runner: GameRunner | None
+    ) -> None:
+        self.game_timer = QTimer(self)
+        self.game_timer.setInterval(1500)
+        self.game_timer.timeout.connect(self._poll_game)
+        if installer is not None and runner is not None:
+            self.installation = InstallController(installer, self.service, runner, self)
+            self.installation.progress.connect(self._install_progress)
+            self.installation.completed.connect(self._installed)
+            self.installation.failed.connect(self._install_failed)
+            self.installation.states.connect(self._local_states)
+            self.home_page.install_requested.connect(self._install)
+            self.home_page.cancel_requested.connect(self.installation.cancel)
+            self.installation.inspect(list(self.home_page.cards))
+        else:
+            for card in self.home_page.cards.values():
+                card.action.setEnabled(False)
 
     def _auth_page(self) -> QWidget:
         page = QWidget()
@@ -257,40 +276,89 @@ class LauncherWindow(QMainWindow):
         layout.addStretch()
         return page
 
-    def _home_page(self) -> QWidget:
-        page = QWidget()
-        layout = QVBoxLayout(page)
-        self.greeting = label("")
-        self.greeting.setObjectName("greeting")
-        layout.addWidget(self.greeting)
-        layout.addWidget(label("Сборки"))
-        packs = QListWidget()
-        packs.setObjectName("serverProfiles")
-        for profile in load_profiles():
-            state = "Подготовка" if profile.status == "legacy" else "Планируется"
-            packs.addItem(
-                f"{profile.name}  ·  Minecraft {profile.minecraft}  ·  {state}"
-            )
-        layout.addWidget(packs)
-        play = QPushButton("Запуск игры появится на следующем этапе")
-        play.setEnabled(False)
-        layout.addWidget(play)
-        row = QHBoxLayout()
-        self.skin_model = QComboBox()
-        self.skin_model.addItem("Классические руки", "classic")
-        self.skin_model.addItem("Узкие руки", "slim")
-        row.addWidget(self.skin_model)
-        row.addWidget(button("Загрузить скин…", "uploadSkin", self._choose_skin))
-        self.skin_preview = QLabel()
-        self.skin_preview.setFixedSize(64, 64)
-        row.addWidget(self.skin_preview)
-        layout.addLayout(row)
-        layout.addWidget(
-            button("Сменить пароль…", "changePassword", self._change_password)
-        )
-        layout.addWidget(button("Завершить все сессии…", "revokeAll", self._revoke_all))
-        layout.addWidget(button("Забыть вход на этом ПК", "forgetDevice", self._forget))
+    def _home_page(self) -> Dashboard:
+        page = Dashboard()
+        self.greeting = page.greeting
+        self.skin_model = page.skin_model
+        self.skin_preview = page.skin_preview
+        page.upload_button.clicked.connect(self._choose_skin)
+        page.change_password.clicked.connect(self._change_password)
         return page
+
+    def _local_states(self, states: dict) -> None:
+        for pack_id, state in states.items():
+            card = self.home_page.cards[pack_id]
+            if card.profile.status != "planned":
+                card.set_local_state(state)
+
+    def _install(self, pack_id: str) -> None:
+        if (
+            self.busy
+            or self.game is not None
+            or self.installation is None
+            or self.installation.busy
+        ):
+            return
+        self.status.clear()
+        self.home_page.upload_button.setEnabled(False)
+        self.home_page.change_password.setEnabled(False)
+        for card in self.home_page.cards.values():
+            card.action.setEnabled(False)
+        self.home_page.cards[pack_id].action.set_busy(True, "Подготавливаем…")
+        self.installation.start(pack_id, play=self.home_page.cards[pack_id].installed)
+
+    def _install_progress(self, pack_id: str, progress) -> None:
+        self.home_page.cards[pack_id].update_progress(progress)
+
+    def _installation_idle(self) -> None:
+        self.home_page.upload_button.setEnabled(True)
+        self.home_page.change_password.setEnabled(True)
+        for card in self.home_page.cards.values():
+            card.action.setEnabled(card.profile.status != "planned")
+
+    def _installed(self, pack_id: str, result: InstallationResult) -> None:
+        self._installation_idle()
+        card = self.home_page.cards[pack_id]
+        card.finished(success=True)
+        card.state_label.setText("Установлена · " + result.release.version)
+        if result.game is not None:
+            self.game, self.game_pack = result.game, pack_id
+            card.action.setText("Игра запущена")
+            for other in self.home_page.cards.values():
+                other.action.setEnabled(False)
+            self.skin_preview.animation.pause()
+            self.game_timer.start()
+        if self._close_after_install:
+            self.close()
+
+    def _install_failed(self, pack_id: str, error: Exception) -> None:
+        self._installation_idle()
+        message = (
+            str(error)
+            if isinstance(error, ReleaseError)
+            else "Не удалось подготовить игру. Повторите попытку."
+        )
+        self.home_page.cards[pack_id].finished(success=False, message=message)
+        if self.service.current is None:
+            self.pages.setCurrentWidget(self.auth_page)
+        if self._close_after_install:
+            self.close()
+
+    def _poll_game(self) -> None:
+        if self.game is None or self.game.poll() is None:
+            return
+        code, log = self.game.poll(), self.game.log_path
+        card = self.home_page.cards[self.game_pack]
+        self.game, self.game_pack = None, None
+        self.game_timer.stop()
+        self._installation_idle()
+        card.finished(success=True)
+        self.skin_preview.animation.resume()
+        if code:
+            self.status.setText(f"Игра завершилась с ошибкой. Журнал: {log}")
+        if self.isHidden():
+            self.close()
+            QApplication.instance().quit()
 
     def _prepare_registration(self) -> None:
         try:
@@ -359,8 +427,11 @@ class LauncherWindow(QMainWindow):
         self.invitation.clear()
         self.greeting.setText(f"Привет, {result.session.player_name}!")
         self.pages.setCurrentWidget(self.home_page)
+        if result.skin_png is not None:
+            self.skin_preview.set_skin(result.skin_png, result.skin_model)
+            self.skin_model.setCurrentIndex(1 if result.skin_model == "slim" else 0)
         self.status.setText(
-            "Вход запомнен."
+            ""
             if result.remembered
             else "Вход выполнен, но запомнить его не удалось. Проверьте доступ к папке лаунчера."
         )
@@ -373,19 +444,17 @@ class LauncherWindow(QMainWindow):
             return
         try:
             with Path(path).open("rb") as file:
-                png = file.read(1024 * 1024 + 1)
-            validate_skin(png)
-        except (OSError, AccountError) as error:
+                png = file.read(MAX_SKIN_BYTES + 1)
+            model = self.skin_model.currentData()
+            skin = decode_skin(png, model)
+            png = skin.png
+        except (OSError, AccountError, SkinError) as error:
             self._failed(error)
             return
         model = self.skin_model.currentData()
 
         def done(_: Any) -> None:
-            pixmap = QPixmap()
-            pixmap.loadFromData(png, "PNG")
-            self.skin_preview.setPixmap(
-                pixmap.scaled(64, 64, Qt.AspectRatioMode.KeepAspectRatio)
-            )
+            self.skin_preview.set_skin(png, model)
             self.status.setText(
                 "Скин загружен. В игре он появится после обновления профиля."
             )
@@ -408,31 +477,6 @@ class LauncherWindow(QMainWindow):
             "password",
         )
 
-    def _revoke_all(self) -> None:
-        password, ok = QInputDialog.getText(
-            self,
-            "Завершить все сессии",
-            "Введите пароль. После этого нужно будет войти заново на всех устройствах.",
-            QLineEdit.EchoMode.Password,
-        )
-        if ok:
-            self._start(
-                lambda: self.service.revoke_all(password), self._forgotten, "password"
-            )
-
-    def _forget(self) -> None:
-        try:
-            self.service.forget()
-        except SessionStoreError as error:
-            self.status.setText(str(error))
-            return
-        self._forgotten(None)
-
-    def _forgotten(self, _: Any) -> None:
-        self.skin_preview.clear()
-        self.pages.setCurrentWidget(self.auth_page)
-        self.status.setText("Вход на этом устройстве забыт.")
-
     def _recovery_help(self) -> None:
         QMessageBox.information(
             self,
@@ -445,13 +489,41 @@ class LauncherWindow(QMainWindow):
     def _start(
         self, operation: Callable[[], Any], success: Callable[[Any], None], context: str
     ) -> None:
-        if self.busy:
+        if self.busy or (self.installation is not None and self.installation.busy):
             return
         self.busy, self._success, self._context = True, success, context
         self.pages.setEnabled(False)
         self.progress.show()
         self.status.setText("Соединяемся…")
-        task = Task(operation)
+        names = {
+            "login": "loginButton",
+            "register": "registerButton",
+            "skin": "uploadSkin",
+            "password": "changePassword",
+        }
+        self._busy_button = self.findChild(BusyButton, names.get(context, ""))
+        if self._busy_button is not None:
+            self._busy_button.set_busy(True, "Подождите…")
+
+        def with_skin():
+            result = operation()
+            if isinstance(result, AuthResult):
+                try:
+                    skin = self.service.client.skin_profile(result.session.player_uuid)
+                    if skin is not None:
+                        result = replace(result, skin_png=skin[0], skin_model=skin[1])
+                except (
+                    OSError,
+                    DraslError,
+                    ValueError,
+                    KeyError,
+                    TypeError,
+                    AttributeError,
+                ):
+                    pass  # A texture outage must not invalidate a successful login.
+            return result
+
+        task = Task(with_skin)
         task.signals.completed.connect(self._completed)
         task.signals.failed.connect(self._failed)
         self._task = task
@@ -459,6 +531,9 @@ class LauncherWindow(QMainWindow):
 
     def _idle(self) -> None:
         self.busy = False
+        if self._busy_button is not None:
+            self._busy_button.set_busy(False)
+            self._busy_button = None
         self.pages.setEnabled(True)
         self.progress.hide()
         self._task = None
@@ -478,7 +553,7 @@ class LauncherWindow(QMainWindow):
             and self.service.current is None
         ):
             self.pages.setCurrentWidget(self.auth_page)
-        if isinstance(error, (AccountError, SessionStoreError)):
+        if isinstance(error, (AccountError, SessionStoreError, SkinError)):
             message = str(error)
         elif isinstance(error, DraslError):
             if error.status == 429:
@@ -499,21 +574,34 @@ class LauncherWindow(QMainWindow):
 
     @override
     def closeEvent(self, event: QCloseEvent) -> None:
-        if self.busy:
+        if self.installation is not None and self.installation.busy:
+            self._close_after_install = True
+            self.installation.cancel()
+            event.ignore()
+        elif self.game is not None and self.game.poll() is None:
+            self.hide()
+            event.ignore()
+        elif self.busy:
             self.status.setText("Дождитесь завершения текущего действия.")
             event.ignore()
         else:
             event.accept()
 
 
-def instance_lock(data_dir: Path) -> QLockFile | None:
+def instance_lock(data_dir: Path, name: str = "launcher.lock") -> QLockFile | None:
     data_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
-    lock = QLockFile(str(data_dir / "launcher.lock"))
+    lock = QLockFile(str(data_dir / name))
     lock.setStaleLockTime(0)
     return lock if lock.tryLock(0) else None
 
 
-def run_launcher(auth_url: str, data_dir: Path) -> int:
+def run_launcher(
+    auth_url: str,
+    data_dir: Path,
+    *,
+    api_url: str | None = None,
+    root: Path | None = None,
+) -> int:
     app = QApplication.instance() or QApplication(sys.argv[:1])
     try:
         lock = instance_lock(data_dir)
@@ -532,7 +620,12 @@ def run_launcher(auth_url: str, data_dir: Path) -> int:
             "Не удалось открыть папку данных или настроить адрес авторизации.",
         )
         return 2
-    window = LauncherWindow(service)
+    root = root or data_dir.parent
+    installer = None
+    if api_url is not None:
+        keys = json.loads((ASSETS / "release-keys.json").read_text(encoding="utf-8"))
+        installer = Installer(root, ReleaseClient(api_url, keys))
+    window = LauncherWindow(service, installer=installer, runner=GameRunner(root))
     window.show()
     try:
         return app.exec()

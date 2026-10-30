@@ -5,7 +5,7 @@ import json
 import secrets
 from typing import Any
 from urllib.error import HTTPError
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlunsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 
@@ -71,7 +71,9 @@ class DraslClient:
         )
         try:
             with self._opener.open(request, timeout=self.timeout) as response:
-                body = response.read()
+                body = response.read(4 * 1024 * 1024 + 1)
+                if len(body) > 4 * 1024 * 1024:
+                    raise DraslError(502)
         except HTTPError as exc:
             status = exc.code
             exc.close()
@@ -168,3 +170,38 @@ class DraslClient:
                 "Authorization": f"Bearer {token}",
             },
         )
+
+    def skin_profile(self, player_id: str) -> tuple[bytes, str] | None:
+        from launcher.skins import (  # noqa: PLC0415 - keep PNG decoding lazy
+            MAX_SKIN_BYTES,
+            decode_skin,
+        )
+
+        profile = self.request("GET", f"/session/minecraft/profile/{player_id}")
+        textures = next(
+            (
+                item["value"]
+                for item in profile.get("properties", [])
+                if item.get("name") == "textures"
+            ),
+            None,
+        )
+        if textures is None:
+            return None
+        payload = json.loads(base64.b64decode(textures, validate=True))
+        skin = payload.get("textures", {}).get("SKIN")
+        if skin is None:
+            return None
+        target, origin = urlsplit(skin["url"]), urlsplit(self.base_url)
+        if target.username or target.password or target.fragment:
+            raise ValueError("Invalid texture URL")
+        if target.hostname == "textures.minecraft.net" and target.port in {None, 443}:
+            target = target._replace(scheme="https")
+        elif (target.scheme, target.netloc) != (origin.scheme, origin.netloc):
+            raise ValueError("Unexpected texture origin")
+        with self._opener.open(
+            Request(urlunsplit(target)), timeout=self.timeout
+        ) as response:
+            png = response.read(MAX_SKIN_BYTES + 1)
+        model = skin.get("metadata", {}).get("model", "classic")
+        return decode_skin(png, model).png, model

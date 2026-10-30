@@ -17,6 +17,14 @@ class ServerProfile:
     loader: str
     utilities_adapter: str
     status: str
+    description: str = ""
+    project_url: str = ""
+    version_url: str = ""
+    author: str = ""
+    translation_label: str = ""
+    translation_url: str = ""
+    artwork: str = ""
+    forge_version: str = ""
 
     def as_dict(self) -> dict[str, str]:
         return asdict(self)

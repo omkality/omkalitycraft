@@ -66,3 +66,6 @@ class FakeDrasl(DraslClient):
         self, player_id: str, token: str, png: bytes, model: str
     ) -> None:
         self.calls.append(("upload_skin", model))
+
+    def skin_profile(self, player_id: str) -> tuple[bytes, str] | None:
+        return None

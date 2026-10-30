@@ -1,3 +1,4 @@
+import threading
 from pathlib import Path
 
 import pytest
@@ -7,6 +8,7 @@ from pytestqt.qtbot import QtBot
 
 from launcher.accounts import AccountService
 from launcher.app import LauncherWindow, instance_lock
+from launcher.install import Progress
 from launcher.storage import FileSessionStore
 from omk.lab import skin_fixture
 from tests.fakes import FakeDrasl
@@ -109,15 +111,14 @@ def test_skin_file_upload_uses_selected_model(
     assert "Скин загружен" in window.status.text()
 
 
-def test_forget_button_removes_only_test_session(
+def test_home_has_no_session_management_clutter(
     qtbot: QtBot, window: LauncherWindow
 ) -> None:
     window._authenticated(window.service.login("test_player", "test-password"))
-    window.service.client.calls.clear()
-    click(qtbot, window, "forgetDevice")
-    assert window.pages.currentWidget() == window.auth_page
-    assert not window.service.store.path.exists()
-    assert window.service.client.calls == []
+    assert window.findChild(QPushButton, "forgetDevice") is None
+    assert window.findChild(QPushButton, "revokeAll") is None
+    assert window.status.text() == ""
+    assert window.font().family() == "Rubik Medium"
 
 
 def test_second_instance_cannot_use_same_token_file(
@@ -132,3 +133,59 @@ def test_second_instance_cannot_use_same_token_file(
     second = instance_lock(tmp_path)
     assert second is not None
     second.unlock()
+
+
+def test_repeated_login_clicks_do_not_duplicate_requests(
+    qtbot: QtBot, window: LauncherWindow, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    entered, release = threading.Event(), threading.Event()
+    login = window.service.login
+    calls = []
+
+    def slow_login(name, password):
+        calls.append(name)
+        entered.set()
+        release.wait(timeout=3)
+        return login(name, password)
+
+    monkeypatch.setattr(window.service, "login", slow_login)
+    window.login_name.setText("test_player")
+    window.login_password.setText("test-password")
+    try:
+        click(qtbot, window, "loginButton")
+        qtbot.waitUntil(entered.is_set)
+        assert window.findChild(QPushButton, "loginButton")._busy
+        for _ in range(20):
+            window._login()
+        assert calls == ["test_player"]
+    finally:
+        release.set()
+        wait_idle(qtbot, window)
+
+
+def test_pack_download_progress_and_planned_profile(
+    qtbot: QtBot, window: LauncherWindow
+) -> None:
+    cards = window.home_page.cards
+    assert not cards["gtnh"].action.isEnabled()
+    cards["dj2"].update_progress(Progress("Скачиваем сборку", 50, 100))
+    assert cards["dj2"].progress.value() == 50
+    assert cards["dj2"].action._busy
+    assert "50%" in cards["dj2"].state_label.text()
+    cards["dj2"].finished(success=True)
+    assert cards["dj2"].action.text() == "Играть"
+
+
+def test_missing_or_malformed_texture_does_not_block_login(
+    qtbot: QtBot, window: LauncherWindow, monkeypatch: pytest.MonkeyPatch
+):
+    def malformed(_player_id):
+        raise TypeError("invalid public texture payload")
+
+    monkeypatch.setattr(window.service.client, "skin_profile", malformed)
+    window.login_name.setText("test_player")
+    window.login_password.setText("test-password")
+    click(qtbot, window, "loginButton")
+    wait_idle(qtbot, window)
+    assert window.pages.currentWidget() == window.home_page
+    assert window.status.text() == ""

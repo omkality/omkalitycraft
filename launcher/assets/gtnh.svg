@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420">
+ <defs><linearGradient id="sky" x2="1" y2="1"><stop stop-color="#262838"/><stop offset="1" stop-color="#74533b"/></linearGradient><radialGradient id="glow"><stop stop-color="#ffba68" stop-opacity=".5"/><stop offset="1" stop-color="#ffba68" stop-opacity="0"/></radialGradient></defs>
+ <path fill="url(#sky)" d="M0 0h900v420H0z"/><circle cx="690" cy="180" r="240" fill="url(#glow)"/>
+ <g fill="none" stroke="#dfa974" opacity=".12"><path d="M0 80h900M0 160h900M0 240h900M0 320h900M100 0v420M250 0v420M400 0v420M550 0v420M700 0v420M850 0v420"/></g>
+ <g fill="#252b33"><path d="M0 350h900v70H0zM450 230h150v130H450zM600 175h105v185H600zM710 260h150v100H710zM495 100h32v140H495zM640 50h25v140h-25z"/></g>
+ <g fill="#e2a867" opacity=".6"><path d="M470 252h14v20h-14zM504 252h14v20h-14zM540 252h14v20h-14zM625 200h12v17h-12zM663 200h12v17h-12zM735 280h13v18h-13zM775 280h13v18h-13z"/></g>
+ <g fill="none" stroke="#e3b275" opacity=".7"><circle cx="735" cy="140" r="57" stroke-width="12" stroke-dasharray="14 10"/><circle cx="735" cy="140" r="30" stroke-width="3"/><path d="M380 340h90v-40h130v30h200" stroke-width="7"/></g>
+</svg>

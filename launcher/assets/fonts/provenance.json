@@ -1,0 +1,17 @@
+{
+  "family": "Rubik Medium",
+  "license": "SIL OFL 1.1",
+  "commit": "9167c98fa8699d75ee51769eba20d81beb16bcb5",
+  "artifacts": [
+    {
+      "file": "Rubik.ttf",
+      "source": "https://raw.githubusercontent.com/googlefonts/rubik/9167c98fa8699d75ee51769eba20d81beb16bcb5/fonts/ttf/Rubik-Medium.ttf",
+      "sha256": "0a72404de99c51a873eeb4c1f6fb6188a29716911f44dada1b8fa56d79f0c0d2"
+    },
+    {
+      "file": "OFL.txt",
+      "source": "https://raw.githubusercontent.com/googlefonts/rubik/9167c98fa8699d75ee51769eba20d81beb16bcb5/OFL.txt",
+      "sha256": "472cbe7c25441df63e9c7864b43eb3c0f4b3df950c66a76224e6cfe1eae843fb"
+    }
+  ]
+}
