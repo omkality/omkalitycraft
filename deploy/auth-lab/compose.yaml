@@ -4,6 +4,11 @@ services:
     image: unmojang/drasl:4.0.0@sha256:d02f57bda0f0840ab6a2d6c9e167b923c71d4c7d7c9ef322c8ffce44854df6ad
     ports:
       - "127.0.0.1:25586:25585"
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "3"
     volumes:
       - type: bind
         source: ${OMK_AUTH_LAB_CONFIG:-./config.toml}

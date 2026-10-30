@@ -5,12 +5,23 @@ import subprocess
 import threading
 from dataclasses import dataclass, field
 from pathlib import Path
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from launcher.client_defaults import prepare_client_defaults
+from launcher.log_policy import prepare_logging
 from launcher.mod_policy import clean_extra_mods, verify_mods
 from launcher.releases import Release, ReleaseError, inside
 from launcher.session import Session
+from launcher.version import VERSION
+from omk.diagnostics import (
+    BoundedLog,
+    collect_output,
+    environment_snapshot,
+    event,
+    failure,
+    prune_native_archives,
+    prune_reports,
+)
 from omk.fs import resolved
 
 
@@ -19,6 +30,10 @@ class GameProcess:
     process: subprocess.Popen = field(repr=False)
     log_path: Path
     folder: Path
+    diagnostics_done: threading.Event = field(
+        default_factory=threading.Event, repr=False
+    )
+    logging_failed: threading.Event = field(default_factory=threading.Event, repr=False)
 
     def poll(self) -> int | None:
         return self.process.poll()
@@ -63,13 +78,17 @@ class GameRunner:
             "-Xms512M",
             f"-Xmx{memory_mb}M",
             "-XX:+UseG1GC",
+            "-Dfile.encoding=UTF-8",
             f"-Djava.library.path={inside(folder, launch['natives'])}",
             f"-Djava.io.tmpdir={private / 'tmp'}",
             f"-Duser.home={private / 'java-home'}",
             f"-javaagent:{agent}={session.origin}/authlib-injector",
             "-Dauthlibinjector.side=client",
         ]
-        if launch.get("logging"):
+        logging = prepare_logging(release.minecraft, private / "logging")
+        if logging is not None:
+            command.append(f"-Dlog4j.configurationFile={logging.as_uri()}")
+        elif launch.get("logging"):
             command.append(
                 f"-Dlog4j.configurationFile={inside(folder, launch['logging'])}"
             )
@@ -109,6 +128,9 @@ class GameRunner:
         if server:
             command.extend(["--server", server[0], "--port", str(server[1])])
         log = self.root / "userdata" / "logs" / f"{release.pack_id}-game.log"
+        writer = BoundedLog(log)
+        prune_reports(self.root, folder / "crash-reports")
+        prune_native_archives(self.root, folder / "logs")
         environment = {
             **os.environ,
             "TMP": str(self.root / "userdata/tmp"),
@@ -118,26 +140,66 @@ class GameRunner:
         environment.pop("JAVA_TOOL_OPTIONS", None)
         environment.pop("_JAVA_OPTIONS", None)
         environment.pop("JDK_JAVA_OPTIONS", None)
-        process = subprocess.Popen(
-            command,
-            cwd=folder,
-            env=environment,
-            shell=False,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
+        try:
+            process = subprocess.Popen(
+                command,
+                cwd=folder,
+                env=environment,
+                shell=False,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
+            )
+        except OSError as error:
+            failure(self.root, "java_start", error)
+            raise
+        result = GameProcess(process, log, folder)
+        run_id = uuid4().hex
+        event(
+            self.root,
+            "game_started",
+            run_id=run_id,
+            pack=release.pack_id,
+            pack_version=release.version,
+            minecraft=release.minecraft,
+            platform=release.platform,
+            launcher=VERSION,
+            memory_mb=self.memory_mb if memory_mb is None else memory_mb,
+            resources=environment_snapshot(self.root),
         )
 
         def collect() -> None:
-            with log.open("w", encoding="utf-8") as output:
-                for raw in iter(process.stdout.readline, b""):
-                    text = raw.decode("utf-8", errors="replace")
-                    for secret in [session.access_token, session.client_token]:
-                        text = text.replace(secret, "[redacted]")
-                    output.write(text)
-                    output.flush()
+            try:
+                writer.write(
+                    f"\n--- run {run_id}: {release.pack_id} {release.version} ---\n"
+                )
+            except OSError:
+                result.logging_failed.set()
+            try:
+                collect_output(
+                    process.stdout,
+                    writer,
+                    (session.access_token, session.client_token),
+                    on_error=result.logging_failed.set,
+                )
+                code = process.wait()
+                event(
+                    self.root,
+                    "game_exited",
+                    run_id=run_id,
+                    pack=release.pack_id,
+                    exit_code=code,
+                    logging_failed=result.logging_failed.is_set(),
+                )
+                prune_reports(self.root, folder / "crash-reports")
+                prune_native_archives(self.root, folder / "logs")
+            except OSError as error:
+                result.logging_failed.set()
+                failure(self.root, "game_log", error)
+            finally:
+                result.diagnostics_done.set()
 
         threading.Thread(
             target=collect, daemon=True, name=f"{release.pack_id}-game-log"
         ).start()
-        return GameProcess(process, log, folder)
+        return result
