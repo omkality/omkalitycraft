@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0.dev5 — real DJ2 command checks and moderator policy
+
+- Add reproducible full Forge teleport, cooldown, movement/damage, TPA, back and restart scenarios.
+- Add a moderator rank with only ban/pardon/banlist/kick/mute/unmute, without OP or gameplay advantages.
+- Reproduce unsafe stock RTP destinations and disable that command in the initial server profile.
+- Characterize the stock FTB mute bypass and verify the separate private Core adapter with guarded lab scenarios.
+- Keep command fixtures bounded, isolated and synchronized with actual console completion.
+- Preserve stock cooldown restart and within-block movement limitations in the command reference.
+
 ## 0.3.0.dev4 — operator tools and quiet client crash reports
 
 - Remove all diagnostic/export controls from the player launcher.

@@ -1,6 +1,7 @@
 """Explicit, disposable DJ2 integration lab. Never copies old worlds or server credentials."""
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -52,6 +53,19 @@ def add_dj2_lab(parser):
     parser.add_argument("--client-root", type=Path)
     parser.add_argument("--manifest", type=Path)
     parser.add_argument("--visual-seconds", type=int, default=0)
+    parser.add_argument(
+        "--commands",
+        action="store_true",
+        help="Exercise teleport timers, non-OP moderation and a safe lab restart",
+    )
+    parser.add_argument(
+        "--command-suite", choices=["full", "moderation", "rtp"], default="full"
+    )
+    parser.add_argument(
+        "--mute-guard",
+        action="store_true",
+        help="Require the private Core 0.2.2 FTB mute adapter",
+    )
 
 
 def _validate(args):
@@ -88,7 +102,6 @@ def _copy_server(args, lab):
         "astralsorcery",
         "resources",
         "asm",
-        "vintagefix",
     ]:
         folder = source / name
         if folder.exists():
@@ -119,8 +132,8 @@ def _copy_server(args, lab):
     cfg = dest / "config/ftbutilities.cfg"
     cfg.write_text(
         cfg.read_text()
-        .replace("rtp_max_distance=100000.0", "rtp_max_distance=96.0")
-        .replace("rtp_min_distance=1000.0", "rtp_min_distance=64.0"),
+        .replace("rtp_max_distance=100000.0", "rtp_max_distance=12.0")
+        .replace("rtp_min_distance=1000.0", "rtp_min_distance=8.0"),
         encoding="utf-8",
     )
     (dest / "local/ftbutilities").mkdir(parents=True, exist_ok=True)
@@ -131,8 +144,9 @@ def _copy_server(args, lab):
     (dest / "eula.txt").write_text("eula=true\n")
     (dest / "server.properties").write_text(
         "online-mode=true\nserver-ip=127.0.0.1\nserver-port=25576\n"
-        "enable-rcon=false\nview-distance=3\nspawn-protection=0\nmax-tick-time=0\n"
+        "enable-rcon=false\nview-distance=3\nspawn-protection=0\nmax-tick-time=0\nallow-flight=true\n"
         "motd=Disposable OmkalityCraft auth test\nlevel-name=lab-world\ngenerate-structures=false\n"
+        "level-seed=3744183613505663369\n"
     )
     return dest, mods
 
@@ -173,11 +187,11 @@ def _start_server(args, lab, dest, client):
     # No passwords or management credentials are written to status/report files.
     java = args.java.resolve()
     agent = args.agent.resolve()
-    (lab / "tmp").mkdir()
-    (lab / "java-home").mkdir()
+    (lab / "tmp").mkdir(exist_ok=True)
+    (lab / "java-home").mkdir(exist_ok=True)
     server_log = lab / "server-output.log"
     writer = BoundedLog(server_log)
-    writer.write("Starting isolated Forge server\n")
+    writer.write("Starting isolated Forge server\n", rotate=True)
     logging = prepare_logging("1.12.2", lab / "logging")
     logging_jars = stage_logging_runtime(dest)
     server = subprocess.Popen(
@@ -230,13 +244,28 @@ def _wait_server(server, server_log, state):
 
 def _console_sender(server, server_log):
     def console(command):
-        mark = server_log.stat().st_size
-        server.stdin.write((command + "\n").encode())
+        original = server_log.stat()
+        marker = "OmkLabBarrier" + uuid4().hex
+        server.stdin.write((command + "\nsay " + marker + "\n").encode())
         server.stdin.flush()
-        time.sleep(0.5)
-        with server_log.open("rb") as output:
-            output.seek(mark)
-            return output.read().decode("utf-8", errors="replace")
+        deadline = time.monotonic() + 60
+        while time.monotonic() < deadline:
+            if server.poll() is not None:
+                raise RuntimeError("Owned lab server stopped during console command")
+            current = server_log.stat()
+            mark = (
+                original.st_size
+                if current.st_ino == original.st_ino
+                and current.st_size >= original.st_size
+                else 0
+            )
+            with server_log.open("rb") as output:
+                output.seek(max(mark, current.st_size - 65536))
+                text = output.read(65536).decode("utf-8", errors="replace")
+            if marker in text:
+                return text
+            time.sleep(0.05)
+        raise RuntimeError("Lab console barrier timed out: " + command)
 
     return console
 
@@ -251,8 +280,9 @@ def _response(player, command, key):
 
 
 def _check_homes(first, console, expect):
-    console("fill 0 78 0 15 78 15 minecraft:stone")
-    console("tp omk_game_test 8.5 79 8.5")
+    console("fill 0 240 0 15 240 15 minecraft:stone")
+    console("fill 0 241 0 15 244 15 minecraft:air")
+    console("tp omk_game_test 8.5 241 8.5")
     first.wait(lambda: abs(first.position[0] - 8.5) < 1)
     for name in ["one", "two", "three"]:
         _response(first, "/sethome " + name, "ftbutilities.lang.homes.set")
@@ -270,8 +300,11 @@ def _check_homes(first, console, expect):
         True,
         "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
     )
-    console("fill 120 78 120 135 78 135 minecraft:stone")
-    console("tp omk_game_test 128.5 79 128.5")
+    _response(first, "/rtp", "commands.generic.permission")
+    expect(True, "unsafe_stock_rtp_disabled_in_new_server_profile")
+    console("fill 120 240 120 135 240 135 minecraft:stone")
+    console("fill 120 241 120 135 244 135 minecraft:air")
+    console("tp omk_game_test 128.5 241 128.5")
     first.wait(lambda: abs(first.position[0] - 128.5) < 1)
     first.command("/home one")
     first.wait(lambda: abs(first.position[0] - 8.5) < 1.5)
@@ -280,29 +313,29 @@ def _check_homes(first, console, expect):
 
 def _check_claims(first, second, console, expect):
     _response(first, "/team create omklab", "ftblib.lang.team.created")
-    console("tp omk_other_test 8.5 79 8.5")
+    console("tp omk_other_test 8.5 241 8.5")
     second.wait(lambda: abs(second.position[0] - 8.5) < 1)
     # Creative mode is a lab-only positive control; both users remain non-OP.
     console("gamemode 1 omk_game_test")
     console("gamemode 1 omk_other_test")
-    console("setblock 9 79 8 minecraft:stone")
-    second.dig(9, 79, 8)
+    console("setblock 9 241 8 minecraft:stone")
+    second.dig(9, 241, 8)
     time.sleep(0.8)
-    found = console("testforblock 9 79 8 minecraft:air")
+    found = console("testforblock 9 241 8 minecraft:air")
     expect(
         "Successfully found" in found,
         "non_owner_can_break_unclaimed_test_block_positive_control",
     )
     first.command("/chunks claim")
     time.sleep(1)
-    console("setblock 9 79 8 minecraft:stone")
-    second.dig(9, 79, 8)
+    console("setblock 9 241 8 minecraft:stone")
+    second.dig(9, 241, 8)
     time.sleep(0.8)
-    found = console("testforblock 9 79 8 minecraft:stone")
+    found = console("testforblock 9 241 8 minecraft:stone")
     expect("Successfully found" in found, "ftb_claim_blocks_non_owner_block_break")
-    first.dig(9, 79, 8)
+    first.dig(9, 241, 8)
     time.sleep(0.8)
-    found = console("testforblock 9 79 8 minecraft:air")
+    found = console("testforblock 9 241 8 minecraft:air")
     expect("Successfully found" in found, "ftb_claim_allows_owner_block_break")
 
 
@@ -439,6 +472,25 @@ def _protocol_tests(client, session, session2, mods, server, server_log, expect)
     _check_guard(client, session, mods, expect)
 
 
+def _catalog_report(dest, report, mute_guard, expect):
+    catalog = dest / "omk-command-catalog.json"
+    metadata = {}
+    if catalog.is_file():
+        metadata = json.loads(catalog.read_text(encoding="utf-8"))
+        report["command_catalog"] = {
+            "file": str(catalog.relative_to(PROJECT_ROOT)),
+            "commands": len(metadata["commands"]),
+            "rank_configs": len(metadata["rank_configs"]),
+        }
+    if mute_guard:
+        guard_state = metadata.get("ftb_mute_guard", "missing adapter metadata")
+        report["ftb_mute_guard_state"] = guard_state
+        expect(
+            guard_state == "enabled",
+            "private_ftb_mute_guard_initialized_on_real_server_" + str(guard_state),
+        )
+
+
 def run_dj2_lab(args: argparse.Namespace) -> dict:
     _validate(args)
     lab = PROJECT_ROOT / ".local" / ("ftb-guard-lab-" + uuid4().hex[:8])
@@ -448,6 +500,7 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
         "checks": [],
         "lab_folder": str(lab.relative_to(PROJECT_ROOT)),
         "logging_runtime": "2.25.5",
+        "mute_guard_requested": args.mute_guard,
     }
     compose = [
         "docker",
@@ -473,18 +526,43 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
     try:
         state("preparing_isolated_server")
         dest, mods = _copy_server(args, lab)
+        report["tested_artifacts_sha256"] = {
+            path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in [
+                dest / "forge-1.12.2-14.23.5.2860.jar",
+                dest / "mods/FTBUtilities-5.4.1.131.jar",
+                dest / "mods/FTBLib-5.4.7.2.jar",
+            ]
+        }
         client, service, session, session2 = _accounts(compose, lab)
         server, server_log, stream = _start_server(args, lab, dest, client)
         _wait_server(server, server_log, state)
-        catalog = server_log.parent / "omk-command-catalog.json"
-        if catalog.is_file():
-            metadata = json.loads(catalog.read_text(encoding="utf-8"))
-            report["command_catalog"] = {
-                "file": str(catalog.relative_to(PROJECT_ROOT)),
-                "commands": len(metadata["commands"]),
-                "rank_configs": len(metadata["rank_configs"]),
-            }
+        _catalog_report(dest, report, args.mute_guard, expect)
         _protocol_tests(client, session, session2, mods, server, server_log, expect)
+        if args.commands:
+            from omk.dj2_commands_lab import (  # noqa: PLC0415
+                check_after_restart,
+                run_command_checks,
+            )
+
+            restart = run_command_checks(
+                client,
+                session,
+                session2,
+                mods,
+                _console_sender(server, server_log),
+                expect,
+                report,
+                suite=args.command_suite,
+                mute_guard=args.mute_guard,
+            )
+            if restart:
+                state("safely_restarting_owned_lab_server")
+                _stop_server(server)
+                stream.close()
+                server, server_log, stream = _start_server(args, lab, dest, client)
+                _wait_server(server, server_log, state)
+                check_after_restart(client, session, mods, expect)
         if args.client_root is not None:
             _real_client(args, lab, server_log, service, state, expect, report)
         report["ok"] = True

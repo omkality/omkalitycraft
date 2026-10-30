@@ -6,6 +6,7 @@ The lab supplies an explicit mod list from a previously verified real client.
 
 import contextlib
 import json
+import math
 import socket
 import struct
 import threading
@@ -33,11 +34,13 @@ class LabPlayer:
         self.mods = dict(mods)
         self.messages = deque(maxlen=200)
         self.position = None
+        self.health = None
         self.error = None
         self._lock = threading.Lock()
         self._stopping = threading.Event()
         self.ready = threading.Event()
         self._handshake = False
+        self._last_chat = 0.0
 
     def __enter__(self):
         self.connection, result = self.login.__enter__()
@@ -82,7 +85,36 @@ class LabPlayer:
             or any(ord(c) < 32 for c in command)
         ):
             raise ValueError("Invalid lab command")
-        self.send(0x02, text(command))
+        self._chat_packet(command)
+
+    def chat(self, message: str):
+        self.check()
+        if (
+            not message
+            or message.startswith("/")
+            or len(message) > 256
+            or any(ord(c) < 32 for c in message)
+        ):
+            raise ValueError("Invalid lab chat")
+        self._chat_packet(message)
+
+    def _chat_packet(self, message):
+        # Vanilla counts commands as chat spam too. Keep the test actor below
+        # that limit rather than disabling protection on the lab server.
+        delay = 1.1 - (time.monotonic() - self._last_chat)
+        if delay > 0:
+            self._stopping.wait(delay)
+        self.check()
+        self.send(0x02, text(message))
+        self._last_chat = time.monotonic()
+
+    def move(self, x: float, y: float, z: float):
+        self.check()
+        if not all(math.isfinite(v) and abs(v) < 30000000 for v in (x, y, z)):
+            raise ValueError("Invalid lab movement")
+        # This protocol actor does not simulate physics. Tests independently echo
+        # the accepted server coordinates before asserting movement behavior.
+        self.send(0x0D, struct.pack(">ddd?", x, y, z, True))
 
     def wait(self, predicate, timeout=12):
         deadline = time.monotonic() + timeout
@@ -150,6 +182,8 @@ class LabPlayer:
                     raise ValueError(
                         "Server kick: " + field(packet.read).decode()[:600]
                     )
+                elif kind == 0x41:
+                    self.health = struct.unpack(">f", packet.read(4))[0]
                 elif kind == 0x2F:
                     values = struct.unpack(">dddffB", packet.read(33))
                     previous = self.position or (0, 0, 0, 0, 0)
