@@ -25,7 +25,7 @@ _EVENT_LOCK = threading.Lock()
 _CREDENTIAL = re.compile(
     r"(?i)([\"']?(?:access[_-]?token|client[_-]?token|api[_-]?token|password|"
     r"passwd|authorization|refresh[_-]?token|invite|secret)[\"']?\s*[:=]\s*)"
-    r"(?:\"[^\"\r\n]*\"|'[^'\r\n]*'|[^\s,;}&]+)"
+    r"(?:\"(?:\\.|[^\"\\\r\n])*\"|'(?:\\.|[^'\\\r\n])*'|[^\s,;}&]+)"
 )
 _ARGUMENT = re.compile(
     r"(?i)(--(?:accessToken|clientToken|password)\s+)(?:\"[^\"\r\n]*\"|\S+)"
@@ -215,6 +215,8 @@ def failure(root: Path, context: str, error: Exception):
 
 
 def _files(folder: Path, root: Path, predicate):
+    if resolved(folder) != folder.absolute():
+        return []
     if folder.is_symlink() or folder.is_junction() or not folder.is_dir():
         return []
     result = []

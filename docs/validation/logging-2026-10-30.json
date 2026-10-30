@@ -3,7 +3,7 @@
   "version": "0.3.0.dev3",
   "ok": true,
   "local_tests": {
-    "passed": 169,
+    "passed": 170,
     "skipped": 1
   },
   "java_probe": {

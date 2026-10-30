@@ -116,6 +116,11 @@ def test_minecraft_colour_codes_do_not_break_plain_log_parsing():
     )
 
 
+def test_escaped_json_credential_is_removed_as_a_whole():
+    value = json.dumps({"password": 'a secret with "quotes" and \\ escapes'})
+    assert "quotes" not in redact(value) and "escapes" not in redact(value)
+
+
 def test_linked_log_output_is_rejected_without_touching_external_file(tmp_path):
     external = tmp_path / "outside"
     external.mkdir()
