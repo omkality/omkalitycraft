@@ -1,0 +1,17 @@
+# Development only: HTTP over loopback. Production requires a separate HTTPS setup.
+Domain = "127.0.0.1"
+BaseURL = "http://127.0.0.1:25586"
+ListenAddress = "0.0.0.0:25585"
+DefaultAdmins = ["omk_lab_admin"]
+StateDirectory = "/var/lib/drasl"
+AllowChangingPlayerName = false
+DefaultMaxPlayerCount = 1
+SignPublicKeys = false
+TokenExpireSec = 3600
+AllowSkins = true
+AllowCapes = false
+
+[RegistrationUsernamePassword.CreateNewPlayer]
+Allow = true
+RequireInvite = true
+AllowChoosingUUID = false

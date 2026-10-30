@@ -1,0 +1,25 @@
+{
+  "id": "divinejourney2",
+  "display_name": "Divine Journey 2",
+  "description": "Existing Divine Journey 2 RU pack; pending launcher integration tests",
+  "ignored_paths": [
+    "crash-reports/",
+    "dumps/",
+    "journeymap/",
+    "local/",
+    "logs/",
+    "saves/",
+    "screenshots/",
+    "BotaniaVars.dat",
+    "crafttweaker.log",
+    "knownkeys.txt",
+    "roots.log",
+    "usercache.json",
+    "usernamecache.json"
+  ],
+  "soft_managed_paths": [
+    "config/",
+    "options.txt"
+  ],
+  "delete_extra_files_in_managed_paths": true
+}
