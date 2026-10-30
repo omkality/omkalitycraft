@@ -105,7 +105,7 @@ def _copy_server(args, lab):
     ]:
         if (source / name).exists():
             shutil.copy2(source / name, dest / name)
-    shutil.copy2(args.core.resolve(), dest / "mods/OmkalityCore-0.2.0.jar")
+    shutil.copy2(args.core.resolve(), dest / "mods/OmkalityCore.jar")
     mods = approved_mods(args.mods_json)
     assert all("\n" not in v and "\\" not in v for v in mods.values())
     (dest / "config/omkalitycore-mods.properties").write_text(
@@ -182,6 +182,7 @@ def _start_server(args, lab, dest, client):
             f'-Duser.home={lab / "java-home"}',
             f"-javaagent:{agent}={client.base_url}/authlib-injector",
             "-Dauthlibinjector.side=server",
+            "-Domkality.lab.commandCatalog=true",
             "-jar",
             "forge-1.12.2-14.23.5.2860.jar",
             "nogui",
@@ -455,6 +456,14 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
         client, service, session, session2 = _accounts(compose, lab)
         server, server_log, stream = _start_server(args, lab, dest, client)
         _wait_server(server, server_log, state)
+        catalog = server_log.parent / "omk-command-catalog.json"
+        if catalog.is_file():
+            metadata = json.loads(catalog.read_text(encoding="utf-8"))
+            report["command_catalog"] = {
+                "file": str(catalog.relative_to(PROJECT_ROOT)),
+                "commands": len(metadata["commands"]),
+                "rank_configs": len(metadata["rank_configs"]),
+            }
         _protocol_tests(client, session, session2, mods, server, server_log, expect)
         if args.client_root is not None:
             _real_client(args, lab, server_log, service, state, expect, report)
