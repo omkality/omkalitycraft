@@ -44,6 +44,7 @@ def build(
         "fonts/provenance.json",
         "dj2.svg",
         "gtnh.svg",
+        "external-link.svg",
         "release-keys.json",
     ]:
         destination = assets / name

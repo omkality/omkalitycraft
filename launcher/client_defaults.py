@@ -48,6 +48,8 @@ def _options(folder: Path, defaults: ClientDefaults) -> None:
         changed["lang"] = defaults.language
     if defaults.unicode_font is not None:
         changed["forceUnicodeFont"] = str(defaults.unicode_font).lower()
+    if all(options.get(key) == value for key, value in changed.items()):
+        return
     output = [line for line in lines if line.split(":", 1)[0] not in changed]
     output.extend(f"{key}:{value}" for key, value in changed.items())
     _replace(folder, "options.txt", ("\n".join(output) + "\n").encode())

@@ -27,7 +27,7 @@ class ServerProfile:
     forge_version: str = ""
     memory_default_mb: int = 6144
     memory_recommended_mb: int = 6144
-    memory_max_mb: int = 8192
+    memory_max_mb: int = 16384
 
     def as_dict(self) -> dict:
         return asdict(self)

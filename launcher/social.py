@@ -21,7 +21,7 @@ class SocialFooter(QWidget):
         row.setSpacing(24)
         row.addStretch()
         for name, url in CHANNELS:
-            link = external_label(name + " ↗", url)
+            link = external_label(name, url)
             link.setObjectName("social_" + name.lower())
             link.setAlignment(Qt.AlignmentFlag.AlignCenter)
             link.setStyleSheet(

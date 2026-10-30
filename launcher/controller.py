@@ -8,6 +8,7 @@ from PySide6.QtCore import QObject, QThreadPool, Signal, Slot
 from launcher.accounts import AccountService
 from launcher.game import GameProcess, GameRunner
 from launcher.install import InstallCancelled, Installer
+from launcher.mod_policy import clean_extra_mods
 from launcher.releases import Release, ReleaseError
 from launcher.tasks import Task
 
@@ -70,6 +71,7 @@ class InstallController(QObject):
                     raise
             if self.installer.cancel.is_set():
                 raise InstallCancelled("Загрузка приостановлена.")
+            clean_extra_mods(release, self.installer.directory(pack_id))
             folder = self.installer.install(release, task.signals.progress.emit)
             game = (
                 self.runner.start(

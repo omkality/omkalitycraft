@@ -35,8 +35,10 @@ def open_link(url: str) -> None:
 
 
 def external_label(text: str, url: str) -> QLabel:
+    icon = QUrl.fromLocalFile(str(ASSETS / "external-link.svg")).toString()
     widget = QLabel(
-        f'<a href="{html.escape(url, quote=True)}" style="color:#a9d6c8;text-decoration:none">{html.escape(text)}</a>'
+        f'<a href="{html.escape(url, quote=True)}" style="color:#a9d6c8;text-decoration:none">'
+        f'{html.escape(text)}&nbsp;<img src="{html.escape(icon, quote=True)}" width="11" height="11"></a>'
     )
     widget.setTextInteractionFlags(
         Qt.TextInteractionFlag.LinksAccessibleByMouse
@@ -111,9 +113,9 @@ class PackCard(QFrame):
         description.setProperty("muted", True)
         layout.addWidget(description)
         credits = QHBoxLayout()
-        credits.addWidget(external_label("Авторы сборки ↗", profile.project_url), 1)
+        credits.addWidget(external_label("Авторы сборки", profile.project_url), 1)
         credits.addWidget(
-            external_label(profile.translation_label + " ↗", profile.translation_url), 1
+            external_label(profile.translation_label, profile.translation_url), 1
         )
         layout.addLayout(credits)
         self.memory = MemoryControl(
@@ -161,7 +163,7 @@ class PackCard(QFrame):
             if profile.pack_version != "unselected"
             else "Сборка ещё не подготовлена"
         )
-        self.version_link = external_label(version + "  ↗", profile.version_url)
+        self.version_link = external_label(version, profile.version_url)
         heading.addWidget(self.version_link)
         detail = QLabel(
             f"Minecraft {profile.minecraft}  ·  Forge"

@@ -18,7 +18,7 @@ artwork = "dj2.svg"
 forge_version = "14.23.5.2860"
 memory_default_mb = 6144
 memory_recommended_mb = 6144
-memory_max_mb = 8192
+memory_max_mb = 16384
 
 [[servers]]
 id = "gtnh"
@@ -37,4 +37,4 @@ translation_url = "https://github.com/GTNewHorizons/GTNH-Translations"
 artwork = "gtnh.svg"
 memory_default_mb = 6144
 memory_recommended_mb = 6144
-memory_max_mb = 8192
+memory_max_mb = 16384
