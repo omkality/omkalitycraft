@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0.dev6 — restore RTP and verify persistent moderation
+
+- Restore stock RTP for all normal players, accepting its magma-surface limitation at the owner's request.
+- Verify mute across reconnect/full server restart and unmute across a subsequent reconnect.
+- Add focused, disposable lab scenarios for block placement and vanilla chest access in FTB claims.
+
 ## 0.3.0.dev5 — real DJ2 command checks and moderator policy
 
 - Add reproducible full Forge teleport, cooldown, movement/damage, TPA, back and restart scenarios.

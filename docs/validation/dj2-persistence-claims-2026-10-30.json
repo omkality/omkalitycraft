@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-30",
+  "version": "0.3.0.dev6",
+  "private_core": "0.2.2",
+  "ok": true,
+  "ready_for_public_launch": false,
+  "python_tests": {
+    "passed": 220,
+    "skipped": 1,
+    "ruff": true,
+    "black": true
+  },
+  "rtp": {
+    "enabled": true,
+    "magma_surface_limitation_accepted_by_owner": true
+  },
+  "scenarios": {
+    "persistence": {
+      "checks": [
+        "private_ftb_mute_guard_initialized_on_real_server_enabled",
+        "two_authenticated_protocol_players_complete_real_forge_handshake",
+        "private_server_core_loaded_explicit_client_policy",
+        "three_homes_allowed_and_fourth_denied_for_normal_player",
+        "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+        "rtp_available_to_normal_player_in_initial_profile",
+        "home_command_really_teleports_player_after_warmup",
+        "non_owner_can_break_unclaimed_test_block_positive_control",
+        "ftb_claim_blocks_non_owner_block_break",
+        "ftb_claim_allows_owner_block_break",
+        "server_guard_rejects_extra_declared_mod_list",
+        "server_guard_rejects_missing_declared_mod_list",
+        "server_guard_rejects_version_declared_mod_list",
+        "unmuted_chat_and_private_message_work_before_sanction",
+        "mute_blocks_chat_and_commands_before_disconnect",
+        "mute_blocks_chat_and_commands_after_reconnect",
+        "muted_player_disconnected_before_safe_server_restart",
+        "mute_blocks_chat_and_commands_after_full_server_restart",
+        "unmuted_chat_and_private_message_work_after_restart_unmute",
+        "moderator_unmute_survives_restart_without_op",
+        "unmuted_chat_and_private_message_work_after_unmuted_reconnect"
+      ],
+      "temporary_auth_removed": true
+    },
+    "claim_interactions": {
+      "checks": [
+        "private_ftb_mute_guard_initialized_on_real_server_enabled",
+        "two_authenticated_protocol_players_complete_real_forge_handshake",
+        "private_server_core_loaded_explicit_client_policy",
+        "three_homes_allowed_and_fourth_denied_for_normal_player",
+        "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+        "rtp_available_to_normal_player_in_initial_profile",
+        "home_command_really_teleports_player_after_warmup",
+        "non_owner_can_break_unclaimed_test_block_positive_control",
+        "ftb_claim_blocks_non_owner_block_break",
+        "ftb_claim_allows_owner_block_break",
+        "server_guard_rejects_extra_declared_mod_list",
+        "server_guard_rejects_missing_declared_mod_list",
+        "server_guard_rejects_version_declared_mod_list",
+        "non_owner_places_block_in_unclaimed_chunk_positive_control",
+        "non_owner_opens_unclaimed_chest_positive_control",
+        "ftb_claim_blocks_non_owner_block_placement",
+        "ftb_claim_allows_owner_block_placement",
+        "ftb_claim_blocks_non_owner_chest_open",
+        "ftb_claim_allows_owner_chest_open"
+      ],
+      "temporary_auth_removed": true
+    },
+    "rtp_policy": {
+      "checks": [
+        "private_ftb_mute_guard_initialized_on_real_server_enabled",
+        "two_authenticated_protocol_players_complete_real_forge_handshake",
+        "private_server_core_loaded_explicit_client_policy",
+        "three_homes_allowed_and_fourth_denied_for_normal_player",
+        "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+        "rtp_available_to_normal_player_in_initial_profile",
+        "home_command_really_teleports_player_after_warmup",
+        "non_owner_can_break_unclaimed_test_block_positive_control",
+        "ftb_claim_blocks_non_owner_block_break",
+        "ftb_claim_allows_owner_block_break",
+        "server_guard_rejects_extra_declared_mod_list",
+        "server_guard_rejects_missing_declared_mod_list",
+        "server_guard_rejects_version_declared_mod_list",
+        "rtp_respects_too_small_border_but_failed_search_consumes_cooldown",
+        "stock_ftb_rtp_accepts_magma_surface_owner_accepted_limitation",
+        "rtp_permission_node_can_disable_command_in_lab",
+        "rtp_restored_after_permission_toggle_with_cooldown_intact"
+      ],
+      "temporary_auth_removed": true
+    }
+  },
+  "artifacts_sha256": {
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "FTBUtilities-5.4.1.131.jar": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a",
+    "FTBLib-5.4.7.2.jar": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac"
+  },
+  "original_server_modified": false,
+  "graphical_minecraft_tested_this_stage": false,
+  "limitations": [
+    "Protocol actors do not execute client mods or simulate physics",
+    "Chest opening is tested; item transfers and modded containers/machines/pipes/explosions/team permissions need further scenarios",
+    "Unmuted reconnect is tested; an additional cold restart after unmute is not part of this run",
+    "Dimensions, resource world, backup/restore and construction rollback remain separate work"
+  ]
+}
