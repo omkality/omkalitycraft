@@ -19,7 +19,7 @@ def cdn_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 def test_cdn_starts_without_account_services(cdn_root: Path) -> None:
     with TestClient(app=app) as client:
         assert client.get("/health").status_code == 200
-        assert client.get("/version").json()["version"] == "0.3.0.dev5"
+        assert client.get("/version").json()["version"] == "0.3.0.dev6"
         assert client.get("/instances").json() == []
         assert client.get("/auth/me").status_code == 404
 
