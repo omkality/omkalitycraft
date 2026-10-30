@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QFileDialog, QLabel, QMessageBox, QPushButton, QTabWidget
+from PySide6.QtWidgets import QFileDialog, QLabel, QPushButton, QTabWidget
 from pytestqt.qtbot import QtBot
 
 from launcher.__main__ import _bootstrap_lock
@@ -19,22 +19,15 @@ from omk.lab import skin_fixture
 from tests.fakes import FakeDrasl
 
 
-def test_help_exports_diagnostics_without_network_or_real_session(
-    qtbot, tmp_path, monkeypatch
-):
+def test_player_launcher_has_no_diagnostic_or_administration_menu(qtbot, tmp_path):
     service = AccountService(
         FakeDrasl(), FileSessionStore(tmp_path / "userdata/session.json")
     )
     window = LauncherWindow(service, runner=GameRunner(tmp_path), auto_restore=False)
     qtbot.addWidget(window)
-    messages = []
-    monkeypatch.setattr(QMessageBox, "information", lambda *args: messages.append(args))
-    help_menu = window.menuBar().actions()[0].menu()
-    help_menu.actions()[0].trigger()
-    qtbot.waitUntil(lambda: bool(messages), timeout=4000)
-    assert len(list((tmp_path / "userdata/diagnostics").glob("*.zip"))) == 1
-    assert service.client.calls == []
+    assert window.menuBar().actions() == []
     assert not service.store.path.exists()
+    assert service.client.calls == []
 
 
 @pytest.fixture

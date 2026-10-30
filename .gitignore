@@ -53,3 +53,4 @@ omkalitycore/
 *.key
 userdata/
 .local/
+.omk-admin/

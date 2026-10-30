@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     api_port: int = 8000
     workers_num: int = 1
     content_root: str = "data/content"
+    client_reports_root: str | None = None
+    client_reports_auth_url: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=".env",

@@ -11,7 +11,17 @@ from scripts.stage_launcher_content import copy_path
 
 @pytest.mark.parametrize(
     "relative",
-    ["userdata/session.json", "AUTH_TOKEN.JSON", "config/.env", "session.json"],
+    [
+        "userdata/session.json",
+        "AUTH_TOKEN.JSON",
+        "config/.env",
+        "session.json",
+        ".omk-admin/drasl-session.json",
+        "logs/latest.log",
+        "crash-reports/crash-test.txt",
+        "hs_err_pid123.log",
+        "server.properties",
+    ],
 )
 def test_cdn_never_serves_account_data(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, relative: str

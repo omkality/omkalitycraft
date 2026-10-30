@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-30",
+  "version": "0.3.0.dev4",
+  "ok": true,
+  "unit_ui_tests": {
+    "passed": 211,
+    "skipped": 1
+  },
+  "real_operator_lab": {
+    "checks": [
+      "separate_operator_login_saves_no_password",
+      "operator_cli_invitation_registers_normal_player",
+      "registration_invitation_is_single_use",
+      "game_token_cannot_issue_invitations",
+      "normal_account_cannot_become_operator",
+      "operator_api_key_is_not_accepted_as_a_game_token",
+      "automatic_queue_delivers_real_http_report_with_real_game_token",
+      "stored_report_excludes_game_token_and_system_dump",
+      "players_cannot_list_or_read_client_reports_over_http",
+      "game_token_cannot_submit_report_under_another_uuid",
+      "operator_cli_reads_private_inbox_without_public_read_api",
+      "revoked_game_token_cannot_upload_client_report",
+      "operator_cli_revocation_blocks_registration"
+    ],
+    "cleanup": true,
+    "transport": "real Granian HTTP and pinned Drasl 4.0.0",
+    "crash_source": "synthetic crash-report fixture"
+  },
+  "real_child_exit_test": "controlled Python subprocess with exit code 1; automatic collector, not Minecraft crash",
+  "player_diagnostic_controls": false,
+  "public_report_read_api": false,
+  "backend_enabled_by_default": false,
+  "inbox_retention_days": 14,
+  "inbox_max_total_reports": 1000,
+  "inbox_max_reports_per_player": 20,
+  "inbox_database_max_mib": 128,
+  "local_queue": {
+    "days": 14,
+    "reports": 20,
+    "mib": 2
+  },
+  "account_quota_independent_of_report_eviction": true,
+  "cdn_and_report_ip_limit_buckets_separate": true,
+  "known_tokens_absent_from_lab_logs": true,
+  "source_game_server_modified": false,
+  "limitations": [
+    "Public auth/inbox services not deployed",
+    "New full Minecraft crash scenario not executed in this milestone",
+    "OS/launcher termination can prevent report capture",
+    "Manual report exports are retained by the operator independently"
+  ],
+  "bounded_concurrent_database_setup_retry": true,
+  "previous_session_stack_never_reused": true,
+  "clock_correction_does_not_reupload_old_crash": true
+}

@@ -9,11 +9,11 @@ from pathlib import Path
 
 import pytest
 
+from omk.diagnostic_export import export_bundle
 from omk.diagnostics import (
     MIB,
     BoundedLog,
     collect_output,
-    export_bundle,
     failure,
     prune_native_archives,
     prune_reports,
