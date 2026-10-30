@@ -59,7 +59,9 @@ def add_dj2_lab(parser):
         help="Exercise teleport timers, non-OP moderation and a safe lab restart",
     )
     parser.add_argument(
-        "--command-suite", choices=["full", "moderation", "rtp"], default="full"
+        "--command-suite",
+        choices=["full", "moderation", "rtp", "persistence", "interactions"],
+        default="full",
     )
     parser.add_argument(
         "--mute-guard",
@@ -69,6 +71,8 @@ def add_dj2_lab(parser):
 
 
 def _validate(args):
+    if args.command_suite == "persistence" and not (args.commands and args.mute_guard):
+        raise ValueError("Persistence checks require --commands and --mute-guard")
     if (
         bool(args.client_root) != bool(args.manifest)
         or not 0 <= args.visual_seconds <= 600
@@ -300,8 +304,11 @@ def _check_homes(first, console, expect):
         True,
         "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
     )
-    _response(first, "/rtp", "commands.generic.permission")
-    expect(True, "unsafe_stock_rtp_disabled_in_new_server_profile")
+    _response(first, "/rtp", "stand_still")
+    first.wait(
+        lambda: any("teleporting" in json.dumps(m) for m in tuple(first.messages))
+    )
+    expect(True, "rtp_available_to_normal_player_in_initial_profile")
     console("fill 120 240 120 135 240 135 minecraft:stone")
     console("fill 120 241 120 135 244 135 minecraft:air")
     console("tp omk_game_test 128.5 241 128.5")
@@ -562,7 +569,14 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
                 stream.close()
                 server, server_log, stream = _start_server(args, lab, dest, client)
                 _wait_server(server, server_log, state)
-                check_after_restart(client, session, mods, expect)
+                check_after_restart(
+                    client,
+                    session,
+                    mods,
+                    expect,
+                    session2=session2,
+                    suite=args.command_suite,
+                )
         if args.client_root is not None:
             _real_client(args, lab, server_log, service, state, expect, report)
         report["ok"] = True

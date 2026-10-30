@@ -239,12 +239,15 @@ def _rtp_limits(first, console, expect):
     found = console(f"testforblock {int(x // 1)} 245 {int(z // 1)} minecraft:magma")
     expect(
         247 <= y <= 248 and "Successfully found" in found,
-        "stock_ftb_rtp_accepts_damage_surface_magma_not_safe_to_release",
+        "stock_ftb_rtp_accepts_magma_surface_owner_accepted_limitation",
     )
     console("ranks setp player ftbutilities.rtp.cooldown 10s")
     console("ranks setp player command.ftbutilities.rtp false")
     _response(first, "/rtp", "commands.generic.permission")
-    expect(True, "unsafe_stock_rtp_can_be_disabled_with_exact_permission_node")
+    expect(True, "rtp_permission_node_can_disable_command_in_lab")
+    console("ranks setp player command.ftbutilities.rtp true")
+    _response(first, "/rtp", "cant_use_now_cooldown")
+    expect(True, "rtp_restored_after_permission_toggle_with_cooldown_intact")
 
 
 def _moderation(first, second, console, expect, guarded=False):
@@ -354,6 +357,20 @@ def run_command_checks(
     suite="full",
     mute_guard=False,
 ):
+    if suite == "interactions":
+        from omk.dj2_claims_lab import check_claim_interactions  # noqa: PLC0415
+
+        with (
+            LabPlayer(client, session, 25576, mods) as first,
+            LabPlayer(client, session2, 25576, mods) as second,
+        ):
+            check_claim_interactions(first, second, console, expect)
+        return False
+    if suite == "persistence":
+        from omk.dj2_persistence_lab import prepare_mute_restart  # noqa: PLC0415
+
+        prepare_mute_restart(client, session, session2, mods, console, expect)
+        return True
     with ExitStack() as stack:
         first = stack.enter_context(LabPlayer(client, session, 25576, mods))
         second = stack.enter_context(LabPlayer(client, session2, 25576, mods))
@@ -401,7 +418,11 @@ def run_command_checks(
     return True
 
 
-def check_after_restart(client, session, mods, expect):
+def check_after_restart(client, session, mods, expect, *, session2=None, suite="full"):
+    if suite == "persistence":
+        from omk.dj2_persistence_lab import verify_mute_restart  # noqa: PLC0415
+
+        return verify_mute_restart(client, session, session2, mods, expect)
     with LabPlayer(client, session, 25576, mods) as first:
         # The stock mod does not persist cooldown timestamps. Record this as an
         # explicit limitation, not a successful persistence/security guarantee.

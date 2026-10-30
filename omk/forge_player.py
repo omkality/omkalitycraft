@@ -33,6 +33,7 @@ class LabPlayer:
         self.login = login_connection(client, session, "127.0.0.1", port)
         self.mods = dict(mods)
         self.messages = deque(maxlen=200)
+        self.open_windows = deque(maxlen=20)
         self.position = None
         self.health = None
         self.error = None
@@ -126,12 +127,41 @@ class LabPlayer:
         raise RuntimeError("Lab player assertion timed out")
 
     def dig(self, x: int, y: int, z: int):
+        self.send(0x14, varint(0) + self._block_position(x, y, z) + b"\x01")
+
+    @staticmethod
+    def _block_position(x, y, z):
         if not (
-            -33554432 <= x < 33554432 and 0 <= y < 256 and -33554432 <= z < 33554432
+            all(type(v) is int for v in (x, y, z))
+            and -33554432 <= x < 33554432
+            and 0 <= y < 256
+            and -33554432 <= z < 33554432
         ):
             raise ValueError("Invalid lab block position")
         position = ((x & 0x3FFFFFF) << 38) | ((y & 0xFFF) << 26) | (z & 0x3FFFFFF)
-        self.send(0x14, varint(0) + struct.pack(">Qb", position, 1))
+        return struct.pack(">Q", position)
+
+    def select_hotbar(self, slot=0):
+        self.check()
+        if type(slot) is not int or not 0 <= slot <= 8:
+            raise ValueError("Invalid lab hotbar slot")
+        self.send(0x1A, struct.pack(">h", slot))
+
+    def use_block(self, x: int, y: int, z: int):
+        self.check()
+        self.send(
+            0x1F,
+            self._block_position(x, y, z)
+            + varint(1)
+            + varint(0)
+            + struct.pack(">fff", 0.5, 1.0, 0.5),
+        )
+
+    def close_window(self, window_id):
+        self.check()
+        if type(window_id) is not int or not 1 <= window_id <= 255:
+            raise ValueError("Invalid lab window")
+        self.send(0x08, struct.pack(">B", window_id))
 
     def _forge(self, payload: bytes):
         if not payload:
@@ -184,6 +214,19 @@ class LabPlayer:
                     )
                 elif kind == 0x41:
                     self.health = struct.unpack(">f", packet.read(4))[0]
+                elif kind == 0x13:
+                    window_id = packet.read(1)[0]
+                    container = field(packet.read).decode()
+                    title = json.loads(field(packet.read))
+                    slots = packet.read(1)[0]
+                    self.open_windows.append(
+                        {
+                            "id": window_id,
+                            "type": container,
+                            "title": title,
+                            "slots": slots,
+                        }
+                    )
                 elif kind == 0x2F:
                     values = struct.unpack(">dddffB", packet.read(33))
                     previous = self.position or (0, 0, 0, 0, 0)
