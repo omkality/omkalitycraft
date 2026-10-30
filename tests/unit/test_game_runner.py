@@ -87,3 +87,13 @@ def test_game_refuses_external_instance(tmp_path: Path):
     folder, release, session = fixture(tmp_path / "outside")
     with pytest.raises(ReleaseError):
         GameRunner(tmp_path / "portable").command(release, folder, session)
+
+
+def test_selected_heap_reaches_java_arguments(tmp_path: Path):
+    folder, release, session = fixture(tmp_path)
+    command = GameRunner(tmp_path).command(release, folder, session, memory_mb=5120)
+    assert [argument for argument in command if argument.startswith("-Xmx")] == [
+        "-Xmx5120M"
+    ]
+    with pytest.raises(ReleaseError):
+        GameRunner(tmp_path).command(release, folder, session, memory_mb=100000)

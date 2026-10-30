@@ -1,6 +1,6 @@
 """Pack cards and a compact account panel, without session-management clutter."""
 
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QComboBox,
     QFrame,
@@ -8,10 +8,12 @@ from PySide6.QtWidgets import (
     QLabel,
     QMessageBox,
     QPushButton,
+    QScrollArea,
     QVBoxLayout,
     QWidget,
 )
 
+from launcher.memory import MemorySnapshot, Preferences
 from launcher.skin_view import SkinView
 from launcher.widgets import BusyButton, PackCard
 from omk.profiles import load_profiles
@@ -20,19 +22,28 @@ from omk.profiles import load_profiles
 class Dashboard(QWidget):
     install_requested = Signal(str)
     cancel_requested = Signal()
+    message = Signal(str)
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        preferences: Preferences | None = None,
+        machine: MemorySnapshot | None = None,
+    ) -> None:
         super().__init__()
+        self.preferences = preferences or Preferences()
+        machine = machine or MemorySnapshot.read()
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 12, 0, 0)
         layout.setSpacing(22)
-        packs = QVBoxLayout()
+        content = QWidget()
+        packs = QVBoxLayout(content)
+        packs.setContentsMargins(0, 0, 8, 0)
         heading = QLabel("Выберите своё приключение")
         heading.setStyleSheet("font-size:21px")
         packs.addWidget(heading)
         self.cards: dict[str, PackCard] = {}
         for profile in load_profiles():
-            card = PackCard(profile)
+            card = PackCard(profile, machine, self.preferences.memory.get(profile.id))
             self.cards[profile.id] = card
             card.action.clicked.connect(
                 lambda checked=False, pack_id=profile.id: self.install_requested.emit(
@@ -40,10 +51,26 @@ class Dashboard(QWidget):
                 )
             )
             card.cancel.clicked.connect(self.cancel_requested.emit)
+            card.memory.changed.connect(
+                lambda value, pack_id=profile.id: self._save_memory(pack_id, value)
+            )
             packs.addWidget(card)
         packs.addStretch()
-        layout.addLayout(packs, 1)
+        scroll = QScrollArea()
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+        scroll.setWidgetResizable(True)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setWidget(content)
+        layout.addWidget(scroll, 1)
         layout.addWidget(self._account_panel())
+
+    def _save_memory(self, pack_id: str, value: int) -> None:
+        try:
+            self.preferences.save_memory(pack_id, value)
+        except OSError, ValueError:
+            self.message.emit(
+                "Не удалось сохранить настройку памяти. Проверьте доступ к папке лаунчера."
+            )
 
     def _account_panel(self) -> QFrame:
         account = QFrame()
@@ -72,8 +99,8 @@ class Dashboard(QWidget):
         row.addWidget(help_button)
         panel.addLayout(row)
         self.skin_model = QComboBox()
-        self.skin_model.addItem("Steve · обычные руки", "classic")
-        self.skin_model.addItem("Alex · тонкие руки", "slim")
+        self.skin_model.addItem("Steve · Minecraft 1.7 и новее", "classic")
+        self.skin_model.addItem("Alex · Minecraft 1.8 и новее", "slim")
         panel.addWidget(self.skin_model)
         self.upload_button = BusyButton("Загрузить скин…")
         self.upload_button.setObjectName("uploadSkin")

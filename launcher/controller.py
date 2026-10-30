@@ -52,7 +52,7 @@ class InstallController(QObject):
         self._state_task = task
         self.pool.start(task)
 
-    def start(self, pack_id: str, *, play: bool) -> None:
+    def start(self, pack_id: str, *, play: bool, memory_mb: int | None = None) -> None:
         if self.busy:
             return
         self.busy, self.active_pack = True, pack_id
@@ -72,7 +72,9 @@ class InstallController(QObject):
                 raise InstallCancelled("Загрузка приостановлена.")
             folder = self.installer.install(release, task.signals.progress.emit)
             game = (
-                self.runner.start(release, folder, self.service.renew_for_game())
+                self.runner.start(
+                    release, folder, self.service.renew_for_game(), memory_mb=memory_mb
+                )
                 if play
                 else None
             )
