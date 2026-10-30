@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0.dev1 — player settings and Forge login checks
+
+- Add per-pack RAM sliders, portable preferences, machine-aware limits and low-memory warnings.
+- Pass selected memory to Java; reject release JVM options that override the player heap limit.
+- Seed the required Russian font, first-run language and compatible servers from signed defaults.
+- Preserve personal options, custom servers and unknown NBT fields; back up changed files.
+- Restore archived square JourneyMap/no-grid defaults once without overwriting player changes.
+- Fix default-skin side hair, clarify skin models and unprepared packs, and add creator social links.
+- Verify real DJ2 login/UUID and reject another nickname, invalid tokens and revoked sessions.
+- Track remaining in-game validation explicitly; window capture failed, so visual game checks remain open.
+
+
 ## 0.3.0.dev0 — portable installation, pack UI and launcher updates
 
 - Install signed platform releases, resume interrupted downloads and repair damaged managed files.
