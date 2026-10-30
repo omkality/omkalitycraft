@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-30",
+  "core": "private 0.2.1",
+  "core_sha256": "16f58af25df5a8eb5ad7be262a285378a56d329b18d3dc3f7273ef14e1fdfa43",
+  "raw_catalog_sha256": "7fba75c106933a5cc1350c9184e3fa0eb73104eeaef2402877738860624d9937",
+  "registered_entries": 438,
+  "root_commands": 270,
+  "rank_configs": 23,
+  "raw_permissions": 22134,
+  "protocol_lab_checks": [
+    "two_authenticated_protocol_players_complete_real_forge_handshake",
+    "private_server_core_loaded_explicit_client_policy",
+    "three_homes_allowed_and_fourth_denied_for_normal_player",
+    "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+    "home_command_really_teleports_player_after_warmup",
+    "non_owner_can_break_unclaimed_test_block_positive_control",
+    "ftb_claim_blocks_non_owner_block_break",
+    "ftb_claim_allows_owner_block_break",
+    "server_guard_rejects_extra_declared_mod_list",
+    "server_guard_rejects_missing_declared_mod_list",
+    "server_guard_rejects_version_declared_mod_list"
+  ],
+  "temporary_auth_removed": true,
+  "scope": "Server registry and Forge CommandTree. Internal execute dispatch and client-only commands are not separately enumerated; registration does not mean every command was executed."
+}
