@@ -32,3 +32,15 @@ def test_owned_auth_cleanup_is_attempted_even_if_game_server_stop_fails(monkeypa
     _cleanup(None, None, compose, report)
     assert run.call_args.args[0] == [*compose, "down", "--timeout", "5"]
     assert not report["ok"] and report["temporary_auth_removed"]
+
+
+def test_owned_auth_cleanup_survives_log_collector_failure(monkeypatch):
+    monkeypatch.setattr("omk.dj2_lab._stop_server", Mock())
+    run = Mock(return_value=Mock(returncode=0))
+    monkeypatch.setattr("omk.dj2_lab.subprocess.run", run)
+    report = {"ok": True}
+    stream = Mock()
+    stream.close.side_effect = OSError("test disk failure")
+    _cleanup(None, stream, ["docker", "compose"], report)
+    assert run.called and report["temporary_auth_removed"]
+    assert report["log_collection_failed"] and not report["ok"]

@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "version": "2.25.5",
+  "minecraft": [
+    "1.12.2"
+  ],
+  "source": "https://logging.apache.org/log4j/2.x/release-notes.html",
+  "artifacts": [
+    {
+      "name": "log4j-api",
+      "source": "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.25.5/log4j-api-2.25.5.jar",
+      "sha256": "64777f73ea0b3104c04eb82befbdccc30a425a19e83ad06cb2f93aa303511863",
+      "size": 351427,
+      "path": "libraries/org/apache/logging/log4j/log4j-api/2.25.5/log4j-api-2.25.5.jar"
+    },
+    {
+      "name": "log4j-core",
+      "source": "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/2.25.5/log4j-core-2.25.5.jar",
+      "sha256": "050c4f85deb48b055e9c041ac39043fbb79ce477841a11a1eb2969c86c6a0072",
+      "size": 2020932,
+      "path": "libraries/org/apache/logging/log4j/log4j-core/2.25.5/log4j-core-2.25.5.jar"
+    }
+  ]
+}

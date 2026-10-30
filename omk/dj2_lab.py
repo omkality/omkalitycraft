@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 import re
 import secrets
 import shutil
@@ -14,11 +15,14 @@ from uuid import uuid4
 
 from launcher.accounts import AccountService
 from launcher.game import GameRunner
+from launcher.log_policy import prepare_logging
 from launcher.releases import read_release
 from launcher.storage import FileSessionStore
+from omk.diagnostics import BoundedLog, PipeLog
 from omk.drasl import DraslClient
 from omk.forge_player import LabPlayer
 from omk.lab import skin_fixture
+from omk.logging_runtime import stage_logging_runtime
 from omk.profiles import PROJECT_ROOT
 
 
@@ -172,28 +176,39 @@ def _start_server(args, lab, dest, client):
     (lab / "tmp").mkdir()
     (lab / "java-home").mkdir()
     server_log = lab / "server-output.log"
-    stream = server_log.open("wb")
+    writer = BoundedLog(server_log)
+    writer.write("Starting isolated Forge server\n")
+    logging = prepare_logging("1.12.2", lab / "logging")
+    logging_jars = stage_logging_runtime(dest)
     server = subprocess.Popen(
         [
             str(java),
             "-Xms1G",
             "-Xmx4G",
+            "-Dfile.encoding=UTF-8",
             f'-Djava.io.tmpdir={lab / "tmp"}',
             f'-Duser.home={lab / "java-home"}',
             f"-javaagent:{agent}={client.base_url}/authlib-injector",
             "-Dauthlibinjector.side=server",
             "-Domkality.lab.commandCatalog=true",
-            "-jar",
-            "forge-1.12.2-14.23.5.2860.jar",
+            f"-Dlog4j.configurationFile={logging.as_uri()}",
+            "-cp",
+            os.pathsep.join(
+                [
+                    *(str(p) for p in logging_jars),
+                    str(dest / "forge-1.12.2-14.23.5.2860.jar"),
+                ]
+            ),
+            "net.minecraftforge.fml.relauncher.ServerLaunchWrapper",
             "nogui",
         ],
         cwd=dest,
         stdin=subprocess.PIPE,
-        stdout=stream,
+        stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
     )
-    return server, server_log, stream
+    return server, server_log, PipeLog(server.stdout, writer)
 
 
 def _wait_server(server, server_log, state):
@@ -385,8 +400,12 @@ def _cleanup(server, stream, compose, report):
         report["ok"] = False
         report["cleanup_error"] = "Failed to stop the owned lab server"
     finally:
-        if stream is not None:
-            stream.close()
+        try:
+            if stream is not None:
+                stream.close()
+        except OSError:
+            report["ok"] = False
+            report["log_collection_failed"] = True
         try:
             result = subprocess.run(
                 [*compose, "down", "--timeout", "5"],
@@ -428,6 +447,7 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
         "ok": False,
         "checks": [],
         "lab_folder": str(lab.relative_to(PROJECT_ROOT)),
+        "logging_runtime": "2.25.5",
     }
     compose = [
         "docker",
