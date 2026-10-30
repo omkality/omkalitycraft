@@ -1,0 +1,82 @@
+{
+  "required_resourcepacks": [
+    "FM_NewFont"
+  ],
+  "language": "ru_ru",
+  "force_unicode_font": false,
+  "servers": [],
+  "initial_configs": [
+    {
+      "path": "journeymap/config/5.7/journeymap.minimap.config",
+      "content": {
+        "gameTimeRealFormat": "HH:mm:ss",
+        "systemTimeRealFormat": "HH:mm:ss",
+        "enabled": "true",
+        "shape": "Square",
+        "position": "TopRight",
+        "showDayNight": "true",
+        "info1Label": "FPS",
+        "info2Label": "GameTime",
+        "info3Label": "Location",
+        "info4Label": "Biome",
+        "sizePercent": "16",
+        "frameAlpha": "100",
+        "terrainAlpha": "100",
+        "orientation": "North",
+        "compassFontScale": "2",
+        "showCompass": "false",
+        "showReticle": "false",
+        "reticleOrientation": "Compass",
+        "active": true,
+        "playerDisplay": "SmallIcons",
+        "showPlayerHeading": "true",
+        "mobDisplay": "LargeIcons",
+        "showMobHeading": "true",
+        "showMobs": "true",
+        "showAnimals": "true",
+        "showVillagers": "true",
+        "showPets": "true",
+        "showPlayers": "true",
+        "fontScale": "2",
+        "showWaypointLabels": "true",
+        "locationFormatVerbose": "true",
+        "locationFormat": "xzyv",
+        "showWaypoints": "true",
+        "showSelf": "true",
+        "showGrid": "false",
+        "showCaves": "true",
+        "showEntityNames": "true",
+        "preferredMapType": "day",
+        "zoomLevel": "0",
+        "configVersion": "5.7.1p3"
+      }
+    },
+    {
+      "path": "journeymap/config/5.7/journeymap.fullmap.config",
+      "content": {
+        "showKeys": "true",
+        "playerDisplay": "SmallDots",
+        "showPlayerHeading": "true",
+        "mobDisplay": "LargeIcons",
+        "showMobHeading": "true",
+        "showMobs": "true",
+        "showAnimals": "true",
+        "showVillagers": "true",
+        "showPets": "true",
+        "showPlayers": "true",
+        "fontScale": "2",
+        "showWaypointLabels": "true",
+        "locationFormatVerbose": "true",
+        "locationFormat": "xzyv",
+        "showWaypoints": "true",
+        "showSelf": "true",
+        "showGrid": "false",
+        "showCaves": "true",
+        "showEntityNames": "true",
+        "preferredMapType": "day",
+        "zoomLevel": "1",
+        "configVersion": "5.7.1p3"
+      }
+    }
+  ]
+}
