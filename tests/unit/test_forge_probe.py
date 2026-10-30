@@ -1,7 +1,9 @@
 import io
+from unittest.mock import Mock
 
 import pytest
 
+from omk.forge_player import LabPlayer
 from omk.forge_probe import Connection, field, number, varint
 
 
@@ -19,3 +21,25 @@ def test_probe_protocol_numbers_and_packet_limits():
 def test_security_probes_cannot_target_public_hosts():
     with pytest.raises(ValueError, match="loopback"):
         Connection("example.com", 25565)
+
+
+@pytest.mark.parametrize(
+    "point", [(float("nan"), 1, 1), (1, float("inf"), 1), (30000000, 1, 1)]
+)
+def test_lab_movement_rejects_invalid_coordinates_before_sending(point):
+    player = LabPlayer.__new__(LabPlayer)
+    player.check = Mock()
+    player.send = Mock()
+    with pytest.raises(ValueError, match="movement"):
+        player.move(*point)
+    player.send.assert_not_called()
+
+
+@pytest.mark.parametrize("message", ["/op someone", "", "line\nbreak", "x" * 257])
+def test_lab_chat_cannot_inject_commands_or_invalid_packets(message):
+    player = LabPlayer.__new__(LabPlayer)
+    player.check = Mock()
+    player.send = Mock()
+    with pytest.raises(ValueError, match="chat"):
+        player.chat(message)
+    player.send.assert_not_called()
