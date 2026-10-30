@@ -3,6 +3,7 @@ from litestar.middleware.rate_limit import RateLimitConfig
 from litestar.openapi import OpenAPIConfig
 
 from api.core.project import get_project_info
+from api.lifecycle import report_retention
 from api.routes.download import download_instance_file, download_launcher_file
 from api.routes.instances import (
     get_instance_config,
@@ -13,6 +14,7 @@ from api.routes.instances import (
 from api.routes.launcher import get_launcher_manifest
 from api.routes.meta import docs_redirect, health, version
 from api.routes.releases import get_release_file, get_release_manifest
+from api.routes.reports import upload_client_report
 from api.routes.updates import update_metadata, update_target
 
 project_info = get_project_info()
@@ -20,10 +22,12 @@ project_info = get_project_info()
 
 def create_app(requests_per_second: int = 128) -> Litestar:
     return Litestar(
+        lifespan=[report_retention],
         middleware=[
             RateLimitConfig(rate_limit=("second", requests_per_second)).middleware
         ],
         route_handlers=[
+            upload_client_report,
             docs_redirect,
             version,
             health,
