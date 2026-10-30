@@ -61,6 +61,7 @@
 | Команда | Назначение |
 | --- | --- |
 | `uv run omk --help` | Все группы команд CLI |
+| `uv run omk diagnostics export --help` | Очищенный локальный ZIP журналов клиента/сервера; [политика](../LOGGING.md) |
 | `uv run omk doctor` | Проверка локального окружения |
 | `uv run omk server list` | Настроенные профили и их статус |
 | `uv run omk launcher --help` | Адреса/API и отдельная переносимая папка лаунчера |

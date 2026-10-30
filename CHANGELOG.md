@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0.dev3 — bounded local diagnostics
+
+- Rotate game/launcher logs; drain bounded stdout even after a disk write failure.
+- Export allowlisted, redacted diagnostic ZIPs from Help or the CLI, with size/retention limits.
+- Preserve crash causes, JVM reports, launch metadata and exit codes without account files or worlds.
+- Bound Java 1.12.2 logging and disposable auth container logs.
+- Pin Java 8 Log4j 2.25.5 for explicit staging/labs; replace legacy 2.8.1/2.15.0 in tested copies.
+- Keep production monitoring, other mod log files and GTNH runtime validation separate.
+
 ## 0.3.0.dev2 — pack integrity and server checks
 
 - Show only Minecraft versions in the skin-model selector.
