@@ -6,11 +6,13 @@ import secrets
 import socket
 import struct
 import zlib
+from contextlib import contextmanager
 from dataclasses import dataclass
 
+from cryptography.hazmat.decrepit.ciphers.modes import CFB8
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms
 
 from launcher.session import Session
 from omk.drasl import DraslClient, DraslError
@@ -71,6 +73,7 @@ class Connection:
         self.socket = socket.create_connection((host, port), timeout=12)
         self.encryptor = self.decryptor = None
         self.compression = False
+        self.compression_threshold = 256
 
     def read(self, length: int) -> bytes:
         data = bytearray()
@@ -82,6 +85,12 @@ class Connection:
         return bytes(data)
 
     def send(self, payload: bytes) -> None:
+        if self.compression:
+            payload = (
+                varint(len(payload)) + zlib.compress(payload)
+                if len(payload) >= self.compression_threshold
+                else b"\0" + payload
+            )
         packet = varint(len(payload)) + payload
         self.socket.sendall(self.encryptor.update(packet) if self.encryptor else packet)
 
@@ -102,7 +111,8 @@ class Connection:
         return stream
 
 
-def probe_login(
+@contextmanager
+def login_connection(
     client: DraslClient,
     session: Session,
     host: str,
@@ -110,7 +120,7 @@ def probe_login(
     *,
     nickname: str | None = None,
     access_token: str | None = None,
-) -> ProbeResult:
+):
     connection = Connection(host, port)
     try:
         connection.send(
@@ -157,14 +167,19 @@ def probe_login(
             + varint(len(encrypted_challenge))
             + encrypted_challenge
         )
-        cipher = Cipher(algorithms.AES(secret), modes.CFB8(secret))
+        cipher = Cipher(algorithms.AES(secret), CFB8(secret))
         connection.encryptor, connection.decryptor = (
             cipher.encryptor(),
             cipher.decryptor(),
         )
-        return _result(connection, joined)
+        yield connection, _result(connection, joined)
     finally:
         connection.socket.close()
+
+
+def probe_login(client, session, host, port, **kwargs) -> ProbeResult:
+    with login_connection(client, session, host, port, **kwargs) as (_, result):
+        return result
 
 
 def _result(connection: Connection, joined: bool) -> ProbeResult:
@@ -174,7 +189,7 @@ def _result(connection: Connection, joined: bool) -> ProbeResult:
         if packet == 0:
             return ProbeResult(False, joined)
         if packet == 3:
-            number(response.read)
+            connection.compression_threshold = number(response.read)
             connection.compression = True
         elif packet == 2:
             return ProbeResult(

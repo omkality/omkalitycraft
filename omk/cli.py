@@ -10,6 +10,7 @@ from typing import Any
 
 from api.settings.content import get_instance_config, get_launcher_manifest_settings
 from launcher.paths import default_data_dir
+from omk.dj2_lab import add_dj2_lab, run_dj2_lab
 from omk.lab import auth_smoke
 from omk.profiles import PROJECT_ROOT, load_profiles
 from omk.release_cli import add_release_commands, prepare_release
@@ -81,6 +82,11 @@ def main(argv: list[str] | None = None) -> int:
     server.add_subparsers(dest="action", required=True).add_parser("list")
     lab = sub.add_parser("lab", help="Disposable integration tests")
     lab_areas = lab.add_subparsers(dest="area", required=True)
+    add_dj2_lab(
+        lab_areas.add_parser(
+            "dj2", help="Fresh isolated Forge/FTB/Core integration lab"
+        )
+    )
     lab_auth = lab_areas.add_parser("auth")
     lab_auth_actions = lab_auth.add_subparsers(dest="action", required=True)
     lab_auth_actions.add_parser("smoke")
@@ -104,6 +110,8 @@ def main(argv: list[str] | None = None) -> int:
         report = doctor()
     elif args.command == "server":
         report = {"ok": True, "servers": [p.as_dict() for p in load_profiles()]}
+    elif args.area == "dj2":
+        report = run_dj2_lab(args)
     else:
         report = auth_smoke(
             with_gui=args.area == "launcher", expiry_only=args.action == "expiry"

@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-30",
+  "platform": "Windows x64",
+  "version": "0.3.0.dev2",
+  "core": "private OmkalityCore 0.2.0",
+  "core_sha256": "51d97f615aab2d9c5e5bdaa83cd223cf669d3d43141195495414cd4fff23df68",
+  "pack_repair": {
+    "ok": true,
+    "checks": [
+      "journeymap_changes_survive_repeated_start_preparation",
+      "missing_java_mod_config_font_library_marks_pack_incomplete",
+      "extra_mods_and_expanded_classes_removed_without_UI_warning",
+      "downloads_only_deleted_or_same_size_damaged_artifacts",
+      "all_6284_signed_artifacts_match_after_repair",
+      "personal_journeymap_survives_full_pack_upgrade_and_repair",
+      "unchanged_options_not_rewritten"
+    ],
+    "artifact_count": 6284,
+    "repair_download_count": 6,
+    "journeymap_restored_to_square_no_grid": true
+  },
+  "game_checks": [
+    "two_authenticated_protocol_players_complete_real_forge_handshake",
+    "private_server_guard_loaded_explicit_client_policy",
+    "three_homes_allowed_and_fourth_denied_for_normal_player",
+    "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+    "home_command_really_teleports_player_after_warmup",
+    "non_owner_can_break_unclaimed_test_block_positive_control",
+    "ftb_claim_blocks_non_owner_block_break",
+    "ftb_claim_allows_owner_block_break",
+    "server_guard_rejects_extra_declared_mod_list",
+    "server_guard_rejects_missing_declared_mod_list",
+    "server_guard_rejects_version_declared_mod_list",
+    "real_dj2_client_joins_with_rewritten_private_omkalitycore"
+  ],
+  "repeatable_omk_cli_checks": [
+    "two_authenticated_protocol_players_complete_real_forge_handshake",
+    "private_server_core_loaded_explicit_client_policy",
+    "three_homes_allowed_and_fourth_denied_for_normal_player",
+    "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+    "home_command_really_teleports_player_after_warmup",
+    "non_owner_can_break_unclaimed_test_block_positive_control",
+    "ftb_claim_blocks_non_owner_block_break",
+    "ftb_claim_allows_owner_block_break",
+    "server_guard_rejects_extra_declared_mod_list",
+    "server_guard_rejects_missing_declared_mod_list",
+    "server_guard_rejects_version_declared_mod_list"
+  ],
+  "all_labs_stopped": true,
+  "visual_game_checks": "NOT VERIFIED: native capture timed out twice",
+  "journeymap_after_real_game": {
+    "shape": "Square",
+    "showGrid": "false",
+    "position": "TopRight",
+    "configVersion": "5.7.1p3"
+  },
+  "limits": "Declared mod list can be falsified; protocol players do not execute client mods; claims need more interaction scenarios."
+}

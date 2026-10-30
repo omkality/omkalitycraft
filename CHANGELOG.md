@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0.dev2 — pack integrity and server checks
+
+- Show only Minecraft versions in the skin-model selector.
+- Raise per-pack heap ceilings to 16 GiB while keeping 6 GiB defaults and machine headroom.
+- Repair deleted Java/mod/config/font/library files and same-size corruption without resetting personal maps.
+- Avoid rewriting unchanged options; verify JourneyMap preferences survive repair and upgrades.
+- Silently remove extra files from managed mod folders without following directory links.
+- Verify mod hashes before process creation; keep identity authentication with Drasl.
+- Add loopback-only protocol players for real server tests; private Core integration stays outside this repository.
+
+
 ## 0.3.0.dev1 — player settings and Forge login checks
 
 - Add per-pack RAM sliders, portable preferences, machine-aware limits and low-memory warnings.

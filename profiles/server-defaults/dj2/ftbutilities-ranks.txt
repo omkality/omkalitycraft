@@ -1,0 +1,11 @@
+// Initial DJ2 lab policy. Copy only into a new, isolated server before testing.
+[player]
+default_player_rank: true
+power: 1
+ftbutilities.homes.max: 3
+ftbutilities.homes.cooldown: 10s
+ftbutilities.homes.warmup: 3s
+
+[admin extends player]
+default_op_rank: true
+power: 100
