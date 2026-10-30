@@ -47,7 +47,7 @@ ZIP ограничен по размеру/числу файлов; обход �
 ```powershell
 uv run python scripts/build_launcher.py --output .local/portable-build --root-metadata .local/update-repository/metadata/1.root.json --auth-url https://AUTH-ORIGIN --api-url https://CDN-ORIGIN
 uv run python scripts/smoke_bundle.py --bundle .local/portable-build/OmkalityCraft
-uv run omk release launcher --repository .local/update-repository --keys-dir .local/update-keys --archive .local/portable-build/OmkalityCraft-0.3.0.dev0-windows-x64.zip --version 0.3.0.dev0 --entrypoint OmkalityCraft.exe --platform windows-x64
+uv run omk release launcher --repository .local/update-repository --keys-dir .local/update-keys --archive .local/portable-build/OmkalityCraft-0.3.0.dev1-windows-x64.zip --version 0.3.0.dev1 --entrypoint OmkalityCraft.exe --platform windows-x64
 ```
 
 Адреса — заполнители. Публичные хосты эти команды не создают.
@@ -97,3 +97,13 @@ uv run omk release pack --files .local/prepared-pack/files --launch-profile .loc
   `launcher/assets/fonts/provenance.json` и `OFL.txt`. Картинки сборок — собственные SVG.
 
 Версии библиотек и сборщика закреплены `uv.lock`. Payload, приватные ключи и ZIP не входят в Git.
+
+
+## Начальные настройки клиента
+
+`launch.client_defaults` подписывается вместе с manifest. Готовый фрагмент DJ2 и происхождение
+его настроек — в `profiles/client-defaults/`. До подписания добавьте настоящий адрес в `servers`
+и объедините фрагмент с launch-profile. Публичного адреса пока нет. `initial_configs` поддерживает
+только разрешённые JSON-конфиги JourneyMap 5.7, создаёт отсутствующие файлы и не управляет
+исследованными картами/точками. `options.txt` и `servers.dat` аккуратно объединяются с личными
+настройками; прежние байты сохраняются в `.omk-defaults-backups` внутри сборки.

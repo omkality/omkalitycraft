@@ -16,6 +16,9 @@ translation_label = "Проект перевода 2.23.3 · BMProjects"
 translation_url = "https://github.com/BMProjects-Development/Divine-Journey-2-Translate"
 artwork = "dj2.svg"
 forge_version = "14.23.5.2860"
+memory_default_mb = 6144
+memory_recommended_mb = 6144
+memory_max_mb = 8192
 
 [[servers]]
 id = "gtnh"
@@ -32,3 +35,6 @@ author = "Команда GT New Horizons"
 translation_label = "Русский перевод · GTNH Translations"
 translation_url = "https://github.com/GTNewHorizons/GTNH-Translations"
 artwork = "gtnh.svg"
+memory_default_mb = 6144
+memory_recommended_mb = 6144
+memory_max_mb = 8192

@@ -39,9 +39,11 @@ from launcher.controller import InstallationResult, InstallController
 from launcher.dashboard import Dashboard
 from launcher.game import GameProcess, GameRunner
 from launcher.install import Installer, ReleaseClient
+from launcher.memory import MIN_MB, Preferences
 from launcher.releases import ReleaseError
 from launcher.session import SessionStoreError
 from launcher.skins import MAX_SKIN_BYTES, SkinError, decode_skin
+from launcher.social import SocialFooter
 from launcher.storage import FileSessionStore
 from launcher.tasks import Task
 from launcher.theme import ASSETS, STYLE, install_font
@@ -126,6 +128,10 @@ class LauncherWindow(QMainWindow):
     ) -> None:
         super().__init__()
         self.service = service
+        store_path = getattr(service.store, "path", None)
+        self.preferences = Preferences(
+            store_path.parent / "preferences.json" if store_path is not None else None
+        )
         install_font(QApplication.instance())
         self.installation: InstallController | None = None
         self.game: GameProcess | None = None
@@ -140,8 +146,8 @@ class LauncherWindow(QMainWindow):
         self.pool = QThreadPool(self)
         self.pool.setMaxThreadCount(1)
         self.setWindowTitle("OmkalityCraft · разработка")
-        self.resize(1200, 820)
-        self.setMinimumSize(1060, 760)
+        self.resize(1200, 850)
+        self.setMinimumSize(1020, 680)
         self.setStyleSheet(STYLE)
         root = QWidget()
         layout = QVBoxLayout(root)
@@ -165,7 +171,7 @@ class LauncherWindow(QMainWindow):
         self.progress.setRange(0, 0)
         self.progress.hide()
         layout.addWidget(self.progress)
-        layout.addWidget(label("Все файлы игры и Java — в папке лаунчера", muted=True))
+        layout.addWidget(SocialFooter())
         self.setCentralWidget(root)
         self._setup_installation(installer, runner)
         if auto_restore:
@@ -277,13 +283,17 @@ class LauncherWindow(QMainWindow):
         return page
 
     def _home_page(self) -> Dashboard:
-        page = Dashboard()
+        page = Dashboard(self.preferences)
+        page.message.connect(self.status_message)
         self.greeting = page.greeting
         self.skin_model = page.skin_model
         self.skin_preview = page.skin_preview
         page.upload_button.clicked.connect(self._choose_skin)
         page.change_password.clicked.connect(self._change_password)
         return page
+
+    def status_message(self, message: str) -> None:
+        self.status.setText(message)
 
     def _local_states(self, states: dict) -> None:
         for pack_id, state in states.items():
@@ -300,12 +310,18 @@ class LauncherWindow(QMainWindow):
         ):
             return
         self.status.clear()
+        memory_mb = self.home_page.cards[pack_id].memory.selected_mb
+        if memory_mb < MIN_MB:
+            self.status.setText("Недостаточно памяти для запуска этой сборки.")
+            return
         self.home_page.upload_button.setEnabled(False)
         self.home_page.change_password.setEnabled(False)
         for card in self.home_page.cards.values():
             card.action.setEnabled(False)
         self.home_page.cards[pack_id].action.set_busy(True, "Подготавливаем…")
-        self.installation.start(pack_id, play=self.home_page.cards[pack_id].installed)
+        self.installation.start(
+            pack_id, play=self.home_page.cards[pack_id].installed, memory_mb=memory_mb
+        )
 
     def _install_progress(self, pack_id: str, progress) -> None:
         self.home_page.cards[pack_id].update_progress(progress)

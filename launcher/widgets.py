@@ -17,6 +17,8 @@ from PySide6.QtWidgets import (
 )
 
 from launcher.install import Progress
+from launcher.memory import MemorySnapshot
+from launcher.memory_widget import MemoryControl
 from launcher.theme import ASSETS
 from omk.profiles import ServerProfile
 
@@ -90,7 +92,12 @@ def artwork(name: str, width: int, height: int) -> QPixmap:
 
 
 class PackCard(QFrame):
-    def __init__(self, profile: ServerProfile) -> None:
+    def __init__(
+        self,
+        profile: ServerProfile,
+        machine: MemorySnapshot | None = None,
+        requested_mb: int | None = None,
+    ) -> None:
         super().__init__()
         self.profile = profile
         self.setProperty("panel", True)
@@ -109,6 +116,10 @@ class PackCard(QFrame):
             external_label(profile.translation_label + " ↗", profile.translation_url), 1
         )
         layout.addLayout(credits)
+        self.memory = MemoryControl(
+            profile, machine or MemorySnapshot.read(), requested_mb
+        )
+        layout.addWidget(self.memory)
         self.state_label = QLabel(
             "Планируется" if profile.status == "planned" else "Не установлена"
         )
@@ -148,7 +159,7 @@ class PackCard(QFrame):
         version = (
             profile.pack_version
             if profile.pack_version != "unselected"
-            else "Версия подбирается"
+            else "Сборка ещё не подготовлена"
         )
         self.version_link = external_label(version + "  ↗", profile.version_url)
         heading.addWidget(self.version_link)

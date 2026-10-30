@@ -16,6 +16,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 )
 
 from api.core.content_policy import is_private_path
+from launcher.client_policy import ClientDefaults
 from omk.fs import resolved
 
 MAX_MANIFEST_BYTES = 8 * 1024 * 1024
@@ -157,6 +158,16 @@ class Release:
             files = tuple(Artifact(**file) for file in payload["files"])
             names = _validate_artifacts(files)
             launch = payload["launch"]
+            _validate_jvm_args(launch.get("jvm_args", []))
+            defaults = ClientDefaults.parse(launch.get("client_defaults", {}))
+            for name in defaults.resourcepacks:
+                path = (
+                    "resourcepacks/"
+                    + name
+                    + ("" if name.endswith(".zip") else "/pack.mcmeta")
+                )
+                if path.casefold() not in names:
+                    raise ValueError
             if launch["main_class"] != "net.minecraft.launchwrapper.Launch":
                 raise ValueError
             if not launch["classpath"] or len(launch["classpath"]) > 500:
@@ -181,6 +192,28 @@ class Release:
             raise ReleaseError(
                 "Описание сборки повреждено или не поддерживается."
             ) from None
+
+
+def _validate_jvm_args(arguments: list) -> None:
+    if not isinstance(arguments, list) or len(arguments) > 100:
+        raise ValueError("Invalid JVM arguments")
+    for argument in arguments:
+        if (
+            not isinstance(argument, str)
+            or len(argument) > 1000
+            or argument.startswith(
+                (
+                    "-Xmx",
+                    "-Xms",
+                    "-XX:MaxRAM",
+                    "-XX:InitialRAM",
+                    "-XX:MaxHeapSize",
+                    "-XX:InitialHeapSize",
+                    "-XX:MinHeapSize",
+                )
+            )
+        ):
+            raise ValueError("Heap settings belong to the player's memory control")
 
 
 def read_release(data: bytes, trusted_keys: dict[str, str]) -> Release:

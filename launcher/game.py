@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from uuid import UUID
 
+from launcher.client_defaults import prepare_client_defaults
 from launcher.releases import Release, ReleaseError, inside
 from launcher.session import Session
 from omk.fs import resolved
@@ -24,12 +25,22 @@ class GameProcess:
 
 class GameRunner:
     def __init__(self, root: Path, *, memory_mb: int = 6144) -> None:
-        if not 2048 <= memory_mb <= 16384:
+        if not 1024 <= memory_mb <= 16384:
             raise ValueError("Invalid memory setting")
         self.root = resolved(root)
         self.memory_mb = memory_mb
 
-    def command(self, release: Release, folder: Path, session: Session) -> list[str]:
+    def command(
+        self,
+        release: Release,
+        folder: Path,
+        session: Session,
+        *,
+        memory_mb: int | None = None,
+    ) -> list[str]:
+        memory_mb = self.memory_mb if memory_mb is None else memory_mb
+        if type(memory_mb) is not int or not 1024 <= memory_mb <= 16384:
+            raise ReleaseError("Недопустимое количество памяти для игры.")
         if not resolved(folder).is_relative_to(self.root):
             raise ReleaseError("Папка игры находится вне лаунчера.")
         launch = release.launch
@@ -49,7 +60,7 @@ class GameRunner:
         command = [
             str(java),
             "-Xms512M",
-            f"-Xmx{self.memory_mb}M",
+            f"-Xmx{memory_mb}M",
             "-XX:+UseG1GC",
             f"-Djava.library.path={inside(folder, launch['natives'])}",
             f"-Djava.io.tmpdir={private / 'tmp'}",
@@ -88,8 +99,10 @@ class GameRunner:
         session: Session,
         *,
         server: tuple[str, int] | None = None,
+        memory_mb: int | None = None,
     ) -> GameProcess:
-        command = self.command(release, folder, session)
+        prepare_client_defaults(release, folder)
+        command = self.command(release, folder, session, memory_mb=memory_mb)
         if server:
             command.extend(["--server", server[0], "--port", str(server[1])])
         log = self.root / "userdata" / "logs" / f"{release.pack_id}-game.log"

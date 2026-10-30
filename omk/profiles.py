@@ -25,8 +25,11 @@ class ServerProfile:
     translation_url: str = ""
     artwork: str = ""
     forge_version: str = ""
+    memory_default_mb: int = 6144
+    memory_recommended_mb: int = 6144
+    memory_max_mb: int = 8192
 
-    def as_dict(self) -> dict[str, str]:
+    def as_dict(self) -> dict:
         return asdict(self)
 
 
@@ -47,6 +50,22 @@ def load_profiles(path: Path | None = None) -> list[ServerProfile]:
             raise ValueError("Only Forge profiles are configured at this stage")
         if profile.status not in {"legacy", "planned", "testing", "ready"}:
             raise ValueError("Invalid server profile status")
+        if (
+            not all(
+                type(value) is int
+                for value in [
+                    profile.memory_default_mb,
+                    profile.memory_recommended_mb,
+                    profile.memory_max_mb,
+                ]
+            )
+            or not 1024
+            <= profile.memory_default_mb
+            <= profile.memory_recommended_mb
+            <= profile.memory_max_mb
+            <= 16384
+        ):
+            raise ValueError("Invalid memory policy")
         if profile.utilities_adapter not in {
             "ftbutilities_112",
             "serverutilities_1710",

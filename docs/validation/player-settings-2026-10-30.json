@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-30",
+  "platform": "Windows x64",
+  "client": "DJ2 RU 2.21.3",
+  "server": "Forge 1.12.2 / 14.23.5.2860 online-mode=true",
+  "checks": [
+    "signed_release_installed_inside_portable_folder",
+    "real_dj2_forge_server_started_online_mode",
+    "real_forge_online_login_preserves_account_uuid",
+    "real_forge_rejects_another_players_nickname",
+    "real_forge_rejects_invalid_session",
+    "real_forge_rejects_revoked_session",
+    "real_minecraft_client_authenticated_and_joined_dj2_forge",
+    "real_client_has_required_russian_font_and_language",
+    "real_client_has_only_its_configured_compatible_server"
+  ],
+  "selected_heap": "-Xmx5120M",
+  "temporary_auth_removed": true,
+  "visual_checks": "NOT VERIFIED: native window capture timed out twice",
+  "journeymap": "Added after real game run; seed and player preservation tested with unit tests",
+  "other_game_platforms": "Not tested; CI covers Qt and packaged startup only"
+}

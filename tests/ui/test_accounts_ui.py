@@ -3,13 +3,16 @@ from pathlib import Path
 
 import pytest
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QFileDialog, QPushButton, QTabWidget
+from PySide6.QtWidgets import QFileDialog, QLabel, QPushButton, QTabWidget
 from pytestqt.qtbot import QtBot
 
 from launcher.__main__ import _bootstrap_lock
 from launcher.accounts import AccountService
 from launcher.app import LauncherWindow, instance_lock
+from launcher.dashboard import Dashboard
 from launcher.install import Progress
+from launcher.memory import MemorySnapshot, Preferences
+from launcher.skin_view import default_skin
 from launcher.storage import FileSessionStore
 from omk.lab import skin_fixture
 from tests.fakes import FakeDrasl
@@ -205,3 +208,34 @@ def test_bootstrap_lock_protects_gap_during_handoff(tmp_path: Path, qtbot: QtBot
         child.unlock()
     finally:
         bootstrap.unlock()
+
+
+def test_heap_slider_saves_profiles_independently(qtbot: QtBot, tmp_path: Path):
+    preferences = Preferences(tmp_path / "preferences.json")
+    panel = Dashboard(preferences, MemorySnapshot(16384, 12000))
+    qtbot.addWidget(panel)
+    panel.cards["dj2"].memory.slider.setValue(20)
+    panel.cards["gtnh"].memory.slider.setValue(28)
+    assert Preferences(preferences.path).memory == {"dj2": 5120, "gtnh": 7168}
+    assert panel.cards["dj2"].memory.selected_mb == 5120
+
+
+def test_weak_machine_caps_slider_and_shows_warning(qtbot: QtBot):
+    panel = Dashboard(machine=MemorySnapshot(4096, 3000))
+    qtbot.addWidget(panel)
+    memory = panel.cards["dj2"].memory
+    assert memory.selected_mb == 2048
+    assert memory.slider.maximum() == 8
+    assert "не запуститься" in memory.warning.text()
+
+
+def test_default_skin_has_hair_on_both_sides_and_top(qtbot: QtBot):
+    image = default_skin()
+    for x, y in [(3, 9), (19, 9), (11, 3), (27, 9)]:
+        assert image.pixelColor(x, y).name() == "#3b3531"
+
+
+def test_social_footer_and_clear_planned_version(window: LauncherWindow):
+    assert "ещё не подготовлена" in window.home_page.cards["gtnh"].version_link.text()
+    assert "https://kick.com/omkality" in window.findChild(QLabel, "social_kick").text()
+    assert "обычные руки" not in window.skin_model.itemText(0)
