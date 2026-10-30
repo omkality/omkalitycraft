@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from omk.diagnostics import prune_native_archives, prune_reports
 from omk.fs import resolved
 
 FORGE_112 = """<?xml version="1.0" encoding="UTF-8"?>
@@ -38,3 +39,10 @@ def prepare_logging(minecraft: str, directory: Path) -> Path | None:
     if not path.exists() or path.read_text(encoding="utf-8") != FORGE_112:
         path.write_text(FORGE_112, encoding="utf-8")
     return path
+
+
+def prune_game_logs(root: Path, folder: Path):
+    """Called only before launch or after the owned process has stopped."""
+    prune_reports(root, folder / "crash-reports")
+    prune_reports(root, folder, jvm=True)
+    prune_native_archives(root, folder / "logs")

@@ -230,15 +230,14 @@ def _files(folder: Path, root: Path, predicate):
     return sorted(result, key=lambda p: p.stat().st_mtime, reverse=True)
 
 
-def prune_reports(root: Path, folder: Path, *, count=10, budget=32 * MIB):
+def prune_reports(root: Path, folder: Path, *, count=10, budget=32 * MIB, jvm=False):
     """Only old crash reports; caller must have stopped the owned game first.
 
     Preserve the newest report even if a third-party writer exceeds the budget.
     """
     used = 0
-    reports = _files(
-        folder, root, lambda n: bool(re.fullmatch(r"crash-[\w.-]+\.txt", n))
-    )
+    pattern = r"hs_err_pid\d+\.log" if jvm else r"crash-[\w.-]+\.txt"
+    reports = _files(folder, root, lambda n: bool(re.fullmatch(pattern, n)))
     for index, path in enumerate(reports):
         size = path.stat().st_size
         if index and (index >= count or used + size > budget):

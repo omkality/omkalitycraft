@@ -256,3 +256,8 @@ GTNH отделён как upstream-справка, без заявления о
 удалён. Локальный подписанный payload `2.21.3-omk.4` (6282 файла), прежний сохранён
 в `data/content/releases/dj2/windows-x64-before-logging`. Пользовательские JourneyMap
 настройки не изменялись. См. docs/validation/logging-2026-10-30.json.
+
+В CI первый готовый дистрибутив выявил пропущенный `omk.diagnostics` в явном
+packaging allowlist; список исправлен, фактический packaged startup проверяется повторно.
+JVM fatal reports направляются в корень instance и также получают retention 10 / 32 МиБ
+после остановки, с сохранением самого нового отчёта при превышении.

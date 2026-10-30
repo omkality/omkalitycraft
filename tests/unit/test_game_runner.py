@@ -68,6 +68,7 @@ def test_game_uses_portable_java_and_paths_without_shell(
     assert "test-game-token" in command  # A game-scoped token is required by Minecraft.
     assert "test-client-token" not in command
     assert "-Dfile.encoding=UTF-8" in command
+    assert f"-XX:ErrorFile={folder / 'hs_err_pid%p.log'}" in command
     assert any(str(root / "userdata/java-home") in argument for argument in command)
     assert start.call_args.kwargs["shell"] is False
     assert start.call_args.kwargs["stdout"] == subprocess.PIPE

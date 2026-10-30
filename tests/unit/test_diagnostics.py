@@ -201,6 +201,15 @@ def test_crash_and_native_cleanup_only_removes_old_allowlisted_files(tmp_path):
     prune_reports(tmp_path, crash, count=2, budget=200)
     assert {p.name for p in crash.glob("crash-*.txt")} == {"crash-3.txt", "crash-4.txt"}
     assert (crash / "notes.txt").exists()
+    for index in range(5):
+        path = tmp_path / f"hs_err_pid{index}.log"
+        path.write_bytes(b"x" * 100)
+        os.utime(path, (100 + index, 100 + index))
+    prune_reports(tmp_path, tmp_path, count=2, budget=200, jvm=True)
+    assert {p.name for p in tmp_path.glob("hs_err_pid*.log")} == {
+        "hs_err_pid3.log",
+        "hs_err_pid4.log",
+    }
     logs = tmp_path / "logs"
     logs.mkdir()
     for index in range(15):

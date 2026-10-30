@@ -8,7 +8,7 @@ from pathlib import Path
 from uuid import UUID, uuid4
 
 from launcher.client_defaults import prepare_client_defaults
-from launcher.log_policy import prepare_logging
+from launcher.log_policy import prepare_logging, prune_game_logs
 from launcher.mod_policy import clean_extra_mods, verify_mods
 from launcher.releases import Release, ReleaseError, inside
 from launcher.session import Session
@@ -19,8 +19,6 @@ from omk.diagnostics import (
     environment_snapshot,
     event,
     failure,
-    prune_native_archives,
-    prune_reports,
 )
 from omk.fs import resolved
 
@@ -79,6 +77,7 @@ class GameRunner:
             f"-Xmx{memory_mb}M",
             "-XX:+UseG1GC",
             "-Dfile.encoding=UTF-8",
+            f"-XX:ErrorFile={resolved(folder) / 'hs_err_pid%p.log'}",
             f"-Djava.library.path={inside(folder, launch['natives'])}",
             f"-Djava.io.tmpdir={private / 'tmp'}",
             f"-Duser.home={private / 'java-home'}",
@@ -129,8 +128,7 @@ class GameRunner:
             command.extend(["--server", server[0], "--port", str(server[1])])
         log = self.root / "userdata" / "logs" / f"{release.pack_id}-game.log"
         writer = BoundedLog(log)
-        prune_reports(self.root, folder / "crash-reports")
-        prune_native_archives(self.root, folder / "logs")
+        prune_game_logs(self.root, folder)
         environment = {
             **os.environ,
             "TMP": str(self.root / "userdata/tmp"),
@@ -191,8 +189,7 @@ class GameRunner:
                     exit_code=code,
                     logging_failed=result.logging_failed.is_set(),
                 )
-                prune_reports(self.root, folder / "crash-reports")
-                prune_native_archives(self.root, folder / "logs")
+                prune_game_logs(self.root, folder)
             except OSError as error:
                 result.logging_failed.set()
                 failure(self.root, "game_log", error)
