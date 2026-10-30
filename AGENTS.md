@@ -19,4 +19,7 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
 - Do not claim a profile, security control or mod works before the relevant real test passes.
   Distinguish transport/API checks from Minecraft client/server checks.
 - Pin external runtime artifacts and images by version/hash. Keep dependency changes in `uv.lock`.
+- Keep launcher/API in this monorepo. Put all player/runtime/update data below the portable root.
+- Launcher updates use TUF and separate version folders with health-checked handoff; never overwrite
+  the running executable or extract an update over userdata/instances. Private signing keys stay offline.
 - Run the relevant tests and Ruff. CI covers CDN, transport, profiles and a disposable Drasl smoke test.

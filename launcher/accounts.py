@@ -2,12 +2,12 @@
 
 import re
 import secrets
-import struct
 from dataclasses import dataclass, field
 from typing import Any
 from uuid import UUID, uuid4
 
 from launcher.session import Session, SessionStore, SessionStoreError
+from launcher.skins import SkinError, decode_skin
 from omk.drasl import DraslClient, DraslError
 
 
@@ -30,18 +30,15 @@ class Registration:
 class AuthResult:
     session: Session
     remembered: bool
+    skin_png: bytes | None = field(default=None, repr=False)
+    skin_model: str = "classic"
 
 
 def validate_skin(png: bytes) -> None:
-    if (
-        len(png) < 24
-        or len(png) > 1024 * 1024
-        or png[:8] != b"\x89PNG\r\n\x1a\n"
-        or png[12:16] != b"IHDR"
-    ):
-        raise AccountError("Нужен PNG-скин размером 64×64 или 64×32, до 1 МБ.")
-    if struct.unpack(">II", png[16:24]) not in {(64, 64), (64, 32)}:
-        raise AccountError("Нужен PNG-скин размером 64×64 или 64×32.")
+    try:
+        decode_skin(png)
+    except SkinError as error:
+        raise AccountError(str(error)) from None
 
 
 class AccountService:
@@ -156,11 +153,29 @@ class AccountService:
             raise AccountError("Сначала войдите в аккаунт.")
         return self.current
 
+    def renew_for_game(self) -> Session:
+        saved = self._require_session()
+        try:
+            game = self.client.refresh(saved.access_token, saved.client_token)
+        except DraslError as error:
+            if error.status in {400, 401, 403}:
+                self.current = None
+                self.store.clear()
+            raise
+        session = self._session(saved.username, game)
+        if (
+            session.player_uuid != saved.player_uuid
+            or session.client_token != saved.client_token
+        ):
+            raise AccountError("Сервис вернул другую игровую сессию.")
+        return self._remember(session).session
+
     def upload_skin(self, png: bytes, model: str) -> None:
         session = self._require_session()
-        validate_skin(png)
-        if model not in {"classic", "slim"}:
-            raise AccountError("Выберите классическую модель или узкие руки.")
+        try:
+            png = decode_skin(png, model).png
+        except SkinError as error:
+            raise AccountError(str(error)) from None
         self.client.upload_game_skin(
             UUID(session.player_uuid).hex, session.access_token, png, model
         )

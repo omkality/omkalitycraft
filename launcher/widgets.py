@@ -1,0 +1,200 @@
+"""Small native Qt controls for real states and restrained animation."""
+
+import html
+from typing import override
+from urllib.parse import urlsplit
+
+from PySide6.QtCore import Qt, QTimer, QUrl
+from PySide6.QtGui import QColor, QDesktopServices, QPainter, QPen, QPixmap
+from PySide6.QtSvg import QSvgRenderer
+from PySide6.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QProgressBar,
+    QPushButton,
+    QVBoxLayout,
+)
+
+from launcher.install import Progress
+from launcher.theme import ASSETS
+from omk.profiles import ServerProfile
+
+
+def open_link(url: str) -> None:
+    parsed = urlsplit(url)
+    if (
+        parsed.scheme == "https"
+        and parsed.hostname
+        and not parsed.username
+        and not parsed.password
+    ):
+        QDesktopServices.openUrl(QUrl(url))
+
+
+def external_label(text: str, url: str) -> QLabel:
+    widget = QLabel(
+        f'<a href="{html.escape(url, quote=True)}" style="color:#a9d6c8;text-decoration:none">{html.escape(text)}</a>'
+    )
+    widget.setTextInteractionFlags(
+        Qt.TextInteractionFlag.LinksAccessibleByMouse
+        | Qt.TextInteractionFlag.LinksAccessibleByKeyboard
+    )
+    widget.linkActivated.connect(open_link)
+    widget.setWordWrap(True)
+    return widget
+
+
+class BusyButton(QPushButton):
+    def __init__(self, text: str, parent=None) -> None:
+        super().__init__(text, parent)
+        self._busy = False
+        self._angle = 0
+        self._normal_text = text
+        self.timer = QTimer(self)
+        self.timer.setInterval(35)
+        self.timer.timeout.connect(self._tick)
+
+    def _tick(self) -> None:
+        self._angle = (self._angle + 18) % 360
+        self.update()
+
+    def set_busy(self, busy: bool, message: str = "") -> None:
+        if busy and not self._busy:
+            self._normal_text = self.text()
+        self._busy = busy
+        self.setEnabled(not busy)
+        self.setText(message or self._normal_text)
+        self.timer.start() if busy else self.timer.stop()
+        self.update()
+
+    @override
+    def paintEvent(self, event) -> None:
+        super().paintEvent(event)
+        if self._busy:
+            painter = QPainter(self)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+            painter.setPen(QPen(QColor("#a5efd1"), 2.2))
+            painter.drawArc(
+                17, self.height() // 2 - 6, 12, 12, self._angle * 16, 250 * 16
+            )
+
+
+def artwork(name: str, width: int, height: int) -> QPixmap:
+    pixmap = QPixmap(width, height)
+    pixmap.fill(Qt.GlobalColor.transparent)
+    painter = QPainter(pixmap)
+    QSvgRenderer(str(ASSETS / name)).render(painter)
+    painter.end()
+    return pixmap
+
+
+class PackCard(QFrame):
+    def __init__(self, profile: ServerProfile) -> None:
+        super().__init__()
+        self.profile = profile
+        self.setProperty("panel", True)
+        self.setObjectName("pack_" + profile.id)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(19, 17, 19, 17)
+        layout.setSpacing(9)
+        layout.addLayout(self._header(profile))
+        description = QLabel(profile.description)
+        description.setWordWrap(True)
+        description.setProperty("muted", True)
+        layout.addWidget(description)
+        credits = QHBoxLayout()
+        credits.addWidget(external_label("Авторы сборки ↗", profile.project_url), 1)
+        credits.addWidget(
+            external_label(profile.translation_label + " ↗", profile.translation_url), 1
+        )
+        layout.addLayout(credits)
+        self.state_label = QLabel(
+            "Планируется" if profile.status == "planned" else "Не установлена"
+        )
+        self.state_label.setObjectName("state_" + profile.id)
+        self.state_label.setStyleSheet("color:#9bb1b6;background:transparent")
+        layout.addWidget(self.state_label)
+        self.progress = QProgressBar()
+        self.progress.setObjectName("progress_" + profile.id)
+        self.progress.setTextVisible(False)
+        self.progress.hide()
+        layout.addWidget(self.progress)
+        row = QHBoxLayout()
+        self.action = BusyButton(
+            "Скоро" if profile.status == "planned" else "Скачать сборку"
+        )
+        self.action.setObjectName("install_" + profile.id)
+        self.action.setProperty("primary", True)
+        self.action.setEnabled(profile.status != "planned")
+        row.addWidget(self.action, 1)
+        self.cancel = QPushButton("Приостановить")
+        self.cancel.setObjectName("cancel_" + profile.id)
+        self.cancel.hide()
+        row.addWidget(self.cancel)
+        layout.addLayout(row)
+        self.installed = False
+
+    def _header(self, profile: ServerProfile) -> QHBoxLayout:
+        header = QHBoxLayout()
+        cover = QLabel()
+        cover.setPixmap(artwork(profile.artwork, 124, 76))
+        cover.setFixedSize(124, 76)
+        header.addWidget(cover)
+        heading = QVBoxLayout()
+        name = QLabel(profile.name)
+        name.setStyleSheet("font-size:19px;background:transparent")
+        heading.addWidget(name)
+        version = (
+            profile.pack_version
+            if profile.pack_version != "unselected"
+            else "Версия подбирается"
+        )
+        self.version_link = external_label(version + "  ↗", profile.version_url)
+        heading.addWidget(self.version_link)
+        detail = QLabel(
+            f"Minecraft {profile.minecraft}  ·  Forge"
+            + (" " + profile.forge_version if profile.forge_version else "")
+        )
+        detail.setProperty("muted", True)
+        heading.addWidget(detail)
+        header.addLayout(heading, 1)
+        return header
+
+    def set_local_state(self, state: dict) -> None:
+        self.installed = state.get("state") == "installed"
+        if self.installed:
+            self.state_label.setText("Установлена · " + state["version"])
+            self.state_label.setStyleSheet("color:#92d5b8;background:transparent")
+            self.action.setText("Играть")
+        elif state.get("state") == "incomplete":
+            self.state_label.setText("Загрузка не завершена")
+            self.action.setText("Продолжить загрузку")
+
+    def update_progress(self, progress: Progress) -> None:
+        self.progress.show()
+        self.cancel.show()
+        self.action.set_busy(
+            True, "Проверяем…" if progress.stage.startswith("Провер") else "Скачиваем…"
+        )
+        self.progress.setRange(0, 100)
+        self.progress.setValue(progress.percent)
+        if progress.stage.startswith("Скач"):
+            self.state_label.setText(
+                f"Скачивание · {progress.percent}% · {progress.done / 1024**2:.0f} / {progress.total / 1024**2:.0f} МБ"
+            )
+        else:
+            self.state_label.setText(progress.stage)
+
+    def finished(self, *, success: bool, message: str = "") -> None:
+        self.action.set_busy(False)
+        self.progress.hide()
+        self.cancel.hide()
+        if success:
+            self.installed = True
+            self.action.setText("Играть")
+            self.state_label.setText("Установлена · готова к игре")
+            self.state_label.setStyleSheet("color:#92d5b8;background:transparent")
+        else:
+            self.action.setText("Продолжить загрузку")
+            self.state_label.setText(message or "Загрузка не завершена")

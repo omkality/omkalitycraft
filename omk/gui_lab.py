@@ -13,7 +13,6 @@ from PySide6.QtWidgets import (
     QApplication,
     QDialogButtonBox,
     QFileDialog,
-    QInputDialog,
     QPushButton,
     QTabWidget,
 )
@@ -68,24 +67,6 @@ def _password_controls(app: QApplication, window: LauncherWindow, password: str)
     _wait(app, lambda: not window.busy)
     _assert_home(window)
     return new_password
-
-
-def _revoke_control(app: QApplication, window: LauncherWindow, password: str) -> None:
-    def confirm_password() -> None:
-        dialog = app.activeModalWidget()
-        if not isinstance(dialog, QInputDialog):
-            raise RuntimeError("Revocation test dialog is unavailable")
-        dialog.setTextValue(password)
-        dialog.accept()
-
-    QTimer.singleShot(0, confirm_password)
-    _click(window, "revokeAll")
-    _wait(app, lambda: not window.busy)
-    if (
-        window.pages.currentWidget() != window.auth_page
-        or window.service.store.load() is not None
-    ):
-        raise RuntimeError("Launcher did not complete remote session revocation")
 
 
 def _registration_control(
@@ -161,8 +142,10 @@ def launcher_checks(
 
             password = _password_controls(app, window, registration.password)
             passed("real_gui_password_change")
-            _revoke_control(app, window, password)
-            passed("real_gui_all_sessions_revoked")
+            window.service.revoke_all(password)
+            if store.load() is not None:
+                raise RuntimeError("Disposable session was not revoked")
+            passed("real_backend_cleanup_sessions_revoked")
         finally:
             for window in windows:
                 _wait(app, lambda window=window: not window.busy)

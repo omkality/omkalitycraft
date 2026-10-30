@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0.dev0 — portable installation, pack UI and launcher updates
+
+- Install signed platform releases, resume interrupted downloads and repair damaged managed files.
+- Preserve player files and retain signed ownership history across interrupted pack upgrades.
+- Launch bundled Java and Forge with authlib-injector and a renewed game session.
+- Add Rubik Medium, pack artwork/links/credits, visible download states and an animated skin preview.
+- Decode and normalize bounded PNG uploads; explain legacy formats and Steve/Alex models.
+- Remove session-management clutter from the player UI; retain account revocation in the backend.
+- Add TUF launcher updates, isolated version directories and health-checked fallback.
+- Build portable distributions and smoke-test actual packaged startup on three operating systems.
+- Verify a real DJ2 client/server login and Windows executable updates in isolated local labs.
+
+Public deployment, GTNH and game distributions for other platforms remain separate work.
+
 ## 0.2.0.dev1 — portable launcher accounts
 
 - Add Qt registration, issued-password acknowledgement, login and automatic session restore.
