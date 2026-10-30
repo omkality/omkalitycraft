@@ -40,6 +40,7 @@ class LabPlayer:
         self._stopping = threading.Event()
         self.ready = threading.Event()
         self._handshake = False
+        self._last_chat = 0.0
 
     def __enter__(self):
         self.connection, result = self.login.__enter__()
@@ -84,7 +85,7 @@ class LabPlayer:
             or any(ord(c) < 32 for c in command)
         ):
             raise ValueError("Invalid lab command")
-        self.send(0x02, text(command))
+        self._chat_packet(command)
 
     def chat(self, message: str):
         self.check()
@@ -95,7 +96,17 @@ class LabPlayer:
             or any(ord(c) < 32 for c in message)
         ):
             raise ValueError("Invalid lab chat")
+        self._chat_packet(message)
+
+    def _chat_packet(self, message):
+        # Vanilla counts commands as chat spam too. Keep the test actor below
+        # that limit rather than disabling protection on the lab server.
+        delay = 1.1 - (time.monotonic() - self._last_chat)
+        if delay > 0:
+            self._stopping.wait(delay)
+        self.check()
         self.send(0x02, text(message))
+        self._last_chat = time.monotonic()
 
     def move(self, x: float, y: float, z: float):
         self.check()
