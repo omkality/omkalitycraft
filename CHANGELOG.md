@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0.dev4 — operator tools and quiet client crash reports
+
+- Remove all diagnostic/export controls from the player launcher.
+- Capture bounded crash summaries automatically; queue offline reports and upload only with a game session.
+- Add an authenticated upload-only inbox with UUID checks, rate/size/count/age limits and no public read API.
+- Provide private local operator commands for server diagnostics, report retrieval and Drasl invitations.
+- Keep operator keys, exports and report storage outside player bundles, CDN and Git.
+- Test real Drasl/Granian/CLI boundaries in a disposable lab; game commands remain a separate milestone.
+
 ## 0.3.0.dev3 — bounded local diagnostics
 
 - Rotate game/launcher logs; drain bounded stdout even after a disk write failure.
