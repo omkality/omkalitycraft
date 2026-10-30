@@ -9,7 +9,7 @@ from omk.profiles import load_profiles
 
 
 @pytest.mark.parametrize(
-    "system_mb, expected", [(4096, 2048), (8192, 5120), (16384, 8192), (65536, 8192)]
+    "system_mb, expected", [(4096, 2048), (8192, 5120), (16384, 11264), (65536, 16384)]
 )
 def test_heap_limit_leaves_headroom_and_respects_pack_cap(system_mb, expected):
     profile = load_profiles()[0]

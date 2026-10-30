@@ -3,13 +3,14 @@ from pathlib import Path
 
 import pytest
 
+from launcher.client_defaults import prepare_client_defaults
 from launcher.install import (
     InstallCancelled,
     Installer,
     ReleaseClient,
     current_platform,
 )
-from launcher.releases import ReleaseError, read_release, safe_path
+from launcher.releases import ReleaseError, read_release, safe_path, sha256_file
 from omk.publish import build_release, signing_key
 from tests.http_fixture import serve
 
@@ -121,6 +122,96 @@ def test_bad_file_hash_never_becomes_installed(repository, tmp_path: Path):
         with pytest.raises(ReleaseError):
             installer.install(installer.client.fetch("dj2"), lambda _: None)
         assert installer.local_state("dj2")["state"] == "incomplete"
+
+
+def test_deleted_files_and_same_size_corruption_repair_without_resetting_maps(
+    repository, tmp_path: Path
+):
+    root, files, envelope, keys, key = repository
+    defaults = json.loads(
+        (
+            Path(__file__).resolve().parents[2] / "profiles/client-defaults/dj2.json"
+        ).read_text(encoding="utf-8")
+    )
+    font = files / "resourcepacks/FM_NewFont/pack.mcmeta"
+    font.parent.mkdir(parents=True)
+    font.write_text('{"pack":{"pack_format":3}}')
+    launch = {**envelope["manifest"]["launch"], "client_defaults": defaults}
+    release = read_release(
+        json.dumps(
+            build_release(
+                files,
+                pack_id="dj2",
+                version="1.1",
+                minecraft="1.12.2",
+                platform=current_platform(),
+                launch=launch,
+                key=key,
+            )
+        ).encode(),
+        keys,
+    )
+    with serve(root) as (url, requests):
+        installer = Installer(tmp_path / "portable", ReleaseClient(url, keys))
+        folder = installer.install(release, lambda _: None)
+        prepare_client_defaults(release, folder)
+        minimap = folder / "journeymap/config/5.7/journeymap.minimap.config"
+        personal = b'{"shape":"Circle","showGrid":"true","sizePercent":"24"}'
+        minimap.write_bytes(personal)
+        saves = folder / "saves/personal.dat"
+        saves.parent.mkdir()
+        saves.write_bytes(b"user save sentinel")
+        options = (folder / "options.txt").read_bytes()
+        deleted = [
+            "runtime/bin/java",
+            "mods/old.jar",
+            "config/test.cfg",
+            "resourcepacks/FM_NewFont/pack.mcmeta",
+        ]
+        for name in deleted:
+            (folder / name).unlink()
+        forge = folder / "forge.jar"
+        forge.write_bytes(b"X" * forge.stat().st_size)
+        assert installer.local_state("dj2")["state"] == "incomplete"
+        requests.clear()
+        installer.install(release, lambda _: None)
+        prepare_client_defaults(release, folder)
+        assert len(requests) == 5  # Only four missing artifacts and one altered hash.
+        assert installer.local_state("dj2")["state"] == "installed"
+        assert all(
+            sha256_file(folder / file.path) == file.sha256 for file in release.files
+        )
+        assert minimap.read_bytes() == personal
+        assert saves.read_bytes() == b"user save sentinel"
+        assert (folder / "options.txt").read_bytes() == options
+        # A new signed release may change defaults, but never an existing personal map.
+        defaults["initial_configs"][0]["content"]["shape"] = "Rectangle"
+        updated = read_release(
+            json.dumps(
+                build_release(
+                    files,
+                    pack_id="dj2",
+                    version="1.2",
+                    minecraft="1.12.2",
+                    platform=current_platform(),
+                    launch=launch,
+                    key=key,
+                )
+            ).encode(),
+            keys,
+        )
+        requests.clear()
+        installer.install(updated, lambda _: None)
+        prepare_client_defaults(updated, folder)
+        assert requests == [] and minimap.read_bytes() == personal
+        # Losing the launcher install record also must not erase personal game state.
+        (folder / ".omk-install.json").write_text("broken metadata")
+        installer.install(updated, lambda _: None)
+        prepare_client_defaults(updated, folder)
+        assert (
+            minimap.read_bytes() == personal
+            and saves.read_bytes() == b"user save sentinel"
+        )
 
 
 def test_cancelled_download_is_not_ready(repository, tmp_path: Path):
