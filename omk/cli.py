@@ -10,7 +10,7 @@ from typing import Any
 
 from api.settings.content import get_instance_config, get_launcher_manifest_settings
 from launcher.paths import default_data_dir
-from omk.diagnostics import export_bundle
+from omk.admin import add_admin_commands, run_admin
 from omk.dj2_lab import add_dj2_lab, run_dj2_lab
 from omk.lab import auth_smoke
 from omk.profiles import PROJECT_ROOT, load_profiles
@@ -69,18 +69,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     sub = parser.add_subparsers(dest="command", required=True)
     add_release_commands(sub)
+    add_admin_commands(sub)
     sub.add_parser("doctor", help="Check local development prerequisites (read-only)")
-    diagnostics = sub.add_parser(
-        "diagnostics", help="Export bounded, redacted local diagnostics"
-    )
-    diagnostics.add_argument("action", choices=["export"])
-    diagnostics.add_argument(
-        "--root", type=Path, required=True, help="Portable launcher root"
-    )
-    diagnostics.add_argument("--pack", required=True)
-    diagnostics.add_argument(
-        "--server-root", type=Path, help="Explicit read-only server folder"
-    )
     launcher = sub.add_parser("launcher", help="Open the desktop account prototype")
     launcher.add_argument(
         "--auth-url",
@@ -94,6 +84,10 @@ def main(argv: list[str] | None = None) -> int:
     server.add_subparsers(dest="action", required=True).add_parser("list")
     lab = sub.add_parser("lab", help="Disposable integration tests")
     lab_areas = lab.add_subparsers(dest="area", required=True)
+    lab_admin = lab_areas.add_parser(
+        "admin", help="Disposable operator CLI and client crash inbox"
+    )
+    lab_admin.add_subparsers(dest="action", required=True).add_parser("smoke")
     add_dj2_lab(
         lab_areas.add_parser(
             "dj2", help="Fresh isolated Forge/FTB/Core integration lab"
@@ -118,14 +112,18 @@ def main(argv: list[str] | None = None) -> int:
         )
     if args.command == "release":
         report = prepare_release(args)
-    elif args.command == "diagnostics":
-        report = export_bundle(args.root, args.pack, server_root=args.server_root)
+    elif args.command == "admin":
+        report = run_admin(args)
     elif args.command == "doctor":
         report = doctor()
     elif args.command == "server":
         report = {"ok": True, "servers": [p.as_dict() for p in load_profiles()]}
     elif args.area == "dj2":
         report = run_dj2_lab(args)
+    elif args.area == "admin":
+        from omk.operator_lab import operator_smoke  # noqa: PLC0415
+
+        report = operator_smoke()
     else:
         report = auth_smoke(
             with_gui=args.area == "launcher", expiry_only=args.action == "expiry"

@@ -1,0 +1,13 @@
+# Copy to a private .omk-admin/operator.toml; never put credentials or reports in the CDN.
+schema = 1
+
+[auth]
+origin = "https://auth.example.invalid"
+session_file = "drasl-session.json"
+
+[reports]
+root = "client-reports"
+
+[servers.dj2]
+# Relative to .omk-admin; replace with the actual, explicitly chosen server folder.
+root = "../servers/dj2"
