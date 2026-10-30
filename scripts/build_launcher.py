@@ -30,7 +30,7 @@ def build(
     stage.mkdir(parents=True)
     for package, names in {
         "launcher": [path.name for path in (PROJECT_ROOT / "launcher").glob("*.py")],
-        "omk": ["__init__.py", "drasl.py", "profiles.py", "fs.py"],
+        "omk": ["__init__.py", "drasl.py", "profiles.py", "fs.py", "diagnostics.py"],
         "api": ["__init__.py", "core/__init__.py", "core/content_policy.py"],
     }.items():
         for name in names:

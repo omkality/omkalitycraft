@@ -59,6 +59,7 @@ def test_game_uses_portable_java_and_paths_without_shell(
     for name in ["JAVA_TOOL_OPTIONS", "_JAVA_OPTIONS", "JDK_JAVA_OPTIONS"]:
         monkeypatch.setenv(name, "unexpected global java option")
     process = Mock()
+    process.wait.return_value = 0
     process.stdout = io.BytesIO(b"test-game-token test-client-token\nnormal output\n")
     with patch("launcher.game.subprocess.Popen", return_value=process) as start:
         result = runner.start(release, folder, session)
@@ -66,6 +67,8 @@ def test_game_uses_portable_java_and_paths_without_shell(
     assert command[0] == str(folder / "runtime/bin/java")
     assert "test-game-token" in command  # A game-scoped token is required by Minecraft.
     assert "test-client-token" not in command
+    assert "-Dfile.encoding=UTF-8" in command
+    assert f"-XX:ErrorFile={folder / 'hs_err_pid%p.log'}" in command
     assert any(str(root / "userdata/java-home") in argument for argument in command)
     assert start.call_args.kwargs["shell"] is False
     assert start.call_args.kwargs["stdout"] == subprocess.PIPE
@@ -81,6 +84,7 @@ def test_game_uses_portable_java_and_paths_without_shell(
     text = result.log_path.read_text()
     assert "test-game-token" not in text and "test-client-token" not in text
     assert "normal output" in text
+    assert result.diagnostics_done.wait(2)
 
 
 def test_game_refuses_external_instance(tmp_path: Path):

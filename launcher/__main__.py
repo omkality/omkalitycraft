@@ -20,6 +20,7 @@ from launcher.storage import FileSessionStore
 from launcher.theme import ASSETS, STYLE, install_font
 from launcher.updater import LauncherUpdater, acknowledge_health
 from launcher.version import VERSION
+from omk.diagnostics import event, failure
 from omk.drasl import DraslClient
 
 
@@ -72,6 +73,7 @@ def _update_before_window(app: QApplication, updater: LauncherUpdater, lock):
     warning = ""
     result = _startup(app, updater.prepare)
     if isinstance(result, Exception):
+        failure(updater.root, "launcher_update", result)
         warning = (
             "Не удалось проверить обновления. Используется рабочая версия лаунчера."
         )
@@ -92,6 +94,7 @@ def _update_before_window(app: QApplication, updater: LauncherUpdater, lock):
         )
         if outcome is True:
             return 0, lock, warning
+        event(updater.root, "launcher_handoff_failed")
         lock = instance_lock(updater.root / "userdata")
         if lock is None:
             return 2, lock, warning
@@ -101,6 +104,7 @@ def _update_before_window(app: QApplication, updater: LauncherUpdater, lock):
 def main() -> int:
     args = _arguments()
     root = args.root.resolve()
+    event(root, "launcher_started", version=VERSION)
     app = QApplication.instance() or QApplication(sys.argv[:1])
     install_font(app)
     app.setQuitOnLastWindowClosed(False)

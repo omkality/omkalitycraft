@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-30",
+  "version": "0.3.0.dev3",
+  "ok": true,
+  "local_tests": {
+    "passed": 170,
+    "skipped": 1
+  },
+  "java_probe": {
+    "ok": true,
+    "checks": {
+      "native_rotation": true,
+      "console_rotation": true,
+      "stack_preserved": true,
+      "latest_event_preserved": true,
+      "utf8_and_literal_lookup": true,
+      "no_config_errors": true
+    },
+    "logging": "2.25.5",
+    "native_bytes": {
+      "latest-1.log.gz": 54090,
+      "latest-2.log.gz": 54193,
+      "latest-3.log.gz": 54291,
+      "latest.log": 883849
+    },
+    "console_bytes": 17665348
+  },
+  "real_forge_checks": [
+    "two_authenticated_protocol_players_complete_real_forge_handshake",
+    "private_server_core_loaded_explicit_client_policy",
+    "three_homes_allowed_and_fourth_denied_for_normal_player",
+    "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+    "home_command_really_teleports_player_after_warmup",
+    "non_owner_can_break_unclaimed_test_block_positive_control",
+    "ftb_claim_blocks_non_owner_block_break",
+    "ftb_claim_allows_owner_block_break",
+    "server_guard_rejects_extra_declared_mod_list",
+    "server_guard_rejects_missing_declared_mod_list",
+    "server_guard_rejects_version_declared_mod_list",
+    "real_dj2_client_joins_with_rewritten_private_omkalitycore"
+  ],
+  "temporary_auth_removed": true,
+  "client_release": "2.21.3-omk.4",
+  "client_artifacts": 6282,
+  "utf8_game_log_confirmed": true,
+  "known_tokens_absent_from_collected_output_and_bundles": true,
+  "client_and_server_export": true,
+  "source_server_modified": false,
+  "limitations": [
+    "Native window rendering not re-verified",
+    "No real game tests on Linux/macOS",
+    "Unknown mod-specific logs and newest oversized crash report are not a global hard disk quota",
+    "Public deployment monitoring and automatic thread dump remain future work"
+  ]
+}
