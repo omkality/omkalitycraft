@@ -9,6 +9,7 @@ from litestar.exceptions import HTTPException
 
 from api.core.content_policy import is_private_path
 from api.settings.config import settings
+from omk.fs import resolved
 
 
 def content_root() -> Path:
@@ -78,9 +79,9 @@ def read_json(path: Path) -> Any:
 
 def safe_resolve(base: Path, relative_path: str) -> Path:
     """Безопасно разрешить относительный путь внутри заданного корня."""
-    base_resolved = base.resolve()
+    base_resolved = resolved(base)
     normalized_relative_path = relative_path.lstrip("/\\")
-    candidate = (base_resolved / normalized_relative_path).resolve()
+    candidate = resolved(base_resolved / normalized_relative_path)
 
     try:
         candidate.relative_to(base_resolved)
