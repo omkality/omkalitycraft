@@ -74,3 +74,30 @@ jobs:
       - run: docker compose -f deploy/auth-lab/compose.yaml pull
       - run: uv run --no-sync omk lab auth smoke
       - run: uv run --no-sync omk lab auth expiry
+
+  portable:
+    name: Portable startup (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2025, ubuntu-24.04, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      QT_QPA_PLATFORM: offscreen
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
+        with:
+          version: "0.11.12"
+      - if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libopengl0
+      - run: uv sync --locked --all-groups
+      - run: uv run --no-sync python scripts/smoke_bundle.py --prepare
+      - run: uv run --no-sync python scripts/build_launcher.py --output .local/portable-ci --root-metadata .local/packaging-fixture/repository/metadata/1.root.json --auth-url http://127.0.0.1:9 --api-url http://127.0.0.1:9
+      - run: uv run --no-sync python scripts/smoke_bundle.py --bundle .local/portable-ci/OmkalityCraft

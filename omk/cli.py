@@ -12,6 +12,7 @@ from api.settings.content import get_instance_config, get_launcher_manifest_sett
 from launcher.paths import default_data_dir
 from omk.lab import auth_smoke
 from omk.profiles import PROJECT_ROOT, load_profiles
+from omk.release_cli import add_release_commands, prepare_release
 
 
 def doctor() -> dict[str, Any]:
@@ -65,6 +66,7 @@ def main(argv: list[str] | None = None) -> int:
         prog="omk", description="OmkalityCraft development and operations tools"
     )
     sub = parser.add_subparsers(dest="command", required=True)
+    add_release_commands(sub)
     sub.add_parser("doctor", help="Check local development prerequisites (read-only)")
     launcher = sub.add_parser("launcher", help="Open the desktop account prototype")
     launcher.add_argument(
@@ -73,6 +75,8 @@ def main(argv: list[str] | None = None) -> int:
         help="Trusted Drasl origin (HTTPS outside loopback)",
     )
     launcher.add_argument("--data-dir", type=Path, default=default_data_dir())
+    launcher.add_argument("--api-url", help="Signed release CDN origin")
+    launcher.add_argument("--root", type=Path, help="Portable launcher folder")
     server = sub.add_parser("server", help="Inspect configured server profiles")
     server.add_subparsers(dest="action", required=True).add_parser("list")
     lab = sub.add_parser("lab", help="Disposable integration tests")
@@ -91,8 +95,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "launcher":
         from launcher.app import run_launcher  # noqa: PLC0415 - optional Qt dependency
 
-        return run_launcher(args.auth_url, args.data_dir)
-    if args.command == "doctor":
+        return run_launcher(
+            args.auth_url, args.data_dir, api_url=args.api_url, root=args.root
+        )
+    if args.command == "release":
+        report = prepare_release(args)
+    elif args.command == "doctor":
         report = doctor()
     elif args.command == "server":
         report = {"ok": True, "servers": [p.as_dict() for p in load_profiles()]}

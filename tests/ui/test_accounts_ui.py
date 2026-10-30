@@ -6,6 +6,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QFileDialog, QPushButton, QTabWidget
 from pytestqt.qtbot import QtBot
 
+from launcher.__main__ import _bootstrap_lock
 from launcher.accounts import AccountService
 from launcher.app import LauncherWindow, instance_lock
 from launcher.install import Progress
@@ -189,3 +190,18 @@ def test_missing_or_malformed_texture_does_not_block_login(
     wait_idle(qtbot, window)
     assert window.pages.currentWidget() == window.home_page
     assert window.status.text() == ""
+
+
+def test_bootstrap_lock_protects_gap_during_handoff(tmp_path: Path, qtbot: QtBot):
+    bootstrap = _bootstrap_lock(tmp_path, False)
+    session = instance_lock(tmp_path / "userdata")
+    session.unlock()
+    try:
+        with pytest.raises(OSError):
+            _bootstrap_lock(tmp_path, False)
+        assert _bootstrap_lock(tmp_path, True) is None
+        child = instance_lock(tmp_path / "userdata")
+        assert child is not None
+        child.unlock()
+    finally:
+        bootstrap.unlock()
