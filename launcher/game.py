@@ -8,6 +8,7 @@ from pathlib import Path
 from uuid import UUID
 
 from launcher.client_defaults import prepare_client_defaults
+from launcher.mod_policy import clean_extra_mods, verify_mods
 from launcher.releases import Release, ReleaseError, inside
 from launcher.session import Session
 from omk.fs import resolved
@@ -101,8 +102,10 @@ class GameRunner:
         server: tuple[str, int] | None = None,
         memory_mb: int | None = None,
     ) -> GameProcess:
-        prepare_client_defaults(release, folder)
         command = self.command(release, folder, session, memory_mb=memory_mb)
+        clean_extra_mods(release, folder)
+        verify_mods(release, folder)
+        prepare_client_defaults(release, folder)
         if server:
             command.extend(["--server", server[0], "--port", str(server[1])])
         log = self.root / "userdata" / "logs" / f"{release.pack_id}-game.log"
