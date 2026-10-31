@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — DJ2 protection validation tools
+
+- Add isolated survival inventory transfer/replay checks for vanilla and Iron Chests.
+- Verify TNT block protection inside and across FTB claims with an unclaimed destruction control.
+- Check authoritative server inventories/counts and record the protocol actor's correction responses.
+- Load and verify the distant home platform before using it as a test fixture.
+
 ## 0.3.0.dev6 — restore RTP and verify persistent moderation
 
 - Restore stock RTP for all normal players, accepting its magma-surface limitation at the owner's request.
