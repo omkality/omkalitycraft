@@ -60,7 +60,15 @@ def add_dj2_lab(parser):
     )
     parser.add_argument(
         "--command-suite",
-        choices=["full", "moderation", "rtp", "persistence", "interactions"],
+        choices=[
+            "full",
+            "moderation",
+            "rtp",
+            "persistence",
+            "interactions",
+            "containers",
+            "explosions",
+        ],
         default="full",
     )
     parser.add_argument(
@@ -508,6 +516,7 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
         "lab_folder": str(lab.relative_to(PROJECT_ROOT)),
         "logging_runtime": "2.25.5",
         "mute_guard_requested": args.mute_guard,
+        "command_suite": args.command_suite if args.commands else None,
     }
     compose = [
         "docker",
@@ -541,6 +550,11 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
                 dest / "mods/FTBLib-5.4.7.2.jar",
             ]
         }
+        if args.commands and args.command_suite == "containers":
+            artifact = dest / "mods/ironchest-1.12.2-7.0.72.847.jar"
+            report["tested_artifacts_sha256"][artifact.name] = hashlib.sha256(
+                artifact.read_bytes()
+            ).hexdigest()
         client, service, session, session2 = _accounts(compose, lab)
         server, server_log, stream = _start_server(args, lab, dest, client)
         _wait_server(server, server_log, state)
