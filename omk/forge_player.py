@@ -35,6 +35,7 @@ class LabPlayer:
         self.mods = dict(mods)
         self.messages = deque(maxlen=200)
         self.open_windows = deque(maxlen=20)
+        self.closed_windows = deque(maxlen=20)
         self.transactions = deque(maxlen=20)
         self.position = None
         self.health = None
@@ -256,6 +257,8 @@ class LabPlayer:
             self.transactions.append((window_id, action, accepted))
             if not accepted:
                 self.send(0x05, struct.pack(">Bh?", window_id, action, True))
+        elif kind == 0x12:
+            self.closed_windows.append(packet.read(1)[0])
         else:
             window_id = packet.read(1)[0]
             container = field(packet.read).decode()
@@ -282,18 +285,21 @@ class LabPlayer:
                     )
                 elif kind == 0x41:
                     self.health = struct.unpack(">f", packet.read(4))[0]
-                elif kind in {0x11, 0x13}:
+                elif kind in {0x11, 0x12, 0x13}:
                     self._container_packet(kind, packet)
                 elif kind == 0x2F:
                     values = struct.unpack(">dddffB", packet.read(33))
                     previous = self.position or (0, 0, 0, 0, 0)
                     flags = values[-1]
-                    self.position = tuple(
+                    position = tuple(
                         value + previous[index] if flags & (1 << index) else value
                         for index, value in enumerate(values[:5])
                     )
                     self.send(0x00, varint(number(packet.read)))
-                    self.send(0x0E, struct.pack(">dddff?", *self.position, True))
+                    self.send(0x0E, struct.pack(">dddff?", *position, True))
+                    # Test actions may proceed as soon as position is visible;
+                    # publish it only after the teleport ACK is on the same TCP stream.
+                    self.position = position
                     self._ready()
         except Exception as error:
             if not self._stopping.is_set():

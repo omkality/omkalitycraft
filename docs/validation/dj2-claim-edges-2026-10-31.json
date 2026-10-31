@@ -1,0 +1,187 @@
+{
+  "date": "2026-10-31",
+  "application_version": "0.3.0.dev6",
+  "harness_source_commit": "2243339",
+  "ok": true,
+  "ready_for_public_launch": false,
+  "python_tests": {
+    "passed": 226,
+    "skipped": 1,
+    "ruff": true,
+    "black": true
+  },
+  "scenarios": {
+    "baseline": {
+      "mode": "characterization",
+      "private_core_version": "0.2.2",
+      "private_core_sha256": "344800ed86042be607cc948738c94e642bae39e1ca4e46db7eaa22deb01d95b7",
+      "checks": [
+        "private_ftb_mute_guard_initialized_on_real_server_enabled",
+        "two_authenticated_protocol_players_complete_real_forge_handshake",
+        "private_server_core_loaded_explicit_client_policy",
+        "three_homes_allowed_and_fourth_denied_for_normal_player",
+        "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+        "rtp_available_to_normal_player_in_initial_profile",
+        "home_origin_platform_created_on_loaded_chunk",
+        "home_command_really_teleports_player_after_warmup",
+        "non_owner_can_break_unclaimed_test_block_positive_control",
+        "ftb_claim_blocks_non_owner_block_break",
+        "ftb_claim_allows_owner_block_break",
+        "server_guard_rejects_extra_declared_mod_list",
+        "server_guard_rejects_missing_declared_mod_list",
+        "server_guard_rejects_version_declared_mod_list",
+        "unclaimed_double_chest_has_54_slots",
+        "unclaimed_double_chest_transfer_from_opposite_half_control",
+        "non_owner_places_unclaimed_chest_next_to_claimed_half",
+        "boundary_chest_forms_real_compound_inventory",
+        "stock_boundary_double_chest_allows_theft_from_claimed_half",
+        "owner_can_use_boundary_double_chest_positive_control",
+        "vanilla_chest_team_member_transfer_positive_control",
+        "vanilla_chest_stock_open_container_allows_transfer_after_team_kick",
+        "iron_chest_team_member_transfer_positive_control",
+        "iron_chest_stock_open_container_allows_transfer_after_team_kick"
+      ],
+      "claim_edge_observations": {
+        "double_chest": {
+          "opened": true,
+          "item_taken": true
+        },
+        "vanilla_chest_revocation": {
+          "closed_by_server": false,
+          "item_taken_after_kick": true
+        },
+        "iron_chest_revocation": {
+          "closed_by_server": false,
+          "item_taken_after_kick": true
+        }
+      },
+      "temporary_auth_removed": true
+    },
+    "guarded": {
+      "mode": "enforced_denial_and_regressions",
+      "private_core_version": "0.2.3",
+      "private_core_sha256": "7333a6a55a65ea08b647302c13dbf7226b61ab7f170fa23592eee8a3e504ce30",
+      "checks": [
+        "private_ftb_mute_guard_initialized_on_real_server_enabled",
+        "private_ftb_claim_guard_initialized_on_real_server_enabled",
+        "two_authenticated_protocol_players_complete_real_forge_handshake",
+        "private_server_core_loaded_explicit_client_policy",
+        "three_homes_allowed_and_fourth_denied_for_normal_player",
+        "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+        "rtp_available_to_normal_player_in_initial_profile",
+        "home_origin_platform_created_on_loaded_chunk",
+        "home_command_really_teleports_player_after_warmup",
+        "non_owner_can_break_unclaimed_test_block_positive_control",
+        "ftb_claim_blocks_non_owner_block_break",
+        "ftb_claim_allows_owner_block_break",
+        "server_guard_rejects_extra_declared_mod_list",
+        "server_guard_rejects_missing_declared_mod_list",
+        "server_guard_rejects_version_declared_mod_list",
+        "unclaimed_double_chest_has_54_slots",
+        "unclaimed_double_chest_transfer_from_opposite_half_control",
+        "non_owner_places_unclaimed_chest_next_to_claimed_half",
+        "guard_blocks_boundary_double_chest_theft",
+        "owner_can_use_boundary_double_chest_positive_control",
+        "vanilla_chest_team_member_transfer_positive_control",
+        "vanilla_chest_guard_closes_revoked_member_container",
+        "iron_chest_team_member_transfer_positive_control",
+        "iron_chest_guard_closes_revoked_member_container",
+        "vanilla_chest_attacker_starts_without_item",
+        "vanilla_chest_unclaimed_transfer_positive_control",
+        "vanilla_chest_claimed_open_denied_to_non_owner",
+        "vanilla_chest_closed_window_click_does_not_steal_claimed_item",
+        "vanilla_chest_claimed_owner_transfer_positive_control",
+        "vanilla_chest_closed_window_replay_preserves_single_item_count",
+        "iron_chest_attacker_starts_without_item",
+        "iron_chest_unclaimed_transfer_positive_control",
+        "iron_chest_claimed_open_denied_to_non_owner",
+        "iron_chest_closed_window_click_does_not_steal_claimed_item",
+        "iron_chest_claimed_owner_transfer_positive_control",
+        "iron_chest_closed_window_replay_preserves_single_item_count",
+        "moderator_inherits_three_home_limit_without_op",
+        "moderator_denied_gameplay_advantages_and_permission_escalation",
+        "moderator_mute_blocks_public_chat",
+        "muted_command_blocked_me",
+        "muted_command_blocked_tell",
+        "muted_command_blocked_msg",
+        "muted_command_blocked_w",
+        "muted_player_keeps_non_chat_home_commands",
+        "moderator_unmute_restores_chat",
+        "unmute_restores_vanilla_action_and_private_message_commands",
+        "chat_command_guard_honors_ftb_chat_speak_permission",
+        "clearing_chat_speak_override_restores_command",
+        "moderator_kick_without_op"
+      ],
+      "claim_edge_observations": {
+        "double_chest": {
+          "opened": false,
+          "item_taken": false
+        },
+        "vanilla_chest_revocation": {
+          "closed_by_server": true,
+          "item_taken_after_kick": false
+        },
+        "iron_chest_revocation": {
+          "closed_by_server": true,
+          "item_taken_after_kick": false
+        }
+      },
+      "temporary_auth_removed": true,
+      "inventory_confirmations": [
+        {
+          "container": "vanilla_chest",
+          "case": "unclaimed",
+          "accepted": [
+            false
+          ]
+        },
+        {
+          "container": "vanilla_chest",
+          "case": "owner",
+          "accepted": [
+            false
+          ]
+        },
+        {
+          "container": "iron_chest",
+          "case": "unclaimed",
+          "accepted": [
+            false
+          ]
+        },
+        {
+          "container": "iron_chest",
+          "case": "owner",
+          "accepted": [
+            false
+          ]
+        }
+      ]
+    }
+  },
+  "artifacts_sha256": {
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "FTBUtilities-5.4.1.131.jar": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a",
+    "FTBLib-5.4.7.2.jar": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac",
+    "ironchest-1.12.2-7.0.72.847.jar": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f"
+  },
+  "original_server_modified": false,
+  "graphical_minecraft_tested_this_stage": false,
+  "private_core_source_or_binary_published": false,
+  "limitations": [
+    "Baseline ok means successful characterization of confirmed unsafe stock behavior, not secure claims",
+    "The private adapter delegates ownership/relations/permission exceptions to existing FTB state",
+    "Supported tested inventories are vanilla compound chests and the installed Iron Chest; arbitrary machines/item handlers/remote GUIs are not covered",
+    "Team kick is tested; alternate rank/status/GUI mutation paths and packet-timing races need separate validation",
+    "Protocol actors do not render, execute client mods, predict container inventory or simulate physics",
+    "Positive minimal-actor transfers receive correction confirmations; source/destination item state is checked independently on server",
+    "Selected-area recovery is specified but not implemented; WorldEdit snapshot compatibility remains untested",
+    "GTNH and public deployment remain separate milestones"
+  ],
+  "harness_adjustments": [
+    "Load the home destination then use bedrock; Underground Biomes changes stone and cobblestone",
+    "Publish actor position only after sending teleport acknowledgement on the same TCP stream",
+    "Observe server close-window packets and query actual team relation instead of FTB UI notifications",
+    "Require explicit guard metadata before lab results can be marked guarded"
+  ]
+}

@@ -6,13 +6,42 @@ from unittest.mock import Mock
 
 import pytest
 
-from omk.dj2_lab import _cleanup, _console_sender, _copy_server, approved_mods
+from omk.dj2_lab import (
+    _catalog_report,
+    _cleanup,
+    _console_sender,
+    _copy_server,
+    _validate,
+    approved_mods,
+)
 
 
 def test_approved_mods_accept_legacy_empty_version_and_normal_r_suffix(tmp_path):
     path = tmp_path / "mods.json"
     path.write_text(json.dumps({"micdoodlecore": "", "example": "r1-preview"}))
     assert approved_mods(path) == {"micdoodlecore": "", "example": "r1-preview"}
+
+
+def test_claim_guard_requires_its_explicit_command_suite():
+    for commands, suite in ((False, "claim-edges"), (True, "containers")):
+        with pytest.raises(ValueError, match="Claim guard checks require"):
+            _validate(
+                Namespace(claim_guard=True, commands=commands, command_suite=suite)
+            )
+
+
+def test_old_core_cannot_be_reported_as_guarded_claim_validation(tmp_path, monkeypatch):
+    monkeypatch.setattr("omk.dj2_lab.PROJECT_ROOT", tmp_path)
+    (tmp_path / "omk-command-catalog.json").write_text(
+        json.dumps({"commands": [], "rank_configs": []})
+    )
+
+    def expect(condition, label):
+        if not condition:
+            raise RuntimeError(label)
+
+    with pytest.raises(RuntimeError, match="missing adapter metadata"):
+        _catalog_report(tmp_path, {}, False, expect, claim_guard=True)
 
 
 @pytest.mark.parametrize("value", ["one\nother=mod", "one\rother=mod", "back\\slash"])

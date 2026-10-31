@@ -1,5 +1,6 @@
 import io
 import struct
+import threading
 from collections import deque
 from unittest.mock import Mock
 
@@ -98,3 +99,26 @@ def test_forge_multipart_is_not_mistaken_for_runtime_gui_channel():
     player._runtime.assert_not_called()
     player._custom_packet(io.BytesIO(text("FML") + b"\x01gui data"))
     player._runtime.assert_called_once_with(b"\x01gui data")
+
+
+def test_lab_position_is_published_only_after_teleport_ack():
+    player = LabPlayer.__new__(LabPlayer)
+    player.position = old = (0, 64, 0, 0, 0)
+    player._stopping = threading.Event()
+    player._handshake = False
+    player.connection = Mock()
+    player.connection.receive.return_value = io.BytesIO(
+        varint(0x2F) + struct.pack(">dddffB", 10, 241, 10, 0, 0, 0) + varint(7)
+    )
+    sent = []
+
+    def send(kind, _payload):
+        assert player.position == old
+        sent.append(kind)
+        if kind == 0x0E:
+            player._stopping.set()
+
+    player.send = send
+    player._receive()
+    assert sent == [0x00, 0x0E]
+    assert player.position[:3] == (10, 241, 10)

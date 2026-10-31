@@ -346,6 +346,36 @@ def _chat_permission_check(first, second, console, expect):
     expect(True, "clearing_chat_speak_override_restores_command")
 
 
+def _interaction_checks(
+    client, session, session2, mods, console, expect, report, suite, claim_guard
+):
+    from omk.dj2_claim_edges_lab import check_claim_edges  # noqa: PLC0415
+    from omk.dj2_claims_lab import check_claim_interactions  # noqa: PLC0415
+    from omk.dj2_explosions_lab import check_tnt_claims  # noqa: PLC0415
+    from omk.dj2_inventory_lab import check_container_transfers  # noqa: PLC0415
+
+    with (
+        LabPlayer(client, session, 25576, mods) as first,
+        LabPlayer(client, session2, 25576, mods) as second,
+    ):
+        if suite == "claim-edges":
+            check_claim_edges(
+                first, second, console, expect, report, guarded=claim_guard
+            )
+            if claim_guard:
+                # Recheck legitimate chest use and the existing mute adapter on
+                # this new Core after testing the edge protections.
+                console("blockdata 10 241 8 {Items:[]}")
+                check_container_transfers(first, second, console, expect, report)
+                _moderation(first, second, console, expect, guarded=True)
+        elif suite == "explosions":
+            check_tnt_claims(first, second, console, expect)
+        elif suite == "containers":
+            check_container_transfers(first, second, console, expect, report)
+        else:
+            check_claim_interactions(first, second, console, expect)
+
+
 def run_command_checks(
     client,
     session,
@@ -356,22 +386,12 @@ def run_command_checks(
     report,
     suite="full",
     mute_guard=False,
+    claim_guard=False,
 ):
-    if suite in {"interactions", "containers", "explosions"}:
-        from omk.dj2_claims_lab import check_claim_interactions  # noqa: PLC0415
-        from omk.dj2_explosions_lab import check_tnt_claims  # noqa: PLC0415
-        from omk.dj2_inventory_lab import check_container_transfers  # noqa: PLC0415
-
-        with (
-            LabPlayer(client, session, 25576, mods) as first,
-            LabPlayer(client, session2, 25576, mods) as second,
-        ):
-            if suite == "explosions":
-                check_tnt_claims(first, second, console, expect)
-            elif suite == "containers":
-                check_container_transfers(first, second, console, expect, report)
-            else:
-                check_claim_interactions(first, second, console, expect)
+    if suite in {"interactions", "containers", "explosions", "claim-edges"}:
+        _interaction_checks(
+            client, session, session2, mods, console, expect, report, suite, claim_guard
+        )
         return False
     if suite == "persistence":
         from omk.dj2_persistence_lab import prepare_mute_restart  # noqa: PLC0415
