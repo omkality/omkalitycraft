@@ -1,0 +1,242 @@
+{
+  "ok": true,
+  "edge_cases": true,
+  "candidate": {
+    "source": "https://www.curseforge.com/minecraft/mc-mods/worldedit/files/2941712",
+    "sha256": "cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75",
+    "version": "6.1.10",
+    "mcmod_metadata": "6.1.10-SNAPSHOT;e6b38e8"
+  },
+  "scope": {
+    "dimension": 0,
+    "min": [
+      130,
+      241,
+      130
+    ],
+    "max": [
+      135,
+      243,
+      134
+    ],
+    "blocks": 90
+  },
+  "private_core_sha256": "7333a6a55a65ea08b647302c13dbf7226b61ab7f170fa23592eee8a3e504ce30",
+  "artifacts": {
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "ironchest-1.12.2-7.0.72.847.jar": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f",
+    "ThermalExpansion-1.12.2-5.5.7.1-universal.jar": "f1cc8aeefcda2c00235bfb5ee7f76d731325aa324e90e84d7d232d88c1e6f472"
+  },
+  "checks": [
+    "fixture_original_entity_exists",
+    "fixture_outside_entity_exists",
+    "cross_chunk_fixture_143_created",
+    "cross_chunk_fixture_144_created",
+    "machine_smelt_positive_control_before_snapshot",
+    "idle_machine_fixture_has_seeded_state",
+    "iron_chest_fixture_has_named_items",
+    "before-grief_snapshot_after_clean_stop",
+    "original_entity_really_removed",
+    "post_snapshot_entity_really_added",
+    "base_really_damaged",
+    "machine_state_really_damaged",
+    "before-restore_snapshot_after_clean_stop",
+    "normal_player_cannot_restore",
+    "operator_lists_actual_zip_snapshots",
+    "primary_restore_selection_passes_readonly_preflight",
+    "first_restore_vanilla_chest_named_inventory",
+    "first_restore_same_type_iron_chest_inventory",
+    "first_restore_machine_energy_orientation_inventory",
+    "first_restore_griefer_block_removed",
+    "first_restore_neighbor_chest_same_chunk_unchanged",
+    "first_restore_above_selection_same_chunk_unchanged",
+    "first_restore_west_of_selection_unchanged",
+    "first_restore_north_of_selection_unchanged",
+    "first_restore_below_selection_unchanged",
+    "first_restore_machine_block_metadata_unchanged",
+    "after_restore_native_snapshot_does_not_restore_destroyed_armor_stand",
+    "after_restore_native_snapshot_keeps_post_snapshot_armor_stand",
+    "after_restore_outside_entity_unchanged",
+    "undo_restores_damaged_air",
+    "undo_restores_damaged_machine",
+    "redo_vanilla_chest_named_inventory",
+    "redo_same_type_iron_chest_inventory",
+    "redo_machine_energy_orientation_inventory",
+    "redo_griefer_block_removed",
+    "redo_neighbor_chest_same_chunk_unchanged",
+    "redo_above_selection_same_chunk_unchanged",
+    "redo_west_of_selection_unchanged",
+    "redo_north_of_selection_unchanged",
+    "redo_below_selection_unchanged",
+    "redo_machine_block_metadata_unchanged",
+    "repeat_restore_vanilla_chest_named_inventory",
+    "repeat_restore_same_type_iron_chest_inventory",
+    "repeat_restore_machine_energy_orientation_inventory",
+    "repeat_restore_griefer_block_removed",
+    "repeat_restore_neighbor_chest_same_chunk_unchanged",
+    "repeat_restore_above_selection_same_chunk_unchanged",
+    "repeat_restore_west_of_selection_unchanged",
+    "repeat_restore_north_of_selection_unchanged",
+    "repeat_restore_below_selection_unchanged",
+    "repeat_restore_machine_block_metadata_unchanged",
+    "missing_snapshot_vanilla_chest_named_inventory",
+    "missing_snapshot_same_type_iron_chest_inventory",
+    "missing_snapshot_machine_energy_orientation_inventory",
+    "missing_snapshot_griefer_block_removed",
+    "missing_snapshot_neighbor_chest_same_chunk_unchanged",
+    "missing_snapshot_above_selection_same_chunk_unchanged",
+    "missing_snapshot_west_of_selection_unchanged",
+    "missing_snapshot_north_of_selection_unchanged",
+    "missing_snapshot_below_selection_unchanged",
+    "missing_snapshot_machine_block_metadata_unchanged",
+    "complete_cross_chunk_snapshot_passes_preflight",
+    "missing_chunk_rejected_before_apply_by_preflight",
+    "preflight_did_not_modify_live_block_143",
+    "preflight_did_not_modify_live_block_144",
+    "native_partial_restore_already_modified_available_chunk",
+    "native_partial_restore_left_missing_chunk_damaged",
+    "immediate_native_partial_undo_returns_lab_block_143",
+    "immediate_native_partial_undo_returns_lab_block_144",
+    "after-restore_snapshot_after_clean_stop",
+    "after_restart_vanilla_chest_named_inventory",
+    "after_restart_same_type_iron_chest_inventory",
+    "after_restart_machine_energy_orientation_inventory",
+    "after_restart_griefer_block_removed",
+    "after_restart_neighbor_chest_same_chunk_unchanged",
+    "after_restart_above_selection_same_chunk_unchanged",
+    "after_restart_west_of_selection_unchanged",
+    "after_restart_north_of_selection_unchanged",
+    "after_restart_below_selection_unchanged",
+    "after_restart_machine_block_metadata_unchanged",
+    "after_restart_native_snapshot_does_not_restore_destroyed_armor_stand",
+    "after_restart_native_snapshot_keeps_post_snapshot_armor_stand",
+    "after_restart_outside_entity_unchanged",
+    "restored_machine_smelt_after_full_restart",
+    "vanilla_chest_saved_tile_exists",
+    "vanilla_chest_complete_saved_nbt_matches_snapshot",
+    "iron_chest_saved_tile_exists",
+    "iron_chest_complete_saved_nbt_matches_snapshot",
+    "thermal_furnace_saved_tile_exists",
+    "thermal_furnace_complete_saved_nbt_matches_snapshot",
+    "neighbor_saved_tile_exists",
+    "neighbor_complete_saved_nbt_unchanged"
+  ],
+  "backups": {
+    "before-grief": {
+      "files": 264,
+      "uncompressed_bytes": 6725704,
+      "bytes": 2248644,
+      "sha256": "1db243316dd9c485ab4d0decda0dcc491118a863de963b5492209a8a3891605e"
+    },
+    "before-restore": {
+      "files": 265,
+      "uncompressed_bytes": 6920666,
+      "bytes": 2455281,
+      "sha256": "f7931b2b5a74f9b9255a42e4c314ac6bc4aab63a00dc927d125c32eedae42344"
+    },
+    "after-restore": {
+      "files": 265,
+      "uncompressed_bytes": 6933079,
+      "bytes": 2465298,
+      "sha256": "87ba9e11d9e1935facc846b686bb233b85597a8df09520b6f1f7f0f3433d8948"
+    }
+  },
+  "snapshots": {
+    "before-grief": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 2074744,
+      "excluded_entries": 261,
+      "sha256": "04846388b6a907d4c52079a91b690ed94d043b3d331d221e59ca5f3163212af3"
+    },
+    "before-restore": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 2074741,
+      "excluded_entries": 262,
+      "sha256": "07a3a42f312c0980ed278438db83e0263977d9ab9f5a0a6b938c20d9ffa111a3"
+    },
+    "after-restore": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 2087031,
+      "excluded_entries": 262,
+      "sha256": "8da3ceab7d39a1cc17de68ece660373f198c7eb263824856027aa4e15db28ae2"
+    }
+  },
+  "native_entity_observations": {
+    "after_restore_": {
+      "original": 0,
+      "outside": 1,
+      "new": 1
+    },
+    "after_restart_": {
+      "original": 0,
+      "outside": 1,
+      "new": 1
+    }
+  },
+  "partial_restore_is_atomic": false,
+  "preflight_scope": {
+    "min": [
+      143,
+      241,
+      132
+    ],
+    "max": [
+      144,
+      241,
+      132
+    ]
+  },
+  "temporary_auth_removed": true,
+  "restore_response": [
+    "Snapshot 'before-grief.zip' loaded; now restoring...",
+    "Restored; 0 missing chunks and 0 other errors."
+  ],
+  "native_partial_restore_response": [
+    "Snapshot 'partial.zip' loaded; now restoring...",
+    "Restored; 0 missing chunks and 1 other errors."
+  ],
+  "validation_source_commit": "278654a8af71efcd9134fd2c968381bdf51b87d5",
+  "environment": {
+    "os": "Windows",
+    "java": "Temurin 1.8.0_472-b08, 64-bit",
+    "mode": "Full isolated Forge server with authenticated protocol actor; no client GUI execution"
+  },
+  "check_count": 92,
+  "owned_game_server_stopped": true,
+  "owned_ports_listening_after_cleanup": [],
+  "existing_server_or_world_modified": false,
+  "snapshot_plan_recorded_before_apply": true,
+  "python_validation": {
+    "passed": 251,
+    "skipped": 1,
+    "skip_reason": "Windows symlink privilege",
+    "ruff": "pass",
+    "black": "pass",
+    "focused_recovery_passed": 25
+  },
+  "preflight_limits": {
+    "dimension": 0,
+    "blocks": 4096,
+    "chunks": 16,
+    "region_bytes": 134217728,
+    "uncompressed_chunk_nbt_bytes": 2097152,
+    "checks": "Selected chunk presence, coordinates and basic NBT list shape; read-only"
+  },
+  "limits": [
+    "Success means native limitations reproduced, not complete entity recovery or atomic apply",
+    "Destroyed armor stand not restored; post-snapshot armor stand retained; other entity kinds untested",
+    "Incomplete two-chunk archive partially mutates world with 0 missing chunks and 1 other errors",
+    "Preflight rejects this archive without changing live blocks; native guard bypass is lab-only",
+    "Immediate undo tested; crash/disk-failure recovery from full backup remains untested",
+    "Primary restore remains 90 overworld blocks, vanilla/Iron Chest and one Thermal furnace",
+    "AE2/EnderIO networks, multiblocks, fluids and other dimensions remain untested",
+    "No production apply CLI, FTB archive compatibility, retention or deployment claim",
+    "Preflight does not validate all mod state semantics, version compatibility, entire ZIP or TOCTOU",
+    "No client mod/GUI execution; protocol actor tests full server behavior only",
+    "Snapshot restore rewinds all selected changes; outside items may be duplicated"
+  ],
+  "artifact_origin": "WorldEdit: official pinned CurseForge file; other jars: unchanged pre-existing DJ2 payload copied into new lab"
+}
