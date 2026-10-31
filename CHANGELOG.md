@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased — DJ2 protection validation tools
+## Unreleased — DJ2 protection and recovery validation tools
+
+- Verify selected-area WorldEdit recovery on a disposable full DJ2 server with 71 checks, full container/machine NBT comparison, neighbor controls, undo/redo and restart/smelting.
+- Reproduce the pinned WorldEdit ZIP reader's dimension ambiguity and prepare overworld-only snapshots separately from full backups.
+- Record a pre-apply lab plan and keep all recovery experiments away from existing servers/worlds.
+- Extend the command reference with tested WorldEdit syntax and explicit recovery limits; no production apply command or deployment yet.
 
 - Reproduce compound-chest and stale team-window access; verify the separate private Core 0.2.3 adapter with 49 real-server checks.
 - Preserve ordinary chest access and non-OP mute/moderator controls on the new adapter.

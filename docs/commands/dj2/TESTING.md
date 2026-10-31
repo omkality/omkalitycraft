@@ -1,5 +1,44 @@
 # Воспроизводимые проверки команд DJ2
 
+## Отдельный стенд восстановления
+
+```text
+uv run omk lab dj2-recovery --server-source PATH_TO_DJ2_SERVER --java PATH_TO_JAVA8 --agent PATH_TO_AUTHLIB_INJECTOR --core PATH_TO_PRIVATE_CORE_0_2_3 --mods-json PATH_TO_VERIFIED_MOD_LIST --worldedit PATH_TO_WORLDEDIT_6_1_10
+```
+
+Это эксперимент на **новом** `.local/recovery-lab-*`, а не команда отката рабочего сервера.
+Принимается только SHA256 официального WorldEdit file 2941712:
+`cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75`.
+Сборка, Java/Forge и приватный Core предоставляются локально; payload в Git не входит.
+
+Стенд создаёт три полных ZIP-backup после чистой остановки: до повреждения, перед восстановлением
+и после него. Они остаются в `backups/`. В `snapshots/` готовятся отдельные архивы только
+верхнего мира, без неоднозначного выбора Nether/другого измерения старым WorldEdit ZIP reader.
+Перед применением записывается `recovery-plan.json` с allowlist измерений, границами,
+хешами и свежей полной копией. Проверяет выделение из 90 блоков в overworld, именованные предметы в vanilla/
+Iron Chest, энергию/направление/инвентарь Thermal Redstone Furnace, отмену и повтор,
+отказ обычному игроку, сохранность соседей в том же чанке и полный restart.
+Сохранённый NBT трёх контейнеров и соседнего сундука сравнивается отдельно, без изменения
+`.mca` и без извлечения архивов. Печь должна переплавить cobblestone в stone до снимка
+и после восстановления/restart; сам факт наличия блока недостаточен.
+
+Наблюдатель проходит настоящий Forge/Drasl вход, но не исполняет клиентские моды и GUI.
+Состояние — `.local/recovery-status.json`, итог — `report.json` внутри нового стенда.
+Успешная загрузка мода не равнозначна успешному восстановлению: смотрим все проверки
+и ограничения в [REGION_RECOVERY.md](../../REGION_RECOVERY.md).
+
+Отдельная проба ZIP reader не запускает Minecraft. В искусственный ZIP сначала записывается
+`lab-world/DIM-1/region/r.0.0.mca` с маркером `NETHER_DECOY`, затем верхний
+`lab-world/region/r.0.0.mca` с `OVERWORLD_EXPECTED` и `lab-world/level.dat`.
+Компилируется `tests/fixtures/WorldEditSnapshotProbe.java` (Java 8, ECJ 3.26.0), затем
+запускается с classpath из каталога `.class` и закреплённого WorldEdit jar, аргумент — ZIP.
+До подготовки выводится `NETHER_DECOY`, после `prepare_overworld_snapshot` —
+`OVERWORLD_EXPECTED`. Это проверка выбора файла настоящим классом jar, не проверка
+генерации Nether или полноценного отката другого измерения. Восемь Python-проверок
+в `tests/unit/test_recovery_lab.py` отдельно проверяют границы backup/подготовки/NBT parser.
+
+## Остальные командные проверки
+
 `omk lab dj2 --commands` поднимает новый loopback Forge 1.12.2 / 14.23.5.2860
 с установленными FTB Utilities 5.4.1.131 и FTB Library 5.4.7.2. Drasl использует
 отдельный временный Compose-проект с tmpfs и двумя новыми игровыми аккаунтами.

@@ -84,6 +84,13 @@ def main(argv: list[str] | None = None) -> int:
     server.add_subparsers(dest="action", required=True).add_parser("list")
     lab = sub.add_parser("lab", help="Disposable integration tests")
     lab_areas = lab.add_subparsers(dest="area", required=True)
+    from omk.recovery_lab import add_recovery_lab  # noqa: PLC0415
+
+    add_recovery_lab(
+        lab_areas.add_parser(
+            "dj2-recovery", help="Fresh Forge WorldEdit snapshot experiment"
+        )
+    )
     lab_admin = lab_areas.add_parser(
         "admin", help="Disposable operator CLI and client crash inbox"
     )
@@ -118,6 +125,10 @@ def main(argv: list[str] | None = None) -> int:
         report = doctor()
     elif args.command == "server":
         report = {"ok": True, "servers": [p.as_dict() for p in load_profiles()]}
+    elif args.area == "dj2-recovery":
+        from omk.recovery_lab import run_recovery_lab  # noqa: PLC0415
+
+        report = run_recovery_lab(args)
     elif args.area == "dj2":
         report = run_dj2_lab(args)
     elif args.area == "admin":
