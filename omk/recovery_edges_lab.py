@@ -107,7 +107,9 @@ def check_partial_snapshot(actor, console, snapshots, expect, report):
     _response(actor, "//pos1 143,241,132", "First position set")
     _response(actor, "//pos2 144,241,132", "Second position set")
     _response(actor, "/snap use partial.zip", "Snapshot set")
-    _response(actor, "//restore", "Restored; 1 missing chunks and 0 other errors.")
+    # This pinned reader reports an absent MCA location as an "other error",
+    # not a missing chunk. Keep the exact observed response in the evidence.
+    _response(actor, "//restore", "Restored; 0 missing chunks and 1 other errors.")
     report["native_partial_restore_response"] = list(actor.messages)
     expect(
         "Successfully found"
