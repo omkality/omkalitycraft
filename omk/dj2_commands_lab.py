@@ -357,14 +357,21 @@ def run_command_checks(
     suite="full",
     mute_guard=False,
 ):
-    if suite == "interactions":
+    if suite in {"interactions", "containers", "explosions"}:
         from omk.dj2_claims_lab import check_claim_interactions  # noqa: PLC0415
+        from omk.dj2_explosions_lab import check_tnt_claims  # noqa: PLC0415
+        from omk.dj2_inventory_lab import check_container_transfers  # noqa: PLC0415
 
         with (
             LabPlayer(client, session, 25576, mods) as first,
             LabPlayer(client, session2, 25576, mods) as second,
         ):
-            check_claim_interactions(first, second, console, expect)
+            if suite == "explosions":
+                check_tnt_claims(first, second, console, expect)
+            elif suite == "containers":
+                check_container_transfers(first, second, console, expect, report)
+            else:
+                check_claim_interactions(first, second, console, expect)
         return False
     if suite == "persistence":
         from omk.dj2_persistence_lab import prepare_mute_restart  # noqa: PLC0415

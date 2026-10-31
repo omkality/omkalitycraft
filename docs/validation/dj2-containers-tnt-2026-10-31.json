@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-31",
+  "application_version": "0.3.0.dev6",
+  "scope": "Validation tools only; no application, mod or server policy release",
+  "harness_source_commit": "0c7d922",
+  "private_core": "0.2.2",
+  "private_core_sha256": "344800ed86042be607cc948738c94e642bae39e1ca4e46db7eaa22deb01d95b7",
+  "ok": true,
+  "ready_for_public_launch": false,
+  "python_tests": {
+    "passed": 223,
+    "skipped": 1,
+    "ruff": true,
+    "black": true
+  },
+  "scenarios": {
+    "containers": {
+      "checks": [
+        "private_ftb_mute_guard_initialized_on_real_server_enabled",
+        "two_authenticated_protocol_players_complete_real_forge_handshake",
+        "private_server_core_loaded_explicit_client_policy",
+        "three_homes_allowed_and_fourth_denied_for_normal_player",
+        "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+        "rtp_available_to_normal_player_in_initial_profile",
+        "home_origin_platform_created_on_loaded_chunk",
+        "home_command_really_teleports_player_after_warmup",
+        "non_owner_can_break_unclaimed_test_block_positive_control",
+        "ftb_claim_blocks_non_owner_block_break",
+        "ftb_claim_allows_owner_block_break",
+        "server_guard_rejects_extra_declared_mod_list",
+        "server_guard_rejects_missing_declared_mod_list",
+        "server_guard_rejects_version_declared_mod_list",
+        "vanilla_chest_attacker_starts_without_item",
+        "vanilla_chest_unclaimed_transfer_positive_control",
+        "vanilla_chest_claimed_open_denied_to_non_owner",
+        "vanilla_chest_closed_window_click_does_not_steal_claimed_item",
+        "vanilla_chest_claimed_owner_transfer_positive_control",
+        "vanilla_chest_closed_window_replay_preserves_single_item_count",
+        "iron_chest_attacker_starts_without_item",
+        "iron_chest_unclaimed_transfer_positive_control",
+        "iron_chest_claimed_open_denied_to_non_owner",
+        "iron_chest_closed_window_click_does_not_steal_claimed_item",
+        "iron_chest_claimed_owner_transfer_positive_control",
+        "iron_chest_closed_window_replay_preserves_single_item_count"
+      ],
+      "temporary_auth_removed": true,
+      "inventory_confirmations": [
+        {
+          "container": "vanilla_chest",
+          "case": "unclaimed",
+          "accepted": [
+            false
+          ]
+        },
+        {
+          "container": "vanilla_chest",
+          "case": "owner",
+          "accepted": [
+            false
+          ]
+        },
+        {
+          "container": "iron_chest",
+          "case": "unclaimed",
+          "accepted": [
+            false
+          ]
+        },
+        {
+          "container": "iron_chest",
+          "case": "owner",
+          "accepted": [
+            false
+          ]
+        }
+      ]
+    },
+    "explosions": {
+      "checks": [
+        "private_ftb_mute_guard_initialized_on_real_server_enabled",
+        "two_authenticated_protocol_players_complete_real_forge_handshake",
+        "private_server_core_loaded_explicit_client_policy",
+        "three_homes_allowed_and_fourth_denied_for_normal_player",
+        "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+        "rtp_available_to_normal_player_in_initial_profile",
+        "home_origin_platform_created_on_loaded_chunk",
+        "home_command_really_teleports_player_after_warmup",
+        "non_owner_can_break_unclaimed_test_block_positive_control",
+        "ftb_claim_blocks_non_owner_block_break",
+        "ftb_claim_allows_owner_block_break",
+        "server_guard_rejects_extra_declared_mod_list",
+        "server_guard_rejects_missing_declared_mod_list",
+        "server_guard_rejects_version_declared_mod_list",
+        "tnt_unclaimed_target_exists",
+        "tnt_destroys_unclaimed_block_control",
+        "ftb_default_claim_prevents_tnt_block_damage_inside_claim",
+        "ftb_tnt_at_claim_border_preserves_claimed_and_breaks_unclaimed_block"
+      ],
+      "temporary_auth_removed": true
+    }
+  },
+  "artifacts_sha256": {
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "FTBUtilities-5.4.1.131.jar": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a",
+    "FTBLib-5.4.7.2.jar": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac",
+    "ironchest-1.12.2-7.0.72.847.jar": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f"
+  },
+  "iron_chest_provenance": {
+    "source": "Pre-existing local DJ2 server payload; no mod downloaded or replaced in this stage",
+    "file": "ironchest-1.12.2-7.0.72.847.jar",
+    "metadata_and_client_mod_list_version": "1.12.2-7.0.67.844",
+    "upstream_equivalence_inferred_from_filename": false
+  },
+  "original_server_modified": false,
+  "graphical_minecraft_tested_this_stage": false,
+  "harness_adjustments": [
+    "FML runtime GUI channel distinguished from FML|MP multipart data",
+    "Fixture NBT Count uses observed TAG_Int serialization of this pack",
+    "Transfers observed from authoritative server inventories despite correction confirmations",
+    "Destination chunk loaded and its floor asserted before home control",
+    "Empty entity selector response recognized before explosion assertions"
+  ],
+  "limitations": [
+    "Protocol actors do not render or execute client mods, predict container inventory or simulate physics",
+    "All four positive transfers received accepted=false corrections; actual transfer and single-item counts were independently verified on server",
+    "One iron ingot per container and closed-window replay are not an exhaustive duplication audit",
+    "TNT checks block damage only, not entity damage or arbitrary mod explosions",
+    "Compound containers across claim borders, already-open permission revocation, machines, pipes, liquids and allies remain untested",
+    "GTNH and public deployment remain separate milestones"
+  ],
+  "private_core_published": false
+}

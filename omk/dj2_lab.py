@@ -60,7 +60,15 @@ def add_dj2_lab(parser):
     )
     parser.add_argument(
         "--command-suite",
-        choices=["full", "moderation", "rtp", "persistence", "interactions"],
+        choices=[
+            "full",
+            "moderation",
+            "rtp",
+            "persistence",
+            "interactions",
+            "containers",
+            "explosions",
+        ],
         default="full",
     )
     parser.add_argument(
@@ -309,8 +317,16 @@ def _check_homes(first, console, expect):
         lambda: any("teleporting" in json.dumps(m) for m in tuple(first.messages))
     )
     expect(True, "rtp_available_to_normal_player_in_initial_profile")
+    # /fill rejects unloaded chunks. Load the destination before building the
+    # platform; a protocol actor otherwise floats even when construction failed.
+    console("tp omk_game_test 128.5 245 128.5")
+    first.wait(lambda: abs(first.position[0] - 128.5) < 1)
     console("fill 120 240 120 135 240 135 minecraft:stone")
     console("fill 120 241 120 135 244 135 minecraft:air")
+    expect(
+        "Successfully found" in console("testforblock 128 240 128 minecraft:stone"),
+        "home_origin_platform_created_on_loaded_chunk",
+    )
     console("tp omk_game_test 128.5 241 128.5")
     first.wait(lambda: abs(first.position[0] - 128.5) < 1)
     first.command("/home one")
@@ -508,6 +524,7 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
         "lab_folder": str(lab.relative_to(PROJECT_ROOT)),
         "logging_runtime": "2.25.5",
         "mute_guard_requested": args.mute_guard,
+        "command_suite": args.command_suite if args.commands else None,
     }
     compose = [
         "docker",
@@ -541,6 +558,11 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
                 dest / "mods/FTBLib-5.4.7.2.jar",
             ]
         }
+        if args.commands and args.command_suite == "containers":
+            artifact = dest / "mods/ironchest-1.12.2-7.0.72.847.jar"
+            report["tested_artifacts_sha256"][artifact.name] = hashlib.sha256(
+                artifact.read_bytes()
+            ).hexdigest()
         client, service, session, session2 = _accounts(compose, lab)
         server, server_log, stream = _start_server(args, lab, dest, client)
         _wait_server(server, server_log, state)

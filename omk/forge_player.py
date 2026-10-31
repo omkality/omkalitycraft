@@ -5,6 +5,7 @@ The lab supplies an explicit mod list from a previously verified real client.
 """
 
 import contextlib
+import io
 import json
 import math
 import socket
@@ -34,6 +35,7 @@ class LabPlayer:
         self.mods = dict(mods)
         self.messages = deque(maxlen=200)
         self.open_windows = deque(maxlen=20)
+        self.transactions = deque(maxlen=20)
         self.position = None
         self.health = None
         self.error = None
@@ -163,6 +165,52 @@ class LabPlayer:
             raise ValueError("Invalid lab window")
         self.send(0x08, struct.pack(">B", window_id))
 
+    def shift_click(self, window_id, slot, action, *, item_id, count, damage=0):
+        """Shift-click an explicit, NBT-free fixture stack; no client inventory model."""
+        self.check()
+        values = (window_id, slot, action, item_id, count, damage)
+        if not (
+            all(type(v) is int for v in values)
+            and 1 <= window_id <= 255
+            and 0 <= slot <= 1023
+            and 1 <= action <= 32767
+            and 0 <= item_id <= 32767
+            and 1 <= count <= 64
+            and 0 <= damage <= 32767
+        ):
+            raise ValueError("Invalid lab inventory click")
+        self.send(
+            0x07,
+            struct.pack(">Bhbhb", window_id, slot, 0, action, 1)
+            + struct.pack(">hbh", item_id, count, damage)
+            + b"\0",  # TAG_End: this fixture stack has no NBT.
+        )
+
+    def _runtime(self, payload):
+        # Forge's FMLRuntimeCodec discriminator 1 is OpenGui. Observe its server
+        # window ID without loading the mod or pretending to render its GUI.
+        packet = io.BytesIO(payload)
+        if packet.read(1) != b"\x01":
+            return
+        window_id = struct.unpack(">i", packet.read(4))[0]
+        mod = field(packet.read).decode()
+        gui, x, y, z = struct.unpack(">iiii", packet.read(16))
+        remaining = len(payload) - packet.tell()
+        if not 1 <= window_id <= 255 or len(mod) > 100 or remaining:
+            raise ValueError(
+                f"Invalid Forge lab window (id={window_id}, mod={mod[:100]}, "
+                f"trailing={remaining})"
+            )
+        self.open_windows.append(
+            {
+                "id": window_id,
+                "type": "forge:" + mod,
+                "gui": gui,
+                "position": (x, y, z),
+                "slots": None,
+            }
+        )
+
     def _forge(self, payload: bytes):
         if not payload:
             raise ValueError("Empty Forge handshake")
@@ -195,15 +243,35 @@ class LabPlayer:
         if self._handshake and self.position is not None:
             self.ready.set()
 
+    def _custom_packet(self, packet):
+        channel = field(packet.read).decode()
+        if channel == "FML|HS":
+            self._forge(packet.read())
+        elif channel == "FML":
+            self._runtime(packet.read())
+
+    def _container_packet(self, kind, packet):
+        if kind == 0x11:
+            window_id, action, accepted = struct.unpack(">Bh?", packet.read(4))
+            self.transactions.append((window_id, action, accepted))
+            if not accepted:
+                self.send(0x05, struct.pack(">Bh?", window_id, action, True))
+        else:
+            window_id = packet.read(1)[0]
+            container = field(packet.read).decode()
+            title = json.loads(field(packet.read))
+            slots = packet.read(1)[0]
+            self.open_windows.append(
+                {"id": window_id, "type": container, "title": title, "slots": slots}
+            )
+
     def _receive(self):
         try:
             while not self._stopping.is_set():
                 packet = self.connection.receive()
                 kind = number(packet.read)
                 if kind == 0x18:
-                    channel = field(packet.read).decode()
-                    if channel == "FML|HS":
-                        self._forge(packet.read())
+                    self._custom_packet(packet)
                 elif kind == 0x1F:
                     self.send(0x0B, packet.read())
                 elif kind == 0x0F:
@@ -214,19 +282,8 @@ class LabPlayer:
                     )
                 elif kind == 0x41:
                     self.health = struct.unpack(">f", packet.read(4))[0]
-                elif kind == 0x13:
-                    window_id = packet.read(1)[0]
-                    container = field(packet.read).decode()
-                    title = json.loads(field(packet.read))
-                    slots = packet.read(1)[0]
-                    self.open_windows.append(
-                        {
-                            "id": window_id,
-                            "type": container,
-                            "title": title,
-                            "slots": slots,
-                        }
-                    )
+                elif kind in {0x11, 0x13}:
+                    self._container_packet(kind, packet)
                 elif kind == 0x2F:
                     values = struct.unpack(">dddffB", packet.read(33))
                     previous = self.position or (0, 0, 0, 0, 0)
