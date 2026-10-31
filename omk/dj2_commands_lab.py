@@ -369,7 +369,7 @@ def run_command_checks(
             if suite == "explosions":
                 check_tnt_claims(first, second, console, expect)
             elif suite == "containers":
-                check_container_transfers(first, second, console, expect)
+                check_container_transfers(first, second, console, expect, report)
             else:
                 check_claim_interactions(first, second, console, expect)
         return False

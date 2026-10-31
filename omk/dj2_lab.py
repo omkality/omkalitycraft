@@ -317,8 +317,16 @@ def _check_homes(first, console, expect):
         lambda: any("teleporting" in json.dumps(m) for m in tuple(first.messages))
     )
     expect(True, "rtp_available_to_normal_player_in_initial_profile")
+    # /fill rejects unloaded chunks. Load the destination before building the
+    # platform; a protocol actor otherwise floats even when construction failed.
+    console("tp omk_game_test 128.5 245 128.5")
+    first.wait(lambda: abs(first.position[0] - 128.5) < 1)
     console("fill 120 240 120 135 240 135 minecraft:stone")
     console("fill 120 241 120 135 244 135 minecraft:air")
+    expect(
+        "Successfully found" in console("testforblock 128 240 128 minecraft:stone"),
+        "home_origin_platform_created_on_loaded_chunk",
+    )
     console("tp omk_game_test 128.5 241 128.5")
     first.wait(lambda: abs(first.position[0] - 128.5) < 1)
     first.command("/home one")

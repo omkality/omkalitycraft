@@ -28,10 +28,22 @@ def _open(actor, point, kind):
     return window["id"]
 
 
-def _take(actor, window_id, action):
+def _take(actor, window_id, action, console, name, point, block):
     actor.transactions.clear()
     actor.shift_click(window_id, 0, action, item_id=265, count=1)
-    actor.wait(lambda: (window_id, action, True) in tuple(actor.transactions))
+    # The real pack transferred the item even when the actor did not observe a
+    # positive vanilla confirmation. Test authoritative state, not prediction.
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline:
+        actor.check()
+        if _empty(console, point, block) and _has_item(console, name):
+            return [
+                accepted
+                for wid, aid, accepted in tuple(actor.transactions)
+                if (wid, aid) == (window_id, action)
+            ]
+        time.sleep(0.1)
+    raise RuntimeError("Fixture transfer did not reach server inventory")
 
 
 def _has_item(console, name):
@@ -61,7 +73,7 @@ def _deny_open(actor, point):
         time.sleep(0.05)
 
 
-def check_container_transfers(first, second, console, expect):
+def check_container_transfers(first, second, console, expect, report):
     # Both actors remain non-OP. Survival prevents creative inventory mechanics
     # from invalidating the transfer/duplication controls.
     for name in (FIRST, SECOND):
@@ -69,6 +81,7 @@ def check_container_transfers(first, second, console, expect):
         console("clear " + name)
     console("fill 16 240 16 31 240 31 minecraft:stone")
     console("fill 16 241 16 31 244 31 minecraft:air")
+    confirmations = report["inventory_confirmations"] = []
     for label, block, kind in [
         ("vanilla_chest", "minecraft:chest", "minecraft:chest"),
         ("iron_chest", "ironchest:iron_chest", "forge:ironchest"),
@@ -80,7 +93,10 @@ def check_container_transfers(first, second, console, expect):
         expect(not _has_item(console, SECOND), label + "_attacker_starts_without_item")
         _stock(console, outside, block)
         previous_window = _open(second, outside, kind)
-        _take(second, previous_window, 1)
+        accepted = _take(second, previous_window, 1, console, SECOND, outside, block)
+        confirmations.append(
+            {"container": label, "case": "unclaimed", "accepted": accepted}
+        )
         second.close_window(previous_window)
         expect(
             _empty(console, outside, block) and _has_item(console, SECOND),
@@ -107,7 +123,10 @@ def check_container_transfers(first, second, console, expect):
 
         console("clear " + FIRST)
         window_id = _open(first, inside, kind)
-        _take(first, window_id, 1)
+        accepted = _take(first, window_id, 1, console, FIRST, inside, block)
+        confirmations.append(
+            {"container": label, "case": "owner", "accepted": accepted}
+        )
         first.close_window(window_id)
         expect(
             _empty(console, inside, block) and _has_item(console, FIRST),

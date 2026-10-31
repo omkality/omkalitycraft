@@ -18,7 +18,7 @@ def _tnt(console, x, y, z):
     while time.monotonic() < deadline:
         # Wait for the actual entity to disappear, not just an arbitrary delay.
         result = console("testfor @e[type=minecraft:tnt,tag=omklabtnt]")
-        if "cannot be found" in result:
+        if "found nothing" in result or "cannot be found" in result:
             return
         time.sleep(0.1)
     raise RuntimeError("Lab TNT did not finish its explosion")
