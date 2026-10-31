@@ -22,7 +22,8 @@ def seed_full_return(actor, console, expect):
     expect(
         "Found "
         in console(
-            f'testfor {FIRST} {{Inventory:[{{Slot:8b,id:"minecraft:emerald",Count:5b}}]}}'
+            # DJ2/NotEnoughIDs writes Count as TAG_Int, Slot remains TAG_Byte.
+            f'testfor {FIRST} {{Inventory:[{{Slot:8b,id:"minecraft:emerald",Count:5}}]}}'
         ),
         "full_backup_player_inventory_seeded",
     )
@@ -35,7 +36,7 @@ def damage_full_return(actor, console, expect):
     expect(
         "Found "
         in console(
-            f'testfor {FIRST} {{Inventory:[{{Slot:8b,id:"minecraft:emerald",Count:1b}}]}}'
+            f'testfor {FIRST} {{Inventory:[{{Slot:8b,id:"minecraft:emerald",Count:1}}]}}'
         ),
         "full_backup_player_inventory_really_changed",
     )
@@ -69,7 +70,7 @@ def _restored_state(first, console, expect):
     expect(
         "Found "
         in console(
-            f'testfor {FIRST} {{Inventory:[{{Slot:8b,id:"minecraft:emerald",Count:5b}}]}}'
+            f'testfor {FIRST} {{Inventory:[{{Slot:8b,id:"minecraft:emerald",Count:5}}]}}'
         ),
         "full_return_player_inventory",
     )
