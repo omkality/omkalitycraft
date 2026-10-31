@@ -2,6 +2,11 @@
 
 ## Unreleased — DJ2 protection and recovery validation tools
 
+- Add a bounded, read-only selected-chunk coverage guard for prepared overworld lab snapshots, with synthetic missing/corrupt/coordinate/bounds checks.
+- Add opt-in entity and incomplete-snapshot characterization in a disposable Forge lab; successful characterization is not full entity recovery or atomic apply.
+- Confirm native partial mutation despite a restore error and unchanged armor-stand state; reject the incomplete snapshot before mutation with the lab preflight.
+- Record hosted-first DJ2 rollout and a shared community account, with manual account recovery still pending.
+
 - Verify selected-area WorldEdit recovery on a disposable full DJ2 server with 71 checks, full container/machine NBT comparison, neighbor controls, undo/redo and restart/smelting.
 - Reproduce the pinned WorldEdit ZIP reader's dimension ambiguity and prepare overworld-only snapshots separately from full backups.
 - Record a pre-apply lab plan and keep all recovery experiments away from existing servers/worlds.
