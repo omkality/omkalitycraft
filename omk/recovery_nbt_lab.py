@@ -7,14 +7,17 @@ import zlib
 from launcher.nbt import MAX_BYTES, read_nbt
 
 
-def fixture_tiles(snapshot):
-    # Fixture chunk (8,8), region (0,0), overworld only. No archive extraction.
+def chunk_level(snapshot, chunk_x, chunk_z):
+    """Bounded overworld chunk reader for lab preflight; no archive extraction."""
     with zipfile.ZipFile(snapshot) as archive:
-        info = archive.getinfo("lab-world/region/r.0.0.mca")
+        name = f"lab-world/region/r.{chunk_x // 32}.{chunk_z // 32}.mca"
+        if sum(info.filename == name for info in archive.infolist()) != 1:
+            raise ValueError("Missing or duplicate fixture region")
+        info = archive.getinfo(name)
         if info.file_size > 128 * 1024**2:
             raise ValueError("Fixture region exceeds lab limit")
         with archive.open(info) as region:
-            region.seek(4 * (8 + 8 * 32))
+            region.seek(4 * (chunk_x % 32 + (chunk_z % 32) * 32))
             location = region.read(4)
             if len(location) != 4:
                 raise ValueError("Missing fixture chunk header")
@@ -37,7 +40,11 @@ def fixture_tiles(snapshot):
     if len(raw) > MAX_BYTES or not inflater.eof or inflater.unused_data:
         raise ValueError("Invalid or oversized fixture NBT")
     _, root = read_nbt(raw)
-    tiles = root["Level"].value["TileEntities"].value[1]
+    return root["Level"].value
+
+
+def fixture_tiles(snapshot):
+    tiles = chunk_level(snapshot, 8, 8)["TileEntities"].value[1]
     return {
         (
             tile.value["x"].value,

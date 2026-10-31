@@ -21,6 +21,13 @@ from omk.dj2_lab import (
 )
 from omk.forge_player import LabPlayer
 from omk.profiles import PROJECT_ROOT
+from omk.recovery_edges_lab import (
+    characterize_entities,
+    check_partial_snapshot,
+    damage_edges,
+    seed_edges,
+)
+from omk.recovery_preflight_lab import preflight
 from omk.recovery_snapshot_lab import prepare_overworld_snapshot
 
 WORLDEDIT_SHA256 = "cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75"
@@ -41,6 +48,11 @@ def add_recovery_lab(parser):
 
     for flag in ["server-source", "java", "agent", "core", "mods-json", "worldedit"]:
         parser.add_argument("--" + flag, type=Path, required=True)
+    parser.add_argument(
+        "--edge-cases",
+        action="store_true",
+        help="Characterize entities and a deliberately incomplete snapshot in the new lab",
+    )
 
 
 def _snapshot(server, dest, target):
@@ -178,11 +190,57 @@ def _restore(actor, command="//restore"):
     _response(actor, command, "Restored; 0 missing chunks and 0 other errors.")
 
 
-def _exercise(client, session, mods, start, backup, expect, report):
+def _restore_checks(actor, console, expect, report, snapshots, edge_cases):
+    _response(actor, "//restore before-grief.zip", "not permitted")
+    expect(
+        _found(console, "130 241 130", "minecraft:air"),
+        "normal_player_cannot_restore",
+    )
+    console("op " + FIRST)  # Only this new lab, not the player's real rank.
+    _response(actor, "//pos1 130,241,130", "First position set")
+    _response(actor, "//pos2 135,243,134", "Second position set")
+    _response(actor, "/snap list", "before-grief.zip")
+    expect(True, "operator_lists_actual_zip_snapshots")
+    _response(actor, "/snap use before-grief.zip", "Snapshot set")
+    if edge_cases:
+        expect(
+            preflight(snapshots / "before-grief.zip", (130, 241, 130), (135, 243, 134))[
+                "blocks"
+            ]
+            == 90,
+            "primary_restore_selection_passes_readonly_preflight",
+        )
+    _restore(actor)
+    report["restore_response"] = list(actor.messages)
+    _restored(console, expect, "first_restore_")
+    if edge_cases:
+        characterize_entities(console, expect, report, "after_restore_")
+    _response(actor, "//undo", "Undo successful")
+    expect(_found(console, "130 241 130", "minecraft:air"), "undo_restores_damaged_air")
+    expect(
+        _found(console, "134 241 130", "thermalexpansion:machine", "{Energy:0}"),
+        "undo_restores_damaged_machine",
+    )
+    _response(actor, "//redo", "Redo successful")
+    _restored(console, expect, "redo_")
+    _restore(actor)
+    _restored(console, expect, "repeat_restore_")
+    _response(actor, "//restore nonexistent.zip", "does not exist")
+    _restored(console, expect, "missing_snapshot_")
+    if edge_cases:
+        check_partial_snapshot(actor, console, snapshots, expect, report)
+    console("deop " + FIRST)
+
+
+def _exercise(
+    client, session, mods, start, backup, expect, report, *, snapshots, edge_cases
+):
     console = start()
     with LabPlayer(client, session, 25576, mods) as actor:
         _place(actor, FIRST, (128.5, 241, 128.5), console)
         _fixture(console)
+        if edge_cases:
+            seed_edges(console, expect)
         _smelt(console, expect, "machine_smelt_positive_control_before_snapshot")
         console(f"blockdata 134 241 130 {MACHINE}")
         report["machine_fixture_nbt"] = console("blockdata 134 241 130 {}")[-3500:]
@@ -204,6 +262,8 @@ def _exercise(client, session, mods, start, backup, expect, report):
     with LabPlayer(client, session, 25576, mods) as actor:
         _place(actor, FIRST, (128.5, 241, 128.5), console)
         _damage(console)
+        if edge_cases:
+            damage_edges(console, expect)
         expect(_found(console, "130 241 130", "minecraft:air"), "base_really_damaged")
         expect(
             _found(console, "134 241 130", "thermalexpansion:machine", "{Energy:0}"),
@@ -213,40 +273,14 @@ def _exercise(client, session, mods, start, backup, expect, report):
     console = start()
     with LabPlayer(client, session, 25576, mods) as actor:
         _place(actor, FIRST, (128.5, 241, 128.5), console)
-        _response(actor, "//restore before-grief.zip", "not permitted")
-        expect(
-            _found(console, "130 241 130", "minecraft:air"),
-            "normal_player_cannot_restore",
-        )
-        console("op " + FIRST)  # Only this new lab, not the player's real rank.
-        _response(actor, "//pos1 130,241,130", "First position set")
-        _response(actor, "//pos2 135,243,134", "Second position set")
-        _response(actor, "/snap list", "before-grief.zip")
-        expect(True, "operator_lists_actual_zip_snapshots")
-        _response(actor, "/snap use before-grief.zip", "Snapshot set")
-        _restore(actor)
-        report["restore_response"] = list(actor.messages)
-        _restored(console, expect, "first_restore_")
-        _response(actor, "//undo", "Undo successful")
-        expect(
-            _found(console, "130 241 130", "minecraft:air"), "undo_restores_damaged_air"
-        )
-        expect(
-            _found(console, "134 241 130", "thermalexpansion:machine", "{Energy:0}"),
-            "undo_restores_damaged_machine",
-        )
-        _response(actor, "//redo", "Redo successful")
-        _restored(console, expect, "redo_")
-        _restore(actor)
-        _restored(console, expect, "repeat_restore_")
-        _response(actor, "//restore nonexistent.zip", "does not exist")
-        _restored(console, expect, "missing_snapshot_")
-        console("deop " + FIRST)
+        _restore_checks(actor, console, expect, report, snapshots, edge_cases)
     backup("after-restore")
     console = start()
     with LabPlayer(client, session, 25576, mods) as actor:
         _place(actor, FIRST, (128.5, 241, 128.5), console)
         _restored(console, expect, "after_restart_")
+        if edge_cases:
+            characterize_entities(console, expect, report, "after_restart_")
         _smelt(console, expect, "restored_machine_smelt_after_full_restart")
 
 
@@ -280,6 +314,16 @@ def _backup(server, stream, lab, dest, name, report):
                     "backup_before_apply": "backups/before-restore.zip",
                     "snapshots": report["snapshots"],
                     "artifacts": report["artifacts"],
+                    "native_partial_probe": (
+                        {
+                            "lab_only": True,
+                            "guard_bypassed_for_characterization": True,
+                            "min": [143, 241, 132],
+                            "max": [144, 241, 132],
+                        }
+                        if report.get("edge_cases")
+                        else None
+                    ),
                 },
                 indent=2,
             ),
@@ -294,6 +338,7 @@ def run_recovery_lab(args):
     report = {
         "ok": False,
         "checks": [],
+        "edge_cases": args.edge_cases,
         "lab_folder": str(lab.relative_to(PROJECT_ROOT)),
         "candidate": {
             "source": WORLDEDIT_SOURCE,
@@ -366,7 +411,17 @@ def run_recovery_lab(args):
             _backup(server, stream, lab, dest, name, report)
             expect(True, name + "_snapshot_after_clean_stop")
 
-        _exercise(client, session, mods, start, backup, expect, report)
+        _exercise(
+            client,
+            session,
+            mods,
+            start,
+            backup,
+            expect,
+            report,
+            snapshots=snapshots,
+            edge_cases=args.edge_cases,
+        )
         from omk.recovery_nbt_lab import verify_snapshot_tiles  # noqa: PLC0415
 
         verify_snapshot_tiles(snapshots, expect)
