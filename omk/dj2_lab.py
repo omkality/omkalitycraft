@@ -68,8 +68,14 @@ def add_dj2_lab(parser):
             "interactions",
             "containers",
             "explosions",
+            "claim-edges",
         ],
         default="full",
+    )
+    parser.add_argument(
+        "--claim-guard",
+        action="store_true",
+        help="Require the private FTB container claim adapter for edge scenarios",
     )
     parser.add_argument(
         "--mute-guard",
@@ -79,6 +85,10 @@ def add_dj2_lab(parser):
 
 
 def _validate(args):
+    if args.claim_guard and not (args.commands and args.command_suite == "claim-edges"):
+        raise ValueError(
+            "Claim guard checks require --commands --command-suite claim-edges"
+        )
     if args.command_suite == "persistence" and not (args.commands and args.mute_guard):
         raise ValueError("Persistence checks require --commands and --mute-guard")
     if (
@@ -321,10 +331,12 @@ def _check_homes(first, console, expect):
     # platform; a protocol actor otherwise floats even when construction failed.
     console("tp omk_game_test 128.5 245 128.5")
     first.wait(lambda: abs(first.position[0] - 128.5) < 1)
-    console("fill 120 240 120 135 240 135 minecraft:stone")
+    # Underground Biomes also replaces cobblestone after chunk population.
+    # Use a bedrock floor only in this disposable command fixture.
+    console("fill 120 240 120 135 240 135 minecraft:bedrock")
     console("fill 120 241 120 135 244 135 minecraft:air")
     expect(
-        "Successfully found" in console("testforblock 128 240 128 minecraft:stone"),
+        "Successfully found" in console("testforblock 128 240 128 minecraft:bedrock"),
         "home_origin_platform_created_on_loaded_chunk",
     )
     console("tp omk_game_test 128.5 241 128.5")
@@ -495,7 +507,7 @@ def _protocol_tests(client, session, session2, mods, server, server_log, expect)
     _check_guard(client, session, mods, expect)
 
 
-def _catalog_report(dest, report, mute_guard, expect):
+def _catalog_report(dest, report, mute_guard, expect, claim_guard=False):
     catalog = dest / "omk-command-catalog.json"
     metadata = {}
     if catalog.is_file():
@@ -505,12 +517,20 @@ def _catalog_report(dest, report, mute_guard, expect):
             "commands": len(metadata["commands"]),
             "rank_configs": len(metadata["rank_configs"]),
         }
+        report["private_core_version"] = metadata.get("core", "unknown")
     if mute_guard:
         guard_state = metadata.get("ftb_mute_guard", "missing adapter metadata")
         report["ftb_mute_guard_state"] = guard_state
         expect(
             guard_state == "enabled",
             "private_ftb_mute_guard_initialized_on_real_server_" + str(guard_state),
+        )
+    if claim_guard:
+        state = metadata.get("ftb_claim_guard", "missing adapter metadata")
+        report["ftb_claim_guard_state"] = state
+        expect(
+            state == "enabled",
+            "private_ftb_claim_guard_initialized_on_real_server_" + str(state),
         )
 
 
@@ -525,6 +545,7 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
         "logging_runtime": "2.25.5",
         "mute_guard_requested": args.mute_guard,
         "command_suite": args.command_suite if args.commands else None,
+        "claim_guard_requested": args.claim_guard,
     }
     compose = [
         "docker",
@@ -550,6 +571,9 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
     try:
         state("preparing_isolated_server")
         dest, mods = _copy_server(args, lab)
+        report["private_core_sha256"] = hashlib.sha256(
+            (dest / "mods/OmkalityCore.jar").read_bytes()
+        ).hexdigest()
         report["tested_artifacts_sha256"] = {
             path.name: hashlib.sha256(path.read_bytes()).hexdigest()
             for path in [
@@ -558,7 +582,7 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
                 dest / "mods/FTBLib-5.4.7.2.jar",
             ]
         }
-        if args.commands and args.command_suite == "containers":
+        if args.commands and args.command_suite in {"containers", "claim-edges"}:
             artifact = dest / "mods/ironchest-1.12.2-7.0.72.847.jar"
             report["tested_artifacts_sha256"][artifact.name] = hashlib.sha256(
                 artifact.read_bytes()
@@ -566,7 +590,7 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
         client, service, session, session2 = _accounts(compose, lab)
         server, server_log, stream = _start_server(args, lab, dest, client)
         _wait_server(server, server_log, state)
-        _catalog_report(dest, report, args.mute_guard, expect)
+        _catalog_report(dest, report, args.mute_guard, expect, args.claim_guard)
         _protocol_tests(client, session, session2, mods, server, server_log, expect)
         if args.commands:
             from omk.dj2_commands_lab import (  # noqa: PLC0415
@@ -584,6 +608,7 @@ def run_dj2_lab(args: argparse.Namespace) -> dict:
                 report,
                 suite=args.command_suite,
                 mute_guard=args.mute_guard,
+                claim_guard=args.claim_guard,
             )
             if restart:
                 state("safely_restarting_owned_lab_server")

@@ -21,7 +21,12 @@ def _stock(console, point, block):
 def _open(actor, point, kind):
     actor.open_windows.clear()
     actor.use_block(*point)
-    actor.wait(lambda: bool(actor.open_windows))
+    try:
+        actor.wait(lambda: bool(actor.open_windows))
+    except RuntimeError as error:
+        raise RuntimeError(
+            f"Fixture open failed at {point}; actor at {actor.position}: {error}"
+        ) from None
     window = actor.open_windows[-1]
     if window["type"] != kind:
         raise RuntimeError("Unexpected fixture container type: " + window["type"])
