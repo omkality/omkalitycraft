@@ -11,8 +11,11 @@ uv run omk lab dj2-recovery --server-source PATH_TO_DJ2_SERVER --java PATH_TO_JA
 `cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75`.
 Сборка, Java/Forge и приватный Core предоставляются локально; payload в Git не входит.
 
-Стенд создаёт три ZIP-снимка после чистой остановки: до повреждения, перед восстановлением
-и после него. Проверяет выделение из 90 блоков в overworld, именованные предметы в vanilla/
+Стенд создаёт три полных ZIP-backup после чистой остановки: до повреждения, перед восстановлением
+и после него. Они остаются в `backups/`. В `snapshots/` готовятся отдельные архивы только
+верхнего мира, без неоднозначного выбора Nether/другого измерения старым WorldEdit ZIP reader.
+Перед применением записывается `recovery-plan.json` с allowlist измерений, границами,
+хешами и свежей полной копией. Проверяет выделение из 90 блоков в overworld, именованные предметы в vanilla/
 Iron Chest, энергию/направление/инвентарь Thermal Redstone Furnace, отмену и повтор,
 отказ обычному игроку, сохранность соседей в том же чанке и полный restart.
 Сохранённый NBT трёх контейнеров и соседнего сундука сравнивается отдельно, без изменения
@@ -23,6 +26,16 @@ Iron Chest, энергию/направление/инвентарь Thermal Red
 Состояние — `.local/recovery-status.json`, итог — `report.json` внутри нового стенда.
 Успешная загрузка мода не равнозначна успешному восстановлению: смотрим все проверки
 и ограничения в [REGION_RECOVERY.md](../../REGION_RECOVERY.md).
+
+Отдельная проба ZIP reader не запускает Minecraft. В искусственный ZIP сначала записывается
+`lab-world/DIM-1/region/r.0.0.mca` с маркером `NETHER_DECOY`, затем верхний
+`lab-world/region/r.0.0.mca` с `OVERWORLD_EXPECTED` и `lab-world/level.dat`.
+Компилируется `tests/fixtures/WorldEditSnapshotProbe.java` (Java 8, ECJ 3.26.0), затем
+запускается с classpath из каталога `.class` и закреплённого WorldEdit jar, аргумент — ZIP.
+До подготовки выводится `NETHER_DECOY`, после `prepare_overworld_snapshot` —
+`OVERWORLD_EXPECTED`. Это проверка выбора файла настоящим классом jar, не проверка
+генерации Nether или полноценного отката другого измерения. Восемь Python-проверок
+в `tests/unit/test_recovery_lab.py` отдельно проверяют границы backup/подготовки/NBT parser.
 
 ## Остальные командные проверки
 

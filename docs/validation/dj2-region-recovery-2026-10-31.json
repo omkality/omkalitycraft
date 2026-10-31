@@ -1,0 +1,200 @@
+{
+  "ok": true,
+  "candidate": {
+    "source": "https://www.curseforge.com/minecraft/mc-mods/worldedit/files/2941712",
+    "sha256": "cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75",
+    "version": "6.1.10",
+    "mcmod_metadata": "6.1.10-SNAPSHOT;e6b38e8"
+  },
+  "scope": {
+    "dimension": 0,
+    "min": [
+      130,
+      241,
+      130
+    ],
+    "max": [
+      135,
+      243,
+      134
+    ],
+    "blocks": 90
+  },
+  "private_core_sha256": "7333a6a55a65ea08b647302c13dbf7226b61ab7f170fa23592eee8a3e504ce30",
+  "artifacts": {
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "ironchest-1.12.2-7.0.72.847.jar": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f",
+    "ThermalExpansion-1.12.2-5.5.7.1-universal.jar": "f1cc8aeefcda2c00235bfb5ee7f76d731325aa324e90e84d7d232d88c1e6f472",
+    "CoFHCore-1.12.2-4.6.6.1-universal.jar": "e07b0c48def9ce8cfaa4cf7a7c656bf7f7d6815f74fbcc2957dd43efa78486a9",
+    "RedstoneFlux-1.12-2.1.1.1-universal.jar": "6ff7f96d076bfaad83fb6ba92ec457b8a76391439663b0cc32a9ec5398345280",
+    "NotEnoughIDs-1.5.4.4.jar": "f042f90c5623a1f2bbcc1d0bd93cfca40109b9c0659399e1f48aa8ce37b75622"
+  },
+  "checks": [
+    "machine_smelt_positive_control_before_snapshot",
+    "idle_machine_fixture_has_seeded_state",
+    "iron_chest_fixture_has_named_items",
+    "before-grief_snapshot_after_clean_stop",
+    "base_really_damaged",
+    "machine_state_really_damaged",
+    "before-restore_snapshot_after_clean_stop",
+    "normal_player_cannot_restore",
+    "operator_lists_actual_zip_snapshots",
+    "first_restore_vanilla_chest_named_inventory",
+    "first_restore_same_type_iron_chest_inventory",
+    "first_restore_machine_energy_orientation_inventory",
+    "first_restore_griefer_block_removed",
+    "first_restore_neighbor_chest_same_chunk_unchanged",
+    "first_restore_above_selection_same_chunk_unchanged",
+    "first_restore_west_of_selection_unchanged",
+    "first_restore_north_of_selection_unchanged",
+    "first_restore_below_selection_unchanged",
+    "first_restore_machine_block_metadata_unchanged",
+    "undo_restores_damaged_air",
+    "undo_restores_damaged_machine",
+    "redo_vanilla_chest_named_inventory",
+    "redo_same_type_iron_chest_inventory",
+    "redo_machine_energy_orientation_inventory",
+    "redo_griefer_block_removed",
+    "redo_neighbor_chest_same_chunk_unchanged",
+    "redo_above_selection_same_chunk_unchanged",
+    "redo_west_of_selection_unchanged",
+    "redo_north_of_selection_unchanged",
+    "redo_below_selection_unchanged",
+    "redo_machine_block_metadata_unchanged",
+    "repeat_restore_vanilla_chest_named_inventory",
+    "repeat_restore_same_type_iron_chest_inventory",
+    "repeat_restore_machine_energy_orientation_inventory",
+    "repeat_restore_griefer_block_removed",
+    "repeat_restore_neighbor_chest_same_chunk_unchanged",
+    "repeat_restore_above_selection_same_chunk_unchanged",
+    "repeat_restore_west_of_selection_unchanged",
+    "repeat_restore_north_of_selection_unchanged",
+    "repeat_restore_below_selection_unchanged",
+    "repeat_restore_machine_block_metadata_unchanged",
+    "missing_snapshot_vanilla_chest_named_inventory",
+    "missing_snapshot_same_type_iron_chest_inventory",
+    "missing_snapshot_machine_energy_orientation_inventory",
+    "missing_snapshot_griefer_block_removed",
+    "missing_snapshot_neighbor_chest_same_chunk_unchanged",
+    "missing_snapshot_above_selection_same_chunk_unchanged",
+    "missing_snapshot_west_of_selection_unchanged",
+    "missing_snapshot_north_of_selection_unchanged",
+    "missing_snapshot_below_selection_unchanged",
+    "missing_snapshot_machine_block_metadata_unchanged",
+    "after-restore_snapshot_after_clean_stop",
+    "after_restart_vanilla_chest_named_inventory",
+    "after_restart_same_type_iron_chest_inventory",
+    "after_restart_machine_energy_orientation_inventory",
+    "after_restart_griefer_block_removed",
+    "after_restart_neighbor_chest_same_chunk_unchanged",
+    "after_restart_above_selection_same_chunk_unchanged",
+    "after_restart_west_of_selection_unchanged",
+    "after_restart_north_of_selection_unchanged",
+    "after_restart_below_selection_unchanged",
+    "after_restart_machine_block_metadata_unchanged",
+    "restored_machine_smelt_after_full_restart",
+    "vanilla_chest_saved_tile_exists",
+    "vanilla_chest_complete_saved_nbt_matches_snapshot",
+    "iron_chest_saved_tile_exists",
+    "iron_chest_complete_saved_nbt_matches_snapshot",
+    "thermal_furnace_saved_tile_exists",
+    "thermal_furnace_complete_saved_nbt_matches_snapshot",
+    "neighbor_saved_tile_exists",
+    "neighbor_complete_saved_nbt_unchanged"
+  ],
+  "backups": {
+    "before-grief": {
+      "files": 264,
+      "uncompressed_bytes": 6729795,
+      "bytes": 2246274,
+      "sha256": "2a014f2083951893eb429e4e0acd78f70f9f405e3c43e11d423e32a315941021"
+    },
+    "before-restore": {
+      "files": 265,
+      "uncompressed_bytes": 6924763,
+      "bytes": 2452675,
+      "sha256": "43f0bab82b67cf08f5f4f8ec1aa8bea9f510b323354451121ece6777be4763db"
+    },
+    "after-restore": {
+      "files": 265,
+      "uncompressed_bytes": 6924892,
+      "bytes": 2453014,
+      "sha256": "7999c90837c113139180a4b3e6729d68cca8d43483198cc28058a2b22efa59c6"
+    }
+  },
+  "snapshots": {
+    "before-grief": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 2078842,
+      "excluded_entries": 261,
+      "sha256": "bce5881b1799195ba50cc6cca82523850180e289432c9075d49b45164b28905e"
+    },
+    "before-restore": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 2078842,
+      "excluded_entries": 262,
+      "sha256": "f69a7785141597d295b76dbb81a54a9d2fd0a3c346774f2c41a8c6cdcb2366c1"
+    },
+    "after-restore": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 2078843,
+      "excluded_entries": 262,
+      "sha256": "5e087703668f13779315aae1f5242435f5962a9232c600680166db01cd92dbe5"
+    }
+  },
+  "temporary_auth_removed": true,
+  "schema": 1,
+  "date": "2026-10-31",
+  "source_revision": "33339e169303862f871032e705962efae331d62a",
+  "pack": "DJ2 RU 2.21.3",
+  "private_core_version": "0.2.3",
+  "check_count": 71,
+  "environment": {
+    "os": "Windows",
+    "java": "Temurin 1.8.0_472-b08, 64-bit",
+    "mode": "Full isolated Forge server with authenticated protocol actor; no client GUI execution"
+  },
+  "restore_response": [
+    "Snapshot 'before-grief.zip' loaded; now restoring...",
+    "Restored; 0 missing chunks and 0 other errors."
+  ],
+  "owned_game_server_stopped": true,
+  "owned_ports_listening_after_cleanup": [],
+  "existing_server_or_world_modified": false,
+  "snapshot_plan_recorded_before_apply": true,
+  "zip_reader_component_probe": {
+    "minecraft_started": false,
+    "class": "com.sk89q.worldedit.world.storage.ZippedMcRegionChunkStore",
+    "world_argument": "lab-world",
+    "region_argument": "r.0.0.mca",
+    "archive_first_region": "lab-world/DIM-1/region/r.0.0.mca",
+    "expected": "OVERWORLD_EXPECTED",
+    "raw_zip_observed": "NETHER_DECOY",
+    "prepared_overworld_zip_observed": "OVERWORLD_EXPECTED",
+    "probe_source": "tests/fixtures/WorldEditSnapshotProbe.java",
+    "probe_source_sha256": "5724fc9759c47512dd8ac2b907b051d0fbae59accfffbbf5fd1fb160f823807e",
+    "compiler": "ECJ 3.26.0",
+    "compiler_sha256": "ac0ba5876eaf7ebb47749a0d1be179c51f194b9dd0b875d1c09e1b530f5a2db5"
+  },
+  "python_validation": {
+    "passed": 234,
+    "skipped": 1,
+    "skip_reason": "Windows symlink privilege",
+    "ruff": "pass",
+    "black": "pass"
+  },
+  "limits": [
+    "90-block overworld selection only; no production recovery CLI or deployment",
+    "One Thermal furnace and vanilla/Iron Chest, not every DJ2 machine or network",
+    "Entities, fluids, multiblocks, AE2/EnderIO networks and other dimensions untested",
+    "Snapshot restore rewinds legitimate changes too; not actor-specific history",
+    "Stolen or dropped items outside the restored inventories may be duplicated",
+    "Missing snapshot tested; damaged/partial multi-chunk archive and mid-apply crash recovery remain untested",
+    "No FTB Backups archive compatibility, production retention, pack migration or client GUI claim",
+    "WorldEdit edits are not atomic; undo is not a backup"
+  ],
+  "artifact_origin": "WorldEdit: official pinned CurseForge file; other jars: unchanged pre-existing DJ2 payload copied into new lab"
+}
