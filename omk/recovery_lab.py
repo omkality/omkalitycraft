@@ -21,6 +21,7 @@ from omk.dj2_lab import (
 )
 from omk.forge_player import LabPlayer
 from omk.profiles import PROJECT_ROOT
+from omk.recovery_snapshot_lab import prepare_overworld_snapshot
 
 WORLDEDIT_SHA256 = "cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75"
 WORLDEDIT_SOURCE = (
@@ -73,8 +74,8 @@ def _snapshot(server, dest, target):
     }
 
 
-def _found(console, xyz, block, nbt="{}"):
-    return "Successfully found" in console(f"testforblock {xyz} {block} -1 {nbt}")
+def _found(console, xyz, block, nbt="{}", *, data=-1):
+    return "Successfully found" in console(f"testforblock {xyz} {block} {data} {nbt}")
 
 
 def _fixture(console):
@@ -147,7 +148,12 @@ def _restored(console, expect, prefix):
         ),
         ("below_selection_unchanged", "130 240 130", "minecraft:diamond_block", "{}"),
     ]:
-        expect(_found(console, xyz, block, nbt), prefix + label)
+        data = 2 if block == "minecraft:chest" else -1
+        expect(_found(console, xyz, block, nbt, data=data), prefix + label)
+    expect(
+        _found(console, "134 241 130", "thermalexpansion:machine", data=0),
+        prefix + "machine_block_metadata_unchanged",
+    )
 
 
 def _smelt(console, expect, label):
@@ -207,7 +213,7 @@ def _exercise(client, session, mods, start, backup, expect, report):
     console = start()
     with LabPlayer(client, session, 25576, mods) as actor:
         _place(actor, FIRST, (128.5, 241, 128.5), console)
-        _response(actor, "//restore before-grief.zip", "permission")
+        _response(actor, "//restore before-grief.zip", "not permitted")
         expect(
             _found(console, "130 241 130", "minecraft:air"),
             "normal_player_cannot_restore",
@@ -251,6 +257,34 @@ def _validate_inputs(args):
     approved_mods(args.mods_json)
     if _sha256(args.worldedit) != WORLDEDIT_SHA256:
         raise ValueError("Expected pinned official WorldEdit file 2941712")
+
+
+def _backup(server, stream, lab, dest, name, report):
+    _stop_server(server)
+    stream.close()
+    source = lab / "backups" / (name + ".zip")
+    target = lab / "snapshots" / (name + ".zip")
+    report.setdefault("backups", {})[name] = _snapshot(server, dest, source)
+    prepared = prepare_overworld_snapshot(source, target)
+    prepared["sha256"] = _sha256(target)
+    report.setdefault("snapshots", {})[name] = prepared
+    if name == "before-restore":
+        (lab / "recovery-plan.json").write_text(
+            json.dumps(
+                {
+                    "schema": 1,
+                    "lab_only": True,
+                    "allowlisted_dimensions": [0],
+                    "selection": report["scope"],
+                    "restore_source": "before-grief.zip",
+                    "backup_before_apply": "backups/before-restore.zip",
+                    "snapshots": report["snapshots"],
+                    "artifacts": report["artifacts"],
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
 
 
 def run_recovery_lab(args):
@@ -301,8 +335,9 @@ def run_recovery_lab(args):
         shutil.copy2(args.worldedit, dest / "mods/WorldEdit.jar")
         config = dest / "config/worldedit"
         config.mkdir(exist_ok=True)
-        snapshots = lab / "snapshots"
+        snapshots, backups = lab / "snapshots", lab / "backups"
         snapshots.mkdir()
+        backups.mkdir()
         (config / "worldedit.properties").write_text(
             "snapshots-dir=" + snapshots.as_posix() + "\nmax-changed-blocks=4096\n"
             "default-max-changed-blocks=4096\nuse-in-creative=false\ncheat-mode=false\n"
@@ -328,10 +363,7 @@ def run_recovery_lab(args):
 
         def backup(name):
             state("stopping_owned_lab_for_" + name)
-            _stop_server(server)
-            stream.close()
-            result = _snapshot(server, dest, snapshots / (name + ".zip"))
-            report.setdefault("snapshots", {})[name] = result
+            _backup(server, stream, lab, dest, name, report)
             expect(True, name + "_snapshot_after_clean_stop")
 
         _exercise(client, session, mods, start, backup, expect, report)

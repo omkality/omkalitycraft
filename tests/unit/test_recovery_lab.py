@@ -9,6 +9,7 @@ import pytest
 from launcher.nbt import Tag, write_nbt
 from omk.recovery_lab import _snapshot, _validate_inputs
 from omk.recovery_nbt_lab import fixture_tiles
+from omk.recovery_snapshot_lab import prepare_overworld_snapshot
 
 
 def test_snapshot_requires_clean_exit_and_owned_lab(tmp_path):
@@ -91,3 +92,41 @@ def test_fixture_reader_preserves_nbt_types_and_rejects_bad_sectors(tmp_path):
         archive.writestr("lab-world/region/r.0.0.mca", region)
     with pytest.raises(ValueError, match="Invalid fixture chunk location"):
         fixture_tiles(snapshot)
+
+
+def test_snapshot_preparation_excludes_other_dimensions_and_private_files(tmp_path):
+    source, output = tmp_path / "backup.zip", tmp_path / "snapshot.zip"
+    with ZipFile(source, "w") as archive:
+        archive.writestr("lab-world/DIM-1/region/r.0.0.mca", b"NETHER_DECOY")
+        archive.writestr("lab-world/region/r.0.0.mca", b"OVERWORLD_EXPECTED")
+        archive.writestr("lab-world/level.dat", b"synthetic level")
+        archive.writestr("lab-world/playerdata/synthetic.dat", b"private fixture")
+        archive.writestr("lab-world/region/../../synthetic-secret", b"not a region")
+    original = source.read_bytes()
+    result = prepare_overworld_snapshot(source, output)
+    assert result["dimension"] == 0 and result["excluded_entries"] == 3
+    with ZipFile(output) as archive:
+        assert set(archive.namelist()) == {
+            "lab-world/level.dat",
+            "lab-world/region/r.0.0.mca",
+        }
+        assert archive.read("lab-world/region/r.0.0.mca") == b"OVERWORLD_EXPECTED"
+    assert source.read_bytes() == original
+    prepared = output.read_bytes()
+    with pytest.raises(FileExistsError):
+        prepare_overworld_snapshot(source, output)
+    assert output.read_bytes() == prepared
+
+
+@pytest.mark.parametrize("duplicate", [False, True])
+def test_missing_or_ambiguous_overworld_snapshot_is_rejected(tmp_path, duplicate):
+    source, output = tmp_path / "backup.zip", tmp_path / "snapshot.zip"
+    with ZipFile(source, "w") as archive:
+        archive.writestr("lab-world/level.dat", b"synthetic level")
+        if duplicate:
+            archive.writestr("lab-world/region/r.0.0.mca", b"first fixture")
+            with pytest.warns(UserWarning, match="Duplicate"):
+                archive.writestr("lab-world/region/r.0.0.mca", b"ambiguous fixture")
+    with pytest.raises(ValueError, match="Missing or duplicate"):
+        prepare_overworld_snapshot(source, output)
+    assert not output.exists()
