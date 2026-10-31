@@ -2,6 +2,10 @@
 
 ## Unreleased — DJ2 protection validation tools
 
+- Reproduce compound-chest and stale team-window access; verify the separate private Core 0.2.3 adapter with 49 real-server checks.
+- Preserve ordinary chest access and non-OP mute/moderator controls on the new adapter.
+- Record selected-area grief recovery requirements and the untested Forge snapshot candidate.
+- Use an inert bedrock lab platform and send teleport acknowledgements before exposing actor coordinates.
 - Add isolated survival inventory transfer/replay checks for vanilla and Iron Chests.
 - Verify TNT block protection inside and across FTB claims with an unclaimed destruction control.
 - Check authoritative server inventories/counts and record the protocol actor's correction responses.
