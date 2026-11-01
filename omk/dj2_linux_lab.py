@@ -32,6 +32,24 @@ JAVA_IMAGE = "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313
 LABEL = "omkality.lab.run"
 
 
+def forge_log_crashed(path):
+    """Forge can exit with code zero after a fatal server exception."""
+    try:
+        with path.open("rb") as file:
+            data = file.read(8 * 1024**2 + 1)
+        if len(data) > 8 * 1024**2:
+            return None
+        return any(
+            marker in data
+            for marker in (
+                b"Encountered an unexpected exception",
+                b"This crash report has been saved to:",
+            )
+        )
+    except OSError:
+        return None
+
+
 def docker(*args, timeout=60, check=True):
     result = subprocess.run(
         ["docker", *args], capture_output=True, text=True, timeout=timeout, check=False
@@ -217,6 +235,15 @@ class LinuxServer:
         self.collector = PipeLog(self.process.stdout, writer)
         return self.process
 
+    def _observe_exit(self, report):
+        crashed = forge_log_crashed(self.log)
+        report["game_crash_detected"] = crashed
+        report["owned_game_clean_exit"] = (
+            self.process is not None and self.process.poll() == 0 and crashed is False
+        )
+        if self.process is not None and not report["owned_game_clean_exit"]:
+            report["ok"] = False
+
     def close(self, report):
         try:
             if self.process is not None and self.process.poll() is None:
@@ -239,6 +266,7 @@ class LinuxServer:
                 report["linux_container_outcome"] = container_outcome(data)
             if self.collector is not None:
                 self.collector.close()
+            self._observe_exit(report)
             if data and self.process.poll() == 0:
                 exported = self.lab / "export"
                 exported.mkdir()
@@ -255,13 +283,14 @@ class LinuxServer:
             helper = inspect_owned("container", self.name + "-helper", self.run_id)
             if helper:
                 docker("rm", "--force", self.name + "-helper")
-            if self.volume_created and report.get("stopped_world_tar_sha256"):
+            if (
+                self.volume_created
+                and report.get("stopped_world_tar_sha256")
+                and report["owned_game_clean_exit"]
+            ):
                 inspect_owned("volume", self.volume, self.run_id)
                 docker("volume", "rm", self.volume)
                 report["owned_volume_removed_after_export"] = True
-            report["owned_game_clean_exit"] = (
-                self.process is not None and self.process.poll() == 0
-            )
             if self.volume_created and not report.get(
                 "owned_volume_removed_after_export"
             ):
