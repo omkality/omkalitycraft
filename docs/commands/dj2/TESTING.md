@@ -2,6 +2,26 @@
 
 ## Отдельный стенд восстановления
 
+### Linux Docker
+
+```text
+uv run omk lab dj2-recovery --runtime linux-docker --edge-cases --server-source PATH_TO_DJ2_SERVER --agent PATH_TO_AUTHLIB_1_2_8 --core PATH_TO_PRIVATE_CORE_0_2_3 --mods-json PATH_TO_VERIFIED_MOD_LIST --worldedit PATH_TO_WORLDEDIT_6_1_10
+```
+
+Нужен закреплённый Temurin из [SERVER_CONTAINERS.md](../../SERVER_CONTAINERS.md).
+`--java` здесь не используется: Java исполняется в Linux-контейнере. Живой мир хранится
+в новом регистрозависимом Linux named volume; старые миры не подключаются.
+Каталог подготовленных ZIP-снимков подключён отдельно, только для чтения сервером.
+После каждого чистого stop tar мира потоково преобразуется в проверенный ZIP без
+распаковки путей на Windows. Лимиты и запрет ссылок/коллизий/опасных путей сохраняются.
+Новый старт получает новый журнал, чтобы прежний `Done` не подтверждал следующий boot.
+
+Игровые проверки общие с нативным режимом ниже. `--full-backup-return` на Linux пока
+отклоняется до запуска: возврат в новый контейнер/volume требует отдельного этапа.
+Этот режим также не даёт команды восстановления рабочего сервера и не моделирует VPS-сеть.
+
+### Нативная Java
+
 ```text
 uv run omk lab dj2-recovery --server-source PATH_TO_DJ2_SERVER --java PATH_TO_JAVA8 --agent PATH_TO_AUTHLIB_INJECTOR --core PATH_TO_PRIVATE_CORE_0_2_3 --mods-json PATH_TO_VERIFIED_MOD_LIST --worldedit PATH_TO_WORLDEDIT_6_1_10
 ```

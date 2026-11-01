@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — Linux region-recovery validation
+
+- Reuse the region-recovery gameplay assertions with a Linux Docker lifecycle, stopped-world export and read-only snapshot mount.
+- Stream validated tar exports into bounded ZIPs without extracting paths on the host; cover traversal, links, collisions, missing level data and limits.
+- Rotate each boot's output so a previous ready marker cannot satisfy the next startup; report preserved lab volumes after early failure.
+- Pass 93 real Linux Forge checks, including restart/smelting, NBT, neighbor controls and the previously characterized WorldEdit limitations.
+- Preserve an earlier intermittent ItemBlock/ThaumcraftFix startup crash as an unresolved profile issue; no cache workaround, Linux full-world replacement or production recovery apply is claimed.
+
 ## Unreleased — single skin upload and Linux Docker lab
 
 - Use one PNG upload with automatic model suggestion, animated preview and an optional hidden model correction; cancel sends no request.

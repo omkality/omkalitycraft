@@ -46,8 +46,12 @@ def _sha256(path):
 def add_recovery_lab(parser):
     from pathlib import Path  # noqa: PLC0415
 
-    for flag in ["server-source", "java", "agent", "core", "mods-json", "worldedit"]:
+    for flag in ["server-source", "agent", "core", "mods-json", "worldedit"]:
         parser.add_argument("--" + flag, type=Path, required=True)
+    parser.add_argument("--java", type=Path, help="Required for the native runtime")
+    parser.add_argument(
+        "--runtime", choices=("native", "linux-docker"), default="native"
+    )
     parser.add_argument(
         "--edge-cases",
         action="store_true",
@@ -298,8 +302,13 @@ def _exercise(
 
 
 def _validate_inputs(args):
-    for path in [args.java, args.agent, args.core, args.mods_json, args.worldedit]:
-        if not path.is_file():
+    paths = [args.agent, args.core, args.mods_json, args.worldedit]
+    if getattr(args, "runtime", "native") == "native":
+        paths.append(args.java)
+    elif args.full_backup_return:
+        raise ValueError("Full backup return is not yet supported in the Linux lab")
+    for path in paths:
+        if path is None or not path.is_file():
             raise ValueError("Required recovery lab input missing")
     approved_mods(args.mods_json)
     if _sha256(args.worldedit) != WORLDEDIT_SHA256:
@@ -312,8 +321,14 @@ def _backup(server, stream, lab, dest, name, report):
     _stop_server(server)
     stream.close()
     source = lab / "backups" / (name + ".zip")
+    info = _snapshot(server, dest, source)
+    _prepare_backup(lab, name, info, report)
+
+
+def _prepare_backup(lab, name, info, report):
+    source = lab / "backups" / (name + ".zip")
     target = lab / "snapshots" / (name + ".zip")
-    report.setdefault("backups", {})[name] = _snapshot(server, dest, source)
+    report.setdefault("backups", {})[name] = info
     prepared = prepare_overworld_snapshot(source, target)
     prepared["sha256"] = _sha256(target)
     report.setdefault("snapshots", {})[name] = prepared
@@ -346,6 +361,73 @@ def _backup(server, stream, lab, dest, name, report):
         )
 
 
+def _prepare_recovery_server(args, lab, report):
+    dest, mods = _copy_server(args, lab)
+    shutil.copy2(args.worldedit, dest / "mods/WorldEdit.jar")
+    config = dest / "config/worldedit"
+    config.mkdir(exist_ok=True)
+    snapshots, backups = lab / "snapshots", lab / "backups"
+    snapshots.mkdir()
+    backups.mkdir()
+    snapshot_path = (
+        "/snapshots" if args.runtime == "linux-docker" else snapshots.as_posix()
+    )
+    (config / "worldedit.properties").write_text(
+        "snapshots-dir=" + snapshot_path + "\nmax-changed-blocks=4096\n"
+        "default-max-changed-blocks=4096\nuse-in-creative=false\ncheat-mode=false\n"
+        "log-commands=false\n",
+        encoding="ascii",
+    )
+    report["private_core_sha256"] = _sha256(args.core)
+    report["artifacts"] = {
+        p.name: _sha256(p)
+        for p in [
+            dest / "forge-1.12.2-14.23.5.2860.jar",
+            dest / "mods/ironchest-1.12.2-7.0.72.847.jar",
+            dest / "mods/ThermalExpansion-1.12.2-5.5.7.1-universal.jar",
+        ]
+    }
+    return dest, mods, snapshots
+
+
+class RecoveryRuntime:
+    def __init__(self, args, lab, dest, client, report, state, expect):
+        self.args, self.lab, self.dest, self.client = args, lab, dest, client
+        self.report, self.state, self.expect = report, state, expect
+        self.linux = self.server = self.stream = None
+
+    def start(self, replacement=None):
+        if self.linux is not None:
+            if replacement is not None:
+                raise ValueError("Linux replacement runtime has not been tested")
+            self.server, log, self.stream = self.linux.start()
+        else:
+            self.server, log, self.stream = _start_server(
+                self.args, self.lab, replacement or self.dest, self.client
+            )
+        _wait_server(self.server, log, self.state)
+        return _console_sender(self.server, log)
+
+    def backup(self, name):
+        self.state("stopping_owned_lab_for_" + name)
+        if self.linux is not None:
+            info = self.linux.backup(name)
+            _prepare_backup(self.lab, name, info, self.report)
+        else:
+            _backup(self.server, self.stream, self.lab, self.dest, name, self.report)
+        self.expect(True, name + "_snapshot_after_clean_stop")
+
+    def close(self, compose):
+        if self.linux is not None:
+            self.linux.close(self.report)
+            _cleanup(None, None, compose, self.report)
+            self.report["ok"] = self.report["ok"] and self.report.get(
+                "owned_game_clean_exit", False
+            )
+        else:
+            _cleanup(self.server, self.stream, compose, self.report)
+
+
 def run_recovery_lab(args):
     _validate_inputs(args)
     lab = PROJECT_ROOT / ".local" / ("recovery-lab-" + uuid4().hex[:8])
@@ -355,6 +437,7 @@ def run_recovery_lab(args):
         "checks": [],
         "edge_cases": args.edge_cases,
         "full_backup_return": args.full_backup_return,
+        "runtime": args.runtime,
         "lab_folder": str(lab.relative_to(PROJECT_ROOT)),
         "candidate": {
             "source": WORLDEDIT_SOURCE,
@@ -377,7 +460,7 @@ def run_recovery_lab(args):
         "-f",
         str(PROJECT_ROOT / "deploy/auth-lab/compose.yaml"),
     ]
-    server = stream = None
+    runtime = None
 
     def state(phase):
         (PROJECT_ROOT / ".local/recovery-status.json").write_text(
@@ -392,47 +475,22 @@ def run_recovery_lab(args):
 
     try:
         state("preparing_fresh_recovery_lab")
-        dest, mods = _copy_server(args, lab)
-        shutil.copy2(args.worldedit, dest / "mods/WorldEdit.jar")
-        config = dest / "config/worldedit"
-        config.mkdir(exist_ok=True)
-        snapshots, backups = lab / "snapshots", lab / "backups"
-        snapshots.mkdir()
-        backups.mkdir()
-        (config / "worldedit.properties").write_text(
-            "snapshots-dir=" + snapshots.as_posix() + "\nmax-changed-blocks=4096\n"
-            "default-max-changed-blocks=4096\nuse-in-creative=false\ncheat-mode=false\n"
-            "log-commands=false\n",
-            encoding="ascii",
-        )
-        report["private_core_sha256"] = _sha256(args.core)
-        report["artifacts"] = {
-            p.name: _sha256(p)
-            for p in [
-                dest / "forge-1.12.2-14.23.5.2860.jar",
-                dest / "mods/ironchest-1.12.2-7.0.72.847.jar",
-                dest / "mods/ThermalExpansion-1.12.2-5.5.7.1-universal.jar",
-            ]
-        }
+        dest, mods, snapshots = _prepare_recovery_server(args, lab, report)
         client, _, session, session2 = _accounts(compose, lab)
+        runtime = RecoveryRuntime(args, lab, dest, client, report, state, expect)
+        if args.runtime == "linux-docker":
+            from omk.recovery_linux_lab import LinuxRecovery  # noqa: PLC0415
 
-        def start(replacement=None):
-            nonlocal server, stream
-            server, log, stream = _start_server(args, lab, replacement or dest, client)
-            _wait_server(server, log, state)
-            return _console_sender(server, log)
-
-        def backup(name):
-            state("stopping_owned_lab_for_" + name)
-            _backup(server, stream, lab, dest, name, report)
-            expect(True, name + "_snapshot_after_clean_stop")
+            runtime.linux = LinuxRecovery(lab, compose[3] + "_default", snapshots)
+            report["linux_java_runtime"] = runtime.linux.prepare(dest, args, client)
+            expect(True, "linux_named_volume_case_sensitive_filesystem")
 
         _exercise(
             client,
             session,
             mods,
-            start,
-            backup,
+            runtime.start,
+            runtime.backup,
             expect,
             report,
             snapshots=snapshots,
@@ -449,14 +507,14 @@ def run_recovery_lab(args):
             exercise_full_return(
                 args,
                 lab,
-                server,
+                runtime.server,
                 client,
                 (session, session2),
                 mods,
                 report,
                 expect,
-                start,
-                backup,
+                runtime.start,
+                runtime.backup,
             )
         report["ok"] = True
     except Exception as error:
@@ -466,7 +524,10 @@ def run_recovery_lab(args):
             for f in traceback.extract_tb(error.__traceback__)
         ]
     finally:
-        _cleanup(server, stream, compose, report)
+        if runtime is not None:
+            runtime.close(compose)
+        else:
+            _cleanup(None, None, compose, report)
         (lab / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
         state("complete" if report["ok"] else "failed")
     return report
