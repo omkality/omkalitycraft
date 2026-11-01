@@ -20,6 +20,7 @@ from launcher.log_policy import prepare_logging
 from launcher.releases import read_release
 from launcher.storage import FileSessionStore
 from omk.diagnostics import BoundedLog, PipeLog
+from omk.dj2_startup_policy import configure_remapper
 from omk.drasl import DraslClient
 from omk.forge_player import LabPlayer
 from omk.lab import skin_fixture
@@ -145,6 +146,7 @@ def _copy_server(args, lab):
         if (source / name).exists():
             shutil.copy2(source / name, dest / name)
     shutil.copy2(args.core.resolve(), dest / "mods/OmkalityCore.jar")
+    configure_remapper(dest / "config/normalasm.cfg")
     mods = approved_mods(args.mods_json)
     assert all("\n" not in v and "\\" not in v for v in mods.values())
     (dest / "config/omkalitycore-mods.properties").write_text(
