@@ -53,6 +53,10 @@ def build(
         "gtnh.svg",
         "external-link.svg",
         "release-keys.json",
+        "skins/default-slim.png",
+        "skins/default-classic.png",
+        "skins/default-legacy.png",
+        "skins/provenance.json",
     ]:
         destination = assets / name
         destination.parent.mkdir(parents=True, exist_ok=True)

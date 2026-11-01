@@ -42,6 +42,7 @@ from launcher.install import Installer, ReleaseClient
 from launcher.memory import MIN_MB, Preferences
 from launcher.releases import ReleaseError
 from launcher.session import SessionStoreError
+from launcher.skin_dialog import SkinDialog
 from launcher.skins import MAX_SKIN_BYTES, SkinError, decode_skin
 from launcher.social import SocialFooter
 from launcher.storage import FileSessionStore
@@ -295,7 +296,6 @@ class LauncherWindow(QMainWindow):
         page = Dashboard(self.preferences)
         page.message.connect(self.status_message)
         self.greeting = page.greeting
-        self.skin_model = page.skin_model
         self.skin_preview = page.skin_preview
         page.upload_button.clicked.connect(self._choose_skin)
         page.change_password.clicked.connect(self._change_password)
@@ -472,7 +472,8 @@ class LauncherWindow(QMainWindow):
         self.pages.setCurrentWidget(self.home_page)
         if result.skin_png is not None:
             self.skin_preview.set_skin(result.skin_png, result.skin_model)
-            self.skin_model.setCurrentIndex(1 if result.skin_model == "slim" else 0)
+        else:
+            self.skin_preview.reset_skin()
         self.status.setText(
             ""
             if result.remembered
@@ -480,6 +481,8 @@ class LauncherWindow(QMainWindow):
         )
 
     def _choose_skin(self) -> None:
+        if self.busy:
+            return
         path, _ = QFileDialog.getOpenFileName(
             self, "Выберите PNG-скин", "", "PNG (*.png)"
         )
@@ -488,13 +491,15 @@ class LauncherWindow(QMainWindow):
         try:
             with Path(path).open("rb") as file:
                 png = file.read(MAX_SKIN_BYTES + 1)
-            model = self.skin_model.currentData()
-            skin = decode_skin(png, model)
+            skin = decode_skin(png)
             png = skin.png
         except (OSError, AccountError, SkinError) as error:
             self._failed(error)
             return
-        model = self.skin_model.currentData()
+        dialog = SkinDialog(skin, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        model = dialog.model
 
         def done(_: Any) -> None:
             self.skin_preview.set_skin(png, model)

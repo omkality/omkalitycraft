@@ -1,0 +1,36 @@
+{
+  "source": "Provided by the project owner in this conversation on 2026-11-01",
+  "default": "default-slim.png",
+  "files": [
+    {
+      "file": "default-slim.png",
+      "original_filename": "steve_white_brown_slim_1.8_plus.png",
+      "model": "slim",
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "481c10cd3617e0134664c115fa728b5aee682b7e2f1c15d66f72c63c005a0312"
+    },
+    {
+      "file": "default-classic.png",
+      "original_filename": "steve_custom_fixed_1.8_plus.png",
+      "model": "classic",
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "4b209f734a3acb79df29faf44078740fbb90401a6fef532ab87b70b134b567ce"
+    },
+    {
+      "file": "default-legacy.png",
+      "original_filename": "steve_custom_fixed_pre_1.8.png",
+      "model": "classic",
+      "size": [
+        64,
+        32
+      ],
+      "sha256": "ff29028d40f2f3a9728688f8a2358c63c7fdd3e1f0c3f82500f458d7a811d54c"
+    }
+  ]
+}

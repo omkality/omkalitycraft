@@ -2,8 +2,16 @@ import threading
 from pathlib import Path
 
 import pytest
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QFileDialog, QLabel, QPushButton, QTabWidget
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QImage
+from PySide6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QFileDialog,
+    QLabel,
+    QPushButton,
+    QTabWidget,
+)
 from pytestqt.qtbot import QtBot
 
 from launcher.__main__ import _bootstrap_lock
@@ -13,7 +21,10 @@ from launcher.dashboard import Dashboard
 from launcher.game import GameRunner
 from launcher.install import Progress
 from launcher.memory import MemorySnapshot, Preferences
+from launcher.skin_defaults import SKIN_ASSETS, default_skin_bytes
+from launcher.skin_dialog import SkinDialog
 from launcher.skin_view import default_skin
+from launcher.skins import decode_skin
 from launcher.storage import FileSessionStore
 from omk.lab import skin_fixture
 from tests.fakes import FakeDrasl
@@ -110,7 +121,7 @@ def test_network_error_keeps_issued_password_for_retry(
     assert window.pages.currentWidget() == window.home_page
 
 
-def test_skin_file_upload_uses_selected_model(
+def test_single_skin_upload_has_preview_and_optional_model_correction(
     qtbot: QtBot,
     window: LauncherWindow,
     tmp_path: Path,
@@ -120,7 +131,19 @@ def test_skin_file_upload_uses_selected_model(
     png = tmp_path / "skin.png"
     png.write_bytes(skin_fixture())
     monkeypatch.setattr(QFileDialog, "getOpenFileName", lambda *args: (str(png), "PNG"))
-    window.skin_model.setCurrentIndex(1)
+
+    def confirm():
+        dialog = QApplication.activeModalWidget()
+        assert isinstance(dialog, SkinDialog)
+        assert dialog.model == "classic"
+        assert not dialog.model_choice.isVisible()
+        qtbot.mouseClick(dialog.adjust, Qt.MouseButton.LeftButton)
+        assert dialog.model_choice.isVisible()
+        dialog.model_choice.setCurrentIndex(1)
+        assert dialog.preview.model == "slim"
+        qtbot.mouseClick(dialog.upload, Qt.MouseButton.LeftButton)
+
+    QTimer.singleShot(0, confirm)
     click(qtbot, window, "uploadSkin")
     wait_idle(qtbot, window)
     assert ("upload_skin", "slim") in window.service.client.calls
@@ -241,13 +264,38 @@ def test_weak_machine_caps_slider_and_shows_warning(qtbot: QtBot):
     assert "не запуститься" in memory.warning.text()
 
 
-def test_default_skin_has_hair_on_both_sides_and_top(qtbot: QtBot):
+def test_default_skin_is_exact_owner_asset(qtbot: QtBot):
     image = default_skin()
-    for x, y in [(3, 9), (19, 9), (11, 3), (27, 9)]:
-        assert image.pixelColor(x, y).name() == "#3b3531"
+    assert image == QImage.fromData(default_skin_bytes(), "PNG")
 
 
 def test_social_footer_and_clear_planned_version(window: LauncherWindow):
     assert "ещё не подготовлена" in window.home_page.cards["gtnh"].version_link.text()
     assert "https://kick.com/omkality" in window.findChild(QLabel, "social_kick").text()
-    assert "обычные руки" not in window.skin_model.itemText(0)
+    assert window.home_page.findChildren(QComboBox) == []
+
+
+def test_skin_preview_cancel_does_not_upload(qtbot, window, tmp_path, monkeypatch):
+    window._authenticated(window.service.login("test_player", "test-password"))
+    png = tmp_path / "skin.png"
+    png.write_bytes(default_skin_bytes())
+    monkeypatch.setattr(QFileDialog, "getOpenFileName", lambda *args: (str(png), "PNG"))
+    QTimer.singleShot(0, lambda: QApplication.activeModalWidget().reject())
+    click(qtbot, window, "uploadSkin")
+    assert not any(call[0] == "upload_skin" for call in window.service.client.calls)
+
+
+def test_old_skin_preview_cannot_select_slim(qtbot):
+    dialog = SkinDialog(decode_skin((SKIN_ASSETS / "default-legacy.png").read_bytes()))
+    qtbot.addWidget(dialog)
+    dialog.show()
+    assert dialog.model == "classic"
+    assert not dialog.adjust.isVisible()
+    assert not dialog.model_choice.isEnabled()
+
+
+def test_missing_skin_on_new_login_resets_previous_account_preview(window):
+    window.skin_preview.set_skin(skin_fixture(), "classic")
+    window._authenticated(window.service.login("test_player", "test-password"))
+    assert window.skin_preview.model == "slim"
+    assert window.skin_preview.image == default_skin()
