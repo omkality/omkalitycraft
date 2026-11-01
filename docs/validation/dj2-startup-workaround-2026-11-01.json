@@ -1,0 +1,462 @@
+{
+  "date": "2026-11-01",
+  "scope": "Local Linux Docker DJ2 RU 2.21.3 / Forge 14.23.5.2860; isolated volumes only",
+  "tested_workaround_source_revision": "9fd47ffa05b4495a0f1276997ab8f5898a66bd94",
+  "root_trigger_fixed_upstream": false,
+  "workaround": {
+    "file": "config/normalasm.cfg",
+    "setting": "B:optimizeFMLRemapper",
+    "default": false,
+    "operator_env": "OMK_DJ2_OPTIMIZE_FML_REMAPPER",
+    "applied_to_original_server": false
+  },
+  "runtime_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "limits": {
+    "container_bytes": 6442450944,
+    "cpus": 4,
+    "java_xms": "1G",
+    "java_xmx": "4G"
+  },
+  "installed_relevant_jars_sha256": {
+    "%60FermiumBooter-1.1.1.jar": "a3b8972e68210a4ea2c9d8dbdb5d157b0f20d9ee3f7467241951d52ec66892ef",
+    "fermiumasm-5.24.jar": "3fdafc9d06817b70c4a94bba07702894d3955e370a1c179cbc810537a2b01967",
+    "ThaumcraftFix-1.12.2-1.1.2.jar": "0c890ed6ad1be4c1bd735df57c1e135f5b3f5c26b558725dd5fab8d8ddd883b2",
+    "vintagefix-0.5.5.jar": "5a88a5e5160276cb4949eeecabadd0c8bcf59119ea26154a410c69adfeaaef6b"
+  },
+  "real_forge_replay": {
+    "raw_input_reproduces_no_holder": true,
+    "mapped_input_passes_actual_forge_transformer": true,
+    "runtime_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "raw_input_sha256": "3fec1864a0381ddec3419d32c04365f0051dc2dd8633ae776d7eb31743b5ef49",
+    "mapped_input_sha256": "3b0fbb3f7afc121023c95c6cd0fa22a6ed0d5f2aa3584dff1de4095560d86a4d"
+  },
+  "prior_enabled_control": {
+    "lab": ".local/startup-trace-lab-85b5f2b3e6",
+    "boots": [
+      {
+        "number": 1,
+        "seconds": 98.2,
+        "clean_exit": true,
+        "trace": {
+          "hooks_armed": true,
+          "console_game_output_seen": true,
+          "mode": "console",
+          "deobfuscator_excluded": false,
+          "deobfuscator_reentry": false,
+          "unmapped_metadata_holder": false,
+          "holder_failure_captured": false,
+          "instrumentation_error": false
+        },
+        "java_oom_logged": false,
+        "native_allocation_failure_logged": false,
+        "container": {
+          "running": false,
+          "oom_killed": false,
+          "exit_code": 0,
+          "memory_limit_bytes": 6442450944,
+          "nano_cpus": 4000000000
+        }
+      },
+      {
+        "number": 2,
+        "seconds": 44.2,
+        "clean_exit": false,
+        "trace": {
+          "hooks_armed": true,
+          "console_game_output_seen": true,
+          "mode": "console",
+          "deobfuscator_excluded": true,
+          "deobfuscator_reentry": false,
+          "unmapped_metadata_holder": false,
+          "holder_failure_captured": false,
+          "instrumentation_error": false
+        },
+        "java_oom_logged": false,
+        "native_allocation_failure_logged": false,
+        "container": {
+          "running": true,
+          "oom_killed": false,
+          "exit_code": 0,
+          "memory_limit_bytes": 6442450944,
+          "nano_cpus": 4000000000
+        },
+        "server_no_holder_failure": true
+      }
+    ]
+  },
+  "paired_control": {
+    "lab": ".local/startup-trace-lab-9b4ad5cc2e",
+    "same_clone_and_agent": true,
+    "fixture": {
+      "inputs": {
+        "compiler": {
+          "sha256": "ac0ba5876eaf7ebb47749a0d1be179c51f194b9dd0b875d1c09e1b530f5a2db5",
+          "source": "https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.26.0/ecj-3.26.0.jar"
+        },
+        "asm": {
+          "sha256": "254b82bec9da4f8efbc8b1f93ab2b87f7465227a82b36cf3d05d9e77a0e8dd2e",
+          "source": "https://repo.maven.apache.org/maven2/org/ow2/asm/asm-debug-all/5.2/asm-debug-all-5.2.jar"
+        },
+        "launchwrapper": {
+          "sha256": "57f402b626d16cc2705bf2a37add7adbb074f0ca3b3102fa6e23aa303dae682f",
+          "source": "https://libraries.minecraft.net/net/minecraft/launchwrapper/1.12/launchwrapper-1.12.jar"
+        },
+        "forge": {
+          "sha256": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+          "source": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2860/forge-1.12.2-14.23.5.2860-universal.jar"
+        }
+      },
+      "agent_sha256": "9f83b898821d39ffb9743f87772257d002a05113ca8a03d306deb27830be028d",
+      "sources_sha256": {
+        "StartupTraceAgent.java": "7427c2ffed759d4de50318ecb60b3ce4e0d097da78b6ff9072f2ada9ca42adcb",
+        "ConsoleStartupAgent.java": "471d8c8338f204e6d5e09bb7e3a748fc15cfe887c60ce2048f3c494e0f59eea1",
+        "ReplayItemBlock.java": "93ebe4aaaff8825fef653f408f6caa5356021ea6add392d5d4fa977e74d14df9"
+      }
+    },
+    "boots": [
+      {
+        "number": 1,
+        "seconds": 96.3,
+        "clean_exit": true,
+        "trace": {
+          "hooks_armed": true,
+          "console_game_output_seen": true,
+          "heap_at_exclusion": null,
+          "mode": "console",
+          "deobfuscator_excluded": false,
+          "deobfuscator_reentry": false,
+          "unmapped_metadata_holder": false,
+          "holder_failure_captured": false,
+          "instrumentation_error": false
+        },
+        "java_oom_logged": false,
+        "native_allocation_failure_logged": false,
+        "container": {
+          "running": false,
+          "oom_killed": false,
+          "exit_code": 0,
+          "memory_limit_bytes": 6442450944,
+          "nano_cpus": 4000000000
+        },
+        "optimize_fml_remapper": false
+      },
+      {
+        "number": 2,
+        "seconds": 96.3,
+        "clean_exit": true,
+        "trace": {
+          "hooks_armed": true,
+          "console_game_output_seen": true,
+          "heap_at_exclusion": null,
+          "mode": "console",
+          "deobfuscator_excluded": false,
+          "deobfuscator_reentry": false,
+          "unmapped_metadata_holder": false,
+          "holder_failure_captured": false,
+          "instrumentation_error": false
+        },
+        "java_oom_logged": false,
+        "native_allocation_failure_logged": false,
+        "container": {
+          "running": false,
+          "oom_killed": false,
+          "exit_code": 0,
+          "memory_limit_bytes": 6442450944,
+          "nano_cpus": 4000000000
+        },
+        "optimize_fml_remapper": false
+      },
+      {
+        "number": 3,
+        "seconds": 96.3,
+        "clean_exit": true,
+        "trace": {
+          "hooks_armed": true,
+          "console_game_output_seen": true,
+          "heap_at_exclusion": null,
+          "mode": "console",
+          "deobfuscator_excluded": false,
+          "deobfuscator_reentry": false,
+          "unmapped_metadata_holder": false,
+          "holder_failure_captured": false,
+          "instrumentation_error": false
+        },
+        "java_oom_logged": false,
+        "native_allocation_failure_logged": false,
+        "container": {
+          "running": false,
+          "oom_killed": false,
+          "exit_code": 0,
+          "memory_limit_bytes": 6442450944,
+          "nano_cpus": 4000000000
+        },
+        "optimize_fml_remapper": false
+      },
+      {
+        "number": 4,
+        "seconds": 96.4,
+        "clean_exit": true,
+        "trace": {
+          "hooks_armed": true,
+          "console_game_output_seen": true,
+          "heap_at_exclusion": null,
+          "mode": "console",
+          "deobfuscator_excluded": false,
+          "deobfuscator_reentry": false,
+          "unmapped_metadata_holder": false,
+          "holder_failure_captured": false,
+          "instrumentation_error": false
+        },
+        "java_oom_logged": false,
+        "native_allocation_failure_logged": false,
+        "container": {
+          "running": false,
+          "oom_killed": false,
+          "exit_code": 0,
+          "memory_limit_bytes": 6442450944,
+          "nano_cpus": 4000000000
+        },
+        "optimize_fml_remapper": false
+      },
+      {
+        "number": 5,
+        "seconds": 96.3,
+        "clean_exit": true,
+        "trace": {
+          "hooks_armed": true,
+          "console_game_output_seen": true,
+          "heap_at_exclusion": null,
+          "mode": "console",
+          "deobfuscator_excluded": false,
+          "deobfuscator_reentry": false,
+          "unmapped_metadata_holder": false,
+          "holder_failure_captured": false,
+          "instrumentation_error": false
+        },
+        "java_oom_logged": false,
+        "native_allocation_failure_logged": false,
+        "container": {
+          "running": false,
+          "oom_killed": false,
+          "exit_code": 0,
+          "memory_limit_bytes": 6442450944,
+          "nano_cpus": 4000000000
+        },
+        "optimize_fml_remapper": false
+      },
+      {
+        "number": 6,
+        "seconds": 96.3,
+        "clean_exit": true,
+        "trace": {
+          "hooks_armed": true,
+          "console_game_output_seen": true,
+          "heap_at_exclusion": null,
+          "mode": "console",
+          "deobfuscator_excluded": false,
+          "deobfuscator_reentry": false,
+          "unmapped_metadata_holder": false,
+          "holder_failure_captured": false,
+          "instrumentation_error": false
+        },
+        "java_oom_logged": false,
+        "native_allocation_failure_logged": false,
+        "container": {
+          "running": false,
+          "oom_killed": false,
+          "exit_code": 0,
+          "memory_limit_bytes": 6442450944,
+          "nano_cpus": 4000000000
+        },
+        "optimize_fml_remapper": false
+      },
+      {
+        "number": 7,
+        "seconds": 46.2,
+        "clean_exit": false,
+        "trace": {
+          "hooks_armed": true,
+          "console_game_output_seen": true,
+          "heap_at_exclusion": null,
+          "mode": "console",
+          "deobfuscator_excluded": true,
+          "deobfuscator_reentry": false,
+          "unmapped_metadata_holder": false,
+          "holder_failure_captured": false,
+          "instrumentation_error": false
+        },
+        "java_oom_logged": false,
+        "native_allocation_failure_logged": false,
+        "container": {
+          "running": true,
+          "oom_killed": false,
+          "exit_code": 0,
+          "memory_limit_bytes": 6442450944,
+          "nano_cpus": 4000000000
+        },
+        "server_no_holder_failure": true,
+        "optimize_fml_remapper": true
+      }
+    ],
+    "disabled_clean_boots": 6,
+    "restored_enabled_first_boot_failed": true,
+    "lab_cleanup_stop_requested": true,
+    "lab_cleanup_docker_stop_requested": true,
+    "final_container": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 143,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "failure_volume_preserved": true,
+    "auth_removed": true
+  },
+  "game_regression_without_startup_observer": {
+    "ok": true,
+    "checks": [
+      "linux_named_volume_case_sensitive_filesystem",
+      "fixture_original_entity_exists",
+      "fixture_outside_entity_exists",
+      "cross_chunk_fixture_143_created",
+      "cross_chunk_fixture_144_created",
+      "machine_smelt_positive_control_before_snapshot",
+      "idle_machine_fixture_has_seeded_state",
+      "iron_chest_fixture_has_named_items",
+      "before-grief_snapshot_after_clean_stop",
+      "original_entity_really_removed",
+      "post_snapshot_entity_really_added",
+      "base_really_damaged",
+      "machine_state_really_damaged",
+      "before-restore_snapshot_after_clean_stop",
+      "normal_player_cannot_restore",
+      "operator_lists_actual_zip_snapshots",
+      "primary_restore_selection_passes_readonly_preflight",
+      "first_restore_vanilla_chest_named_inventory",
+      "first_restore_same_type_iron_chest_inventory",
+      "first_restore_machine_energy_orientation_inventory",
+      "first_restore_griefer_block_removed",
+      "first_restore_neighbor_chest_same_chunk_unchanged",
+      "first_restore_above_selection_same_chunk_unchanged",
+      "first_restore_west_of_selection_unchanged",
+      "first_restore_north_of_selection_unchanged",
+      "first_restore_below_selection_unchanged",
+      "first_restore_machine_block_metadata_unchanged",
+      "after_restore_native_snapshot_does_not_restore_destroyed_armor_stand",
+      "after_restore_native_snapshot_keeps_post_snapshot_armor_stand",
+      "after_restore_outside_entity_unchanged",
+      "undo_restores_damaged_air",
+      "undo_restores_damaged_machine",
+      "redo_vanilla_chest_named_inventory",
+      "redo_same_type_iron_chest_inventory",
+      "redo_machine_energy_orientation_inventory",
+      "redo_griefer_block_removed",
+      "redo_neighbor_chest_same_chunk_unchanged",
+      "redo_above_selection_same_chunk_unchanged",
+      "redo_west_of_selection_unchanged",
+      "redo_north_of_selection_unchanged",
+      "redo_below_selection_unchanged",
+      "redo_machine_block_metadata_unchanged",
+      "repeat_restore_vanilla_chest_named_inventory",
+      "repeat_restore_same_type_iron_chest_inventory",
+      "repeat_restore_machine_energy_orientation_inventory",
+      "repeat_restore_griefer_block_removed",
+      "repeat_restore_neighbor_chest_same_chunk_unchanged",
+      "repeat_restore_above_selection_same_chunk_unchanged",
+      "repeat_restore_west_of_selection_unchanged",
+      "repeat_restore_north_of_selection_unchanged",
+      "repeat_restore_below_selection_unchanged",
+      "repeat_restore_machine_block_metadata_unchanged",
+      "missing_snapshot_vanilla_chest_named_inventory",
+      "missing_snapshot_same_type_iron_chest_inventory",
+      "missing_snapshot_machine_energy_orientation_inventory",
+      "missing_snapshot_griefer_block_removed",
+      "missing_snapshot_neighbor_chest_same_chunk_unchanged",
+      "missing_snapshot_above_selection_same_chunk_unchanged",
+      "missing_snapshot_west_of_selection_unchanged",
+      "missing_snapshot_north_of_selection_unchanged",
+      "missing_snapshot_below_selection_unchanged",
+      "missing_snapshot_machine_block_metadata_unchanged",
+      "complete_cross_chunk_snapshot_passes_preflight",
+      "missing_chunk_rejected_before_apply_by_preflight",
+      "preflight_did_not_modify_live_block_143",
+      "preflight_did_not_modify_live_block_144",
+      "native_partial_restore_already_modified_available_chunk",
+      "native_partial_restore_left_missing_chunk_damaged",
+      "immediate_native_partial_undo_returns_lab_block_143",
+      "immediate_native_partial_undo_returns_lab_block_144",
+      "after-restore_snapshot_after_clean_stop",
+      "after_restart_vanilla_chest_named_inventory",
+      "after_restart_same_type_iron_chest_inventory",
+      "after_restart_machine_energy_orientation_inventory",
+      "after_restart_griefer_block_removed",
+      "after_restart_neighbor_chest_same_chunk_unchanged",
+      "after_restart_above_selection_same_chunk_unchanged",
+      "after_restart_west_of_selection_unchanged",
+      "after_restart_north_of_selection_unchanged",
+      "after_restart_below_selection_unchanged",
+      "after_restart_machine_block_metadata_unchanged",
+      "after_restart_native_snapshot_does_not_restore_destroyed_armor_stand",
+      "after_restart_native_snapshot_keeps_post_snapshot_armor_stand",
+      "after_restart_outside_entity_unchanged",
+      "restored_machine_smelt_after_full_restart",
+      "vanilla_chest_saved_tile_exists",
+      "vanilla_chest_complete_saved_nbt_matches_snapshot",
+      "iron_chest_saved_tile_exists",
+      "iron_chest_complete_saved_nbt_matches_snapshot",
+      "thermal_furnace_saved_tile_exists",
+      "thermal_furnace_complete_saved_nbt_matches_snapshot",
+      "neighbor_saved_tile_exists",
+      "neighbor_complete_saved_nbt_unchanged"
+    ],
+    "lab_folder": ".local\\recovery-lab-3a310e17",
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "lab_cleanup_stop_requested": true,
+    "owned_game_clean_exit": true,
+    "owned_volume_removed_after_export": true,
+    "temporary_auth_removed": true,
+    "stopped_world_tar_sha256": "55c7245487502c372aa07226bc162dea515134c3714827aec25ba2329737a6a5",
+    "full_boots": 4
+  },
+  "desktop_client_regression_without_startup_observer": {
+    "ok": true,
+    "checks": [
+      "linux_named_volume_case_sensitive_filesystem",
+      "full_forge_dj2_starts_in_linux_docker",
+      "real_forge_login_to_linux_server",
+      "real_windows_dj2_client_joins_linux_docker_server"
+    ],
+    "lab_folder": ".local\\linux-skin-lab-fa16c975ca",
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "lab_cleanup_stop_requested": true,
+    "owned_game_clean_exit": true,
+    "owned_volume_removed_after_export": true,
+    "temporary_auth_removed": true,
+    "stopped_world_tar_sha256": "c351e606e98ba3580ec06a04edd7193a58a490bb7c2392920d48c217cd05d724"
+  },
+  "python_validation": {
+    "passed": 439,
+    "windows_symlink_skipped": 2,
+    "ruff": "passed",
+    "black": "passed"
+  },
+  "limitations": [
+    "Paired control supports a workaround for this pinned pack; it is not an upstream root-trigger fix.",
+    "No claim of long-duration stability, many-player factory load or VPS CPU/disk/network equivalence.",
+    "Actual desktop client tested on Windows; Linux/macOS graphical Minecraft remain separate.",
+    "143 in failed control followed lab cleanup; failure was detected while the container was still running.",
+    "WorldEdit entity and partial-snapshot limitations remain; passing characterization does not fix them."
+  ]
+}
