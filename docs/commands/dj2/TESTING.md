@@ -4,6 +4,17 @@
 
 ### Linux Docker
 
+Дополнительный самостоятельный сценарий модовых систем:
+
+```text
+uv run python -m omk lab dj2-recovery --runtime linux-docker --mod-systems --server-source PATH_TO_DJ2_SERVER --agent PATH_TO_AUTHLIB_1_2_8 --core PATH_TO_PRIVATE_CORE_0_2_3 --mods-json PATH_TO_VERIFIED_MOD_LIST --worldedit PATH_TO_WORLDEDIT_6_1_10
+```
+
+Он **не совмещается** с двумя другими recovery-флагами. Пройдены 38 проверок ME-сундука
+AE2, двухблочного накопителя EnderIO, повторного отката и их работы после restart.
+Выделение 180 блоков; [полный сценарий, артефакты и ограничения](../../MOD_SYSTEM_RECOVERY.md).
+Далее — прежний сценарий сущностей/неполного архива:
+
 ```text
 uv run omk lab dj2-recovery --runtime linux-docker --edge-cases --server-source PATH_TO_DJ2_SERVER --agent PATH_TO_AUTHLIB_1_2_8 --core PATH_TO_PRIVATE_CORE_0_2_3 --mods-json PATH_TO_VERIFIED_MOD_LIST --worldedit PATH_TO_WORLDEDIT_6_1_10
 ```
