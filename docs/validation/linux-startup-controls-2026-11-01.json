@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-01",
+  "original_evidence_preserved_read_only": true,
+  "reproduced_failure_volume_preserved": true,
+  "default_runtime_profile_changed": false,
+  "root_cause_fixed": false,
+  "runs": [
+    {
+      "experiment": "unchanged clone",
+      "clean_boots": 2,
+      "failed_boot": 3,
+      "same_ItemBlock_no_holder_and_ThaumcraftFix_failure": true
+    },
+    {
+      "experiment": "cloned normalasm.cfg optimizeFMLRemapper=false",
+      "clean_boots": 6,
+      "clean_exit_and_export": true,
+      "volume_removed_after_export": true
+    },
+    {
+      "experiment": "new unchanged clone control",
+      "clean_boots": 3,
+      "clean_exit_and_export": true,
+      "volume_removed_after_export": true
+    }
+  ],
+  "conclusion": "Failure reproduced on the third unchanged boot. Six changed boots and three further unchanged boots passed; the remapper change is a hypothesis, not an established fix.",
+  "next": "Capture the ItemBlock bytecode/field descriptors at the failing transform, investigate classloading/re-entrant transformation, then test a pinned upstream fix/workaround with login and game regressions."
+}
