@@ -6,7 +6,8 @@
 - Bundle the owner's three unchanged skin variants with provenance/hashes; use the first Slim skin for the launcher and Drasl's native account default.
 - Verify all three skin uploads and default texture/model with real Drasl + Qt (26 checks); 290 unit/UI tests pass with one Windows symlink skip.
 - Add an isolated, pinned Linux Docker Forge lab with a Linux named volume, bounded logs/resources and ownership-checked cleanup after world export.
-- Verify full DJ2 startup, real Forge protocol login and an actual Windows DJ2 client joining that Linux server; visual skin verification remains pending after window capture timeouts.
+- Verify full DJ2 startup, real Forge protocol login and an actual Windows DJ2 client joining that Linux server.
+- Inspect real Minecraft F2 screenshots of the default Slim and three uploaded skin variants, Russian inventory text and the square minimap; verify exact uploaded PNG hashes in the client cache. Native window capture still times out; fullscreen map/server-list GUI remain separate checks.
 
 ## Unreleased — DJ2 protection and recovery validation tools
 
