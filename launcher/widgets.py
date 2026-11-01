@@ -34,11 +34,15 @@ def open_link(url: str) -> None:
         QDesktopServices.openUrl(QUrl(url))
 
 
-def external_label(text: str, url: str) -> QLabel:
+def external_label(text: str, url: str, *, icon_name: str | None = None) -> QLabel:
     icon = QUrl.fromLocalFile(str(ASSETS / "external-link.svg")).toString()
+    prefix = ""
+    if icon_name is not None:
+        channel = QUrl.fromLocalFile(str(ASSETS / icon_name)).toString()
+        prefix = f'<img src="{html.escape(channel, quote=True)}" width="16" height="16">&nbsp;&nbsp;'
     widget = QLabel(
         f'<a href="{html.escape(url, quote=True)}" style="color:#a9d6c8;text-decoration:none">'
-        f'{html.escape(text)}&nbsp;<img src="{html.escape(icon, quote=True)}" width="11" height="11"></a>'
+        f'{prefix}{html.escape(text)}&nbsp;<img src="{html.escape(icon, quote=True)}" width="11" height="11"></a>'
     )
     widget.setTextInteractionFlags(
         Qt.TextInteractionFlag.LinksAccessibleByMouse
