@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0.dev7 — capture recoverable client crashes while Minecraft stays open
+
+- Observe stable new crash files during play, without adding player diagnostic controls; queue complete bounded reports before attempting delivery.
+- Distinguish a running process from an exited one in report schema 2, correlate incidents by game run and continue accepting schema 1 from older clients.
+- Verify a controlled crash in real Windows DJ2 on a Linux Docker server: offline queue, restored API, automatic delivery, Drasl identity and private operator export (27 checks).
+- Keep the lab-only Java crash agent out of player distributions; pin its compiler and record fixture hashes.
+- Document exact portable crash/log/queue paths and private operator storage. The earlier intermittent Linux server startup crash remains unresolved.
+
 ## Unreleased — Linux region-recovery validation
 
 - Reuse the region-recovery gameplay assertions with a Linux Docker lifecycle, stopped-world export and read-only snapshot mount.

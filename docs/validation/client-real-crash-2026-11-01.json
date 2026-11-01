@@ -1,0 +1,71 @@
+{
+  "date": "2026-11-01",
+  "application_version": "0.3.0.dev7",
+  "tested_source_commit": "e5b859a66e9d320f81dbf13b1271ffec98caaa04",
+  "ok": true,
+  "environment": {
+    "client": "real graphical Windows DJ2 RU 2.21.3, signed local 2.21.3-omk.4 payload",
+    "server": "full Forge 1.12.2 / 14.23.5.2860, Linux Docker named volume",
+    "server_java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "authentication": "isolated real Drasl 4.0.0, authlib-injector 1.2.8",
+    "incident_api": "real Granian on Windows loopback; no VPS deployment"
+  },
+  "crash_source": "real graphical DJ2 client, controlled lab-only agent requests a Minecraft crash; not a spontaneous mod failure",
+  "checks": [
+    "fresh_client_files_match_signed_release",
+    "full_linux_dj2_server_ready",
+    "real_windows_dj2_client_joined_linux_server",
+    "owned_incident_api_stopped_before_game_crash",
+    "recoverable_minecraft_crash_did_not_exit_the_game",
+    "automatic_report_was_captured_while_game_still_running",
+    "game_stdout_collection_did_not_fail",
+    "offline_crash_saved_exactly_one_pending_report",
+    "live_report_does_not_invent_an_exit_code",
+    "queued_controlled_exception_and_stack_preserved",
+    "queued_canary_tokens_paths_and_system_dump_not_exported",
+    "offline_report_kind_is_minecraft_crash",
+    "minecraft_itself_created_a_raw_crash_report",
+    "incident_api_restarted_at_same_origin",
+    "real_client_closes_cleanly_after_recoverable_crash",
+    "game_runner_completed_exit_diagnostics_and_retry",
+    "queued_report_removed_only_after_real_http_ack",
+    "real_drasl_verified_account_for_received_crash",
+    "received_controlled_exception_and_stack_preserved",
+    "received_canary_tokens_paths_and_system_dump_not_exported",
+    "repeated_delivery_does_not_duplicate_report",
+    "player_game_token_cannot_read_the_inbox",
+    "private_operator_list_succeeds",
+    "operator_stdout_contains_paths_only_list",
+    "private_operator_export_succeeds",
+    "operator_stdout_contains_paths_only_export",
+    "operator_export_contains_the_real_client_crash"
+  ],
+  "fixture": {
+    "compiler_sha256": "ac0ba5876eaf7ebb47749a0d1be179c51f194b9dd0b875d1c09e1b530f5a2db5",
+    "compiler_source": "https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.26.0/ecj-3.26.0.jar",
+    "agent_sha256": "0c9128aed7bab19df45ddb20f527dd397a85843338ef887405a54c4f8498b2b3",
+    "source_sha256": "f73c6315bdfbb486281db86e9ab1df76e1513dac57feec51cb0e1729c79ab550"
+  },
+  "raw_crash_sha256": "6a290f451cf6c1dd970281a7407e8bd6acefb6ac57a24d490ea559e49bfb67e0",
+  "client_exit_code": 0,
+  "cleanup": {
+    "owned_volume_removed_after_export": true,
+    "owned_game_clean_exit": true,
+    "temporary_api_and_auth_removed": true
+  },
+  "other_validation": {
+    "unit_and_ui_passed": 326,
+    "unit_and_ui_skipped": 1,
+    "ruff": "passed",
+    "black": "passed",
+    "operator_real_drasl_http_cli_checks": 13
+  },
+  "limits": [
+    "Controlled Minecraft crash; not proof of spontaneous mod-failure diagnosis or repair.",
+    "Offline means owned incident API stopped; no real ISP/TSPU outage was emulated.",
+    "API restored on same origin; normal game exit automatically retried the pending report.",
+    "Raw reports, usernames, account IDs, tokens, private inbox and world data are not published.",
+    "No graphical Linux/macOS client, fatal JVM/OOM/SIGKILL or launcher crash tested here.",
+    "Earlier intermittent Linux server ItemBlock/ThaumcraftFix startup crash remains unresolved."
+  ]
+}

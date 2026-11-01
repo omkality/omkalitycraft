@@ -72,10 +72,13 @@ def _cleanup(api_process, stream, compose):
         return False
 
 
-def _start_api(lab, private):
-    with socket.socket() as reservation:
-        reservation.bind(("127.0.0.1", 0))
-        port = reservation.getsockname()[1]
+def _start_api(lab, private, *, port=None):
+    if port is None:
+        with socket.socket() as reservation:
+            reservation.bind(("127.0.0.1", 0))
+            port = reservation.getsockname()[1]
+    elif type(port) is not int or not 1024 <= port <= 65535:
+        raise ValueError("Invalid owned API lab port")
     log = BoundedLog(lab / "api.log")
     process = subprocess.Popen(
         [

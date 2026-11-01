@@ -1,3 +1,3 @@
 """Version embedded in portable launcher bundles."""
 
-VERSION = "0.3.0.dev6"
+VERSION = "0.3.0.dev7"

@@ -151,14 +151,21 @@ class ReportStore:
                 "player": row[1],
                 "received": row[2],
                 "received_at": datetime.fromtimestamp(row[2], UTC).isoformat(),
-                "name": json.loads(row[3]).get("verified_name"),
-                **{
-                    k: json.loads(row[3])[k]
-                    for k in ("kind", "pack", "pack_version", "exit_code")
-                },
+                **self._summary(row[3]),
             }
             for row in rows
         ]
+
+    @staticmethod
+    def _summary(body):
+        value = json.loads(body)
+        summary = {"name": value.get("verified_name")}
+        summary.update(
+            {k: value[k] for k in ("kind", "pack", "pack_version", "exit_code")}
+        )
+        if value["schema"] == 2:
+            summary.update({k: value[k] for k in ("run_id", "process_state")})
+        return summary
 
     def get(self, report_id):
         with contextlib.closing(self._connect(readonly=True)) as db:
