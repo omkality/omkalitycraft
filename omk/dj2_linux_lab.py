@@ -56,6 +56,18 @@ def inspect_owned(kind, name, run_id):
     return data
 
 
+def container_outcome(data):
+    """Only resource/exit facts, never Docker environment or Java arguments."""
+    state, host = data["State"], data["HostConfig"]
+    return {
+        "running": state["Running"],
+        "oom_killed": state["OOMKilled"],
+        "exit_code": state["ExitCode"],
+        "memory_limit_bytes": host["Memory"],
+        "nano_cpus": host["NanoCpus"],
+    }
+
+
 class LinuxServer:
     def __init__(self, lab, run_id, network):
         self.lab, self.run_id, self.network = lab, run_id, network
@@ -130,9 +142,7 @@ class LinuxServer:
         result = self.helper("uname -s; java -version")
         return result.stdout + result.stderr
 
-    def start(self, *, snapshot_dir=None):
-        if docker("container", "inspect", self.name, check=False).returncode == 0:
-            raise ValueError("A new Docker container is required")
+    def command(self, *, snapshot_dir=None):
         snapshot_mount = (
             [
                 "--mount",
@@ -190,10 +200,15 @@ class LinuxServer:
             "net.minecraftforge.fml.relauncher.ServerLaunchWrapper",
             "nogui",
         ]
+        return command
+
+    def start(self, *, snapshot_dir=None):
+        if docker("container", "inspect", self.name, check=False).returncode == 0:
+            raise ValueError("A new Docker container is required")
         writer = BoundedLog(self.log)
         writer.write("Starting pinned Linux Docker Forge server\n", rotate=True)
         self.process = subprocess.Popen(
-            command,
+            self.command(snapshot_dir=snapshot_dir),
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
@@ -205,17 +220,23 @@ class LinuxServer:
     def close(self, report):
         try:
             if self.process is not None and self.process.poll() is None:
+                report["lab_cleanup_stop_requested"] = True
                 try:
                     self.process.stdin.write(b"stop\n")
                     self.process.stdin.flush()
                     self.process.wait(timeout=60)
                 except OSError, subprocess.TimeoutExpired:
                     if inspect_owned("container", self.name, self.run_id):
+                        report["lab_cleanup_docker_stop_requested"] = True
                         docker("stop", "--time", "30", self.name)
                     self.process.wait(timeout=40)
             data = inspect_owned("container", self.name, self.run_id)
             if data and data["State"]["Running"]:
+                report["lab_cleanup_docker_stop_requested"] = True
                 docker("stop", "--time", "30", self.name)
+                data = inspect_owned("container", self.name, self.run_id)
+            if data:
+                report["linux_container_outcome"] = container_outcome(data)
             if self.collector is not None:
                 self.collector.close()
             if data and self.process.poll() == 0:

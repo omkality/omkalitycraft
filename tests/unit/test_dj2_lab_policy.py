@@ -92,6 +92,7 @@ def test_fresh_server_copy_excludes_existing_worlds_credentials_and_roles(tmp_pa
     (source / "server.properties").write_text("rcon.password=synthetic-old-secret\n")
     config = source / "config/ftbutilities.cfg"
     config.write_text("rtp_max_distance=100000.0\nrtp_min_distance=1000.0\n")
+    (source / "config/normalasm.cfg").write_text("B:optimizeFMLRemapper=true\n")
     (source / "mods/old-omkality.jar").write_bytes(b"legacy private core")
     core = tmp_path / "test-core.jar"
     core.write_bytes(b"explicit lab core")
@@ -109,6 +110,7 @@ def test_fresh_server_copy_excludes_existing_worlds_credentials_and_roles(tmp_pa
     assert not (dest / "vintagefix").exists()
     assert not (dest / "mods/old-omkality.jar").exists()
     assert (dest / "mods/OmkalityCore.jar").read_bytes() == core.read_bytes()
+    assert "B:optimizeFMLRemapper=false" in (dest / "config/normalasm.cfg").read_text()
     properties = (dest / "server.properties").read_text()
     assert "127.0.0.1" in properties and "enable-rcon=false" in properties
     assert "synthetic-old-secret" not in properties
