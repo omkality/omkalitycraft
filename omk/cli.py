@@ -92,6 +92,10 @@ def main(argv: list[str] | None = None) -> int:
     server.add_subparsers(dest="action", required=True).add_parser("list")
     lab = sub.add_parser("lab", help="Disposable integration tests")
     lab_areas = lab.add_subparsers(dest="area", required=True)
+    lab_areas.add_parser(
+        "backup-safety",
+        help="Disposable Linux archive rotation, ENOSPC and SIGKILL probes",
+    )
     from omk.recovery_lab import add_recovery_lab  # noqa: PLC0415
 
     add_recovery_lab(
@@ -156,6 +160,10 @@ def _report(args):
         from omk.recovery_lab import run_recovery_lab  # noqa: PLC0415
 
         report = run_recovery_lab(args)
+    elif args.area == "backup-safety":
+        from omk.backup_safety_lab import run_backup_safety_lab  # noqa: PLC0415
+
+        report = run_backup_safety_lab()
     elif args.area == "dj2-linux":
         report = run_linux_skin_lab(args)
     elif args.area == "client-crash":
