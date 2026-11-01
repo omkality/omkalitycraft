@@ -7,8 +7,8 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any, override
 
-from PySide6.QtCore import QLockFile, Qt, QThreadPool, QTimer
-from PySide6.QtGui import QCloseEvent
+from PySide6.QtCore import QLockFile, QRegularExpression, Qt, QThreadPool, QTimer
+from PySide6.QtGui import QCloseEvent, QRegularExpressionValidator
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -29,6 +29,7 @@ from PySide6.QtWidgets import (
 )
 
 from launcher.accounts import (
+    USERNAME_PATTERN,
     AccountError,
     AccountService,
     AuthResult,
@@ -41,6 +42,7 @@ from launcher.game import GameProcess, GameRunner
 from launcher.install import Installer, ReleaseClient
 from launcher.memory import MIN_MB, Preferences
 from launcher.releases import ReleaseError
+from launcher.server_status import ServerStatusController
 from launcher.session import SessionStoreError
 from launcher.skin_dialog import SkinDialog
 from launcher.skins import MAX_SKIN_BYTES, SkinError, decode_skin
@@ -68,6 +70,17 @@ def field(name: str, placeholder: str = "", *, password: bool = False) -> QLineE
     widget.setMaxLength(256)
     if password:
         widget.setEchoMode(QLineEdit.EchoMode.Password)
+    return widget
+
+
+def nickname_field(name: str) -> QLineEdit:
+    widget = field(name, "Omkality_01")
+    widget.setMaxLength(16)
+    widget.setProperty("minecraftNickname", True)
+    widget.setValidator(
+        QRegularExpressionValidator(QRegularExpression(USERNAME_PATTERN), widget)
+    )
+    widget.setToolTip("3–16 символов: A–Z, a–z, 0–9 и _.")
     return widget
 
 
@@ -177,9 +190,19 @@ class LauncherWindow(QMainWindow):
         layout.addWidget(self.progress)
         layout.addWidget(SocialFooter())
         self.setCentralWidget(root)
+        self._setup_server_status(runner)
         self._setup_installation(installer, runner)
         if auto_restore:
             QTimer.singleShot(0, self._restore)
+
+    def _setup_server_status(self, runner):
+        self.server_status = ServerStatusController(
+            self,
+            origin=runner.reports_url if runner is not None else None,
+            active=lambda: self.isVisible()
+            and self.pages.currentWidget() == self.home_page,
+        )
+        self.server_status.updated.connect(self._server_status_updated)
 
     def _setup_installation(
         self, installer: Installer | None, runner: GameRunner | None
@@ -200,6 +223,11 @@ class LauncherWindow(QMainWindow):
             for card in self.home_page.cards.values():
                 card.action.setEnabled(False)
 
+    def _align_form_labels(self) -> None:
+        for caption, edit in self._form_labels:
+            edit.ensurePolished()
+            caption.setFixedHeight(edit.sizeHint().height())
+
     def _auth_page(self) -> QWidget:
         page = QWidget()
         layout = QVBoxLayout(page)
@@ -208,16 +236,20 @@ class LauncherWindow(QMainWindow):
         layout.addWidget(tabs)
         signup, login = QWidget(), QWidget()
         signup_layout, login_layout = QFormLayout(signup), QFormLayout(login)
-        self.signup_name = field("signupName", "От 3 до 16 латинских букв, цифр или _")
+        for form in (signup_layout, login_layout):
+            form.setFormAlignment(
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
+            )
+            form.setLabelAlignment(
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+            )
+            form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
+            form.setHorizontalSpacing(22)
+            form.setVerticalSpacing(16)
+        self.signup_name = nickname_field("signupName")
         self.invitation = field("invitationCode", "Код от владельца проекта")
         signup_layout.addRow("Ник", self.signup_name)
         signup_layout.addRow("Приглашение", self.invitation)
-        signup_layout.addRow(
-            label(
-                "При сбое лаунчер может автоматически передать владельцу технический отчёт об ошибке.",
-                muted=True,
-            )
-        )
         signup_layout.addRow(
             label(
                 "Пароль создадим автоматически. Его нужно будет сохранить один раз.",
@@ -232,7 +264,7 @@ class LauncherWindow(QMainWindow):
                 primary=True,
             )
         )
-        self.login_name = field("loginName", "Ваш ник")
+        self.login_name = nickname_field("loginName")
         self.login_password = field("loginPassword", password=True)
         login_layout.addRow("Ник", self.login_name)
         login_layout.addRow("Пароль", self.login_password)
@@ -241,6 +273,14 @@ class LauncherWindow(QMainWindow):
             button("Не помню пароль", "recoveryHelp", self._recovery_help)
         )
         self.login_password.returnPressed.connect(self._login)
+        self._form_labels = []
+        for form, inputs in (
+            (signup_layout, (self.signup_name, self.invitation)),
+            (login_layout, (self.login_name, self.login_password)),
+        ):
+            for edit in inputs:
+                self._form_labels.append((form.labelForField(edit), edit))
+        QTimer.singleShot(0, self, self._align_form_labels)
         tabs.addTab(login, "Уже есть аккаунт")
         tabs.addTab(signup, "Первый вход")
         layout.addWidget(
@@ -470,6 +510,7 @@ class LauncherWindow(QMainWindow):
         self.invitation.clear()
         self.greeting.setText(f"Привет, {result.session.player_name}!")
         self.pages.setCurrentWidget(self.home_page)
+        self.server_status.refresh()
         if result.skin_png is not None:
             self.skin_preview.set_skin(result.skin_png, result.skin_model)
         else:
@@ -479,6 +520,12 @@ class LauncherWindow(QMainWindow):
             if result.remembered
             else "Вход выполнен, но запомнить его не удалось. Проверьте доступ к папке лаунчера."
         )
+
+    def _server_status_updated(self, statuses) -> None:
+        for pack_id, card in self.home_page.cards.items():
+            card.set_server_status(
+                statuses.get(pack_id, False) if statuses is not None else None
+            )
 
     def _choose_skin(self) -> None:
         if self.busy:

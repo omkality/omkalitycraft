@@ -166,7 +166,7 @@ def _copy_server(args, lab):
     (dest / "eula.txt").write_text("eula=true\n")
     (dest / "server.properties").write_text(
         "online-mode=true\nserver-ip=127.0.0.1\nserver-port=25576\n"
-        "enable-rcon=false\nview-distance=3\nspawn-protection=0\nmax-tick-time=0\nallow-flight=true\n"
+        "enable-rcon=false\nview-distance=3\nspawn-protection=0\nmax-tick-time=0\nallow-flight=true\nmax-players=20\n"
         "motd=Disposable OmkalityCraft auth test\nlevel-name=lab-world\ngenerate-structures=false\n"
         "level-seed=3744183613505663369\n"
     )

@@ -10,6 +10,8 @@ from launcher.session import Session, SessionStore, SessionStoreError
 from launcher.skins import SkinError, decode_skin
 from omk.drasl import DraslClient, DraslError
 
+USERNAME_PATTERN = r"[A-Za-z0-9_]{3,16}"
+
 
 class AccountError(RuntimeError):
     """An error safe to show to a player."""
@@ -50,7 +52,7 @@ class AccountService:
     @staticmethod
     def prepare_registration(username: str, invitation: str) -> Registration:
         username, invitation = username.strip(), invitation.strip()
-        if not re.fullmatch(r"[A-Za-z0-9_]{3,16}", username):
+        if not re.fullmatch(USERNAME_PATTERN, username):
             raise AccountError(
                 "Ник: от 3 до 16 латинских букв, цифр или знаков подчёркивания."
             )

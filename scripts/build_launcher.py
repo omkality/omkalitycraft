@@ -48,6 +48,8 @@ def build(
     for name in [
         "fonts/Rubik.ttf",
         "fonts/OFL.txt",
+        "fonts/Monocraft-Bold.ttf",
+        "fonts/Monocraft-LICENSE.txt",
         "fonts/provenance.json",
         "dj2.svg",
         "gtnh.svg",

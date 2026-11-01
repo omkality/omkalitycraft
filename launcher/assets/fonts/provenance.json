@@ -1,17 +1,30 @@
 {
-  "family": "Rubik Medium",
+  "family": "Rubik Bold",
   "license": "SIL OFL 1.1",
   "commit": "9167c98fa8699d75ee51769eba20d81beb16bcb5",
   "artifacts": [
     {
       "file": "Rubik.ttf",
-      "source": "https://raw.githubusercontent.com/googlefonts/rubik/9167c98fa8699d75ee51769eba20d81beb16bcb5/fonts/ttf/Rubik-Medium.ttf",
-      "sha256": "0a72404de99c51a873eeb4c1f6fb6188a29716911f44dada1b8fa56d79f0c0d2"
+      "source": "https://raw.githubusercontent.com/googlefonts/rubik/9167c98fa8699d75ee51769eba20d81beb16bcb5/fonts/ttf/Rubik-Bold.ttf",
+      "sha256": "d8bd37af963dd47e984df6a38017dd82a5a7a8304414235681919c52b321e340"
     },
     {
       "file": "OFL.txt",
       "source": "https://raw.githubusercontent.com/googlefonts/rubik/9167c98fa8699d75ee51769eba20d81beb16bcb5/OFL.txt",
       "sha256": "472cbe7c25441df63e9c7864b43eb3c0f4b3df950c66a76224e6cfe1eae843fb"
+    },
+    {
+      "file": "Monocraft-Bold.ttf",
+      "family": "Monocraft",
+      "version": "4.2.1",
+      "commit": "04d8a6f3c0fcddf9ab0ec6c21aefcf6302392464",
+      "source": "https://raw.githubusercontent.com/IdreesInc/Monocraft/04d8a6f3c0fcddf9ab0ec6c21aefcf6302392464/dist/Monocraft-ttf/weights/Monocraft-Bold.ttf",
+      "sha256": "d5b840fa300981271fbccb2385e27f61f4220c6a81b497e60ff582a2ede5ce99"
+    },
+    {
+      "file": "Monocraft-LICENSE.txt",
+      "source": "https://raw.githubusercontent.com/IdreesInc/Monocraft/04d8a6f3c0fcddf9ab0ec6c21aefcf6302392464/LICENSE",
+      "sha256": "f69c147003e052dbc9d96c40a9f73647e72766cfda95a597b94ed827fe25acb1"
     }
   ]
 }

@@ -157,7 +157,7 @@ def test_home_has_no_session_management_clutter(
     assert window.findChild(QPushButton, "forgetDevice") is None
     assert window.findChild(QPushButton, "revokeAll") is None
     assert window.status.text() == ""
-    assert window.font().family() == "Rubik Medium"
+    assert window.font().family() == "Rubik"
 
 
 def test_second_instance_cannot_use_same_token_file(
