@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "filesystem_faults": {
+    "ok": true,
+    "runtime_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "scope": "synthetic-archive-filesystem-faults",
+    "probe": {
+      "ok": true,
+      "python": "3.14.2",
+      "rotation": {
+        "published": 4,
+        "retained_sequences": [
+          3,
+          4
+        ],
+        "restored_files": 3,
+        "restore_readback_verified": true,
+        "synthetic_input": true
+      },
+      "disk_full": {
+        "errno": 28,
+        "filesystem": "16 MiB tmpfs",
+        "previous_copies_unchanged": true,
+        "verified_sequences": [
+          1,
+          2
+        ],
+        "retry_blocked": true
+      },
+      "process_crashes": [
+        {
+          "phase": "copy",
+          "signal": "SIGKILL",
+          "verified_sequences": [
+            1,
+            2
+          ],
+          "retry_blocked": true,
+          "lock_released_by_os": true
+        },
+        {
+          "phase": "committed",
+          "signal": "SIGKILL",
+          "verified_sequences": [
+            1,
+            2,
+            3
+          ],
+          "retry_blocked": true,
+          "lock_released_by_os": true
+        },
+        {
+          "phase": "retiring",
+          "signal": "SIGKILL",
+          "verified_sequences": [
+            2,
+            3
+          ],
+          "retry_blocked": true,
+          "lock_released_by_os": true
+        },
+        {
+          "phase": "retired-data-deleted",
+          "signal": "SIGKILL",
+          "verified_sequences": [
+            2,
+            3
+          ],
+          "retry_blocked": true,
+          "lock_released_by_os": true
+        }
+      ]
+    },
+    "container_removed": true,
+    "tested_source_commit": "337ffa017bccec9c8aba8394cf947a53eb0d1fb6",
+    "checked_at": "2026-11-01T10:54:35.390356+00:00"
+  },
+  "stopped_lab_archive": {
+    "ok": true,
+    "scope": "stopped-linux-dj2-lab-world-archive-round-trip",
+    "tested_source_commit": "337ffa017bccec9c8aba8394cf947a53eb0d1fb6",
+    "checked_at": "2026-11-01T10:54:32.691905+00:00",
+    "runtime_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "original_export_sha256": "c1f1903850cb3f6e0cc030b1873c1896c5c4f8e8d9c797112e52d772b87e0c62",
+    "minecraft_started_in_this_test": false,
+    "probe": {
+      "ok": true,
+      "files": 270,
+      "uncompressed_bytes": 7051853,
+      "retained_sequences": [
+        2,
+        3
+      ],
+      "complete_restore_readback_verified": true
+    },
+    "archive_sha256": "1718acbfb51a23e7c7ccf82b57e4b43bfa20462135e74166a21844ceffabd85d",
+    "container_removed": true,
+    "original_export_unchanged": true
+  },
+  "limits": [
+    "No live server, account or original backup changes",
+    "Synthetic ENOSPC and process SIGKILL are not power-loss tests",
+    "Stopped lab world archive round trip does not boot Minecraft",
+    "No production scheduler, Forge save barrier, offsite copy or repair command"
+  ]
+}
