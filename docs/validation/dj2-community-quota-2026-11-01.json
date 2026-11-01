@@ -1,0 +1,239 @@
+{
+  "date": "2026-11-01",
+  "scope": "Native FTB personal/shared claim quota; registered dimension inventory, not dimension generation",
+  "runtime": {
+    "minecraft": "1.12.2",
+    "forge": "14.23.5.2860",
+    "ftbutilities": "5.4.1.131",
+    "ftblib": "5.4.7.2",
+    "container_ram_bytes": 6442450944,
+    "cpus": 4,
+    "java_heap_gib": 4
+  },
+  "checks": [
+    "all_fifty_claims_confirmed_for_single_non_op_member",
+    "fifty_first_chunk_rejected_and_still_unowned",
+    "joining_second_member_increases_shared_ftb_quota"
+  ],
+  "personal_limits": {
+    "claim_chunks": 50,
+    "homes": 3
+  },
+  "territory_limit_implemented": false,
+  "rtp_current_dimension_implemented": false,
+  "ordinary_item_dupe_confirmed": false,
+  "item_induced_crash_confirmed": false,
+  "dimensions": [
+    {
+      "name": "moon.moon",
+      "ids": [
+        -28
+      ]
+    },
+    {
+      "name": "The Dark Realm",
+      "ids": [
+        53
+      ]
+    },
+    {
+      "name": "the_end",
+      "ids": [
+        1
+      ]
+    },
+    {
+      "name": "Deep Dark",
+      "ids": [
+        -11325
+      ]
+    },
+    {
+      "name": "The Abyssal Wasteland",
+      "ids": [
+        50
+      ]
+    },
+    {
+      "name": "simplevoidworld",
+      "ids": [
+        -100
+      ]
+    },
+    {
+      "name": "The Dreadlands",
+      "ids": [
+        51
+      ]
+    },
+    {
+      "name": "ExtraUtils2_Quarry_Dim",
+      "ids": [
+        -9999
+      ]
+    },
+    {
+      "name": "Omothol",
+      "ids": [
+        52
+      ]
+    },
+    {
+      "name": "divinerpg:skythern",
+      "ids": [
+        423
+      ]
+    },
+    {
+      "name": "overworld",
+      "ids": [
+        0
+      ]
+    },
+    {
+      "name": "divinerpg:mortum",
+      "ids": [
+        424
+      ]
+    },
+    {
+      "name": "planet.asteroids",
+      "ids": [
+        -30
+      ]
+    },
+    {
+      "name": "Storage Cell",
+      "ids": [
+        2
+      ]
+    },
+    {
+      "name": "divinerpg:vethea",
+      "ids": [
+        427
+      ]
+    },
+    {
+      "name": "atum",
+      "ids": [
+        17
+      ]
+    },
+    {
+      "name": "twilight_forest",
+      "ids": [
+        7
+      ]
+    },
+    {
+      "name": "divinerpg:iceika",
+      "ids": [
+        425
+      ]
+    },
+    {
+      "name": "divinerpg:apalachia",
+      "ids": [
+        422
+      ]
+    },
+    {
+      "name": "the_nether",
+      "ids": [
+        -1
+      ]
+    },
+    {
+      "name": "divinerpg:eden",
+      "ids": [
+        420
+      ]
+    },
+    {
+      "name": "Underworld",
+      "ids": [
+        -9
+      ]
+    },
+    {
+      "name": "planet.venus",
+      "ids": [
+        -31
+      ]
+    },
+    {
+      "name": "EREBUS",
+      "ids": [
+        66
+      ]
+    },
+    {
+      "name": "divinerpg:wildwood",
+      "ids": [
+        421
+      ]
+    },
+    {
+      "name": "emptiness",
+      "ids": [
+        14676
+      ]
+    },
+    {
+      "name": "AetherI",
+      "ids": [
+        4
+      ]
+    },
+    {
+      "name": "divinerpg:arcana",
+      "ids": [
+        426
+      ]
+    },
+    {
+      "name": "planet.mars",
+      "ids": [
+        -29
+      ]
+    }
+  ],
+  "labs": [
+    {
+      "lab": ".local/community-audit-8ad48331c0",
+      "audit_completed": true,
+      "stopped_world_tar_sha256": "7183de11373867b38f756a5cbe73d68a881103b8aae9515985aa8c1307e96427",
+      "owned_volume_removed_after_export": true,
+      "owned_game_clean_exit": true,
+      "auth_removed": true,
+      "linux_container_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      }
+    },
+    {
+      "lab": ".local/community-trees-be862cf3d0",
+      "audit_completed": true,
+      "stopped_world_tar_sha256": "d78175a58027a5a6d3f74f1b807826a0dde04bfe66c41ed5f675465935e1f53f",
+      "owned_volume_removed_after_export": true,
+      "owned_game_clean_exit": true,
+      "auth_removed": true,
+      "linux_container_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      }
+    }
+  ],
+  "limits": [
+    "Protocol actors execute real server logic, not the graphical client",
+    "No automatic item bans or modpack updates",
+    "Detailed risk fixtures are private owner documentation"
+  ]
+}
