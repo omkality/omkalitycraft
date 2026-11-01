@@ -77,6 +77,7 @@
 | `uv run omk lab dj2-recovery --edge-cases --full-backup-return …` | Проверенный возврат полной world-копии в пустой новый тестовый сервер; прежний мир сохраняется, рабочего apply/cutover нет |
 | `uv run omk doctor` | Проверка локального окружения |
 | `uv run omk storage plan` | Расчёт бюджета VPS из env/defaults; ничего не применяет и не удаляет. [Миры, предгенерация и диск](../WORLDS_AND_STORAGE.md) |
+| `uv run python -m omk lab backup-safety` | Проверка ротации, настоящего ENOSPC и SIGKILL в одноразовом Linux Docker; не принимает рабочие миры. [Устройство и ограничения](../BACKUP_SAFETY.md) |
 | `uv run omk server list` | Настроенные профили и их статус |
 | `uv run omk launcher --help` | Адреса/API и отдельная переносимая папка лаунчера |
 | `uv run omk lab auth smoke` | Одноразовый Drasl: регистрация, UUID, сессии, скины |
