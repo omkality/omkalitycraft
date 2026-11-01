@@ -1,5 +1,20 @@
 # Разработка OmkalityCraft
 
+## Текущая работа и issues
+
+Открытые задачи ведём в [трекере первого запуска #41](https://github.com/omkality/omkalitycraft/issues/41)
+и [milestone DJ2](https://github.com/omkality/omkalitycraft/milestone/1).
+P0 — краши/безопасность/потеря данных, P1 — подготовка открытия, P2 — следующие этапы.
+У каждой задачи есть критерии приёмки; PR закрывает только реально выполненную и
+проверенную область. Здесь остаются решения и доказательства, отдельный полный backlog
+не дублируется. Подробные security-fixtures и Core не публикуются в issues.
+
+Текущий RTP — [#27](https://github.com/omkality/omkalitycraft/issues/27), подготовлены 50
+Linux-проверок и PR. Следующие блокеры: [WR-CBE при остановке #28](https://github.com/omkality/omkalitycraft/issues/28)
+и [границы FTB/модовые механизмы #29](https://github.com/omkality/omkalitycraft/issues/29).
+[Полный проход env #30](https://github.com/omkality/omkalitycraft/issues/30) обязателен
+перед VPS и пока не завершён. GTNH отслеживается отдельно после DJ2.
+
 ## Назначение и состояние
 
 Лаунчер для сообщества стримера: приглашение → ник → выданный пароль один раз →

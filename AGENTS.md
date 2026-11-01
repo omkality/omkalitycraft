@@ -4,6 +4,11 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
 
 - Development is on `dev`; use focused commits and task branches with PRs into `dev`.
   `master` is for tested milestones. No force pushes or automatic production deployments.
+- Track actionable bugs and open work in GitHub Issues; inspect existing issues to avoid duplicates.
+  Use the DJ2 launch milestone/tracker #41, priorities and concrete acceptance criteria.
+  Link PRs to issues and close only the scope actually implemented and tested; DEVELOPMENT.md
+  keeps decisions/evidence, rather than a second full backlog. Keep detailed security reproductions
+  and private Core sources outside public issues.
 - Keep the launcher simple: invitation, nickname, issued password once, remembered revocable session.
   Authentication belongs to Drasl + authlib-injector. Do not restore Telegram or custom password security.
 - Target Windows, Linux and macOS. Keep portable session files in the launcher's data directory;
