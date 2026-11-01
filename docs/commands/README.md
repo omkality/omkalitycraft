@@ -78,6 +78,7 @@
 | `uv run omk doctor` | Проверка локального окружения |
 | `uv run omk storage plan` | Расчёт бюджета VPS из env/defaults; ничего не применяет и не удаляет. [Миры, предгенерация и диск](../WORLDS_AND_STORAGE.md) |
 | `uv run python -m omk lab backup-safety` | Проверка ротации, настоящего ENOSPC и SIGKILL в одноразовом Linux Docker; не принимает рабочие миры. [Устройство и ограничения](../BACKUP_SAFETY.md) |
+| `uv run python -m omk lab dj2-startup --help` | Наблюдение повторных стартов полного DJ2 в новом Linux volume; ресурсы/OOM, стек исключения деобфускатора, opt-in байткод. [Аргументы, пути и границы](../DJ2_STARTUP_DIAGNOSTICS.md) |
 | `uv run omk server list` | Настроенные профили и их статус |
 | `uv run omk launcher --help` | Адреса/API и отдельная переносимая папка лаунчера |
 | `uv run omk lab auth smoke` | Одноразовый Drasl: регистрация, UUID, сессии, скины |
