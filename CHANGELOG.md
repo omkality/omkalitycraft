@@ -1,150 +1,150 @@
-# Changelog
+# Журнал изменений
 
-## 0.3.0.dev7 — capture recoverable client crashes while Minecraft stays open
+## Не выпущено — ссылки сообщества и язык документации
 
-- Observe stable new crash files during play, without adding player diagnostic controls; queue complete bounded reports before attempting delivery.
-- Distinguish a running process from an exited one in report schema 2, correlate incidents by game run and continue accepting schema 1 from older clients.
-- Verify a controlled crash in real Windows DJ2 on a Linux Docker server: offline queue, restored API, automatic delivery, Drasl identity and private operator export (27 checks).
-- Keep the lab-only Java crash agent out of player distributions; pin its compiler and record fixture hashes.
-- Document exact portable crash/log/queue paths and private operator storage. The earlier intermittent Linux server startup crash remains unresolved.
+- Добавлена ссылка на Telegram владельца; все четыре ссылки оформлены монохромными иконками в палитре лаунчера.
+- Changelog переведён на русский. Названия коммитов и AGENTS.md остаются на английском.
+- Зафиксированы требования к скринам/тестовым исполняемым файлам, локальным Docker-стендам и конфигурации через переменные окружения.
 
-## Unreleased — Linux region-recovery validation
+## 0.3.0.dev7 — сбор клиентских крашей без ожидания закрытия Minecraft
 
-- Reuse the region-recovery gameplay assertions with a Linux Docker lifecycle, stopped-world export and read-only snapshot mount.
-- Stream validated tar exports into bounded ZIPs without extracting paths on the host; cover traversal, links, collisions, missing level data and limits.
-- Rotate each boot's output so a previous ready marker cannot satisfy the next startup; report preserved lab volumes after early failure.
-- Pass 93 real Linux Forge checks, including restart/smelting, NBT, neighbor controls and the previously characterized WorldEdit limitations.
-- Preserve an earlier intermittent ItemBlock/ThaumcraftFix startup crash as an unresolved profile issue; no cache workaround, Linux full-world replacement or production recovery apply is claimed.
+- Новые стабильные crash-файлы отслеживаются во время игры; короткий отчёт сохраняется атомарно до отправки. Пользовательских кнопок диагностики нет.
+- Schema 2 различает работающий и завершённый процесс и связывает инциденты одним запуском игры; API продолжает принимать schema 1.
+- Управляемый краш настоящего Windows DJ2 на Linux Docker-сервере прошёл 27 проверок: очередь при недоступном API, восстановление сервиса, автоматическая доставка, Drasl и закрытый экспорт владельца.
+- Тестовый Java-агент исключён из дистрибутива игрока; компилятор закреплён, хеши fixture записаны.
+- Документированы точные пути к крашлогам, очереди и закрытому inbox. Непостоянный сбой старта Linux-сервера остаётся открытым.
 
-## Unreleased — single skin upload and Linux Docker lab
+## Не выпущено — восстановление области на Linux
 
-- Use one PNG upload with automatic model suggestion, animated preview and an optional hidden model correction; cancel sends no request.
-- Bundle the owner's three unchanged skin variants with provenance/hashes; use the first Slim skin for the launcher and Drasl's native account default.
-- Verify all three skin uploads and default texture/model with real Drasl + Qt (26 checks); 290 unit/UI tests pass with one Windows symlink skip.
-- Add an isolated, pinned Linux Docker Forge lab with a Linux named volume, bounded logs/resources and ownership-checked cleanup after world export.
-- Verify full DJ2 startup, real Forge protocol login and an actual Windows DJ2 client joining that Linux server.
-- Inspect real Minecraft F2 screenshots of the default Slim and three uploaded skin variants, Russian inventory text and the square minimap; verify exact uploaded PNG hashes in the client cache. Native window capture still times out; fullscreen map/server-list GUI remain separate checks.
+- Игровые проверки отката области запускаются с Linux Docker lifecycle, экспортом остановленного мира и read-only снимками.
+- Проверенные tar-экспорты потоково преобразуются в ограниченные ZIP без распаковки путей на хосте. Проверяются обход пути, ссылки, коллизии, отсутствие level.dat и лимиты.
+- Журнал ротируется при каждом старте: прежняя отметка готовности не подтверждает новый запуск. При раннем отказе volume сохраняется и указывается в отчёте.
+- Пройдены 93 проверки полного Linux Forge, включая restart/плавку, NBT, соседние блоки и известные ограничения WorldEdit.
+- Предыдущий непостоянный краш ItemBlock/ThaumcraftFix сохранён для разбора. Исправление кеша, полный возврат мира на Linux и эксплуатационный apply не заявляются.
 
-## Unreleased — DJ2 protection and recovery validation tools
+## Не выпущено — одна загрузка скина и Linux Docker-стенд
 
-- Verify a complete stopped-world backup in an empty replacement DJ2 server: 111 real checks including entities, player inventory, working FTB home/claim and furnace.
-- Stage pinned world ZIPs with path/collision/link/size checks, a recorded plan and per-file SHA256 readback; never overwrite or move an existing world.
-- Test CRC and interrupted-write failures without a completed staging marker; production cutover/access-policy reconciliation remain pending.
+- Одна загрузка PNG, автоматическая подсказка модели, вращающийся предпросмотр и необязательная скрытая коррекция; отмена не отправляет запрос.
+- Три исходных скина владельца сохранены без изменений с происхождением/хешами. Первый Slim используется в лаунчере и как штатный default skin Drasl.
+- Все три загрузки и стандартные текстура/модель проверены настоящим Drasl + Qt: 26 условий. На этом этапе прошли 290 unit/UI-тестов с одним Windows symlink-пропуском.
+- Добавлен изолированный Linux Docker Forge-стенд с закреплённым образом, named volume, ограниченными логами/ресурсами и проверкой принадлежности перед очисткой после экспорта мира.
+- Подтверждены полный старт DJ2, Forge protocol login и вход настоящего Windows DJ2 на Linux-сервер.
+- На игровых F2-кадрах осмотрены стандартный Slim, три загруженных скина, русский текст инвентаря и квадратная миникарта. SHA256 PNG проверены в кеше клиента. Нативный захват окна по-прежнему завершается по таймауту; меню серверов и полная карта проверяются отдельно.
 
-- Add a bounded, read-only selected-chunk coverage guard for prepared overworld lab snapshots, with synthetic missing/corrupt/coordinate/bounds checks.
-- Add opt-in entity and incomplete-snapshot characterization in a disposable Forge lab; successful characterization is not full entity recovery or atomic apply.
-- Confirm native partial mutation despite a restore error and unchanged armor-stand state; reject the incomplete snapshot before mutation with the lab preflight.
-- Record hosted-first DJ2 rollout and a shared community account, with manual account recovery still pending.
+## Не выпущено — защита DJ2 и инструменты восстановления
 
-- Verify selected-area WorldEdit recovery on a disposable full DJ2 server with 71 checks, full container/machine NBT comparison, neighbor controls, undo/redo and restart/smelting.
-- Reproduce the pinned WorldEdit ZIP reader's dimension ambiguity and prepare overworld-only snapshots separately from full backups.
-- Record a pre-apply lab plan and keep all recovery experiments away from existing servers/worlds.
-- Extend the command reference with tested WorldEdit syntax and explicit recovery limits; no production apply command or deployment yet.
+- Полная копия остановленного мира запущена в пустом заменяющем DJ2-сервере: 111 проверок, включая сущности, инвентарь, FTB home/claim и работающую печь.
+- Закреплённый ZIP мира подготавливается с проверками путей/коллизий/ссылок/размеров, записанным планом и чтением SHA256 каждого файла. Существующий мир не перезаписывается и не переносится.
+- Проверены ошибки CRC и прерванной записи без завершённого staging marker. Эксплуатационное переключение и согласование политики доступа ещё предстоят.
+- Добавлена ограниченная read-only проверка наличия выбранных чанков в overworld-снимке: отсутствующие/повреждённые чанки, координаты и границы.
+- Отдельный Forge-стенд характеризует сущности и неполные снимки. Успешный тест этих ограничений не означает восстановления всех сущностей или атомарного apply.
+- Подтверждены частичное изменение мира при ошибке restore и неизменность стойки для брони; lab preflight отклоняет неполный снимок до изменений.
+- Зафиксированы запуск сразу на хостинге и единый аккаунт сообщества; ручное восстановление аккаунта пока не реализовано.
+- Выбранная область восстановлена Forge/WorldEdit в отдельном полном DJ2: 71 проверка, полное сравнение NBT контейнеров/машин, соседние блоки, undo/redo и restart/плавка.
+- Воспроизведена неоднозначность измерений в закреплённом WorldEdit ZIP reader. Overworld-снимки подготавливаются отдельно от полных резервных копий.
+- Перед lab apply записывается план; существующие серверы и миры в опытах не используются.
+- Справочник команд дополнен проверенным синтаксисом WorldEdit и ограничениями. Эксплуатационных apply/cutover и развёртывания пока нет.
+- Воспроизведены обходы через составной сундук и устаревшее командное GUI; отдельный закрытый Core 0.2.3 прошёл 49 настоящих серверных проверок.
+- На новом адаптере сохранены обычный доступ к сундукам и non-OP mute/moderator.
+- Записаны требования к откату базы после грифа и первоначально непроверенный Forge-кандидат для снимков.
+- Стенд использует инертную bedrock-платформу и подтверждения телепорта перед чтением координат акторов.
+- Добавлены изолированные survival-проверки передачи/повтора предметов для vanilla и Iron Chests.
+- Защита блоков от TNT проверена внутри и на границе FTB claim с контрольным разрушением вне привата.
+- Проверяются реальные серверные инвентари/количества; корректирующие ответы протокольного актора записываются.
+- Дальняя home-платформа загружается и проверяется перед использованием как fixture.
 
-- Reproduce compound-chest and stale team-window access; verify the separate private Core 0.2.3 adapter with 49 real-server checks.
-- Preserve ordinary chest access and non-OP mute/moderator controls on the new adapter.
-- Record selected-area grief recovery requirements and the untested Forge snapshot candidate.
-- Use an inert bedrock lab platform and send teleport acknowledgements before exposing actor coordinates.
-- Add isolated survival inventory transfer/replay checks for vanilla and Iron Chests.
-- Verify TNT block protection inside and across FTB claims with an unclaimed destruction control.
-- Check authoritative server inventories/counts and record the protocol actor's correction responses.
-- Load and verify the distant home platform before using it as a test fixture.
+## 0.3.0.dev6 — возврат RTP и сохранение модерации
 
-## 0.3.0.dev6 — restore RTP and verify persistent moderation
+- По решению владельца штатный RTP возвращён обычным игрокам; ограничение с магмой принято.
+- Мут проверен после reconnect/полного restart; unmute — после следующего reconnect.
+- Добавлены отдельные lab-сценарии установки блоков и доступа к vanilla-сундукам в FTB claims.
 
-- Restore stock RTP for all normal players, accepting its magma-surface limitation at the owner's request.
-- Verify mute across reconnect/full server restart and unmute across a subsequent reconnect.
-- Add focused, disposable lab scenarios for block placement and vanilla chest access in FTB claims.
+## 0.3.0.dev5 — настоящие команды DJ2 и права модератора
 
-## 0.3.0.dev5 — real DJ2 command checks and moderator policy
+- Добавлены воспроизводимые полные Forge-сценарии телепортов, cooldown, движения/урона, TPA, back и restart.
+- Ранг moderator получает только ban/pardon/banlist/kick/mute/unmute, без OP и игровых преимуществ.
+- Воспроизведены небезопасные штатные RTP-точки; на этом историческом этапе команда была отключена.
+- Исследован обход штатного FTB mute; отдельный закрытый Core-адаптер проверен guarded-сценариями.
+- Командные fixture ограничены, изолированы и синхронизируются с завершением консольной команды.
+- В справочнике сохранены ограничения cooldown после restart и движения внутри одного блока.
 
-- Add reproducible full Forge teleport, cooldown, movement/damage, TPA, back and restart scenarios.
-- Add a moderator rank with only ban/pardon/banlist/kick/mute/unmute, without OP or gameplay advantages.
-- Reproduce unsafe stock RTP destinations and disable that command in the initial server profile.
-- Characterize the stock FTB mute bypass and verify the separate private Core adapter with guarded lab scenarios.
-- Keep command fixtures bounded, isolated and synchronized with actual console completion.
-- Preserve stock cooldown restart and within-block movement limitations in the command reference.
+## 0.3.0.dev4 — инструменты владельца и тихие клиентские отчёты
 
-## 0.3.0.dev4 — operator tools and quiet client crash reports
+- Из лаунчера полностью убраны меню диагностики и экспорта.
+- Короткие отчёты собираются автоматически; без сети остаются в очереди, отправка использует только игровую сессию.
+- Добавлен upload-only inbox с проверкой UUID, лимитами частоты/размера/количества/возраста и без публичного чтения.
+- Закрытая локальная утилита владельца получает серверную диагностику, клиентские отчёты и приглашения Drasl.
+- Ключи владельца, экспорты и inbox исключены из дистрибутива, CDN и Git.
+- Границы Drasl/Granian/CLI проверены отдельным стендом; игровые команды остаются отдельным этапом.
 
-- Remove all diagnostic/export controls from the player launcher.
-- Capture bounded crash summaries automatically; queue offline reports and upload only with a game session.
-- Add an authenticated upload-only inbox with UUID checks, rate/size/count/age limits and no public read API.
-- Provide private local operator commands for server diagnostics, report retrieval and Drasl invitations.
-- Keep operator keys, exports and report storage outside player bundles, CDN and Git.
-- Test real Drasl/Granian/CLI boundaries in a disposable lab; game commands remain a separate milestone.
+## 0.3.0.dev3 — ограниченная локальная диагностика
 
-## 0.3.0.dev3 — bounded local diagnostics
+- Логи игры/лаунчера ротируются; stdout продолжает вычитываться даже при ошибке записи на диск.
+- На этом историческом этапе появился экспорт allowlisted ZIP из Help или CLI с очисткой секретов и лимитами. Пользовательский экспорт впоследствии убран в dev4.
+- Сохраняются причины крашей, JVM reports, параметры запуска и exit code без аккаунтов и миров.
+- Ограничены Java 1.12.2 logging и логи временных auth-контейнеров.
+- Для явного staging/стендов закреплён Java 8 Log4j 2.25.5; старые 2.8.1/2.15.0 заменены в проверенных копиях.
+- Производственный мониторинг, чужие mod-логи и GTNH runtime проверяются отдельно.
 
-- Rotate game/launcher logs; drain bounded stdout even after a disk write failure.
-- Export allowlisted, redacted diagnostic ZIPs from Help or the CLI, with size/retention limits.
-- Preserve crash causes, JVM reports, launch metadata and exit codes without account files or worlds.
-- Bound Java 1.12.2 logging and disposable auth container logs.
-- Pin Java 8 Log4j 2.25.5 for explicit staging/labs; replace legacy 2.8.1/2.15.0 in tested copies.
-- Keep production monitoring, other mod log files and GTNH runtime validation separate.
+## 0.3.0.dev2 — целостность сборки и серверные проверки
 
-## 0.3.0.dev2 — pack integrity and server checks
+- В выборе модели скина оставлены только версии Minecraft; позднее сам выбор версии убран.
+- Максимальный heap поднят до 16 ГиБ, начальные 6 ГиБ и резерв под систему сохранены.
+- Удалённые Java/моды/конфиги/шрифт/библиотеки и порча того же размера восстанавливаются без сброса личных карт.
+- Неизменённые options не перезаписываются; настройки JourneyMap переживают ремонт и обновление.
+- Лишние файлы в управляемых папках модов удаляются молча, без перехода по ссылкам каталогов.
+- Хеши модов проверяются до старта процесса; авторизация остаётся в Drasl.
+- Добавлены loopback-only протокольные игроки для настоящих серверных тестов. Закрытый Core остаётся вне репозитория.
 
-- Show only Minecraft versions in the skin-model selector.
-- Raise per-pack heap ceilings to 16 GiB while keeping 6 GiB defaults and machine headroom.
-- Repair deleted Java/mod/config/font/library files and same-size corruption without resetting personal maps.
-- Avoid rewriting unchanged options; verify JourneyMap preferences survive repair and upgrades.
-- Silently remove extra files from managed mod folders without following directory links.
-- Verify mod hashes before process creation; keep identity authentication with Drasl.
-- Add loopback-only protocol players for real server tests; private Core integration stays outside this repository.
+## 0.3.0.dev1 — настройки игрока и Forge-вход
 
+- Добавлены отдельные RAM-слайдеры, переносимые настройки, ограничения по памяти ПК и предупреждения о низкой RAM.
+- Выбор передаётся Java; release JVM options не могут переопределить выбранный heap.
+- Подписанные defaults задают русский шрифт, язык первого запуска и совместимые серверы.
+- Личные options, серверы и неизвестные NBT-поля сохраняются; изменяемые файлы получают копии.
+- Архивные квадратная миникарта JourneyMap и отсутствие сетки задаются один раз без сброса выбора игрока.
+- Исправлены волосы сбоку стандартного скина, пояснения моделей/неподготовленных сборок; добавлены ссылки автора.
+- Проверены настоящий вход DJ2/UUID и отказы с чужим ником, неверным и отозванным токеном.
+- Оставшиеся игровые проверки записаны явно; захват окна тогда не удался, визуальные проверки оставались открытыми.
 
-## 0.3.0.dev1 — player settings and Forge login checks
+## 0.3.0.dev0 — переносимая установка, карточки сборок и автообновление
 
-- Add per-pack RAM sliders, portable preferences, machine-aware limits and low-memory warnings.
-- Pass selected memory to Java; reject release JVM options that override the player heap limit.
-- Seed the required Russian font, first-run language and compatible servers from signed defaults.
-- Preserve personal options, custom servers and unknown NBT fields; back up changed files.
-- Restore archived square JourneyMap/no-grid defaults once without overwriting player changes.
-- Fix default-skin side hair, clarify skin models and unprepared packs, and add creator social links.
-- Verify real DJ2 login/UUID and reject another nickname, invalid tokens and revoked sessions.
-- Track remaining in-game validation explicitly; window capture failed, so visual game checks remain open.
+- Подписанные платформенные релизы устанавливаются с докачкой и восстановлением повреждений.
+- Пользовательские файлы и подписанная история владения сохраняются при прерывании обновления сборки.
+- Вложенные Java и Forge запускаются с authlib-injector и обновлённой игровой сессией.
+- Добавлены Rubik Medium, изображения/ссылки/авторы перевода, видимые состояния загрузки и анимированный скин.
+- PNG ограничены, декодируются и нормализуются; пояснялись старые форматы и модели Steve/Alex.
+- Из UI убраны лишние управление сессиями; серверный отзыв сохранён.
+- Автообновление TUF использует отдельные папки версий и проверку старта с возвратом к рабочей копии.
+- Переносимые дистрибутивы собраны и проверены настоящим packaged startup на трёх ОС.
+- В изолированных локальных стендах проверены вход настоящего DJ2 и обновления Windows exe.
 
+Публичное развёртывание, GTNH и игровые дистрибутивы остальных платформ проверяются отдельно.
 
-## 0.3.0.dev0 — portable installation, pack UI and launcher updates
+## 0.2.0.dev1 — переносимые аккаунты лаунчера
 
-- Install signed platform releases, resume interrupted downloads and repair damaged managed files.
-- Preserve player files and retain signed ownership history across interrupted pack upgrades.
-- Launch bundled Java and Forge with authlib-injector and a renewed game session.
-- Add Rubik Medium, pack artwork/links/credits, visible download states and an animated skin preview.
-- Decode and normalize bounded PNG uploads; explain legacy formats and Steve/Alex models.
-- Remove session-management clutter from the player UI; retain account revocation in the backend.
-- Add TUF launcher updates, isolated version directories and health-checked fallback.
-- Build portable distributions and smoke-test actual packaged startup on three operating systems.
-- Verify a real DJ2 client/server login and Windows executable updates in isolated local labs.
+- Добавлены Qt-регистрация, показ выданного пароля, подтверждение его сохранения, вход и автовосстановление сессии.
+- В собственной папке сохраняются только игровые токены, без зависимости от системного keyring.
+- На этом этапе были загрузки classic/slim, смена пароля и отзыв сессий после подтверждения пароля.
+- Сетевые запросы выполняются вне UI-потока; выданный пароль сохраняется на экране при сетевом отказе.
+- Одновременные окна с одним session-файлом блокируются; запись сессии атомарна.
+- Закрытые runtime-файлы исключены из manifest/staging, прямое скачивание через CDN запрещено.
+- Настоящие виджеты проверены с временным Drasl; истечение токена проверено отдельно.
+- Аккаунты/UI проверяются CI на Windows, Linux и macOS.
 
-Public deployment, GTNH and game distributions for other platforms remain separate work.
+На этом историческом этапе установка игры, настоящий Forge-вход и платформенные дистрибутивы ещё предстояли.
 
-## 0.2.0.dev1 — portable launcher accounts
+## 0.2.0.dev0 — основа разработки
 
-- Add Qt registration, issued-password acknowledgement, login and automatic session restore.
-- Save only game-scoped tokens in the launcher's own data folder, without OS keyring dependencies.
-- Upload classic/slim skins, change passwords and revoke all sessions after password confirmation.
-- Keep network requests off the UI thread and preserve issued passwords across request failures.
-- Block simultaneous windows using the same session file; write sessions atomically.
-- Exclude private runtime files from manifests/staging and deny their direct CDN download.
-- Exercise real widgets against disposable Drasl; verify genuine token expiry separately.
-- Test account/UI code on Windows, Linux and macOS in CI.
+- Создана ветка dev для небольших проверяемых изменений.
+- CDN/manifest запускаются отдельно; исправлены пути настроек после переноса API.
+- Старый Telegram/custom-auth прототип выведен из актуального дерева исходников.
+- Добавлены omk CLI, отдельные профили DJ2/GTNH и изолированный Drasl 4.0.0-стенд.
+- Проверены приглашения, доступ к скинам, UUID, join verification, refresh и отзыв сессий.
+- Добавлены автоматические проверки; credentials, миры, клиентский payload и Core не входят в Git.
 
-Game installation, real Forge login and standalone platform distributions remain next steps.
-
-## 0.2.0.dev0 — development foundation
-
-- Start a `dev` branch for small, reviewable development steps.
-- Keep CDN/manifest serving independently runnable; fix settings paths after the API directory move.
-- Retire the abandoned Telegram/custom-auth prototype from the current source tree.
-- Add the `omk` CLI, separate DJ2/GTNH profiles and an isolated Drasl 4.0.0 integration lab.
-- Check invitations, skin access, game identity, join verification, refresh and session revocation.
-- Add automated checks; keep credentials, worlds, client payloads and OmkalityCore outside Git.
-
-This is not a playable launcher release. GUI registration, OS credential storage and real Forge
-authentication remain to be implemented and tested.
+Этот исторический этап ещё не был игровым релизом. GUI, хранение сессии и настоящий Forge-вход были будущими задачами; системное хранилище учётных данных позднее исключено по решению владельца.
 
 ## 0.1.0
 
-Existing repository milestone retained in Git history.
+Прежний этап репозитория сохранён в истории Git.
