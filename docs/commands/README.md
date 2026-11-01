@@ -80,6 +80,7 @@
 | `uv run omk lab auth expiry` | Настоящее истечение токена |
 | `uv run omk lab launcher smoke` | Qt + настоящий временный Drasl |
 | `uv run omk lab dj2 --help` | Новый loopback Forge/FTB/Core-стенд с двумя тестовыми игроками |
+| `uv run omk lab dj2-linux --help` | Проверенный запуск полного DJ2 в Linux Docker и вход Windows-клиента; [изоляция, параметры и границы](../SERVER_CONTAINERS.md) |
 | `uv run omk release pack --help` | Подписать подготовленный релиз сборки локально |
 | `uv run omk release launcher --help` | Подготовить подписанное обновление лаунчера |
 
