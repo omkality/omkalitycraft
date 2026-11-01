@@ -1,0 +1,231 @@
+{
+  "ok": true,
+  "checks": [
+    "linux_named_volume_case_sensitive_filesystem",
+    "baseline_ae2_ingests_seven_named_diamonds_via_hopper",
+    "baseline_furnace_smelts_using_enderio_multiblock_power",
+    "baseline_furnace_buffer_full_before_energy_snapshot",
+    "baseline_bank_network_balances_energy_between_two_blocks",
+    "before-grief_snapshot_after_clean_stop",
+    "ae2_same_type_storage_really_emptied",
+    "bank_168_really_empty",
+    "bank_169_really_empty",
+    "before-restore_snapshot_after_clean_stop",
+    "mod_system_snapshot_coverage_checked_before_apply",
+    "restore_ae2_cell_named_contents_restored",
+    "restore_bank_168_energy_and_limits_restored",
+    "restore_bank_169_energy_and_limits_restored",
+    "restore_furnace_inventory_restored",
+    "restore_outside_neighbor_unchanged",
+    "repeat_ae2_cell_named_contents_restored",
+    "repeat_bank_168_energy_and_limits_restored",
+    "repeat_bank_169_energy_and_limits_restored",
+    "repeat_furnace_inventory_restored",
+    "repeat_outside_neighbor_unchanged",
+    "after-restore_snapshot_after_clean_stop",
+    "restart_ae2_cell_named_contents_restored",
+    "restart_bank_168_energy_and_limits_restored",
+    "restart_bank_169_energy_and_limits_restored",
+    "restart_furnace_inventory_restored",
+    "restart_outside_neighbor_unchanged",
+    "restored_ae2_ingests_new_item_after_full_restart",
+    "restored_bank_network_powers_furnace_after_full_restart",
+    "saved_ae2_complete_cell_inventory_matches_snapshot",
+    "saved_ae2_inventory_damage_control",
+    "saved_bank_168_energyStored_matches_snapshot",
+    "saved_bank_168_maxInput_matches_snapshot",
+    "saved_bank_168_maxOutput_matches_snapshot",
+    "saved_bank_169_energyStored_matches_snapshot",
+    "saved_bank_169_maxInput_matches_snapshot",
+    "saved_bank_169_maxOutput_matches_snapshot",
+    "saved_outside_neighbor_complete_nbt_unchanged"
+  ],
+  "lab_folder": ".local\\recovery-lab-b6ff55d8",
+  "candidate": {
+    "source": "https://www.curseforge.com/minecraft/mc-mods/worldedit/files/2941712",
+    "sha256": "cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75",
+    "version": "6.1.10",
+    "mcmod_metadata": "6.1.10-SNAPSHOT;e6b38e8"
+  },
+  "scope": {
+    "dimension": 0,
+    "min": [
+      160,
+      241,
+      160
+    ],
+    "max": [
+      171,
+      243,
+      164
+    ],
+    "blocks": 180
+  },
+  "private_core_sha256": "7333a6a55a65ea08b647302c13dbf7226b61ab7f170fa23592eee8a3e504ce30",
+  "artifacts": {
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "ironchest-1.12.2-7.0.72.847.jar": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f",
+    "ThermalExpansion-1.12.2-5.5.7.1-universal.jar": "f1cc8aeefcda2c00235bfb5ee7f76d731325aa324e90e84d7d232d88c1e6f472"
+  },
+  "mod_system_artifacts_sha256": {
+    "ae2-uel-v0.56.4.jar": "3505d2e31e9c48a0c96ca058fcde8a6a50b7d673e13af488a398878d6d33b698",
+    "EnderIO-1.12.2-5.3.72.jar": "9b5e7756af35a191de8bc8f010c0f7c7ffc2e1e056a69ec265d1dd5ce90d19b4"
+  },
+  "mod_system_bank_energy": [
+    238880,
+    238880
+  ],
+  "mod_system_restore_responses": [
+    [
+      {
+        "color": "light_purple",
+        "text": "Snapshot 'before-grief.zip' loaded; now restoring..."
+      },
+      {
+        "color": "light_purple",
+        "text": "Restored; 0 missing chunks and 0 other errors."
+      }
+    ],
+    [
+      {
+        "color": "light_purple",
+        "text": "Snapshot 'before-grief.zip' loaded; now restoring..."
+      },
+      {
+        "color": "light_purple",
+        "text": "Restored; 0 missing chunks and 0 other errors."
+      }
+    ]
+  ],
+  "backups": {
+    "before-grief": {
+      "files": 264,
+      "uncompressed_bytes": 6713268,
+      "bytes": 2250316,
+      "sha256": "54fb65920d69b48330b29c2f05624acf49b38b538f4472d0d0c54f97e9f0f238"
+    },
+    "before-restore": {
+      "files": 265,
+      "uncompressed_bytes": 6908210,
+      "bytes": 2457280,
+      "sha256": "618f82c5c8d1266e4dc5b1bbd2866412166c7ddc9a791f4ab8bb7a509dea4d44"
+    },
+    "after-restore": {
+      "files": 265,
+      "uncompressed_bytes": 6908341,
+      "bytes": 2457569,
+      "sha256": "106780e57eee9cb77faa47cb82115c4a3e0f1be3938bab1fc6452f5a56bb249f"
+    }
+  },
+  "snapshots": {
+    "before-grief": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 2062444,
+      "excluded_entries": 261,
+      "sha256": "5077674f32c7ec0224b47c07f251e06726926cc6f24c681f0ad84341e2af0884"
+    },
+    "before-restore": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 2062442,
+      "excluded_entries": 262,
+      "sha256": "7df921021b6c7b4b64c49bb6327e1d2ad60a1cab86a03d157ca03320cd9b9793"
+    },
+    "after-restore": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 2062442,
+      "excluded_entries": 262,
+      "sha256": "b7fe2d9eacab131fb543b28527906483e418236389c590859d5b8fc313da39b1"
+    }
+  },
+  "linux_java_runtime": "Linux\nopenjdk version \"1.8.0_504\"\nOpenJDK Runtime Environment (Temurin)(build 1.8.0_504-b01)\nOpenJDK 64-Bit Server VM (Temurin)(build 25.504-b01, mixed mode)\n",
+  "linux_java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "linux_container_outcome": {
+    "running": false,
+    "oom_killed": false,
+    "exit_code": 0,
+    "memory_limit_bytes": 6442450944,
+    "nano_cpus": 4000000000
+  },
+  "lab_cleanup_stop_requested": true,
+  "owned_game_clean_exit": true,
+  "owned_volume_removed_after_export": true,
+  "stopped_world_tar_sha256": "8e00b9dc170e87cc9737874710edbfc05bfae7f680e3b6feb047f55bbd9d257e",
+  "temporary_auth_removed": true,
+  "date": "2026-11-01",
+  "tested_source_revision": "33dd50274499cffe337d1f00c00a0c6d17a7f30d",
+  "full_linux_boots": 4,
+  "startup_observer_used": false,
+  "server_container_memory_bytes": 6442450944,
+  "server_cpu_limit": 4,
+  "java_heap_max": "4G",
+  "reused_installed_modpack_artifacts_not_updated": true,
+  "saved_controls": {
+    "before-grief": {
+      "cell_item_count": 7,
+      "bank_energy": [
+        238880,
+        238880
+      ],
+      "bank_max_input": [
+        1234,
+        1234
+      ],
+      "bank_max_output": [
+        2345,
+        2345
+      ]
+    },
+    "before-restore": {
+      "cell_item_count": 0,
+      "bank_energy": [
+        0,
+        0
+      ],
+      "bank_max_input": [
+        -1,
+        -1
+      ],
+      "bank_max_output": [
+        -1,
+        -1
+      ]
+    },
+    "after-restore": {
+      "cell_item_count": 7,
+      "bank_energy": [
+        238880,
+        238880
+      ],
+      "bank_max_input": [
+        1234,
+        1234
+      ],
+      "bank_max_output": [
+        2345,
+        2345
+      ]
+    }
+  },
+  "fixture_development_control": {
+    "lab": ".local/recovery-lab-babdafb8",
+    "ok": false,
+    "reason": "Initial fixed two-second fixture pause sampled two banks during furnace charging; unequal reads 239160/239080. Replaced with full-buffer predicate before the successful run.",
+    "game_recovery_attempted": false
+  },
+  "python_validation": {
+    "passed": 451,
+    "windows_symlink_skipped": 2,
+    "ruff": "passed",
+    "black": "passed"
+  },
+  "scope_limits": [
+    "Only a small ME chest with 1k cell and creative power, a two-bank EnderIO multiblock and Thermal furnace.",
+    "No ME Drive, crafting/controller/P2P/quantum network or EnderIO conduit compatibility claim.",
+    "No external network part across selection, other dimension, crash during apply or item/player duplication audit.",
+    "Protocol actors test real server logic, not graphical clients or their mod execution.",
+    "WorldEdit entity and partial-snapshot limits remain; no production administrative apply or deployment."
+  ]
+}

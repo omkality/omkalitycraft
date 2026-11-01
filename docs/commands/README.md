@@ -73,7 +73,8 @@
 | `uv run omk lab client-crash --help` | Настоящий управляемый краш DJ2, очередь без сети и закрытый экспорт; [аргументы и изоляция](../CLIENT_CRASH_TESTING.md), 27 проверок прошли |
 | `uv run omk lab dj2-recovery --help` | Отдельный стенд отката выделенной базы из снимка, никогда не рабочие миры |
 | `uv run omk lab dj2-recovery --edge-cases …` | Дополнение того же стенда: сущности, read-only покрытие и намеренное частичное применение неполного снимка; все обязательные пути из [TESTING](dj2/TESTING.md) |
-| `uv run omk lab dj2-recovery --runtime linux-docker --edge-cases …` | Те же игровые сценарии в Linux volume: 93 проверки прошли; прежний сбой одного restart остаётся открытым. Java внутри закреплённого образа, [параметры/границы](dj2/TESTING.md) |
+| `uv run omk lab dj2-recovery --runtime linux-docker --edge-cases …` | Те же игровые сценарии в Linux volume: 93 проверки прошли, включая повтор после startup-обхода. Java внутри закреплённого образа, [параметры/границы](dj2/TESTING.md) |
+| `uv run omk lab dj2-recovery --runtime linux-docker --mod-systems …` | Отдельные 38 проверок ME-сундука AE2/двухблочного накопителя EnderIO, повторного отката и работы после restart; [условия и ограничения](../MOD_SYSTEM_RECOVERY.md) |
 | `uv run omk lab dj2-recovery --edge-cases --full-backup-return …` | Проверенный возврат полной world-копии в пустой новый тестовый сервер; прежний мир сохраняется, рабочего apply/cutover нет |
 | `uv run omk doctor` | Проверка локального окружения |
 | `uv run omk storage plan` | Расчёт бюджета VPS из env/defaults; ничего не применяет и не удаляет. [Миры, предгенерация и диск](../WORLDS_AND_STORAGE.md) |

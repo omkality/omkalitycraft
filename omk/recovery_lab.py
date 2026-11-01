@@ -8,6 +8,7 @@ import traceback
 import zipfile
 from uuid import uuid4
 
+from omk import recovery_mod_systems_lab as mod_systems
 from omk.dj2_commands_lab import FIRST, _place, _response
 from omk.dj2_lab import (
     _accounts,
@@ -61,6 +62,11 @@ def add_recovery_lab(parser):
         "--full-backup-return",
         action="store_true",
         help="With --edge-cases, start a full backup in a new empty replacement lab",
+    )
+    parser.add_argument(
+        "--mod-systems",
+        action="store_true",
+        help="Experimental Linux AE2/EnderIO functional recovery suite; separate from other suites",
     )
 
 
@@ -302,6 +308,8 @@ def _exercise(
 
 
 def _validate_inputs(args):
+    if getattr(args, "mod_systems", False):
+        mod_systems.validate_mod_systems(args)
     paths = [args.agent, args.core, args.mods_json, args.worldedit]
     if getattr(args, "runtime", "native") == "native":
         paths.append(args.java)
@@ -436,6 +444,7 @@ def run_recovery_lab(args):
         "ok": False,
         "checks": [],
         "edge_cases": args.edge_cases,
+        "mod_systems": getattr(args, "mod_systems", False),
         "full_backup_return": args.full_backup_return,
         "runtime": args.runtime,
         "lab_folder": str(lab.relative_to(PROJECT_ROOT)),
@@ -461,6 +470,14 @@ def run_recovery_lab(args):
         str(PROJECT_ROOT / "deploy/auth-lab/compose.yaml"),
     ]
     runtime = None
+    if report["mod_systems"]:
+        report["scope"] = {
+            "dimension": 0,
+            "min": list(mod_systems.MINIMUM),
+            "max": list(mod_systems.MAXIMUM),
+            "blocks": 180,
+        }
+        report["mod_system_artifacts_sha256"] = mod_systems.PINS
 
     def state(phase):
         (PROJECT_ROOT / ".local/recovery-status.json").write_text(
@@ -485,20 +502,34 @@ def run_recovery_lab(args):
             report["linux_java_runtime"] = runtime.linux.prepare(dest, args, client)
             expect(True, "linux_named_volume_case_sensitive_filesystem")
 
-        _exercise(
-            client,
-            session,
-            mods,
-            runtime.start,
-            runtime.backup,
-            expect,
-            report,
-            snapshots=snapshots,
-            edge_cases=args.edge_cases,
-        )
+        if report["mod_systems"]:
+            mod_systems.exercise(
+                client,
+                session,
+                mods,
+                runtime.start,
+                runtime.backup,
+                expect,
+                report,
+                snapshots,
+            )
+            mod_systems.verify_saved(snapshots, expect)
+        else:
+            _exercise(
+                client,
+                session,
+                mods,
+                runtime.start,
+                runtime.backup,
+                expect,
+                report,
+                snapshots=snapshots,
+                edge_cases=args.edge_cases,
+            )
         from omk.recovery_nbt_lab import verify_snapshot_tiles  # noqa: PLC0415
 
-        verify_snapshot_tiles(snapshots, expect)
+        if not report["mod_systems"]:
+            verify_snapshot_tiles(snapshots, expect)
         if args.full_backup_return:
             from omk.recovery_full_probe_lab import (  # noqa: PLC0415
                 exercise_full_return,

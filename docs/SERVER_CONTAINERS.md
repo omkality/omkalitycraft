@@ -58,6 +58,10 @@ uv run omk lab dj2-linux --server-source PATH_TO_DJ2_SERVER --agent PATH_TO_AUTH
 
 ## Что ещё нужно подтвердить
 
+Дополнительно прошёл отдельный Linux `--mod-systems`: 38 проверок небольшого
+ME-хранилища AE2 и двухблочного накопителя EnderIO, повторного отката и работы
+после четвёртого старта. [Версии/команда/границы](MOD_SYSTEM_RECOVERY.md).
+
 - В Linux повторены 93 проверки восстановления области: контейнеры/печь/NBT,
   соседние изменения, undo/redo, сущности, неполный снимок и полноценные restart.
   [Результат](validation/dj2-linux-region-recovery-2026-11-01.json),
