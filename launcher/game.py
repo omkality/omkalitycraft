@@ -1,5 +1,6 @@
 """Start only a verified release, keep paths local, and redact credential output."""
 
+import contextlib
 import os
 import subprocess
 import threading
@@ -22,7 +23,12 @@ from omk.diagnostics import (
     failure,
 )
 from omk.fs import resolved
-from omk.incidents import capture_incident, crash_fingerprints, submit_pending
+from omk.incidents import (
+    RunningCrashWatcher,
+    capture_incident,
+    crash_fingerprints,
+    submit_pending,
+)
 
 
 @dataclass
@@ -176,6 +182,18 @@ class GameRunner:
             raise
         result = GameProcess(process, log, folder)
         run_id = uuid4().hex
+        watcher = RunningCrashWatcher(
+            self.root,
+            folder,
+            release,
+            session,
+            baseline=baseline,
+            run_id=run_id,
+            memory_mb=self.memory_mb if memory_mb is None else memory_mb,
+            launcher=VERSION,
+            notify=lambda: self.send_reports(session),
+        )
+        watcher.start()
         event(
             self.root,
             "game_started",
@@ -205,6 +223,7 @@ class GameRunner:
                     on_error=result.logging_failed.set,
                 )
                 code = process.wait()
+                handled = watcher.stop()
                 event(
                     self.root,
                     "game_exited",
@@ -225,7 +244,7 @@ class GameRunner:
                         memory_mb=self.memory_mb if memory_mb is None else memory_mb,
                         launcher=VERSION,
                         stdout_current=not result.logging_failed.is_set(),
-                        baseline=baseline,
+                        baseline=handled,
                     )
                 except (ValueError, TypeError) as error:
                     failure(self.root, "incident_capture", error)
@@ -235,6 +254,8 @@ class GameRunner:
                 result.logging_failed.set()
                 failure(self.root, "game_log", error)
             finally:
+                with contextlib.suppress(OSError):
+                    watcher.stop()
                 result.diagnostics_done.set()
 
         threading.Thread(

@@ -67,6 +67,24 @@ def test_player_cannot_impersonate_another_report_owner(api):
     )
 
 
+def test_running_report_schema_two_keeps_unknown_exit_and_private_run_metadata(api):
+    client, root, player = api
+    run = uuid4().hex
+    value = report(
+        player, schema=2, run_id=run, process_state="running", exit_code=None
+    )
+    response = client.post(
+        "/reports/client", json=value, headers={"Authorization": "Bearer " + TOKEN}
+    )
+    assert response.status_code == 201
+    store = ReportStore(root)
+    saved = store.get(value["id"])
+    assert saved["exit_code"] is None and saved["process_state"] == "running"
+    summary = store.list()[0]
+    assert summary["run_id"] == run and summary["exit_code"] is None
+    assert summary["process_state"] == "running" and "detail" not in summary
+
+
 def test_revoked_session_is_not_accepted(api, monkeypatch):
     client, root, player = api
 

@@ -11,6 +11,7 @@ from typing import Any
 from api.settings.content import get_instance_config, get_launcher_manifest_settings
 from launcher.paths import default_data_dir
 from omk.admin import add_admin_commands, run_admin
+from omk.client_crash_lab import add_client_crash_lab
 from omk.dj2_lab import add_dj2_lab, run_dj2_lab
 from omk.dj2_linux_lab import add_linux_skin_lab, run_linux_skin_lab
 from omk.lab import auth_smoke
@@ -64,14 +65,7 @@ def doctor() -> dict[str, Any]:
     return {"ok": all(check["ok"] for check in checks), "checks": checks}
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
-        prog="omk", description="OmkalityCraft development and operations tools"
-    )
-    sub = parser.add_subparsers(dest="command", required=True)
-    add_release_commands(sub)
-    add_admin_commands(sub)
-    sub.add_parser("doctor", help="Check local development prerequisites (read-only)")
+def _add_launcher_parser(sub):
     launcher = sub.add_parser("launcher", help="Open the desktop account prototype")
     launcher.add_argument(
         "--auth-url",
@@ -81,6 +75,17 @@ def main(argv: list[str] | None = None) -> int:
     launcher.add_argument("--data-dir", type=Path, default=default_data_dir())
     launcher.add_argument("--api-url", help="Signed release CDN origin")
     launcher.add_argument("--root", type=Path, help="Portable launcher folder")
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        prog="omk", description="OmkalityCraft development and operations tools"
+    )
+    sub = parser.add_subparsers(dest="command", required=True)
+    add_release_commands(sub)
+    add_admin_commands(sub)
+    sub.add_parser("doctor", help="Check local development prerequisites (read-only)")
+    _add_launcher_parser(sub)
     server = sub.add_parser("server", help="Inspect configured server profiles")
     server.add_subparsers(dest="action", required=True).add_parser("list")
     lab = sub.add_parser("lab", help="Disposable integration tests")
@@ -104,6 +109,12 @@ def main(argv: list[str] | None = None) -> int:
     add_linux_skin_lab(
         lab_areas.add_parser(
             "dj2-linux", help="Disposable Linux Docker Forge and desktop skin check"
+        )
+    )
+    add_client_crash_lab(
+        lab_areas.add_parser(
+            "client-crash",
+            help="Real graphical DJ2 crash and private incident delivery lab",
         )
     )
     lab_auth = lab_areas.add_parser("auth")
@@ -137,6 +148,10 @@ def main(argv: list[str] | None = None) -> int:
         report = run_recovery_lab(args)
     elif args.area == "dj2-linux":
         report = run_linux_skin_lab(args)
+    elif args.area == "client-crash":
+        from omk.client_crash_lab import run_client_crash_lab  # noqa: PLC0415
+
+        report = run_client_crash_lab(args)
     elif args.area == "dj2":
         report = run_dj2_lab(args)
     elif args.area == "admin":
