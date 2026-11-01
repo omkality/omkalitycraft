@@ -2,7 +2,7 @@ import threading
 
 import pytest
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QTabWidget
+from PySide6.QtWidgets import QLabel, QTabWidget
 
 from launcher.accounts import AccountError, AccountService
 from launcher.app import LauncherWindow
@@ -38,6 +38,15 @@ def test_labels_center_on_inputs_and_nickname_uses_bundled_pixel_font(qtbot, win
     assert window.invitation.font().family() == "Rubik"
     assert window.invitation.font().weight() == QFont.Weight.Bold
     assert window.signup_name.font().family() == "Monocraft"
+    window._authenticated(window.service.login("test_player", "test-password"))
+    window.resize(1020, 680)
+    qtbot.waitUntil(lambda: window.home_page.cards["dj2"].width() > 100)
+    for pack_id, card in window.home_page.cards.items():
+        description = card.findChild(QLabel, "description_" + pack_id)
+        assert (
+            description.fontMetrics().horizontalAdvance(description.text())
+            <= description.width()
+        )
 
 
 def test_nickname_typing_accepts_legacy_java_alphabet_and_limits_length(window):

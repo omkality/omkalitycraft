@@ -113,6 +113,7 @@ class PackCard(QFrame):
         layout.setSpacing(9)
         layout.addLayout(self._header(profile))
         description = QLabel(profile.description)
+        description.setObjectName("description_" + profile.id)
         description.setWordWrap(True)
         description.setProperty("muted", True)
         layout.addWidget(description)
