@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-01",
+  "tested_source_commit": "8ce51f2a7a9a80d3c11fe5d1c5e4c44808f27673",
+  "application_version": "0.3.0.dev8",
+  "ok": true,
+  "environment": {
+    "game": "full DJ2 Forge 1.12.2 / 14.23.5.2860, Linux Docker",
+    "image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "auth": "real isolated Drasl 4.0.0",
+    "api": "real Granian HTTP, Windows process",
+    "ui": "real Qt widgets, isolated fake account session, counts fetched over real HTTP",
+    "player": "loopback Forge protocol actor, not a graphical Minecraft client"
+  },
+  "status_empty": {
+    "state": "online",
+    "online": 0,
+    "max": 20,
+    "checked_at": "2026-11-01T10:26:27.154736+00:00"
+  },
+  "status_one_protocol_player": {
+    "state": "online",
+    "online": 1,
+    "max": 20,
+    "checked_at": "2026-11-01T10:26:28.909002+00:00"
+  },
+  "status_after_player_disconnect": {
+    "state": "online",
+    "online": 0,
+    "max": 20,
+    "checked_at": "2026-11-01T10:26:30.175591+00:00"
+  },
+  "status_after_server_stop": {
+    "state": "offline",
+    "checked_at": "2026-11-01T10:26:34.310759+00:00"
+  },
+  "real_http_ui_status": true,
+  "world_export_sha256": "c1f1903850cb3f6e0cc030b1873c1896c5c4f8e8d9c797112e52d772b87e0c62",
+  "cleanup": {
+    "game_clean_exit": true,
+    "world_volume_removed_after_export": true,
+    "api_and_auth_removed": true
+  },
+  "validation": {
+    "unit_ui_passed": 356,
+    "unit_ui_skipped": 1,
+    "packaged_windows_startup": true,
+    "raw_player_samples_exported": false,
+    "public_deployment": false
+  }
+}

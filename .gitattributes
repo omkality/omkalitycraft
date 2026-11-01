@@ -1,0 +1,3 @@
+# Preserve pinned font bytes and upstream license hashes on all supported OSes.
+launcher/assets/fonts/*.ttf -text
+launcher/assets/fonts/*.txt text eol=lf

@@ -49,7 +49,7 @@ def external_label(text: str, url: str, *, icon_name: str | None = None) -> QLab
         | Qt.TextInteractionFlag.LinksAccessibleByKeyboard
     )
     widget.linkActivated.connect(open_link)
-    widget.setWordWrap(True)
+    widget.setWordWrap(False)
     return widget
 
 
@@ -113,14 +113,17 @@ class PackCard(QFrame):
         layout.setSpacing(9)
         layout.addLayout(self._header(profile))
         description = QLabel(profile.description)
+        description.setObjectName("description_" + profile.id)
         description.setWordWrap(True)
         description.setProperty("muted", True)
         layout.addWidget(description)
         credits = QHBoxLayout()
-        credits.addWidget(external_label("Авторы сборки", profile.project_url), 1)
-        credits.addWidget(
-            external_label(profile.translation_label, profile.translation_url), 1
+        credits.addWidget(external_label("Авторы сборки", profile.project_url))
+        translation = external_label(profile.translation_label, profile.translation_url)
+        translation.setAlignment(
+            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
         )
+        credits.addWidget(translation, 1)
         layout.addLayout(credits)
         self.memory = MemoryControl(
             profile, machine or MemorySnapshot.read(), requested_mb
@@ -131,7 +134,17 @@ class PackCard(QFrame):
         )
         self.state_label.setObjectName("state_" + profile.id)
         self.state_label.setStyleSheet("color:#9bb1b6;background:transparent")
-        layout.addWidget(self.state_label)
+        state_row = QHBoxLayout()
+        state_row.addWidget(self.state_label)
+        self.online_label = QLabel("Сервер готовится")
+        self.online_label.setObjectName("online_" + profile.id)
+        self.online_label.setProperty("muted", True)
+        self.online_label.setAlignment(
+            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+        )
+        self.online_label.setVisible(profile.status != "planned")
+        state_row.addWidget(self.online_label, 1)
+        layout.addLayout(state_row)
         self.progress = QProgressBar()
         self.progress.setObjectName("progress_" + profile.id)
         self.progress.setTextVisible(False)
@@ -151,6 +164,28 @@ class PackCard(QFrame):
         row.addWidget(self.cancel)
         layout.addLayout(row)
         self.installed = False
+
+    def set_server_status(self, value):
+        if value is None:
+            text = "Онлайн недоступен"
+        elif not isinstance(value, dict):
+            text = "Сервер готовится"
+        elif value.get("state") == "offline":
+            text = "Сервер недоступен"
+        elif value.get("state") == "checking":
+            text = "Проверяем онлайн…"
+        elif (
+            value.get("state") == "online"
+            and all(
+                type(value.get(key)) is int and 0 <= value[key] <= 100000
+                for key in ("online", "max")
+            )
+            and value["max"] > 0
+        ):
+            text = f"Онлайн: {value['online']} / {value['max']}"
+        else:
+            text = "Онлайн недоступен"
+        self.online_label.setText(text)
 
     def _header(self, profile: ServerProfile) -> QHBoxLayout:
         header = QHBoxLayout()

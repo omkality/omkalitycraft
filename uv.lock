@@ -543,7 +543,7 @@ wheels = [
 
 [[package]]
 name = "omkalitycraft-api"
-version = "0.3.0.dev7"
+version = "0.3.0.dev8"
 source = { editable = "." }
 
 [package.dev-dependencies]

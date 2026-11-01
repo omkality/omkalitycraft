@@ -1,4 +1,5 @@
 from litestar import Litestar
+from litestar.datastructures import State
 from litestar.middleware.rate_limit import RateLimitConfig
 from litestar.openapi import OpenAPIConfig
 
@@ -15,19 +16,32 @@ from api.routes.launcher import get_launcher_manifest
 from api.routes.meta import docs_redirect, health, version
 from api.routes.releases import get_release_file, get_release_manifest
 from api.routes.reports import upload_client_report
+from api.routes.server_status import server_status
 from api.routes.updates import update_metadata, update_target
+from api.settings.config import settings
+from omk.minecraft_status import ServerStatusCache
 
 project_info = get_project_info()
 
 
 def create_app(requests_per_second: int = 128) -> Litestar:
     return Litestar(
+        state=State(
+            {
+                "server_status": ServerStatusCache(
+                    settings.server_status_targets,
+                    ttl=settings.server_status_cache_seconds,
+                    timeout=settings.server_status_timeout_seconds,
+                )
+            }
+        ),
         lifespan=[report_retention],
         middleware=[
             RateLimitConfig(rate_limit=("second", requests_per_second)).middleware
         ],
         route_handlers=[
             upload_client_report,
+            server_status,
             docs_redirect,
             version,
             health,

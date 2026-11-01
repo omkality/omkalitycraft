@@ -1,0 +1,14 @@
+{
+  "date": "2026-11-01",
+  "artifact": "FTBBackups-1.1.0.1.jar",
+  "sha256": "6b6bcbbf6ac4528657345e1696339528a44643ecb06e6137908eafb8432bd962",
+  "source_commit": "4e77b0390fb1f347eac3e6f341233ec8bedd035e",
+  "validation": "Read-only source review and javap of the installed JAR; not a live backup failure test",
+  "observations": [
+    "percent uses File.getTotalSpace",
+    "deletion occurs before opening the new ZIP output",
+    "individual file-copy exceptions are caught inside the compression loop"
+  ],
+  "existing_config_changed": false,
+  "backup_retention_enforced": false
+}

@@ -5,8 +5,6 @@ from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
-    QMessageBox,
-    QPushButton,
     QScrollArea,
     QVBoxLayout,
     QWidget,
@@ -84,16 +82,6 @@ class Dashboard(QWidget):
         panel.addWidget(self.greeting)
         self.skin_preview = SkinView()
         panel.addWidget(self.skin_preview, 1)
-        row = QHBoxLayout()
-        row.addStretch()
-        help_button = QPushButton("?")
-        help_button.setObjectName("skinHelp")
-        help_button.setFixedSize(28, 28)
-        help_button.setToolTip("Чем отличаются форматы скинов и модели Steve / Alex?")
-        help_button.setProperty("quiet", True)
-        help_button.clicked.connect(self._skin_help)
-        row.addWidget(help_button)
-        panel.addLayout(row)
         self.upload_button = BusyButton("Загрузить скин…")
         self.upload_button.setObjectName("uploadSkin")
         panel.addWidget(self.upload_button)
@@ -102,14 +90,3 @@ class Dashboard(QWidget):
         self.change_password.setObjectName("changePassword")
         panel.addWidget(self.change_password)
         return account
-
-    def _skin_help(self) -> None:
-        QMessageBox.information(
-            self,
-            "Как выбрать скин",
-            "Загрузите один PNG-скин — выбирать версию Minecraft не нужно. "
-            "Поддерживаются 64×64 и старый формат 64×32, до 256 КБ.\n\n"
-            "Перед загрузкой появится предпросмотр. Если модель выглядит неправильно, "
-            "нажмите «Настроить модель». У PNG нет надёжного признака Classic/Slim, "
-            "поэтому автоматическое определение иногда требует поправки.",
-        )

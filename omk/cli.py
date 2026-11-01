@@ -17,6 +17,7 @@ from omk.dj2_linux_lab import add_linux_skin_lab, run_linux_skin_lab
 from omk.lab import auth_smoke
 from omk.profiles import PROJECT_ROOT, load_profiles
 from omk.release_cli import add_release_commands, prepare_release
+from omk.storage_policy import add_storage_commands, storage_plan
 
 
 def doctor() -> dict[str, Any]:
@@ -84,6 +85,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     add_release_commands(sub)
     add_admin_commands(sub)
+    add_storage_commands(sub)
     sub.add_parser("doctor", help="Check local development prerequisites (read-only)")
     _add_launcher_parser(sub)
     server = sub.add_parser("server", help="Inspect configured server profiles")
@@ -134,6 +136,14 @@ def main(argv: list[str] | None = None) -> int:
         return run_launcher(
             args.auth_url, args.data_dir, api_url=args.api_url, root=args.root
         )
+    report = _report(args)
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0 if report["ok"] else 1
+
+
+def _report(args):
+    if args.command == "storage":
+        return storage_plan()
     if args.command == "release":
         report = prepare_release(args)
     elif args.command == "admin":
@@ -162,5 +172,4 @@ def main(argv: list[str] | None = None) -> int:
         report = auth_smoke(
             with_gui=args.area == "launcher", expiry_only=args.action == "expiry"
         )
-    print(json.dumps(report, ensure_ascii=False, indent=2))
-    return 0 if report["ok"] else 1
+    return report
