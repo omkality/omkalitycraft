@@ -130,9 +130,17 @@ class LinuxServer:
         result = self.helper("uname -s; java -version")
         return result.stdout + result.stderr
 
-    def start(self):
+    def start(self, *, snapshot_dir=None):
         if docker("container", "inspect", self.name, check=False).returncode == 0:
             raise ValueError("A new Docker container is required")
+        snapshot_mount = (
+            [
+                "--mount",
+                f"type=bind,source={snapshot_dir.resolve()},target=/snapshots,readonly",
+            ]
+            if snapshot_dir is not None
+            else []
+        )
         command = [
             "docker",
             "run",
@@ -163,6 +171,7 @@ class LinuxServer:
             "max-file=3",
             "--mount",
             f"type=volume,source={self.volume},target=/srv",
+            *snapshot_mount,
             JAVA_IMAGE,
             "java",
             "-Xms1G",
@@ -182,7 +191,7 @@ class LinuxServer:
             "nogui",
         ]
         writer = BoundedLog(self.log)
-        writer.write("Starting pinned Linux Docker Forge server\n")
+        writer.write("Starting pinned Linux Docker Forge server\n", rotate=True)
         self.process = subprocess.Popen(
             command,
             stdin=subprocess.PIPE,
@@ -232,6 +241,10 @@ class LinuxServer:
             report["owned_game_clean_exit"] = (
                 self.process is not None and self.process.poll() == 0
             )
+            if self.volume_created and not report.get(
+                "owned_volume_removed_after_export"
+            ):
+                report["owned_volume_retained"] = self.volume
         except Exception as error:
             report["ok"] = False
             report["cleanup_error"] = type(error).__name__
