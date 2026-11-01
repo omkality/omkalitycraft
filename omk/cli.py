@@ -124,6 +124,13 @@ def main(argv: list[str] | None = None) -> int:
             "dj2-linux", help="Disposable Linux Docker Forge and desktop skin check"
         )
     )
+    from omk.dj2_spawn_lab import add_spawn_lab  # noqa: PLC0415
+
+    add_spawn_lab(
+        lab_areas.add_parser(
+            "dj2-spawn", help="Fresh Linux FTB spawn boundary and grave recovery checks"
+        )
+    )
     add_client_crash_lab(
         lab_areas.add_parser(
             "client-crash",
@@ -183,6 +190,10 @@ def _lab_report(args):
         report = run_startup_trace_lab(args)
     elif args.area == "dj2-linux":
         report = run_linux_skin_lab(args)
+    elif args.area == "dj2-spawn":
+        from omk.dj2_spawn_lab import run_spawn_lab  # noqa: PLC0415
+
+        report = run_spawn_lab(args)
     elif args.area == "client-crash":
         from omk.client_crash_lab import run_client_crash_lab  # noqa: PLC0415
 

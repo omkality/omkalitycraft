@@ -39,6 +39,7 @@ class LabPlayer:
         self.transactions = deque(maxlen=20)
         self.position = None
         self.health = None
+        self.entity_id = None
         self.error = None
         self._lock = threading.Lock()
         self._stopping = threading.Event()
@@ -131,6 +132,20 @@ class LabPlayer:
 
     def dig(self, x: int, y: int, z: int):
         self.send(0x14, varint(0) + self._block_position(x, y, z) + b"\x01")
+
+    def respawn(self):
+        self.check()
+        if self.health is None or self.health > 0:
+            raise ValueError("Lab respawn requires a confirmed dead actor")
+        self.send(0x03, varint(0))
+
+    def sneak(self, enabled):
+        self.check()
+        if self.entity_id is None or type(enabled) is not bool:
+            raise ValueError("Lab sneak requires a joined actor and boolean state")
+        self.send(
+            0x15, varint(self.entity_id) + varint(0 if enabled else 1) + varint(0)
+        )
 
     @staticmethod
     def _block_position(x, y, z):
@@ -285,6 +300,8 @@ class LabPlayer:
                     )
                 elif kind == 0x41:
                     self.health = struct.unpack(">f", packet.read(4))[0]
+                elif kind == 0x23:
+                    self.entity_id = struct.unpack(">i", packet.read(4))[0]
                 elif kind in {0x11, 0x12, 0x13}:
                     self._container_packet(kind, packet)
                 elif kind == 0x2F:
