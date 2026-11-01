@@ -96,6 +96,13 @@ def main(argv: list[str] | None = None) -> int:
         "backup-safety",
         help="Disposable Linux archive rotation, ENOSPC and SIGKILL probes",
     )
+    from omk.startup_trace_lab import add_startup_trace_lab  # noqa: PLC0415
+
+    add_startup_trace_lab(
+        lab_areas.add_parser(
+            "dj2-startup", help="Observe startup transformers on an owned Linux lab"
+        )
+    )
     from omk.recovery_lab import add_recovery_lab  # noqa: PLC0415
 
     add_recovery_lab(
@@ -156,7 +163,13 @@ def _report(args):
         report = doctor()
     elif args.command == "server":
         report = {"ok": True, "servers": [p.as_dict() for p in load_profiles()]}
-    elif args.area == "dj2-recovery":
+    else:
+        return _lab_report(args)
+    return report
+
+
+def _lab_report(args):
+    if args.area == "dj2-recovery":
         from omk.recovery_lab import run_recovery_lab  # noqa: PLC0415
 
         report = run_recovery_lab(args)
@@ -164,6 +177,10 @@ def _report(args):
         from omk.backup_safety_lab import run_backup_safety_lab  # noqa: PLC0415
 
         report = run_backup_safety_lab()
+    elif args.area == "dj2-startup":
+        from omk.startup_trace_lab import run_startup_trace_lab  # noqa: PLC0415
+
+        report = run_startup_trace_lab(args)
     elif args.area == "dj2-linux":
         report = run_linux_skin_lab(args)
     elif args.area == "client-crash":
