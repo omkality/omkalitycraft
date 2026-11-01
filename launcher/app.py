@@ -203,13 +203,13 @@ class LauncherWindow(QMainWindow):
     def _auth_page(self) -> QWidget:
         page = QWidget()
         layout = QVBoxLayout(page)
-        layout.addWidget(label("Войти или присоединиться к серверу"))
+        layout.addWidget(label("Войти или присоединиться к сообществу"))
         tabs = QTabWidget()
         layout.addWidget(tabs)
         signup, login = QWidget(), QWidget()
         signup_layout, login_layout = QFormLayout(signup), QFormLayout(login)
         self.signup_name = field("signupName", "От 3 до 16 латинских букв, цифр или _")
-        self.invitation = field("invitationCode", "Код от владельца сервера")
+        self.invitation = field("invitationCode", "Код от владельца проекта")
         signup_layout.addRow("Ник", self.signup_name)
         signup_layout.addRow("Приглашение", self.invitation)
         signup_layout.addRow(
