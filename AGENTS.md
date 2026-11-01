@@ -24,6 +24,7 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
   the running executable or extract an update over userdata/instances. Private signing keys stay offline.
 - Run the relevant tests and Ruff. CI covers CDN, transport, profiles and a disposable Drasl smoke test.
 - Keep CHANGELOG.md and owner/player documentation in Russian; commit subjects and AGENTS.md remain English.
+- Public GitHub Releases are player launcher distributions, not source-only development checkpoints. Attach only tested portable launcher bundles and their release integrity/license material; never upload the backend, repository source bundles, server data or modpack payloads. Git history/tags track development checkpoints independently. Do not publish loopback previews as player releases.
 - After launcher UI changes, show the actual UI state as a PNG and provide a link to the tested local executable bundle for review. Never substitute a GitHub screenshot for launcher visual validation.
 - Use a new screenshot filename for every shared UI revision; never overwrite a PNG after linking it in chat, because the app may cache it.
 - Prefer validated environment overrides with documented defaults for deployment policy; do not require source edits for operational limits. Keep security/trust keys and release integrity outside arbitrary player overrides.
