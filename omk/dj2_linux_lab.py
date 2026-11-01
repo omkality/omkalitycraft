@@ -220,16 +220,19 @@ class LinuxServer:
     def close(self, report):
         try:
             if self.process is not None and self.process.poll() is None:
+                report["lab_cleanup_stop_requested"] = True
                 try:
                     self.process.stdin.write(b"stop\n")
                     self.process.stdin.flush()
                     self.process.wait(timeout=60)
                 except OSError, subprocess.TimeoutExpired:
                     if inspect_owned("container", self.name, self.run_id):
+                        report["lab_cleanup_docker_stop_requested"] = True
                         docker("stop", "--time", "30", self.name)
                     self.process.wait(timeout=40)
             data = inspect_owned("container", self.name, self.run_id)
             if data and data["State"]["Running"]:
+                report["lab_cleanup_docker_stop_requested"] = True
                 docker("stop", "--time", "30", self.name)
                 data = inspect_owned("container", self.name, self.run_id)
             if data:

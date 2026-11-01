@@ -23,7 +23,7 @@ def command_server(tmp_path, cls=TraceServer):
     return server
 
 
-@pytest.mark.parametrize("mode", ["full", "exclusions"])
+@pytest.mark.parametrize("mode", ["full", "exclusions", "console"])
 def test_agent_only_enters_explicit_trace_server_command(tmp_path, mode):
     server = command_server(tmp_path)
     server.new_trace(1)
@@ -151,6 +151,23 @@ def test_trace_does_not_claim_success_when_hook_failed_or_log_oversized(tmp_path
     path.write_bytes(bytes(2 * 1024**2 + 1))
     with pytest.raises(ValueError, match="large"):
         inspect_trace(path)
+
+
+def test_console_trace_requires_actual_game_output_and_reads_heap_snapshot(tmp_path):
+    path = tmp_path / "trace.txt"
+    path.write_text("trace-mode=console\nconsole-hook-armed\n")
+    assert not inspect_trace(path)["hooks_armed"]
+    path.write_text(
+        "trace-mode=console\nconsole-hook-armed\nconsole-game-log-observed\n"
+        "DEOBF-EXCLUDED console-stack\nHEAP 1000 2000 4000\n"
+    )
+    data = inspect_trace(path)
+    assert data["hooks_armed"] and data["deobfuscator_excluded"]
+    assert data["heap_at_exclusion"] == {
+        "free_bytes": 1000,
+        "committed_bytes": 2000,
+        "max_bytes": 4000,
+    }
 
 
 @pytest.mark.parametrize("oom,exit_code", [(False, 1), (True, 137), (False, 0)])

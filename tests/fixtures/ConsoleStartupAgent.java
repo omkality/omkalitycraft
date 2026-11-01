@@ -3,6 +3,7 @@ package omk.lab.trace;
 import java.io.*;
 import java.lang.instrument.Instrumentation;
 import java.nio.file.*;
+import java.util.Map;
 
 /** JDK-only observer. Does not load ASM or modify game/loader classes. */
 public final class ConsoleStartupAgent {
@@ -62,9 +63,34 @@ public final class ConsoleStartupAgent {
         if (captured) return;
         captured = true;
         StringBuilder text = new StringBuilder("DEOBF-EXCLUDED console-stack\n");
+        Runtime runtime = Runtime.getRuntime();
+        text.append("HEAP ").append(runtime.freeMemory()).append(' ')
+            .append(runtime.totalMemory()).append(' ').append(runtime.maxMemory()).append('\n');
         StackTraceElement[] frames = new Throwable().getStackTrace();
         for (int index = 0; index < frames.length && index < 80; index++) {
-            text.append("  ").append(frames[index].toString()).append('\n');
+            appendFrame(text, frames[index]);
+        }
+        // Inspect other class-loading threads only after the failure signal.
+        // Omit thread names and all argument values.
+        try {
+            int count = 0;
+            for (Map.Entry<Thread, StackTraceElement[]> entry : Thread.getAllStackTraces().entrySet()) {
+                if (entry.getKey() == Thread.currentThread() || count >= 32 || text.length() > 200000) continue;
+                boolean relevant = false;
+                for (StackTraceElement frame : entry.getValue()) {
+                    String name = frame.getClassName();
+                    if (name.startsWith("net.minecraft.launchwrapper.") || name.startsWith("org.spongepowered.asm.")
+                            || name.startsWith("mirror.normalasm.")) relevant = true;
+                }
+                if (!relevant) continue;
+                count++;
+                text.append("OTHER-CLASSLOAD-THREAD id=").append(entry.getKey().getId())
+                    .append(" state=").append(entry.getKey().getState()).append('\n');
+                StackTraceElement[] other = entry.getValue();
+                for (int index = 0; index < other.length && index < 64; index++) appendFrame(text, other[index]);
+            }
+        } catch (Throwable unavailable) {
+            text.append("other-thread-snapshot-unavailable\n");
         }
         try {
             Files.write(directory.resolve("trace.txt"), text.toString().getBytes("UTF-8"), StandardOpenOption.APPEND);
@@ -73,8 +99,16 @@ public final class ConsoleStartupAgent {
         }
     }
 
+    private static void appendFrame(StringBuilder text, StackTraceElement frame) {
+        if (text.length() >= 200000) return;
+        String line = frame.toString();
+        if (line.length() > 512) line = line.substring(0, 512);
+        text.append("  ").append(line).append('\n');
+    }
+
     public static void main(String[] args) throws Exception {
         if (!Boolean.getBoolean("omkality.lab.consoleProbe")) throw new IllegalArgumentException("Lab probe only");
+        Thread.currentThread().setName("omk_lab_private_thread_canary");
         System.out.println("Forge Mod Loader version 14.23.5.2860");
         // Split writes exercise matching across buffer boundaries.
         System.out.print(MARKER.substring(0, 24));

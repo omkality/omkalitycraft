@@ -34,10 +34,24 @@ def inspect_trace(path):
     hooks = {"console": ("console",), "exclusions": ("mixin-service",), "full": HOOKS}[
         mode
     ]
+    heap = re.search(
+        r"^HEAP ([0-9]{1,20}) ([0-9]{1,20}) ([0-9]{1,20})$", text, re.MULTILINE
+    )
     return {
         "hooks_armed": all(hook + "-hook-armed" in text for hook in hooks)
         and (mode != "console" or "console-game-log-observed" in text),
         "console_game_output_seen": "console-game-log-observed" in text,
+        "heap_at_exclusion": (
+            dict(
+                zip(
+                    ("free_bytes", "committed_bytes", "max_bytes"),
+                    map(int, heap.groups()),
+                    strict=True,
+                )
+            )
+            if heap
+            else None
+        ),
         "mode": mode,
         "deobfuscator_excluded": "DEOBF-EXCLUDED" in text,
         "deobfuscator_reentry": "DEOBF-REENTRY" in text,
