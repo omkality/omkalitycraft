@@ -2,6 +2,10 @@
 
 ## Unreleased — DJ2 protection and recovery validation tools
 
+- Verify a complete stopped-world backup in an empty replacement DJ2 server: 111 real checks including entities, player inventory, working FTB home/claim and furnace.
+- Stage pinned world ZIPs with path/collision/link/size checks, a recorded plan and per-file SHA256 readback; never overwrite or move an existing world.
+- Test CRC and interrupted-write failures without a completed staging marker; production cutover/access-policy reconciliation remain pending.
+
 - Add a bounded, read-only selected-chunk coverage guard for prepared overworld lab snapshots, with synthetic missing/corrupt/coordinate/bounds checks.
 - Add opt-in entity and incomplete-snapshot characterization in a disposable Forge lab; successful characterization is not full entity recovery or atomic apply.
 - Confirm native partial mutation despite a restore error and unchanged armor-stand state; reject the incomplete snapshot before mutation with the lab preflight.
