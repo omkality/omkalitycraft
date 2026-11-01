@@ -396,3 +396,21 @@ def test_symlinked_store_or_input_is_refused(tmp_path):
     directory.symlink_to(store.root, target_is_directory=True)
     with pytest.raises(ValueError, match="Linked"):
         BackupStore(directory, store.policy)
+
+
+def test_caller_cannot_change_manifest_inventory_during_transaction(
+    tmp_path, monkeypatch
+):
+    store = store_at(tmp_path)
+    source, files = make_archive(tmp_path)
+    original = store._copy
+
+    def mutate_caller_inventory(archive, target, size):
+        files["world/level.dat"]["sha256"] = "0" * 64
+        return original(archive, target, size)
+
+    monkeypatch.setattr(store, "_copy", mutate_caller_inventory)
+    result = store.publish(source, files)
+    metadata = json.loads((store.root / result["id"] / "manifest.json").read_bytes())
+    assert metadata["files"]["world/level.dat"]["sha256"] != "0" * 64
+    assert len(store.inspect()) == 1

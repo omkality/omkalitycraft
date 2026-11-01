@@ -1,5 +1,7 @@
 import json
+import os
 import subprocess
+from pathlib import Path
 from unittest.mock import Mock
 
 from omk import backup_safety_lab
@@ -35,6 +37,24 @@ def test_lab_mounts_only_allowlisted_code_and_bounded_disposable_filesystems(
             assert "--pull" in args and args[args.index("--pull") + 1] == "never"
             mount = args[args.index("--mount") + 1]
             assert mount.endswith("target=/code,readonly")
+            folder = Path(
+                mount.removeprefix("type=bind,source=").removesuffix(
+                    ",target=/code,readonly"
+                )
+            )
+            assert {p.name for p in (folder / "omk").iterdir()} == {
+                "__init__.py",
+                "backup_archive.py",
+                "backup_store.py",
+                "backup_safety_probe.py",
+            }
+            if os.name != "nt":
+                assert folder.stat().st_mode & 0o777 == 0o755
+                assert (folder / "omk").stat().st_mode & 0o777 == 0o755
+                assert all(
+                    p.stat().st_mode & 0o777 == 0o644
+                    for p in (folder / "omk").iterdir()
+                )
             return Mock(returncode=0, stdout='{"ok":true}')
         if args[:2] == ["docker", "inspect"]:
             return Mock(

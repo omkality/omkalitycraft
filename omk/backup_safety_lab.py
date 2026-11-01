@@ -22,6 +22,11 @@ def run_backup_safety_lab():
         root = Path(temp)
         package = root / "omk"
         package.mkdir()
+        # A Linux host creates TemporaryDirectory as 0700. The container drops
+        # DAC_OVERRIDE, so even its root cannot traverse a different host UID's
+        # directory. Only these public source copies become world-readable.
+        root.chmod(0o755)
+        package.chmod(0o755)
         for filename in (
             "__init__.py",
             "backup_archive.py",
@@ -31,6 +36,7 @@ def run_backup_safety_lab():
             (package / filename).write_bytes(
                 (Path(__file__).parent / filename).read_bytes()
             )
+            (package / filename).chmod(0o644)
         try:
             result = subprocess.run(
                 [

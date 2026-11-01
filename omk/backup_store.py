@@ -214,6 +214,10 @@ class BackupStore:
         Pending/retired leftovers deliberately block further writes after a crash.
         An operator must inspect them; repeated retries cannot fill the disk.
         """
+        # Own the inventory for the duration of this transaction. A caller
+        # reusing/mutating its dict must not change the committed manifest after
+        # the staged archive's readback has already passed.
+        files = json.loads(_json_bytes(files))
         if archive.resolve().is_relative_to(self.root.resolve()):
             raise ValueError("Backup input must be outside the managed store")
         size = regular_file(archive)
