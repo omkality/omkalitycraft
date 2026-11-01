@@ -53,6 +53,11 @@ def add_recovery_lab(parser):
         action="store_true",
         help="Characterize entities and a deliberately incomplete snapshot in the new lab",
     )
+    parser.add_argument(
+        "--full-backup-return",
+        action="store_true",
+        help="With --edge-cases, start a full backup in a new empty replacement lab",
+    )
 
 
 def _snapshot(server, dest, target):
@@ -239,6 +244,10 @@ def _exercise(
     with LabPlayer(client, session, 25576, mods) as actor:
         _place(actor, FIRST, (128.5, 241, 128.5), console)
         _fixture(console)
+        if report.get("full_backup_return"):
+            from omk.recovery_full_probe_lab import seed_full_return  # noqa: PLC0415
+
+            seed_full_return(actor, console, expect)
         if edge_cases:
             seed_edges(console, expect)
         _smelt(console, expect, "machine_smelt_positive_control_before_snapshot")
@@ -262,6 +271,10 @@ def _exercise(
     with LabPlayer(client, session, 25576, mods) as actor:
         _place(actor, FIRST, (128.5, 241, 128.5), console)
         _damage(console)
+        if report.get("full_backup_return"):
+            from omk.recovery_full_probe_lab import damage_full_return  # noqa: PLC0415
+
+            damage_full_return(actor, console, expect)
         if edge_cases:
             damage_edges(console, expect)
         expect(_found(console, "130 241 130", "minecraft:air"), "base_really_damaged")
@@ -291,6 +304,8 @@ def _validate_inputs(args):
     approved_mods(args.mods_json)
     if _sha256(args.worldedit) != WORLDEDIT_SHA256:
         raise ValueError("Expected pinned official WorldEdit file 2941712")
+    if args.full_backup_return and not args.edge_cases:
+        raise ValueError("Full backup return requires --edge-cases")
 
 
 def _backup(server, stream, lab, dest, name, report):
@@ -339,6 +354,7 @@ def run_recovery_lab(args):
         "ok": False,
         "checks": [],
         "edge_cases": args.edge_cases,
+        "full_backup_return": args.full_backup_return,
         "lab_folder": str(lab.relative_to(PROJECT_ROOT)),
         "candidate": {
             "source": WORLDEDIT_SOURCE,
@@ -398,11 +414,11 @@ def run_recovery_lab(args):
                 dest / "mods/ThermalExpansion-1.12.2-5.5.7.1-universal.jar",
             ]
         }
-        client, _, session, _ = _accounts(compose, lab)
+        client, _, session, session2 = _accounts(compose, lab)
 
-        def start():
+        def start(replacement=None):
             nonlocal server, stream
-            server, log, stream = _start_server(args, lab, dest, client)
+            server, log, stream = _start_server(args, lab, replacement or dest, client)
             _wait_server(server, log, state)
             return _console_sender(server, log)
 
@@ -425,6 +441,23 @@ def run_recovery_lab(args):
         from omk.recovery_nbt_lab import verify_snapshot_tiles  # noqa: PLC0415
 
         verify_snapshot_tiles(snapshots, expect)
+        if args.full_backup_return:
+            from omk.recovery_full_probe_lab import (  # noqa: PLC0415
+                exercise_full_return,
+            )
+
+            exercise_full_return(
+                args,
+                lab,
+                server,
+                client,
+                (session, session2),
+                mods,
+                report,
+                expect,
+                start,
+                backup,
+            )
         report["ok"] = True
     except Exception as error:
         report["error"] = type(error).__name__ + ": " + str(error)[:1800]
