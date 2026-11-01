@@ -2,7 +2,6 @@
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
-    QComboBox,
     QFrame,
     QHBoxLayout,
     QLabel,
@@ -86,9 +85,6 @@ class Dashboard(QWidget):
         self.skin_preview = SkinView()
         panel.addWidget(self.skin_preview, 1)
         row = QHBoxLayout()
-        text = QLabel("Модель скина")
-        text.setProperty("muted", True)
-        row.addWidget(text)
         row.addStretch()
         help_button = QPushButton("?")
         help_button.setObjectName("skinHelp")
@@ -98,10 +94,6 @@ class Dashboard(QWidget):
         help_button.clicked.connect(self._skin_help)
         row.addWidget(help_button)
         panel.addLayout(row)
-        self.skin_model = QComboBox()
-        self.skin_model.addItem("Minecraft 1.7 и новее", "classic")
-        self.skin_model.addItem("Minecraft 1.8 и новее", "slim")
-        panel.addWidget(self.skin_model)
         self.upload_button = BusyButton("Загрузить скин…")
         self.upload_button.setObjectName("uploadSkin")
         panel.addWidget(self.upload_button)
@@ -115,10 +107,9 @@ class Dashboard(QWidget):
         QMessageBox.information(
             self,
             "Как выбрать скин",
-            "Формат PNG:\n64×64 — современный; 64×32 — старый.\n\n"
-            "Модель персонажа:\nSteve — руки шириной 4 пикселя; Alex — 3 пикселя. "
-            "Это отдельный параметр, он не определяется одной лишь версией Minecraft.\n\n"
-            "Для Alex нужен скин 64×64. В сборках на Minecraft 1.7.10 современные детали "
-            "скина требуют поддержки со стороны модов.\n\n"
-            "Поддерживается обычный PNG до 256 КБ. Повреждённые изображения не загружаются.",
+            "Загрузите один PNG-скин — выбирать версию Minecraft не нужно. "
+            "Поддерживаются 64×64 и старый формат 64×32, до 256 КБ.\n\n"
+            "Перед загрузкой появится предпросмотр. Если модель выглядит неправильно, "
+            "нажмите «Настроить модель». У PNG нет надёжного признака Classic/Slim, "
+            "поэтому автоматическое определение иногда требует поправки.",
         )

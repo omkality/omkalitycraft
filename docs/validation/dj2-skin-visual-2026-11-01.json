@@ -1,0 +1,72 @@
+{
+  "date": "2026-11-01",
+  "source_commit": "0fc86c84d5859ebba8cd93144a1d9ccb50ce8797",
+  "method": "Computer Use sky keyboard input, Minecraft built-in F2 PNGs inspected directly; Windows Graphics Capture failed twice",
+  "observed": [
+    "Default Slim skin rendered on the real player",
+    "Second player remained visibly textured after Classic, legacy 64x32 and Slim uploads/reconnects",
+    "All three uploaded PNG hashes downloaded into the real client skin cache",
+    "Square JourneyMap minimap without grid",
+    "Readable Russian inventory heading with FM_NewFont"
+  ],
+  "not_covered": [
+    "All views/poses and arbitrary PNG model inference",
+    "JourneyMap fullscreen GUI and its grid toggle",
+    "Server-list GUI",
+    "GTNH and Linux/macOS game clients"
+  ],
+  "screenshots": {
+    "dj2-default-slim-and-classic": {
+      "path": "docs/validation/screenshots/dj2-default-slim-and-classic-2026-11-01.png",
+      "sha256": "e0a326fa2001b3ab26da4e0cd394eafa448c154122832646c2653cb37c7c6465",
+      "dimensions": [
+        854,
+        480
+      ]
+    },
+    "dj2-default-slim-and-legacy": {
+      "path": "docs/validation/screenshots/dj2-default-slim-and-legacy-2026-11-01.png",
+      "sha256": "1dc77519a0a6a95c7574a1daf086a58d0fea0a33f8b8e587906413435fa4f53e",
+      "dimensions": [
+        854,
+        480
+      ]
+    },
+    "dj2-default-slim-and-uploaded-slim": {
+      "path": "docs/validation/screenshots/dj2-default-slim-and-uploaded-slim-2026-11-01.png",
+      "sha256": "fb6c3c5649b7d2bb1f9b67c9b81bb7741aaf8e103baa74370d570c656a093127",
+      "dimensions": [
+        854,
+        480
+      ]
+    },
+    "dj2-russian-inventory": {
+      "path": "docs/validation/screenshots/dj2-russian-inventory-2026-11-01.png",
+      "sha256": "3f1f4174c3fe26c76b859b6680bab46fa961405d13cf7b9d1c890524e08e6b13",
+      "dimensions": [
+        854,
+        480
+      ]
+    }
+  },
+  "downloaded_skins": {
+    "slim": "481c10cd3617e0134664c115fa728b5aee682b7e2f1c15d66f72c63c005a0312",
+    "classic": "4b209f734a3acb79df29faf44078740fbb90401a6fef532ab87b70b134b567ce",
+    "legacy": "ff29028d40f2f3a9728688f8a2358c63c7fdd3e1f0c3f82500f458d7a811d54c"
+  },
+  "font_options_verified": true,
+  "linux_run": {
+    "ok": true,
+    "checks": [
+      "linux_named_volume_case_sensitive_filesystem",
+      "full_forge_dj2_starts_in_linux_docker",
+      "real_forge_login_to_linux_server",
+      "real_windows_dj2_client_joins_linux_docker_server"
+    ],
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "owned_game_clean_exit": true,
+    "owned_volume_removed_after_export": true,
+    "temporary_auth_removed": true,
+    "stopped_world_tar_sha256": "10c6df58745bf7853c143c494ed94d0d388bc6cd99657a4bef37f7ab192ef278"
+  }
+}

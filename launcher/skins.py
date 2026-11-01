@@ -26,7 +26,21 @@ class Skin:
         return self.height == 32
 
 
-def decode_skin(data: bytes, model: str = "classic") -> Skin:
+def _suggest_model(rgba: Image.Image) -> str:
+    if rgba.height == 32:
+        return "classic"
+    # PNG has no authoritative model field. These unused Slim UV strips
+    # provide a suggestion; the upload preview can override it.
+    alpha = rgba.getchannel("A")
+    unused = ((50, 16, 52, 20), (54, 20, 56, 32), (42, 48, 44, 52), (46, 52, 48, 64))
+    return (
+        "slim"
+        if all(alpha.crop(rect).getextrema()[1] == 0 for rect in unused)
+        else "classic"
+    )
+
+
+def decode_skin(data: bytes, model: str | None = None) -> Skin:
     if len(data) > MAX_SKIN_BYTES:
         raise SkinError("Скин слишком большой. Максимальный размер — 256 КБ.")
     if len(data) < 33 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
@@ -34,12 +48,10 @@ def decode_skin(data: bytes, model: str = "classic") -> Skin:
     width, height = struct.unpack(">II", data[16:24])
     if (width, height) not in {(64, 32), (64, 64)}:
         raise SkinError("Поддерживаются скины 64×64 и старые скины 64×32.")
-    if model not in {"classic", "slim"}:
-        raise SkinError("Выберите модель Steve или Alex.")
+    if model not in {None, "classic", "slim"}:
+        raise SkinError("Неизвестная модель скина.")
     if height == 32 and model == "slim":
-        raise SkinError(
-            "Скин 64×32 использует модель Steve. Для Alex нужен формат 64×64."
-        )
+        raise SkinError("Скин 64×32 поддерживает только стандартную модель.")
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("error", Image.DecompressionBombWarning)
@@ -52,6 +64,7 @@ def decode_skin(data: bytes, model: str = "classic") -> Skin:
                 rgba.load()
                 if rgba.getchannel("A").getextrema()[1] == 0:
                     raise SkinError("Скин полностью прозрачный.")
+                model = model or _suggest_model(rgba)
                 # Re-encode pixels only: discard comments, profiles and ancillary data.
                 clean = io.BytesIO()
                 rgba.save(clean, format="PNG")

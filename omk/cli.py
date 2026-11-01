@@ -12,6 +12,7 @@ from api.settings.content import get_instance_config, get_launcher_manifest_sett
 from launcher.paths import default_data_dir
 from omk.admin import add_admin_commands, run_admin
 from omk.dj2_lab import add_dj2_lab, run_dj2_lab
+from omk.dj2_linux_lab import add_linux_skin_lab, run_linux_skin_lab
 from omk.lab import auth_smoke
 from omk.profiles import PROJECT_ROOT, load_profiles
 from omk.release_cli import add_release_commands, prepare_release
@@ -100,6 +101,11 @@ def main(argv: list[str] | None = None) -> int:
             "dj2", help="Fresh isolated Forge/FTB/Core integration lab"
         )
     )
+    add_linux_skin_lab(
+        lab_areas.add_parser(
+            "dj2-linux", help="Disposable Linux Docker Forge and desktop skin check"
+        )
+    )
     lab_auth = lab_areas.add_parser("auth")
     lab_auth_actions = lab_auth.add_subparsers(dest="action", required=True)
     lab_auth_actions.add_parser("smoke")
@@ -129,6 +135,8 @@ def main(argv: list[str] | None = None) -> int:
         from omk.recovery_lab import run_recovery_lab  # noqa: PLC0415
 
         report = run_recovery_lab(args)
+    elif args.area == "dj2-linux":
+        report = run_linux_skin_lab(args)
     elif args.area == "dj2":
         report = run_dj2_lab(args)
     elif args.area == "admin":

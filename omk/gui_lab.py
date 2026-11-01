@@ -8,6 +8,7 @@ from typing import Any
 from unittest.mock import patch
 
 from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QImage
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import (
     QApplication,
@@ -19,9 +20,10 @@ from PySide6.QtWidgets import (
 
 from launcher.accounts import AccountService, Registration
 from launcher.app import LauncherWindow, PasswordDialog
+from launcher.skin_defaults import SKIN_ASSETS, default_skin_bytes
+from launcher.skin_dialog import SkinDialog
 from launcher.storage import FileSessionStore
 from omk.drasl import DraslClient
-from omk.lab import skin_fixture
 from omk.profiles import PROJECT_ROOT
 
 
@@ -92,6 +94,49 @@ def _registration_control(
     return registration
 
 
+def _skin_controls(app, window, client, folder, passed):
+    session = window.service.store.load()
+    result = client.skin_profile(session.player_uuid)
+    if (
+        result is None
+        or result[1] != "slim"
+        or QImage.fromData(result[0], "PNG")
+        != QImage.fromData(default_skin_bytes(), "PNG")
+    ):
+        raise RuntimeError("Drasl did not serve the project default skin")
+    passed("real_drasl_project_default_skin_and_slim_metadata")
+    for filename, model in [
+        ("default-slim.png", "slim"),
+        ("default-classic.png", "classic"),
+        ("default-legacy.png", "classic"),
+    ]:
+        png = Path(folder) / "skin.png"
+        png.write_bytes((SKIN_ASSETS / filename).read_bytes())
+
+        def confirm(model=model):
+            dialog = app.activeModalWidget()
+            if not isinstance(dialog, SkinDialog) or dialog.model != model:
+                raise RuntimeError("Automatic skin preview selected wrong model")
+            QTest.mouseClick(dialog.upload, Qt.MouseButton.LeftButton)
+
+        with patch.object(
+            QFileDialog, "getOpenFileName", return_value=(str(png), "PNG")
+        ):
+            QTimer.singleShot(0, confirm)
+            _click(window, "uploadSkin")
+            _wait(app, lambda: not window.busy)
+        result = client.skin_profile(session.player_uuid)
+        if (
+            "Скин загружен" not in window.status.text()
+            or result is None
+            or result[1] != model
+            or QImage.fromData(result[0], "PNG")
+            != QImage.fromData(png.read_bytes(), "PNG")
+        ):
+            raise RuntimeError("Uploaded skin pixels/model did not round trip")
+        passed("real_gui_one_upload_" + filename.removesuffix(".png"))
+
+
 def launcher_checks(
     client: DraslClient, admin: dict[str, Any], passed: Callable[[str], None]
 ) -> None:
@@ -129,16 +174,7 @@ def launcher_checks(
             )
             passed("real_gui_restart_auto_login")
 
-            png = Path(folder) / "skin.png"
-            png.write_bytes(skin_fixture())
-            with patch.object(
-                QFileDialog, "getOpenFileName", return_value=(str(png), "PNG")
-            ):
-                _click(window, "uploadSkin")
-                _wait(app, lambda: not window.busy)
-            if "Скин загружен" not in window.status.text():
-                raise RuntimeError("Launcher skin upload did not complete")
-            passed("real_gui_skin_upload")
+            _skin_controls(app, window, client, folder, passed)
 
             password = _password_controls(app, window, registration.password)
             passed("real_gui_password_change")

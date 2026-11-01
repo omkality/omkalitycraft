@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "date": "2026-11-01",
+  "source_commit": "df51ef90bae9f08ecc843d01c0c3187a87755dbe",
+  "environment": "Linux amd64 Docker Desktop on Windows; Linux named volume",
+  "scope": "New disposable full DJ2 server and fresh Windows graphical client; no existing worlds or accounts",
+  "checks": [
+    "linux_named_volume_case_sensitive_filesystem",
+    "full_forge_dj2_starts_in_linux_docker",
+    "real_forge_login_to_linux_server",
+    "real_windows_dj2_client_joins_linux_docker_server"
+  ],
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "java_source": "https://hub.docker.com/_/eclipse-temurin",
+  "java_runtime": "Linux\nopenjdk version \"1.8.0_504\"\nOpenJDK Runtime Environment (Temurin)(build 1.8.0_504-b01)\nOpenJDK 64-Bit Server VM (Temurin)(build 25.504-b01, mixed mode)\n",
+  "forge_version": "1.12.2-14.23.5.2860",
+  "forge_sha256": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+  "authlib_injector_version": "1.2.8",
+  "authlib_injector_sha256": "9c7f4343e6c82034958ffb48c14a2cb0c85928be7283103ce17da00c6d5a7b10",
+  "private_core_version": "0.2.3",
+  "private_core_sha256": "7333a6a55a65ea08b647302c13dbf7226b61ab7f170fa23592eee8a3e504ce30",
+  "drasl_version": "4.0.0",
+  "skin_gui_real_service_checks": [
+    "bootstrap_registration",
+    "registration_requires_invitation",
+    "player_registration",
+    "invitation_cannot_be_reused",
+    "anonymous_skin_change_rejected",
+    "skin_uploaded_through_api",
+    "another_players_skin_change_rejected",
+    "wrong_password_rejected",
+    "game_authentication_stable_uuid",
+    "join_hasJoined_protocol",
+    "session_refreshed_without_password",
+    "revoked_session_rejected",
+    "launcher_registration_with_portable_game_session",
+    "portable_game_token_cannot_change_account_password",
+    "launcher_auto_login_without_password",
+    "launcher_skin_upload_with_game_token_classic_and_slim",
+    "launcher_password_change_revokes_old_sessions_and_management_token",
+    "launcher_all_sessions_revoked",
+    "real_gui_registration_after_password_acknowledgement",
+    "real_gui_restart_auto_login",
+    "real_drasl_project_default_skin_and_slim_metadata",
+    "real_gui_one_upload_default-slim",
+    "real_gui_one_upload_default-classic",
+    "real_gui_one_upload_default-legacy",
+    "real_gui_password_change",
+    "real_backend_cleanup_sessions_revoked"
+  ],
+  "skin_gui_real_service_ok": true,
+  "visual_skin_verified": false,
+  "visual_capture_errors": [
+    "FrameArrived timed out: timed out waiting on channel",
+    "window capture timed out: timed out waiting on channel"
+  ],
+  "cleanup": {
+    "owned_game_clean_exit": true,
+    "temporary_auth_removed": true,
+    "owned_volume_removed_after_export": true,
+    "stopped_world_tar_sha256": "0b0a75f3b7aa1be9ca52cd0409352dad5a82f95a4cd71df12f2c8f602a931d99"
+  },
+  "ok_for_scope": true,
+  "not_covered": [
+    "Skin appearance in Minecraft",
+    "Full Windows recovery/claims/commands suite repeated on Linux",
+    "Real VPS I/O, CPU, load, network and public HTTPS",
+    "Linux/macOS graphical Minecraft clients",
+    "GTNH"
+  ],
+  "follow_up_visual_report": "docs/validation/dj2-skin-visual-2026-11-01.json"
+}

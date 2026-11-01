@@ -22,32 +22,13 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QWidget
 
+from launcher.skin_defaults import DEFAULT_SKIN_MODEL, default_skin_bytes
+
 
 def default_skin() -> QImage:
-    image = QImage(64, 64, QImage.Format.Format_ARGB32)
-    image.fill(Qt.GlobalColor.transparent)
-    painter = QPainter(image)
-    painter.fillRect(0, 0, 32, 16, QColor("#ad7758"))
-    painter.fillRect(8, 0, 8, 8, QColor("#3b3531"))
-    painter.fillRect(0, 8, 8, 5, QColor("#3b3531"))
-    painter.fillRect(16, 8, 8, 5, QColor("#3b3531"))
-    painter.fillRect(24, 8, 8, 7, QColor("#3b3531"))
-    painter.fillRect(8, 8, 8, 8, QColor("#d6a17c"))
-    painter.fillRect(8, 8, 8, 2, QColor("#3b3531"))
-    painter.fillRect(8, 10, 1, 2, QColor("#3b3531"))
-    painter.fillRect(15, 10, 1, 2, QColor("#3b3531"))
-    painter.fillRect(10, 11, 1, 1, QColor("#213b3c"))
-    painter.fillRect(13, 11, 1, 1, QColor("#213b3c"))
-    painter.fillRect(11, 14, 2, 1, QColor("#a2634a"))
-    painter.fillRect(16, 16, 24, 16, QColor("#3c967a"))
-    painter.fillRect(22, 20, 4, 4, QColor("#203d36"))
-    for u, v in [(40, 16), (32, 48)]:
-        painter.fillRect(u, v, 16, 16, QColor("#32856d"))
-        painter.fillRect(u, v + 12, 16, 4, QColor("#d6a17c"))
-    for u, v in [(0, 16), (16, 48)]:
-        painter.fillRect(u, v, 16, 16, QColor("#293d4b"))
-        painter.fillRect(u, v + 13, 16, 3, QColor("#1a282e"))
-    painter.end()
+    image = QImage.fromData(default_skin_bytes(), "PNG")
+    if image.isNull():
+        raise RuntimeError("Bundled project skin is missing or unreadable")
     return image
 
 
@@ -55,7 +36,7 @@ class SkinView(QWidget):
     def __init__(self) -> None:
         super().__init__()
         self.image = default_skin()
-        self.model = "classic"
+        self.model = DEFAULT_SKIN_MODEL
         self._angle = -25.0
         self.setMinimumSize(180, 245)
         self.setObjectName("skinPreview")
@@ -80,6 +61,10 @@ class SkinView(QWidget):
         if image.isNull() or image.width() != 64 or image.height() not in {32, 64}:
             return
         self.image, self.model = image, model
+        self.update()
+
+    def reset_skin(self) -> None:
+        self.image, self.model = default_skin(), DEFAULT_SKIN_MODEL
         self.update()
 
     def _project(self, point: tuple[float, float, float]) -> tuple[QPointF, float]:
