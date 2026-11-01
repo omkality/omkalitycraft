@@ -20,6 +20,7 @@ from launcher.log_policy import prepare_logging
 from launcher.releases import read_release
 from launcher.storage import FileSessionStore
 from omk.diagnostics import BoundedLog, PipeLog
+from omk.dj2_rank_policy import apply_player_limits
 from omk.dj2_startup_policy import configure_remapper
 from omk.drasl import DraslClient
 from omk.forge_player import LabPlayer
@@ -165,6 +166,7 @@ def _copy_server(args, lab):
         PROJECT_ROOT / "profiles/server-defaults/dj2/ftbutilities-ranks.txt",
         dest / "local/ftbutilities/ranks.txt",
     )
+    apply_player_limits(dest / "local/ftbutilities/ranks.txt")
     (dest / "eula.txt").write_text("eula=true\n")
     (dest / "server.properties").write_text(
         "online-mode=true\nserver-ip=127.0.0.1\nserver-port=25576\n"
