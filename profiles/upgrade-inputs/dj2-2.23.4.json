@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "source_version": "2.21.3",
+  "target_version": "2.23.4",
+  "accepted": false,
+  "minecraft": "1.12.2",
+  "loader": "forge-14.23.5.2860",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "client_archive": {
+    "source": "https://github.com/Divine-Journey-2/Divine-Journey-2/releases/download/2.23.4/Divine_Journey_2.23.4.zip",
+    "bytes": 13039727,
+    "sha256": "aeb52f145413f9bd46a2d1045696fd76e518275dd2e4e917ec9cf0935510be2c"
+  },
+  "server_archive": {
+    "source": "https://github.com/Divine-Journey-2/Divine-Journey-2/releases/download/2.23.4/Divine_Journey_2.23.4_Server_Pack.zip",
+    "bytes": 423586059,
+    "sha256": "692c820a636ab59a050ba560235e3af9852f598d18f5dad931271e4cbd729831"
+  },
+  "translation": {
+    "source": "https://github.com/BMProjects-Development/Divine-Journey-2-Translate",
+    "declared_pack_version": "2.23.3",
+    "commit": "1f6764559cf2118b929ad880abd03b53b6f9daa0",
+    "status": "draft_resources_only_unrendered",
+    "copy_full_repository_over_target": false
+  },
+  "core_compatibility": "unverified",
+  "launcher_profile_switched": false
+}

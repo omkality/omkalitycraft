@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-02",
+  "mode": "read_only_release_manifest_inspection",
+  "game_tested": false,
+  "inputs": [
+    {
+      "version": "2.23.3",
+      "source": "https://github.com/Divine-Journey-2/Divine-Journey-2/releases/download/2.23.3/Divine_Journey_2.23.3.zip",
+      "sha256": "75ae5887cd90b3bfa40edad223dafc82628b52a1e104a7f9a0ca44a5f25dcf49",
+      "bytes": 13038099,
+      "published": "2026-05-29T12:23:48Z",
+      "minecraft": {
+        "version": "1.12.2",
+        "modLoaders": [
+          {
+            "id": "forge-14.23.5.2860",
+            "primary": true
+          }
+        ]
+      },
+      "file_count": 223
+    },
+    {
+      "version": "2.23.4",
+      "source": "https://github.com/Divine-Journey-2/Divine-Journey-2/releases/download/2.23.4/Divine_Journey_2.23.4.zip",
+      "sha256": "aeb52f145413f9bd46a2d1045696fd76e518275dd2e4e917ec9cf0935510be2c",
+      "bytes": 13039727,
+      "published": "2026-06-06T04:20:47Z",
+      "minecraft": {
+        "version": "1.12.2",
+        "modLoaders": [
+          {
+            "id": "forge-14.23.5.2860",
+            "primary": true
+          }
+        ]
+      },
+      "file_count": 223
+    }
+  ],
+  "same_mod_file_ids": true,
+  "same_minecraft_and_loader": true,
+  "added_mod_files": [],
+  "removed_mod_files": [],
+  "existing_payload_profile_worlds_changed": false
+}
