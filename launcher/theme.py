@@ -52,7 +52,8 @@ QTabWidget::pane { border: none; }
 QTabBar::tab { background: #1a2932; padding: 11px 22px; margin-right: 5px; border-radius: 7px; }
 QTabBar::tab:selected { background: #304a53; }
 QCheckBox { padding: 8px 0; }
-QToolTip { color: #ecf2f5; background: #22333d; border: 1px solid #4b6a72; padding: 8px; }
+QToolTip { color: #ecf2f5; background: #22333d; border: 1px solid #e4bc84;
+border-radius: 9px; padding: 8px 11px; }
 QScrollBar:vertical { background:#11191f; width:8px; margin:0; }
 QScrollBar::handle:vertical { background:#344a53; border-radius:4px; min-height:32px; }
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height:0; }
