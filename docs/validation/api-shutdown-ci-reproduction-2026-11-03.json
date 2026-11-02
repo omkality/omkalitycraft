@@ -1,0 +1,58 @@
+{
+  "run_url": "https://github.com/omkality/omkalitycraft/actions/runs/41526353884",
+  "tested_head": "fc93181165f244ee77851b9aac1093aadbeec8d0",
+  "scope": "Instrumented fixture-only API shutdown; no auth/game data",
+  "cycles": [
+    {
+      "cycle": 1,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.371,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 2,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.396,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 3,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.375,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 4,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.309,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 5,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.347,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 6,
+      "exit_code": 137,
+      "oom_killed": false,
+      "seconds": 15.088,
+      "stacks_requested": true
+    }
+  ],
+  "cleanup": true,
+  "ok": false,
+  "stack_observations": [
+    "Interleaved output limits attribution to individual PIDs; subsequent probe writes separate process files.",
+    "Granian parent waits in _stop_workers -> multiprocessing join.",
+    "A worker remains at granian/server/mp.py:221 serve(scheduler, loop, shutdown_event).",
+    "A tokio worker is in asyncio selector_events._write_to_self via call_soon_threadsafe.",
+    "These stacks narrow the investigation but do not prove a root cause or a fix."
+  ]
+}

@@ -64,6 +64,10 @@ uv run omk admin --config .omk-admin/operator.toml access revoke-invite --invita
 
 ## Серверная диагностика
 
+Поиск переписки по игроку/периоду пока не реализован. Его отдельный owner-only
+[план #58](CHAT_HISTORY.md) включает все игровые chat-каналы и контекст сообщений;
+диагностический ZIP не заменяет этот архив.
+
 ```powershell
 uv run omk admin --config .omk-admin/operator.toml diagnostics dj2
 ```

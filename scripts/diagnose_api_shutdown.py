@@ -1,0 +1,367 @@
+"""Fixture-only Linux shutdown reproduction with bounded Python stack evidence."""
+
+import argparse
+import json
+import subprocess
+import time
+from pathlib import Path
+from uuid import uuid4
+
+ROOT = Path(__file__).resolve().parents[1]
+LABEL = "omk.api-stop-probe"
+SIGNAL_PROCESSES = """import os,signal
+for item in os.listdir('/proc'):
+    if not item.isdigit() or int(item) == os.getpid(): continue
+    try:
+        if 'python' in os.readlink('/proc/' + item + '/exe'):
+            os.kill(int(item), signal.SIGUSR1)
+    except OSError:
+        pass
+"""
+# Independent fixture based on the race described in Granian upstream issue #875.
+# This delay and busy loop must never be injected into the actual API application.
+RACE_APPLICATION = """import asyncio,contextlib,time
+async def churn():
+    while True:
+        await asyncio.sleep(0)
+async def app(scope, receive, send):
+    if scope['type'] == 'lifespan':
+        while True:
+            event = await receive()
+            if event['type'] == 'lifespan.startup':
+                loop = asyncio.get_running_loop()
+                wake = loop._write_to_self
+                def delayed_wakeup():
+                    time.sleep(0.2)
+                    wake()
+                loop._write_to_self = delayed_wakeup
+                task = loop.create_task(churn())
+                await send({'type': 'lifespan.startup.complete'})
+            elif event['type'] == 'lifespan.shutdown':
+                task.cancel()
+                with contextlib.suppress(asyncio.CancelledError):
+                    await task
+                await send({'type': 'lifespan.shutdown.complete'})
+                return
+    elif scope['type'] == 'http':
+        await send({'type': 'http.response.start', 'status': 200, 'headers': []})
+        await send({'type': 'http.response.body', 'body': b'fixture'})
+"""
+
+
+def docker(*args, check=True, timeout=60):
+    result = subprocess.run(
+        ["docker", *args],
+        capture_output=True,
+        text=True,
+        timeout=timeout,
+        cwd=ROOT,
+        check=False,
+    )
+    if check and result.returncode:
+        raise RuntimeError("Owned shutdown probe command failed")
+    return result
+
+
+def checked_state(data, run):
+    if (data.get("Config", {}).get("Labels") or {}).get(LABEL) != run:
+        raise ValueError("Refusing access to an unowned container")
+    return data["State"]
+
+
+def state(name, run):
+    result = docker("inspect", name, check=False)
+    return (
+        checked_state(json.loads(result.stdout)[0], run)
+        if result.returncode == 0
+        else None
+    )
+
+
+def prepare(lab, image, run):
+    probe, content = lab / "probe", lab / "content"
+    probe.mkdir()
+    (content / "instances/fixture").mkdir(parents=True)
+    (probe / "sitecustomize.py").write_text(
+        "import faulthandler,os,signal\n"
+        "_omk_stacks=open('/stacks/stack-'+str(os.getpid())+'.log','a')\n"
+        "faulthandler.register(signal.SIGUSR1,file=_omk_stacks,all_threads=True)\n",
+        encoding="utf-8",
+    )
+    (probe / "race_app.py").write_text(RACE_APPLICATION, encoding="utf-8")
+    if docker("info", "--format", "{{.OSType}}").stdout.strip() != "linux":
+        raise RuntimeError("The shutdown probe requires Linux containers")
+    if docker("image", "inspect", image, check=False).returncode == 0:
+        raise ValueError("A new probe image tag is required")
+    built = docker(
+        "build",
+        "--label",
+        LABEL + "=" + run,
+        "-f",
+        "Dockerfile.api",
+        "-t",
+        image,
+        ".",
+        check=False,
+        timeout=600,
+    )
+    (lab / "build.log").write_text(built.stdout + built.stderr, encoding="utf-8")
+    if built.returncode:
+        raise RuntimeError("Probe image build failed")
+
+
+def start(name, run, image, lab, *, race=False):
+    stacks = lab / (name + "-stacks")
+    stacks.mkdir()
+    docker(
+        "run",
+        "-d",
+        "--name",
+        name,
+        "--label",
+        LABEL + "=" + run,
+        "--network",
+        "none",
+        "--sysctl",
+        "net.ipv4.tcp_migrate_req=1",
+        "--memory",
+        "512m",
+        "--cpus",
+        "0.75",
+        "--mount",
+        f"type=bind,source={lab / 'probe'},target=/probe,readonly",
+        "--mount",
+        f"type=bind,source={lab / 'content'},target=/data/content,readonly",
+        "--mount",
+        f"type=bind,source={stacks},target=/stacks",
+        "-e",
+        "PYTHONPATH=/probe",
+        "-e",
+        "WORKERS_NUM=2",
+        "-e",
+        "API_HOST=0.0.0.0",
+        image,
+        *(
+            [
+                ".venv/bin/python",
+                "-m",
+                "granian",
+                "--interface",
+                "asgi",
+                "--loop",
+                "asyncio",
+                "--workers",
+                "2",
+                "--host",
+                "0.0.0.0",
+                "race_app:app",
+            ]
+            if race
+            else []
+        ),
+    )
+    deadline = time.monotonic() + 40
+    while time.monotonic() < deadline:
+        ready = docker(
+            "exec",
+            name,
+            ".venv/bin/python",
+            "-c",
+            "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=1).read()",
+            check=False,
+        )
+        if ready.returncode == 0:
+            return
+        time.sleep(0.25)
+    raise TimeoutError("Fixture API readiness timeout")
+
+
+def stop_with_stacks(name, run):
+    checked = state(name, run)
+    if checked is None or not checked["Running"]:
+        raise RuntimeError("Probe container is not running")
+    started = time.monotonic()
+    stopping = subprocess.Popen(
+        ["docker", "stop", "--time", "15", name],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    requested = False
+    try:
+        # Give the ordinary clean stop a chance; dump stacks before Docker's kill.
+        try:
+            stopping.communicate(timeout=1)
+        except subprocess.TimeoutExpired:
+            current = state(name, run)
+            if current is not None and current["Running"]:
+                docker(
+                    "exec",
+                    name,
+                    ".venv/bin/python",
+                    "-c",
+                    SIGNAL_PROCESSES,
+                    check=False,
+                    timeout=8,
+                )
+                requested = True
+            stopping.communicate(timeout=22)
+    finally:
+        if stopping.poll() is None:
+            stopping.kill()  # Only the host Docker CLI; container cleanup below still checks ownership.
+            stopping.communicate(timeout=5)
+    outcome = state(name, run)
+    if outcome is None:
+        raise RuntimeError("Probe container disappeared")
+    return {
+        "exit_code": outcome["ExitCode"],
+        "oom_killed": outcome["OOMKilled"],
+        "seconds": round(time.monotonic() - started, 3),
+        "stacks_requested": requested,
+    }
+
+
+def collect_stacks(lab, name):
+    """Bound CI output and keep each process separate even when writes coincide."""
+    captured = {}
+    remaining = 65536
+    paths = sorted((lab / (name + "-stacks")).glob("stack-*.log"))
+    limited = len(paths) > 32
+    for path in paths[:32]:
+        size = path.stat().st_size
+        if size == 0:
+            continue
+        if remaining == 0:
+            limited = True
+            break
+        budget = min(size, remaining, 32768)
+        with path.open("rb") as source:
+            source.seek(size - budget)
+            data = source.read(budget)
+        remaining -= len(data)
+        captured[path.name] = {
+            "tail": data.decode("utf-8", errors="replace"),
+            "truncated": size > len(data),
+        }
+    return {"processes": captured, "limited": limited}
+
+
+def exercise_cycle(name, run, image, lab, cycle, names, *, race=False):
+    start(name, run, image, lab, race=race)
+    # Match the startup CPU activity preceding the original smoke stop.
+    for key in ("WORKERS_NUM", "SERVER_STATUS_TARGETS", "OMK_API_CPUS"):
+        invalid_name = name + "-invalid-" + key.lower()
+        names.append(invalid_name)
+        result = docker(
+            "run",
+            "--name",
+            invalid_name,
+            "--rm",
+            "--network",
+            "none",
+            "--memory",
+            "512m",
+            "-e",
+            key + "=fixture-invalid",
+            image,
+            check=False,
+        )
+        if result.returncode != 2:
+            raise RuntimeError("Invalid-settings fixture behaved unexpectedly")
+        names.remove(invalid_name)
+    result = {"cycle": cycle, **stop_with_stacks(name, run)}
+    logs = docker("logs", "--tail", "500", name)
+    tail = (logs.stdout + logs.stderr)[-131072:]
+    (lab / f"cycle-{cycle}.log").write_text(tail, encoding="utf-8")
+    if result["exit_code"] != 0 or result["oom_killed"] or result["stacks_requested"]:
+        result["fixture_log_tail"] = tail[-16384:]
+        result["python_stacks"] = collect_stacks(lab, name)
+    return result
+
+
+def cleanup(names, run, image):
+    complete = True
+    for name in names:
+        try:
+            current = state(name, run)
+            if current is None:
+                continue
+            if current["Running"]:
+                docker("stop", "--time", "15", name)
+            docker("rm", name)
+        except OSError, ValueError, RuntimeError, subprocess.SubprocessError:
+            complete = False
+    try:
+        inspected = docker("image", "inspect", image, check=False)
+        if inspected.returncode:
+            return complete
+        data = json.loads(inspected.stdout)[0]
+        if (data.get("Config", {}).get("Labels") or {}).get(LABEL) != run:
+            return False
+        removed = docker("image", "rm", image, check=False)
+        return complete and removed.returncode == 0
+    except OSError, ValueError, RuntimeError, subprocess.SubprocessError:
+        return False
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--cycles", type=int, choices=range(1, 25), default=12)
+    parser.add_argument(
+        "--race",
+        action="store_true",
+        help="Fixture-only busy asyncio loop with delayed wakeup, upstream Granian #875",
+    )
+    args = parser.parse_args(argv)
+    run = uuid4().hex[:12]
+    lab = ROOT / ".local" / ("api-stop-probe-" + run)
+    lab.mkdir(parents=True)
+    image, names = "omk-api-stop-probe-" + run + ":lab", []
+    report = {
+        "cycles": [],
+        "scope": "Instrumented fixture-only API shutdown; no auth/game data",
+        "fixture": "synthetic_shutdown_race" if args.race else "actual_api",
+    }
+    try:
+        prepare(lab, image, run)
+        report["image_id"] = json.loads(docker("image", "inspect", image).stdout)[0][
+            "Id"
+        ]
+        for cycle in range(1, args.cycles + 1):
+            name = "omk-api-stop-probe-" + run + "-" + str(cycle)
+            names.append(name)
+            result = exercise_cycle(name, run, image, lab, cycle, names, race=args.race)
+            report["cycles"].append(result)
+            if result["exit_code"] != 0 or result["oom_killed"]:
+                break
+            # Verify the label immediately before deleting this completed fixture.
+            state(name, run)
+            docker("rm", name)
+            names.remove(name)
+    except (
+        OSError,
+        ValueError,
+        RuntimeError,
+        TimeoutError,
+        subprocess.SubprocessError,
+    ) as error:
+        report["error_type"] = type(error).__name__
+    finally:
+        report["cleanup"] = cleanup(names, run, image)
+        report["ok"] = (
+            len(report["cycles"]) == args.cycles
+            and "error_type" not in report
+            and report["cleanup"]
+            and all(
+                c["exit_code"] == 0 and not c["oom_killed"] for c in report["cycles"]
+            )
+        )
+        (lab / "report.json").write_text(
+            json.dumps(report, indent=2) + "\n", encoding="utf-8"
+        )
+    print(json.dumps({**report, "lab": str(lab.relative_to(ROOT))}))
+    return 0 if report["ok"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

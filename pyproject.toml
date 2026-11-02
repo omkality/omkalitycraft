@@ -20,7 +20,7 @@ shared = [
     "tuf>=6.0.0",
 ]
 api = [
-    "granian>=2.7.0",
+    "granian==2.8.6",
     "litestar>=2.19.0",
 ]
 launcher = [

@@ -208,6 +208,10 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
             "compose_cpu_and_memory_limits_applied",
         )
         expect(
+            host["Sysctls"].get("net.ipv4.tcp_migrate_req") == "1",
+            "multi_worker_socket_migration_is_container_scoped",
+        )
+        expect(
             host["LogConfig"]
             == {"Type": "local", "Config": {"max-file": "2", "max-size": "4m"}},
             "docker_log_rotation_overrides_applied",

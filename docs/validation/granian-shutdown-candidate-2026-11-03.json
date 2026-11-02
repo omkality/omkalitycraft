@@ -1,0 +1,179 @@
+{
+  "cycles": [
+    {
+      "cycle": 1,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.24,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 2,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.267,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 3,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.245,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 4,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.272,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 5,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.214,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 6,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.226,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 7,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.221,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 8,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.199,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 9,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.319,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 10,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.296,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 11,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.286,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 12,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.227,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 13,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.216,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 14,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.21,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 15,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.261,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 16,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.348,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 17,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.432,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 18,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.366,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 19,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.264,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 20,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.302,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 21,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.335,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 22,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.288,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 23,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.373,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 24,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.314,
+      "stacks_requested": false
+    }
+  ],
+  "scope": "Isolated Granian dependency candidate, not deployed",
+  "granian": "2.8.6",
+  "network_namespace_sysctl": {
+    "net.ipv4.tcp_migrate_req": 1
+  },
+  "cleanup": true,
+  "ok": true
+}

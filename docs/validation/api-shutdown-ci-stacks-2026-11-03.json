@@ -1,0 +1,30 @@
+{
+  "run_url": "https://github.com/omkality/omkalitycraft/actions/runs/41527261380",
+  "tested_head": "2da11da1cca2b0e091589da07b45eae59bba4576",
+  "scope": "Instrumented fixture-only API shutdown; no auth/game data",
+  "cycles": [
+    {
+      "cycle": 1,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.263,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 2,
+      "exit_code": 137,
+      "oom_killed": false,
+      "seconds": 15.096,
+      "stacks_requested": true
+    }
+  ],
+  "cleanup": true,
+  "ok": false,
+  "stack_observations": [
+    "Separate per-process stack files captured on this revision; raw fixture stacks retained locally.",
+    "Granian parent waits in _stop_workers -> multiprocessing join.",
+    "A worker remains at granian/server/mp.py:221 serve(scheduler, loop, shutdown_event).",
+    "A tokio worker is in asyncio selector_events._write_to_self via call_soon_threadsafe.",
+    "These stacks narrow the investigation but do not prove a root cause or a fix."
+  ]
+}

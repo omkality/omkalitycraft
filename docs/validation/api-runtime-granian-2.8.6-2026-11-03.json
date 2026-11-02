@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "checks": [
+    "pinned_api_image_built",
+    "native_defaults_serve_inside_unpublished_linux_container",
+    "default_worker_count_is_used",
+    "default_pid1_handles_clean_stop_without_oom",
+    "compose_port_override_stays_loopback",
+    "compose_override_serves_only_fixture_content",
+    "compose_cpu_and_memory_limits_applied",
+    "multi_worker_socket_migration_is_container_scoped",
+    "docker_log_rotation_overrides_applied",
+    "fixture_content_mount_is_read_only",
+    "container_reads_worker_rate_and_retention_overrides",
+    "two_real_granian_workers_started",
+    "private_host_paths_are_not_in_image",
+    "invalid_workers_num_fails_without_value_or_traceback",
+    "invalid_server_status_targets_fails_without_value_or_traceback",
+    "invalid_omk_api_cpus_fails_without_value_or_traceback",
+    "override_pid1_handles_clean_stop_without_oom"
+  ],
+  "scope": "Disposable API image/Compose, not game readiness",
+  "image_id": "sha256:e16abca04eb9b7c23b33eca611efe3ac51722b380f1ce9d42dbdd29f607bcb5c",
+  "stops": {
+    "default": {
+      "running": false,
+      "exit_code": 0,
+      "oom_killed": false,
+      "stop_seconds": 0.197
+    },
+    "override": {
+      "running": false,
+      "exit_code": 0,
+      "oom_killed": false,
+      "stop_seconds": 0.565
+    }
+  },
+  "runtime_limits": {
+    "memory_bytes": 536870912,
+    "nano_cpus": 750000000,
+    "docker_logging": {
+      "Type": "local",
+      "Config": {
+        "max-file": "2",
+        "max-size": "4m"
+      }
+    }
+  },
+  "owned_compose_removed": true,
+  "owned_default_removed": true,
+  "owned_image_tag_removed": true
+}
