@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-03",
+  "scope": "Fixture validation failure before water-denial scenario; not an RTP bypass or game crash",
+  "source_report_sha256": "f9dbe0ca35cbd187dbe8549f56967c602ee1aec33b8d99102b355d73c8f45545",
+  "world_export_sha256": "7dd40bde9c0aa498685bf53bffc9dae357e751ec64436af14716ea5f2384d00f",
+  "core_sha256": "ee86e32a913792854e25e37c93ae494b1903a8fbc75683883577986d32ea86ed",
+  "checks_passed_before_stop": 8,
+  "failed_fixture": "surface_fixture_water_dimension_0",
+  "fatal_game_crash": false,
+  "container": {
+    "running": false,
+    "oom_killed": false,
+    "exit_code": 0,
+    "memory_limit_bytes": 6442450944,
+    "nano_cpus": 4000000000
+  },
+  "independent_stopped_nbt": {
+    "observed_block_id": 8,
+    "registry_name": "minecraft:flowing_water",
+    "original_expected_block_id": 9,
+    "original_expected_registry_name": "minecraft:water",
+    "registry_mapping_source": "FML Registries in the same exported level.dat"
+  },
+  "correction": "Prove either exact vanilla water ID in the fixture; keep the unsafe-water RTP denial and landing/timer assertions unchanged",
+  "retained_source_lab": ".local/rtp-dimensions-9e82c7754b"
+}

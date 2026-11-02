@@ -24,6 +24,12 @@
     "status": "draft_resources_only_unrendered",
     "copy_full_repository_over_target": false
   },
-  "core_compatibility": "unverified",
-  "launcher_profile_switched": false
+  "core_compatibility": "server_adapters_verified_with_synthetic_protocol_fixture_only",
+  "launcher_profile_switched": false,
+  "core_review": {
+    "version": "0.2.8",
+    "evidence": "docs/validation/dj2-core-regressions-2026-11-03.json",
+    "rendered_client_accepted": false,
+    "source_world_migration_accepted": false
+  }
 }

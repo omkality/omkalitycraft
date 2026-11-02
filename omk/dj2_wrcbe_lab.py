@@ -38,11 +38,23 @@ PINS = {
     ),
     "probe": (None, "b214d2fb54496d4d400c610f36f0ff52755078aa2112ccee4fb5f919ea63508e"),
 }
+PIN_OVERRIDES = {
+    "2.21.3": {},
+    "2.23.4": {
+        "mixinbooter": (
+            "!mixinbooter-10.7.jar",
+            "8bb53080aede2d2b1e1c5f713bbf49a38f20add8caa3d52fabcdf8a536b55a18",
+        )
+    },
+}
 
 
 def add_wrcbe_lab(parser):
     for name in ("server-source", "agent", "core", "mods-json", "probe"):
         parser.add_argument("--" + name, type=Path, required=True)
+    parser.add_argument(
+        "--pack-version", choices=tuple(PIN_OVERRIDES), default="2.21.3"
+    )
     parser.add_argument(
         "--baseline",
         action="store_true",
@@ -56,6 +68,10 @@ def add_wrcbe_lab(parser):
 def validate_inputs(args):
     if type(args.cycles) is not int or not 1 <= args.cycles <= 5:
         raise ValueError("WR lab cycles must be 1..5")
+    pack_version = getattr(args, "pack_version", "2.21.3")
+    if pack_version not in PIN_OVERRIDES:
+        raise ValueError("Unknown reviewed WR lab pack version")
+    pins = {**PINS, **PIN_OVERRIDES[pack_version]}
     for path in (
         args.agent,
         args.core,
@@ -66,7 +82,7 @@ def validate_inputs(args):
             raise ValueError("A required WR lab input is missing")
     approved_mods(args.mods_json)
     hashes = {}
-    for label, (filename, expected) in PINS.items():
+    for label, (filename, expected) in pins.items():
         path = (
             args.probe if filename is None else args.server_source / "mods" / filename
         )
@@ -266,6 +282,7 @@ def run_wrcbe_lab(args):
         "ok": False,
         "security_ready": False,
         "baseline": args.baseline,
+        "pack_version": getattr(args, "pack_version", "2.21.3"),
         "lab": lab.relative_to(PROJECT_ROOT).as_posix(),
         "checks": [],
         "cycles": [],

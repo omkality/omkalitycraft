@@ -93,7 +93,7 @@
 | `uv run omk lab dj2-linux --help` | Проверенный запуск полного DJ2 в Linux Docker и вход Windows-клиента; [изоляция, параметры и границы](../SERVER_CONTAINERS.md) |
 | `uv run omk lab dj2-spawn --help` | Новый Linux-стенд: server-owned FTB-спавн, границы, TNT и возврат своей могилы через Shift в чужом/серверном claim; [параметры и ограничения](../SPAWN_AND_GRAVES.md) |
 | `uv run omk lab dj2-rtp --help` | Linux DJ2: RTP текущего мира, Nether/TF, ограничения и два одновременных запроса; [конфигурация и проверки](../DIMENSION_RTP.md) |
-| `uv run omk lab dj2-wrcbe --help` | Изолированный Linux DJ2: callback WR-CBE при остановке и сохранность беспроводной связи после restart; [артефакты/параметры/границы](../WRCBE_SHUTDOWN.md) |
+| `uv run omk lab dj2-wrcbe --help` | Изолированный Linux DJ2: callback WR-CBE при остановке и связь после restart; default 2.21.3, проверенный `--pack-version 2.23.4` выбирает точные target pins. [Артефакты/параметры/границы](../WRCBE_SHUTDOWN.md) |
 | `uv run omk release pack --help` | Подписать подготовленный релиз сборки локально |
 | `uv run omk release launcher --help` | Подготовить подписанное обновление лаунчера |
 

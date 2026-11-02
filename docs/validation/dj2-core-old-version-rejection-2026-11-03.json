@@ -1,0 +1,20 @@
+{
+  "scope": "Expected rejection of an unverified target; no players",
+  "core_version": "0.2.7",
+  "policy_fixture_only": true,
+  "negative_control_ok": true,
+  "expected_rejection_seen": true,
+  "healthy_server_ready": false,
+  "linux_container_outcome": {
+    "running": false,
+    "oom_killed": false,
+    "exit_code": 0,
+    "memory_limit_bytes": 6442450944,
+    "nano_cpus": 4000000000
+  },
+  "game_crash_detected": true,
+  "auth_removed": true,
+  "lab": ".local/dj2-target-core027-bcb04ec66d",
+  "source_report_sha256": "1aab1baae719b6105cef38c39300e5e505d2a8c7bb96f84e30183a3e9bc0fe15",
+  "staged_core_sha256": "5ef2abdb3902074f55dffc0cd43fbd511df8c18c9a12615bf57f674e3cca9ee1"
+}

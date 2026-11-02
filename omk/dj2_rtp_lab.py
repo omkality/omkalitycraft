@@ -98,9 +98,26 @@ class RtpScenario:
         self.at(name, f"fill {x-17} 245 {z-17} {x+17} 245 {z+17} minecraft:glass")
         self.at(name, f"fill {x-16} 245 {z-16} {x+16} 245 {z+16} minecraft:{material}")
         self.at(name, f"fill {x-16} 246 {z-16} {x+16} 253 {z+16} minecraft:air")
+        # Fluid updates can switch source water between its two vanilla block IDs.
+        # Prove the actual fluid, rather than comparing its shared display name.
+        variants = {
+            "water": ("flowing_water", "water"),
+        }.get(material, (material,))
+        observed = None
+        for _ in range(2):
+            for variant in variants:
+                if "Successfully found" in self.at(
+                    name, f"testforblock {x} 245 {z} minecraft:{variant}"
+                ):
+                    observed = variant
+                    break
+            if observed is not None:
+                break
+        self.report.setdefault("surface_fixtures", []).append(
+            {"dimension": actor.dimension, "requested": material, "observed": observed}
+        )
         self.expect(
-            "Successfully found"
-            in self.at(name, f"testforblock {x} 245 {z} minecraft:{material}"),
+            observed is not None,
             "surface_fixture_" + material + "_dimension_" + str(actor.dimension),
         )
 

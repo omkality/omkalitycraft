@@ -1,0 +1,145 @@
+{
+  "date": "2026-11-03",
+  "scope": "Actual dedicated Forge and authenticated protocol fixtures in owned Linux Docker, not rendered clients",
+  "core_version": "0.2.8",
+  "policy_fixture_only_for_target": true,
+  "launcher_profile_switched": false,
+  "translation_tested": false,
+  "full_world_migration_tested": false,
+  "scenarios": [
+    {
+      "scenario": "target_sorting",
+      "pack_version": "2.23.4",
+      "ok": true,
+      "checks": 220,
+      "case_count": 28,
+      "start_cycles": 2,
+      "core_sha256": "ee86e32a913792854e25e37c93ae494b1903a8fbc75683883577986d32ea86ed",
+      "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+      "container": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "clean_game_exit": true,
+      "volume_removed_after_export": true,
+      "auth_removed": true,
+      "source_report_sha256": "8e38b19297220b402b19205aa0c20dd662745a3311af76543e4b3109e5a3ad38",
+      "owner_lab": ".local/sorting-claims-a2556612f6"
+    },
+    {
+      "scenario": "target_wrcbe",
+      "pack_version": "2.23.4",
+      "ok": true,
+      "checks": 67,
+      "case_count": 0,
+      "start_cycles": 3,
+      "core_sha256": "ee86e32a913792854e25e37c93ae494b1903a8fbc75683883577986d32ea86ed",
+      "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+      "container": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "clean_game_exit": true,
+      "volume_removed_after_export": true,
+      "auth_removed": true,
+      "source_report_sha256": "1901b2546bded8277b2cbe7172800c2202eccb34fd1b02138548afe8e448c906",
+      "owner_lab": ".local/wrcbe-shutdown-d2929e3c96"
+    },
+    {
+      "scenario": "target_rtp_without_probes",
+      "pack_version": "2.23.4",
+      "ok": true,
+      "checks": 50,
+      "case_count": 0,
+      "start_cycles": 1,
+      "core_sha256": "ee86e32a913792854e25e37c93ae494b1903a8fbc75683883577986d32ea86ed",
+      "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+      "container": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "clean_game_exit": true,
+      "volume_removed_after_export": true,
+      "auth_removed": true,
+      "source_report_sha256": "d38e0f9f4881d8f4c420e889c80385ecf3647fba481b277a6faddaf6fea855df",
+      "owner_lab": ".local/rtp-dimensions-1e00b1c58d"
+    },
+    {
+      "scenario": "source_sorting_control",
+      "pack_version": "2.21.3",
+      "ok": true,
+      "checks": 25,
+      "case_count": 3,
+      "start_cycles": 1,
+      "core_sha256": "ee86e32a913792854e25e37c93ae494b1903a8fbc75683883577986d32ea86ed",
+      "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+      "container": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "clean_game_exit": true,
+      "volume_removed_after_export": true,
+      "auth_removed": true,
+      "source_report_sha256": "f91902d097c94ab3ce19d5d968632c5bd2cd840a5f1c1ca00b68002c77c94427",
+      "owner_lab": ".local/sorting-claims-5cb08c8043"
+    }
+  ],
+  "unprotected_target_control": {
+    "pack_version": "2.23.4",
+    "baseline_core_version": "0.2.5",
+    "expected_unprotected_behavior_reproduced": true,
+    "checks": 24,
+    "case_count": 3,
+    "clean_game_exit": true,
+    "source_report_sha256": "3f9c447f7cd859cb11ffbb8f06ee71d5d36871aec7e12b916114b80626b5c9bc",
+    "owner_lab": ".local/sorting-claims-36acfedb4e"
+  },
+  "modified_same_version_artifact_control": {
+    "core_version": "0.2.8",
+    "expected_rejection_seen": true,
+    "negative_control_ok": true,
+    "mutation": "valid_zip_comment_only",
+    "unchanged_uncompressed_entries": 3975,
+    "zipfs_parse_verified_separately": true,
+    "game_crash_detected": true,
+    "container": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "healthy_server_ready": false,
+    "source_report_sha256": "978bdf9e8d00334c6e1652eb273d4b23f4185f5c5f9d4462615496946256b8a4",
+    "owner_lab": ".local/dj2-target-core028-tampered-ca7069098e",
+    "original_artifact_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2",
+    "modified_artifact_sha256": "7acd9fb69ec5dd13f2ef879836cd4f0689aef0352ee3949e16e9e6cfc991c278"
+  },
+  "prototype_failures_not_counted_as_success": [
+    {
+      "owner_lab": ".local/dj2-target-core028-3c0abb9998",
+      "reason": "DummyModContainer source is not the loaded coremod JAR"
+    },
+    {
+      "owner_lab": ".local/dj2-target-core028-adf95ec467",
+      "reason": "jar:file source URI needs unwrapping before Paths.get"
+    },
+    {
+      "owner_lab": ".local/dj2-target-core028-tampered-4d1f634e11",
+      "reason": "Malformed negative fixture rejected by Java ZipFS before the Core hash gate"
+    }
+  ],
+  "pure_jre_source_resolution_checks": 6
+}
