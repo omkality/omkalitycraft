@@ -24,7 +24,7 @@ from omk.minecraft_status import ServerStatusCache
 project_info = get_project_info()
 
 
-def create_app(requests_per_second: int = 128) -> Litestar:
+def create_app(requests_per_second: int | None = None) -> Litestar:
     return Litestar(
         state=State(
             {
@@ -37,7 +37,16 @@ def create_app(requests_per_second: int = 128) -> Litestar:
         ),
         lifespan=[report_retention],
         middleware=[
-            RateLimitConfig(rate_limit=("second", requests_per_second)).middleware
+            RateLimitConfig(
+                rate_limit=(
+                    "second",
+                    (
+                        settings.api_requests_per_second
+                        if requests_per_second is None
+                        else requests_per_second
+                    ),
+                )
+            ).middleware
         ],
         route_handlers=[
             upload_client_report,
