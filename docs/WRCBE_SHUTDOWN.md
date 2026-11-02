@@ -1,5 +1,10 @@
 # WR-CBE: последний тик после выгрузки менеджера
 
+3 ноября сценарий повторён на [DJ2 2.23.4 / Core 0.2.8](DJ2_CORE_UPGRADE.md)
+с MixinBooter 10.7: 67 проверок, три старта / два restart и чистое завершение.
+Для этой версии стенд требует явный `--pack-version 2.23.4` и её точные pins;
+default 2.21.3 и прежние результаты ниже сохраняются.
+
 На отдельном Linux DJ2 обнаружен `NullPointerException` в `WREventHandler.worldTick`:
 во время остановки `onWorldUnload` обнуляет `RedstoneEtherAddons.serverManager`,
 после чего оставшийся START callback обращается к нему через `processSMPMaps`.

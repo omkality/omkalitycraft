@@ -1,0 +1,65 @@
+{
+  "ok": true,
+  "scope": "Candidate Core startup and persistence; not real client acceptance",
+  "pack_version": "2.23.4",
+  "security_ready": false,
+  "core_installed": true,
+  "translation_installed": false,
+  "core_version": "0.2.8",
+  "core_sha256": "ee86e32a913792854e25e37c93ae494b1903a8fbc75683883577986d32ea86ed",
+  "policy_fixture_only": true,
+  "server_mod_count": 236,
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "checks": [
+    "archive_has_no_duplicate_files",
+    "no_old_core_or_lab_probe_in_candidate",
+    "no_existing_world_in_seed",
+    "fresh_owned_linux_volume_prepared",
+    "boot_1_forge_ready",
+    "boot_1_core_adapters_active",
+    "boot_1_fixture_chunk_loaded_via_neighbor",
+    "boot_1_known_inventory_preserved",
+    "boot_1_saved_world_exists",
+    "boot_1_clean_stop_without_oom_or_fatal_marker",
+    "boot_2_forge_ready",
+    "boot_2_core_adapters_active",
+    "boot_2_fixture_chunk_loaded_via_neighbor",
+    "boot_2_known_inventory_preserved",
+    "boot_2_saved_world_exists",
+    "boot_2_clean_stop_without_oom_or_fatal_marker",
+    "independent_saved_nbt_confirms_exact_integer_count_after_restart"
+  ],
+  "cycles": [
+    {
+      "cycle": 1,
+      "exit_code": 0,
+      "oom_killed": false,
+      "fatal_log_marker": false
+    },
+    {
+      "cycle": 2,
+      "exit_code": 0,
+      "oom_killed": false,
+      "fatal_log_marker": false
+    }
+  ],
+  "saved_fixture": {
+    "count": 17,
+    "count_nbt_type": 3,
+    "item_id": "minecraft:diamond"
+  },
+  "linux_container_outcome": {
+    "running": false,
+    "oom_killed": false,
+    "exit_code": 0,
+    "memory_limit_bytes": 6442450944,
+    "nano_cpus": 4000000000
+  },
+  "game_crash_detected": false,
+  "owned_game_clean_exit": true,
+  "owned_volume_removed_after_export": true,
+  "auth_removed": true,
+  "lab": ".local/dj2-target-core028-d78c2856f5",
+  "target_server_archive_sha256": "692c820a636ab59a050ba560235e3af9852f598d18f5dad931271e4cbd729831",
+  "source_report_sha256": "26b14b43daa9cf01afb0d6ff616659754fcc3ee3eec386e8bfece09a38166b06"
+}

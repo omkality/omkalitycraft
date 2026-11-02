@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-03",
+  "scope": "Read-only artifact/ABI preflight, not runtime or client acceptance",
+  "source_release": "2.21.3-omk.4",
+  "target_pack": "2.23.4",
+  "target_server_archive_sha256": "692c820a636ab59a050ba560235e3af9852f598d18f5dad931271e4cbd729831",
+  "artifacts": [
+    {
+      "component": "FTBUtilities",
+      "source_file": "FTBUtilities-5.4.1.131.jar",
+      "source_sha256": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a",
+      "target_file": "FTBUtilities-5.4.1.131.jar",
+      "target_sha256": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a"
+    },
+    {
+      "component": "FTBLib",
+      "source_file": "FTBLib-5.4.7.2.jar",
+      "source_sha256": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac",
+      "target_file": "FTBLib-5.4.7.2.jar",
+      "target_sha256": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac"
+    },
+    {
+      "component": "WR-CBE",
+      "source_file": "WR-CBE-1.12.2-2.3.2.33-universal.jar",
+      "source_sha256": "a8305c42e29f43abbad906c3c91c36ed0a1a6f949ff2bff9eec66499fb57f36e",
+      "target_file": "WR-CBE-1.12.2-2.3.2.33-universal.jar",
+      "target_sha256": "a8305c42e29f43abbad906c3c91c36ed0a1a6f949ff2bff9eec66499fb57f36e"
+    },
+    {
+      "component": "ironchest",
+      "source_file": "ironchest-1.12.2-7.0.72.847.jar",
+      "source_sha256": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f",
+      "target_file": "ironchest-1.12.2-7.0.72.847.jar",
+      "target_sha256": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f"
+    },
+    {
+      "component": "!mixinbooter",
+      "source_file": "!mixinbooter-10.6.jar",
+      "source_sha256": "c74998ccd73e6722b2b1f0d236c7b9c0b34572a892a3810d5e49557d96a356bd",
+      "target_file": "!mixinbooter-10.7.jar",
+      "target_sha256": "8bb53080aede2d2b1e1c5f713bbf49a38f20add8caa3d52fabcdf8a536b55a18"
+    },
+    {
+      "component": "twilightforest",
+      "source_file": "twilightforest-1.12.2-3.11.1021-universal.jar",
+      "source_sha256": "e1cee0a1e8f4aaedbd4381308fe6f32a6f69935e7bfb0df0748c2b292fb821ce",
+      "target_file": "twilightforest-1.12.2-3.15.1.jar",
+      "target_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    }
+  ],
+  "mixin_late_loader_interface_class_identical": true,
+  "twilight_sorting_method_identical_ignoring_debug_line_numbers": true,
+  "twilight_method_normalized_asm_lines": 427,
+  "limits": [
+    "Only the adapter target method was compared, not all Twilight behavior",
+    "Iron Chest runtime-declared version differs from filename; do not infer mod versions from names",
+    "No source/current world/runtime/launcher profile was changed by this inspection"
+  ]
+}
