@@ -93,6 +93,21 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
         )
         return json.loads(result.stdout) if result.returncode == 0 else None
 
+    def stopped_evidence(name, phase, started):
+        state = json.loads(call(["docker", "inspect", name]).stdout)[0]["State"]
+        report.setdefault("stops", {})[phase] = {
+            "running": state["Running"],
+            "exit_code": state["ExitCode"],
+            "oom_killed": state["OOMKilled"],
+            "stop_seconds": round(time.monotonic() - started, 3),
+        }
+        # Only this disposable API's fixture logs; never inspect arbitrary services.
+        logs = call(["docker", "logs", "--tail", "120", name], check=False)
+        (lab / (phase + "-stopped.log")).write_text(
+            (logs.stdout + logs.stderr)[-32768:], encoding="utf-8"
+        )
+        return state
+
     try:
         built = call(
             ["docker", "build", "-f", "Dockerfile.api", "-t", image, "."],
@@ -138,10 +153,11 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
         expect(
             native[native.index("--workers") + 1] == "1", "default_worker_count_is_used"
         )
+        started_stop = time.monotonic()
         call(["docker", "stop", "--time", "15", default_container])
-        stopped = json.loads(call(["docker", "inspect", default_container]).stdout)[0]
+        stopped = stopped_evidence(default_container, "default", started_stop)
         expect(
-            stopped["State"]["ExitCode"] == 0 and not stopped["State"]["OOMKilled"],
+            stopped["ExitCode"] == 0 and not stopped["OOMKilled"],
             "default_pid1_handles_clean_stop_without_oom",
         )
 
@@ -248,8 +264,9 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
                 and "Traceback" not in invalid.stderr,
                 "invalid_" + key.lower() + "_fails_without_value_or_traceback",
             )
+        started_stop = time.monotonic()
         call([*compose, "stop", "-t", "15"])
-        outcome = json.loads(call(["docker", "inspect", cid]).stdout)[0]["State"]
+        outcome = stopped_evidence(cid, "override", started_stop)
         expect(
             outcome["ExitCode"] == 0 and not outcome["OOMKilled"],
             "override_pid1_handles_clean_stop_without_oom",
@@ -266,6 +283,13 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
         report["error_type"] = type(error).__name__
         if isinstance(error, AssertionError):
             report["failed_check"] = str(error)
+            if str(error).endswith("_pid1_handles_clean_stop_without_oom"):
+                phase = "default" if str(error).startswith("default_") else "override"
+                # The script creates both containers with fixture-only data and no auth.
+                stop_log = lab / (phase + "-stopped.log")
+                report["fixture_stop_log_tail"] = stop_log.read_text(encoding="utf-8")[
+                    -16384:
+                ]
     finally:
         # Only UUID-owned resources; no prune, shared services or real volumes.
         if env_file.exists():

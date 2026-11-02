@@ -15,6 +15,7 @@ from omk.client_crash_lab import add_client_crash_lab
 from omk.dj2_lab import add_dj2_lab, run_dj2_lab
 from omk.dj2_linux_lab import add_linux_skin_lab, run_linux_skin_lab
 from omk.lab import auth_smoke
+from omk.locale_cli import add_locale_commands, audit_locale_files
 from omk.profiles import PROJECT_ROOT, load_profiles
 from omk.release_cli import add_release_commands, prepare_release
 from omk.storage_policy import add_storage_commands, storage_plan
@@ -86,6 +87,7 @@ def main(argv: list[str] | None = None) -> int:
     add_release_commands(sub)
     add_admin_commands(sub)
     add_storage_commands(sub)
+    add_locale_commands(sub)
     sub.add_parser("doctor", help="Check local development prerequisites (read-only)")
     _add_launcher_parser(sub)
     server = sub.add_parser("server", help="Inspect configured server profiles")
@@ -174,6 +176,8 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _report(args):
+    if args.command == "locale":
+        return audit_locale_files(args)
     if args.command == "storage":
         return storage_plan()
     if args.command == "release":

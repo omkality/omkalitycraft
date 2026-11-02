@@ -1,0 +1,248 @@
+{
+  "date": "2026-11-02",
+  "scope": "Static draft language overlay only",
+  "target": "DJ2 2.23.4",
+  "accepted": false,
+  "game_tested": false,
+  "installed": false,
+  "translation_source_commit": "1f6764559cf2118b929ad880abd03b53b6f9daa0",
+  "only_ru_locale_files": true,
+  "scripts_recipes_configs_mods_copied": false,
+  "reviewed_additional_source_delta_keys": [
+    {
+      "key": "dj2.quest.db.1066.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.1169.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.1171.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.1181.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.137.desc",
+      "decision": "existing meaning retained",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.142.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.1466.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.148.desc",
+      "decision": "existing meaning retained",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.1482.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.160.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.1613.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.1731.desc",
+      "decision": "existing meaning retained",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.183.desc",
+      "decision": "existing meaning retained",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.190.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.217.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.408.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.781.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.781.title",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.816.title",
+      "decision": "existing meaning retained",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.866.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    },
+    {
+      "key": "dj2.quest.db.881.desc",
+      "decision": "updated",
+      "rendered_in_game": false
+    }
+  ],
+  "changed_quest_keys": [
+    "dj2.quest.db.1066.desc",
+    "dj2.quest.db.1169.desc",
+    "dj2.quest.db.1171.desc",
+    "dj2.quest.db.1181.desc",
+    "dj2.quest.db.142.desc",
+    "dj2.quest.db.143.desc",
+    "dj2.quest.db.1466.desc",
+    "dj2.quest.db.1482.desc",
+    "dj2.quest.db.160.desc",
+    "dj2.quest.db.1613.desc",
+    "dj2.quest.db.190.desc",
+    "dj2.quest.db.207.desc",
+    "dj2.quest.db.217.desc",
+    "dj2.quest.db.288.desc",
+    "dj2.quest.db.291.desc",
+    "dj2.quest.db.408.desc",
+    "dj2.quest.db.781.desc",
+    "dj2.quest.db.781.title",
+    "dj2.quest.db.866.desc",
+    "dj2.quest.db.881.desc"
+  ],
+  "added_crafttweaker_keys": [
+    "dj2.arcanium_base.desc6",
+    "dj2.omniwand.desc0",
+    "tile.metamorphic_sandstone_chiseled.blueschist.name",
+    "tile.metamorphic_sandstone_chiseled.eclogite.name",
+    "tile.metamorphic_sandstone_chiseled.gneiss.name",
+    "tile.metamorphic_sandstone_chiseled.greenschist.name",
+    "tile.metamorphic_sandstone_chiseled.marble.name",
+    "tile.metamorphic_sandstone_chiseled.migmatite.name",
+    "tile.metamorphic_sandstone_chiseled.quartzite.name",
+    "tile.metamorphic_sandstone_chiseled.soapstone.name"
+  ],
+  "groovy_locale_keys": 30,
+  "files": [
+    {
+      "path": "groovy/assets/divine_journey_2/lang/ru_ru.lang",
+      "bytes": 4092,
+      "sha256": "3d84f9b12939b4605396d687df421b37d74a170532a1a745da240829cb11bb80"
+    },
+    {
+      "path": "resources/betterquesting/lang/ru_ru.lang",
+      "bytes": 1088883,
+      "sha256": "313e4674ccab9155cc28b3d6f626034ba5e2a446f4ff803bc8fc07106e86a788"
+    },
+    {
+      "path": "resources/contenttweaker/lang/ru_ru.lang",
+      "bytes": 60499,
+      "sha256": "fbbd8e6ca912bd9b4ed2335ddf1c3e4462c1f7586ed1327fb151db8c49b95985"
+    },
+    {
+      "path": "resources/crafttweaker/lang/ru_ru.lang",
+      "bytes": 81052,
+      "sha256": "744ec91257afa837f1951688f0ae6dc5635f8e98df273866da54b14f876b4dc0"
+    },
+    {
+      "path": "resources/enchantment_descriptions/lang/ru_ru.lang",
+      "bytes": 4212,
+      "sha256": "be2a8b184dc3934d61366c6d7d405ad5a45395a825202fbc1aeb5cd33b85a76d"
+    }
+  ],
+  "audits": {
+    "betterquesting": {
+      "source_keys": 3532,
+      "locale_keys": 3534,
+      "missing": [],
+      "extra": [
+        "dj2.quest.db.9999.desc",
+        "dj2.quest.db.9999.title"
+      ],
+      "format_mismatches": [],
+      "game_tested": false,
+      "changed_source_values": [
+        "dj2.quest.db.288.desc",
+        "dj2.quest.db.291.desc"
+      ],
+      "ok": true,
+      "read_only": true,
+      "semantic_review_required": true,
+      "sha256": {
+        "source": "13b2b2012e2ef4539d9f2035d200e5d6decfe71af78e2b2a449f93a3c72b7cc5",
+        "locale": "313e4674ccab9155cc28b3d6f626034ba5e2a446f4ff803bc8fc07106e86a788",
+        "previous_source": "d71b7f4aa53ceda2b9ca27aacf60b25e7f0793c2d22ba11c6908f4cff014cbcc"
+      }
+    },
+    "crafttweaker": {
+      "source_keys": 657,
+      "locale_keys": 659,
+      "missing": [],
+      "extra": [
+        "ritual.moretweaker.moretweakerrecipe0",
+        "ritual.moretweaker.moretweakerrecipe1"
+      ],
+      "format_mismatches": [],
+      "game_tested": false,
+      "changed_source_values": [],
+      "ok": true,
+      "read_only": true,
+      "semantic_review_required": true,
+      "sha256": {
+        "source": "522137ce116f60b51f5bf0a258c31ba2ba894e71cb29f4e572f66414d2ff6208",
+        "locale": "744ec91257afa837f1951688f0ae6dc5635f8e98df273866da54b14f876b4dc0",
+        "previous_source": "e08149198b44d547e77701bbea47b8fd9d2510d4a471e7d02584b5926c2ab746"
+      }
+    },
+    "groovy": {
+      "source_keys": 30,
+      "locale_keys": 30,
+      "missing": [],
+      "extra": [],
+      "format_mismatches": [],
+      "game_tested": false,
+      "changed_source_values": [],
+      "ok": true,
+      "read_only": true,
+      "semantic_review_required": true,
+      "sha256": {
+        "source": "c8e4cfea19d061e276c993eb91c0c7a3ede95bdbbd255adfa9fdbb383042e500",
+        "locale": "3d84f9b12939b4605396d687df421b37d74a170532a1a745da240829cb11bb80",
+        "previous_source": "82707f5029686ce9db45019cdb3ce3a2ff5fe682ebc722b844f9ec2eb64465ce"
+      }
+    }
+  },
+  "limitations": [
+    "Coverage and format checks do not prove semantic correctness",
+    "Actual Russian client/JEI/book rendering remains pending",
+    "Not a claim that every mod is fully translated",
+    "Reviewed draft is local; launcher still serves old accepted profile"
+  ]
+}

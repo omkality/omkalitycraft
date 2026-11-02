@@ -78,6 +78,7 @@
 | `uv run omk lab dj2-recovery --edge-cases --full-backup-return …` | Проверенный возврат полной world-копии в пустой новый тестовый сервер; прежний мир сохраняется, рабочего apply/cutover нет |
 | `uv run omk doctor` | Проверка локального окружения |
 | `uv run omk storage plan` | Расчёт бюджета VPS из env/defaults; ничего не применяет и не удаляет. [Миры, предгенерация и диск](../WORLDS_AND_STORAGE.md) |
+| `uv run omk locale audit --source en_us.lang --locale ru_ru.lang --previous-source old/en_us.lang` | Read-only проверка ключей/параметров перевода и изменённых исходных строк; предыдущий файл необязателен. Не заменяет смысловую и игровую проверку. [Обновление сборки](../PACK_UPGRADES.md) |
 | `uv run python -m omk lab backup-safety` | Проверка ротации, настоящего ENOSPC и SIGKILL в одноразовом Linux Docker; не принимает рабочие миры. [Устройство и ограничения](../BACKUP_SAFETY.md) |
 | `uv run python -m omk lab dj2-startup --help` | Наблюдение повторных стартов полного DJ2 в новом Linux volume; ресурсы/OOM, стек исключения деобфускатора, opt-in байткод. [Аргументы, пути и границы](../DJ2_STARTUP_DIAGNOSTICS.md) |
 | `uv run omk server list` | Настроенные профили и их статус |
