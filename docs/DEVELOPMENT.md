@@ -9,11 +9,21 @@ P0 — краши/безопасность/потеря данных, P1 — п�
 проверенную область. Здесь остаются решения и доказательства, отдельный полный backlog
 не дублируется. Подробные security-fixtures и Core не публикуются в issues.
 
-Текущий RTP — [#27](https://github.com/omkality/omkalitycraft/issues/27), подготовлены 50
-Linux-проверок и PR. Следующие блокеры: [WR-CBE при остановке #28](https://github.com/omkality/omkalitycraft/issues/28)
+RTP — [#27](https://github.com/omkality/omkalitycraft/issues/27): 50 Linux-проверок,
+8 проверок CI, PR #42 слит в `dev` (01bdebd), issue закрыт. Текущий блокер:
+[WR-CBE при остановке #28](https://github.com/omkality/omkalitycraft/issues/28)
 и [границы FTB/модовые механизмы #29](https://github.com/omkality/omkalitycraft/issues/29).
 [Полный проход env #30](https://github.com/omkality/omkalitycraft/issues/30) обязателен
 перед VPS и пока не завершён. GTNH отслеживается отдельно после DJ2.
+
+Решения владельца по хранению/приветствию: Drasl оставляем на SQLite без собственного
+форка ради PostgreSQL; перед VPS нужны постоянные данные и проверенное восстановление.
+Приветствие с короткими командами переносится в чат при входе в первые наигранные часы
+([#44](https://github.com/omkality/omkalitycraft/issues/44)); title по центру отменён.
+Предложенный настраиваемый порог — 3 часа. Серверный учёт времени по UUID/профилю
+([#43](https://github.com/omkality/omkalitycraft/issues/43)) отделяет онлайн от будущей
+политики активности/наград; активность AFK автоматически не доказана. Подробный справочник
+лаунчера остаётся отдельным последующим этапом #39. Реализация этих пунктов ещё предстоит.
 
 ## Назначение и состояние
 
