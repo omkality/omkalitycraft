@@ -131,6 +131,13 @@ def main(argv: list[str] | None = None) -> int:
             "dj2-spawn", help="Fresh Linux FTB spawn boundary and grave recovery checks"
         )
     )
+    from omk.dj2_rtp_lab import add_rtp_lab  # noqa: PLC0415
+
+    add_rtp_lab(
+        lab_areas.add_parser(
+            "dj2-rtp", help="Fresh Linux dimension-aware FTB RTP checks"
+        )
+    )
     add_client_crash_lab(
         lab_areas.add_parser(
             "client-crash",
@@ -194,6 +201,10 @@ def _lab_report(args):
         from omk.dj2_spawn_lab import run_spawn_lab  # noqa: PLC0415
 
         report = run_spawn_lab(args)
+    elif args.area == "dj2-rtp":
+        from omk.dj2_rtp_lab import run_rtp_lab  # noqa: PLC0415
+
+        report = run_rtp_lab(args)
     elif args.area == "client-crash":
         from omk.client_crash_lab import run_client_crash_lab  # noqa: PLC0415
 

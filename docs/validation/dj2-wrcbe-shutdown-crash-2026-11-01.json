@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-01",
+  "lab": ".local/rtp-dimensions-412d509acb",
+  "trigger": "Last lab player left Nether immediately before stop; a remaining world START tick followed the unload callback",
+  "exception": "java.lang.NullPointerException",
+  "handler": "codechicken.wirelessredstone.handler.WREventHandler.worldTick",
+  "source_line": 170,
+  "docker_exit_code": 0,
+  "oom_killed": false,
+  "old_harness_called_exit_clean": true,
+  "wireless_redstone_fix_applied": false,
+  "world_export_sha256": "270b22ecc09dfad1cde30bde540bff5d976668dcc367c2ebb49c49f342f8934d",
+  "artifact": {
+    "version": "2.3.2.33",
+    "sha256": "a8305c42e29f43abbad906c3c91c36ed0a1a6f949ff2bff9eec66499fb57f36e",
+    "source_snapshot": "https://github.com/TheCBProject/WirelessRedstone/tree/fdbb8c80fabf30b6eb0b083fed5038d74985c559"
+  },
+  "limits": [
+    "Shutdown race observed once; ordinary dimension-travel crash not reproduced",
+    "Raw log is private; no account/session data included",
+    "Existing services and worlds untouched"
+  ]
+}

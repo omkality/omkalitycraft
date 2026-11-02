@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "worlds": [
+    {"id": 0, "mode": "surface", "min_y": 8, "max_y": 253},
+    {"id": -1, "mode": "cave", "min_y": 8, "max_y": 120},
+    {"id": 7, "mode": "surface", "min_y": 8, "max_y": 253}
+  ]
+}

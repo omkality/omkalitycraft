@@ -40,6 +40,7 @@ class LabPlayer:
         self.position = None
         self.health = None
         self.entity_id = None
+        self.dimension = None
         self.error = None
         self._lock = threading.Lock()
         self._stopping = threading.Event()
@@ -302,6 +303,10 @@ class LabPlayer:
                     self.health = struct.unpack(">f", packet.read(4))[0]
                 elif kind == 0x23:
                     self.entity_id = struct.unpack(">i", packet.read(4))[0]
+                    packet.read(1)  # Game mode.
+                    self.dimension = struct.unpack(">i", packet.read(4))[0]
+                elif kind == 0x35:
+                    self.dimension = struct.unpack(">i", packet.read(4))[0]
                 elif kind in {0x11, 0x12, 0x13}:
                     self._container_packet(kind, packet)
                 elif kind == 0x2F:

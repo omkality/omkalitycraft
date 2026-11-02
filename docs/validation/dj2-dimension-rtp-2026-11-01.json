@@ -1,0 +1,149 @@
+{
+  "date": "2026-11-01",
+  "private_core_version": "0.2.5",
+  "harness_source_commit": "2e7b9c2",
+  "check_count": 50,
+  "graphical_client_exercised": false,
+  "resource_world_tested": false,
+  "python_tests": {"passed": 502, "skipped": 3, "ruff": true, "black": true},
+  "ok": true,
+  "security_ready": false,
+  "checks": [
+    "dimension_rtp_adapter_initialized",
+    "surface_fixture_wool_dimension_0",
+    "rtp_observes_ftb_warmup_0",
+    "rtp_keeps_invocation_world_0",
+    "rtp_lands_in_configured_annulus_0",
+    "repeat_request_during_attempt_guard_rejected",
+    "native_ftb_cooldown_is_preserved",
+    "native_ftb_permission_denial_is_preserved",
+    "surface_fixture_water_dimension_0",
+    "water_surface_rejected_does_not_teleport",
+    "surface_fixture_stone_slab_dimension_0",
+    "partial_floor_rejected_does_not_teleport",
+    "surface_fixture_wool_dimension_0",
+    "too_small_border_rejected_does_not_teleport",
+    "all_candidate_claims_rejected_does_not_teleport",
+    "far_target_region_absent_control",
+    "ungenerated_region_rejected_does_not_teleport",
+    "rtp_does_not_create_region_files_for_absent_chunks",
+    "surface_fixture_wool_dimension_0",
+    "rtp_observes_ftb_warmup_0",
+    "rtp_keeps_invocation_world_0",
+    "rtp_lands_in_configured_annulus_0",
+    "cross_block_movement_cancels_native_rtp_warmup",
+    "server_confirms_dimension_-1_omk_game_test",
+    "nether_roof_positive_control_present",
+    "nether_floor_and_headroom_fixtures_exist",
+    "rtp_observes_ftb_warmup_-1",
+    "rtp_keeps_invocation_world_-1",
+    "rtp_lands_in_configured_annulus_-1",
+    "server_confirms_dimension_7_omk_game_test",
+    "surface_fixture_wool_dimension_7",
+    "rtp_observes_ftb_warmup_7",
+    "rtp_keeps_invocation_world_7",
+    "rtp_lands_in_configured_annulus_7",
+    "server_confirms_dimension_1_omk_game_test",
+    "dimension_change_during_warmup_never_returns_to_old_world",
+    "end_story_world_denied_without_fallback",
+    "server_confirms_dimension_-100_omk_game_test",
+    "unlisted_registered_world_denied_without_fallback",
+    "server_confirms_dimension_0_omk_game_test",
+    "surface_fixture_wool_dimension_0",
+    "rtp_observes_ftb_warmup_0",
+    "rtp_keeps_invocation_world_0",
+    "rtp_lands_in_configured_annulus_0",
+    "disconnected_request_does_not_spend_new_connection_cooldown",
+    "server_confirms_dimension_-1_omk_other_test",
+    "simultaneous_rtp_keeps_two_independent_dimensions",
+    "concurrent_requests_keep_warmup",
+    "server_independently_confirms_concurrent_worlds",
+    "server_confirms_dimension_0_omk_other_test"
+  ],
+  "lab": ".local/rtp-dimensions-41bff0e219",
+  "core_sha256": "1024c4294f9606de60da3639f4699a0ea5c61a9682d57ffab7f8d0fa363d5a49",
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "destinations": [
+    {
+      "dimension": 0,
+      "position": [
+        -9.5,
+        246.01,
+        -1.5
+      ]
+    },
+    {
+      "dimension": 0,
+      "position": [
+        118.5,
+        246.01,
+        131.5
+      ]
+    },
+    {
+      "dimension": -1,
+      "position": [
+        8.5,
+        66.01,
+        0.5
+      ]
+    },
+    {
+      "dimension": 7,
+      "position": [
+        11.5,
+        246.01,
+        -0.5
+      ]
+    },
+    {
+      "dimension": 0,
+      "position": [
+        1.5,
+        246.01,
+        11.5
+      ]
+    }
+  ],
+  "policy": {
+    "minimum": 8,
+    "maximum": 12,
+    "border_percent": 66,
+    "attempts": 64,
+    "chunk_loads": 8,
+    "retry_seconds": 5,
+    "worlds": [
+      {
+        "id": 0,
+        "mode": "surface",
+        "min_y": 8,
+        "max_y": 253
+      },
+      {
+        "id": -1,
+        "mode": "cave",
+        "min_y": 8,
+        "max_y": 120
+      },
+      {
+        "id": 7,
+        "mode": "surface",
+        "min_y": 8,
+        "max_y": 253
+      }
+    ]
+  },
+  "lab_cleanup_stop_requested": true,
+  "linux_container_outcome": {
+    "running": false,
+    "oom_killed": false,
+    "exit_code": 0,
+    "memory_limit_bytes": 6442450944,
+    "nano_cpus": 4000000000
+  },
+  "game_crash_detected": false,
+  "owned_game_clean_exit": true,
+  "stopped_world_tar_sha256": "42466187cd9d88a8ef357fad97c6ee7b108c8237947dbab2ab14e01fa72effe3",
+  "owned_volume_removed_after_export": true,
+  "auth_removed": true
+}
