@@ -194,6 +194,11 @@ class WrcbeScenario:
             else:
                 time.sleep(2)
                 self.check(self.request("check"), True, cycle)
+                # A saved active bit alone could hide a disconnected ether network.
+                self.power(console, False)
+                self.check(self.request("check"), False, cycle)
+                self.power(console, True)
+                self.check(self.request("check"), True, cycle)
             console(f"forge setdimension {FIRST} -1 24 100 24")
             actor.wait(lambda: actor.dimension == -1, timeout=45)
             self.expect(
@@ -206,13 +211,17 @@ class WrcbeScenario:
         self.server.collector.close()
         data = inspect_owned("container", self.server.name, self.server.run_id)
         outcome = container_outcome(data)
+        result = self.result()
+        shutil.copy2(self.server.log, self.server.lab / f"cycle-{cycle}.log")
+        self.report["cycles"].append(
+            {"cycle": cycle, "outcome": outcome, "probe": result}
+        )
         self.expect(
             process.returncode == 0
             and not outcome["oom_killed"]
             and forge_log_crashed(self.server.log) is False,
             f"clean_native_shutdown_cycle_{cycle}",
         )
-        result = self.result()
         count = int(result.get("shutdown_replays", "0"))
         self.expect(
             count > 0
@@ -235,10 +244,6 @@ class WrcbeScenario:
                 for n in range(1, count + 1)
             ),
             f"shutdown_end_callback_preserved_cycle_{cycle}",
-        )
-        shutil.copy2(self.server.log, self.server.lab / f"cycle-{cycle}.log")
-        self.report["cycles"].append(
-            {"cycle": cycle, "outcome": outcome, "probe": result}
         )
 
 
