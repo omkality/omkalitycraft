@@ -1,0 +1,201 @@
+{
+  "ok": true,
+  "security_ready": false,
+  "checks": [
+    "dimension_rtp_adapter_initialized",
+    "surface_fixture_wool_dimension_0",
+    "rtp_observes_ftb_warmup_0",
+    "rtp_keeps_invocation_world_0",
+    "rtp_lands_in_configured_annulus_0",
+    "repeat_request_during_attempt_guard_rejected",
+    "native_ftb_cooldown_is_preserved",
+    "native_ftb_permission_denial_is_preserved",
+    "surface_fixture_water_dimension_0",
+    "water_surface_rejected_does_not_teleport",
+    "surface_fixture_stone_slab_dimension_0",
+    "partial_floor_rejected_does_not_teleport",
+    "surface_fixture_wool_dimension_0",
+    "too_small_border_rejected_does_not_teleport",
+    "all_candidate_claims_rejected_does_not_teleport",
+    "far_target_region_absent_control",
+    "ungenerated_region_rejected_does_not_teleport",
+    "rtp_does_not_create_region_files_for_absent_chunks",
+    "surface_fixture_wool_dimension_0",
+    "rtp_observes_ftb_warmup_0",
+    "rtp_keeps_invocation_world_0",
+    "rtp_lands_in_configured_annulus_0",
+    "cross_block_movement_cancels_native_rtp_warmup",
+    "server_confirms_dimension_-1_omk_game_test",
+    "nether_roof_positive_control_present",
+    "nether_floor_and_headroom_fixtures_exist",
+    "rtp_observes_ftb_warmup_-1",
+    "rtp_keeps_invocation_world_-1",
+    "rtp_lands_in_configured_annulus_-1",
+    "server_confirms_dimension_7_omk_game_test",
+    "surface_fixture_wool_dimension_7",
+    "rtp_observes_ftb_warmup_7",
+    "rtp_keeps_invocation_world_7",
+    "rtp_lands_in_configured_annulus_7",
+    "server_confirms_dimension_1_omk_game_test",
+    "dimension_change_during_warmup_never_returns_to_old_world",
+    "end_story_world_denied_without_fallback",
+    "server_confirms_dimension_-100_omk_game_test",
+    "unlisted_registered_world_denied_without_fallback",
+    "server_confirms_dimension_0_omk_game_test",
+    "surface_fixture_wool_dimension_0",
+    "rtp_observes_ftb_warmup_0",
+    "rtp_keeps_invocation_world_0",
+    "rtp_lands_in_configured_annulus_0",
+    "disconnected_request_does_not_spend_new_connection_cooldown",
+    "server_confirms_dimension_-1_omk_other_test",
+    "simultaneous_rtp_keeps_two_independent_dimensions",
+    "concurrent_requests_keep_warmup",
+    "server_independently_confirms_concurrent_worlds",
+    "server_confirms_dimension_0_omk_other_test"
+  ],
+  "lab": ".local/rtp-dimensions-47e129f5c9",
+  "core_sha256": "5ef2abdb3902074f55dffc0cd43fbd511df8c18c9a12615bf57f674e3cca9ee1",
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "destinations": [
+    {
+      "dimension": 0,
+      "position": [
+        7.5,
+        246.01,
+        -5.5
+      ]
+    },
+    {
+      "dimension": 0,
+      "position": [
+        127.5,
+        246.01,
+        116.5
+      ]
+    },
+    {
+      "dimension": -1,
+      "position": [
+        -10.5,
+        66.01,
+        -0.5
+      ]
+    },
+    {
+      "dimension": 7,
+      "position": [
+        -3.5,
+        246.01,
+        -10.5
+      ]
+    },
+    {
+      "dimension": 0,
+      "position": [
+        0.5,
+        246.01,
+        -10.5
+      ]
+    }
+  ],
+  "policy": {
+    "minimum": 8,
+    "maximum": 12,
+    "border_percent": 66,
+    "attempts": 64,
+    "chunk_loads": 8,
+    "retry_seconds": 5,
+    "worlds": [
+      {
+        "id": 0,
+        "mode": "surface",
+        "min_y": 8,
+        "max_y": 253
+      },
+      {
+        "id": -1,
+        "mode": "cave",
+        "min_y": 8,
+        "max_y": 120
+      },
+      {
+        "id": 7,
+        "mode": "surface",
+        "min_y": 8,
+        "max_y": 253
+      }
+    ]
+  },
+  "landing_timings": [
+    {
+      "dimension": 0,
+      "seconds": 3.5420226999995066,
+      "position": [
+        7.5,
+        246.01,
+        -5.5
+      ]
+    },
+    {
+      "dimension": 0,
+      "seconds": 3.4173842999953195,
+      "position": [
+        127.5,
+        246.01,
+        116.5
+      ]
+    },
+    {
+      "dimension": -1,
+      "seconds": 3.9025877000021865,
+      "position": [
+        -10.5,
+        66.01,
+        -0.5
+      ]
+    },
+    {
+      "dimension": 7,
+      "seconds": 3.709041399997659,
+      "position": [
+        -3.5,
+        246.01,
+        -10.5
+      ]
+    },
+    {
+      "dimension": 0,
+      "seconds": 3.335149899998214,
+      "position": [
+        0.5,
+        246.01,
+        -10.5
+      ]
+    }
+  ],
+  "lab_cleanup_stop_requested": true,
+  "linux_container_outcome": {
+    "running": false,
+    "oom_killed": false,
+    "exit_code": 0,
+    "memory_limit_bytes": 6442450944,
+    "nano_cpus": 4000000000
+  },
+  "game_crash_detected": false,
+  "owned_game_clean_exit": true,
+  "stopped_world_tar_sha256": "b3ee6d43eeb0d6a664d87715b95d44a38d4b7b203bd9a33c594d3a2e1cb83d74",
+  "owned_volume_removed_after_export": true,
+  "auth_removed": true,
+  "date": "2026-11-02",
+  "core_version": "0.2.7",
+  "diagnostic_lab_probes_installed": false,
+  "harness_source_commit": "c1c8ea032f935e0b60f8b0df2c450152f4241e85",
+  "landing_detection": "world, floor height and full destination annulus; decimal border centers",
+  "preceding_inconclusive_warmup_assertion": {
+    "passed_checks": 31,
+    "private_report_sha256": "ef0f3fa62bc514a2487c4472a1fcd07e40bc196b157ab6878fb636d74b352b97",
+    "old_detector": "floor height alone",
+    "missing_evidence": "failed landing coordinates and elapsed time were not recorded",
+    "conclusion": "No proven game warmup defect or retrospective root cause; strengthened detector and diagnostics before rerun"
+  }
+}
