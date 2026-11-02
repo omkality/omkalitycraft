@@ -1,0 +1,87 @@
+{
+  "ok": true,
+  "pack_version": "2.23.4",
+  "security_ready": false,
+  "core_installed": false,
+  "translation_installed": false,
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "archive": {
+    "version": "2.23.4",
+    "source": "https://github.com/Divine-Journey-2/Divine-Journey-2/releases/download/2.23.4/Divine_Journey_2.23.4_Server_Pack.zip",
+    "sha256": "692c820a636ab59a050ba560235e3af9852f598d18f5dad931271e4cbd729831",
+    "bytes": 423586059,
+    "file_count": 2322,
+    "expanded_bytes": 476383722
+  },
+  "lab": ".local/dj2-target-2.23.4-018f5de30d",
+  "checks": [
+    "archive_has_no_duplicate_files",
+    "no_old_core_or_lab_probe_in_candidate",
+    "no_existing_world_in_seed",
+    "fresh_owned_linux_volume_prepared",
+    "boot_1_forge_ready",
+    "boot_1_fixture_chunk_loaded_via_neighbor",
+    "boot_1_known_inventory_preserved",
+    "boot_1_saved_world_exists",
+    "boot_1_clean_stop_without_oom_or_fatal_marker",
+    "boot_2_forge_ready",
+    "boot_2_fixture_chunk_loaded_via_neighbor",
+    "boot_2_known_inventory_preserved",
+    "boot_2_saved_world_exists",
+    "boot_2_clean_stop_without_oom_or_fatal_marker",
+    "independent_saved_nbt_confirms_exact_integer_count_after_restart"
+  ],
+  "cycles": [
+    {
+      "cycle": 1,
+      "exit_code": 0,
+      "oom_killed": false,
+      "fatal_log_marker": false
+    },
+    {
+      "cycle": 2,
+      "exit_code": 0,
+      "oom_killed": false,
+      "fatal_log_marker": false
+    }
+  ],
+  "fixture_position": [
+    16,
+    240,
+    248
+  ],
+  "linux_container_outcome": {
+    "running": false,
+    "oom_killed": false,
+    "exit_code": 0,
+    "memory_limit_bytes": 6442450944,
+    "nano_cpus": 4000000000
+  },
+  "game_crash_detected": false,
+  "owned_game_clean_exit": true,
+  "stopped_world_tar_sha256": "81f133f825ef0727e3e08c58433f944118779967111bf025532418b64d24c48c",
+  "owned_volume_removed_after_export": true,
+  "auth_removed": true,
+  "saved_fixture": {
+    "count": 17,
+    "count_nbt_type": 3,
+    "item_id": "minecraft:diamond"
+  },
+  "date": "2026-11-02",
+  "driver": {
+    "stage": "exploratory_owned_lab_prototype",
+    "source_sha256": "01f62edf742490653181b30e89ead9e4a882987e2e09289ffe3800c54517ea6d",
+    "public_cli": false
+  },
+  "limits": [
+    "No Core or translation installed",
+    "No player connection or rendered client",
+    "Not migration from 2.21.3",
+    "No quest/recipe/script-error acceptance",
+    "Generation limited to a fresh fixture world, not pregeneration"
+  ],
+  "previous_fixture_mismatches": [
+    "Count was persisted as TAG_Int, not expected TAG_Byte; saved quantity remained 17",
+    "Arbitrary fixture chunk unloaded after restart; updated harness uses saved spawn chunk"
+  ]
+}
