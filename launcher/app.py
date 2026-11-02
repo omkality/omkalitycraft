@@ -7,8 +7,8 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any, override
 
-from PySide6.QtCore import QLockFile, QRegularExpression, Qt, QThreadPool, QTimer
-from PySide6.QtGui import QCloseEvent, QRegularExpressionValidator
+from PySide6.QtCore import QLockFile, Qt, QThreadPool, QTimer
+from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -29,7 +29,6 @@ from PySide6.QtWidgets import (
 )
 
 from launcher.accounts import (
-    USERNAME_PATTERN,
     AccountError,
     AccountService,
     AuthResult,
@@ -42,6 +41,7 @@ from launcher.dashboard import Dashboard
 from launcher.game import GameProcess, GameRunner
 from launcher.install import Installer, ReleaseClient
 from launcher.memory import MIN_MB, Preferences
+from launcher.nickname import NicknameField
 from launcher.releases import ReleaseError
 from launcher.server_status import ServerStatusController
 from launcher.session import SessionStoreError
@@ -75,14 +75,7 @@ def field(name: str, placeholder: str = "", *, password: bool = False) -> QLineE
 
 
 def nickname_field(name: str) -> QLineEdit:
-    widget = field(name, "Omkality_01")
-    widget.setMaxLength(16)
-    widget.setProperty("minecraftNickname", True)
-    widget.setValidator(
-        QRegularExpressionValidator(QRegularExpression(USERNAME_PATTERN), widget)
-    )
-    widget.setToolTip("3–16 символов: A–Z, a–z, 0–9 и _.")
-    return widget
+    return NicknameField(name)
 
 
 def button(
@@ -118,6 +111,8 @@ class PasswordDialog(QDialog):
             QDialogButtonBox.StandardButton.Save
             | QDialogButtonBox.StandardButton.Cancel
         )
+        controls.button(QDialogButtonBox.StandardButton.Save).setText("Сохранить")
+        controls.button(QDialogButtonBox.StandardButton.Cancel).setText("Отмена")
         controls.accepted.connect(self._validate)
         controls.rejected.connect(self.reject)
         layout.addWidget(controls)

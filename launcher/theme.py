@@ -41,6 +41,10 @@ QSlider::groove:horizontal { background:#293b44; height:5px; border-radius:2px; 
 QSlider::sub-page:horizontal { background:#78dcaf; border-radius:2px; }
 QSlider::handle:horizontal { background:#b1f1d4; border:2px solid #233e33;
 width:12px; margin:-5px 0; border-radius:7px; }
+QSlider::groove:horizontal:disabled { background:#253139; }
+QSlider::sub-page:horizontal:disabled { background:#46545c; }
+QSlider::handle:horizontal:disabled { background:#68767d; border-color:#35434a; }
+QLabel:disabled { color:#687a83; }
 QFrame[panel="true"] { background: #172229; border: 1px solid #2a3a42; border-radius: 14px; }
 QProgressBar { border: none; border-radius: 3px; background: #273b43; min-height: 5px; max-height: 5px; }
 QProgressBar::chunk { background: #78dcaf; border-radius: 3px; }
@@ -48,7 +52,8 @@ QTabWidget::pane { border: none; }
 QTabBar::tab { background: #1a2932; padding: 11px 22px; margin-right: 5px; border-radius: 7px; }
 QTabBar::tab:selected { background: #304a53; }
 QCheckBox { padding: 8px 0; }
-QToolTip { color: #ecf2f5; background: #22333d; border: 1px solid #4b6a72; padding: 8px; }
+QToolTip { color: #ecf2f5; background: #22333d; border: 1px solid #e4bc84;
+border-radius: 9px; padding: 8px 11px; }
 QScrollBar:vertical { background:#11191f; width:8px; margin:0; }
 QScrollBar::handle:vertical { background:#344a53; border-radius:4px; min-height:32px; }
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height:0; }

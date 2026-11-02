@@ -31,10 +31,14 @@ class MemoryControl(QWidget):
             MIN_MB // STEP_MB, max(MIN_MB, choice.maximum_mb) // STEP_MB
         )
         self.slider.setValue(max(MIN_MB, choice.selected_mb) // STEP_MB)
-        self.slider.setEnabled(choice.maximum_mb >= MIN_MB)
+        available = profile.status != "planned"
+        self.setEnabled(available)
+        self.slider.setEnabled(available and choice.maximum_mb >= MIN_MB)
         self.slider.setAccessibleName("Память для " + profile.name)
-        self.slider.setToolTip(
-            f"Рекомендуется {profile.memory_recommended_mb / 1024:g} ГБ. Часть памяти оставляем системе и Java."
+        self.setToolTip(
+            "Настройка станет доступна, когда сборка будет готова."
+            if not available
+            else f"Рекомендуется {profile.memory_recommended_mb / 1024:g} ГБ. Часть памяти оставляем системе и Java."
         )
         layout.addWidget(self.slider)
         self.warning = QLabel()
