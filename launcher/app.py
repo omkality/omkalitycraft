@@ -36,6 +36,7 @@ from launcher.accounts import (
     PasswordChanged,
     Registration,
 )
+from launcher.branding import install_branding, title_header
 from launcher.controller import InstallationResult, InstallController
 from launcher.dashboard import Dashboard
 from launcher.game import GameProcess, GameRunner
@@ -150,6 +151,7 @@ class LauncherWindow(QMainWindow):
             store_path.parent / "preferences.json" if store_path is not None else None
         )
         install_font(QApplication.instance())
+        install_branding(QApplication.instance())
         self.installation: InstallController | None = None
         self.game: GameProcess | None = None
         self.game_pack: str | None = None
@@ -169,10 +171,7 @@ class LauncherWindow(QMainWindow):
         root = QWidget()
         layout = QVBoxLayout(root)
         layout.setContentsMargins(30, 24, 30, 24)
-        title = label("OMKALITYCRAFT")
-        title.setProperty("title", True)
-        layout.addWidget(title)
-        layout.addWidget(label("Играть вместе. Без лишних шагов.", muted=True))
+        layout.addLayout(title_header())
         self.pages = QStackedWidget()
         self.auth_page = self._auth_page()
         self.password_page = self._password_page()

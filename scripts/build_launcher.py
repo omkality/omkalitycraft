@@ -11,12 +11,25 @@ from pathlib import Path
 from uuid import uuid4
 
 from packaging.version import Version
+from PIL import Image
 from tuf.api.metadata import Metadata, Root
 
 from launcher.install import current_platform
 from launcher.version import VERSION
 from omk.drasl import DraslClient
 from omk.profiles import PROJECT_ROOT
+
+
+def packaging_icon(source: Path, stage: Path) -> Path:
+    """Pad the original pixels so platform converters cannot stretch a rectangle."""
+    with Image.open(source) as opened:
+        image = opened.convert("RGBA")
+        edge = max(128, *image.size)
+        canvas = Image.new("RGBA", (edge, edge))
+        canvas.paste(image, ((edge - image.width) // 2, (edge - image.height) // 2))
+        target = stage / "app-icon.png"
+        canvas.save(target)
+    return target
 
 
 def build(
@@ -59,6 +72,8 @@ def build(
         "social-kick.svg",
         "social-telegram.svg",
         "release-keys.json",
+        "branding/icon.png",
+        "branding/provenance.json",
         "skins/default-slim.png",
         "skins/default-classic.png",
         "skins/default-legacy.png",
@@ -68,6 +83,7 @@ def build(
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(PROJECT_ROOT / "launcher/assets" / name, destination)
     shutil.copyfile(root_metadata, assets / "tuf-root.json")
+    icon = packaging_icon(assets / "branding/icon.png", stage)
     (assets / "deployment.json").write_text(
         json.dumps({"auth_url": auth_url, "api_url": api_url}), encoding="utf-8"
     )
@@ -115,6 +131,7 @@ def build(
             "--windowed",
             "--name",
             "OmkalityCraft",
+            *(["--icon", str(icon)] if sys.platform in {"win32", "darwin"} else []),
             "--distpath",
             str(output),
             "--workpath",

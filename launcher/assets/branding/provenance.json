@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-02",
+  "source": "Original Mortum ore block image supplied by the owner in chat",
+  "asset_sha256": "6feb6854bd1a67de03c2c62c3de64e2ee056ebfbde1eb4451396912dc28611cf",
+  "size": [
+    114,
+    126
+  ],
+  "mode": "RGBA",
+  "original_bytes_preserved": true,
+  "ai_redrawn": false,
+  "notes": [
+    "Owner explicitly chose the supplied original instead of the generated variant.",
+    "Packaging converts the same PNG into the OS icon format; the texture is not redrawn."
+  ]
+}

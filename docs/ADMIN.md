@@ -38,6 +38,10 @@ Minecraft OP, игровые ранги и административная ро
 
 ## Доступ по приглашениям
 
+Ручная выдача зрителям за участие в сообществе, расчёт баллов и проверка заявителя:
+[памятка по наградам стрим-площадок](STREAM_ACCESS.md). Это предложение; награды ещё
+не созданы и не являются автоматической привязкой Telegram.
+
 ```powershell
 uv run omk admin --config .omk-admin/operator.toml access invite
 uv run omk admin --config .omk-admin/operator.toml access invites

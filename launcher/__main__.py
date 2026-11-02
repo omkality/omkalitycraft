@@ -13,6 +13,7 @@ from PySide6.QtWidgets import QApplication, QLabel, QMessageBox
 
 from launcher.accounts import AccountService
 from launcher.app import LauncherWindow, instance_lock
+from launcher.branding import install_branding
 from launcher.game import GameRunner
 from launcher.install import Installer, ReleaseClient
 from launcher.paths import default_data_dir
@@ -106,6 +107,7 @@ def main() -> int:
     root = args.root.resolve()
     event(root, "launcher_started", version=VERSION)
     app = QApplication.instance() or QApplication(sys.argv[:1])
+    install_branding(app)
     install_font(app)
     app.setQuitOnLastWindowClosed(False)
     try:
