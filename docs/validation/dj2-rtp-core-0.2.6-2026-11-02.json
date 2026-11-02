@@ -1,0 +1,145 @@
+{
+  "ok": true,
+  "security_ready": false,
+  "checks": [
+    "dimension_rtp_adapter_initialized",
+    "surface_fixture_wool_dimension_0",
+    "rtp_observes_ftb_warmup_0",
+    "rtp_keeps_invocation_world_0",
+    "rtp_lands_in_configured_annulus_0",
+    "repeat_request_during_attempt_guard_rejected",
+    "native_ftb_cooldown_is_preserved",
+    "native_ftb_permission_denial_is_preserved",
+    "surface_fixture_water_dimension_0",
+    "water_surface_rejected_does_not_teleport",
+    "surface_fixture_stone_slab_dimension_0",
+    "partial_floor_rejected_does_not_teleport",
+    "surface_fixture_wool_dimension_0",
+    "too_small_border_rejected_does_not_teleport",
+    "all_candidate_claims_rejected_does_not_teleport",
+    "far_target_region_absent_control",
+    "ungenerated_region_rejected_does_not_teleport",
+    "rtp_does_not_create_region_files_for_absent_chunks",
+    "surface_fixture_wool_dimension_0",
+    "rtp_observes_ftb_warmup_0",
+    "rtp_keeps_invocation_world_0",
+    "rtp_lands_in_configured_annulus_0",
+    "cross_block_movement_cancels_native_rtp_warmup",
+    "server_confirms_dimension_-1_omk_game_test",
+    "nether_roof_positive_control_present",
+    "nether_floor_and_headroom_fixtures_exist",
+    "rtp_observes_ftb_warmup_-1",
+    "rtp_keeps_invocation_world_-1",
+    "rtp_lands_in_configured_annulus_-1",
+    "server_confirms_dimension_7_omk_game_test",
+    "surface_fixture_wool_dimension_7",
+    "rtp_observes_ftb_warmup_7",
+    "rtp_keeps_invocation_world_7",
+    "rtp_lands_in_configured_annulus_7",
+    "server_confirms_dimension_1_omk_game_test",
+    "dimension_change_during_warmup_never_returns_to_old_world",
+    "end_story_world_denied_without_fallback",
+    "server_confirms_dimension_-100_omk_game_test",
+    "unlisted_registered_world_denied_without_fallback",
+    "server_confirms_dimension_0_omk_game_test",
+    "surface_fixture_wool_dimension_0",
+    "rtp_observes_ftb_warmup_0",
+    "rtp_keeps_invocation_world_0",
+    "rtp_lands_in_configured_annulus_0",
+    "disconnected_request_does_not_spend_new_connection_cooldown",
+    "server_confirms_dimension_-1_omk_other_test",
+    "simultaneous_rtp_keeps_two_independent_dimensions",
+    "concurrent_requests_keep_warmup",
+    "server_independently_confirms_concurrent_worlds",
+    "server_confirms_dimension_0_omk_other_test"
+  ],
+  "lab": ".local/rtp-dimensions-c8bf70ca17",
+  "core_sha256": "f832bd773f543b14ad01aebc6eaf3dd30ea93557367d9a6fb0ca8ccd04bbc72b",
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "destinations": [
+    {
+      "dimension": 0,
+      "position": [
+        -6.5,
+        246.01,
+        9.5
+      ]
+    },
+    {
+      "dimension": 0,
+      "position": [
+        126.5,
+        246.01,
+        138.5
+      ]
+    },
+    {
+      "dimension": -1,
+      "position": [
+        -7.5,
+        66.01,
+        -7.5
+      ]
+    },
+    {
+      "dimension": 7,
+      "position": [
+        10.5,
+        246.01,
+        -2.5
+      ]
+    },
+    {
+      "dimension": 0,
+      "position": [
+        -8.5,
+        246.01,
+        -0.5
+      ]
+    }
+  ],
+  "policy": {
+    "minimum": 8,
+    "maximum": 12,
+    "border_percent": 66,
+    "attempts": 64,
+    "chunk_loads": 8,
+    "retry_seconds": 5,
+    "worlds": [
+      {
+        "id": 0,
+        "mode": "surface",
+        "min_y": 8,
+        "max_y": 253
+      },
+      {
+        "id": -1,
+        "mode": "cave",
+        "min_y": 8,
+        "max_y": 120
+      },
+      {
+        "id": 7,
+        "mode": "surface",
+        "min_y": 8,
+        "max_y": 253
+      }
+    ]
+  },
+  "lab_cleanup_stop_requested": true,
+  "linux_container_outcome": {
+    "running": false,
+    "oom_killed": false,
+    "exit_code": 0,
+    "memory_limit_bytes": 6442450944,
+    "nano_cpus": 4000000000
+  },
+  "game_crash_detected": false,
+  "owned_game_clean_exit": true,
+  "stopped_world_tar_sha256": "b4353de4731d62ad018417d9d44622a4d4bdf2905f2fed236e190648427e4f23",
+  "owned_volume_removed_after_export": true,
+  "auth_removed": true,
+  "date": "2026-11-02",
+  "wrcbe_lab_probe_installed": false,
+  "harness_source_commit": "7a141b6"
+}
