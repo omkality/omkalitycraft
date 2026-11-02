@@ -12,6 +12,7 @@ from omk.dj2_lab import (
     _console_sender,
     _copy_server,
     _validate,
+    _wait_server,
     approved_mods,
 )
 
@@ -82,6 +83,8 @@ def test_fresh_server_copy_excludes_existing_worlds_credentials_and_roles(tmp_pa
     source = tmp_path / "existing-server"
     (source / "config").mkdir(parents=True)
     (source / "mods").mkdir()
+    (source / "groovy/postInit").mkdir(parents=True)
+    (source / "groovy/postInit/pack.groovy").write_text("// pack-owned recipes\n")
     (source / "world").mkdir()
     (source / "vintagefix/transformerCache").mkdir(parents=True)
     (source / "vintagefix/transformerCache/jarDiscoverer.cache").write_bytes(
@@ -110,6 +113,9 @@ def test_fresh_server_copy_excludes_existing_worlds_credentials_and_roles(tmp_pa
     assert not (dest / "vintagefix").exists()
     assert not (dest / "mods/old-omkality.jar").exists()
     assert (dest / "mods/OmkalityCore.jar").read_bytes() == core.read_bytes()
+    assert (dest / "groovy/postInit/pack.groovy").read_bytes() == (
+        source / "groovy/postInit/pack.groovy"
+    ).read_bytes()
     assert "B:optimizeFMLRemapper=false" in (dest / "config/normalasm.cfg").read_text()
     properties = (dest / "server.properties").read_text()
     assert "127.0.0.1" in properties and "enable-rcon=false" in properties
@@ -117,6 +123,36 @@ def test_fresh_server_copy_excludes_existing_worlds_credentials_and_roles(tmp_pa
     assert {
         p.relative_to(source): p.read_bytes() for p in source.rglob("*") if p.is_file()
     } == before
+
+
+@pytest.mark.parametrize("failure", ["exit_zero", "late_crash"])
+def test_done_marker_does_not_hide_failure_in_later_mod_callbacks(
+    tmp_path, monkeypatch, failure
+):
+    path = tmp_path / "server.log"
+    path.write_text("Done (1.0s)!\n")
+    server = Mock()
+    server.poll.return_value = None
+
+    def later(_seconds):
+        if failure == "exit_zero":
+            server.poll.return_value = 0
+        else:
+            with path.open("a") as log:
+                log.write("Encountered an unexpected exception\n")
+
+    monkeypatch.setattr("omk.dj2_lab.time.sleep", later)
+    with pytest.raises(RuntimeError, match="after its ready marker"):
+        _wait_server(server, path, lambda _: None)
+
+
+def test_stable_ready_server_is_accepted(tmp_path, monkeypatch):
+    path = tmp_path / "server.log"
+    path.write_text("Done (1.0s)!\n")
+    server = Mock()
+    server.poll.return_value = None
+    monkeypatch.setattr("omk.dj2_lab.time.sleep", lambda _: None)
+    _wait_server(server, path, lambda _: None)
 
 
 def test_console_waits_for_completion_and_does_not_reuse_old_success(tmp_path):

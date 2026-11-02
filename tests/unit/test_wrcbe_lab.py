@@ -44,6 +44,34 @@ def test_explicit_artifacts_are_checked_without_creating_a_lab(tmp_path, monkeyp
     assert set(tmp_path.rglob("*")) == before
 
 
+def test_unknown_pack_rejected_before_filesystem_access():
+    with pytest.raises(ValueError, match="Unknown reviewed"):
+        lab.validate_inputs(SimpleNamespace(cycles=3, pack_version="unreviewed"))
+
+
+def test_candidate_uses_its_own_exact_pin_and_rejects_mutation(tmp_path, monkeypatch):
+    args = inputs(tmp_path, monkeypatch)
+    old_name, digest = lab.PINS["mixinbooter"]
+    candidate_name = "!mixinbooter-candidate.jar"
+    (args.server_source / "mods" / old_name).rename(
+        args.server_source / "mods" / candidate_name
+    )
+    monkeypatch.setattr(
+        lab,
+        "PIN_OVERRIDES",
+        {"2.21.3": {}, "2.23.4": {"mixinbooter": (candidate_name, digest)}},
+    )
+    args.pack_version = "2.23.4"
+    assert lab.validate_inputs(args)["mixinbooter"] == digest
+    args.pack_version = "2.21.3"
+    with pytest.raises(ValueError, match="Missing or invalid"):
+        lab.validate_inputs(args)
+    args.pack_version = "2.23.4"
+    (args.server_source / "mods" / candidate_name).write_bytes(b"changed candidate")
+    with pytest.raises(ValueError, match="hash mismatch"):
+        lab.validate_inputs(args)
+
+
 @pytest.mark.parametrize("label", ["wrcbe", "mixinbooter", "probe"])
 def test_corrupt_pin_rejected_without_echoing_payload(tmp_path, monkeypatch, label):
     args = inputs(tmp_path, monkeypatch)

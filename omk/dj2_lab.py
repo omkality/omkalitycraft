@@ -120,6 +120,7 @@ def _copy_server(args, lab):
         "mods",
         "config",
         "scripts",
+        "groovy",
         "libraries",
         "structures",
         "patchouli_books",
@@ -266,6 +267,20 @@ def _wait_server(server, server_log, state):
     else:
         raise RuntimeError("Forge startup timed out")
     time.sleep(15)
+    # Forge can print Done before server-started mod callbacks fail, even exiting 0.
+    # Do not report readiness from the earlier marker after that grace period.
+    log = server_log.read_text(encoding="utf-8", errors="replace")
+    if server.poll() is not None or any(
+        marker in log
+        for marker in (
+            "LoaderExceptionModCrash",
+            "Encountered an unexpected exception",
+            "This crash report has been saved to:",
+        )
+    ):
+        raise RuntimeError(
+            "Forge startup failed after its ready marker; inspect isolated log"
+        )
 
 
 def _console_sender(server, server_log):
