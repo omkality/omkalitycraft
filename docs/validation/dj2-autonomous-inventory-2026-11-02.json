@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-02",
+  "scope": "One pinned autonomous inventory operation, not all mod automation",
+  "issue": 46,
+  "parent_issue": 29,
+  "parent_audit_complete": false,
+  "security_ready": false,
+  "core": {
+    "version": "0.2.7",
+    "sha256": "5ef2abdb3902074f55dffc0cd43fbd511df8c18c9a12615bf57f674e3cca9ee1"
+  },
+  "runtime": {
+    "platform": "Linux Docker",
+    "image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "memory_bytes": 6442450944,
+    "nano_cpus": 4000000000,
+    "java_heap": "4 GiB"
+  },
+  "baseline": {
+    "core_version": "0.2.6",
+    "core_sha256": "f832bd773f543b14ad01aebc6eaf3dd30ea93557367d9a6fb0ca8ccd04bbc72b",
+    "checks": 206,
+    "fixture_cases": 28,
+    "original_cross_domain_behavior_reproduced": true,
+    "item_totals_preserved": true,
+    "clean_starts": 2,
+    "private_report_sha256": "6463192f711ec71d456df3deacf752c4dc9106215cf5fcce64b7db9f6324bd18",
+    "world_export_sha256": "106da68d99a1070d72c0b0a9af1bc9779164940092d99c9b343501cbc00c9d86"
+  },
+  "patched": {
+    "checks": 219,
+    "fixture_cases": 28,
+    "clean_starts": 2,
+    "clean_restarts": 1,
+    "coverage": {
+      "same_domain_native_controls": true,
+      "disconnected_team_claims": true,
+      "bidirectional_domain_isolation": true,
+      "compound_inventory_both_sides": true,
+      "negative_coordinates": true,
+      "pending_claim_same_tick": true,
+      "live_owner_refresh": true,
+      "team_join_leave": true,
+      "server_domain": true,
+      "dimension_isolation": true,
+      "native_non_op_use": true,
+      "post_restart_behavior": true,
+      "item_conservation": true,
+      "guard_active_not_global_failure": true,
+      "no_human_op": true
+    },
+    "private_report_sha256": "8f13cedb8b8ff7d0a2c70a8cdfa31309dd32830c17f01a64d3de9721a1f5f8a2",
+    "world_export_sha256": "ed4f3931fd5d831a6058346b66f9292725306061a1ec4bb9783d4cd2ce9b15bf"
+  },
+  "private_lab_probe": {
+    "version": "0.1.1",
+    "sha256": "9c52fa1949d7e15373ffd68c3352a18dcf550355ca0d8d1cdb3d29d21c5518ef",
+    "included_in_runtime": false
+  },
+  "preservation": {
+    "author_mod_jar_unchanged": true,
+    "no_item_bans": true,
+    "no_new_claim_database": true,
+    "no_fake_op_actor": true,
+    "existing_worlds_services_untouched": true,
+    "owned_volumes_removed_only_after_export": true,
+    "temporary_auth_removed": true
+  },
+  "limits": [
+    "Private fixture coordinates, item names and internal injection code are not published",
+    "Protocol players do not verify rendered-client compatibility",
+    "The use test receives its item from the lab console; full acquisition/quest progression not replayed",
+    "Other machines, world growth, biome writes and explosives remain in the parent audit",
+    "No claim of all duplication bugs, all storage types or production readiness"
+  ]
+}
