@@ -94,6 +94,7 @@ uv run omk admin --config .omk-admin/operator.toml reports export --id REPORT_ID
 - [Порядок обновления сборки и переход на свежий DJ2](docs/PACK_UPGRADES.md)
 - [Релизы и автообновления](docs/RELEASES.md)
 - [Команды владельца и выдача приглашений](docs/ADMIN.md)
+- [Награды зрителям: расчёт баллов и ручная выдача приглашения](docs/STREAM_ACCESS.md)
 - [Логи, crash-report и диагностический архив](docs/LOGGING.md)
 - [Переносимые сессии](docs/PORTABLE_SESSIONS.md)
 - [История изменений](CHANGELOG.md)
