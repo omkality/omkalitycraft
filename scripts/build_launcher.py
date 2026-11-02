@@ -59,6 +59,8 @@ def build(
         "social-kick.svg",
         "social-telegram.svg",
         "release-keys.json",
+        "branding/icon.png",
+        "branding/provenance.json",
         "skins/default-slim.png",
         "skins/default-classic.png",
         "skins/default-legacy.png",
@@ -115,6 +117,11 @@ def build(
             "--windowed",
             "--name",
             "OmkalityCraft",
+            *(
+                ["--icon", str(assets / "branding/icon.png")]
+                if sys.platform in {"win32", "darwin"}
+                else []
+            ),
             "--distpath",
             str(output),
             "--workpath",
