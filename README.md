@@ -28,7 +28,7 @@ uv run pytest -q
 Локальный CDN:
 
 ```powershell
-uv run granian --interface asgi api.app:app --host 127.0.0.1 --port 8000
+uv run python -m api
 ```
 
 Для локального контента `CONTENT_ROOT` должен указывать на абсолютный путь к папке CDN.
@@ -90,6 +90,8 @@ uv run omk admin --config .omk-admin/operator.toml reports export --id REPORT_ID
 - [Текущее состояние и следующий этап](docs/DEVELOPMENT.md)
 - [Миры, предгенерация, RTP и бюджет диска из env](docs/WORLDS_AND_STORAGE.md)
 - [Онлайн серверов и его env-настройки](docs/SERVER_STATUS.md)
+- [Env-настройки и запуск API в Docker](docs/API_RUNTIME.md)
+- [Порядок обновления сборки и переход на свежий DJ2](docs/PACK_UPGRADES.md)
 - [Релизы и автообновления](docs/RELEASES.md)
 - [Команды владельца и выдача приглашений](docs/ADMIN.md)
 - [Логи, crash-report и диагностический архив](docs/LOGGING.md)

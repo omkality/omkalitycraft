@@ -34,7 +34,7 @@ async def report_retention(_app):
     async def maintain():
         while True:
             await asyncio.to_thread(prune_reports)
-            await asyncio.sleep(3600)
+            await asyncio.sleep(settings.client_reports_prune_interval_seconds)
 
     task = asyncio.create_task(maintain())
     try:

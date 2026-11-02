@@ -14,6 +14,7 @@ client/
 launcher/
 userdata/
 .local/
+.omk-admin/
 .pytest_cache/
 .pytest-local-*/
 build/

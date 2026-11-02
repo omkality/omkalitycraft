@@ -34,6 +34,8 @@ jobs:
         run: |
           docker pull python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925
           uv run --no-sync python -m omk lab backup-safety
+      - name: Disposable API image and runtime configuration
+        run: uv run --no-sync python scripts/smoke_api_container.py
 
   desktop:
     name: Desktop UI (${{ matrix.os }})

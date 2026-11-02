@@ -1,0 +1,48 @@
+{
+  "ok": true,
+  "checks": [
+    "pinned_api_image_built",
+    "native_defaults_serve_inside_unpublished_linux_container",
+    "default_worker_count_is_used",
+    "default_pid1_handles_clean_stop_without_oom",
+    "compose_port_override_stays_loopback",
+    "compose_override_serves_only_fixture_content",
+    "compose_cpu_and_memory_limits_applied",
+    "docker_log_rotation_overrides_applied",
+    "fixture_content_mount_is_read_only",
+    "container_reads_worker_rate_and_retention_overrides",
+    "two_real_granian_workers_started",
+    "private_host_paths_are_not_in_image",
+    "invalid_workers_num_fails_without_value_or_traceback",
+    "invalid_server_status_targets_fails_without_value_or_traceback",
+    "invalid_omk_api_cpus_fails_without_value_or_traceback",
+    "override_pid1_handles_clean_stop_without_oom"
+  ],
+  "scope": "Disposable API image/Compose, not game readiness",
+  "image_id": "sha256:7a8ec3b9daee0987bd098c858d032db6d15eba076a5a4b3f99dbd5e17645c10a",
+  "runtime_limits": {
+    "memory_bytes": 536870912,
+    "nano_cpus": 750000000,
+    "docker_logging": {
+      "Type": "local",
+      "Config": {
+        "max-file": "2",
+        "max-size": "4m"
+      }
+    }
+  },
+  "owned_compose_removed": true,
+  "owned_default_removed": true,
+  "owned_image_tag_removed": true,
+  "date": "2026-11-02",
+  "source_sha256": {
+    "Dockerfile.api": "71b6870f6573fa097a9146c0bcd0051bd117d96cfce7a2bd63c9748ad1a0ede8",
+    "docker-compose.yml": "4c2f58ed88cc6eab987a54b0cec63336eb1f325bdbbd4de5369ccc7bcaf95659",
+    "api/__main__.py": "aa8afbc18298fd59f2b736413fba9e1aca0499351dacfacd0dc50c711d4aec8d",
+    "api/settings/config.py": "a2f2cf7e775cf5c28c2bec5304fe75bd8480d7f21a37a4c10c3475fa8c6a98a4",
+    "api/app.py": "d55ca784ef9c4f36300b6d793694b821ae6f40e04f921de17c9c20df01ad9923",
+    "api/lifecycle.py": "b7fd010fedc13c3534f40d25703ff61c0cd6898a1d0aa5d0f1c73169d017a521",
+    "scripts/smoke_api_container.py": "2d1614bd6a78e3ce2afe78ed4eda47af92cce8acdf53db4309dc2af88d171a66",
+    ".dockerignore": "fe81e7633bb3410c9bcceb7667f4a256e4ad1463f9749abf78af71bd1647d408"
+  }
+}
