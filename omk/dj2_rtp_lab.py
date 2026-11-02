@@ -20,6 +20,15 @@ def add_rtp_lab(parser):
         parser.add_argument("--" + name, type=Path, required=True)
 
 
+def _landed(actor, dim, y, cx=0, cz=0):
+    """Height alone can match an unrelated position correction during transfer."""
+    if actor.position is None or actor.dimension != dim:
+        return False
+    x, actual_y, z = actor.position[:3]
+    distance = ((x - cx) ** 2 + (z - cz) ** 2) ** 0.5
+    return y <= actual_y < y + 1 and 8 <= distance <= 12
+
+
 class RtpScenario:
     def __init__(self, server, report):
         self.server, self.report = server, report
@@ -101,10 +110,17 @@ class RtpScenario:
         start = time.monotonic()
         actor.command("/rtp")
         actor.wait(
-            lambda: actor.position is not None and y <= actor.position[1] < y + 1,
+            lambda: _landed(actor, dim, y, cx, cz),
             timeout=25,
         )
         x, actual_y, z = actor.position[:3]
+        self.report.setdefault("landing_timings", []).append(
+            {
+                "dimension": dim,
+                "seconds": time.monotonic() - start,
+                "position": [x, actual_y, z],
+            }
+        )
         self.expect(
             time.monotonic() - start >= 2, "rtp_observes_ftb_warmup_" + str(dim)
         )
@@ -164,12 +180,13 @@ class RtpScenario:
         _response(first, "/chunks info", "not_claimed")
 
     def center_and_movement(self, first):
-        self.console("worldborder center 128 128")
+        # Vanilla block-centers integer coordinates (+0.5); use exact fixture centers.
+        self.console("worldborder center 128.0 128.0")
         self.console("worldborder set 64")
         self.surface(first, FIRST, 128, 128)
         self.success(first, FIRST, 0, 246, 128, 128)
         time.sleep(5.1)
-        self.console("worldborder center 0 0")
+        self.console("worldborder center 0.0 0.0")
         self.console("worldborder set 60000000")
         _place(first, FIRST, (24.5, 241, 24.5), self.console)
         first.messages.clear()
@@ -247,14 +264,14 @@ class RtpScenario:
         )
         before = self.server.helper(listing).stdout
         self.expect("r.97.97.mca" not in before, "far_target_region_absent_control")
-        self.console("worldborder center 50000 50000")
+        self.console("worldborder center 50000.0 50000.0")
         self.fail(first, FIRST, "ungenerated_region_rejected")
         self.console("save-all flush")
         after = self.server.helper(listing).stdout
         self.expect(
             before == after, "rtp_does_not_create_region_files_for_absent_chunks"
         )
-        self.console("worldborder center 0 0")
+        self.console("worldborder center 0.0 0.0")
 
     def concurrent(self, first, client, session2, mods):
         self.console("ranks setp player ftbutilities.rtp.cooldown 0s")
@@ -265,8 +282,8 @@ class RtpScenario:
             started = time.monotonic()
             first.command("/rtp")
             second.command("/rtp")
-            first.wait(lambda: 246 <= first.position[1] < 247, timeout=25)
-            second.wait(lambda: 66 <= second.position[1] < 67, timeout=25)
+            first.wait(lambda: _landed(first, 0, 246), timeout=25)
+            second.wait(lambda: _landed(second, -1, 66), timeout=25)
             self.expect(
                 first.dimension == 0 and second.dimension == -1,
                 "simultaneous_rtp_keeps_two_independent_dimensions",
