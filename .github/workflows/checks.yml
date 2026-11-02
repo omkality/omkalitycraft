@@ -35,7 +35,11 @@ jobs:
           docker pull python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925
           uv run --no-sync python -m omk lab backup-safety
       - name: Disposable API image and runtime configuration
+        id: api_smoke
         run: uv run --no-sync python scripts/smoke_api_container.py
+      - name: Diagnose failed API shutdown without hiding the original failure
+        if: ${{ failure() && steps.api_smoke.outcome == 'failure' }}
+        run: uv run --no-sync python scripts/diagnose_api_shutdown.py --cycles 12
 
   desktop:
     name: Desktop UI (${{ matrix.os }})

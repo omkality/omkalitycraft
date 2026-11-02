@@ -1,0 +1,40 @@
+{
+  "cycles": [
+    {
+      "cycle": 1,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.223,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 2,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.187,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 3,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.229,
+      "stacks_requested": false
+    }
+  ],
+  "scope": "Instrumented fixture-only API shutdown; no auth/game data",
+  "image_id": "sha256:04c9eebda1bbc51a849887848f52b35591df875edc660b5c712173d1890c87ba",
+  "cleanup": true,
+  "ok": true,
+  "explicit_stack_signal_verification": {
+    "scope": "Explicit stack signal in isolated fixture; not a reproduced hang",
+    "exit_code": 0,
+    "oom_killed": false,
+    "seconds": 0.36,
+    "stacks_requested": false,
+    "stack_marker_seen": true,
+    "worker_marker_seen": true,
+    "cleanup": true,
+    "signal_sent_before_stop": true
+  }
+}
