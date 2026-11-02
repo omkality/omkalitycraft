@@ -54,8 +54,9 @@ def prepare(lab, image, run):
     probe.mkdir()
     (content / "instances/fixture").mkdir(parents=True)
     (probe / "sitecustomize.py").write_text(
-        "import faulthandler,signal\n"
-        "faulthandler.register(signal.SIGUSR1,all_threads=True)\n",
+        "import faulthandler,os,signal\n"
+        "_omk_stacks=open('/stacks/stack-'+str(os.getpid())+'.log','a')\n"
+        "faulthandler.register(signal.SIGUSR1,file=_omk_stacks,all_threads=True)\n",
         encoding="utf-8",
     )
     if docker("info", "--format", "{{.OSType}}").stdout.strip() != "linux":
@@ -80,6 +81,8 @@ def prepare(lab, image, run):
 
 
 def start(name, run, image, lab):
+    stacks = lab / (name + "-stacks")
+    stacks.mkdir()
     docker(
         "run",
         "-d",
@@ -97,6 +100,8 @@ def start(name, run, image, lab):
         f"type=bind,source={lab / 'probe'},target=/probe,readonly",
         "--mount",
         f"type=bind,source={lab / 'content'},target=/data/content,readonly",
+        "--mount",
+        f"type=bind,source={stacks},target=/stacks",
         "-e",
         "PYTHONPATH=/probe",
         "-e",
@@ -166,6 +171,31 @@ def stop_with_stacks(name, run):
     }
 
 
+def collect_stacks(lab, name):
+    """Bound CI output and keep each process separate even when writes coincide."""
+    captured = {}
+    remaining = 65536
+    paths = sorted((lab / (name + "-stacks")).glob("stack-*.log"))
+    limited = len(paths) > 32
+    for path in paths[:32]:
+        size = path.stat().st_size
+        if size == 0:
+            continue
+        if remaining == 0:
+            limited = True
+            break
+        budget = min(size, remaining, 32768)
+        with path.open("rb") as source:
+            source.seek(size - budget)
+            data = source.read(budget)
+        remaining -= len(data)
+        captured[path.name] = {
+            "tail": data.decode("utf-8", errors="replace"),
+            "truncated": size > len(data),
+        }
+    return {"processes": captured, "limited": limited}
+
+
 def exercise_cycle(name, run, image, lab, cycle, names):
     start(name, run, image, lab)
     # Match the startup CPU activity preceding the original smoke stop.
@@ -195,6 +225,7 @@ def exercise_cycle(name, run, image, lab, cycle, names):
     (lab / f"cycle-{cycle}.log").write_text(tail, encoding="utf-8")
     if result["exit_code"] != 0 or result["oom_killed"] or result["stacks_requested"]:
         result["fixture_log_tail"] = tail[-16384:]
+        result["python_stacks"] = collect_stacks(lab, name)
     return result
 
 

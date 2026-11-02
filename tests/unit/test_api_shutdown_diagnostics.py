@@ -74,3 +74,25 @@ def test_stack_collection_preserves_docker_kill_failure_and_stop_budget(monkeypa
     assert len(calls) == 1
     assert calls[0][:3] == ("exec", "fixture", ".venv/bin/python")
     assert "SIGUSR1" in calls[0][-1]
+
+
+def test_stacks_are_separate_and_bounded_with_visible_truncation(tmp_path):
+    folder = tmp_path / "fixture-stacks"
+    folder.mkdir()
+    (folder / "stack-1.log").write_bytes(b"a" * 40000)
+    (folder / "stack-2.log").write_bytes(b"b" * 40000)
+    (folder / "stack-3.log").write_bytes(b"c" * 40000)
+    (folder / "stack-4.log").write_bytes(b"")
+
+    result = probe.collect_stacks(tmp_path, "fixture")
+
+    assert result["limited"] is True
+    assert set(result["processes"]) == {"stack-1.log", "stack-2.log"}
+    assert result["processes"]["stack-1.log"] == {
+        "tail": "a" * 32768,
+        "truncated": True,
+    }
+    assert result["processes"]["stack-2.log"] == {
+        "tail": "b" * 32768,
+        "truncated": True,
+    }
