@@ -80,6 +80,9 @@
 | `uv run omk storage plan` | Расчёт бюджета VPS из env/defaults; ничего не применяет и не удаляет. [Миры, предгенерация и диск](../WORLDS_AND_STORAGE.md) |
 | `uv run omk locale audit --source en_us.lang --locale ru_ru.lang --previous-source old/en_us.lang` | Read-only проверка ключей/параметров перевода и изменённых исходных строк; предыдущий файл необязателен. Не заменяет смысловую и игровую проверку. [Обновление сборки](../PACK_UPGRADES.md) |
 | `uv run python -m omk lab backup-safety` | Проверка ротации, настоящего ENOSPC и SIGKILL в одноразовом Linux Docker; не принимает рабочие миры. [Устройство и ограничения](../BACKUP_SAFETY.md) |
+| `uv run python scripts/smoke_api_container.py` | Настоящий Linux API/Compose: env, лимиты, два workers и чистый stop; [17 условий на Granian 2.8.6](../API_RUNTIME.md) |
+| `uv run python scripts/diagnose_api_shutdown.py --cycles 3` | Изолированные остановки API со сбором раздельных стеков при задержке; не подключает auth/игроков |
+| `uv run python scripts/diagnose_api_shutdown.py --race --cycles 3` | Синтетическая регрессия гонки Granian в отдельном ASGI fixture, без изменения приложения API; [сравнение и границы](../API_RUNTIME.md) |
 | `uv run python -m omk lab dj2-startup --help` | Наблюдение повторных стартов полного DJ2 в новом Linux volume; ресурсы/OOM, стек исключения деобфускатора, opt-in байткод. [Аргументы, пути и границы](../DJ2_STARTUP_DIAGNOSTICS.md) |
 | `uv run omk server list` | Настроенные профили и их статус |
 | `uv run omk launcher --help` | Адреса/API и отдельная переносимая папка лаунчера |

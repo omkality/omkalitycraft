@@ -56,6 +56,11 @@ CPU/RAM/ротация валидируются Settings, но native-проце
   Compose-файла. Папка должна существовать: автоматическое создание опечатанного пути отключено.
 - CPU/RAM и Docker local logs берутся из env. Ротация приблизительно ограничивает
   объём файлов `OMK_API_LOG_MIB × OMK_API_LOG_FILES`; служебные данные Docker учитываются отдельно.
+- Granian 2.8.6 закреплён в lockfile. Для нескольких Linux workers нужен kernel ≥5.14
+  и `net.ipv4.tcp_migrate_req=1`. Compose включает эту сетевую инварианту только внутри
+  namespace контейнера, не меняя host sysctl; произвольного переключателя отключения нет.
+  Native Linux с несколькими workers требует соответствующей настройки администратора;
+  Windows/macOS native не используют этот Linux sysctl.
 - Контекст сборки исключает `.env`, `.git`, `.local`, `.omk-admin`, runtime/data и сессии.
   Образ, Java и моды не заменяются произвольными клиентскими env.
 
@@ -129,3 +134,35 @@ exit 137 / OOM false после 15 секунд. Родитель ожидает
 tokio в `asyncio.call_soon_threadsafe` / `_write_to_self`. Вывод нескольких процессов
 перемешался, поэтому следующая ревизия пишет стеки отдельно по PID. Это сужает
 расследование, но ещё не доказывает первопричину. #54 остаётся открытым.
+
+## Исправление воспроизводимого зависания Granian
+
+Раздельные CI-стеки следующей ревизии подтвердили ту же пару потоков в одном worker:
+`serve` и `_write_to_self` / `call_soon_threadsafe`. Это соответствует описанию
+[upstream #875](https://github.com/emmett-framework/granian/issues/875).
+Granian обновлён с 2.7.3 до закреплённого 2.8.6 с исправленным shutdown;
+[изменения upstream](https://github.com/emmett-framework/granian/releases/tag/v2.8.0)
+включают новые сетевые требования, описанные выше.
+
+[Сравнение на одном Linux-стенде](validation/granian-shutdown-race-comparison-2026-11-03.json):
+синтетический busy asyncio loop с задержкой wakeup воспроизводит гонку старой 2.7.3
+(exit 137 / OOM false, 15.9 с), новая 2.8.6 завершается чисто (exit 0, 0.39 с).
+Это намеренно усиленная гонка, а не обычная нагрузка игроков. Отдельно новая версия
+прошла [24 обычных цикла API](validation/granian-shutdown-candidate-2026-11-03.json)
+при двух workers, 0.75 CPU / 512 МиБ без OOM/принудительной остановки.
+
+Воспроизводимая регрессия теперь входит в CI:
+
+```powershell
+uv run python scripts/diagnose_api_shutdown.py --race --cycles 3
+```
+
+`--race` запускает отдельное fixture ASGI-приложение, не меняет код API и не внедряет
+задержку в рабочий сервис. Без флага проверяется обычное API. Отчёт различает эти
+режимы; оба используют новые контейнеры без сети и пользовательских данных.
+Таймаут Docker остаётся 15 секунд, принудительный kill по-прежнему проваливает тест.
+Закрытие #54 требует зелёного CI точного head; изменение не развёртывает живой сервис.
+
+После обновления локально прошли [17 условий настоящего API/Compose](validation/api-runtime-granian-2.8.6-2026-11-03.json),
+[три цикла публичного race-стенда](validation/granian-shutdown-race-regression-2026-11-03.json),
+586 unit/UI tests (3 известных Windows symlink skips), Ruff и Black.

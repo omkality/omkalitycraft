@@ -1,0 +1,29 @@
+{
+  "cycles": [],
+  "scope": "Synthetic widened shutdown race from Granian upstream issue 875; isolated fixture",
+  "granian": "2.8.6",
+  "network_namespace_sysctl": {
+    "net.ipv4.tcp_migrate_req": 1
+  },
+  "upstream_source": "https://github.com/emmett-framework/granian/issues/875",
+  "compared_versions": [
+    {
+      "granian": "2.7.3",
+      "exit_code": 137,
+      "oom_killed": false,
+      "seconds": 15.924,
+      "stacks_requested": true,
+      "stack_processes": 4
+    },
+    {
+      "granian": "2.8.6",
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.39,
+      "stacks_requested": false,
+      "stack_processes": 0
+    }
+  ],
+  "cleanup": true,
+  "ok": true
+}

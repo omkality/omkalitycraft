@@ -18,6 +18,35 @@ for item in os.listdir('/proc'):
     except OSError:
         pass
 """
+# Independent fixture based on the race described in Granian upstream issue #875.
+# This delay and busy loop must never be injected into the actual API application.
+RACE_APPLICATION = """import asyncio,contextlib,time
+async def churn():
+    while True:
+        await asyncio.sleep(0)
+async def app(scope, receive, send):
+    if scope['type'] == 'lifespan':
+        while True:
+            event = await receive()
+            if event['type'] == 'lifespan.startup':
+                loop = asyncio.get_running_loop()
+                wake = loop._write_to_self
+                def delayed_wakeup():
+                    time.sleep(0.2)
+                    wake()
+                loop._write_to_self = delayed_wakeup
+                task = loop.create_task(churn())
+                await send({'type': 'lifespan.startup.complete'})
+            elif event['type'] == 'lifespan.shutdown':
+                task.cancel()
+                with contextlib.suppress(asyncio.CancelledError):
+                    await task
+                await send({'type': 'lifespan.shutdown.complete'})
+                return
+    elif scope['type'] == 'http':
+        await send({'type': 'http.response.start', 'status': 200, 'headers': []})
+        await send({'type': 'http.response.body', 'body': b'fixture'})
+"""
 
 
 def docker(*args, check=True, timeout=60):
@@ -59,6 +88,7 @@ def prepare(lab, image, run):
         "faulthandler.register(signal.SIGUSR1,file=_omk_stacks,all_threads=True)\n",
         encoding="utf-8",
     )
+    (probe / "race_app.py").write_text(RACE_APPLICATION, encoding="utf-8")
     if docker("info", "--format", "{{.OSType}}").stdout.strip() != "linux":
         raise RuntimeError("The shutdown probe requires Linux containers")
     if docker("image", "inspect", image, check=False).returncode == 0:
@@ -80,7 +110,7 @@ def prepare(lab, image, run):
         raise RuntimeError("Probe image build failed")
 
 
-def start(name, run, image, lab):
+def start(name, run, image, lab, *, race=False):
     stacks = lab / (name + "-stacks")
     stacks.mkdir()
     docker(
@@ -92,6 +122,8 @@ def start(name, run, image, lab):
         LABEL + "=" + run,
         "--network",
         "none",
+        "--sysctl",
+        "net.ipv4.tcp_migrate_req=1",
         "--memory",
         "512m",
         "--cpus",
@@ -109,6 +141,24 @@ def start(name, run, image, lab):
         "-e",
         "API_HOST=0.0.0.0",
         image,
+        *(
+            [
+                ".venv/bin/python",
+                "-m",
+                "granian",
+                "--interface",
+                "asgi",
+                "--loop",
+                "asyncio",
+                "--workers",
+                "2",
+                "--host",
+                "0.0.0.0",
+                "race_app:app",
+            ]
+            if race
+            else []
+        ),
     )
     deadline = time.monotonic() + 40
     while time.monotonic() < deadline:
@@ -196,8 +246,8 @@ def collect_stacks(lab, name):
     return {"processes": captured, "limited": limited}
 
 
-def exercise_cycle(name, run, image, lab, cycle, names):
-    start(name, run, image, lab)
+def exercise_cycle(name, run, image, lab, cycle, names, *, race=False):
+    start(name, run, image, lab, race=race)
     # Match the startup CPU activity preceding the original smoke stop.
     for key in ("WORKERS_NUM", "SERVER_STATUS_TARGETS", "OMK_API_CPUS"):
         invalid_name = name + "-invalid-" + key.lower()
@@ -257,6 +307,11 @@ def cleanup(names, run, image):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cycles", type=int, choices=range(1, 25), default=12)
+    parser.add_argument(
+        "--race",
+        action="store_true",
+        help="Fixture-only busy asyncio loop with delayed wakeup, upstream Granian #875",
+    )
     args = parser.parse_args(argv)
     run = uuid4().hex[:12]
     lab = ROOT / ".local" / ("api-stop-probe-" + run)
@@ -265,6 +320,7 @@ def main(argv=None):
     report = {
         "cycles": [],
         "scope": "Instrumented fixture-only API shutdown; no auth/game data",
+        "fixture": "synthetic_shutdown_race" if args.race else "actual_api",
     }
     try:
         prepare(lab, image, run)
@@ -274,7 +330,7 @@ def main(argv=None):
         for cycle in range(1, args.cycles + 1):
             name = "omk-api-stop-probe-" + run + "-" + str(cycle)
             names.append(name)
-            result = exercise_cycle(name, run, image, lab, cycle, names)
+            result = exercise_cycle(name, run, image, lab, cycle, names, race=args.race)
             report["cycles"].append(result)
             if result["exit_code"] != 0 or result["oom_killed"]:
                 break

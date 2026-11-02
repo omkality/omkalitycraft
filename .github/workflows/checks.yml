@@ -40,6 +40,8 @@ jobs:
       - name: Diagnose failed API shutdown without hiding the original failure
         if: ${{ failure() && steps.api_smoke.outcome == 'failure' }}
         run: uv run --no-sync python scripts/diagnose_api_shutdown.py --cycles 12
+      - name: Granian shutdown race regression in an isolated fixture
+        run: uv run --no-sync python scripts/diagnose_api_shutdown.py --race --cycles 3
 
   desktop:
     name: Desktop UI (${{ matrix.os }})

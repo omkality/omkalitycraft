@@ -1,0 +1,30 @@
+{
+  "cycles": [
+    {
+      "cycle": 1,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.379,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 2,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.382,
+      "stacks_requested": false
+    },
+    {
+      "cycle": 3,
+      "exit_code": 0,
+      "oom_killed": false,
+      "seconds": 0.426,
+      "stacks_requested": false
+    }
+  ],
+  "scope": "Instrumented fixture-only API shutdown; no auth/game data",
+  "fixture": "synthetic_shutdown_race",
+  "image_id": "sha256:7ee934bfc3bdbe373a476635c72147fd631439b2809f4de4f919109eb25ecc30",
+  "cleanup": true,
+  "ok": true
+}

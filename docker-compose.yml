@@ -20,6 +20,10 @@ services:
       CONTENT_ROOT: /data/content
     cpus: "${OMK_API_CPUS:-1.0}"
     mem_limit: "${OMK_API_MEMORY_MIB:-1024}m"
+    # Required by Granian's Linux multi-worker socket sharing. This changes only
+    # the container network namespace, never the host's global sysctl.
+    sysctls:
+      net.ipv4.tcp_migrate_req: "1"
     logging:
       driver: local
       options:
