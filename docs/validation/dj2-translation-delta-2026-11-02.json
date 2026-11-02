@@ -1,0 +1,172 @@
+{
+  "date": "2026-11-02",
+  "mode": "static_source_review_only",
+  "game_tested": false,
+  "base_version": "2.23.3",
+  "base_commit": "23ce41df7d0b6b566c810f5dfbc3bf5af628dda7",
+  "target_version": "2.23.4",
+  "target_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "translation_commit": "1f6764559cf2118b929ad880abd03b53b6f9daa0",
+  "translation_tree": "c00a4b8ca6cedce8e7fde8f1d1c0463481f1fb5e",
+  "changed_files": 19,
+  "quest_database_changed_in_upstream_diff": false,
+  "mod_manifest_changed_in_upstream_diff": false,
+  "languages": [
+    {
+      "path": "resources/betterquesting/lang/en_us.lang",
+      "old_keys": 3532,
+      "new_keys": 3532,
+      "added": [],
+      "removed": [],
+      "changed": [
+        "dj2.quest.db.288.desc",
+        "dj2.quest.db.291.desc"
+      ],
+      "ru_keys": 3534,
+      "new_missing_in_ru_count": 0,
+      "changed_keys_present_in_ru": [
+        "dj2.quest.db.288.desc",
+        "dj2.quest.db.291.desc"
+      ],
+      "translator_english_differs_from_base_keys": [
+        "dj2.quest.db.1066.desc",
+        "dj2.quest.db.1169.desc",
+        "dj2.quest.db.1171.desc",
+        "dj2.quest.db.1181.desc",
+        "dj2.quest.db.137.desc",
+        "dj2.quest.db.142.desc",
+        "dj2.quest.db.143.desc",
+        "dj2.quest.db.1466.desc",
+        "dj2.quest.db.148.desc",
+        "dj2.quest.db.1482.desc",
+        "dj2.quest.db.160.desc",
+        "dj2.quest.db.1613.desc",
+        "dj2.quest.db.1731.desc",
+        "dj2.quest.db.183.desc",
+        "dj2.quest.db.190.desc",
+        "dj2.quest.db.207.desc",
+        "dj2.quest.db.217.desc",
+        "dj2.quest.db.408.desc",
+        "dj2.quest.db.781.desc",
+        "dj2.quest.db.781.title",
+        "dj2.quest.db.816.title",
+        "dj2.quest.db.866.desc",
+        "dj2.quest.db.881.desc"
+      ],
+      "translator_english_missing_base_key_count": 0
+    },
+    {
+      "path": "resources/crafttweaker/lang/en_us.lang",
+      "old_keys": 663,
+      "new_keys": 657,
+      "added": [],
+      "removed": [
+        "dj2.electricium.desc0",
+        "dj2.electricium.desc1",
+        "dj2.electricium.desc2",
+        "dj2.ichor.desc0",
+        "dj2.ichor.desc1",
+        "dj2.ichor.desc2"
+      ],
+      "changed": [],
+      "ru_keys": 655,
+      "new_missing_in_ru_count": 10,
+      "changed_keys_present_in_ru": [],
+      "translator_english_differs_from_base_keys": [],
+      "translator_english_missing_base_key_count": 0
+    },
+    {
+      "path": "groovy/assets/divine_journey_2/lang/en_us.lang",
+      "old_keys": 28,
+      "new_keys": 30,
+      "added": [
+        "dj2.jei.lightningcraft.lightning.instruction",
+        "jei.category.divine_journey_2.lightning.name"
+      ],
+      "removed": [],
+      "changed": [],
+      "translator_has_ru_file_at_equivalent_path": false
+    }
+  ],
+  "artifacts": [
+    {
+      "label": "old",
+      "path": "resources/betterquesting/lang/en_us.lang",
+      "source": "https://raw.githubusercontent.com/Divine-Journey-2/Divine-Journey-2/23ce41df7d0b6b566c810f5dfbc3bf5af628dda7/overrides/resources/betterquesting/lang/en_us.lang",
+      "sha256": "d71b7f4aa53ceda2b9ca27aacf60b25e7f0793c2d22ba11c6908f4cff014cbcc"
+    },
+    {
+      "label": "old",
+      "path": "resources/crafttweaker/lang/en_us.lang",
+      "source": "https://raw.githubusercontent.com/Divine-Journey-2/Divine-Journey-2/23ce41df7d0b6b566c810f5dfbc3bf5af628dda7/overrides/resources/crafttweaker/lang/en_us.lang",
+      "sha256": "e08149198b44d547e77701bbea47b8fd9d2510d4a471e7d02584b5926c2ab746"
+    },
+    {
+      "label": "old",
+      "path": "groovy/assets/divine_journey_2/lang/en_us.lang",
+      "source": "https://raw.githubusercontent.com/Divine-Journey-2/Divine-Journey-2/23ce41df7d0b6b566c810f5dfbc3bf5af628dda7/overrides/groovy/assets/divine_journey_2/lang/en_us.lang",
+      "sha256": "82707f5029686ce9db45019cdb3ce3a2ff5fe682ebc722b844f9ec2eb64465ce"
+    },
+    {
+      "label": "new",
+      "path": "resources/betterquesting/lang/en_us.lang",
+      "source": "https://raw.githubusercontent.com/Divine-Journey-2/Divine-Journey-2/2743c22b177ab0479819dadb15785925cfe7d0aa/overrides/resources/betterquesting/lang/en_us.lang",
+      "sha256": "13b2b2012e2ef4539d9f2035d200e5d6decfe71af78e2b2a449f93a3c72b7cc5"
+    },
+    {
+      "label": "new",
+      "path": "resources/crafttweaker/lang/en_us.lang",
+      "source": "https://raw.githubusercontent.com/Divine-Journey-2/Divine-Journey-2/2743c22b177ab0479819dadb15785925cfe7d0aa/overrides/resources/crafttweaker/lang/en_us.lang",
+      "sha256": "522137ce116f60b51f5bf0a258c31ba2ba894e71cb29f4e572f66414d2ff6208"
+    },
+    {
+      "label": "new",
+      "path": "groovy/assets/divine_journey_2/lang/en_us.lang",
+      "source": "https://raw.githubusercontent.com/Divine-Journey-2/Divine-Journey-2/2743c22b177ab0479819dadb15785925cfe7d0aa/overrides/groovy/assets/divine_journey_2/lang/en_us.lang",
+      "sha256": "c8e4cfea19d061e276c993eb91c0c7a3ede95bdbbd255adfa9fdbb383042e500"
+    },
+    {
+      "label": "translation",
+      "path": "resources/betterquesting/lang/en_us.lang",
+      "source": "https://raw.githubusercontent.com/BMProjects-Development/Divine-Journey-2-Translate/1f6764559cf2118b929ad880abd03b53b6f9daa0/resources/betterquesting/lang/en_us.lang",
+      "sha256": "2f64a0308bd75889fab22388154be3b79cb1b795c647b1259bbca2d055df9e1c"
+    },
+    {
+      "label": "translation",
+      "path": "resources/betterquesting/lang/ru_ru.lang",
+      "source": "https://raw.githubusercontent.com/BMProjects-Development/Divine-Journey-2-Translate/1f6764559cf2118b929ad880abd03b53b6f9daa0/resources/betterquesting/lang/ru_ru.lang",
+      "sha256": "c12d7997f35267567e3a3720759d48d34c51fdaefeef25b8bef84688ed09520e"
+    },
+    {
+      "label": "translation",
+      "path": "resources/crafttweaker/lang/en_us.lang",
+      "source": "https://raw.githubusercontent.com/BMProjects-Development/Divine-Journey-2-Translate/1f6764559cf2118b929ad880abd03b53b6f9daa0/resources/crafttweaker/lang/en_us.lang",
+      "sha256": "8b7a45c54ba330020ec3ea101838a3c2a89ca1c6b24f93001347341448c788f0"
+    },
+    {
+      "label": "translation",
+      "path": "resources/crafttweaker/lang/ru_ru.lang",
+      "source": "https://raw.githubusercontent.com/BMProjects-Development/Divine-Journey-2-Translate/1f6764559cf2118b929ad880abd03b53b6f9daa0/resources/crafttweaker/lang/ru_ru.lang",
+      "sha256": "ad9e63e469cfffd87c5def4efc940fdd11b9b35409953181852f1b44d3d5b418"
+    }
+  ],
+  "limits": [
+    "Not a server/client launch or translated pack acceptance",
+    "No existing files/worlds overwritten",
+    "No claim that every mod translation is complete"
+  ],
+  "supplemental_translation_resourcepacks": [
+    {
+      "path": "resourcepacks/BMP_Translations_1.12.2.zip",
+      "source": "https://raw.githubusercontent.com/BMProjects-Development/Divine-Journey-2-Translate/1f6764559cf2118b929ad880abd03b53b6f9daa0/resourcepacks/BMP_Translations_1.12.2.zip",
+      "sha256": "a2223ccc5469b936e56b9e6b1abb94147e73577210ae66e9f18a4497a39184e2",
+      "ru_languages": []
+    },
+    {
+      "path": "resourcepacks/shrift-1-gladkiyx32.zip",
+      "source": "https://raw.githubusercontent.com/BMProjects-Development/Divine-Journey-2-Translate/1f6764559cf2118b929ad880abd03b53b6f9daa0/resourcepacks/shrift-1-gladkiyx32.zip",
+      "sha256": "85876858fae42e51edbc7a3bbb510c12775bc9f788d445b35bbc836b3d809613",
+      "ru_languages": []
+    }
+  ]
+}
