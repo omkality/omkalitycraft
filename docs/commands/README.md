@@ -79,6 +79,7 @@
 | `uv run omk doctor` | Проверка локального окружения |
 | `uv run omk storage plan` | Расчёт бюджета VPS из env/defaults; ничего не применяет и не удаляет. [Миры, предгенерация и диск](../WORLDS_AND_STORAGE.md) |
 | `uv run omk locale audit --source en_us.lang --locale ru_ru.lang --previous-source old/en_us.lang` | Read-only проверка ключей/параметров перевода и изменённых исходных строк; предыдущий файл необязателен. Не заменяет смысловую и игровую проверку. [Обновление сборки](../PACK_UPGRADES.md) |
+| `uv run omk upgrade registry-audit --source old-level.dat --target fresh-level.dat` | Сравнение сохранённых реестров Forge из остановленных копий: исчезнувшие/новые имена и число изменённых числовых ID, SHA256 входов. Только чтение; удалённые имена дают exit 1 и требуют разбора. Не конвертирует мир и не разрешает обновление. [Проверка миграции](../DJ2_MIGRATION_REGISTRIES.md) |
 | `uv run python -m omk lab backup-safety` | Проверка ротации, настоящего ENOSPC и SIGKILL в одноразовом Linux Docker; не принимает рабочие миры. [Устройство и ограничения](../BACKUP_SAFETY.md) |
 | `uv run python scripts/smoke_api_container.py` | Настоящий Linux API/Compose: env, лимиты, два workers и чистый stop; [17 условий на Granian 2.8.6](../API_RUNTIME.md) |
 | `uv run python scripts/diagnose_api_shutdown.py --cycles 3` | Изолированные остановки API со сбором раздельных стеков при задержке; не подключает auth/игроков |

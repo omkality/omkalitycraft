@@ -1,0 +1,164 @@
+{
+  "pilot_expectations_passed": true,
+  "upgrade_accepted": false,
+  "scope": "Owned Linux source -> rejected unmodified target -> original snapshot on source; synthetic protocol client",
+  "source_pack": "2.21.3",
+  "target_pack": "2.23.4",
+  "core_version": "0.2.8",
+  "core_sha256": "ee86e32a913792854e25e37c93ae494b1903a8fbc75683883577986d32ea86ed",
+  "target_server_pack_sha256": "692c820a636ab59a050ba560235e3af9852f598d18f5dad931271e4cbd729831",
+  "runtime": {
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "container_memory_bytes": 6442450944,
+    "heap_max_bytes": 4294967296,
+    "cpus": 4,
+    "loopback_game_port": 25576
+  },
+  "checks": [
+    "full_backup_player_inventory_seeded",
+    "baseline_ae2_ingests_seven_named_diamonds_via_hopper",
+    "baseline_furnace_smelts_using_enderio_multiblock_power",
+    "baseline_furnace_buffer_full_before_energy_snapshot",
+    "baseline_bank_network_balances_energy_between_two_blocks",
+    "source_item_0",
+    "source_item_1",
+    "source_item_2",
+    "source_item_3",
+    "source_item_4",
+    "source_item_5",
+    "source_item_6",
+    "source_item_7",
+    "source_item_8",
+    "source_item_9",
+    "source_item_10",
+    "source_item_11",
+    "source_item_12",
+    "source_item_13",
+    "source_item_14",
+    "source_legacy_battery_present",
+    "source_legacy_drawer_block_present",
+    "source_clean_stop",
+    "original_backup_unchanged_after_target",
+    "rollback_ae2_seven_named_diamonds",
+    "rollback_bank_168",
+    "rollback_bank_169",
+    "rollback_furnace_output",
+    "rollback_unmodified_neighbor_iron",
+    "rollback_item_0",
+    "rollback_item_1",
+    "rollback_item_2",
+    "rollback_item_3",
+    "rollback_item_4",
+    "rollback_item_5",
+    "rollback_item_6",
+    "rollback_item_7",
+    "rollback_item_8",
+    "rollback_item_9",
+    "rollback_item_10",
+    "rollback_item_11",
+    "rollback_item_12",
+    "rollback_item_13",
+    "rollback_item_14",
+    "rollback_legacy_drawer_restored",
+    "rollback_player_uuid_inventory_preserved",
+    "rollback_ftb_home_usable_same_identity",
+    "rollback_clean_stop",
+    "candidate_rejected_without_confirmation",
+    "candidate_rejection_did_not_wait_for_interactive_timeout"
+  ],
+  "stopped_snapshot_checks": [
+    "source_backup_still_unchanged",
+    "quest_1_completion_preserved_for_same_authenticated_uuid",
+    "one_source_claim_record",
+    "saved_ftb_claim_chunks_identical",
+    "one_source_team_record",
+    "saved_ftb_team_identity_membership_preserved",
+    "saved_player_inventory_exact_nbt_preserved",
+    "source_dimension_directory_set_retained_not_full_dimension_gameplay_test",
+    "rollback_saved_registry_names_and_numbers_identical",
+    "stopped_legacy_item_chest_exact_full_tile_nbt_preserved",
+    "stopped_legacy_drawer_exact_full_tile_nbt_preserved",
+    "all_fifteen_named_legacy_items_independently_saved"
+  ],
+  "source_backup": {
+    "files": 266,
+    "uncompressed_bytes": 6767210,
+    "bytes": 2303187,
+    "sha256": "f51323ca1ba99d45c582f33430ab6577ab9afaf7af1857840305313c82729dda"
+  },
+  "rollback_backup": {
+    "files": 267,
+    "uncompressed_bytes": 7203867,
+    "bytes": 2738707,
+    "sha256": "482857f2e755f77adb3d1fcb75c7e27a89977a00cc3c2a40f0e4e8c714108462"
+  },
+  "phases": {
+    "source": {
+      "ok": true,
+      "linux_container_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "game_crash_detected": false,
+      "owned_game_clean_exit": true,
+      "stopped_world_tar_sha256": "0e5f891233169b58e075ea7ca07030dbe42fa1f7e5804996dc431e98fed7003e",
+      "owned_volume_removed_after_export": true
+    },
+    "target": {
+      "ok": false,
+      "linux_container_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "game_crash_detected": false,
+      "owned_game_clean_exit": true,
+      "stopped_world_tar_sha256": "017bb75236da11eab36e1ba2f6cdd14dc64bafb26d4655f1132ab26d445749ba",
+      "owned_volume_removed_after_export": true
+    },
+    "rollback": {
+      "ok": true,
+      "linux_container_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "game_crash_detected": false,
+      "owned_game_clean_exit": true,
+      "stopped_world_tar_sha256": "643fda4d997a818c36e98ae36d6561ef5248d9796e770a00e57ee2da90c47d4b",
+      "owned_volume_removed_after_export": true
+    }
+  },
+  "target_query_policy": "cancel",
+  "target_ready_marker": false,
+  "target_exited_before_ready": true,
+  "target_start_elapsed_seconds": 113.72,
+  "no_mapping_confirmation_sent": true,
+  "same_lab_auth_service_across_all_three_phases": true,
+  "temporary_auth_removed": true,
+  "initial_failed_pilot": {
+    "accepted": false,
+    "reason": "Reused recovery assertion expected five gold in neighboring chest; source seeded three iron. Corrected pilot reran all three phases on new owned state.",
+    "target_without_cancel_policy": {
+      "state": "FML StartupQuery.confirm / GameData.injectSnapshot waiting",
+      "oom_killed": false,
+      "operator_stop_exit": 143,
+      "owned_target_volume_retained": true
+    }
+  },
+  "limitations": [
+    "Target migration not accepted: saved registry conflict must be resolved in issue 61.",
+    "No item conversion rules or author datafixers enabled.",
+    "One rollback boot; not multiple accepted target restarts.",
+    "One quest completion and saved claim/team records, not all quest paths or active foreign-player claim checks.",
+    "Dimension directory set retained, not gameplay in all dimensions.",
+    "Real candidate graphical client, translation and launcher payload not tested or switched."
+  ]
+}
