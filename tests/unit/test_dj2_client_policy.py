@@ -36,8 +36,12 @@ def config(mode=b"MINECRAFT_AND_WORLD", newline=b"\n"):
 
 
 @pytest.mark.parametrize("newline", [b"\n", b"\r\n"])
-@pytest.mark.parametrize("mode", [b"MINECRAFT_AND_WORLD", b"MINECRAFT", b"WORLD", b"NOTHING"])
-def test_only_reviewed_category_changes_and_repeated_staging_is_stable(tmp_path, artifact, mode, newline):
+@pytest.mark.parametrize(
+    "mode", [b"MINECRAFT_AND_WORLD", b"MINECRAFT", b"WORLD", b"NOTHING"]
+)
+def test_only_reviewed_category_changes_and_repeated_staging_is_stable(
+    tmp_path, artifact, mode, newline
+):
     path = tmp_path / "tweaks.cfg"
     before = config(mode, newline)
     path.write_bytes(before)
@@ -57,7 +61,9 @@ def test_only_reviewed_category_changes_and_repeated_staging_is_stable(tmp_path,
             b' S:"[1] Mode"=MINECRAFT_AND_WORLD',
             b' S:"[1] Mode"=WORLD\n S:"[1] Mode"=invalid',
         ),
-        config().replace(b'        S:"[1] Mode"', b'        "nested" {\n        S:"[1] Mode"'),
+        config().replace(
+            b'        S:"[1] Mode"', b'        "nested" {\n        S:"[1] Mode"'
+        ),
         b"x" * (1024**2 + 1),
     ],
     ids=[

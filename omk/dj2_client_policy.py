@@ -6,11 +6,17 @@ from pathlib import Path
 from launcher.releases import sha256_file
 from omk.backup_archive import regular_file
 
-LOAD_SOUND_ARTIFACT_SHA256 = "0b94bea35ce762c1f9066695ddafea0091afc7696bdc310f77b5d2fa7139a13c"
+LOAD_SOUND_ARTIFACT_SHA256 = (
+    "0b94bea35ce762c1f9066695ddafea0091afc7696bdc310f77b5d2fa7139a13c"
+)
 MAX_CONFIG = 1024**2
-BLOCK = re.compile(rb'(?m)^[ \t]*"load sounds"[ \t]*\{[ \t]*\r?\n(?P<body>[\s\S]*?)^[ \t]*\}[ \t]*\r?$')
+BLOCK = re.compile(
+    rb'(?m)^[ \t]*"load sounds"[ \t]*\{[ \t]*\r?\n(?P<body>[\s\S]*?)^[ \t]*\}[ \t]*\r?$'
+)
 MODE_KEY = re.compile(rb'(?m)^[ \t]*S:"\[1\] Mode"=')
-MODE = re.compile(rb'(?m)^([ \t]*S:"\[1\] Mode"=)(NOTHING|MINECRAFT_AND_WORLD|MINECRAFT|WORLD)([ \t]*\r?$)')
+MODE = re.compile(
+    rb'(?m)^([ \t]*S:"\[1\] Mode"=)(NOTHING|MINECRAFT_AND_WORLD|MINECRAFT|WORLD)([ \t]*\r?$)'
+)
 
 
 def configure_load_sounds(path: Path, *, universal_tweaks: Path) -> dict:
