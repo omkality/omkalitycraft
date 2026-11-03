@@ -1,0 +1,1804 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "minecraft": "1.12.2",
+  "loader": "forge-14.23.5.2860",
+  "platform_tested": "windows-x64",
+  "accepted": false,
+  "author_client_mods": 223,
+  "server_archive_mods": 205,
+  "client_only_mods": 18,
+  "reused_artifacts_independently_fetched_by_exact_file_id": 15,
+  "all_reused_hashes_matched": true,
+  "official_client_archive_sha256": "aeb52f145413f9bd46a2d1045696fd76e518275dd2e4e917ec9cf0935510be2c",
+  "official_server_archive_sha256": "692c820a636ab59a050ba560235e3af9852f598d18f5dad931271e4cbd729831",
+  "probe_excluded": true,
+  "artifacts": [
+    {
+      "project_id": 32274,
+      "file_id": 5172461,
+      "filename": "journeymap-1.12.2-5.7.1p3.jar",
+      "bytes": 6851584,
+      "sha256": "b72c9dd7e6dd0f7438c01ea8e440519bf4a3c0b47674810929a9c899dc98b406",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 53686,
+      "file_id": 3425234,
+      "filename": "AbyssalCraft-1.12.2-1.10.4.jar",
+      "bytes": 14248353,
+      "sha256": "4599244bd96a7c1ccdce452d626dacd897c8c195a1a5dcbd7ad2450a6b726670",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 59621,
+      "file_id": 3116599,
+      "filename": "Atum-1.12.2-2.0.20.jar",
+      "bytes": 2683652,
+      "sha256": "0973e747df932e5d4170071ce4cdb3ce5517d0b90a48d767bdc8cdbfc032e91d",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 64578,
+      "file_id": 4674244,
+      "filename": "EnderIO-1.12.2-5.3.72.jar",
+      "bytes": 8946588,
+      "sha256": "9b5e7756af35a191de8bc8f010c0f7c7ffc2e1e056a69ec265d1dd5ce90d19b4",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 69118,
+      "file_id": 2664449,
+      "filename": "Morpheus-1.12.2-3.5.106.jar",
+      "bytes": 21508,
+      "sha256": "1904c32a8e0077e005bfefe005c26834c2df09881bc075a7deadce8da97fb457",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 69162,
+      "file_id": 2920433,
+      "filename": "CoFHCore-1.12.2-4.6.6.1-universal.jar",
+      "bytes": 848187,
+      "sha256": "e07b0c48def9ce8cfaa4cf7a7c656bf7f7d6815f74fbcc2957dd43efa78486a9",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 69163,
+      "file_id": 2926431,
+      "filename": "ThermalExpansion-1.12.2-5.5.7.1-universal.jar",
+      "bytes": 2345139,
+      "sha256": "f1cc8aeefcda2c00235bfb5ee7f76d731325aa324e90e84d7d232d88c1e6f472",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 74072,
+      "file_id": 2902483,
+      "filename": "TConstruct-1.12.2-2.13.0.183.jar",
+      "bytes": 4023372,
+      "sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 74610,
+      "file_id": 2811267,
+      "filename": "EvilCraft-1.12.2-0.10.78.jar",
+      "bytes": 2957006,
+      "sha256": "1d9407d7834bdba70da3fed44f5ba744958781a823bb220aa7d555c6db7d33be",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 74924,
+      "file_id": 2713386,
+      "filename": "Mantle-1.12-1.3.3.55.jar",
+      "bytes": 843486,
+      "sha256": "0975ad3ef3b8b35fe43461feabe44d406b5521b0a2f3d1965c8d2f6a59ad2e65",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 79287,
+      "file_id": 2481605,
+      "filename": "WailaHarvestability-mc1.12-1.1.12.jar",
+      "bytes": 31462,
+      "sha256": "f445cdccfe824a895ace7cb83d29cfb17d5b3c3383949298e44c2da8697237f0",
+      "source": "https://cursemaven.com/curse/maven/project-79287/2481605/project-79287-2481605.jar"
+    },
+    {
+      "project_id": 220698,
+      "file_id": 3211974,
+      "filename": "Erebus-1.0.32.jar",
+      "bytes": 12365648,
+      "sha256": "ccc51daa04378d1bd8f5a3a53d77836ac1059133ac844261540b868e9cf3ce0c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 220954,
+      "file_id": 3840577,
+      "filename": "modtweaker-4.0.20.11.jar",
+      "bytes": 493285,
+      "sha256": "2c2db905cae947092fe46dba301d1f6777fdab9cc8e79140c050b09fe62dda7a",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 222880,
+      "file_id": 2926428,
+      "filename": "ThermalFoundation-1.12.2-2.6.7.1-universal.jar",
+      "bytes": 2219736,
+      "sha256": "5052f3e308b3ecb6620d26c5ab0cc15c0373732086337483a19fd4447e540ab0",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 223094,
+      "file_id": 2482481,
+      "filename": "InventoryTweaks-1.63.jar",
+      "bytes": 263258,
+      "sha256": "ef2fdcb59f9a766ee5c3c4c514c78f0a9e35b3d6bf02c17051b7dd4e94efdf7a",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 223150,
+      "file_id": 5615733,
+      "filename": "RecurrentComplex-1.4.8.6.jar",
+      "bytes": 5749924,
+      "sha256": "253226e6c7efe61ae255df0cc2e19d1420945cb7e86f7cd79f51d5db10fd9de8",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 223565,
+      "file_id": 3431261,
+      "filename": "Draconic-Evolution-1.12.2-2.3.28.354-universal.jar",
+      "bytes": 5708839,
+      "sha256": "1eecdefa00056efac98ff56e25f7ed840b70e2d809c628e38c9c5b5518ff14ff",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 223628,
+      "file_id": 2629023,
+      "filename": "Thaumcraft-1.12.2-6.1.BETA26.jar",
+      "bytes": 11360786,
+      "sha256": "9425f8643581b27ff8845b087c8bc6fc10425a32942f1a3f0e265ce6b38f7b5f",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 223852,
+      "file_id": 4655859,
+      "filename": "StorageDrawers-1.12.2-5.5.0.jar",
+      "bytes": 609908,
+      "sha256": "896a013c318138fdcc9d5d575b2666fe1bfc2009554c796f3c66673bb9f5acdc",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 224320,
+      "file_id": 2977010,
+      "filename": "enderutilities-1.12.2-0.7.15.jar",
+      "bytes": 1730192,
+      "sha256": "c0a604aac57853f76f16e21958b02f4d6adbc543c20dda67eb1088ca91ba618c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 224535,
+      "file_id": 2443253,
+      "filename": "IvToolkit-1.3.3-1.12.jar",
+      "bytes": 455763,
+      "sha256": "ffb745111790e27cb7810a2e03d5270265dee7ebd3ef98fde897c409d58b1e59",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 224641,
+      "file_id": 2861573,
+      "filename": "rftools-1.12-7.73.jar",
+      "bytes": 2895803,
+      "sha256": "558c38d0f7852d17a03aef81e4bd6cc2f28e60db8a8749c710c9ee829f2de0a4",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 224712,
+      "file_id": 2916368,
+      "filename": "Wawla-1.12.2-2.6.275.jar",
+      "bytes": 94115,
+      "sha256": "272a3229f669bfe1bc1af748bf8f5fe312c2efa11f6798584f1029b899d95453",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 224791,
+      "file_id": 2822288,
+      "filename": "BloodMagic-1.12.2-2.4.3-105.jar",
+      "bytes": 7208594,
+      "sha256": "ef187aea109446bdb7b35e06958d4c6d22f5f7ceb4e5bcaeab16f3ad29fe16a5",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 225561,
+      "file_id": 2678374,
+      "filename": "extrautils2-1.12-1.9.9.jar",
+      "bytes": 3226408,
+      "sha256": "6c1809eb2222604ebf3c051e1c7834b84049013b537633c2e5a1b0077ef9a940",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 225635,
+      "file_id": 3317747,
+      "filename": "agricraft-2.12.0-1.12.2-b2.jar",
+      "bytes": 1457033,
+      "sha256": "33380f205af75566b4f9d14698189107426e1890a09613017ed4208d51ecdeb9",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 225738,
+      "file_id": 2503041,
+      "filename": "MmmMmmMmmMmm-1.12-1.14.jar",
+      "bytes": 33622,
+      "sha256": "def6e04f8ecb9b506447dc52ec0aa8e310c02463caaeb7f73955b612af59c252",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 226406,
+      "file_id": 2857869,
+      "filename": "CustomMainMenu-MC1.12.2-2.0.9.1.jar",
+      "bytes": 91121,
+      "sha256": "63b8e4d86b336739c9df8275d28e61519c73c815d0ba9ec18fb8d0cf8a218488",
+      "source": "https://cursemaven.com/curse/maven/project-226406/2857869/project-226406-2857869.jar"
+    },
+    {
+      "project_id": 226410,
+      "file_id": 2702991,
+      "filename": "ProjectE-1.12.2-PE1.4.1.jar",
+      "bytes": 1812973,
+      "sha256": "9a46c66e95487bcfb7d715650817a9c30df5c759013bb6cb0d3290b261212595",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 226447,
+      "file_id": 2477566,
+      "filename": "ResourceLoader-MC1.12.1-1.5.3.jar",
+      "bytes": 16612,
+      "sha256": "5c5ee114dccab5caca1772e3487eca04e161c494baca4d53c8fddf5cf8722e56",
+      "source": "https://cursemaven.com/curse/maven/project-226447/2477566/project-226447-2477566.jar"
+    },
+    {
+      "project_id": 227443,
+      "file_id": 2920505,
+      "filename": "ThermalDynamics-1.12.2-2.5.6.1-universal.jar",
+      "bytes": 728082,
+      "sha256": "ce3f08c8a0f36ba02fceafa47f25e80c7130727bd8e11206b37a4454d51da3b0",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 227873,
+      "file_id": 2721268,
+      "filename": "Ruins-1.12.2.jar",
+      "bytes": 244703,
+      "sha256": "c9d4c4761f88e9e2e453778fd48d33288b48e07846e1fc578a5eea56ba0b888c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 228027,
+      "file_id": 3647708,
+      "filename": "BiblioCraft[v2.4.6][MC1.12.2].jar",
+      "bytes": 5185177,
+      "sha256": "43f0fe963867bd74a18ac3f04caaf65c75d197abaf703f96b8282af6b843f2f8",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 228266,
+      "file_id": 2519739,
+      "filename": "restrictedportals-1.12-0.6.3.jar",
+      "bytes": 47098,
+      "sha256": "c4cf83d1cf21bde25b632a3505dfe7d48165c5927f183c3fa4b86337df35a84f",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 228404,
+      "file_id": 3117927,
+      "filename": "ActuallyAdditions-1.12.2-r152.jar",
+      "bytes": 2958699,
+      "sha256": "21311e401f36a58222a50b6f0d66ac29614d7ab039c961dcc307fe499da030b6",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 228525,
+      "file_id": 2836960,
+      "filename": "Bookshelf-1.12.2-2.3.590.jar",
+      "bytes": 266636,
+      "sha256": "043afbddfd567e753a893f5a8f0e052db7c45209a08d09d9dcf32cadca764109",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 228609,
+      "file_id": 2703415,
+      "filename": "quantumflux-1.12.2-2.0.18.jar",
+      "bytes": 277358,
+      "sha256": "021f8f494c9cab040236921b33bf670b4e139720a851875979cb7b9eb3ef48aa",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 228702,
+      "file_id": 2745545,
+      "filename": "ProjectRed-1.12.2-4.9.4.120-Base.jar",
+      "bytes": 2036136,
+      "sha256": "8345e86d84cc38e8017fef9b20b1160b4a988637e14b8bcb5b817747d8e63570",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 228756,
+      "file_id": 2747935,
+      "filename": "ironchest-1.12.2-7.0.72.847.jar",
+      "bytes": 956692,
+      "sha256": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 228832,
+      "file_id": 2645992,
+      "filename": "Guide-API-1.12-2.1.8-63.jar",
+      "bytes": 169528,
+      "sha256": "e201712ef8fadc6c4b6380939751e92fe32cad2ba2dcb717e1acb3b07e0c2125",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 228895,
+      "file_id": 3112142,
+      "filename": "BiomeTweaker-1.12.2-3.2.369.jar",
+      "bytes": 571464,
+      "sha256": "a988d397a755680598925aed319ca3206d5a9babb13f6f6a6d4c1bda52585f31",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 229002,
+      "file_id": 2735197,
+      "filename": "MrTJPCore-1.12.2-2.1.4.43-universal.jar",
+      "bytes": 803400,
+      "sha256": "82652f00e513c61c99a791abf2cbc10fdfb0e3a79e4eb02b305cccbc2d2f0087",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 229045,
+      "file_id": 2745548,
+      "filename": "ProjectRed-1.12.2-4.9.4.120-integration.jar",
+      "bytes": 3923751,
+      "sha256": "659623f496dd457dd689c69dbd7a593453f65f78662a4af8dc624bfff33ee2eb",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 229587,
+      "file_id": 2698688,
+      "filename": "BNBGamingLib-1.12.2-2.17.6.jar",
+      "bytes": 132644,
+      "sha256": "868c7810de85e43913dc42d8b1443d5316a71ecc19e5983e5aa6cda69ed4db5d",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 230497,
+      "file_id": 2450900,
+      "filename": "Chameleon-1.12-4.1.3.jar",
+      "bytes": 96859,
+      "sha256": "238416f801acda67b90fba9e0e572dbd6e7631b7e64c3eb3d6226f45ae536c87",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 231095,
+      "file_id": 2720655,
+      "filename": "chiselsandbits-14.33.jar",
+      "bytes": 737407,
+      "sha256": "0b086aced1beca90ed5bb25fe6951a4d191d9b49f221af1074d1f9ff4f364b74",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 231382,
+      "file_id": 3408276,
+      "filename": "BrandonsCore-1.12.2-2.4.20.162-universal.jar",
+      "bytes": 827900,
+      "sha256": "7f26e2cad131d3cb79296b0309dbde4f361b34c7f602d9575aecff893bb04d76",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 231868,
+      "file_id": 4671384,
+      "filename": "EnderCore-1.12.2-0.5.78.jar",
+      "bytes": 660062,
+      "sha256": "adbd309f6c8001c38c4630aa701cdc5ea59fa7ee9ffa770e21f56b160adb443c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 231951,
+      "file_id": 2974106,
+      "filename": "ImmersiveEngineering-0.12-98.jar",
+      "bytes": 6360959,
+      "sha256": "1dceb974d037dae7161f9a8e9f78cb33dfaad9e3adf02d14d52a3024eb961e58",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 232131,
+      "file_id": 2624732,
+      "filename": "DefaultOptions_1.12.2-9.2.8.jar",
+      "bytes": 15056,
+      "sha256": "1a4007ec8c503fe75faf7429b66c0ffe1555fa7a7d43147386049913ce6ebf4a",
+      "source": "https://cursemaven.com/curse/maven/project-232131/2624732/project-232131-2624732.jar"
+    },
+    {
+      "project_id": 232758,
+      "file_id": 3159497,
+      "filename": "CyclopsCore-1.12.2-1.6.7.jar",
+      "bytes": 1060985,
+      "sha256": "613b513fee6089cac67bf497ab823416bea0e10764e5395c49ac935d5ebf9f44",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 233071,
+      "file_id": 2562139,
+      "filename": "CraftingTweaks_1.12.2-8.1.9.jar",
+      "bytes": 97854,
+      "sha256": "b2f6bf5d4a5118a6b07afde92af9b34932c07c1ebbd6b12eb0441547f98b8de6",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 233105,
+      "file_id": 2745846,
+      "filename": "mcjtylib-1.12-3.5.4.jar",
+      "bytes": 544856,
+      "sha256": "af7d2b3c421329e7b97202302a072867e7c9bd73c5b8fab9bdb3a76fbfe474e3",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 233258,
+      "file_id": 2810152,
+      "filename": "BadMobs-1.12.2-1.1.40.jar",
+      "bytes": 14818,
+      "sha256": "eec9e1013f3a7bc6a4ae2fb8527d2fb6ea9c1d3b4d2aebd0f764a2583a6d23ec",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 233577,
+      "file_id": 2502492,
+      "filename": "simpleautorun-1.12.2-1.2.0.jar",
+      "bytes": 5538,
+      "sha256": "4444de454a6489c48355f54a06ee899995eec90f85f8d18b3c6901e46a930fe3",
+      "source": "https://cursemaven.com/curse/maven/project-233577/2502492/project-233577-2502492.jar"
+    },
+    {
+      "project_id": 234851,
+      "file_id": 3425537,
+      "filename": "AbyssalCraft Integration-1.12.2-1.11.3.jar",
+      "bytes": 507074,
+      "sha256": "74a722339d448c6b6855279f8fb53629812810544f22e01b5a5f95eb6bee5cc0",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 235107,
+      "file_id": 2695044,
+      "filename": "NotEnoughIDs-1.5.4.4.jar",
+      "bytes": 31782,
+      "sha256": "f042f90c5623a1f2bbcc1d0bd93cfca40109b9c0659399e1f48aa8ce37b75622",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 235279,
+      "file_id": 2915375,
+      "filename": "Chisel-MC1.12.2-1.0.2.45.jar",
+      "bytes": 4755282,
+      "sha256": "64c62f20a89939db2c03d47737c7bd371d8bd8c10ae42e2e8c63432ae89db2c7",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 235492,
+      "file_id": 2825547,
+      "filename": "Triumph-1.12.2-3.19.2.jar",
+      "bytes": 367437,
+      "sha256": "60b7e185a7d830841df7849c014bec4945f7afd83cfbb533ad3af19204fe787c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 236307,
+      "file_id": 3159505,
+      "filename": "IntegratedDynamics-1.12.2-1.1.11.jar",
+      "bytes": 3049509,
+      "sha256": "88d3da662fc35c6709d0dc6931682318bb84964e169819fa8291e2f41451b5f1",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 237065,
+      "file_id": 3331364,
+      "filename": "ContentTweaker-1.12.2-4.10.0.jar",
+      "bytes": 278152,
+      "sha256": "3371fcccdda4c0701e0991d576db58e2806046c2cb27c22c1e52764080f0e3e9",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 237102,
+      "file_id": 3157548,
+      "filename": "FTBUtilities-5.4.1.131.jar",
+      "bytes": 425832,
+      "sha256": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 237167,
+      "file_id": 2985811,
+      "filename": "FTBLib-5.4.7.2.jar",
+      "bytes": 934370,
+      "sha256": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 237422,
+      "file_id": 2872478,
+      "filename": "lightningcraft-2.9.7_1.jar",
+      "bytes": 1313900,
+      "sha256": "8dc46f631283cbbb57837c22bf86ae624fe20f3b5a65dcf70eb93cd18b67e4ac",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 237541,
+      "file_id": 4111310,
+      "filename": "Totemic-1.12.2-0.11.7.jar",
+      "bytes": 1065042,
+      "sha256": "235da256061555df3b6c03c1a5265e97de72ee487a7fee3fe846316b28524cf5",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 237903,
+      "file_id": 3330308,
+      "filename": "RebornCore-1.12.2-3.19.5-universal.jar",
+      "bytes": 2285146,
+      "sha256": "31571a6c01b9fd8daf481fa2f22615bbc99335c21f5e474a5607ea149bf2b9aa",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 238003,
+      "file_id": 2559089,
+      "filename": "ThaumicInventoryScanning_1.12.2-2.0.10.jar",
+      "bytes": 17224,
+      "sha256": "2fa7286fe1ce1e95eb1ccf958cf6e07fca8beddc3d7de7986d390523c75f247c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 238222,
+      "file_id": 3043174,
+      "filename": "jei_1.12.2-4.16.1.302.jar",
+      "bytes": 653210,
+      "sha256": "9dbc2c0ec8c28821fdd5dca487909089501607ee25c0e8470c43c9fd0bd12053",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 238403,
+      "file_id": 2691084,
+      "filename": "BetterBuildersWands-1.12.2-0.13.2.271+5997513.jar",
+      "bytes": 77866,
+      "sha256": "0bb50f545b87f19087d9dbdb9930d6be2d66ee8c76d2a1982eef9e3d2bb43108",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 238856,
+      "file_id": 2950248,
+      "filename": "BetterQuesting-3.5.329.jar",
+      "bytes": 1425671,
+      "sha256": "f7803b91d54b98eb54b3e2f12143866e68a46e3f963d51997d1a1195b8469ba7",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 238857,
+      "file_id": 2863771,
+      "filename": "StandardExpansion-3.4.173.jar",
+      "bytes": 460454,
+      "sha256": "405211aef15d442f857f92c4f755f051396283d6e6fc2de818f4f693091e89f9",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 239197,
+      "file_id": 7406648,
+      "filename": "CraftTweaker2-1.12-4.1.20.711.jar",
+      "bytes": 1608673,
+      "sha256": "dc11a0cb527019385a732907a8057ecd673cdf6bf56d4b5358693e3c2e572a82",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 239431,
+      "file_id": 2615930,
+      "filename": "MCMultiPart-2.5.3.jar",
+      "bytes": 173426,
+      "sha256": "ce28db33cfdca80c98dfbb2e5928a5f090477897fa6d28a37300d5564617fde2",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 240630,
+      "file_id": 2728585,
+      "filename": "JustEnoughResources-1.12.2-0.9.2.60.jar",
+      "bytes": 222270,
+      "sha256": "9ea4d7df19c0a53880aae5e745ef1e886854bea5c533878688587a5e3fdaebdd",
+      "source": "https://cursemaven.com/curse/maven/project-240630/2728585/project-240630-2728585.jar"
+    },
+    {
+      "project_id": 240950,
+      "file_id": 2707390,
+      "filename": "rftoolsdim-1.12-5.71.jar",
+      "bytes": 1682421,
+      "sha256": "ac731cd6b991c6da850499a83585ca34c971e2de8106515d1ee5830995110820",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 241721,
+      "file_id": 3044416,
+      "filename": "astralsorcery-1.12.2-1.10.27.jar",
+      "bytes": 25028160,
+      "sha256": "771107764cad17a30b37f683fd6889384a916981b1c8ed63826ec0a335efae86",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 242223,
+      "file_id": 3524685,
+      "filename": "JustEnoughCalculation-1.12.2-3.2.7.jar",
+      "bytes": 298222,
+      "sha256": "5fc2aed14ac29f715af29ea26016e018f2a734fadfe3fc60d52d07206cf054f4",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 242818,
+      "file_id": 2779848,
+      "filename": "CodeChickenLib-1.12.2-3.2.3.358-universal.jar",
+      "bytes": 704330,
+      "sha256": "5f8499f7ee2590e45110bbf296b2bf101aec15897e28d5e9759cf8f2387d8a74",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 243478,
+      "file_id": 2745657,
+      "filename": "moreoverlays-1.15.1-mc1.12.2.jar",
+      "bytes": 51284,
+      "sha256": "428542f8e4e9a683826058fd113d6e74121a3d47c7e796d7cb96ceed801102ad",
+      "source": "https://cursemaven.com/curse/maven/project-243478/2745657/project-243478-2745657.jar"
+    },
+    {
+      "project_id": 244258,
+      "file_id": 3553627,
+      "filename": "UniDict-1.12.2-3.0.10.jar",
+      "bytes": 225385,
+      "sha256": "003421fa15bc84733343ad26f8bd9387bbd110df6c7ff860cae87ec11f85399d",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 245174,
+      "file_id": 2755787,
+      "filename": "EnderStorage-1.12.2-2.4.6.137-universal.jar",
+      "bytes": 223250,
+      "sha256": "06e2357019f4e0836bfb9202af013adc125252f610b198a7a547d4596d2934c0",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 245480,
+      "file_id": 2691542,
+      "filename": "valkyrielib-1.12.2-2.0.20.1.jar",
+      "bytes": 733580,
+      "sha256": "24a72428d22c04040e8a60899a395283ca8512f39bfb0cec62ecf9109bf891e0",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 245549,
+      "file_id": 2476626,
+      "filename": "Tinkers' Addons-1.12.1-1.0.7.jar",
+      "bytes": 44044,
+      "sha256": "4df85922e481622c074f9e09cbb6ecb8e5d1bced3920597e1a22c5819a22913e",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 246183,
+      "file_id": 5193525,
+      "filename": "Roots-1.12.2-3.1.9.2.jar",
+      "bytes": 3574262,
+      "sha256": "ee43b8a6ee89100874b363b538bea3d7016f8ad5268fbb7e113493e8f7e8bb94",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 246640,
+      "file_id": 2704562,
+      "filename": "MysticalAgriculture-1.12.2-1.7.5.jar",
+      "bytes": 1536124,
+      "sha256": "e84a70bbcb5dc559d28c7bc65f1ef1af512485097ad89c6748249b173019975c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 246974,
+      "file_id": 3050838,
+      "filename": "SolarFluxReborn-1.12.2-12.4.11.jar",
+      "bytes": 715629,
+      "sha256": "be490ddbeb08b35ba76bee38feaae465a9553ba3bcfbe2d5eef83875d5b5eda2",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 246996,
+      "file_id": 3440963,
+      "filename": "base-1.12.2-3.14.0.jar",
+      "bytes": 690000,
+      "sha256": "5ec979220887e4e73772ecdb5dceb8a258b4da974bd4ece8fd85cade089913d4",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 247007,
+      "file_id": 3053017,
+      "filename": "CommonCapabilities-1.12.2-2.4.8.jar",
+      "bytes": 361018,
+      "sha256": "71e7ed804a6d9f25c4c9af5e46c3e362a5c3b43919b2d3a276a57fd25d98776f",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 247401,
+      "file_id": 6348753,
+      "filename": "HammerLib-1.12.2-12.2.58.jar",
+      "bytes": 2591232,
+      "sha256": "34e22ee309113239848aa2f44cc7ccba5bdf285a4db92031afe70e744f3b940a",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 247921,
+      "file_id": 3194743,
+      "filename": "zerocore-1.12.2-0.1.2.9.jar",
+      "bytes": 227426,
+      "sha256": "fed0f20d19ed0c35f2b804a120419cfda398397e2aaa19e8494847b48c9ffb44",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 248787,
+      "file_id": 2987247,
+      "filename": "AppleSkin-mc1.12-1.0.14.jar",
+      "bytes": 33683,
+      "sha256": "4bbd37edecff0b420ab0eea166b5d7b4b41a9870bfb8647bf243140dc57f101e",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 248873,
+      "file_id": 3065384,
+      "filename": "Avaritiaddons-1.12.2-1.2.jar",
+      "bytes": 167819,
+      "sha256": "0eb70a63c17c6fcf37fbcbe08995d197d88b73502b1bc4689d9d2cc2ebf2bc96",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 250277,
+      "file_id": 3194746,
+      "filename": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "bytes": 1149733,
+      "sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 250363,
+      "file_id": 2746011,
+      "filename": "AutoRegLib-1.3-32.jar",
+      "bytes": 108306,
+      "sha256": "d8610a94da8f30815db4612b3291ecdcfd8204eaf1a4db8c5d0663c7b1191d91",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 250577,
+      "file_id": 2648656,
+      "filename": "AkashicTome-1.2-12.jar",
+      "bytes": 44663,
+      "sha256": "4edda1cb9a1eb9240b7c9087dfc0347b0f75c29f7239299991b27324524b167f",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 250898,
+      "file_id": 2897369,
+      "filename": "OreExcavation-1.4.150.jar",
+      "bytes": 184743,
+      "sha256": "535c5a8e2d708fa810687698425f982f16c326c0cc91fa5eec08194d65ef2c28",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 251389,
+      "file_id": 3159511,
+      "filename": "IntegratedTunnels-1.12.2-1.6.14.jar",
+      "bytes": 493503,
+      "sha256": "4bd7652951fcdc81fcfa29ae5e91926796e17395bb33599e4d1e7f53deed1b56",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 251396,
+      "file_id": 3317119,
+      "filename": "infinitylib-1.12.1.jar",
+      "bytes": 907292,
+      "sha256": "b8dc7c75a78bd41cb6a8b6da91ef9d18d61f3ff9434982ecc312d02b87309a1f",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 251792,
+      "file_id": 3294422,
+      "filename": "SimplyJetpacks2-1.12.2-2.2.20.0.jar",
+      "bytes": 728575,
+      "sha256": "9e0015782e3258dcb138c4e5189666c41f0492c07c0956aa262a502ff2f5fccb",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 252239,
+      "file_id": 3567495,
+      "filename": "SpartanShields-1.12.2-1.5.5.jar",
+      "bytes": 430876,
+      "sha256": "46b58f509e9023adda3ac087031ebd60acc9db8177125cd197a33099b8eea603",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 252848,
+      "file_id": 2893527,
+      "filename": "NaturesCompass-1.12.2-1.8.5.jar",
+      "bytes": 196434,
+      "sha256": "bd4f556b7e5480687dbc09735dca05a1ceb3622dc93422adb5dab4f68cc9f2d1",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 252907,
+      "file_id": 3983598,
+      "filename": "BiggerCraftingTables-1.12.2-2.3b.jar",
+      "bytes": 285623,
+      "sha256": "b0ab42e04799f8437d04ac41955fd2fbddb158a296573c0db5e52fdab3256534",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 253043,
+      "file_id": 3597087,
+      "filename": "WanionLib-1.12.2-2.9.jar",
+      "bytes": 221001,
+      "sha256": "e684b9517e5e394af418e615c0484f4344a0c932b3ba404c511e98e60a297120",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 253211,
+      "file_id": 3308160,
+      "filename": "MTLib-3.0.7.jar",
+      "bytes": 30009,
+      "sha256": "e978ce61b6177ec07a9db231d05a64415239c836f43f5cbcc0cf01bd9da4b3e2",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 253230,
+      "file_id": 2465617,
+      "filename": "InitialInventory-3.0.0.jar",
+      "bytes": 7863,
+      "sha256": "9f1ba4dd157bbeedf82ca0fca6333e6f244e83d5c92ca7354951ced38678a3e6",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 253449,
+      "file_id": 2568751,
+      "filename": "Hwyla-1.8.26-B41_1.12.2.jar",
+      "bytes": 453778,
+      "sha256": "e9ddecd4920ee9a57e11e4b43fb1dd395bbf37e276be726a99a2590272304124",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 253874,
+      "file_id": 2989594,
+      "filename": "Guidebook-1.12.2-2.9.5.jar",
+      "bytes": 258905,
+      "sha256": "56d68b9a125c6285633d70a221cb2a8badd0590c753ea5aadc55e674bf789c6c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 254241,
+      "file_id": 2656683,
+      "filename": "MobGrindingUtils-0.3.13.jar",
+      "bytes": 951922,
+      "sha256": "7b10f754481e3813b8c8e11daed9392257e722c2af24042d7a35ccca42672594",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 254268,
+      "file_id": 3529742,
+      "filename": "torchmaster_1.12.2-1.8.5.0.jar",
+      "bytes": 156406,
+      "sha256": "c8e0099dcda96d0d284db19be2998fac0a9dd71f84d90ea2b03b07fdf36eafa1",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 254466,
+      "file_id": 2498115,
+      "filename": "Simple-Void-World-1.12-1.2.0.9-universal.jar",
+      "bytes": 19865,
+      "sha256": "d8eb380fc028e7f60ffbb9805e2a44f375dc8798d5f3c8745bf48bcc969b9a7b",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 254602,
+      "file_id": 3438487,
+      "filename": "tesla-core-lib-1.12.2-1.0.18.jar",
+      "bytes": 1139012,
+      "sha256": "2e65e880be07a2cac3784490f93ddcba241160dbeb5191716f0e26b44b9d89d0",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 255232,
+      "file_id": 2830265,
+      "filename": "p455w0rdslib-1.12.2-2.3.161.jar",
+      "bytes": 328793,
+      "sha256": "e5844c044d9f2ce2f23eef84d95eea8cc1f2c5581874bd01410e7d103b90a424",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 255257,
+      "file_id": 5420240,
+      "filename": "LootTweaker-0.4.1+MC1.12.2.jar",
+      "bytes": 136587,
+      "sha256": "44a09ee9f68ca73c553ab5dfc96f05a6db1f19b8b17adee251d9ff65d19cbdb1",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 255308,
+      "file_id": 6316434,
+      "filename": "aether-1.12.2-v1.5.4.1.jar",
+      "bytes": 14740706,
+      "sha256": "ed6df388e0c696dc527ed078d4ca0a3361e6014c2b0801aef1c140eeb0f2ceb8",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 256247,
+      "file_id": 2704832,
+      "filename": "MysticalAgradditions-1.12.2-1.3.2.jar",
+      "bytes": 134055,
+      "sha256": "58094bdace050ce943bc4b14033abc63e91e705233fc24c2d7f8d786c714884f",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 256717,
+      "file_id": 2666198,
+      "filename": "Clumps-3.1.2.jar",
+      "bytes": 13792,
+      "sha256": "f3ce670e0087f4c6b770fd05ae5c3dfd8462f74c62397932ea72954d1c6c8df4",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 258426,
+      "file_id": 2755790,
+      "filename": "ForgeMultipart-1.12.2-2.6.2.83-universal.jar",
+      "bytes": 1304958,
+      "sha256": "25718bd80799a608c45299d13d86e5d67248f07a3c00657c690948b1821835ce",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 260824,
+      "file_id": 2755798,
+      "filename": "WR-CBE-1.12.2-2.3.2.33-universal.jar",
+      "bytes": 364036,
+      "sha256": "a8305c42e29f43abbad906c3c91c36ed0a1a6f949ff2bff9eec66499fb57f36e",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 261348,
+      "file_id": 3143349,
+      "filename": "Avaritia-1.12.2-3.3.0.37-universal.jar",
+      "bytes": 975727,
+      "sha256": "e37b89bf89d5cb75d0605cf03863537b7e52a73e2ff6fb033161989c43d33876",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 262823,
+      "file_id": 2619249,
+      "filename": "TombManyGraves-1.12-4.2.0.jar",
+      "bytes": 150657,
+      "sha256": "3fef07b3124a16250645c9549b9b67e0a85dde29b5b27b16d33581b531f25fce",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 263624,
+      "file_id": 2579934,
+      "filename": "moartinkers-0.6.0.jar",
+      "bytes": 70754,
+      "sha256": "533b8ac850ab6ad9da4e9fff550f3377eaef84667365af91aef87b150cf81841",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 266515,
+      "file_id": 2745321,
+      "filename": "industrialforegoing-1.12.2-1.12.13-237.jar",
+      "bytes": 1603134,
+      "sha256": "8b6e1aa820d7d02571aeae818b4ab9aa2d78e0d3b277d7be6df53e3153ae9ea7",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 266550,
+      "file_id": 3270468,
+      "filename": "toolprogression-1.12.2-1.6.12.jar",
+      "bytes": 96478,
+      "sha256": "077e0153a7347e86e75970cc900f09323b89b01effb6fb322db2591137eb354e",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 267602,
+      "file_id": 2915363,
+      "filename": "CTM-MC1.12.2-1.0.2.31.jar",
+      "bytes": 199045,
+      "sha256": "433f441dc9c0aa75a4168df832900720ddadac1f22cc3bba4e4f25ca789b268b",
+      "source": "https://cursemaven.com/curse/maven/project-267602/2915363/project-267602-2915363.jar"
+    },
+    {
+      "project_id": 267769,
+      "file_id": 2613657,
+      "filename": "Traverse-1.12.2-1.6.0-69.jar",
+      "bytes": 270133,
+      "sha256": "be89ff855b55d10469779660089cbb13f1f438a9a934724ebffa49982f269414",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 268560,
+      "file_id": 2835175,
+      "filename": "Mekanism-1.12.2-9.8.3.390.jar",
+      "bytes": 7863657,
+      "sha256": "17573e0c3b2ff9d071a719a06a84c8cd89ca26d1ea3bd7f6e9f3842c4df88ea1",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 270789,
+      "file_id": 2920436,
+      "filename": "RedstoneFlux-1.12-2.1.1.1-universal.jar",
+      "bytes": 31802,
+      "sha256": "6ff7f96d076bfaad83fb6ba92ec457b8a76391439663b0cc32a9ec5398345280",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 270790,
+      "file_id": 2713714,
+      "filename": "modularmachinery-1.12.2-1.10.0.jar",
+      "bytes": 654742,
+      "sha256": "87ec44f78e4b33488f6ad803cfb38dc7cf95737b4d019be7605f32979c65a84a",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 271384,
+      "file_id": 2920434,
+      "filename": "CoFHWorld-1.12.2-1.4.0.1-universal.jar",
+      "bytes": 505987,
+      "sha256": "f10cd57075690ecbe52094f8af0d2a5af12f89c82b7c6eb73d3d090d74206ea0",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 272335,
+      "file_id": 2645867,
+      "filename": "Cucumber-1.12.2-1.1.3.jar",
+      "bytes": 126699,
+      "sha256": "0475ba0f0964c4a56afd1c2765b7063849ca2b77a91d80d7f612fb15354c27e5",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 272514,
+      "file_id": 2962052,
+      "filename": "DankNull-1.12.2-1.7.101.jar",
+      "bytes": 327386,
+      "sha256": "2f27a2163d2e15e70ea37394381afb953864a61b653edb7453bcc14b971120e2",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 272515,
+      "file_id": 2685984,
+      "filename": "BetterAdvancements-1.12.2-0.1.0.77.jar",
+      "bytes": 62668,
+      "sha256": "c70cda15d9c76cc79423399c1002977d6dfcc229128b33b87f25d5b4238bea34",
+      "source": "https://cursemaven.com/curse/maven/project-272515/2685984/project-272515-2685984.jar"
+    },
+    {
+      "project_id": 274341,
+      "file_id": 2991671,
+      "filename": "BNBGamingCore-1.12.2-0.12.0.jar",
+      "bytes": 139568,
+      "sha256": "ca3ca764e2821c4db3a1e2fd0ccfffe32837d2bdb11a8f945e493cd267a1d137",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 277064,
+      "file_id": 3483816,
+      "filename": "mysticallib-1.12.2-1.13.0.jar",
+      "bytes": 426226,
+      "sha256": "9293907825d431db479afd87fcc70b5d09b672231c2f66db2f41e74de02e4891",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 280506,
+      "file_id": 2738135,
+      "filename": "Modular Diversity-1.8.jar",
+      "bytes": 398175,
+      "sha256": "6fcc1db904118e713032f9958a7f8037235c096e705f4ff44517aca8dcffabde",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 282313,
+      "file_id": 2689835,
+      "filename": "TipTheScales-1.12.2-1.0.4.jar",
+      "bytes": 11641,
+      "sha256": "91eab825f0730d412a05a40136e9f0755b9a2b9483fc92255cba08e282a1e146",
+      "source": "https://cursemaven.com/curse/maven/project-282313/2689835/project-282313-2689835.jar"
+    },
+    {
+      "project_id": 282623,
+      "file_id": 3280750,
+      "filename": "tweakersconstruct-1.12.2-1.6.1.jar",
+      "bytes": 35393,
+      "sha256": "852c74c4693ae78bc2343444358ec73042314ff1d5fb6926740f1e203bdd1548",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 282940,
+      "file_id": 3460961,
+      "filename": "mysticalworld-1.12.2-1.11.0.jar",
+      "bytes": 2367049,
+      "sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 282947,
+      "file_id": 2682612,
+      "filename": "baubley-heart-canisters-1.12.2-1.2.3.jar",
+      "bytes": 63035,
+      "sha256": "b2e129185202de96c29d6a3d05666f9aa162404c91d20957a2cf71f8f575abab",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 283525,
+      "file_id": 4493884,
+      "filename": "LagGoggles-1.12.2-5.9-140.jar",
+      "bytes": 179329,
+      "sha256": "bc69907451119c14efaca9bfb124beef178be1932ddb32d7f98f7bb8f637f8ed",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 284331,
+      "file_id": 3344068,
+      "filename": "MJRLegendsLib-1.12.2-1.2.1.jar",
+      "bytes": 116827,
+      "sha256": "1506cdab6f2ae7576001de2d632c48813920b92e8782f8d8a869f0cb1a8ea8a0",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 285439,
+      "file_id": 6379256,
+      "filename": "bewitchment-1.12.2-0.0.22.65.jar",
+      "bytes": 4914477,
+      "sha256": "ab9206e0f2ba092da007a0c89f82b7727862ed58d63ef431f1cd237307cc8218",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 285492,
+      "file_id": 2705304,
+      "filename": "ThaumicJEI-1.12.2-1.6.0-27.jar",
+      "bytes": 59213,
+      "sha256": "b9bef5de98638fe1497cc28de6414860ffc77962d93974d10ba44af3ad77fdce",
+      "source": "https://cursemaven.com/curse/maven/project-285492/2705304/project-285492-2705304.jar"
+    },
+    {
+      "project_id": 286116,
+      "file_id": 2647978,
+      "filename": "GalacticraftTweaker-1.12.2-1.0.3.jar",
+      "bytes": 18481,
+      "sha256": "21608e790f3c9e625531da42264a2dae763b5868c2234fba42b8155056fe7f06",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 287275,
+      "file_id": 4000252,
+      "filename": "PlanetProgression-1.12.2-0.4.8.jar",
+      "bytes": 606364,
+      "sha256": "f42e16b3321b9ed5d6da26c210f8106ac40574accc33d8cbcf5271ad2faccd09",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 288959,
+      "file_id": 2535057,
+      "filename": "mystagradcompat-1.2.jar",
+      "bytes": 8943,
+      "sha256": "5c85f184fd328473b8ea4b8725db58f49b6768a396c341a43a8654cf6bc32306",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 289647,
+      "file_id": 2989956,
+      "filename": "BasicNetherOres-1.12.2-1.0.5.0.jar",
+      "bytes": 153276,
+      "sha256": "eb18c3723c6f985c5a6ec144dc238e49a72d6abda35eafde085e35709153ef99",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 291786,
+      "file_id": 2701203,
+      "filename": "tinkersjei-1.2.jar",
+      "bytes": 12255,
+      "sha256": "526d4fb23d033a79c44276b68746ab3f653e960c7101a9d62f51a12940730b94",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 292952,
+      "file_id": 2671784,
+      "filename": "JustEnoughReactors-1.12.2-1.1.3.61.jar",
+      "bytes": 53675,
+      "sha256": "280b808fd921fc6c1c4f796d465d49addf7041cfe9886d9ad82a7ef5aa5b2c77",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 293268,
+      "file_id": 3832678,
+      "filename": "UndergroundBiomesConstructs-1.12-1.3.14.jar",
+      "bytes": 1332844,
+      "sha256": "663ba6f52fcc64d7ce6da9c52c526c8d397617137b2e90ce91d0d7a5958cfdbc",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 293425,
+      "file_id": 3186612,
+      "filename": "alchemistry-1.12.2-42.jar",
+      "bytes": 1325991,
+      "sha256": "8815705433e54f84f8752ca7562637b3832189b53e09af113ef4953f144684ab",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 293426,
+      "file_id": 2761706,
+      "filename": "alib-1.0.12.jar",
+      "bytes": 75827,
+      "sha256": "e8d9af35ae9e77c5a7e7722f10710a4e0ac7e5cda82a62c7ae3350ffe2059136",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 298187,
+      "file_id": 3005950,
+      "filename": "BuildingGadgets-2.8.4.jar",
+      "bytes": 719492,
+      "sha256": "1f130a49dbcdd56ec24df38710d6fe67e95880294f9941c28a4d4a104d1ddec5",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 301310,
+      "file_id": 2863053,
+      "filename": "simpletrophies-1.2.2.1.jar",
+      "bytes": 51327,
+      "sha256": "dc78ef618154151176d33da079ae9b046ac8e7e193e0185253e2a43e3c13b522",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 303122,
+      "file_id": 2919936,
+      "filename": "jetif-1.12.2-1.5.2.jar",
+      "bytes": 29003,
+      "sha256": "fc0609f69a0d527849d76253d53e0a55b9a3745906c5457d845ffbd2450422fd",
+      "source": "https://cursemaven.com/curse/maven/project-303122/2919936/project-303122-2919936.jar"
+    },
+    {
+      "project_id": 301356,
+      "file_id": 3091010,
+      "filename": "demagnetize-1.12.2-1.1.2.jar",
+      "bytes": 62280,
+      "sha256": "6c2b40365ed0b1c525961bc911aec1eb691ecf02a629403410a56e0065c00b01",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 304346,
+      "file_id": 4674241,
+      "filename": "EnderIO-endergy-1.12.2-5.3.72.jar",
+      "bytes": 118017,
+      "sha256": "8379e7174304658873e5e260aeb362d5c4f4dc450fae6f81ee2fde7d07645a98",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 306028,
+      "file_id": 2833640,
+      "filename": "ProjectIntelligence-1.12.2-1.0.9.28-universal.jar",
+      "bytes": 473948,
+      "sha256": "bdbb48ac3f504f224e5383e281e56e773aa6261defb6912c99fb6e0088d6fae9",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 306549,
+      "file_id": 2906537,
+      "filename": "Tips-1.12.2-1.0.9.jar",
+      "bytes": 20578,
+      "sha256": "09b1fb75a712b4e3bf524ad29bf5c65e0dfde2cd5eb17ea64ada4a5fc3879ebc",
+      "source": "https://cursemaven.com/curse/maven/project-306549/2906537/project-306549-2906537.jar"
+    },
+    {
+      "project_id": 306770,
+      "file_id": 3162874,
+      "filename": "Patchouli-1.0-23.6.jar",
+      "bytes": 472464,
+      "sha256": "8fcceac75c71e0d041db734111200205d03431b7e8646f8209cf2c4de9afef7b",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 308380,
+      "file_id": 3614585,
+      "filename": "PackagedAuto-1.12.2-1.0.5.19.jar",
+      "bytes": 220297,
+      "sha256": "b7d168fe803d7a87fef0a38574cd030d9f5d89f725b8937553831bbab2a2e04b",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 309756,
+      "file_id": 4674242,
+      "filename": "EnderIO-conduits-mekanism-1.12.2-5.3.72.jar",
+      "bytes": 155610,
+      "sha256": "e0fbb451bcfb75b123ec539ece9c2791278e099415270782abdfe84103eb9abc",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 311377,
+      "file_id": 2859893,
+      "filename": "betternether-0.1.8.6.jar",
+      "bytes": 1769238,
+      "sha256": "6fffbb495ec446317f4cfdbc4f471a30bffa298c4f354adfed62e4ab5ab274b2",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 311595,
+      "file_id": 3028832,
+      "filename": "simplybackpacks-1.4.9.jar",
+      "bytes": 129190,
+      "sha256": "1c0e8cac846875a0f5f4a9e5ade6a302c12a643bac89b667815901eda1a38ca9",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 311938,
+      "file_id": 2683267,
+      "filename": "inworldcrafting-1.12.2-1.2.0-universal.jar",
+      "bytes": 72109,
+      "sha256": "80552a052778103ada116b81406fa30482e1738c469e728b2b70255c97610643",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 312195,
+      "file_id": 3474382,
+      "filename": "EnderTweaker-1.12.2-1.2.3.jar",
+      "bytes": 31753,
+      "sha256": "127e47c0e9e15fe29634ddaa0b6536093a3fd5430e4429b9f3150bd4c64e8b31",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 313252,
+      "file_id": 2668865,
+      "filename": "Wasaila-1.0.jar",
+      "bytes": 4365,
+      "sha256": "3414d2fbf682e2e08b2245ca439c807763829b91bdee18ab972284c223541a31",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 314515,
+      "file_id": 3195127,
+      "filename": "Draconic-Additions-1.12.2-1.15.1.39-universal.jar",
+      "bytes": 769476,
+      "sha256": "f529f96033592beffaa977232890cbed667f2be0759e9ca8b9d50aaecf832549",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 314904,
+      "file_id": 2819669,
+      "filename": "FTBBackups-1.1.0.1.jar",
+      "bytes": 43764,
+      "sha256": "6b6bcbbf6ac4528657345e1696339528a44643ecb06e6137908eafb8432bd962",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 319037,
+      "file_id": 2710957,
+      "filename": "knowledgeshare-1.1.jar",
+      "bytes": 5887,
+      "sha256": "2f142b3cf73fc2c51779637f8c1591ac081c2b2a84830a481e8cafa1281bd816",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 319441,
+      "file_id": 6047659,
+      "filename": "ThaumicAugmentation-1.12.2-2.1.14.jar",
+      "bytes": 8220792,
+      "sha256": "6af6851071a227dc48a634bb827c7679703f0825c0b2a697553e261036b13c00",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 320254,
+      "file_id": 2703755,
+      "filename": "PlaneFix-1.12.2-1.0.0.jar",
+      "bytes": 7357,
+      "sha256": "7aceca6356b0a7a1a970298081c60135bb458d7780bf1058694c1f0eb8a5172f",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 321720,
+      "file_id": 2711427,
+      "filename": "AE-Net-Vis-Tool-1.12.2-1.0.3.0-universal.jar",
+      "bytes": 77203,
+      "sha256": "0e898bf22d923889986e70705351601c4f8b98f6ef917b1644082067008b2310",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 324318,
+      "file_id": 2737623,
+      "filename": "modularmagic-1.4.0.jar",
+      "bytes": 158798,
+      "sha256": "fdf583a1f67600d151b991a23132d91b2e3905de1cfe48764236f9a61226b7f2",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 336569,
+      "file_id": 3226142,
+      "filename": "MoreTweaker-1.0.19.jar",
+      "bytes": 312044,
+      "sha256": "46fca3b43ba4a56110cd47713c110e329d19ac9eff84ca21b0083a591e340871",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 336748,
+      "file_id": 3218640,
+      "filename": "Requious Frakto-0.12.jar",
+      "bytes": 501916,
+      "sha256": "3324c6c9e02c478cf4db1dfc2c9dd8bdcbe97f31ac7ccdc5cb89c2bca496d487",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 340583,
+      "file_id": 3003242,
+      "filename": "bettercaves-1.12.2-2.0.4.jar",
+      "bytes": 193604,
+      "sha256": "b81b66c2b90431d0cd764f95a2d7ff4561052fa040e8e694b7e2b8e8fa974a00",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 361579,
+      "file_id": 3542217,
+      "filename": "spark-forge.jar",
+      "bytes": 2827422,
+      "sha256": "c77a59d84d68dd32f8394f7e0cf21e229db36c220c8f2f82bcffd832f1ffdaea",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 363543,
+      "file_id": 3081433,
+      "filename": "DivineRPG-1.7.1.jar",
+      "bytes": 18732935,
+      "sha256": "6a220de5ccde3580f44e113d3e89ade6e9196a11799fc6c3c03fbfd5a520a491",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 363856,
+      "file_id": 2886150,
+      "filename": "supersoundmuffler-revived_1.12.2_1.0.2.10.jar",
+      "bytes": 80841,
+      "sha256": "2faf6423756b3c4af3a83424a931122d18ee16dfaf1fff5058baaee923522312",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 376351,
+      "file_id": 3015136,
+      "filename": "framedcompactdrawers-1.2.7.jar",
+      "bytes": 90351,
+      "sha256": "0b5ef2bac1feb334132e4b18434390d772e534d038b9d062b98f1ed8d8029dcb",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 376903,
+      "file_id": 3319812,
+      "filename": "plustic-8.0.3.jar",
+      "bytes": 560648,
+      "sha256": "b88d420e52cb388e167aacc6cf4c02a80cd0b1bbd5f7b9e54d80fd5601f5fb0c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 377201,
+      "file_id": 3140670,
+      "filename": "TickCentral-3.2.jar",
+      "bytes": 53554,
+      "sha256": "87f0f163162522c8379dce1ce7f802b46f7fe1c167905965037c3f42908fd19c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 380998,
+      "file_id": 3132891,
+      "filename": "integratednbt-1.2.2.jar",
+      "bytes": 114838,
+      "sha256": "4e0dc8eb527ed2eba55697ac109337805f2eda366ad120c9c58fd769d1c33179",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 398267,
+      "file_id": 5778512,
+      "filename": "extendedcrafting-nomifactory-edition-1.7.0.7.jar",
+      "bytes": 497677,
+      "sha256": "75ed6cf78cf73816bb1d44fed0bbd1e5b2f5e08fbb2ef98bc49b6b59715bb271",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 401178,
+      "file_id": 8135692,
+      "filename": "zenutils-1.27.2.jar",
+      "bytes": 871567,
+      "sha256": "46dc53134128ced2812fe0744d20b55faaedf2cac2bf9bda47fb17b8c6c698c6",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 408089,
+      "file_id": 3479639,
+      "filename": "extracpus-1.12.2-1.2.1.jar",
+      "bytes": 44118,
+      "sha256": "d6bbb31afa0c59f56df2b06e901c44789c0d8c713cc70d3c146312ccc449a04a",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 417392,
+      "file_id": 7215216,
+      "filename": "QuarkRotN-r1.6-191.jar",
+      "bytes": 3999969,
+      "sha256": "23b4167d064509eef2cc61e55886973bd86a3bd5c575cd51980a91b1658de01b",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 419003,
+      "file_id": 3215120,
+      "filename": "tinkersaether-1.4.1.jar",
+      "bytes": 126827,
+      "sha256": "d8df387c4e59affe12c20b7c7d0dc7b01f5c320b554cdd43fd3e7f121871dae9",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 419286,
+      "file_id": 7049694,
+      "filename": "!mixinbooter-10.7.jar",
+      "bytes": 2383999,
+      "sha256": "8bb53080aede2d2b1e1c5f713bbf49a38f20add8caa3d52fabcdf8a536b55a18",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 423758,
+      "file_id": 4448659,
+      "filename": "BQTweaker-1.3.5.jar",
+      "bytes": 201577,
+      "sha256": "c947f92623b22cc8baab77e82e58852710bb5b67123c85891b528b223ad4d3e5",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 456403,
+      "file_id": 7883992,
+      "filename": "Forgelin-Continuous-2.3.20.0.jar",
+      "bytes": 7764070,
+      "sha256": "d0995d14d16169a639fcbbb27a99cfa15bee5c919098f98d006a934e224d8402",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 461660,
+      "file_id": 5876158,
+      "filename": "mousetweaks-1.12.2-3.1.5.jar",
+      "bytes": 201591,
+      "sha256": "4874dc0e614ea47f4c049875ffffc4a48b79dceebb5b76f41945b42dfd624175",
+      "source": "https://cursemaven.com/curse/maven/mouse-tweaks-unofficial-461660/5876158/mouse-tweaks-unofficial-461660-5876158.jar"
+    },
+    {
+      "project_id": 473325,
+      "file_id": 3407210,
+      "filename": "uberconduitprobe-1.0.3.jar",
+      "bytes": 41016,
+      "sha256": "107344e318970f984bf8a2407aef9de6eafc726d3f3e00f19c6dd675c6756239",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 485225,
+      "file_id": 3329212,
+      "filename": "ExtraCells-1.12.2-2.6.7.jar",
+      "bytes": 2570450,
+      "sha256": "44b181503bdc84349cf56a9aff268daac870b7292a236b29f3e9817029db864e",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 513857,
+      "file_id": 3739783,
+      "filename": "oauth-1.06.4.jar",
+      "bytes": 124249,
+      "sha256": "211db6d0687fffd970752c7a4b1a69d26182736ce41a06b1bc5516c6031fa50e",
+      "source": "https://cursemaven.com/curse/maven/project-513857/3739783/project-513857-3739783.jar"
+    },
+    {
+      "project_id": 564236,
+      "file_id": 6364107,
+      "filename": "Galacticraft-1.12.2-4.0.7.jar",
+      "bytes": 15675570,
+      "sha256": "e77f62ba847ae4ecef95c4db3878b8eba1d9b05fdc9c20fac79f6bc4517e8240",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 570458,
+      "file_id": 5147702,
+      "filename": "ae2-uel-v0.56.4.jar",
+      "bytes": 4405400,
+      "sha256": "3505d2e31e9c48a0c96ca058fcde8a6a50b7d673e13af488a398878d6d33b698",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 605280,
+      "file_id": 4069565,
+      "filename": "dj2addons-1.2.1.1.1.jar",
+      "bytes": 111056,
+      "sha256": "c580a640e27e416410c8edcf308215be8dfdf478debd93d09b44213f96d490d1",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 616190,
+      "file_id": 4630499,
+      "filename": "JEI-Utilities-1.12.2-0.2.12.jar",
+      "bytes": 97182,
+      "sha256": "691c6c2a6c4ab779de90e8a9d311f5e145ca27798ce268944e91095098db0a49",
+      "source": "https://cursemaven.com/curse/maven/project-616190/4630499/project-616190-4630499.jar"
+    },
+    {
+      "project_id": 687577,
+      "file_id": 7925117,
+      "filename": "groovyscript-1.4.3.jar",
+      "bytes": 16954096,
+      "sha256": "07617b7ce9170a857199bd61d730a0db3af2685cf83d31734a2d4b628fda7533",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 705000,
+      "file_id": 8149643,
+      "filename": "UniversalTweaks-1.12.2-1.20.0.jar",
+      "bytes": 1936617,
+      "sha256": "0b94bea35ce762c1f9066695ddafea0091afc7696bdc310f77b5d2fa7139a13c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 849094,
+      "file_id": 4513158,
+      "filename": "thaumicenergistics-extended_life-2.2.7.jar",
+      "bytes": 1086975,
+      "sha256": "35e6f46459c9497e69ee487c4837afba7121c31c7acf30b94f1309ff59fef187",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 870276,
+      "file_id": 5212709,
+      "filename": "!configanytime-3.0.jar",
+      "bytes": 5201,
+      "sha256": "29fe190f0d1bb0b3841b2b9f315a5d561cab9f587df6164a0205440540577575",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 871198,
+      "file_id": 7958801,
+      "filename": "vintagefix-0.7.0.jar",
+      "bytes": 1043465,
+      "sha256": "b109ca7e2ad58a8d45279da76a7882877e807f949c6f09f173907284ac08a318",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 873867,
+      "file_id": 6147102,
+      "filename": "!Red-Core-MC-1.8-1.12-0.6.jar",
+      "bytes": 151154,
+      "sha256": "698a0e74f50e6fa44a34026d95894c2b6608998521bbcee2a83447c5d208fde4",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 876339,
+      "file_id": 4815198,
+      "filename": "betterp2p-1.12.2-1.2.3-extended_life.jar",
+      "bytes": 128422,
+      "sha256": "d29c8bad54aeed335bc294df192b6703a987e4da8a144de577bfa27b5016f14f",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 896591,
+      "file_id": 5187152,
+      "filename": "serializationisbad-1.5.2.jar",
+      "bytes": 511085,
+      "sha256": "2031c8edce4b124f29a33c9ba892b9049d19fcff4c711e2aa276d051cf0d5d31",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 910715,
+      "file_id": 6687458,
+      "filename": "Alfheim-1.6.jar",
+      "bytes": 70512,
+      "sha256": "730bb0425c97d394c86712e27f71c93069d5b95877bd54f70fc56235eeef33ef",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 923677,
+      "file_id": 7476868,
+      "filename": "omniwand-1.12.2-2.0.4.jar",
+      "bytes": 39461,
+      "sha256": "e9b9925b4da668f1b67f012f7bb0097a61a05c7c9a38ae562b4d826b02ce138c",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 968474,
+      "file_id": 7279112,
+      "filename": "`FermiumBooter-1.4.1.jar",
+      "bytes": 1931503,
+      "sha256": "acbf49a2ace819b775e648c079634fc0a6c8a54cdf1bc2098eb0dd8f011afe6b",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 971247,
+      "file_id": 7741058,
+      "filename": "fermiumasm-5.31.jar",
+      "bytes": 530358,
+      "sha256": "338a6c6aca9b6434a9eeb7870a7f0aa83275e430cd331e3681fa2fc56b157b63",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 995393,
+      "file_id": 7736064,
+      "filename": "Bubbles-2.4.10.jar",
+      "bytes": 342223,
+      "sha256": "8a54cb9abafb14ce66bbc61fbfe5846fdeb3a4cf6ca6ff3bbd6bfe7b16f595f2",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 1063334,
+      "file_id": 7846443,
+      "filename": "twilightforest-1.12.2-3.15.1.jar",
+      "bytes": 28781821,
+      "sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 1067548,
+      "file_id": 5994116,
+      "filename": "integratedderivative-1.1.2.jar",
+      "bytes": 134894,
+      "sha256": "d3f85306d236f3d57f6cbe7c0d3a56c77cd4fb59d41d132df8cf1578fde05cbe",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 1069346,
+      "file_id": 8150308,
+      "filename": "ThaumcraftFix-1.12.2-1.1.11.jar",
+      "bytes": 1036394,
+      "sha256": "14372384835f03ebe7148ad77b534ffa28b71c897f6b9331f762c7d027f53676",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 1116420,
+      "file_id": 7571611,
+      "filename": "natura-legacy-1.12.2-4.4.1.jar",
+      "bytes": 1249794,
+      "sha256": "67a2502b1c6738e9b8bd501f5aea8b4cc7877ec503defe263979ad73415a2f99",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 1153744,
+      "file_id": 7522969,
+      "filename": "NoiseThreader-1.1.3.jar",
+      "bytes": 42995,
+      "sha256": "6f94e8f82b0dc8baf70b6f9c453a7b53f5b6e471f20d7b45a38e19447ade4f2b",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 1154099,
+      "file_id": 8049629,
+      "filename": "!!!CrashAssistant-forge-1.12.2-1.11.9.jar",
+      "bytes": 3375700,
+      "sha256": "71c02edadca48062030dc2a1278301b144fee460742703e1fbbda01c076efea4",
+      "source": "https://cdn.modrinth.com/data/ix1qq8Ux/versions/h27q2ARc/%21%21%21CrashAssistant-forge-1.12.2-1.11.9.jar"
+    },
+    {
+      "project_id": 1179448,
+      "file_id": 7925896,
+      "filename": "botania-r1.10-372.jar",
+      "bytes": 13843203,
+      "sha256": "41441336d074d34e4dcbd93aa818f4e4c9674c927cf9f32959111e0705f00ba5",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 1221029,
+      "file_id": 6973315,
+      "filename": "endermodpacktweaks-0.5.11.jar",
+      "bytes": 696898,
+      "sha256": "9a46e90fbd9ec91f8125663248ebf514fce0b97491f7212ce91624496c8d98cc",
+      "source": "Pinned official 2.23.4 server pack"
+    },
+    {
+      "project_id": 1329068,
+      "file_id": 6902995,
+      "filename": "morphoverlay-1.0.1.jar",
+      "bytes": 10240,
+      "sha256": "bde1ea2b1d0f2eda1c43108eea60e8282c5298e174f28f563b9ea313e99e93e1",
+      "source": "https://cursemaven.com/curse/maven/morphoverlay-1329068/6902995/morphoverlay-1329068-6902995.jar"
+    },
+    {
+      "project_id": 1342654,
+      "file_id": 7294306,
+      "filename": "OpenBlocksReopened-1.12.2-1.8.3.1.jar",
+      "bytes": 5470837,
+      "sha256": "47a4fa7f5d97ae5d6fbfd88635e1ddb8f215fcd41694b602e60455f74f631396",
+      "source": "Pinned official 2.23.4 server pack"
+    }
+  ],
+  "limits": "Artifact provenance only; not release acceptance, full translation or server load capacity"
+}

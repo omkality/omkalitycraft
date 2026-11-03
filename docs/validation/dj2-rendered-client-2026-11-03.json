@@ -1,0 +1,298 @@
+{
+  "date": "2026-11-03",
+  "pack": "DJ2 2.23.4",
+  "accepted_player_release": false,
+  "live_profile_or_payload_changed": false,
+  "runtime": {
+    "graphical_client_os": "Windows",
+    "client_java": "Temurin 8u472",
+    "client_heap_mb": 6144,
+    "forge": "1.12.2-14.23.5.2860",
+    "server_os": "Linux Docker",
+    "server_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "server_cpus": 4,
+    "server_container_memory_mb": 6144,
+    "server_heap_mb": 4096,
+    "private_core": "0.2.8",
+    "auth": "isolated Drasl + authlib-injector"
+  },
+  "inputs": {
+    "client_bom": "profiles/upgrade-inputs/dj2-2.23.4-client.json",
+    "author_client_jars": 223,
+    "author_forge_containers": 254,
+    "translation_commit": "1f6764559cf2118b929ad880abd03b53b6f9daa0",
+    "translation_files": [
+      {
+        "path": "groovy/assets/divine_journey_2/lang/ru_ru.lang",
+        "bytes": 4092,
+        "sha256": "3d84f9b12939b4605396d687df421b37d74a170532a1a745da240829cb11bb80"
+      },
+      {
+        "path": "resources/betterquesting/lang/ru_ru.lang",
+        "bytes": 1088883,
+        "sha256": "313e4674ccab9155cc28b3d6f626034ba5e2a446f4ff803bc8fc07106e86a788"
+      },
+      {
+        "path": "resources/contenttweaker/lang/ru_ru.lang",
+        "bytes": 60499,
+        "sha256": "fbbd8e6ca912bd9b4ed2335ddf1c3e4462c1f7586ed1327fb151db8c49b95985"
+      },
+      {
+        "path": "resources/crafttweaker/lang/ru_ru.lang",
+        "bytes": 81052,
+        "sha256": "744ec91257afa837f1951688f0ae6dc5635f8e98df273866da54b14f876b4dc0"
+      },
+      {
+        "path": "resources/enchantment_descriptions/lang/ru_ru.lang",
+        "bytes": 4212,
+        "sha256": "be2a8b184dc3934d61366c6d7d405ad5a45395a825202fbc1aeb5cd33b85a76d"
+      }
+    ],
+    "reused_jars_independently_crosschecked": 15
+  },
+  "load_sound_workaround": {
+    "load_sound_mode": "NOTHING",
+    "previous_mode": "MINECRAFT_AND_WORLD",
+    "changed": true,
+    "universal_tweaks_sha256": "0b94bea35ce762c1f9066695ddafea0091afc7696bdc310f77b5d2fa7139a13c",
+    "before_sha256": "ced608a5a42cb908b8b4956eb004e7004e12b44028d73f7e8081968aafa5ba2b",
+    "after_sha256": "0095afb8d4b511b6d2ac219c05e1b85582bf63ff7bcfacd4b071601e64a5767c"
+  },
+  "native_instrumented_gui": {
+    "probe": "0.1.1",
+    "probe_sha256": "053668f52d70c4e27be258d223d7664040b7e6a558861e3ec0951f2d569ddca3",
+    "checks": [
+      "direct_join_reaches_world_without_connecting_overlay",
+      "native_render_screenshot_loadsound-pass-hud",
+      "real_quest_screen_288",
+      "native_render_screenshot_loadsound-pass-quest-288",
+      "quest_closes_without_ut_exception_288",
+      "real_quest_screen_291",
+      "native_render_screenshot_loadsound-pass-quest-291",
+      "quest_closes_without_ut_exception_291",
+      "real_quest_screen_143",
+      "native_render_screenshot_loadsound-pass-quest-143",
+      "quest_closes_without_ut_exception_143",
+      "real_quest_screen_1066",
+      "native_render_screenshot_loadsound-pass-quest-1066",
+      "quest_closes_without_ut_exception_1066",
+      "native_render_screenshot_loadsound-pass-book",
+      "book_closes_without_ut_exception",
+      "fixed_probe_writes_only_inside_owned_game_folder"
+    ],
+    "runtime_locale_keys_matched": 20
+  },
+  "stock_control": {
+    "probe_absent": true,
+    "author_jar_count": 223,
+    "server_inventory_query_found": true,
+    "client_exit_code": 0,
+    "server_exit_code": 0,
+    "server_oom_killed": false
+  },
+  "forge_protocol_declared_list_controls": {
+    "ok": true,
+    "scope": "Actual Forge protocol with synthetic declared lists; stock graphical client starts after this",
+    "checks": [
+      "server_guard_rejects_extra_declared_mod_list",
+      "server_guard_rejects_missing_declared_mod_list",
+      "server_guard_rejects_version_declared_mod_list",
+      "matching_stock_declared_list_positive_control",
+      "old_2_21_3_declared_list_rejected_not_rendered_old_client",
+      "extra_probe_exists_before_stock_launcher_cleanup"
+    ]
+  },
+  "rendered_frames": [
+    {
+      "filename": "loadsound-pass-hud.png",
+      "bytes": 157352,
+      "sha256": "0e4a2ce7cad2725d45d471ed7d28c686de755020bcacc050b1d264c87a548263",
+      "dimensions": [
+        1280,
+        800
+      ],
+      "png_fully_decoded": true
+    },
+    {
+      "filename": "loadsound-pass-quest-288.png",
+      "bytes": 49619,
+      "sha256": "52d976cb29706993e6ba336de78bc20b47dabd9490a82db1ed900273da3203a7",
+      "dimensions": [
+        1280,
+        800
+      ],
+      "png_fully_decoded": true
+    },
+    {
+      "filename": "loadsound-pass-quest-291.png",
+      "bytes": 52335,
+      "sha256": "84ae92cd3150e67e59039d8202ba5e35989c953c4fb13539f85e3dae88159a5a",
+      "dimensions": [
+        1280,
+        800
+      ],
+      "png_fully_decoded": true
+    },
+    {
+      "filename": "loadsound-pass-quest-143.png",
+      "bytes": 65878,
+      "sha256": "23bf7bd95e31e05b2cf6b5bf4caf289119eb4c646ab83f5b7c7c4668a32d5ad8",
+      "dimensions": [
+        1280,
+        800
+      ],
+      "png_fully_decoded": true
+    },
+    {
+      "filename": "loadsound-pass-quest-1066.png",
+      "bytes": 62800,
+      "sha256": "6c4a55ef0107047dc20bc1aa52d491f02a18b1f1d711dee1477483af7cb385be",
+      "dimensions": [
+        1280,
+        800
+      ],
+      "png_fully_decoded": true
+    },
+    {
+      "filename": "loadsound-pass-book.png",
+      "bytes": 475052,
+      "sha256": "1529a1913cf483dbedebba687d60f2ca7913b91c35981ecf32eb5d6b5b963f8c",
+      "dimensions": [
+        1280,
+        800
+      ],
+      "png_fully_decoded": true
+    },
+    {
+      "filename": "2026-11-03_12.33.00.png",
+      "bytes": 336393,
+      "sha256": "9a4c798cfb0738b624fe8a4b3fc545afbad0545888dcd91ba59bfe38d51641f7",
+      "dimensions": [
+        1280,
+        800
+      ],
+      "png_fully_decoded": true,
+      "instrumented": false
+    }
+  ],
+  "frame_hash_scope": "Final files fully decoded after client closed; replaces early async-write metadata, including incomplete 43-byte snapshots. GUI conditions remain separately reported.",
+  "limits": [
+    "No public payload, production world or authentication deployment changed",
+    "Only selected quests and 20 runtime locale keys checked; partial English labels/Tips remain",
+    "Client and server are real, declared-list guard negative controls use a synthetic protocol client",
+    "No graphical Linux/macOS, player load capacity or universal anticheat acceptance",
+    "AgriCraft reconnect regression was in the lab fixture and fixed there; no AgriCraft or production Core patch",
+    "A fall interrupted the first GUI attempt; successful retry seeded a new inventory, not a death-recovery claim"
+  ],
+  "native_menu_reconnect_control": {
+    "ok": false,
+    "instrumented": true,
+    "probe_version": "0.1.2",
+    "scope": "Three actual graphical menu connections against isolated Linux server; lab-only ServerData correction",
+    "checks": [
+      "starts_at_menu_without_world",
+      "first_process_menu_had_no_server_data_before_any_connection",
+      "cycle_1_native_connection_sets_server_data",
+      "cycle_1_world_and_player_present",
+      "cycle_1_agricraft_network_json_written_and_parsed",
+      "cycle_1_no_new_crash_report",
+      "native_quest_opens_after_menu_connect",
+      "native_quest_closes_after_menu_connect",
+      "cycle_1_native_disconnect_returns_to_menu",
+      "cycle_2_native_connection_sets_server_data",
+      "cycle_2_world_and_player_present",
+      "cycle_2_agricraft_network_json_written_and_parsed",
+      "cycle_2_no_new_crash_report",
+      "cycle_2_native_disconnect_returns_to_menu",
+      "cycle_3_native_connection_sets_server_data",
+      "cycle_3_world_and_player_present",
+      "cycle_3_agricraft_network_json_written_and_parsed",
+      "cycle_3_no_new_crash_report",
+      "cycle_3_native_disconnect_returns_to_menu",
+      "no_agricraft_server_id_exception_in_session",
+      "no_universal_tweaks_null_gui_exception_in_session"
+    ],
+    "cycles": [
+      {
+        "cycle": 1,
+        "network_json_count": 262,
+        "server_data_present": true,
+        "new_crash_reports": 0
+      },
+      {
+        "cycle": 2,
+        "network_json_count": 262,
+        "server_data_present": true,
+        "new_crash_reports": 0
+      },
+      {
+        "cycle": 3,
+        "network_json_count": 262,
+        "server_data_present": true,
+        "new_crash_reports": 0
+      }
+    ],
+    "prior_attempt": {
+      "scope": "Initial fresh-menu observation and successful network sync; fixture then expected base GuiQuest instead of BQTweaker GuiQuestOverride",
+      "checks": [
+        "starts_at_menu_without_world",
+        "initial_menu_has_no_current_server_data",
+        "cycle_1_native_connection_sets_server_data",
+        "cycle_1_world_and_player_present",
+        "cycle_1_agricraft_network_json_written_and_parsed",
+        "cycle_1_no_new_crash_report"
+      ],
+      "error": "native_quest_opens_after_menu_connect"
+    },
+    "post_disconnect_audit": {
+      "ok": false,
+      "reason": "New queued-task exceptions after the immediate disconnect assertions and before clean process exit; initial pass claim withdrawn",
+      "crash_reports": [
+        {
+          "filename": "crash-2026-11-03_17.58.57-client.txt",
+          "cause": "Caused by: java.lang.NullPointerException",
+          "top_frames": [
+            "at net.minecraft.network.play.server.SPacketEntity.getEntity(SourceFile:161)",
+            "at net.minecraft.client.network.NetHandlerPlayClient.handleEntityMovement(NetHandlerPlayClient.java:620)",
+            "at net.minecraft.network.play.server.SPacketEntity.processPacket(SourceFile:152)"
+          ]
+        },
+        {
+          "filename": "crash-2026-11-03_17.58.58-client.txt",
+          "cause": "Caused by: java.lang.NullPointerException",
+          "top_frames": [
+            "at com.bewitchment.api.message.SyncExtendedPlayer$Handler.lambda$onMessage$0(SyncExtendedPlayer.java:40)",
+            "at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)",
+            "at java.util.concurrent.FutureTask.run(FutureTask.java:266)"
+          ]
+        },
+        {
+          "filename": "crash-2026-11-03_18.00.34-client.txt",
+          "cause": "Caused by: java.lang.NullPointerException",
+          "top_frames": [
+            "at net.minecraft.network.play.server.SPacketEntityHeadLook.getEntity(SourceFile:42)",
+            "at net.minecraft.client.network.NetHandlerPlayClient.handleEntityHeadLook(NetHandlerPlayClient.java:644)",
+            "at net.minecraft.network.play.server.SPacketEntityHeadLook.processPacket(SourceFile:38)"
+          ]
+        },
+        {
+          "filename": "crash-2026-11-03_18.00.35-client.txt",
+          "cause": "Caused by: java.lang.NullPointerException",
+          "top_frames": [
+            "at com.bewitchment.api.message.SyncExtendedPlayer$Handler.lambda$onMessage$0(SyncExtendedPlayer.java:40)",
+            "at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)",
+            "at java.util.concurrent.FutureTask.run(FutureTask.java:266)"
+          ]
+        }
+      ]
+    },
+    "limits": [
+      "AgriCraft ServerData path passed, but overall reconnect/disconnect acceptance failed",
+      "Client exit 0 does not mean no recovered Minecraft task crashes"
+    ],
+    "probe_sha256": "aaf28f8a1288571c5eacfe9e799dada3c35d33ba48ccb11fae71e8525389d287",
+    "client_exit_code": 0,
+    "server_exit_code": 0,
+    "server_oom_killed": false
+  }
+}
