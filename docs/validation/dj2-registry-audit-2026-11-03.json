@@ -1,0 +1,968 @@
+{
+  "ok": false,
+  "read_only": true,
+  "upgrade_accepted": false,
+  "requires_registry_review": true,
+  "coverage": "Saved registry names/IDs only; not aliases, datafixers or world contents",
+  "sha256": {
+    "source": "666362b62fd1513bccd5c1dc7eaae7782fa04d8b6624476985bd9dbbb9ec80bc",
+    "target": "ccea9dfc2c0fb1cdd01088e0e4d047b99ef6bd9bfdec305cae4babad50029eeb"
+  },
+  "detail_limit_per_change": 100,
+  "registries": {
+    "aetherapi:accessories": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 31,
+      "target_count": 31,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "aetherapi:enchantment_fuels": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 1,
+      "target_count": 1,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "aetherapi:enchantments": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 84,
+      "target_count": 84,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "aetherapi:freezable_fuels": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 1,
+      "target_count": 1,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "aetherapi:freezables": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 11,
+      "target_count": 11,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "aetherapi:moa_types": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 4,
+      "target_count": 4,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "atum:kiln_recipes": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 133,
+      "target_count": 133,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 130
+    },
+    "atum:quern_recipes": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 22,
+      "target_count": 22,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "atum:spinning_wheel_recipes": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 2,
+      "target_count": 2,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "bewitchment:brew": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 71,
+      "target_count": 71,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "bewitchment:cauldron_recipe": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 39,
+      "target_count": 39,
+      "removed": {
+        "count": 5,
+        "names": [
+          "moretweaker:moretweakerrecipe17",
+          "moretweaker:moretweakerrecipe23",
+          "moretweaker:moretweakerrecipe24",
+          "moretweaker:moretweakerrecipe5",
+          "moretweaker:moretweakerrecipe8"
+        ],
+        "truncated": false
+      },
+      "added": {
+        "count": 5,
+        "names": [
+          "moretweaker:moretweakerrecipe1",
+          "moretweaker:moretweakerrecipe13",
+          "moretweaker:moretweakerrecipe18",
+          "moretweaker:moretweakerrecipe19",
+          "moretweaker:moretweakerrecipe6"
+        ],
+        "truncated": false
+      },
+      "numeric_id_changes": 5
+    },
+    "bewitchment:curse": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 16,
+      "target_count": 16,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "bewitchment:distillery_recipe": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 15,
+      "target_count": 15,
+      "removed": {
+        "count": 7,
+        "names": [
+          "moretweaker:moretweakerrecipe12",
+          "moretweaker:moretweakerrecipe13",
+          "moretweaker:moretweakerrecipe18",
+          "moretweaker:moretweakerrecipe19",
+          "moretweaker:moretweakerrecipe26",
+          "moretweaker:moretweakerrecipe27",
+          "moretweaker:moretweakerrecipe6"
+        ],
+        "truncated": false
+      },
+      "added": {
+        "count": 7,
+        "names": [
+          "moretweaker:moretweakerrecipe14",
+          "moretweaker:moretweakerrecipe17",
+          "moretweaker:moretweakerrecipe2",
+          "moretweaker:moretweakerrecipe23",
+          "moretweaker:moretweakerrecipe24",
+          "moretweaker:moretweakerrecipe5",
+          "moretweaker:moretweakerrecipe8"
+        ],
+        "truncated": false
+      },
+      "numeric_id_changes": 7
+    },
+    "bewitchment:fortune": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 28,
+      "target_count": 28,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "bewitchment:frostfire_recipe": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 1,
+      "target_count": 1,
+      "removed": {
+        "count": 1,
+        "names": [
+          "moretweaker:moretweakerrecipe14"
+        ],
+        "truncated": false
+      },
+      "added": {
+        "count": 1,
+        "names": [
+          "moretweaker:moretweakerrecipe12"
+        ],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "bewitchment:incense": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 7,
+      "target_count": 7,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "bewitchment:oven_recipe": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 11,
+      "target_count": 11,
+      "removed": {
+        "count": 1,
+        "names": [
+          "moretweaker:moretweakerrecipe2"
+        ],
+        "truncated": false
+      },
+      "added": {
+        "count": 1,
+        "names": [
+          "moretweaker:moretweakerrecipe0"
+        ],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "bewitchment:ritual": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 37,
+      "target_count": 37,
+      "removed": {
+        "count": 2,
+        "names": [
+          "moretweaker:moretweakerrecipe0",
+          "moretweaker:moretweakerrecipe1"
+        ],
+        "truncated": false
+      },
+      "added": {
+        "count": 2,
+        "names": [
+          "divine_journey_2:cycles",
+          "divine_journey_2:tough_and_pure"
+        ],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "bewitchment:sigil": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 11,
+      "target_count": 11,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "bewitchment:spinning_wheel_recipe": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 22,
+      "target_count": 22,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "bewitchment:tarot": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 21,
+      "target_count": 21,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "bloodmagic:blood_orb": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 6,
+      "target_count": 6,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "commoncapabilities:registry:ingredientcomponents": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 3,
+      "target_count": 3,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "divinerpg:armor_descriptions": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 44,
+      "target_count": 44,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "enderio:capacitor": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 274,
+      "target_count": 274,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 39
+    },
+    "enderio:farmers": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 29,
+      "target_count": 32,
+      "removed": {
+        "count": 1,
+        "names": [
+          "agricraft:farmer"
+        ],
+        "truncated": false
+      },
+      "added": {
+        "count": 4,
+        "names": [
+          "divine_journey_2:roots_cloud_berry",
+          "divine_journey_2:roots_dewgonia",
+          "divine_journey_2:roots_infernal_bulb",
+          "divine_journey_2:roots_stalicripe"
+        ],
+        "truncated": false
+      },
+      "numeric_id_changes": 27
+    },
+    "enderio:fertilizer": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 4,
+      "target_count": 9,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 5,
+        "names": [
+          "alchemistry:fertilizer",
+          "evilcraft:blood_potash",
+          "industrialforegoing:fertilizer",
+          "thaumcraft:elemental_hoe",
+          "thermalfoundation:fertilizer"
+        ],
+        "truncated": false
+      },
+      "numeric_id_changes": 1
+    },
+    "enderio:integration": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 0,
+      "target_count": 0,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "enderio:modobject": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 292,
+      "target_count": 292,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "enderio:remoteexec": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 10,
+      "target_count": 10,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 7
+    },
+    "enderio:upgrades": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 43,
+      "target_count": 43,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 33
+    },
+    "industrialforegoing:conveyor_upgrade": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 7,
+      "target_count": 7,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "mcmultipart:micro_material": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 0,
+      "target_count": 0,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "mcmultipart:micro_type": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 0,
+      "target_count": 0,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "mcmultipart:slots": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 28,
+      "target_count": 28,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "minecraft:biomes": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 160,
+      "target_count": 160,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "minecraft:blocks": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 5786,
+      "target_count": 5796,
+      "removed": {
+        "count": 6,
+        "names": [
+          "requious:terra_plate",
+          "storagedrawersextra:extra_drawers",
+          "storagedrawersextra:extra_trim_0",
+          "storagedrawersextra:extra_trim_1",
+          "storagedrawersextra:extra_trim_2",
+          "storagedrawersextra:extra_trim_3"
+        ],
+        "truncated": false
+      },
+      "added": {
+        "count": 16,
+        "names": [
+          "galacticraftcore:compact_workbench",
+          "natura:apple_button",
+          "natura:apple_fence",
+          "natura:apple_fence_gate",
+          "natura:apple_leaves",
+          "natura:apple_log",
+          "natura:apple_pressure_plate",
+          "natura:apple_sapling",
+          "natura:apple_trap_door",
+          "natura:charred_netherrack_bricks",
+          "natura:netherrack_bricks",
+          "natura:overworld_door_amaranth",
+          "natura:overworld_door_apple",
+          "natura:overworld_door_willow",
+          "natura:overworld_stairs_apple",
+          "natura:smooth_netherrack"
+        ],
+        "truncated": false
+      },
+      "numeric_id_changes": 3411
+    },
+    "minecraft:enchantments": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 76,
+      "target_count": 76,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 4
+    },
+    "minecraft:entities": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 917,
+      "target_count": 920,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 3,
+        "names": [
+          "natura:babyheatscarspider",
+          "natura:heatscarspider",
+          "twilightforest:portal_spawner_item"
+        ],
+        "truncated": false
+      },
+      "numeric_id_changes": 434
+    },
+    "minecraft:items": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 10236,
+      "target_count": 10227,
+      "removed": {
+        "count": 35,
+        "names": [
+          "actuallyadditions:battery_bauble",
+          "actuallyadditions:battery_double_bauble",
+          "actuallyadditions:battery_quadruple_bauble",
+          "actuallyadditions:battery_quintuple_bauble",
+          "actuallyadditions:battery_triple_bauble",
+          "actuallyadditions:magnet_ring_bauble",
+          "actuallyadditions:potion_ring_advanced_bauble",
+          "ae2wtlib:infinity_booster_card",
+          "ae2wtlib:wut",
+          "ae2wtlib:wut_creative",
+          "baubles:ring",
+          "matc:inferiumcrystal",
+          "matc:intermediumcrystal",
+          "matc:prudentiumcrystal",
+          "matc:superiumcrystal",
+          "matc:supremiumcrystal",
+          "morphtool:tool",
+          "natura:bloodwood_kama",
+          "natura:darkwood_kama",
+          "natura:empty_bowls",
+          "natura:fusewood_kama",
+          "natura:ghostwood_kama",
+          "natura:netherquartz_kama",
+          "natura:soups",
+          "requious:terra_plate",
+          "storagedrawersextra:extra_drawers",
+          "storagedrawersextra:extra_trim_0",
+          "storagedrawersextra:extra_trim_1",
+          "storagedrawersextra:extra_trim_2",
+          "storagedrawersextra:extra_trim_3",
+          "wct:magnet_card",
+          "wct:wct",
+          "wct:wct_creative",
+          "wft:wft",
+          "wft:wft_creative"
+        ],
+        "truncated": false
+      },
+      "added": {
+        "count": 26,
+        "names": [
+          "baubles:max_verstappen",
+          "galacticraftcore:compact_workbench",
+          "natura:apple_button",
+          "natura:apple_fence",
+          "natura:apple_fence_gate",
+          "natura:apple_leaves",
+          "natura:apple_log",
+          "natura:apple_pressure_plate",
+          "natura:apple_sapling",
+          "natura:apple_trap_door",
+          "natura:berry_medley",
+          "natura:bloodwood_hoe",
+          "natura:charred_netherrack_bricks",
+          "natura:darkwood_hoe",
+          "natura:fusewood_hoe",
+          "natura:ghostwood_hoe",
+          "natura:glowshroom_stew",
+          "natura:netherquartz_hoe",
+          "natura:netherquartz_shears",
+          "natura:netherrack_bricks",
+          "natura:overworld_door_amaranth",
+          "natura:overworld_door_apple",
+          "natura:overworld_door_willow",
+          "natura:overworld_stairs_apple",
+          "natura:smooth_netherrack",
+          "omniwand:wand"
+        ],
+        "truncated": false
+      },
+      "numeric_id_changes": 7020
+    },
+    "minecraft:potions": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 154,
+      "target_count": 154,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "minecraft:potiontypes": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 145,
+      "target_count": 145,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 21
+    },
+    "minecraft:soundevents": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 1367,
+      "target_count": 1384,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 17,
+        "names": [
+          "baubles:max_verstappen",
+          "bibliocraft:addpaper",
+          "bibliocraft:cclose",
+          "bibliocraft:copen",
+          "bibliocraft:ding",
+          "bibliocraft:drill",
+          "bibliocraft:endbell",
+          "bibliocraft:removebook",
+          "bibliocraft:screw",
+          "bibliocraft:tapeclose",
+          "bibliocraft:tapeopen",
+          "bibliocraft:tick",
+          "bibliocraft:tock",
+          "bibliocraft:typing",
+          "bibliocraft:typingsingle",
+          "bibliocraft:wind",
+          "bibliocraft:woundchime"
+        ],
+        "truncated": false
+      },
+      "numeric_id_changes": 808
+    },
+    "minecraft:villagerprofessions": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 16,
+      "target_count": 16,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "roots:herb": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 0,
+      "target_count": 0,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 0
+    },
+    "solarflux:panels": {
+      "source_present": true,
+      "target_present": true,
+      "source_count": 13,
+      "target_count": 13,
+      "removed": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "added": {
+        "count": 0,
+        "names": [],
+        "truncated": false
+      },
+      "numeric_id_changes": 5
+    }
+  },
+  "scope": "Read-only comparison of independently generated lab worlds; not a migrated world",
+  "source_pack": "2.21.3",
+  "target_pack": "2.23.4",
+  "core_version": "0.2.8",
+  "stopped_lab_world_tar_sha256": {
+    "source": "be7eb11b6e8d0e45f467f05f950f22b0819acf9f3ccf440940c8a04c22be621d",
+    "target": "0091153a8c8ad4ee9a54963def08c7f706dd79eae21b38e0d080750febd82558"
+  }
+}

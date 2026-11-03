@@ -205,6 +205,9 @@ class LinuxServer:
             "-Xms1G",
             "-Xmx4G",
             "-Dfile.encoding=UTF-8",
+            # A lab must reject missing mappings rather than wait indefinitely
+            # for a console decision or silently confirm removal of old data.
+            "-Dfml.queryResult=cancel",
             "-Djava.io.tmpdir=/srv/.omk/tmp",
             "-Duser.home=/srv/.omk/java-home",
             "-javaagent:/srv/.omk/authlib-injector.jar=http://drasl:25585/authlib-injector",

@@ -43,6 +43,14 @@ def test_existing_volume_is_refused_before_seed_changes(tmp_path, monkeypatch):
     assert not server.volume_created
 
 
+def test_owned_linux_lab_cancels_interactive_mapping_queries(tmp_path):
+    server = LinuxServer(tmp_path, "test-run", "test-network")
+    server.classpath, server.prefetched = "/srv/test.jar", "public-metadata-fixture"
+    command = server.command()
+    assert "-Dfml.queryResult=cancel" in command
+    assert not any("queryResult=confirm" in value for value in command)
+
+
 @pytest.mark.parametrize(
     ("log", "expected"),
     [
