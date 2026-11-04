@@ -6,7 +6,13 @@ import tarfile
 import zipfile
 from uuid import uuid4
 
-from omk.dj2_linux_lab import JAVA_IMAGE, LinuxServer, docker, inspect_owned
+from omk.dj2_linux_lab import (
+    JAVA_IMAGE,
+    LinuxServer,
+    docker,
+    forge_log_crashed,
+    inspect_owned,
+)
 from omk.recovery_full_lab import MAX_FILE, MAX_FILES, MAX_TOTAL, RESERVED, _entries
 
 
@@ -93,6 +99,8 @@ class LinuxRecovery:
             or data is None
             or data["State"]["Running"]
             or data["State"]["ExitCode"] != 0
+            or data["State"].get("OOMKilled") is not False
+            or forge_log_crashed(self.server.log) is not False
         ):
             raise ValueError("Linux backup requires a cleanly stopped owned server")
         export = self.lab / "exports" / name
