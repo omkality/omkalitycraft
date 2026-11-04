@@ -12,6 +12,7 @@ from omk.admin import (
     server_diagnostics,
 )
 from omk.cli import main
+from omk.drasl import DraslError
 from omk.operator_lab import _cleanup
 
 
@@ -137,3 +138,44 @@ def test_operator_lab_always_cleans_owned_auth_after_api_cleanup_failure(monkeyp
         None, stream, ["docker", "compose", "--project-name", "owned-test"]
     )
     assert run.called
+
+
+@pytest.mark.parametrize("error", [DraslError(404), OSError("private network details")])
+def test_failed_revoke_never_marks_file_or_reports_success(
+    tmp_path, monkeypatch, capsys, error
+):
+    settings, path = config(tmp_path)
+    file = settings.private / "invitation.json"
+    value = {
+        "schema": 1,
+        "origin": settings.auth_origin,
+        "code": "private-fixture-code",
+    }
+    file.write_text(json.dumps(value), encoding="utf-8")
+    before = file.read_bytes()
+    monkeypatch.setattr("omk.admin._credential", lambda _: "fixture-admin-token")
+    monkeypatch.setattr("omk.admin.DraslClient.request", Mock(side_effect=error))
+    assert (
+        main(
+            [
+                "admin",
+                "--config",
+                str(path),
+                "access",
+                "revoke-invite",
+                "--invitation-file",
+                str(file),
+            ]
+        )
+        == 1
+    )
+    output = capsys.readouterr().out
+    result = json.loads(output)
+    assert not result["ok"] and file.read_bytes() == before
+    assert (
+        "private-fixture-code" not in output and "private network details" not in output
+    )
+    assert "fixture-admin-token" not in (settings.private / "audit.jsonl").read_text()
+    if isinstance(error, DraslError):
+        assert "already used, revoked or not found" in result["error"]
+        assert "no account was blocked" in result["error"]
