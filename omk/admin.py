@@ -14,7 +14,7 @@ from uuid import UUID, uuid4
 
 from omk.diagnostic_export import export_bundle
 from omk.diagnostics import BoundedLog, regular
-from omk.drasl import DraslClient
+from omk.drasl import DraslClient, DraslError
 from omk.fs import resolved
 from omk.report_store import ReportStore
 
@@ -225,9 +225,16 @@ def revoke_invite(config: OperatorConfig, file: Path):
     if value.get("origin") != config.auth_origin or value.get("schema") != 1:
         raise AdminError("Invitation origin mismatch")
     code = _invite(value)["code"]
-    _client(config).request(
-        "DELETE", "/drasl/api/v3/invites/" + code, token=_credential(config)
-    )
+    try:
+        _client(config).request(
+            "DELETE", "/drasl/api/v3/invites/" + code, token=_credential(config)
+        )
+    except DraslError as error:
+        if error.status == 404:
+            raise AdminError(
+                "Invitation was already used, revoked or not found; no account was blocked"
+            ) from None
+        raise
     _write_private(file, config.private, {**value, "revoked": True})
     return {"ok": True, "invitation_file": str(file), "revoked": True}
 

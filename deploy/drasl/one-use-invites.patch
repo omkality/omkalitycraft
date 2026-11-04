@@ -1,0 +1,18 @@
+diff --git a/user.go b/user.go
+--- a/user.go
++++ b/user.go
+@@ -379,8 +379,12 @@ func (app *App) CreateUser(
+ 	}
+ 
+ 	if i, ok := invite.Get(); ok {
+-		if err := tx.Delete(i).Error; err != nil {
+-			return User{}, err
++		result := tx.Delete(i)
++		if result.Error != nil {
++			return User{}, result.Error
++		}
++		if result.RowsAffected != 1 {
++			return User{}, InviteNotFoundError
+ 		}
+ 	}
+ 

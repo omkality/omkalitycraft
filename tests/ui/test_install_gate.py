@@ -1,4 +1,3 @@
-import socket
 import threading
 from types import SimpleNamespace
 from urllib.error import URLError
@@ -10,7 +9,6 @@ from launcher.accounts import AccountService
 from launcher.app import LauncherWindow
 from launcher.controller import InstallController
 from launcher.game import GameRunner
-from launcher.install import ReleaseClient
 from launcher.releases import ReleaseError
 from launcher.storage import FileSessionStore
 from tests.fakes import FakeDrasl
@@ -66,30 +64,24 @@ def test_play_never_falls_back_to_cached_pack_when_manifest_check_fails(
     assert controller.pool.waitForDone(5000)
 
 
-@pytest.mark.parametrize("minimum_required", [False, True])
-def test_manifest_error_is_readable_on_minimum_launcher(
-    qtbot, tmp_path, minimum_required
-):
+@pytest.mark.parametrize(
+    "message",
+    [
+        "Не удалось проверить актуальную версию сборки. Проверьте соединение и повторите.",
+        "Нужно обновление лаунчера. Проверьте соединение и перезапустите OmkalityCraft.",
+    ],
+    ids=["network", "launcher-minimum"],
+)
+def test_manifest_error_is_readable_on_minimum_launcher(qtbot, tmp_path, message):
     service = AccountService(FakeDrasl(), FileSessionStore(tmp_path / "session.json"))
     window = LauncherWindow(service, runner=GameRunner(tmp_path), auto_restore=False)
     qtbot.addWidget(window)
     window._authenticated(service.login("test_player", "test-password"))
     card = window.home_page.cards["dj2"]
     card.set_local_state({"state": "installed", "version": "2.21.3-omk.4"})
-    with socket.socket() as offline:
-        offline.bind(("127.0.0.1", 0))
-        with pytest.raises(ReleaseError) as error:
-            ReleaseClient(f"http://127.0.0.1:{offline.getsockname()[1]}", {}).fetch(
-                "dj2"
-            )
-    message = (
-        ReleaseError(
-            "Нужно обновление лаунчера. Проверьте соединение и перезапустите OmkalityCraft."
-        )
-        if minimum_required
-        else error.value
-    )
-    window._install_failed("dj2", message)
+    # Avoid an exception traceback retaining the frame that owns these live widgets.
+    # The real HTTP failure has independent coverage without Qt widget ownership.
+    window._install_failed("dj2", ReleaseError(message))
     window.resize(1020, 680)
     window.show()
     qtbot.waitExposed(window)
