@@ -1,0 +1,112 @@
+{
+  "date": "2026-11-04",
+  "upstream_version": "4.0.0",
+  "image_variant": "4.0.0-omk.1",
+  "tested_image_id": "sha256:18728f7bb4e484621b7c9d6561934cd9da71d428f7168beebf422d62a3931a4a",
+  "upstream_commit": "0fe488c087bbe792485e9c5dae751c6e5fbdc380",
+  "source_archive_sha256": "cc6196dbd538e6e17d3d22d180697673b607f585603f4ee72cebeb4dff615493",
+  "patch_sha256": "fb2190d4eeedc00ea87e3f1752ffda0f108f131daa8ccc0f10d99c271b739324",
+  "binary": {
+    "binary_sha256": "f1bc18a0b974671d416cd64a4b3fccb64e4b102bccf9e74dc1b4e7cb4ff34341",
+    "binary_bytes": 27321976
+  },
+  "baseline_concurrent_control_accepted_multiple_accounts": true,
+  "fixed": {
+    "ok": true,
+    "registration_rounds": 20,
+    "attempts": 64,
+    "maximum_competitors": 8,
+    "accounts": 20,
+    "one_real_account_and_profile_each_round": true,
+    "revoke_registration_rounds": 20,
+    "registration_won": 8,
+    "revocation_won": 12,
+    "checks": [
+      "twenty_rounds_exactly_one_persisted_account_and_profile_per_key",
+      "loser_authentication_and_new_name_reuse_rejected",
+      "twenty_revoke_registration_races_have_one_consistent_outcome",
+      "invalid_registration_does_not_consume_an_unused_key",
+      "winner_uuids_profiles_and_sessions_survive_auth_container_restart",
+      "unrelated_unused_key_survives_restart"
+    ],
+    "cleanup": true
+  },
+  "first_incomplete_fixture": {
+    "completed_pairs": 12,
+    "http_rate_limit_observed": 429,
+    "accepted_as_full": false
+  },
+  "concurrency_fixture_rate_limit_only": {
+    "requests_per_second": 10000,
+    "burst": 10000,
+    "default_or_production_changed": false
+  },
+  "scheduled_registration_first_cases": true,
+  "ordinary_protocol": {
+    "auth": {
+      "checks": [
+        "bootstrap_registration",
+        "registration_requires_invitation",
+        "player_registration",
+        "invitation_cannot_be_reused",
+        "anonymous_skin_change_rejected",
+        "skin_uploaded_through_api",
+        "another_players_skin_change_rejected",
+        "wrong_password_rejected",
+        "game_authentication_stable_uuid",
+        "join_hasJoined_protocol",
+        "session_refreshed_without_password",
+        "revoked_session_rejected",
+        "launcher_registration_with_portable_game_session",
+        "portable_game_token_cannot_change_account_password",
+        "launcher_auto_login_without_password",
+        "launcher_skin_upload_with_game_token_classic_and_slim",
+        "launcher_password_change_revokes_old_sessions_and_management_token",
+        "launcher_all_sessions_revoked"
+      ],
+      "cleanup": true
+    },
+    "expiry": {
+      "checks": [
+        "bootstrap_registration",
+        "registration_requires_invitation",
+        "player_registration",
+        "invitation_cannot_be_reused",
+        "game_session_valid_before_expiry",
+        "expired_game_session_requires_reauthentication"
+      ],
+      "cleanup": true
+    },
+    "operator": {
+      "checks": [
+        "separate_operator_login_saves_no_password",
+        "operator_cli_invitation_registers_normal_player",
+        "registration_invitation_is_single_use",
+        "game_token_cannot_issue_invitations",
+        "normal_account_cannot_become_operator",
+        "operator_api_key_is_not_accepted_as_a_game_token",
+        "automatic_queue_delivers_real_http_report_with_real_game_token",
+        "stored_report_excludes_game_token_and_system_dump",
+        "players_cannot_list_or_read_client_reports_over_http",
+        "game_token_cannot_submit_report_under_another_uuid",
+        "operator_cli_reads_private_inbox_without_public_read_api",
+        "revoked_game_token_cannot_upload_client_report",
+        "operator_cli_revocation_blocks_registration",
+        "revoked_invitation_removed_without_revoking_other_invites",
+        "unrelated_unused_invitation_still_registers",
+        "revoking_unused_invitation_preserves_existing_account_session"
+      ],
+      "cleanup": true
+    }
+  },
+  "local_tests": {
+    "passed": 655,
+    "skipped": 5
+  },
+  "credentials_in_record": false,
+  "schema_changed": false,
+  "password_algorithm_changed": false,
+  "public_auth_deployed": false,
+  "minecraft_client_started": false,
+  "private_detailed_fixture_published": false
+}
