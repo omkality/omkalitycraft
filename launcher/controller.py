@@ -9,7 +9,7 @@ from launcher.accounts import AccountService
 from launcher.game import GameProcess, GameRunner
 from launcher.install import InstallCancelled, Installer
 from launcher.mod_policy import clean_extra_mods
-from launcher.releases import Release, ReleaseError
+from launcher.releases import Release
 from launcher.tasks import Task
 
 
@@ -61,14 +61,7 @@ class InstallController(QObject):
         self.started.emit(pack_id)
 
         def operation() -> InstallationResult:
-            local = self.installer.local_state(pack_id)
-            try:
-                release = self.installer.client.fetch(pack_id)
-            except ReleaseError, OSError:
-                if play and local.get("state") == "installed":
-                    release = local["release"]
-                else:
-                    raise
+            release = self.installer.client.fetch(pack_id)
             if self.installer.cancel.is_set():
                 raise InstallCancelled("Загрузка приостановлена.")
             clean_extra_mods(release, self.installer.directory(pack_id))

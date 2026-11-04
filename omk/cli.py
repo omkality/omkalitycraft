@@ -96,6 +96,14 @@ def main(argv: list[str] | None = None) -> int:
     server.add_subparsers(dest="action", required=True).add_parser("list")
     lab = sub.add_parser("lab", help="Disposable integration tests")
     lab_areas = lab.add_subparsers(dest="area", required=True)
+    from omk.pack_install_lab import add_pack_install_lab  # noqa: PLC0415
+
+    add_pack_install_lab(
+        lab_areas.add_parser(
+            "pack-install",
+            help="Owned signed-pack install, interruption, resume and repair checks",
+        )
+    )
     lab_areas.add_parser(
         "backup-safety",
         help="Disposable Linux archive rotation, ENOSPC and SIGKILL probes",
@@ -198,6 +206,10 @@ def _report(args):
 
 
 def _lab_report(args):
+    if args.area == "pack-install":
+        from omk.pack_install_lab import run_pack_install_args  # noqa: PLC0415
+
+        return run_pack_install_args(args)
     if args.area == "dj2-recovery":
         from omk.recovery_lab import run_recovery_lab  # noqa: PLC0415
 

@@ -8,6 +8,7 @@ from litestar.testing import TestClient
 from api.app import app
 from api.core.storage import instance_root, safe_resolve
 from api.settings.config import settings
+from launcher.version import VERSION
 
 
 @pytest.fixture
@@ -19,7 +20,7 @@ def cdn_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 def test_cdn_starts_without_account_services(cdn_root: Path) -> None:
     with TestClient(app=app) as client:
         assert client.get("/health").status_code == 200
-        assert client.get("/version").json()["version"] == "0.3.0.dev8"
+        assert client.get("/version").json()["version"] == VERSION
         assert client.get("/instances").json() == []
         assert client.get("/auth/me").status_code == 404
 

@@ -214,6 +214,8 @@ class PackCard(QFrame):
         return header
 
     def set_local_state(self, state: dict) -> None:
+        self.state_label.setWordWrap(False)
+        self.state_label.setStyleSheet("color:#9bb1b6;background:transparent")
         self.installed = state.get("state") == "installed"
         if self.installed:
             self.state_label.setText("Установлена · " + state["version"])
@@ -224,6 +226,8 @@ class PackCard(QFrame):
             self.action.setText("Продолжить загрузку")
 
     def update_progress(self, progress: Progress) -> None:
+        self.state_label.setWordWrap(False)
+        self.state_label.setStyleSheet("color:#9bb1b6;background:transparent")
         self.progress.show()
         self.cancel.show()
         self.action.set_busy(
@@ -243,10 +247,15 @@ class PackCard(QFrame):
         self.progress.hide()
         self.cancel.hide()
         if success:
+            self.state_label.setWordWrap(False)
             self.installed = True
             self.action.setText("Играть")
             self.state_label.setText("Установлена · готова к игре")
             self.state_label.setStyleSheet("color:#92d5b8;background:transparent")
         else:
-            self.action.setText("Продолжить загрузку")
+            self.action.setText(
+                "Повторить" if self.installed else "Продолжить загрузку"
+            )
+            self.state_label.setWordWrap(True)
+            self.state_label.setStyleSheet("color:#e6bd7a;background:transparent")
             self.state_label.setText(message or "Загрузка не завершена")
