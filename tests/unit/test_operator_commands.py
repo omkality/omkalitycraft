@@ -152,6 +152,7 @@ def test_failed_revoke_never_marks_file_or_reports_success(
         "code": "private-fixture-code",
     }
     file.write_text(json.dumps(value), encoding="utf-8")
+    file.chmod(0o600)
     before = file.read_bytes()
     monkeypatch.setattr("omk.admin._credential", lambda _: "fixture-admin-token")
     monkeypatch.setattr("omk.admin.DraslClient.request", Mock(side_effect=error))
