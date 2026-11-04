@@ -1,0 +1,287 @@
+{
+  "date": "2026-11-04",
+  "python": "3.14.2",
+  "dependencies": {
+    "PySide6": "6.11.0",
+    "shiboken6": "6.11.0",
+    "pytest": "9.0.3",
+    "pytest-qt": "4.5.0"
+  },
+  "baseline_commit": "0c8ed5d581db9ae994a5025fe8862305aeb8a9ca",
+  "split_fixture_commit": "5a064c1827ea9c9f2084ae7a682fb2b68f830a85",
+  "current_application_commit": "c392342f598052519b9047ae96668fb635374d45",
+  "application_or_dependency_code_changed": false,
+  "windows_controls": [
+    {
+      "snapshot": "baseline",
+      "mode": "normal",
+      "exit_code": 0,
+      "seconds": 52.07,
+      "fatal_python_error": false,
+      "tail": [
+        "",
+        "============================= 60 passed in 51.35s ============================="
+      ]
+    },
+    {
+      "snapshot": "baseline",
+      "mode": "gc-stress",
+      "exit_code": 3,
+      "seconds": 22.07,
+      "fatal_python_error": true,
+      "tail": [
+        "",
+        "Extension modules: shiboken6.Shiboken, PySide6.QtCore, PySide6.QtGui, PySide6.QtWidgets, PySide6.QtTest, PIL._imaging, _cffi_backend, psutil._psutil_windows, PySide6.QtSvg (total: 9)"
+      ]
+    },
+    {
+      "snapshot": "split_fixture",
+      "mode": "normal",
+      "exit_code": 0,
+      "seconds": 3.13,
+      "fatal_python_error": false,
+      "tail": [
+        "",
+        "============================= 60 passed in 2.09s =============================="
+      ]
+    },
+    {
+      "snapshot": "split_fixture",
+      "mode": "gc-stress",
+      "exit_code": 0,
+      "seconds": 2.68,
+      "fatal_python_error": false,
+      "tail": [
+        "",
+        "============================= 60 passed in 1.97s =============================="
+      ]
+    }
+  ],
+  "windows_fresh_error_control": [
+    {
+      "snapshot": "fresh_error_same_http",
+      "mode": "gc-stress",
+      "exit_code": 3,
+      "seconds": 15.99,
+      "fatal_python_error": true,
+      "tail": [
+        "",
+        "Extension modules: shiboken6.Shiboken, PySide6.QtCore, PySide6.QtGui, PySide6.QtWidgets, PySide6.QtTest, PIL._imaging, _cffi_backend, psutil._psutil_windows, PySide6.QtSvg (total: 9)"
+      ]
+    }
+  ],
+  "windows_retained_original_scenario": [
+    {
+      "snapshot": "retained_widgets",
+      "mode": "gc-stress",
+      "exit_code": 0,
+      "seconds": 52.64,
+      "fatal_python_error": false,
+      "tail": [
+        "",
+        "============================= 60 passed in 51.89s ============================="
+      ]
+    }
+  ],
+  "linux_controls": {
+    "platform": "linux-docker",
+    "image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "cpu_limit": 2,
+    "memory_mib": 2048,
+    "checks": [
+      {
+        "snapshot": "baseline",
+        "mode": "normal",
+        "exit_code": 0,
+        "oom_killed": false,
+        "cli_exit_code": 0,
+        "owned_container_removed": true,
+        "seconds": 3.92,
+        "fatal_python_error": false,
+        "tail": [
+          "",
+          "============================== 60 passed in 2.26s =============================="
+        ]
+      },
+      {
+        "snapshot": "baseline",
+        "mode": "gc-stress",
+        "exit_code": 0,
+        "oom_killed": false,
+        "cli_exit_code": 0,
+        "owned_container_removed": true,
+        "seconds": 3.74,
+        "fatal_python_error": false,
+        "tail": [
+          "",
+          "============================== 60 passed in 2.08s =============================="
+        ]
+      },
+      {
+        "snapshot": "split_fixture",
+        "mode": "normal",
+        "exit_code": 0,
+        "oom_killed": false,
+        "cli_exit_code": 0,
+        "owned_container_removed": true,
+        "seconds": 3.68,
+        "fatal_python_error": false,
+        "tail": [
+          "",
+          "============================== 60 passed in 2.02s =============================="
+        ]
+      },
+      {
+        "snapshot": "split_fixture",
+        "mode": "gc-stress",
+        "exit_code": 0,
+        "oom_killed": false,
+        "cli_exit_code": 0,
+        "owned_container_removed": true,
+        "seconds": 3.54,
+        "fatal_python_error": false,
+        "tail": [
+          "",
+          "============================== 60 passed in 1.92s =============================="
+        ]
+      },
+      {
+        "snapshot": "fresh_error_same_http",
+        "mode": "normal",
+        "exit_code": 0,
+        "oom_killed": false,
+        "cli_exit_code": 0,
+        "owned_container_removed": true,
+        "seconds": 3.88,
+        "fatal_python_error": false,
+        "tail": [
+          "",
+          "============================== 60 passed in 2.19s =============================="
+        ]
+      },
+      {
+        "snapshot": "fresh_error_same_http",
+        "mode": "gc-stress",
+        "exit_code": 139,
+        "oom_killed": false,
+        "cli_exit_code": 139,
+        "owned_container_removed": true,
+        "seconds": 3.62,
+        "fatal_python_error": true,
+        "tail": [
+          "",
+          "Extension modules: shiboken6.Shiboken, PySide6.QtCore, PySide6.QtGui, PySide6.QtWidgets, PySide6.QtTest, PIL._imaging, _cffi_backend, psutil._psutil_linux, PySide6.QtSvg (total: 9)"
+        ]
+      }
+    ]
+  },
+  "linux_retained_original_scenario": {
+    "platform": "linux-docker",
+    "image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "cpu_limit": 2,
+    "memory_mib": 2048,
+    "checks": [
+      {
+        "snapshot": "retained_widgets",
+        "mode": "gc-stress",
+        "exit_code": 0,
+        "oom_killed": false,
+        "cli_exit_code": 0,
+        "owned_container_removed": true,
+        "seconds": 4.25,
+        "fatal_python_error": false,
+        "tail": [
+          "",
+          "============================== 60 passed in 2.32s =============================="
+        ]
+      }
+    ]
+  },
+  "alternative_qt_6113_control": {
+    "platform": "linux-docker",
+    "image_id": "sha256:7d1be5029b9fdd4b2f03ebc49a29dfb5bca169b3418186ac54357e498be9a7d8",
+    "cpu_limit": 2,
+    "memory_mib": 2048,
+    "checks": [
+      {
+        "snapshot": "fresh_error_same_http",
+        "mode": "gc-stress",
+        "exit_code": 139,
+        "oom_killed": false,
+        "cli_exit_code": 139,
+        "owned_container_removed": true,
+        "seconds": 3.65,
+        "fatal_python_error": true,
+        "tail": [
+          "",
+          "Extension modules: shiboken6.Shiboken, PySide6.QtCore, PySide6.QtGui, PySide6.QtWidgets, PySide6.QtTest, PIL._imaging, _cffi_backend, psutil._psutil_linux, PySide6.QtSvg (total: 9)"
+        ]
+      }
+    ]
+  },
+  "ownership_regressions": {
+    "without_retention": {
+      "exit_code": 1,
+      "failed": 2
+    },
+    "with_retention": {
+      "exit_code": 0,
+      "passed": 2
+    }
+  },
+  "current_gc_windows": {
+    "passed": 132,
+    "log_sha256": "8ee32ff96f55f43dd256aded14dfbdc7030234f6c8a8f3d394f0e5f917752dc6"
+  },
+  "current_gc_linux": {
+    "platform": "linux-docker",
+    "image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "cpu_limit": 2,
+    "memory_mib": 2048,
+    "checks": [
+      {
+        "snapshot": "current",
+        "mode": "gc-stress",
+        "exit_code": 0,
+        "oom_killed": false,
+        "cli_exit_code": 0,
+        "owned_container_removed": true,
+        "seconds": 21.35,
+        "fatal_python_error": false,
+        "tail": [
+          "",
+          "============================= 132 passed in 19.47s ============================="
+        ]
+      }
+    ]
+  },
+  "default_windows_suite": {
+    "passed": 672,
+    "skipped": 5,
+    "log_sha256": "fdf0b1ee27efac91d86fdfe4061d26619fd0392fbfc62a6c7c5cf6c429c8d9cf"
+  },
+  "failed_fixture_setups": [
+    "Missing libGL.so.1 before Qt could import",
+    "Missing fontconfig/xkbcommon/freetype/dbus before Qt could import"
+  ],
+  "private_fixture_base_image_id": "sha256:c97b44f3966bfa81986855315499696064e78ee6b9fda09ff16ec4e74df036ae",
+  "local_detailed_logs_published": false,
+  "minecraft_started": false,
+  "real_accounts_used": false,
+  "runtime_gc_disabled_or_retuned": false,
+  "qtbot_teardown_still_owns_widget_close": true,
+  "windows_gc_thresholds": [
+    20,
+    2,
+    2
+  ],
+  "windows_report_logs": {
+    "baseline-ownership-windows.log": "083b3ea2d4dc10988d8901d4ba547d030c1883dfb3f5c8e16690e6f6cd90b6a4",
+    "retained_widgets-ownership-windows.log": "7a1a8845c577be5b8c106736d829d0206f2d20638f38f6e51d1a84cea2e80dc9"
+  },
+  "ui_fixture_changes_sha256": {
+    "tests\\ui\\conftest.py": "eeb3e5affcb469813edfc9b9588a6cf3da2e33782ff2874c4cd8f0cd9fb5e976",
+    "tests\\ui\\test_install_gate.py": "933ebdb8798867b0294324b9a89cbb6b99aa9a8ea5b967f5d9ec92f055d757bf",
+    "tests\\ui\\test_widget_lifetime.py": "df6a02c7306e16daeaa86a3d06a8318002667e45068307a2e47a10659cd4043f"
+  }
+}
