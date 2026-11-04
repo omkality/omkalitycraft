@@ -1,0 +1,269 @@
+{
+  "date": "2026-11-04",
+  "issues": [
+    33,
+    34,
+    49
+  ],
+  "base_implementation_commit": "8c36621",
+  "accepted_player_release": false,
+  "live_profile_or_payload_changed": false,
+  "scope": {
+    "graphical_client": false,
+    "real_linux_forge_server": true,
+    "protocol_client": true,
+    "dimension": 0,
+    "selection": {
+      "dimension": 0,
+      "min": [
+        130,
+        241,
+        130
+      ],
+      "max": [
+        135,
+        243,
+        134
+      ],
+      "blocks": 90
+    },
+    "full_world_return": false,
+    "full_upgrade_migration": false,
+    "production_scheduler": false
+  },
+  "runtime": {
+    "dj2": "2.23.4",
+    "forge": "1.12.2-14.23.5.2860",
+    "private_core": "0.2.8",
+    "private_core_sha256": "ee86e32a913792854e25e37c93ae494b1903a8fbc75683883577986d32ea86ed",
+    "server_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "observed_java": "Linux\nopenjdk version \"1.8.0_504\"\nOpenJDK Runtime Environment (Temurin)(build 1.8.0_504-b01)\nOpenJDK 64-Bit Server VM (Temurin)(build 25.504-b01, mixed mode)\n",
+    "cpus": 4,
+    "container_memory_mib": 6144,
+    "heap_mib": 4096,
+    "server_starts": 4,
+    "auth": "isolated Drasl 4.0.0-omk.1 + authlib-injector 1.2.8"
+  },
+  "artifacts": {
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "ironchest-1.12.2-7.0.72.847.jar": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f",
+    "ThermalExpansion-1.12.2-5.5.7.1-universal.jar": "f1cc8aeefcda2c00235bfb5ee7f76d731325aa324e90e84d7d232d88c1e6f472"
+  },
+  "worldedit": {
+    "source": "https://www.curseforge.com/minecraft/mc-mods/worldedit/files/2941712",
+    "sha256": "cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75",
+    "version": "6.1.10",
+    "mcmod_metadata": "6.1.10-SNAPSHOT;e6b38e8"
+  },
+  "regression_controls": {
+    "mocked_lifecycle": true,
+    "real_minecraft_crash_injected": false,
+    "previous_code_failed_first_four_negative_cases": true,
+    "negative_cases": [
+      "fatal marker with process/container exit 0",
+      "saved-crash marker with exit 0",
+      "missing log",
+      "log larger than bounded read limit",
+      "OOM true",
+      "OOM unknown"
+    ],
+    "positive_case": "clean log with optional integration message exports ZIP and verifies level.dat before removing owned container"
+  },
+  "focused_tests": {
+    "windows": {
+      "passed": 126,
+      "skipped": 1
+    },
+    "linux_docker": {
+      "image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "exit_code": 0,
+      "oom_killed": false,
+      "cpu_limit": 2,
+      "memory_mib": 1024,
+      "network": "none",
+      "source_mount": "readonly",
+      "mock_lifecycle_tests": true,
+      "real_minecraft": false,
+      "tail": [
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "127 passed, 2 warnings in 1.75s"
+      ],
+      "owned_container_removed": true
+    }
+  },
+  "checks": [
+    "linux_named_volume_case_sensitive_filesystem",
+    "fixture_original_entity_exists",
+    "fixture_outside_entity_exists",
+    "cross_chunk_fixture_143_created",
+    "cross_chunk_fixture_144_created",
+    "machine_smelt_positive_control_before_snapshot",
+    "idle_machine_fixture_has_seeded_state",
+    "iron_chest_fixture_has_named_items",
+    "before-grief_snapshot_after_clean_stop",
+    "original_entity_really_removed",
+    "post_snapshot_entity_really_added",
+    "base_really_damaged",
+    "machine_state_really_damaged",
+    "before-restore_snapshot_after_clean_stop",
+    "normal_player_cannot_restore",
+    "operator_lists_actual_zip_snapshots",
+    "primary_restore_selection_passes_readonly_preflight",
+    "first_restore_vanilla_chest_named_inventory",
+    "first_restore_same_type_iron_chest_inventory",
+    "first_restore_machine_energy_orientation_inventory",
+    "first_restore_griefer_block_removed",
+    "first_restore_neighbor_chest_same_chunk_unchanged",
+    "first_restore_above_selection_same_chunk_unchanged",
+    "first_restore_west_of_selection_unchanged",
+    "first_restore_north_of_selection_unchanged",
+    "first_restore_below_selection_unchanged",
+    "first_restore_machine_block_metadata_unchanged",
+    "after_restore_native_snapshot_does_not_restore_destroyed_armor_stand",
+    "after_restore_native_snapshot_keeps_post_snapshot_armor_stand",
+    "after_restore_outside_entity_unchanged",
+    "undo_restores_damaged_air",
+    "undo_restores_damaged_machine",
+    "redo_vanilla_chest_named_inventory",
+    "redo_same_type_iron_chest_inventory",
+    "redo_machine_energy_orientation_inventory",
+    "redo_griefer_block_removed",
+    "redo_neighbor_chest_same_chunk_unchanged",
+    "redo_above_selection_same_chunk_unchanged",
+    "redo_west_of_selection_unchanged",
+    "redo_north_of_selection_unchanged",
+    "redo_below_selection_unchanged",
+    "redo_machine_block_metadata_unchanged",
+    "repeat_restore_vanilla_chest_named_inventory",
+    "repeat_restore_same_type_iron_chest_inventory",
+    "repeat_restore_machine_energy_orientation_inventory",
+    "repeat_restore_griefer_block_removed",
+    "repeat_restore_neighbor_chest_same_chunk_unchanged",
+    "repeat_restore_above_selection_same_chunk_unchanged",
+    "repeat_restore_west_of_selection_unchanged",
+    "repeat_restore_north_of_selection_unchanged",
+    "repeat_restore_below_selection_unchanged",
+    "repeat_restore_machine_block_metadata_unchanged",
+    "missing_snapshot_vanilla_chest_named_inventory",
+    "missing_snapshot_same_type_iron_chest_inventory",
+    "missing_snapshot_machine_energy_orientation_inventory",
+    "missing_snapshot_griefer_block_removed",
+    "missing_snapshot_neighbor_chest_same_chunk_unchanged",
+    "missing_snapshot_above_selection_same_chunk_unchanged",
+    "missing_snapshot_west_of_selection_unchanged",
+    "missing_snapshot_north_of_selection_unchanged",
+    "missing_snapshot_below_selection_unchanged",
+    "missing_snapshot_machine_block_metadata_unchanged",
+    "complete_cross_chunk_snapshot_passes_preflight",
+    "missing_chunk_rejected_before_apply_by_preflight",
+    "preflight_did_not_modify_live_block_143",
+    "preflight_did_not_modify_live_block_144",
+    "native_partial_restore_already_modified_available_chunk",
+    "native_partial_restore_left_missing_chunk_damaged",
+    "immediate_native_partial_undo_returns_lab_block_143",
+    "immediate_native_partial_undo_returns_lab_block_144",
+    "after-restore_snapshot_after_clean_stop",
+    "after_restart_vanilla_chest_named_inventory",
+    "after_restart_same_type_iron_chest_inventory",
+    "after_restart_machine_energy_orientation_inventory",
+    "after_restart_griefer_block_removed",
+    "after_restart_neighbor_chest_same_chunk_unchanged",
+    "after_restart_above_selection_same_chunk_unchanged",
+    "after_restart_west_of_selection_unchanged",
+    "after_restart_north_of_selection_unchanged",
+    "after_restart_below_selection_unchanged",
+    "after_restart_machine_block_metadata_unchanged",
+    "after_restart_native_snapshot_does_not_restore_destroyed_armor_stand",
+    "after_restart_native_snapshot_keeps_post_snapshot_armor_stand",
+    "after_restart_outside_entity_unchanged",
+    "restored_machine_smelt_after_full_restart",
+    "vanilla_chest_saved_tile_exists",
+    "vanilla_chest_complete_saved_nbt_matches_snapshot",
+    "iron_chest_saved_tile_exists",
+    "iron_chest_complete_saved_nbt_matches_snapshot",
+    "thermal_furnace_saved_tile_exists",
+    "thermal_furnace_complete_saved_nbt_matches_snapshot",
+    "neighbor_saved_tile_exists",
+    "neighbor_complete_saved_nbt_unchanged"
+  ],
+  "native_entity_observations": {
+    "after_restore_": {
+      "original": 0,
+      "outside": 1,
+      "new": 1
+    },
+    "after_restart_": {
+      "original": 0,
+      "outside": 1,
+      "new": 1
+    }
+  },
+  "partial_restore_is_atomic": false,
+  "backups": {
+    "before-grief": {
+      "files": 265,
+      "uncompressed_bytes": 12686307,
+      "bytes": 7618476,
+      "sha256": "5d4192072c8c0b2abc07e5cb342574b12dbebbb0767909fce55621110881916d"
+    },
+    "before-restore": {
+      "files": 266,
+      "uncompressed_bytes": 12881498,
+      "bytes": 7834584,
+      "sha256": "a6b40e4cbd25e2ec1a4ca22b41c71b76cd71cb623c6de20b057d2570c00b4002"
+    },
+    "after-restore": {
+      "files": 266,
+      "uncompressed_bytes": 12898007,
+      "bytes": 7858256,
+      "sha256": "b4962de3a1832f58a5a215966cddc55b01e5fa14c7bb7b2d5c8a43143f03be83"
+    }
+  },
+  "snapshots": {
+    "before-grief": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 8034651,
+      "excluded_entries": 262,
+      "sha256": "ba4a5c21566f0448de3f851b37db096314b0d551e3a6a50eb29fec8b440bb66b"
+    },
+    "before-restore": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 8034653,
+      "excluded_entries": 263,
+      "sha256": "1b470f4975dffa94255683a0c58ced7d3f8cc8263ee363354c060d6e059213fc"
+    },
+    "after-restore": {
+      "dimension": 0,
+      "files": 3,
+      "uncompressed_bytes": 8051035,
+      "excluded_entries": 263,
+      "sha256": "86aedec63ebeee5d0c6b5d1db82f2d88043d7d8225d30954e90f9cca95860e7b"
+    }
+  },
+  "outcome": {
+    "ok": true,
+    "owned_game_clean_exit": true,
+    "game_crash_detected": false,
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "owned_volume_removed_after_export": true,
+    "auth_removed": true
+  },
+  "private_report_sha256": "9c629b2e343d88532f4afcf9c63ceb77883fe6d3cf6a7e073bf7b1ac0da82706",
+  "limits": [
+    "Synthetic 90-block lab selection, not an arbitrary large base",
+    "WorldEdit block restore does not restore or remove entities",
+    "Incomplete snapshot is characterized as partial; guarded preflight must refuse it",
+    "No large AE2 network, cross-boundary multiblock or modded-dimension acceptance",
+    "No actual power loss, production deployment, live-world migration or release promotion",
+    "No native Minecraft renderer or ordinary mouse disconnect acceptance"
+  ]
+}
