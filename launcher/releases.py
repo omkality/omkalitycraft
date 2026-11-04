@@ -14,9 +14,11 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
     Ed25519PrivateKey,
     Ed25519PublicKey,
 )
+from packaging.version import Version
 
 from api.core.content_policy import is_private_path
 from launcher.client_policy import ClientDefaults
+from launcher.version import VERSION
 from omk.fs import resolved
 
 MAX_MANIFEST_BYTES = 8 * 1024 * 1024
@@ -119,6 +121,23 @@ def _validate_artifacts(files: tuple[Artifact, ...]) -> set[str]:
     return names
 
 
+def _minimum_launcher(payload: dict[str, Any]) -> str | None:
+    schema = payload["schema"]
+    if type(schema) is not int or schema not in {1, 2}:
+        raise ValueError("Unsupported release schema")
+    if schema == 2:
+        minimum = payload.get("minimum_launcher_version")
+        if not isinstance(minimum, str) or not re.fullmatch(
+            r"[0-9][A-Za-z0-9.!+_-]{0,79}", minimum
+        ):
+            raise ValueError("Invalid minimum launcher version")
+        Version(minimum)
+        return minimum
+    if "minimum_launcher_version" in payload:
+        raise ValueError("Launcher requirements need schema 2")
+    return None
+
+
 @dataclass(frozen=True)
 class Release:
     pack_id: str
@@ -129,6 +148,15 @@ class Release:
     launch: dict[str, Any]
     digest: str
     envelope: dict[str, Any]
+    minimum_launcher_version: str | None = None
+
+    def require_launcher(self, running_version: str = VERSION) -> None:
+        if self.minimum_launcher_version is not None and Version(
+            running_version
+        ) < Version(self.minimum_launcher_version):
+            raise ReleaseError(
+                "Нужно обновление лаунчера. Проверьте соединение и перезапустите OmkalityCraft."
+            )
 
     @property
     def total_size(self) -> int:
@@ -137,11 +165,8 @@ class Release:
     @classmethod
     def parse(cls, payload: dict[str, Any], envelope: dict[str, Any]) -> Release:
         try:
-            if (
-                payload["schema"] != 1
-                or payload["loader"] != "forge"
-                or payload["platform"] not in PLATFORMS
-            ):
+            minimum = _minimum_launcher(payload)
+            if payload["loader"] != "forge" or payload["platform"] not in PLATFORMS:
                 raise ValueError
             if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,47}", payload["pack_id"]):
                 raise ValueError
@@ -187,6 +212,7 @@ class Release:
                 launch,
                 hashlib.sha256(canonical(payload)).hexdigest(),
                 envelope,
+                minimum,
             )
         except KeyError, TypeError, ValueError:
             raise ReleaseError(

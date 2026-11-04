@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from launcher.install import current_platform
+from launcher.version import VERSION
 from omk.publish import build_release, signing_key
 from omk.updates import publish_update
 
@@ -27,6 +28,11 @@ def add_release_commands(subparsers) -> None:
     pack.add_argument("--output", type=Path, required=True)
     pack.add_argument("--pack-id", required=True)
     pack.add_argument("--minecraft", required=True)
+    pack.add_argument(
+        "--minimum-launcher-version",
+        default=VERSION,
+        help="Signed schema-2 minimum launcher requirement",
+    )
     for command in [launcher, pack]:
         command.add_argument("--version", required=True)
         command.add_argument("--platform", default=current_platform())
@@ -54,6 +60,7 @@ def prepare_release(args: argparse.Namespace) -> dict:
         platform=args.platform,
         launch=json.loads(args.launch_profile.read_text(encoding="utf-8")),
         key=key,
+        minimum_launcher_version=getattr(args, "minimum_launcher_version", None),
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(envelope, ensure_ascii=False), encoding="utf-8")

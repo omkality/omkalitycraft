@@ -49,6 +49,7 @@ def build_release(
     platform: str,
     launch: dict[str, Any],
     key: Ed25519PrivateKey,
+    minimum_launcher_version: str | None = None,
 ) -> dict[str, Any]:
     files = []
     for path in sorted(files_root.rglob("*")):
@@ -71,7 +72,12 @@ def build_release(
         )
     return sign_release(
         {
-            "schema": 1,
+            "schema": 1 if minimum_launcher_version is None else 2,
+            **(
+                {"minimum_launcher_version": minimum_launcher_version}
+                if minimum_launcher_version is not None
+                else {}
+            ),
             "pack_id": pack_id,
             "version": version,
             "minecraft": minecraft,

@@ -3,15 +3,18 @@ import hashlib
 import json
 from pathlib import Path
 
+import pytest
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from launcher.install import current_platform
 from omk.pack_install_lab import run_pack_install_lab
+from omk.pack_process_lab import run_pack_process_lab
 from omk.publish import build_release
 
 
-def test_signed_upgrade_lab_exercises_real_http_fault_and_preserves_settings(tmp_path):
+@pytest.fixture
+def pack_releases(tmp_path):
     key = Ed25519PrivateKey.generate()
     # The same signer is sufficient here; the full DJ2 lab also verifies key rotation.
     public = key.public_key().public_bytes(
@@ -30,7 +33,7 @@ def test_signed_upgrade_lab_exercises_real_http_fault_and_preserves_settings(tmp
             "agent.jar": b"not an executable agent",
             "forge.jar": b"not an executable loader",
             "mods/keep.jar": b"not an executable mod",
-            f"mods/{version}.jar": version.encode() * (256 * 1024),
+            f"mods/{version}.jar": version.encode() * (512 * 1024),
             "resourcepacks/FM_NewFont/pack.mcmeta": b'{"pack":{"pack_format":3}}',
             "resources/empty.txt": b"",
         }
@@ -64,6 +67,13 @@ def test_signed_upgrade_lab_exercises_real_http_fault_and_preserves_settings(tmp
         )
         (root / "manifest.json").write_text(json.dumps(envelope), encoding="utf-8")
         roots.append(root)
+    return roots, keys
+
+
+def test_signed_upgrade_lab_exercises_real_http_fault_and_preserves_settings(
+    tmp_path, pack_releases
+):
+    roots, keys = pack_releases
     report = run_pack_install_lab(*roots, keys, lab_parent=tmp_path / "owned")
     assert report["ok"], report
     assert report["minecraft_started"] is False
@@ -75,3 +85,18 @@ def test_signed_upgrade_lab_exercises_real_http_fault_and_preserves_settings(tmp
     )
     assert report["obsolete_source_files"] == 1
     assert (Path(report["lab"]) / ".omk-owned-pack-install-lab").is_file()
+
+
+def test_actual_killed_installer_process_recovers_using_only_persisted_state(
+    tmp_path, pack_releases
+):
+    roots, keys = pack_releases
+    report = run_pack_process_lab(*roots, keys, lab_parent=tmp_path / "owned")
+    assert report["ok"], report
+    assert report["killed_child_exit_code"] != 0
+    assert report["restarted_child_exit_code"] == 0
+    assert report["owned_child_stopped"]
+    assert report["partial_bytes_after_kill"] >= 256 * 1024
+    assert report["range_offsets"][0] == 0
+    assert any(offset > 0 for offset in report["range_offsets"][1:])
+    assert len(report["checks"]) == 15

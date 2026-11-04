@@ -261,6 +261,17 @@ def _exercise(lab, config, client, api, admin_password, checked):
         {401},
     )
     checked("revoked_game_token_cannot_upload_client_report")
+    _exercise_invitation_revocation(client, command, checked)
+
+
+def _exercise_invitation_revocation(client, command, checked):
+    spare = command("access", "invite")
+    spare_code = json.loads(Path(spare["invitation_file"]).read_text())["code"]
+    used = command("access", "invite")
+    used_code = json.loads(Path(used["invitation_file"]).read_text())["code"]
+    password = secrets.token_urlsafe(24)
+    client.register("omk_keep_user", password, used_code, request_api_token=False)
+    game = client.authenticate("omk_keep_user", password, uuid4().hex)
     invite = command("access", "invite")
     code = json.loads(Path(invite["invitation_file"]).read_text())["code"]
     command("access", "revoke-invite", "--invitation-file", invite["invitation_file"])
@@ -269,6 +280,22 @@ def _exercise(lab, config, client, api, admin_password, checked):
         {400, 403},
     )
     checked("operator_cli_revocation_blocks_registration")
+    inventory = command("access", "invites")
+    values = json.loads(Path(inventory["inventory_file"]).read_text())["invites"]
+    codes = {value["code"] for value in values}
+    if code in codes or spare_code not in codes:
+        raise RuntimeError("Revocation affected the wrong invitation inventory")
+    checked("revoked_invitation_removed_without_revoking_other_invites")
+    client.register(
+        "omk_spare_user", secrets.token_urlsafe(24), spare_code, request_api_token=False
+    )
+    checked("unrelated_unused_invitation_still_registers")
+    client.request(
+        "POST",
+        "/auth/validate",
+        {"accessToken": game["accessToken"], "clientToken": game["clientToken"]},
+    )
+    checked("revoking_unused_invitation_preserves_existing_account_session")
 
 
 def operator_smoke():

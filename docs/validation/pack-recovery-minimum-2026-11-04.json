@@ -1,0 +1,133 @@
+{
+  "date": "2026-11-04",
+  "version": "0.3.0.dev10",
+  "windows_process_recovery": {
+    "ok": true,
+    "accepted_player_release": false,
+    "minecraft_started": false,
+    "source_digest": "66c15f3081135f98c42ac0c3fbb67372594b822bb07556f31622e8f658a08225",
+    "target_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+    "target_files": 5274,
+    "target_bytes": 741838782,
+    "kill_method": "TerminateProcess",
+    "checks": [
+      "source_payload_verified_before_child_start",
+      "actual_child_wrote_partial_before_kill",
+      "child_saved_incomplete_state_and_signed_source_history",
+      "owned_child_was_running_at_kill",
+      "forced_child_exit_observed",
+      "killed_child_never_reported_complete",
+      "old_owned_files_retained_after_process_kill",
+      "new_process_completed_update",
+      "new_process_used_real_http_range",
+      "new_process_confirmed_exact_target_digest",
+      "all_target_hashes_verified_after_restart",
+      "recovered_install_is_ready",
+      "obsolete_owned_files_removed_only_after_success",
+      "options_journeymap_saves_screenshots_preserved",
+      "launcher_userdata_preserved"
+    ],
+    "killed_child_exit_code": 1,
+    "partial_bytes_after_kill": 262144,
+    "restarted_child_exit_code": 0,
+    "range_offsets": [
+      0,
+      262144
+    ],
+    "owned_child_stopped": true
+  },
+  "full_manifest_minimum_policy": {
+    "ok": true,
+    "date": "2026-11-04",
+    "launcher_version": "0.3.0.dev10",
+    "source_candidate_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+    "policy_candidate_digest": "0448faabb924415bf043e5a379c0d468e373829195a04fe1ac84a28c49a3fc1b",
+    "candidate_version": "2.23.4-omk.1-rc.2",
+    "schema": 2,
+    "minimum_launcher_version": "0.3.0.dev10",
+    "files": 5274,
+    "bytes": 741838782,
+    "source_payload_hashes_verified": true,
+    "payload_unchanged": true,
+    "legacy_reader": {
+      "commit": "a8099c3a395b978f8e76b0a20b1a4b83c178c987",
+      "sha256": "b8e422d6cf8e9c202b03630665dc3c52f9b1ad114d959c21d5f00bc835dcc7d5",
+      "accepted_signed_schema_one_control": true,
+      "rejected_valid_signed_schema_two": true
+    },
+    "current_reader_http_accepted_compatible_minimum": true,
+    "current_reader_http_rejected_future_minimum": true,
+    "artifact_requests": 0,
+    "ephemeral_signing_key_persisted": false,
+    "deployed_content_changed": false,
+    "minecraft_started": false,
+    "accepted_player_release": false
+  },
+  "real_operator_smoke": {
+    "ok": true,
+    "checks": [
+      "separate_operator_login_saves_no_password",
+      "operator_cli_invitation_registers_normal_player",
+      "registration_invitation_is_single_use",
+      "game_token_cannot_issue_invitations",
+      "normal_account_cannot_become_operator",
+      "operator_api_key_is_not_accepted_as_a_game_token",
+      "automatic_queue_delivers_real_http_report_with_real_game_token",
+      "stored_report_excludes_game_token_and_system_dump",
+      "players_cannot_list_or_read_client_reports_over_http",
+      "game_token_cannot_submit_report_under_another_uuid",
+      "operator_cli_reads_private_inbox_without_public_read_api",
+      "revoked_game_token_cannot_upload_client_report",
+      "operator_cli_revocation_blocks_registration",
+      "revoked_invitation_removed_without_revoking_other_invites",
+      "unrelated_unused_invitation_still_registers",
+      "revoking_unused_invitation_preserves_existing_account_session"
+    ],
+    "cleanup": true,
+    "crash_source": "synthetic crash-report fixture; real HTTP and Drasl"
+  },
+  "local_tests": {
+    "passed": 653,
+    "skipped": 5,
+    "qt_backend": "offscreen",
+    "first_without_backend_aborted_inside_qt": true
+  },
+  "windows_preview": {
+    "version": "0.3.0.dev10",
+    "preview_only": true,
+    "public_backend_configured": false,
+    "source_commit": "434d433",
+    "packaged_qt_startup_smoke_passed": true,
+    "ui_source_fixture": "FakeDrasl with an injected temporary session store and actual minimum-version error",
+    "screenshots": [
+      {
+        "filename": "launcher-update-required-dev10-2026-11-04.png",
+        "sha256": "32522b22442fceaf1881eed03ae7cc8251cc6a7b96c0064e20ec16e9ee75ba0a",
+        "dimensions": [
+          1160,
+          740
+        ]
+      },
+      {
+        "filename": "launcher-update-required-dev10-2026-11-04-minimum.png",
+        "sha256": "3d9799bc72319cfbb8790351af9b1f4b901d777164bc16396124cacca59f3665",
+        "dimensions": [
+          1020,
+          680
+        ]
+      }
+    ],
+    "exe_sha256": "68f12078605ccbc77b81fde00b3eac455ca2d549e90a3a5012583c30de8e5f7d",
+    "exe_bytes": 6058954,
+    "zip_sha256": "6b51828de1dc51d02b0b02dc68d88ca3a8fcec26a54f7e36af3b986a1de5a98f",
+    "zip_bytes": 62148448
+  },
+  "limitations": [
+    "No physical power loss or filesystem durability proof",
+    "No Minecraft execution in the process or manifest policy tests",
+    "Legacy reader source compatibility, not old compiled GUI execution",
+    "No production deployment or working payload/profile change",
+    "No native Linux/macOS Minecraft renderer acceptance",
+    "Unused invitation revocation, not blocking an already registered player"
+  ]
+}

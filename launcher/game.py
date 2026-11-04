@@ -79,6 +79,7 @@ class GameRunner:
         *,
         memory_mb: int | None = None,
     ) -> list[str]:
+        release.require_launcher()
         memory_mb = self.memory_mb if memory_mb is None else memory_mb
         if type(memory_mb) is not int or not 1024 <= memory_mb <= 16384:
             raise ReleaseError("Недопустимое количество памяти для игры.")
