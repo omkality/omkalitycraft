@@ -19,7 +19,7 @@ manifest и автообновление самого лаунчера чере�
 uv sync --locked --all-groups
 uv run omk doctor
 uv run omk server list
-docker compose -f deploy/auth-lab/compose.yaml pull
+docker compose -f deploy/auth-lab/compose.yaml build --pull
 uv run omk lab launcher smoke
 uv run omk lab auth expiry
 uv run pytest -q

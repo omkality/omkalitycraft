@@ -67,7 +67,7 @@ jobs:
       - run: uv sync --locked --all-groups
       - run: uv run --no-sync pytest tests/unit tests/ui -v
       - if: runner.os == 'Linux'
-        run: docker compose -f deploy/auth-lab/compose.yaml pull
+        run: docker compose -f deploy/auth-lab/compose.yaml build --pull
       - if: runner.os == 'Linux'
         run: uv run --no-sync omk lab launcher smoke
 
@@ -83,7 +83,7 @@ jobs:
         with:
           version: "0.11.12"
       - run: uv sync --locked --no-default-groups --group shared --group api
-      - run: docker compose -f deploy/auth-lab/compose.yaml pull
+      - run: docker compose -f deploy/auth-lab/compose.yaml build --pull
       - run: uv run --no-sync omk lab auth smoke
       - run: uv run --no-sync omk lab auth expiry
       - run: uv run --no-sync omk lab admin smoke
