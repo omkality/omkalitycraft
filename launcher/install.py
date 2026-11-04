@@ -80,6 +80,11 @@ class ReleaseClient:
             raise ReleaseError(
                 "Не удалось получить сборку. Попробуйте позже."
             ) from None
+        except OSError:
+            raise ReleaseError(
+                "Не удалось проверить актуальную версию сборки. "
+                "Проверьте соединение и повторите."
+            ) from None
         release = read_release(data, self.trusted_keys)
         if release.pack_id != pack_id or release.platform != target:
             raise ReleaseError("Сервер вернул описание другой сборки или платформы.")

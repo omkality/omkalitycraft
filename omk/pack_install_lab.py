@@ -395,7 +395,8 @@ def run_pack_install_lab(  # noqa: PLR0915 -- ordered regression in owned folder
             )
             try:
                 disconnected.fetch(new.pack_id)
-            except OSError:
+            except (OSError, ReleaseError) as error:
+                report["offline_error"] = str(error)
                 expect(
                     True,
                     "offline_manifest_fetch_fails_instead_of_returning_stale_release",
