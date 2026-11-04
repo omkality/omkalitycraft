@@ -65,7 +65,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libegl1 libopengl0
       - run: uv sync --locked --all-groups
-      - run: uv run --no-sync pytest tests/unit tests/ui -q
+      - run: uv run --no-sync pytest tests/unit tests/ui -v
       - if: runner.os == 'Linux'
         run: docker compose -f deploy/auth-lab/compose.yaml pull
       - if: runner.os == 'Linux'
