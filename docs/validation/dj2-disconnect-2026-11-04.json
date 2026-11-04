@@ -1,0 +1,540 @@
+{
+  "date": "2026-11-04",
+  "issue": 65,
+  "accepted_player_release": false,
+  "live_profile_or_payload_changed": false,
+  "runtime": {
+    "graphical_client_os": "Windows",
+    "client_java": "Temurin 8u472",
+    "client_heap_mb": 6144,
+    "forge": "1.12.2-14.23.5.2860",
+    "server_os": "Linux Docker",
+    "server_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "server_cpus": 4,
+    "server_container_memory_mb": 6144,
+    "server_heap_mb": 4096,
+    "private_core": "0.2.8",
+    "auth": "isolated Drasl + authlib-injector",
+    "private_client_addon": "0.1.0"
+  },
+  "inputs": {
+    "old_signed_release_digest": "66c15f3081135f98c42ac0c3fbb67372594b822bb07556f31622e8f658a08225",
+    "target_client_bom": "profiles/upgrade-inputs/dj2-2.23.4-client.json",
+    "minecraft_client_sha256": "8ada07da5ee77dad3527bd7278fbd05ee1fc8a597813b216a871a2d7d64cc64f",
+    "private_client_addon": {
+      "version": "0.1.0",
+      "sha256": "18a7b204ee1eb01e26ee601d92fca25c1c30393f77533140dfcad954fd530217",
+      "pure_java_behavior_checks_per_runtime": 14,
+      "helper_test_runtimes": [
+        "Windows Java 8",
+        "pinned Linux JRE Docker"
+      ],
+      "clean_build_excludes_seeded_stale_class": true
+    },
+    "private_lab_probe": {
+      "version": "0.1.5",
+      "sha256": "c85262926d4b97106c33384f46031a1efff3081c038051f28a9cf303be1bbf7c",
+      "excluded_from_player_release": true
+    }
+  },
+  "baseline_comparison": {
+    "native_gui_button_via_client_api": true,
+    "windows_mouse_injection": false,
+    "probe_version": "0.1.3",
+    "probe_sha256": "9a094aedb3a50d3fe5ab7565d2d6ee714ba0f2cb8d142a6f3b4b1d87f314d58d",
+    "old_early_new_reports": 2,
+    "target_early_new_reports": 9,
+    "settled_30s_and_45s_clean_on_both": true,
+    "post_disconnect_observation_seconds": 20,
+    "bewitchment_handler_class_identical": true,
+    "bewitchment_handler_class_sha256": "57befe0117caccfe1f61c5fb0d62f34a6838cb6c75365a12528ad8fe56acae42",
+    "upstream_user_report": "https://github.com/Divine-Journey-2/Divine-Journey-2/issues/1370",
+    "upstream_fix_confirmed": false
+  },
+  "guarded_clients": [
+    {
+      "pack": "2.21.3-omk.4",
+      "instrumented_native_checks": [
+        "client_guard_loaded_in_real_game",
+        "real_mod_list_matches_reviewed_guard_candidate",
+        "cycle_1_live_player_joined",
+        "cycle_1_open_session_packet_tasks_executed",
+        "cycle_1_before_disconnect_no_new_or_rewritten_reports",
+        "cycle_1_before_disconnect_no_task_or_fatal_markers",
+        "cycle_1_after_disconnect_20s_no_new_or_rewritten_reports",
+        "cycle_1_after_disconnect_20s_no_task_or_fatal_markers",
+        "cycle_1_clean_configured_menu",
+        "cycle_2_live_player_joined",
+        "cycle_2_open_session_packet_tasks_executed",
+        "cycle_2_before_disconnect_no_new_or_rewritten_reports",
+        "cycle_2_before_disconnect_no_task_or_fatal_markers",
+        "cycle_2_after_disconnect_20s_no_new_or_rewritten_reports",
+        "cycle_2_after_disconnect_20s_no_task_or_fatal_markers",
+        "cycle_2_clean_configured_menu",
+        "cycle_3_live_player_joined",
+        "cycle_3_open_session_packet_tasks_executed",
+        "cycle_3_before_disconnect_no_new_or_rewritten_reports",
+        "cycle_3_before_disconnect_no_task_or_fatal_markers",
+        "cycle_3_after_disconnect_20s_no_new_or_rewritten_reports",
+        "cycle_3_after_disconnect_20s_no_task_or_fatal_markers",
+        "cycle_3_clean_configured_menu",
+        "cycle_4_live_player_joined",
+        "cycle_4_open_session_packet_tasks_executed",
+        "valid_live_inventory_and_xp_packets_preserved",
+        "local_gui_translation_command_still_works",
+        "cycle_4_before_disconnect_no_new_or_rewritten_reports",
+        "cycle_4_before_disconnect_no_task_or_fatal_markers",
+        "cycle_4_after_disconnect_20s_no_new_or_rewritten_reports",
+        "cycle_4_after_disconnect_20s_no_task_or_fatal_markers",
+        "cycle_4_clean_configured_menu",
+        "cycle_5_live_player_joined",
+        "cycle_5_open_session_packet_tasks_executed",
+        "same_session_inventory_and_xp_persist_after_rejoin",
+        "cycle_5_before_disconnect_no_new_or_rewritten_reports",
+        "cycle_5_before_disconnect_no_task_or_fatal_markers",
+        "cycle_5_after_disconnect_20s_no_new_or_rewritten_reports",
+        "cycle_5_after_disconnect_20s_no_task_or_fatal_markers",
+        "cycle_5_clean_configured_menu",
+        "actual_closed_session_packet_tasks_were_discarded"
+      ],
+      "cycles": [
+        {
+          "cycle": 1,
+          "settled_seconds": 0,
+          "post_exit_seconds": 20,
+          "before_counts": {
+            "wrapped": 0,
+            "executed": 0,
+            "discarded": 0
+          },
+          "after_counts": {
+            "wrapped": 41,
+            "executed": 22,
+            "discarded": 19
+          },
+          "new_reports": 0
+        },
+        {
+          "cycle": 2,
+          "settled_seconds": 0,
+          "post_exit_seconds": 20,
+          "before_counts": {
+            "wrapped": 41,
+            "executed": 22,
+            "discarded": 19
+          },
+          "after_counts": {
+            "wrapped": 797,
+            "executed": 702,
+            "discarded": 95
+          },
+          "new_reports": 0
+        },
+        {
+          "cycle": 3,
+          "settled_seconds": 0,
+          "post_exit_seconds": 20,
+          "before_counts": {
+            "wrapped": 797,
+            "executed": 702,
+            "discarded": 95
+          },
+          "after_counts": {
+            "wrapped": 1550,
+            "executed": 1432,
+            "discarded": 118
+          },
+          "new_reports": 0
+        },
+        {
+          "cycle": 4,
+          "settled_seconds": 30,
+          "post_exit_seconds": 20,
+          "before_counts": {
+            "wrapped": 1550,
+            "executed": 1432,
+            "discarded": 118
+          },
+          "after_counts": {
+            "wrapped": 6567,
+            "executed": 6449,
+            "discarded": 118
+          },
+          "new_reports": 0
+        },
+        {
+          "cycle": 5,
+          "settled_seconds": 3,
+          "post_exit_seconds": 20,
+          "before_counts": {
+            "wrapped": 6567,
+            "executed": 6449,
+            "discarded": 118
+          },
+          "after_counts": {
+            "wrapped": 7562,
+            "executed": 7444,
+            "discarded": 118
+          },
+          "new_reports": 0
+        }
+      ],
+      "final_counts": {
+        "wrapped": 7562,
+        "executed": 7444,
+        "discarded": 118
+      },
+      "post_exit_checks": {
+        "no_new_or_rewritten_reports_after_process_exit": true,
+        "no_task_or_fatal_markers_after_process_exit": true,
+        "normal_client_exit": true,
+        "normal_linux_server_exit": true,
+        "owned_services_cleaned": true,
+        "driver_crash_audit_clean": true
+      },
+      "client_exit_codes": [
+        0
+      ],
+      "linux_server_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "owned_world_export_sha256": "b629481a3bbacab40837c1789c60e01cfbdc4ca97be6266b4a7e7886c48047f7",
+      "owned_volume_removed_after_export": true,
+      "auth_removed": true
+    },
+    {
+      "pack": "2.23.4",
+      "instrumented_native_checks": [
+        "client_guard_loaded_in_real_game",
+        "real_mod_list_matches_reviewed_guard_candidate",
+        "cycle_1_live_player_joined",
+        "cycle_1_open_session_packet_tasks_executed",
+        "cycle_1_before_disconnect_no_new_or_rewritten_reports",
+        "cycle_1_before_disconnect_no_task_or_fatal_markers",
+        "cycle_1_after_disconnect_20s_no_new_or_rewritten_reports",
+        "cycle_1_after_disconnect_20s_no_task_or_fatal_markers",
+        "cycle_1_clean_configured_menu",
+        "cycle_2_live_player_joined",
+        "cycle_2_open_session_packet_tasks_executed",
+        "cycle_2_before_disconnect_no_new_or_rewritten_reports",
+        "cycle_2_before_disconnect_no_task_or_fatal_markers",
+        "cycle_2_after_disconnect_20s_no_new_or_rewritten_reports",
+        "cycle_2_after_disconnect_20s_no_task_or_fatal_markers",
+        "cycle_2_clean_configured_menu",
+        "cycle_3_live_player_joined",
+        "cycle_3_open_session_packet_tasks_executed",
+        "cycle_3_before_disconnect_no_new_or_rewritten_reports",
+        "cycle_3_before_disconnect_no_task_or_fatal_markers",
+        "cycle_3_after_disconnect_20s_no_new_or_rewritten_reports",
+        "cycle_3_after_disconnect_20s_no_task_or_fatal_markers",
+        "cycle_3_clean_configured_menu",
+        "cycle_4_live_player_joined",
+        "cycle_4_open_session_packet_tasks_executed",
+        "valid_live_inventory_and_xp_packets_preserved",
+        "local_gui_translation_command_still_works",
+        "cycle_4_before_disconnect_no_new_or_rewritten_reports",
+        "cycle_4_before_disconnect_no_task_or_fatal_markers",
+        "cycle_4_after_disconnect_20s_no_new_or_rewritten_reports",
+        "cycle_4_after_disconnect_20s_no_task_or_fatal_markers",
+        "cycle_4_clean_configured_menu",
+        "cycle_5_live_player_joined",
+        "cycle_5_open_session_packet_tasks_executed",
+        "same_session_inventory_and_xp_persist_after_rejoin",
+        "cycle_5_before_disconnect_no_new_or_rewritten_reports",
+        "cycle_5_before_disconnect_no_task_or_fatal_markers",
+        "cycle_5_after_disconnect_20s_no_new_or_rewritten_reports",
+        "cycle_5_after_disconnect_20s_no_task_or_fatal_markers",
+        "cycle_5_clean_configured_menu",
+        "actual_closed_session_packet_tasks_were_discarded"
+      ],
+      "cycles": [
+        {
+          "cycle": 1,
+          "settled_seconds": 0,
+          "post_exit_seconds": 20,
+          "before_counts": {
+            "wrapped": 0,
+            "executed": 0,
+            "discarded": 0
+          },
+          "after_counts": {
+            "wrapped": 2267,
+            "executed": 2108,
+            "discarded": 159
+          },
+          "new_reports": 0
+        },
+        {
+          "cycle": 2,
+          "settled_seconds": 0,
+          "post_exit_seconds": 20,
+          "before_counts": {
+            "wrapped": 2267,
+            "executed": 2108,
+            "discarded": 159
+          },
+          "after_counts": {
+            "wrapped": 3035,
+            "executed": 2876,
+            "discarded": 159
+          },
+          "new_reports": 0
+        },
+        {
+          "cycle": 3,
+          "settled_seconds": 0,
+          "post_exit_seconds": 20,
+          "before_counts": {
+            "wrapped": 3035,
+            "executed": 2876,
+            "discarded": 159
+          },
+          "after_counts": {
+            "wrapped": 3833,
+            "executed": 3674,
+            "discarded": 159
+          },
+          "new_reports": 0
+        },
+        {
+          "cycle": 4,
+          "settled_seconds": 30,
+          "post_exit_seconds": 20,
+          "before_counts": {
+            "wrapped": 3833,
+            "executed": 3674,
+            "discarded": 159
+          },
+          "after_counts": {
+            "wrapped": 12500,
+            "executed": 12320,
+            "discarded": 180
+          },
+          "new_reports": 0
+        },
+        {
+          "cycle": 5,
+          "settled_seconds": 3,
+          "post_exit_seconds": 20,
+          "before_counts": {
+            "wrapped": 12500,
+            "executed": 12320,
+            "discarded": 180
+          },
+          "after_counts": {
+            "wrapped": 13837,
+            "executed": 13657,
+            "discarded": 180
+          },
+          "new_reports": 0
+        }
+      ],
+      "final_counts": {
+        "wrapped": 13837,
+        "executed": 13657,
+        "discarded": 180
+      },
+      "post_exit_checks": {
+        "no_new_or_rewritten_reports_after_process_exit": true,
+        "no_task_or_fatal_markers_after_process_exit": true,
+        "normal_client_exit": true,
+        "normal_linux_server_exit": true,
+        "clean_policy_update_restarts": true,
+        "owned_services_cleaned": true,
+        "driver_crash_audit_clean": true
+      },
+      "client_exit_codes": [
+        0,
+        0
+      ],
+      "linux_server_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "owned_world_export_sha256": "e7b8009e693f398a8620ffe4571654860cc4ff6b9af5bf57676fa4ac3a208a28",
+      "owned_volume_removed_after_export": true,
+      "auth_removed": true
+    }
+  ],
+  "native_version_rejection_control": {
+    "completed": true,
+    "ok": true,
+    "checks": [
+      "clean_server_restart_with_explicit_lab_version_mismatch",
+      "server_rejection_does_not_enter_world",
+      "after_native_version_rejection_no_new_or_rewritten_reports",
+      "after_native_version_rejection_no_task_or_fatal_markers",
+      "real_gui_version_rejection_preserved",
+      "exact_reviewed_policy_restored_after_negative_control",
+      "inventory_and_xp_preserved_after_clean_server_restart",
+      "independent_server_inventory_and_xp_query_matches",
+      "after_restored_policy_rejoin_no_new_or_rewritten_reports",
+      "after_restored_policy_rejoin_no_task_or_fatal_markers",
+      "restored_policy_disconnect_finished"
+    ],
+    "resumed_after_bounded_inventory_sync": true,
+    "server_stack_count_nbt_type": "int; byte and short negative controls rejected"
+  },
+  "ordinary_guarded_client": {
+    "scope": "Ordinary Windows candidate: 223 author JARs + private client guard, direct native join, no diagnostic Forge mod",
+    "ok": true,
+    "accepted_player_release": false,
+    "probe_absent": true,
+    "diagnostic_jvm_flag_absent": true,
+    "normal_launcher_removed_extra_probe": true,
+    "prelaunch_mod_verification_passed": true,
+    "expected_mod_jars_hash_verified": 224,
+    "runtime_generated_folders_not_deleted_or_counted_as_signed_artifacts": true,
+    "reviewed_strict_policy_entries": 255,
+    "native_hud_observed": true,
+    "manual_disconnect_button_tested": false,
+    "server_disconnect_tested": true,
+    "post_exit_audit_complete": true,
+    "screenshots": [
+      {
+        "filename": "2026-11-04_04.45.49.png",
+        "sha256": "fc81d13ca7240917f502fb36bfe8196aa47e3661e5a6ed26cd5a742c3d055662",
+        "bytes": 845968,
+        "dimensions": [
+          1280,
+          800
+        ]
+      },
+      {
+        "filename": "2026-11-04_04.47.12.png",
+        "sha256": "3e5677a874f5bbe5e936fd13030e7c280e440de8e221799e8e1b94a93885321e",
+        "bytes": 24055,
+        "dimensions": [
+          1280,
+          800
+        ]
+      }
+    ],
+    "independent_server_inventory_and_xp_query_matches": true,
+    "window_capture_errors": [
+      "window capture timed out: timed out waiting on channel",
+      "window capture timed out: timed out waiting on channel"
+    ],
+    "windows_capture_recovery_exhausted": true,
+    "post_disconnect_observation_seconds": 20,
+    "native_server_disconnect_screen_observed": true,
+    "post_disconnect_no_new_or_rewritten_reports": true,
+    "post_disconnect_no_task_or_fatal_markers": true,
+    "client_exit_code": 0,
+    "post_exit_no_new_or_rewritten_reports": true,
+    "post_exit_no_task_or_fatal_markers": true,
+    "server_exit_code": 0,
+    "server_oom_killed": false,
+    "auth_removed": true,
+    "limits": [
+      "One ordinary direct join/server kick with native F2 observation; manual native mouse-button disconnect without diagnostic mod remains untested because Windows capture timed out twice.",
+      "No entire player release acceptance."
+    ]
+  },
+  "native_handled_crash_capture": [
+    {
+      "pack": "2.21.3",
+      "matched_native_reports": 2,
+      "all_schema_2_valid": true,
+      "process_state": "running",
+      "exit_code": null,
+      "external_upload_configured": false,
+      "matched_reports": [
+        {
+          "report_file": "crash-2026-11-04_03.39.00-client.txt",
+          "native_handled_report_captured_while_running": true
+        },
+        {
+          "report_file": "crash-2026-11-04_03.39.01-client.txt",
+          "native_handled_report_captured_while_running": true
+        }
+      ]
+    },
+    {
+      "pack": "2.23.4",
+      "matched_native_reports": 9,
+      "all_schema_2_valid": true,
+      "process_state": "running",
+      "exit_code": null,
+      "external_upload_configured": false,
+      "matched_reports": [
+        {
+          "report_file": "crash-2026-11-04_03.24.23-client.txt",
+          "native_handled_report_captured_while_running": true
+        },
+        {
+          "report_file": "crash-2026-11-04_03.24.24-client.txt",
+          "native_handled_report_captured_while_running": true
+        },
+        {
+          "report_file": "crash-2026-11-04_03.24.25-client.txt",
+          "native_handled_report_captured_while_running": true
+        },
+        {
+          "report_file": "crash-2026-11-04_03.24.26-client.txt",
+          "native_handled_report_captured_while_running": true
+        },
+        {
+          "report_file": "crash-2026-11-04_03.24.27-client.txt",
+          "native_handled_report_captured_while_running": true
+        },
+        {
+          "report_file": "crash-2026-11-04_03.24.28-client.txt",
+          "native_handled_report_captured_while_running": true
+        },
+        {
+          "report_file": "crash-2026-11-04_03.24.29-client.txt",
+          "native_handled_report_captured_while_running": true
+        },
+        {
+          "report_file": "crash-2026-11-04_03.24.30-client.txt",
+          "native_handled_report_captured_while_running": true
+        },
+        {
+          "report_file": "crash-2026-11-04_03.24.31-client.txt",
+          "native_handled_report_captured_while_running": true
+        }
+      ]
+    }
+  ],
+  "excluded_attempts": [
+    {
+      "attempt": "probe 0.1.4",
+      "reason": "Incorrect health SRG binding caused diagnostic exception; excluded from guard/pack results; corrected with pinned-mapping preflight in 0.1.5."
+    },
+    {
+      "attempt": "target lab first bootstrap",
+      "reason": "Loopback auth port still held during prior owned lab shutdown; no game checks started; retried after cleanup."
+    },
+    {
+      "attempt": "initial expected return to server list",
+      "reason": "Pack enables Always Return to Main Menu; independent new task reports still fail the baseline."
+    },
+    {
+      "attempt": "target guard first game fixture",
+      "reason": "Avatar drowned during waiting; first four cycles clean but inventory/rejoin incomplete, not accepted. World exported; repeated unchanged guard on a new owned creative/platform-prepared lab."
+    },
+    {
+      "attempt": "post-policy inventory check",
+      "reason": "First HUD does not imply complete inventory sync. Initial immediate assertion retained; bounded wait then confirmed client data."
+    },
+    {
+      "attempt": "independent server inventory query",
+      "reason": "Fixture assumed vanilla byte Count. This exact pack uses int: full Count:7 query passed, byte and short controls rejected. Original failed assertion retained."
+    }
+  ],
+  "limits": [
+    "Instrumented callbacks exercise actual GuiScreen button; ordinary input is recorded separately.",
+    "No Linux/macOS graphical client acceptance.",
+    "Live-session exceptions remain visible; only closed originating connection tasks are skipped.",
+    "Background mod tasks outside packet context are not covered.",
+    "No full pack, translation, load or signed install/update acceptance."
+  ]
+}
