@@ -106,6 +106,15 @@ Consistent snapshots используют неизменяемые имена а
 uv run omk release pack --files .local/prepared-pack/files --launch-profile .local/prepared-pack/launch.json --private-key .local/pack-signing.pem --public-keys launcher/assets/release-keys.json --output .local/prepared-pack/manifest.json --pack-id dj2 --version 2.21.3-omk.1 --minecraft 1.12.2 --platform windows-x64
 ```
 
+С 0.3.0.dev10 команда создаёт signed schema 2 и по умолчанию записывает текущую
+версию лаунчера как минимальную. `--minimum-launcher-version 0.3.0.dev10` позволяет
+явно задать проверенный минимум. Поле не берётся из окружения игрока. Schema 1
+остаётся legacy-форматом без этого требования; добавлять поле минимума в schema 1
+нельзя. Старые readers отвергают schema 2. Сначала нужно выпустить/проверить новый
+лаунчер через TUF, затем публиковать зависимый pack. Нет доступного совместимого
+лаунчера — запуск остаётся заблокированным, требование не обходится.
+[Проверки и границы безопасности](SIGNED_PACK_INSTALL.md).
+
 Публичный ключ сборки попадает в лаунчер до её распространения.
 Контент размещается под `CONTENT_ROOT/releases/<profile>/<platform>/`:
 `manifest.json` и `files/`. Описание подписано Ed25519, каждый файл имеет SHA256 и длину.
