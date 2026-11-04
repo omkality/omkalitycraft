@@ -1,0 +1,196 @@
+{
+  "date": "2026-11-04",
+  "issue": 49,
+  "accepted_player_release": false,
+  "live_profile_or_payload_changed": false,
+  "candidate": {
+    "candidate_version": "2.23.4-omk.1-rc.1",
+    "candidate_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+    "candidate_files": 5274,
+    "candidate_bytes": 741838782,
+    "sources": {
+      "verified_signed_artifact": 5137,
+      "pinned_author_override_and_reviewed_policy": 137
+    },
+    "ephemeral_lab_signing_key_only": true,
+    "private_key_persisted": false,
+    "existing_deployed_content_changed": false,
+    "accepted_player_release": false,
+    "source_pinned_author_zip_sha256": "aeb52f145413f9bd46a2d1045696fd76e518275dd2e4e917ec9cf0935510be2c"
+  },
+  "transport_and_installer": {
+    "ok": true,
+    "accepted_player_release": false,
+    "minecraft_started": false,
+    "checks": [
+      "source_signed_payload_installed_and_hash_verified",
+      "interrupted_upgrade_is_not_ready",
+      "interrupted_upgrade_keeps_signed_source_history",
+      "interruption_does_not_delete_obsolete_source_files",
+      "short_body_partial_is_preserved",
+      "new_installer_resumes_actual_http_range",
+      "updated_complete_payload_hashes_match",
+      "resumed_upgrade_is_ready",
+      "obsolete_signed_source_files_removed_after_success",
+      "options_maps_saves_and_screenshots_preserved",
+      "launcher_userdata_preserved",
+      "managed_server_updated_and_personal_entry_preserved",
+      "normal_prelaunch_policy_removes_unsigned_extra",
+      "repair_downloads_only_deleted_and_same_size_corrupt_mods",
+      "repaired_complete_payload_hashes_match",
+      "repair_does_not_reset_personal_settings",
+      "healthy_recheck_downloads_nothing",
+      "fresh_cdn_serves_exact_signed_candidate",
+      "fresh_complete_payload_hashes_match",
+      "fresh_install_ready",
+      "offline_manifest_fetch_fails_instead_of_returning_stale_release",
+      "offline_fetch_does_not_damage_last_complete_install"
+    ],
+    "source_version": "2.21.3-omk.4",
+    "target_version": "2.23.4-omk.1-rc.1",
+    "source_digest": "66c15f3081135f98c42ac0c3fbb67372594b822bb07556f31622e8f658a08225",
+    "target_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+    "target_files": 5274,
+    "target_bytes": 741838782,
+    "fresh_target_cdn": "external_loopback",
+    "interruption_error": "Загрузка прервалась. Проверьте соединение и повторите.",
+    "interrupted_partial_bytes": 393216,
+    "fault_offsets": [
+      0,
+      131072,
+      262144,
+      393216
+    ],
+    "obsolete_source_files": 1113
+  },
+  "linux_cdn": {
+    "api_image_id": "sha256:ed2a913fba5d206d35b82ca8be807c1b213dc15e6c0afd1a1b5fce06e32b9e5c",
+    "api_limits": {
+      "cpus": 1,
+      "memory_mib": 512,
+      "workers": 2,
+      "requests_per_second": 10000,
+      "note": "High request limit only for local fixture throughput; not production capacity acceptance"
+    },
+    "api_stop": {
+      "Running": false,
+      "ExitCode": 0,
+      "OOMKilled": false
+    },
+    "owned_container_removed": true,
+    "owned_image_removed": true
+  },
+  "native_installed_client": {
+    "ok": true,
+    "accepted_player_release": false,
+    "client_source": "actual signed source-to-target installer result",
+    "probe_absent": true,
+    "server_java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "private_core_version": "0.2.8",
+    "candidate_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+    "client_exit_code": 0,
+    "client_exit_before_cleanup": 0,
+    "no_new_or_rewritten_crash_reports": true,
+    "no_task_or_fatal_markers": true,
+    "lab_cleanup_stop_requested": true,
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "game_crash_detected": false,
+    "owned_game_clean_exit": true,
+    "stopped_world_tar_sha256": "629d4bcb4549dfd10a9fe57af4f07e873d4736f43273238f2d7affdca1ce5a6d",
+    "owned_volume_removed_after_export": true,
+    "auth_removed": true
+  },
+  "native_observations": {
+    "native_hud_observed": true,
+    "server_inventory_and_xp_query_matches": true,
+    "image": {
+      "filename": "2026-11-04_06.26.36.png",
+      "sha256": "87117634469f002276a1ed958056db8fad5f77a66a50f2a97b9bfb3913068568",
+      "bytes": 293547,
+      "dimensions": [
+        854,
+        480
+      ]
+    },
+    "manual_disconnect_button_tested": false,
+    "minecraft_source": "actual signed upgraded files; no probe",
+    "native_server_disconnect_screen_observed": true,
+    "post_disconnect_observation_seconds_at_least": 20,
+    "journeymap_custom_circle_and_grid_observed": true,
+    "disconnect_image": {
+      "filename": "2026-11-04_06.28.53.png",
+      "sha256": "a1bc7ac3cb2b5793dbecdc05dd0dd50f91db6c802a3af9de359ad7176bc3e0a7",
+      "bytes": 14806,
+      "dimensions": [
+        854,
+        480
+      ]
+    }
+  },
+  "launcher_manifest_gate": {
+    "development_version": "0.3.0.dev9",
+    "cache_fallback_removed": true,
+    "fetch_network_error_prevents_prepare_and_launch": true,
+    "invalid_signature_error_prevents_prepare_and_launch": true,
+    "saved_session_and_installed_sentinel_preserved_in_controller_tests": true,
+    "minimum_window_error_layout_checked": [
+      1020,
+      680
+    ]
+  },
+  "excluded_attempts": [
+    {
+      "scope": "first full installer/CDN fixture",
+      "result": "not accepted",
+      "reason": "17 installer conditions passed, but fresh Linux API returned 404: CONTENT_ROOT environment was missing. The owned container used its empty default root. Report retained; repeated with correct read-only root and an exact signed-manifest preflight. Both containers stopped with exit0/OOMfalse."
+    }
+  ],
+  "limits": [
+    "Installer transport uses synthetic user-data sentinels; no actual world migration or old game account migration is implied.",
+    "HTTP short bodies and a new Installer instance are tested, not sudden host power loss or a forcibly killed launcher process.",
+    "Full native client observation is Windows only; the Linux component is CDN and Forge server, not a Linux/macOS renderer.",
+    "Native control is direct join/server kick, not a manual disconnect mouse click; #65 remains open.",
+    "No new public URLs, production signing keys, profile switch, launcher update publication or live deployment."
+  ],
+  "local_checks": {
+    "pytest_passed": 631,
+    "pytest_skipped": 5,
+    "skip_scope": "Windows symlink cases",
+    "ruff": "passed",
+    "black": "passed"
+  },
+  "windows_launcher_preview": {
+    "version": "0.3.0.dev9",
+    "preview_only": true,
+    "public_backend_configured": false,
+    "packaged_qt_startup_smoke_passed": true,
+    "exe_sha256": "a38a69e2d2e21301c2e993afe79a83a6bea86b2d4fcd4265dab693bd35671d82",
+    "exe_bytes": 6058035,
+    "zip_sha256": "3658b630685a98489ebd2b9a372405ec8b9f5dcb6e4ce2dd3fa8ea0858689212",
+    "zip_bytes": 62147491,
+    "screenshots": [
+      {
+        "filename": "launcher-network-gate-dev9-2026-11-04.png",
+        "sha256": "86932c084a48637a53afd56481afe82d9371f5ceafbb53beace904eac5eb6a21",
+        "dimensions": [
+          1160,
+          740
+        ]
+      },
+      {
+        "filename": "launcher-network-gate-dev9-minimum-2026-11-04.png",
+        "sha256": "9b5ea7a13f8b064daa2f4b447c9b3d3836f4887e6daabbc9419862e120525805",
+        "dimensions": [
+          1020,
+          680
+        ]
+      }
+    ]
+  }
+}
