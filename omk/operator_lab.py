@@ -131,7 +131,9 @@ def _register_client(lab, config, client, admin_password, command, checked):
     service = AccountService(
         client, FileSessionStore(portable / "userdata/session.json")
     )
-    registration = service.prepare_registration("omk_report_user", invitation)
+    registration = service.prepare_registration(
+        "omk_report_user", invitation, secrets.token_urlsafe(24)
+    )
     session = service.register(registration).session
     checked("operator_cli_invitation_registers_normal_player")
     _denied(

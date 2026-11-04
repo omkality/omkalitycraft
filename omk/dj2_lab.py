@@ -199,13 +199,17 @@ def _accounts(compose, lab):
         "code"
     ]
     service = AccountService(client, FileSessionStore(lab / "account/session.json"))
-    actor = service.prepare_registration("omk_game_test", invite)
+    actor = service.prepare_registration(
+        "omk_game_test", invite, secrets.token_urlsafe(24)
+    )
     session = service.register(actor).session
     invite2 = client.request("POST", "/drasl/api/v3/invites", {}, admin["apiToken"])[
         "code"
     ]
     service2 = AccountService(client, FileSessionStore(lab / "account2/session.json"))
-    actor2 = service2.prepare_registration("omk_other_test", invite2)
+    actor2 = service2.prepare_registration(
+        "omk_other_test", invite2, secrets.token_urlsafe(24)
+    )
     session2 = service2.register(actor2).session
     return client, service, session, session2
 

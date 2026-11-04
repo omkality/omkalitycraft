@@ -23,8 +23,10 @@ def account(tmp_path: Path) -> AccountService:
 def test_registration_password_exists_before_any_network_request(
     account: AccountService,
 ) -> None:
-    registration = account.prepare_registration("test_player", "test-invitation")
-    assert len(registration.password) >= 32
+    registration = account.prepare_registration(
+        "test_player", "test-invitation", "player-chosen-fixture-password"
+    )
+    assert registration.password == "player-chosen-fixture-password"
     assert registration.password not in repr(registration)
     assert account.client.calls == []
     result = account.register(registration)
@@ -33,7 +35,9 @@ def test_registration_password_exists_before_any_network_request(
 
 
 def test_portable_file_contains_only_game_session(account: AccountService) -> None:
-    registration = account.prepare_registration("test_player", "test-invitation")
+    registration = account.prepare_registration(
+        "test_player", "test-invitation", "player-chosen-fixture-password"
+    )
     result = account.register(registration)
     data = account.store.path.read_text(encoding="utf-8")
     assert registration.password not in data
@@ -50,6 +54,21 @@ def test_portable_file_contains_only_game_session(account: AccountService) -> No
     assert result.session.access_token not in repr(result)
     if os.name != "nt":
         assert stat.S_IMODE(account.store.path.stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("password", [None, 12, "", "short", "x" * 129])
+def test_chosen_registration_password_is_validated_without_network(account, password):
+    with pytest.raises(AccountError, match="от 12 до 128"):
+        account.prepare_registration("test_player", "test-invitation", password)
+    assert account.client.calls == []
+
+
+@pytest.mark.parametrize(
+    "password", ["x" * 12, "y" * 128, "  passphrase with spaces  "]
+)
+def test_chosen_password_boundaries_and_spaces_are_preserved(account, password):
+    result = account.prepare_registration("test_player", "test-invitation", password)
+    assert result.password == password
 
 
 def test_restore_refreshes_without_password(account: AccountService) -> None:

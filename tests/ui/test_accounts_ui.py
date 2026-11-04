@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QFileDialog,
     QLabel,
+    QLineEdit,
     QPushButton,
     QTabWidget,
 )
@@ -60,25 +61,23 @@ def wait_idle(qtbot: QtBot, window: LauncherWindow) -> None:
     qtbot.waitUntil(lambda: not window.busy, timeout=4000)
 
 
-def test_registration_requires_saved_password_before_server_request(
+def test_registration_accepts_chosen_confirmed_password_and_clears_it_after_login(
     qtbot: QtBot, window: LauncherWindow
 ) -> None:
     window.signup_name.setText("test_player")
     window.invitation.setText("test-invitation")
+    chosen = "player-chosen-fixture-password"
+    window.signup_password.setText(chosen)
+    window.signup_repeat.setText(chosen)
     window.auth_page.findChild(QTabWidget).setCurrentIndex(1)
-    click(qtbot, window, "prepareRegistration")
-    assert window.pages.currentWidget() == window.password_page
-    issued = window.issued_password.text()
-    assert len(issued) >= 32
-    assert not window.register_button.isEnabled()
     assert window.service.client.calls == []
-    qtbot.keyClick(window.saved_password, Qt.Key.Key_Space)
     click(qtbot, window, "registerButton")
     wait_idle(qtbot, window)
     assert window.pages.currentWidget() == window.home_page
-    assert issued not in window.service.store.path.read_text(encoding="utf-8")
-    assert window.issued_password.text() == ""
-    assert window.pending is None
+    assert chosen not in window.service.store.path.read_text(encoding="utf-8")
+    assert window.signup_password.text() == window.signup_repeat.text() == ""
+    assert window.findChild(QPushButton, "copyPassword") is None
+    assert window.pages.count() == 2
 
 
 def test_login_and_new_window_auto_login(qtbot: QtBot, window: LauncherWindow) -> None:
@@ -97,26 +96,105 @@ def test_login_and_new_window_auto_login(qtbot: QtBot, window: LauncherWindow) -
     )
 
 
-def test_network_error_keeps_issued_password_for_retry(
+def test_network_error_keeps_chosen_password_for_login_after_uncertain_registration(
     qtbot: QtBot, window: LauncherWindow, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     window.signup_name.setText("test_player")
     window.invitation.setText("test-invitation")
-    window._prepare_registration()
-    issued = window.issued_password.text()
+    chosen = "player-chosen-fixture-password"
+    window.signup_password.setText(chosen)
+    window.signup_repeat.setText(chosen)
+    window.auth_page.findChild(QTabWidget).setCurrentIndex(1)
 
     def lost_response(*args: object, **kwargs: object) -> None:
         raise TimeoutError("sensitive server details must not appear")
 
     monkeypatch.setattr(window.service.client, "register", lost_response)
-    qtbot.keyClick(window.saved_password, Qt.Key.Key_Space)
     click(qtbot, window, "registerButton")
     wait_idle(qtbot, window)
-    assert window.pages.currentWidget() == window.password_page
-    assert window.issued_password.text() == issued
+    assert window.pages.currentWidget() == window.auth_page
+    assert window.signup_password.text() == window.signup_repeat.text() == chosen
     assert window.retry_login.isVisible()
     assert "sensitive server details" not in window.status.text()
-    click(qtbot, window, "retryIssuedLogin")
+    click(qtbot, window, "retryRegistrationLogin")
+    wait_idle(qtbot, window)
+    assert window.pages.currentWidget() == window.home_page
+
+
+@pytest.mark.parametrize(
+    ("password", "confirmation", "message"),
+    [
+        ("chosen-password", "other-password", "не совпадают"),
+        ("short", "short", "от 12 до 128"),
+        ("x" * 129, "x" * 129, "от 12 до 128"),
+    ],
+)
+def test_invalid_registration_password_never_reaches_backend(
+    qtbot, window, password, confirmation, message
+):
+    window.signup_name.setText("test_player")
+    window.invitation.setText("test-invitation")
+    window.signup_password.setText(password)
+    window.signup_repeat.setText(confirmation)
+    window.auth_page.findChild(QTabWidget).setCurrentIndex(1)
+    click(qtbot, window, "registerButton")
+    assert message in window.status.text()
+    assert window.service.client.calls == [] and not window.busy
+    assert not window.service.store.path.exists()
+
+
+def test_registration_password_can_be_shown_and_hidden_without_changing_it(
+    qtbot, window
+):
+    window.auth_page.findChild(QTabWidget).setCurrentIndex(1)
+    window.signup_password.setText("chosen-fixture-password")
+    window.signup_repeat.setText("chosen-fixture-password")
+    assert window.signup_password.echoMode() == QLineEdit.EchoMode.Password
+    qtbot.keyClick(window.show_signup_password, Qt.Key.Key_Space)
+    assert all(
+        edit.echoMode() == QLineEdit.EchoMode.Normal
+        for edit in (window.signup_password, window.signup_repeat)
+    )
+    qtbot.keyClick(window.show_signup_password, Qt.Key.Key_Space)
+    assert window.signup_repeat.echoMode() == QLineEdit.EchoMode.Password
+    assert window.signup_password.text() == "chosen-fixture-password"
+
+
+def test_fresh_launcher_opens_registration_without_network(qtbot, tmp_path):
+    client = FakeDrasl()
+    service = AccountService(client, FileSessionStore(tmp_path / "session.json"))
+    window = LauncherWindow(service)
+    qtbot.addWidget(window)
+    window.show()
+    qtbot.waitUntil(lambda: not window.busy and window.auth_tabs.currentIndex() == 1)
+    assert window.pages.currentWidget() == window.auth_page and client.calls == []
+
+
+def test_repeated_registration_clicks_issue_only_one_request(
+    qtbot, window, monkeypatch
+):
+    window.auth_tabs.setCurrentIndex(1)
+    window.signup_name.setText("test_player")
+    window.invitation.setText("test-invitation")
+    window.signup_password.setText("chosen-fixture-password")
+    window.signup_repeat.setText("chosen-fixture-password")
+    release = threading.Event()
+    calls = []
+    original = window.service.client.register
+
+    def held(*args, **kwargs):
+        calls.append(True)
+        release.wait(3)
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(window.service.client, "register", held)
+    try:
+        click(qtbot, window, "registerButton")
+        qtbot.waitUntil(lambda: len(calls) == 1)
+        window._register()
+        assert not window.pages.isEnabled() and len(calls) == 1
+    finally:
+        release.set()
     wait_idle(qtbot, window)
     assert window.pages.currentWidget() == window.home_page
 

@@ -67,6 +67,7 @@ def build(
         "dj2.svg",
         "gtnh.svg",
         "external-link.svg",
+        "checkmark.svg",
         "social-youtube.svg",
         "social-twitch.svg",
         "social-kick.svg",
