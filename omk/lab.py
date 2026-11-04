@@ -68,6 +68,8 @@ def _registration_checks(
     invite = client.request("POST", "/drasl/api/v3/invites", {}, admin["apiToken"])[
         "code"
     ]
+    _expect_denied(lambda: client.register(name, "x" * 11, invite), {400, 403})
+    passed("server_rejects_short_registration_password_without_consuming_invite")
     user = client.register(name, password, invite)
     if user["user"]["isAdmin"]:
         raise RuntimeError("A player account received admin privileges")
@@ -224,7 +226,9 @@ def _launcher_checks(
         invite = client.request("POST", "/drasl/api/v3/invites", {}, admin["apiToken"])[
             "code"
         ]
-        registration = service.prepare_registration("omk_launcher", invite)
+        registration = service.prepare_registration(
+            "omk_launcher", invite, secrets.token_urlsafe(24)
+        )
         result = service.register(registration)
         if not result.remembered or registration.password in store.path.read_text():
             raise RuntimeError("Portable registration storage check failed")
@@ -269,7 +273,11 @@ def _launcher_expiry_checks(
         invite = client.request("POST", "/drasl/api/v3/invites", {}, admin["apiToken"])[
             "code"
         ]
-        result = service.register(service.prepare_registration("omk_expiry", invite))
+        result = service.register(
+            service.prepare_registration(
+                "omk_expiry", invite, secrets.token_urlsafe(24)
+            )
+        )
         client.request(
             "POST",
             "/auth/validate",

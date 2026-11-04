@@ -33,7 +33,6 @@ from launcher.accounts import (
     AccountService,
     AuthResult,
     PasswordChanged,
-    Registration,
 )
 from launcher.branding import install_branding, title_header
 from launcher.controller import InstallationResult, InstallController
@@ -152,7 +151,6 @@ class LauncherWindow(QMainWindow):
         self.game_pack: str | None = None
         self._close_after_install = False
         self._busy_button: BusyButton | None = None
-        self.pending: Registration | None = None
         self.busy = False
         self._task: Task | None = None
         self._success: Callable[[Any], None] | None = None
@@ -169,9 +167,8 @@ class LauncherWindow(QMainWindow):
         layout.addLayout(title_header())
         self.pages = QStackedWidget()
         self.auth_page = self._auth_page()
-        self.password_page = self._password_page()
         self.home_page = self._home_page()
-        for page in [self.auth_page, self.password_page, self.home_page]:
+        for page in [self.auth_page, self.home_page]:
             self.pages.addWidget(page)
         layout.addWidget(self.pages, 1)
         self.status = label("")
@@ -227,6 +224,7 @@ class LauncherWindow(QMainWindow):
         layout = QVBoxLayout(page)
         layout.addWidget(label("Войти или присоединиться к сообществу"))
         tabs = QTabWidget()
+        self.auth_tabs = tabs
         layout.addWidget(tabs)
         signup, login = QWidget(), QWidget()
         signup_layout, login_layout = QFormLayout(signup), QFormLayout(login)
@@ -239,25 +237,42 @@ class LauncherWindow(QMainWindow):
             )
             form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
             form.setHorizontalSpacing(22)
-            form.setVerticalSpacing(16)
+            form.setVerticalSpacing(12)
         self.signup_name = nickname_field("signupName")
+        self.signup_password = field(
+            "signupPassword", "От 12 до 128 символов", password=True
+        )
+        self.signup_repeat = field(
+            "signupPasswordRepeat", "Введите пароль ещё раз", password=True
+        )
         self.invitation = field("invitationCode", "Код от владельца проекта")
         signup_layout.addRow("Ник", self.signup_name)
+        signup_layout.addRow("Пароль", self.signup_password)
+        signup_layout.addRow("Ещё раз", self.signup_repeat)
         signup_layout.addRow("Приглашение", self.invitation)
-        signup_layout.addRow(
-            label(
-                "Пароль создадим автоматически. Его нужно будет сохранить один раз.",
-                muted=True,
-            )
+        self.show_signup_password = QCheckBox("Показать пароль")
+        self.show_signup_password.setObjectName("showSignupPassword")
+        checkmark = (ASSETS / "checkmark.svg").as_posix().replace('"', r"\"")
+        self.show_signup_password.setStyleSheet(
+            "QCheckBox { spacing:9px; }"
+            "QCheckBox::indicator { width:16px; height:16px; border:1px solid #789e92;"
+            " border-radius:3px; background:#1a272f; }"
+            f'QCheckBox::indicator:checked {{ background:#78dcaf; image:url("{checkmark}"); }}'
         )
-        signup_layout.addRow(
-            button(
-                "Продолжить",
-                "prepareRegistration",
-                self._prepare_registration,
-                primary=True,
-            )
+        self.show_signup_password.toggled.connect(self._show_signup_password)
+        signup_layout.addRow("", self.show_signup_password)
+        self.register_button = button(
+            "Создать аккаунт и войти", "registerButton", self._register, primary=True
         )
+        signup_layout.addRow(self.register_button)
+        self.retry_login = button(
+            "Попробовать войти",
+            "retryRegistrationLogin",
+            self._login_registration,
+        )
+        self.retry_login.hide()
+        signup_layout.addRow(self.retry_login)
+        self.invitation.returnPressed.connect(self._register)
         self.login_name = nickname_field("loginName")
         self.login_password = field("loginPassword", password=True)
         login_layout.addRow("Ник", self.login_name)
@@ -269,7 +284,15 @@ class LauncherWindow(QMainWindow):
         self.login_password.returnPressed.connect(self._login)
         self._form_labels = []
         for form, inputs in (
-            (signup_layout, (self.signup_name, self.invitation)),
+            (
+                signup_layout,
+                (
+                    self.signup_name,
+                    self.signup_password,
+                    self.signup_repeat,
+                    self.invitation,
+                ),
+            ),
             (login_layout, (self.login_name, self.login_password)),
         ):
             for edit in inputs:
@@ -283,46 +306,6 @@ class LauncherWindow(QMainWindow):
                 muted=True,
             )
         )
-        layout.addStretch()
-        return page
-
-    def _password_page(self) -> QWidget:
-        page = QWidget()
-        layout = QVBoxLayout(page)
-        layout.addWidget(
-            label(
-                "Сохраните пароль — он пригодится на другом компьютере или после потери папки лаунчера."
-            )
-        )
-        self.issued_password = field("issuedPassword")
-        self.issued_password.setReadOnly(True)
-        layout.addWidget(self.issued_password)
-        layout.addWidget(
-            button("Копировать пароль", "copyPassword", self._copy_password)
-        )
-        layout.addWidget(
-            label(
-                "Аккаунт будет создан после подтверждения. Пароль в файлы лаунчера не записывается.",
-                muted=True,
-            )
-        )
-        self.saved_password = QCheckBox("Я сохранил пароль в надёжном месте")
-        self.saved_password.setObjectName("savedPassword")
-        layout.addWidget(self.saved_password)
-        self.register_button = button(
-            "Создать аккаунт и войти", "registerButton", self._register, primary=True
-        )
-        self.register_button.setEnabled(False)
-        self.saved_password.toggled.connect(self.register_button.setEnabled)
-        layout.addWidget(self.register_button)
-        self.retry_login = button(
-            "Аккаунт уже создан? Войти выданным паролем",
-            "retryIssuedLogin",
-            self._login_issued,
-        )
-        self.retry_login.hide()
-        layout.addWidget(self.retry_login)
-        layout.addWidget(button("Назад", "registrationBack", self._back_to_auth))
         layout.addStretch()
         return page
 
@@ -435,49 +418,37 @@ class LauncherWindow(QMainWindow):
             self.close()
             QApplication.instance().quit()
 
-    def _prepare_registration(self) -> None:
+    def _show_signup_password(self, visible: bool) -> None:
+        mode = QLineEdit.EchoMode.Normal if visible else QLineEdit.EchoMode.Password
+        self.signup_password.setEchoMode(mode)
+        self.signup_repeat.setEchoMode(mode)
+
+    def _register(self) -> None:
+        if self.busy:
+            return
+        if self.signup_password.text() != self.signup_repeat.text():
+            self.status.setText("Пароли не совпадают.")
+            self.signup_repeat.setFocus()
+            return
         try:
-            self.pending = self.service.prepare_registration(
-                self.signup_name.text(), self.invitation.text()
+            registration = self.service.prepare_registration(
+                self.signup_name.text(),
+                self.invitation.text(),
+                self.signup_password.text(),
             )
         except AccountError as error:
             self.status.setText(str(error))
             return
-        self.issued_password.setText(self.pending.password)
-        self.saved_password.setChecked(False)
         self.retry_login.hide()
-        self.status.clear()
-        self.pages.setCurrentWidget(self.password_page)
+        self._start(
+            lambda: self.service.register(registration), self._authenticated, "register"
+        )
 
-    def _register(self) -> None:
-        registration = self.pending
-        if registration is not None and self.saved_password.isChecked():
-            self.retry_login.show()
-            self._start(
-                lambda: self.service.register(registration),
-                self._authenticated,
-                "register",
-            )
-
-    def _login_issued(self) -> None:
-        registration = self.pending
-        if registration is not None:
-            self._start(
-                lambda: self.service.login(
-                    registration.username, registration.password
-                ),
-                self._authenticated,
-                "login",
-            )
-
-    def _copy_password(self) -> None:
-        QApplication.clipboard().setText(self.issued_password.text())
-
-    def _back_to_auth(self) -> None:
-        self.pending = None
-        self.issued_password.clear()
-        self.pages.setCurrentWidget(self.auth_page)
-        self.status.clear()
+    def _login_registration(self) -> None:
+        name, password = self.signup_name.text(), self.signup_password.text()
+        self._start(
+            lambda: self.service.login(name, password), self._authenticated, "login"
+        )
 
     def _login(self) -> None:
         name, password = self.login_name.text(), self.login_password.text()
@@ -494,12 +465,15 @@ class LauncherWindow(QMainWindow):
             self._authenticated(result)
         else:
             self.pages.setCurrentWidget(self.auth_page)
+            self.auth_tabs.setCurrentIndex(1)
 
     def _authenticated(self, result: AuthResult) -> None:
         if self.report_runner is not None:
             self.report_runner.send_reports(result.session)
-        self.pending = None
-        self.issued_password.clear()
+        self.signup_password.clear()
+        self.signup_repeat.clear()
+        self.show_signup_password.setChecked(False)
+        self.retry_login.hide()
         self.login_password.clear()
         self.invitation.clear()
         self.greeting.setText(f"Привет, {result.session.player_name}!")
@@ -641,6 +615,8 @@ class LauncherWindow(QMainWindow):
             failure(self.diagnostic_root, self._context, error)
         self._success = None
         self._idle()
+        if self._context == "register":
+            self.retry_login.show()
         if isinstance(error, PasswordChanged) or (
             self.pages.currentWidget() == self.home_page
             and self.service.current is None
@@ -652,7 +628,10 @@ class LauncherWindow(QMainWindow):
             if error.status == 429:
                 message = "Слишком много попыток. Подождите немного и повторите."
             elif error.status in {400, 401, 403} and self._context == "register":
-                message = "Проверьте приглашение и ник. Если запрос прерывался, попробуйте войти выданным паролем."
+                message = (
+                    "Приглашение недействительно или уже использовано, либо ник занят. "
+                    "Если аккаунт уже создан, попробуйте войти."
+                )
             elif error.status in {400, 401, 403}:
                 message = (
                     "Вход не подтверждён. Проверьте ник и пароль или войдите заново."

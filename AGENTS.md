@@ -9,7 +9,8 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
   Link PRs to issues and close only the scope actually implemented and tested; DEVELOPMENT.md
   keeps decisions/evidence, rather than a second full backlog. Keep detailed security reproductions
   and private Core sources outside public issues.
-- Keep the launcher simple: invitation, nickname, issued password once, remembered revocable session.
+- Keep the launcher simple: nickname, chosen password with confirmation, one-use invitation,
+  remembered revocable game session. Never persist account passwords in the launcher.
   Authentication belongs to Drasl + authlib-injector. Do not restore Telegram or custom password security.
 - Target Windows, Linux and macOS. Keep portable session files in the launcher's data directory;
   never assume Windows-only paths, Java executables or UI behavior in shared code.

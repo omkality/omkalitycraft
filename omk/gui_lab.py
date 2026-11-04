@@ -1,5 +1,6 @@
 """Exercise real Qt widgets against disposable Drasl accounts, never real players."""
 
+import secrets
 import tempfile
 import time
 from collections.abc import Callable
@@ -83,11 +84,11 @@ def _registration_control(
     window.auth_page.findChild(QTabWidget).setCurrentIndex(1)
     window.signup_name.setText("omk_gui_test")
     window.invitation.setText(invite)
-    _click(window, "prepareRegistration")
-    registration = window.pending
-    if registration is None or window.register_button.isEnabled():
-        raise RuntimeError("Password acknowledgement is missing")
-    QTest.keyClick(window.saved_password, Qt.Key.Key_Space)
+    registration = window.service.prepare_registration(
+        "omk_gui_test", invite, secrets.token_urlsafe(24)
+    )
+    window.signup_password.setText(registration.password)
+    window.signup_repeat.setText(registration.password)
     _click(window, "registerButton")
     _wait(app, lambda: not window.busy)
     _assert_home(window)
@@ -137,6 +138,51 @@ def _skin_controls(app, window, client, folder, passed):
         passed("real_gui_one_upload_" + filename.removesuffix(".png"))
 
 
+def _lost_registration_response(app, client, admin, folder, windows, passed):
+    invite = client.request("POST", "/drasl/api/v3/invites", {}, admin["apiToken"])[
+        "code"
+    ]
+    store = FileSessionStore(Path(folder) / "lost-registration/session.json")
+    window = LauncherWindow(AccountService(client, store), auto_restore=False)
+    windows.append(window)
+    window.show()
+    window.auth_page.findChild(QTabWidget).setCurrentIndex(1)
+    password = secrets.token_urlsafe(24)
+    window.signup_name.setText("omk_lost_signup")
+    window.signup_password.setText(password)
+    window.signup_repeat.setText(password)
+    window.invitation.setText(invite)
+    original = client.register
+
+    def committed_but_reply_lost(*args, **kwargs):
+        original(*args, **kwargs)
+        raise TimeoutError("Owned fixture drops the reply after Drasl commits")
+
+    with patch.object(client, "register", side_effect=committed_but_reply_lost):
+        _click(window, "registerButton")
+        _wait(app, lambda: not window.busy)
+    if (
+        window.pages.currentWidget() != window.auth_page
+        or store.path.exists()
+        or window.signup_password.text() != password
+        or not window.retry_login.isVisible()
+    ):
+        raise RuntimeError("Registration reply-loss state was not preserved")
+    passed("real_committed_registration_reply_loss_keeps_typed_password")
+    _click(window, "retryRegistrationLogin")
+    _wait(app, lambda: not window.busy)
+    _assert_home(window)
+    if (
+        password in store.path.read_text()
+        or window.signup_password.text()
+        or window.signup_repeat.text()
+    ):
+        raise RuntimeError("Recovered registration password was persisted")
+    passed("real_registration_recovery_uses_login_without_second_account")
+    window.service.revoke_all(password)
+    window.close()
+
+
 def launcher_checks(
     client: DraslClient, admin: dict[str, Any], passed: Callable[[str], None]
 ) -> None:
@@ -156,12 +202,13 @@ def launcher_checks(
             registration = _registration_control(app, window, client, admin)
             if (
                 registration.password in store.path.read_text()
-                or window.issued_password.text()
+                or window.signup_password.text()
+                or window.signup_repeat.text()
             ):
                 raise RuntimeError(
-                    "Issued password remains in launcher storage or widgets"
+                    "Registration password remains in launcher storage or widgets"
                 )
-            passed("real_gui_registration_after_password_acknowledgement")
+            passed("real_gui_registration_with_chosen_confirmed_password")
             window.close()
 
             window = LauncherWindow(AccountService(client, store))
@@ -182,6 +229,7 @@ def launcher_checks(
             if store.load() is not None:
                 raise RuntimeError("Disposable session was not revoked")
             passed("real_backend_cleanup_sessions_revoked")
+            _lost_registration_response(app, client, admin, folder, windows, passed)
         finally:
             for window in windows:
                 _wait(app, lambda window=window: not window.busy)

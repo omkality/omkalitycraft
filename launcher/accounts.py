@@ -1,7 +1,6 @@
 """Account workflows independent of Qt and individual modpacks."""
 
 import re
-import secrets
 from dataclasses import dataclass, field
 from typing import Any
 from uuid import UUID, uuid4
@@ -50,7 +49,9 @@ class AccountService:
         self.current: Session | None = None
 
     @staticmethod
-    def prepare_registration(username: str, invitation: str) -> Registration:
+    def prepare_registration(
+        username: str, invitation: str, password: str
+    ) -> Registration:
         username, invitation = username.strip(), invitation.strip()
         if not re.fullmatch(USERNAME_PATTERN, username):
             raise AccountError(
@@ -58,9 +59,9 @@ class AccountService:
             )
         if not invitation:
             raise AccountError("Введите код приглашения.")
-        # The player saves the issued password BEFORE the registration request.
-        # Even a lost HTTP response cannot leave them with an unknown password.
-        return Registration(username, secrets.token_urlsafe(24), invitation)
+        if not isinstance(password, str) or not 12 <= len(password) <= 128:
+            raise AccountError("Пароль: от 12 до 128 символов.")
+        return Registration(username, password, invitation)
 
     def register(self, registration: Registration) -> AuthResult:
         response = self.client.register(

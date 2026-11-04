@@ -8,6 +8,7 @@ AllowChangingPlayerName = false
 DefaultMaxPlayerCount = 1
 SignPublicKeys = false
 TokenExpireSec = 3600
+MinPasswordLength = 12
 AllowSkins = true
 AllowCapes = false
 

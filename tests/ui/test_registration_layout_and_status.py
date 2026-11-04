@@ -29,10 +29,20 @@ def test_labels_center_on_inputs_and_nickname_uses_bundled_pixel_font(qtbot, win
                 - edit.geometry().center().y()
             )
             <= 1
-            for edit in (window.signup_name, window.invitation)
+            for edit in (
+                window.signup_name,
+                window.signup_password,
+                window.signup_repeat,
+                window.invitation,
+            )
         )
     )
-    for edit in (window.signup_name, window.invitation):
+    for edit in (
+        window.signup_name,
+        window.signup_password,
+        window.signup_repeat,
+        window.invitation,
+    ):
         caption = edit.parentWidget().layout().labelForField(edit)
         assert abs(caption.geometry().center().y() - edit.geometry().center().y()) <= 1
     assert window.invitation.font().family() == "Rubik"
@@ -61,7 +71,9 @@ def test_nickname_typing_accepts_legacy_java_alphabet_and_limits_length(window):
     name.insert("ab")
     assert not name.hasAcceptableInput()
     with pytest.raises(AccountError):
-        window.service.prepare_registration(name.text(), "lab-invitation")
+        window.service.prepare_registration(
+            name.text(), "lab-invitation", "fixture-passphrase"
+        )
 
 
 def test_online_poll_is_coalesced_and_unavailable_does_not_show_zero(qtbot, window):
