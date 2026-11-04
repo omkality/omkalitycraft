@@ -79,12 +79,11 @@ def test_manifest_error_is_readable_on_minimum_launcher(qtbot, tmp_path, message
     window._authenticated(service.login("test_player", "test-password"))
     card = window.home_page.cards["dj2"]
     card.set_local_state({"state": "installed", "version": "2.21.3-omk.4"})
-    # Avoid an exception traceback retaining the frame that owns these live widgets.
-    # The real HTTP failure has independent coverage without Qt widget ownership.
+    # Transport has independent coverage; this test renders the supplied warning.
     window._install_failed("dj2", ReleaseError(message))
     window.resize(1020, 680)
-    window.show()
-    qtbot.waitExposed(window)
+    with qtbot.waitExposed(window):
+        window.show()
     assert "Проверьте соединение" in card.state_label.text()
     assert card.state_label.wordWrap()
     assert card.action.text() == "Повторить"
