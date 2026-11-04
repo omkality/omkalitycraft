@@ -1,4 +1,4 @@
 # Preserve pinned font bytes and upstream license hashes on all supported OSes.
 launcher/assets/fonts/*.ttf -text
 launcher/assets/fonts/*.txt text eol=lf
-deploy/drasl/*.patch text eol=lf whitespace=-blank-at-eol
+deploy/drasl/*.patch text eol=lf whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
