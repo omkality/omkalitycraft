@@ -18,7 +18,13 @@ from tests.fakes import FakeDrasl
 
 @pytest.mark.parametrize(
     "error",
-    [URLError("owned fixture offline"), ReleaseError("invalid signed manifest")],
+    [
+        URLError("owned fixture offline"),
+        ReleaseError("invalid signed manifest"),
+        ReleaseError(
+            "Нужно обновление лаунчера. Проверьте соединение и перезапустите OmkalityCraft."
+        ),
+    ],
 )
 def test_play_never_falls_back_to_cached_pack_when_manifest_check_fails(
     qtbot, tmp_path, error
@@ -60,7 +66,10 @@ def test_play_never_falls_back_to_cached_pack_when_manifest_check_fails(
     assert controller.pool.waitForDone(5000)
 
 
-def test_manifest_network_error_is_readable_on_minimum_launcher(qtbot, tmp_path):
+@pytest.mark.parametrize("minimum_required", [False, True])
+def test_manifest_error_is_readable_on_minimum_launcher(
+    qtbot, tmp_path, minimum_required
+):
     service = AccountService(FakeDrasl(), FileSessionStore(tmp_path / "session.json"))
     window = LauncherWindow(service, runner=GameRunner(tmp_path), auto_restore=False)
     qtbot.addWidget(window)
@@ -73,7 +82,14 @@ def test_manifest_network_error_is_readable_on_minimum_launcher(qtbot, tmp_path)
             ReleaseClient(f"http://127.0.0.1:{offline.getsockname()[1]}", {}).fetch(
                 "dj2"
             )
-    window._install_failed("dj2", error.value)
+    message = (
+        ReleaseError(
+            "Нужно обновление лаунчера. Проверьте соединение и перезапустите OmkalityCraft."
+        )
+        if minimum_required
+        else error.value
+    )
+    window._install_failed("dj2", message)
     window.resize(1020, 680)
     window.show()
     qtbot.waitExposed(window)

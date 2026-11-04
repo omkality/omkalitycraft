@@ -88,6 +88,7 @@ class ReleaseClient:
         release = read_release(data, self.trusted_keys)
         if release.pack_id != pack_id or release.platform != target:
             raise ReleaseError("Сервер вернул описание другой сборки или платформы.")
+        release.require_launcher()
         return release
 
 
@@ -140,6 +141,7 @@ class Installer:
             return {"state": "missing"}
 
     def install(self, release: Release, progress: Callable[[Progress], None]) -> Path:
+        release.require_launcher()
         if release.platform != current_platform():
             raise ReleaseError("Эта сборка подготовлена для другой платформы.")
         folder = self.directory(release.pack_id)
