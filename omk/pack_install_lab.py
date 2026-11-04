@@ -49,6 +49,9 @@ class PackWire:
         self.fault_offsets = []
         self.requests = Counter()
         self.lock = threading.Lock()
+        self.pause_path = None
+        self.paused = threading.Event()
+        self.resume_stream = threading.Event()
 
     @contextlib.contextmanager
     def serve(self):
@@ -114,6 +117,10 @@ class PackWire:
                                 break
                             self.wfile.write(chunk)
                             remaining -= len(chunk)
+                            if relative == wire.pause_path and not wire.paused.is_set():
+                                self.wfile.flush()
+                                wire.paused.set()
+                                wire.resume_stream.wait(120)
                     self.wfile.flush()
                 except ConnectionError:
                     pass
@@ -415,6 +422,11 @@ def run_pack_install_lab(  # noqa: PLR0915 -- ordered regression in owned folder
 
 
 def add_pack_install_lab(parser):
+    parser.add_argument(
+        "--hard-kill",
+        action="store_true",
+        help="Kill and restart a real installer child process",
+    )
     parser.add_argument("--source-release", type=Path, required=True)
     parser.add_argument("--target-release", type=Path, required=True)
     parser.add_argument("--public-keys", type=Path, required=True)
@@ -427,6 +439,12 @@ def add_pack_install_lab(parser):
 def run_pack_install_args(args):
     try:
         keys = json.loads(args.public_keys.read_text(encoding="utf-8"))
+        if args.hard_kill:
+            if args.target_cdn:
+                raise ValueError("Hard-kill control uses its own loopback server")
+            from omk.pack_process_lab import run_pack_process_lab  # noqa: PLC0415
+
+            return run_pack_process_lab(args.source_release, args.target_release, keys)
         return run_pack_install_lab(
             args.source_release, args.target_release, keys, target_cdn=args.target_cdn
         )
