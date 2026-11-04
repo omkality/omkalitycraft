@@ -1,0 +1,106 @@
+{
+  "date": "2026-11-04",
+  "issue": 65,
+  "accepted_player_release": false,
+  "live_profile_or_payload_changed": false,
+  "candidate": "2.23.4-omk.1-rc.1",
+  "signed_manifest_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+  "runtime": {
+    "graphical_client_os": "Windows",
+    "client_java": "Temurin 8u472",
+    "client_heap_mib": 6144,
+    "server": "real Linux Docker Forge 1.12.2-14.23.5.2860",
+    "server_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "server_cpu_limit": 4,
+    "server_container_mib": 6144,
+    "server_heap_mib": 4096,
+    "server_core": "0.2.8",
+    "client_adapter": "0.1.0",
+    "auth": "isolated Drasl 4.0.0-omk.1 + authlib-injector 1.2.8"
+  },
+  "scope": {
+    "fresh_signed_installer_result": true,
+    "source_files": 5274,
+    "approved_mod_jars_verified_before_and_after": 224,
+    "diagnostic_probe_absent": true,
+    "diagnostic_jvm_flag_absent": true,
+    "native_user_actions": true,
+    "windows_automation_clicks": false,
+    "instrumented_button_callback": false,
+    "user_confirmed_world_without_login_overlay": true,
+    "user_confirmed_native_menu_disconnects": 2,
+    "user_confirmed_quit_game_button": true,
+    "ordinary_user_play_not_a_first_tick_disconnect": true
+  },
+  "observations": {
+    "first_post_disconnect_seconds": 40.2,
+    "rejoined_gameplay_seconds": 52.9,
+    "second_post_disconnect_seconds": 46.0,
+    "post_quit_seconds": 53.5444540977478,
+    "all_audits_empty_crash_reports": true,
+    "all_audits_no_task_or_fatal_markers": true,
+    "inventory_rejoin_query": {
+      "emeralds": 7,
+      "slot": 8,
+      "xp_level": 12
+    },
+    "independent_stopped_playerdata": {
+      "saved_player_filename_matches_drasl_uuid": true,
+      "emeralds_in_slot_8": 7,
+      "xp_level": 12,
+      "creative_mode": true,
+      "playerdata_sha256": "73f05a36dcc4f3ccf6cb6c55b71752f6b724e593d3715db04a87eef50b4b9eca"
+    },
+    "client_exit_code": 0,
+    "client_exit_before_cleanup": 0,
+    "owned_java_processes_remaining": 0,
+    "natural_assistant_exit": true
+  },
+  "screenshots": [
+    {
+      "file": "2026-11-04_14.16.45.png",
+      "sha256": "aa517e79ee4c36fd017686f54de7daf4ff378318c419b06e6dd655fd5d6e586a",
+      "pixels": [
+        854,
+        480
+      ]
+    },
+    {
+      "file": "2026-11-04_14.20.23.png",
+      "sha256": "64c4a6bca1d47f310ca7399a0e32a1e3b0110ef0aa39c12e0188bc91986e1fd7",
+      "pixels": [
+        854,
+        480
+      ]
+    }
+  ],
+  "server_outcome": {
+    "running": false,
+    "oom_killed": false,
+    "exit_code": 0,
+    "memory_limit_bytes": 6442450944,
+    "nano_cpus": 4000000000
+  },
+  "cleanup": {
+    "server_clean_exit": true,
+    "server_fatal_marker": false,
+    "world_export_sha256": "064a21c32b09741dd4ff0f0895d2579214b3ec49e09c7992d68ca91da715d199",
+    "owned_volume_removed_after_export": true,
+    "temporary_auth_removed": true
+  },
+  "fixture_limitations": [
+    {
+      "platform_created": false,
+      "invalidated_field": "manual-rejoin-validation.json.teleported_to_safe_platform_after_rejoin",
+      "actual_behavior": "Teleport command succeeded; platform fill was rejected before target chunks loaded, so creative player fell into water",
+      "server_fill_error": "Cannot place blocks outside of the world",
+      "creative_mode_observed_in_f2": true,
+      "scope": "Network/menu and inventory checks remain accepted; safe platform fixture is not accepted"
+    },
+    "User pressed Esc twice during first disconnect; first may have stopped Computer Use, then ordinary game menu/button used",
+    "Early first-tick cancellation stress remains the previously recorded instrumented tests; this run checks ordinary human interactions",
+    "Previous capture-failure run was explicitly aborted; game_exited=1 and Crash Assistant appeared after forced cleanup, not accepted as natural exit",
+    "No graphical Linux/macOS, long survival session, arbitrary mod mechanic, full pack migration or public deployment acceptance"
+  ],
+  "private_raw_report_sha256": "757b60204ec7d35dd4e7f10671106d5fa0fe745522984e2b3d1e962509453228"
+}
