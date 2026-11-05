@@ -125,6 +125,10 @@ def exercise_full_return(
         from omk.recovery_access_lab import seed_access  # noqa: PLC0415
 
         seed_access(_console_sender(old_server, lab / "server-output.log"), expect)
+    if getattr(args, "rank_policy", False):
+        from omk.recovery_ranks_lab import seed_ranks  # noqa: PLC0415
+
+        seed_ranks(_console_sender(old_server, lab / "server-output.log"), expect)
     backup("before-full-return")
     original = lab / "server"
     original_world_digest = original_world_digest or (
@@ -157,6 +161,10 @@ def exercise_full_return(
         from omk.recovery_access_lab import verify_access  # noqa: PLC0415
 
         verify_access(client, sessions, mods, console, expect)
+    if getattr(args, "rank_policy", False):
+        from omk.recovery_ranks_lab import verify_ranks  # noqa: PLC0415
+
+        verify_ranks(client, sessions[0], mods, console, expect)
     with ExitStack() as stack:
         first, second = [
             stack.enter_context(LabPlayer(client, s, 25576, mods)) for s in sessions
