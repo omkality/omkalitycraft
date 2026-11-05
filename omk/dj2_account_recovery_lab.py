@@ -243,7 +243,7 @@ def _exercise(accounts, mods, console, expect, report):
             in console(
                 "testfor "
                 + FIRST
-                + ' {Inventory:[{Slot:8b,id:"minecraft:emerald",Count:7b}],XpLevel:12}'
+                + ' {Inventory:[{Slot:8b,id:"minecraft:emerald",Count:7}],XpLevel:12}'
             ),
             "recovered_actor_keeps_inventory_and_xp",
         )
@@ -314,7 +314,7 @@ def _repeat_reset(accounts, target, password, recovered, mods, console, expect):
             in console(
                 "testfor "
                 + FIRST
-                + ' {Inventory:[{Slot:8b,id:"minecraft:emerald",Count:7b}],XpLevel:12}'
+                + ' {Inventory:[{Slot:8b,id:"minecraft:emerald",Count:7}],XpLevel:12}'
             ),
             "second_recovery_keeps_inventory_and_xp",
         )
