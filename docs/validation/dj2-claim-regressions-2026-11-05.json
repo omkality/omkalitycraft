@@ -1,0 +1,219 @@
+{
+  "date": "2026-11-05",
+  "issues": [
+    29,
+    49
+  ],
+  "implementation_commit": "dfd21fe665b8b65cc6053b051610fadf00a8a44a",
+  "accepted_player_release": false,
+  "live_worlds_accounts_or_profile_changed": false,
+  "dj2": "2.23.4",
+  "private_core": "0.2.8",
+  "scope": {
+    "real_linux_server": true,
+    "protocol_players": 2,
+    "graphical_client": false,
+    "server_starts": 1,
+    "full_restart": false,
+    "actual_mid_write_crash": false,
+    "new_item_bans": false
+  },
+  "runtime": {
+    "image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "java": "Linux\nopenjdk version \"1.8.0_504\"\nOpenJDK Runtime Environment (Temurin)(build 1.8.0_504-b01)\nOpenJDK 64-Bit Server VM (Temurin)(build 25.504-b01, mixed mode)\n",
+    "cpus": 4,
+    "container_mib": 6144,
+    "heap_mib": 4096,
+    "auth": "isolated Drasl 4.0.0-omk.1 + authlib-injector 1.2.8"
+  },
+  "artifact_sha256": {
+    "OmkalityCore-0.2.8.jar": "ee86e32a913792854e25e37c93ae494b1903a8fbc75683883577986d32ea86ed",
+    "authlib-injector-1.2.8.jar": "9c7f4343e6c82034958ffb48c14a2cb0c85928be7283103ce17da00c6d5a7b10",
+    "FTBUtilities-5.4.1.131.jar": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a",
+    "FTBLib-5.4.7.2.jar": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac",
+    "ironchest-1.12.2-7.0.72.847.jar": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f",
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64"
+  },
+  "server_checks": [
+    "private_ftb_mute_guard_initialized_on_real_server_enabled",
+    "private_ftb_claim_guard_initialized_on_real_server_enabled",
+    "neither_authenticated_actor_is_an_operator",
+    "two_authenticated_protocol_players_complete_real_forge_handshake",
+    "private_server_core_loaded_explicit_client_policy",
+    "three_homes_allowed_and_fourth_denied_for_normal_player",
+    "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+    "rtp_available_to_normal_player_in_initial_profile",
+    "home_origin_platform_created_on_loaded_chunk",
+    "home_command_really_teleports_player_after_warmup",
+    "non_owner_can_break_unclaimed_test_block_positive_control",
+    "ftb_claim_blocks_non_owner_block_break",
+    "ftb_claim_allows_owner_block_break",
+    "server_guard_rejects_extra_declared_mod_list",
+    "server_guard_rejects_missing_declared_mod_list",
+    "server_guard_rejects_version_declared_mod_list",
+    "unclaimed_double_chest_has_54_slots",
+    "unclaimed_double_chest_transfer_from_opposite_half_control",
+    "non_owner_places_unclaimed_chest_next_to_claimed_half",
+    "guard_blocks_boundary_double_chest_theft",
+    "owner_can_use_boundary_double_chest_positive_control",
+    "vanilla_chest_team_member_transfer_positive_control",
+    "vanilla_chest_guard_closes_revoked_member_container",
+    "iron_chest_team_member_transfer_positive_control",
+    "iron_chest_guard_closes_revoked_member_container",
+    "vanilla_chest_attacker_starts_without_item",
+    "vanilla_chest_unclaimed_transfer_positive_control",
+    "vanilla_chest_claimed_open_denied_to_non_owner",
+    "vanilla_chest_closed_window_click_does_not_steal_claimed_item",
+    "vanilla_chest_claimed_owner_transfer_positive_control",
+    "vanilla_chest_closed_window_replay_preserves_single_item_count",
+    "iron_chest_attacker_starts_without_item",
+    "iron_chest_unclaimed_transfer_positive_control",
+    "iron_chest_claimed_open_denied_to_non_owner",
+    "iron_chest_closed_window_click_does_not_steal_claimed_item",
+    "iron_chest_claimed_owner_transfer_positive_control",
+    "iron_chest_closed_window_replay_preserves_single_item_count",
+    "moderator_inherits_three_home_limit_without_op",
+    "moderator_denied_gameplay_advantages_and_permission_escalation",
+    "moderator_mute_blocks_public_chat",
+    "muted_command_blocked_me",
+    "muted_command_blocked_tell",
+    "muted_command_blocked_msg",
+    "muted_command_blocked_w",
+    "muted_player_keeps_non_chat_home_commands",
+    "moderator_unmute_restores_chat",
+    "unmute_restores_vanilla_action_and_private_message_commands",
+    "chat_command_guard_honors_ftb_chat_speak_permission",
+    "clearing_chat_speak_override_restores_command",
+    "moderator_kick_without_op",
+    "tnt_unclaimed_target_exists",
+    "tnt_destroys_unclaimed_block_control",
+    "ftb_default_claim_prevents_tnt_block_damage_inside_claim",
+    "ftb_tnt_at_claim_border_preserves_claimed_and_breaks_unclaimed_block"
+  ],
+  "command_catalog": {
+    "commands": 458,
+    "rank_configs": 23
+  },
+  "command_catalog_bytes": 2407226,
+  "ftb_claim_guard_state": "enabled",
+  "ftb_mute_guard_state": "enabled",
+  "service_operator_count": 1,
+  "claim_edge_observations": {
+    "double_chest": {
+      "opened": false,
+      "item_taken": false
+    },
+    "vanilla_chest_revocation": {
+      "closed_by_server": true,
+      "item_taken_after_kick": false
+    },
+    "iron_chest_revocation": {
+      "closed_by_server": true,
+      "item_taken_after_kick": false
+    }
+  },
+  "inventory_confirmations": [
+    {
+      "container": "vanilla_chest",
+      "case": "unclaimed",
+      "accepted": [
+        false
+      ]
+    },
+    {
+      "container": "vanilla_chest",
+      "case": "owner",
+      "accepted": [
+        false
+      ]
+    },
+    {
+      "container": "iron_chest",
+      "case": "unclaimed",
+      "accepted": [
+        false
+      ]
+    },
+    {
+      "container": "iron_chest",
+      "case": "owner",
+      "accepted": [
+        false
+      ]
+    }
+  ],
+  "independent": {
+    "checks": [
+      "stopped_export_matches_recorded_hash",
+      "saved_ftb_players_match_authenticated_uuids",
+      "saved_claim_team_owner_matches_first_player",
+      "excluded_player_not_saved_as_team_member",
+      "saved_homes_remain_personal_three_and_one",
+      "saved_claim_is_exact_overworld_chunk_zero",
+      "saved_startup_catalog_confirms_version_and_active_adapters",
+      "critical_artifacts_match_previously_pinned_bom"
+    ],
+    "changes_to_game_data": false
+  },
+  "outcome": {
+    "ok": true,
+    "owned_game_clean_exit": true,
+    "game_crash_detected": false,
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "owned_volume_removed_after_export": true,
+    "temporary_auth_removed": true,
+    "stopped_world_tar_sha256": "04254f18df865e56fd0a8da2a0eafbf83aa9a308320f5b632013924bd21cd014"
+  },
+  "focused_tests": {
+    "windows": {
+      "passed": 26,
+      "skipped": 0
+    },
+    "linux_docker": {
+      "image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "exit_code": 0,
+      "oom_killed": false,
+      "cpu_limit": 2,
+      "memory_mib": 1024,
+      "network": "none",
+      "source_mount": "readonly",
+      "mock_lifecycle_tests": true,
+      "real_minecraft": false,
+      "tail": [
+        "..........................                                               [100%]",
+        "26 passed in 1.02s"
+      ],
+      "owned_container_removed": true
+    }
+  },
+  "excluded_attempts": [
+    {
+      "reason": "Claim lab catalog too large",
+      "accepted_game_checks": 0,
+      "minecraft_crash": false,
+      "server_clean_exit": true,
+      "owned_volume_removed_after_export": true,
+      "temporary_auth_removed": true,
+      "raw_private_report_sha256": "ef929cf2608d4ad8f35242869a7a3c14ad4d5be507daff2164e48d1822c2bcbe"
+    }
+  ],
+  "reader_setup_corrections": [
+    "Used Tag.kind instead of nonexistent Tag.type",
+    "FTB team Owner and member keys use player names; authenticated UUIDs resolved through saved player data"
+  ],
+  "limits": [
+    "No graphical client or mod GUI prediction; server slot/NBT changes are the authority",
+    "Protocol observer receives inventory corrections accepted=false; not represented as a passing client GUI test",
+    "TNT checks blocks only, not modded explosions or entity damage",
+    "No new tree, fluid, piston, AE2 plane or service-OP automation tests",
+    "PlaneFix service OP left unchanged; neither protocol player has OP",
+    "Existing targeted guards and commands only; not all griefing, dupes, claims quota or full pack acceptance"
+  ],
+  "raw_private_report_sha256": "fa2125bb15ea35934f5081dba566b6a8aaa0cf4a11ac35b1fb4ff6508eeed9cf"
+}

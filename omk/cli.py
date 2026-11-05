@@ -143,6 +143,13 @@ def main(argv: list[str] | None = None) -> int:
             "dj2-spawn", help="Fresh Linux FTB spawn boundary and grave recovery checks"
         )
     )
+    from omk.dj2_claim_regression_lab import add_claim_regression_lab  # noqa: PLC0415
+
+    add_claim_regression_lab(
+        lab_areas.add_parser(
+            "dj2-claims", help="Existing FTB claim/TNT regressions in a fresh Linux lab"
+        )
+    )
     from omk.dj2_rtp_lab import add_rtp_lab  # noqa: PLC0415
 
     add_rtp_lab(
@@ -224,10 +231,15 @@ def _lab_report(args):
         report = run_startup_trace_lab(args)
     elif args.area == "dj2-linux":
         report = run_linux_skin_lab(args)
-    elif args.area == "dj2-spawn":
+    elif args.area in {"dj2-spawn", "dj2-claims"}:
+        from omk.dj2_claim_regression_lab import (  # noqa: PLC0415
+            run_claim_regression_lab,
+        )
         from omk.dj2_spawn_lab import run_spawn_lab  # noqa: PLC0415
 
-        report = run_spawn_lab(args)
+        report = {"dj2-spawn": run_spawn_lab, "dj2-claims": run_claim_regression_lab}[
+            args.area
+        ](args)
     elif args.area == "dj2-rtp":
         from omk.dj2_rtp_lab import run_rtp_lab  # noqa: PLC0415
 
