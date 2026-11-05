@@ -313,8 +313,6 @@ def _validate_inputs(args):
     paths = [args.agent, args.core, args.mods_json, args.worldedit]
     if getattr(args, "runtime", "native") == "native":
         paths.append(args.java)
-    elif args.full_backup_return:
-        raise ValueError("Full backup return is not yet supported in the Linux lab")
     for path in paths:
         if path is None or not path.is_file():
             raise ValueError("Required recovery lab input missing")
@@ -403,11 +401,29 @@ class RecoveryRuntime:
         self.args, self.lab, self.dest, self.client = args, lab, dest, client
         self.report, self.state, self.expect = report, state, expect
         self.linux = self.server = self.stream = None
+        self.source_linux = None
 
     def start(self, replacement=None):
         if self.linux is not None:
             if replacement is not None:
-                raise ValueError("Linux replacement runtime has not been tested")
+                if (
+                    self.source_linux is not None
+                    or replacement != self.lab / "recovery-lab-return/server"
+                    or not (self.lab / "full-return-staged.json").is_file()
+                    or self.server.poll() != 0
+                ):
+                    raise ValueError(
+                        "Expected a staged empty Linux replacement after stop"
+                    )
+                from omk.recovery_linux_lab import LinuxRecovery  # noqa: PLC0415
+
+                self.source_linux = self.linux
+                self.linux = LinuxRecovery(
+                    replacement.parent,
+                    self.source_linux.server.network,
+                    self.lab / "snapshots",
+                )
+                self.linux.prepare(replacement, self.args, self.client)
             self.server, log, self.stream = self.linux.start()
         else:
             self.server, log, self.stream = _start_server(
@@ -415,6 +431,9 @@ class RecoveryRuntime:
             )
         _wait_server(self.server, log, self.state)
         return _console_sender(self.server, log)
+
+    def original_world_digest(self):
+        return (self.source_linux or self.linux).world_digest()
 
     def backup(self, name):
         self.state("stopping_owned_lab_for_" + name)
@@ -428,6 +447,14 @@ class RecoveryRuntime:
     def close(self, compose):
         if self.linux is not None:
             self.linux.close(self.report)
+            if self.source_linux is not None:
+                original = self.report.setdefault("linux_original", {"ok": True})
+                self.source_linux.close(original)
+                self.report["ok"] = (
+                    self.report["ok"]
+                    and original.get("owned_game_clean_exit", False)
+                    and original["ok"]
+                )
             _cleanup(None, None, compose, self.report)
             self.report["ok"] = self.report["ok"] and self.report.get(
                 "owned_game_clean_exit", False
@@ -546,6 +573,9 @@ def run_recovery_lab(args):
                 expect,
                 runtime.start,
                 runtime.backup,
+                original_world_digest=(
+                    runtime.original_world_digest if runtime.linux is not None else None
+                ),
             )
         report["ok"] = True
     except Exception as error:

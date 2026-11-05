@@ -51,6 +51,18 @@ def test_owned_linux_lab_cancels_interactive_mapping_queries(tmp_path):
     assert not any("queryResult=confirm" in value for value in command)
 
 
+@pytest.mark.parametrize("readonly", [False, True])
+def test_volume_audit_mount_is_explicitly_read_only(tmp_path, monkeypatch, readonly):
+    server = LinuxServer(tmp_path, "test-run", "test-network")
+    calls = []
+    monkeypatch.setattr(
+        "omk.dj2_linux_lab.docker", lambda *args, **kw: calls.append(args)
+    )
+    server.helper("true", readonly_volume=readonly)
+    mount = f"type=volume,source={server.volume},target=/srv"
+    assert mount + (",readonly" if readonly else "") in calls[0]
+
+
 @pytest.mark.parametrize(
     ("log", "expected"),
     [

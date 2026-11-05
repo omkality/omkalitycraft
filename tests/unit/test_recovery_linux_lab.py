@@ -1,3 +1,4 @@
+import hashlib
 import io
 import tarfile
 import zipfile
@@ -75,7 +76,10 @@ def test_clean_stop_still_exports_verified_world_then_removes_container(
     server.collector = SimpleNamespace(close=lambda: None)
     monkeypatch.setattr(
         "omk.recovery_linux_lab.inspect_owned",
-        lambda *a: {"State": {"Running": False, "ExitCode": 0, "OOMKilled": False}},
+        lambda *a: {
+            "State": {"Running": False, "ExitCode": 0, "OOMKilled": False},
+            "HostConfig": {"Memory": 1024, "NanoCpus": 1000000000},
+        },
     )
     calls = []
 
@@ -99,6 +103,82 @@ def make_tar(path, entries):
             entry = tarfile.TarInfo(name)
             entry.size = len(data)
             archive.addfile(entry, io.BytesIO(data))
+
+
+def test_stopped_volume_digest_reads_only_and_detects_changed_world(
+    tmp_path, monkeypatch
+):
+    recovery = LinuxRecovery(tmp_path, "test-network", tmp_path / "snapshots")
+    recovery.checkpoint_export = (tmp_path / "checkpoint.tar", "verified")
+    recovery.server.process = SimpleNamespace(poll=lambda: 0)
+    monkeypatch.setattr("omk.recovery_linux_lab.inspect_owned", lambda *a: {})
+    payload = [b"original"]
+    calls = []
+
+    def export(*args, **kwargs):
+        calls.append(kwargs["readonly_volume"])
+        make_tar(kwargs["export"] / "world.tar", [("lab-world/level.dat", payload[0])])
+
+    recovery.server.helper = export
+    before = recovery.world_digest()
+    assert recovery.world_digest() == before
+    payload[0] = b"changed"
+    assert recovery.world_digest() != before
+    assert calls == [True, True, True]
+
+
+@pytest.mark.parametrize("payload", [None, b"changed"])
+def test_checkpoint_export_loss_preserves_source_volume(tmp_path, payload):
+    recovery = LinuxRecovery(tmp_path, "test-network", tmp_path / "snapshots")
+    path = tmp_path / "checkpoint.tar"
+    recovery.checkpoint_export = (path, hashlib.sha256(b"original").hexdigest())
+    if payload is not None:
+        path.write_bytes(payload)
+    recovery.server.close = lambda _: pytest.fail(
+        "Must not clean unverified original volume"
+    )
+    report = {"ok": True}
+    recovery.close(report)
+    assert (
+        not report["ok"] and report["owned_volume_retained"] == recovery.server.volume
+    )
+
+
+def test_missing_source_volume_is_not_recreated_by_helper(tmp_path, monkeypatch):
+    recovery = LinuxRecovery(tmp_path, "test-network", tmp_path / "snapshots")
+    recovery.checkpoint_export = (tmp_path / "checkpoint.tar", "verified")
+    recovery.server.process = SimpleNamespace(poll=lambda: 0)
+    monkeypatch.setattr("omk.recovery_linux_lab.inspect_owned", lambda *a: None)
+    recovery.server.helper = lambda *a, **kw: pytest.fail(
+        "Must not mount absent volume"
+    )
+    with pytest.raises(ValueError, match="volume is missing"):
+        recovery.world_digest()
+    assert not list(tmp_path.glob("digest-*"))
+
+
+def test_verified_stopped_checkpoint_allows_original_volume_cleanup(tmp_path):
+    recovery = LinuxRecovery(tmp_path, "test-network", tmp_path / "snapshots")
+    path = tmp_path / "checkpoint.tar"
+    path.write_bytes(b"original")
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    recovery.checkpoint_export = (path, digest)
+    recovery.checkpoint_stop = {"oom_killed": False, "exit_code": 0}
+    calls = []
+    recovery.server.close = lambda report: calls.append(dict(report))
+    report = {"ok": True}
+    recovery.close(report)
+    assert calls[0]["stopped_world_tar_sha256"] == digest
+    assert calls[0]["linux_container_outcome"]["oom_killed"] is False
+
+
+def test_restart_invalidates_previous_checkpoint(tmp_path, monkeypatch):
+    recovery = LinuxRecovery(tmp_path, "test-network", tmp_path / "snapshots")
+    recovery.checkpoint_export, recovery.checkpoint_stop = ("old", "hash"), {}
+    recovery.server.start = lambda **kw: "new-process"
+    recovery.server.collector = "new-stream"
+    assert recovery.start()[0] == "new-process"
+    assert recovery.checkpoint_export is None and recovery.checkpoint_stop is None
 
 
 def test_linux_export_is_world_only_streamed_and_never_overwrites(tmp_path):
