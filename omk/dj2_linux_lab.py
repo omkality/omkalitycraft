@@ -95,7 +95,7 @@ class LinuxServer:
         self.process = self.collector = None
         self.log = lab / "server-output.log"
 
-    def helper(self, script, *, source=None, export=None):
+    def helper(self, script, *, source=None, export=None, readonly_volume=False):
         arguments = [
             "run",
             "--rm",
@@ -108,7 +108,8 @@ class LinuxServer:
             "--label",
             LABEL + "=" + self.run_id,
             "--mount",
-            f"type=volume,source={self.volume},target=/srv",
+            f"type=volume,source={self.volume},target=/srv"
+            + (",readonly" if readonly_volume else ""),
         ]
         for path, target, readonly in [
             (source, "/seed", True),

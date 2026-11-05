@@ -78,7 +78,7 @@
 | `uv run omk lab dj2-recovery --edge-cases …` | Дополнение того же стенда: сущности, read-only покрытие и намеренное частичное применение неполного снимка; все обязательные пути из [TESTING](dj2/TESTING.md) |
 | `uv run omk lab dj2-recovery --runtime linux-docker --edge-cases …` | Те же игровые сценарии в Linux volume: 93 проверки прошли, включая повтор после startup-обхода. Java внутри закреплённого образа, [параметры/границы](dj2/TESTING.md) |
 | `uv run omk lab dj2-recovery --runtime linux-docker --mod-systems …` | Отдельные 38 проверок ME-сундука AE2/двухблочного накопителя EnderIO, повторного отката и работы после restart; [условия и ограничения](../MOD_SYSTEM_RECOVERY.md) |
-| `uv run omk lab dj2-recovery --edge-cases --full-backup-return …` | Проверенный возврат полной world-копии в пустой новый тестовый сервер; прежний мир сохраняется, рабочего apply/cutover нет |
+| `uv run omk lab dj2-recovery --runtime linux-docker --edge-cases --full-backup-return …` | Полный мир в новом Linux volume: 112 серверных условий / 6 проверок файлов, исходник не меняется. Откатывается весь мир; рабочего apply/cutover нет. [Границы](../LINUX_WORLD_RETURN.md) |
 | `uv run omk doctor` | Проверка локального окружения |
 | `uv run omk storage plan` | Расчёт бюджета VPS из env/defaults; ничего не применяет и не удаляет. [Миры, предгенерация и диск](../WORLDS_AND_STORAGE.md) |
 | `uv run omk locale audit --source en_us.lang --locale ru_ru.lang --previous-source old/en_us.lang` | Read-only проверка ключей/параметров перевода и изменённых исходных строк; предыдущий файл необязателен. Не заменяет смысловую и игровую проверку. [Обновление сборки](../PACK_UPGRADES.md) |

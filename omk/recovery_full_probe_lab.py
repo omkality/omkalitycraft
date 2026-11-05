@@ -108,11 +108,25 @@ def _claim(first, second, console, expect):
 
 
 def exercise_full_return(
-    args, lab, old_server, client, sessions, mods, report, expect, start, backup
+    args,
+    lab,
+    old_server,
+    client,
+    sessions,
+    mods,
+    report,
+    expect,
+    start,
+    backup,
+    original_world_digest=None,
 ):
     backup("before-full-return")
     original = lab / "server"
-    original_digest = tree_digest(original / "lab-world")
+    original_world_digest = original_world_digest or (
+        lambda: tree_digest(original / "lab-world")
+    )
+    original_digest = original_world_digest()
+    report["full_return_original_digest_before"] = original_digest
     replacement = lab / "recovery-lab-return"
     replacement.mkdir()
     dest, _ = _copy_server(args, replacement)
@@ -137,7 +151,8 @@ def exercise_full_return(
         ]
         _restored_state(first, console, expect)
         _claim(first, second, console, expect)
+    report["full_return_original_digest_after"] = original_world_digest()
     expect(
-        tree_digest(original / "lab-world") == original_digest,
+        report["full_return_original_digest_after"] == original_digest,
         "full_return_original_world_preserved",
     )
