@@ -150,6 +150,14 @@ def main(argv: list[str] | None = None) -> int:
             "dj2-claims", help="Existing FTB claim/TNT regressions in a fresh Linux lab"
         )
     )
+    from omk.dj2_account_recovery_lab import add_account_recovery_lab  # noqa: PLC0415
+
+    add_account_recovery_lab(
+        lab_areas.add_parser(
+            "dj2-account-recovery",
+            help="Fresh Drasl reset/lock and live Forge connection checks",
+        )
+    )
     from omk.dj2_rtp_lab import add_rtp_lab  # noqa: PLC0415
 
     add_rtp_lab(
@@ -231,15 +239,20 @@ def _lab_report(args):
         report = run_startup_trace_lab(args)
     elif args.area == "dj2-linux":
         report = run_linux_skin_lab(args)
-    elif args.area in {"dj2-spawn", "dj2-claims"}:
+    elif args.area in {"dj2-spawn", "dj2-claims", "dj2-account-recovery"}:
+        from omk.dj2_account_recovery_lab import (  # noqa: PLC0415
+            run_account_recovery_lab,
+        )
         from omk.dj2_claim_regression_lab import (  # noqa: PLC0415
             run_claim_regression_lab,
         )
         from omk.dj2_spawn_lab import run_spawn_lab  # noqa: PLC0415
 
-        report = {"dj2-spawn": run_spawn_lab, "dj2-claims": run_claim_regression_lab}[
-            args.area
-        ](args)
+        report = {
+            "dj2-spawn": run_spawn_lab,
+            "dj2-claims": run_claim_regression_lab,
+            "dj2-account-recovery": run_account_recovery_lab,
+        }[args.area](args)
     elif args.area == "dj2-rtp":
         from omk.dj2_rtp_lab import run_rtp_lab  # noqa: PLC0415
 

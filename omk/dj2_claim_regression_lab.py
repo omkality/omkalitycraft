@@ -24,15 +24,23 @@ SUITES = ("claim-edges", "explosions")
 CATALOG_LIMIT = 4 * 1024**2
 
 
-def add_claim_regression_lab(parser):
+def add_linux_runtime_inputs(parser):
     for name in ("server-source", "agent", "core", "mods-json"):
         parser.add_argument("--" + name, type=Path, required=True)
+
+
+def add_claim_regression_lab(parser):
+    add_linux_runtime_inputs(parser)
     parser.add_argument("--suite", choices=(*SUITES, "all"), default="all")
 
 
 def _validate(args):
     if args.suite not in (*SUITES, "all"):
         raise ValueError("Unknown Linux claim suite")
+    validate_linux_runtime_inputs(args)
+
+
+def validate_linux_runtime_inputs(args):
     for path in (
         args.agent,
         args.core,
