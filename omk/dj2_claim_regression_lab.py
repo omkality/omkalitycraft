@@ -20,7 +20,8 @@ from omk.operator_lab import _cleanup
 from omk.profiles import PROJECT_ROOT
 
 SUITES = ("claim-edges", "explosions")
-CATALOG_LIMIT = 2 * 1024**2
+# Reviewed 2.23.4 startup catalog is 2,551,543 bytes (registered mod permissions).
+CATALOG_LIMIT = 4 * 1024**2
 
 
 def add_claim_regression_lab(parser):

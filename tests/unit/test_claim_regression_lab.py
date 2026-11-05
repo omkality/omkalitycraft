@@ -47,6 +47,23 @@ def test_bad_catalog_never_publishes_guard_input(tmp_path, monkeypatch, bad):
     assert not (tmp_path / "omk-command-catalog.json").exists()
 
 
+def test_valid_modded_catalog_over_two_mib_is_not_truncated(tmp_path, monkeypatch):
+    metadata = {
+        "core": "synthetic",
+        "ftb_claim_guard": "enabled",
+        "permissions": [{"description": "x" * 2_600_000}],
+    }
+    raw = json.dumps(metadata)
+    monkeypatch.setattr(labmod, "inspect_owned", lambda *a: {})
+    server = SimpleNamespace(
+        volume="owned",
+        run_id="fixture",
+        helper=lambda *a, **kw: SimpleNamespace(stdout=raw),
+    )
+    labmod._catalog(server, tmp_path)
+    assert json.loads((tmp_path / "omk-command-catalog.json").read_text()) == metadata
+
+
 @pytest.mark.parametrize(
     "failure",
     [
