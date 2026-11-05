@@ -8,6 +8,7 @@ import pytest
 from omk import dj2_account_recovery_lab as labmod
 from omk.cli import main
 from omk.drasl import DraslError
+from omk.forge_probe import ProbeResult
 
 
 def inputs(tmp_path):
@@ -52,6 +53,20 @@ def test_network_and_unexpected_http_failure_are_not_successful_revocation(error
 def test_successful_http_is_never_a_revoked_session():
     with pytest.raises(RuntimeError, match="must be denied"):
         labmod._denied(lambda: None, lambda *a: pytest.fail("accepted"), "label")
+
+
+@pytest.mark.parametrize(
+    "authenticated,joined", [(False, False), (True, False), (False, True), (True, True)]
+)
+def test_native_login_gate_requires_both_game_and_auth_refusals(
+    monkeypatch, authenticated, joined
+):
+    monkeypatch.setattr(
+        labmod, "probe_login", lambda *a: ProbeResult(authenticated, joined)
+    )
+    results = []
+    labmod._old_token_login(object(), object(), lambda ok, label: results.append(ok))
+    assert results == [not authenticated and not joined]
 
 
 @pytest.mark.parametrize(

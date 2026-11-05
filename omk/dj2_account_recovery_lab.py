@@ -130,6 +130,14 @@ def _kick(player, console, expect, label):
     expect(player.error is not None and "omk_recovery_lab" in player.error, label)
 
 
+def _old_token_login(client, session, expect):
+    stale = probe_login(client, session, "127.0.0.1", 25576)
+    expect(
+        not stale.authenticated and not stale.join_accepted,
+        "old_token_real_login_denied",
+    )
+
+
 def _permissions(accounts, expect):
     client, session = accounts.client, accounts.sessions[0]
     user_id = accounts.user["user"]["uuid"]
@@ -223,8 +231,7 @@ def _exercise(accounts, mods, console, expect, report):
             player, console, expect, "password_reset_alone_does_not_kick_live_player"
         )
         _kick(player, console, expect, "explicit_console_kick_disconnects_live_player")
-    stale = probe_login(client, session, "127.0.0.1", 25576)
-    expect(not stale.authenticated and not stale.joined, "old_token_real_login_denied")
+    _old_token_login(client, session, expect)
     recovered = accounts.services[0].login(FIRST, password).session
     expect(
         UUID(recovered.player_uuid) == UUID(session.player_uuid),
