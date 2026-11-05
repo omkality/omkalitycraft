@@ -68,6 +68,11 @@ def add_recovery_lab(parser):
         action="store_true",
         help="Experimental Linux AE2/EnderIO functional recovery suite; separate from other suites",
     )
+    parser.add_argument(
+        "--access-policy",
+        action="store_true",
+        help="With Linux full return, preserve and exercise current vanilla access lists",
+    )
 
 
 def _snapshot(server, dest, target):
@@ -308,6 +313,15 @@ def _exercise(
 
 
 def _validate_inputs(args):
+    if getattr(args, "access_policy", False) and (
+        getattr(args, "runtime", "native") != "linux-docker"
+        or not args.full_backup_return
+        or not args.edge_cases
+        or getattr(args, "mod_systems", False)
+    ):
+        raise ValueError(
+            "Access policy requires Linux full backup return with edge cases"
+        )
     if getattr(args, "mod_systems", False):
         mod_systems.validate_mod_systems(args)
     paths = [args.agent, args.core, args.mods_json, args.worldedit]
@@ -402,6 +416,7 @@ class RecoveryRuntime:
         self.report, self.state, self.expect = report, state, expect
         self.linux = self.server = self.stream = None
         self.source_linux = None
+        self.access_verified = False
 
     def start(self, replacement=None):
         if self.linux is not None:
@@ -410,6 +425,10 @@ class RecoveryRuntime:
                     self.source_linux is not None
                     or replacement != self.lab / "recovery-lab-return/server"
                     or not (self.lab / "full-return-staged.json").is_file()
+                    or (
+                        getattr(self.args, "access_policy", False)
+                        and not (self.lab / "current-access-staged.json").is_file()
+                    )
                     or self.server.poll() != 0
                 ):
                     raise ValueError(
@@ -435,6 +454,45 @@ class RecoveryRuntime:
     def original_world_digest(self):
         return (self.source_linux or self.linux).world_digest()
 
+    def export_current_access(self, label):
+        from omk.dj2_linux_lab import inspect_owned  # noqa: PLC0415
+        from omk.recovery_access_lab import FILES, read_access  # noqa: PLC0415
+
+        if label not in {"before", "after"}:
+            raise ValueError("Invalid access checkpoint")
+        source = self.source_linux or self.linux
+        if source.checkpoint_export is None or source.server.process.poll() != 0:
+            raise ValueError("Current access requires a stopped checkpoint")
+        if inspect_owned("volume", source.server.volume, source.server.run_id) is None:
+            raise ValueError("Current access source volume missing")
+        export = self.lab / ("current-access-" + label)
+        export.mkdir()
+        source.server.helper(
+            "test ! -e /export/access.tar && tar -C /srv -cf /export/access.tar "
+            + " ".join(FILES),
+            export=export,
+            readonly_volume=True,
+        )
+        archive = export / "access.tar"
+        _, _, manifest = read_access(archive)
+        return archive, manifest
+
+    def stage_current_access(self, destination):
+        from omk.recovery_access_lab import stage_access  # noqa: PLC0415
+
+        archive, _ = self.export_current_access("before")
+        return stage_access(archive, destination, lab=self.lab)
+
+    def verify_current_access_source(self):
+        if getattr(self.args, "access_policy", False):
+            _, manifest = self.export_current_access("after")
+            same = manifest == self.report["current_access"]["source_file_sha256"]
+            self.expect(
+                same,
+                "current_access_source_files_unchanged",
+            )
+            self.access_verified = same
+
     def backup(self, name):
         self.state("stopping_owned_lab_for_" + name)
         if self.linux is not None:
@@ -446,10 +504,22 @@ class RecoveryRuntime:
 
     def close(self, compose):
         if self.linux is not None:
-            self.linux.close(self.report)
+            retain_source = (
+                getattr(self.args, "access_policy", False) and not self.access_verified
+            )
+            if retain_source:
+                self.report["ok"] = False
+                self.report["access_policy_validation_incomplete"] = True
+            if retain_source and self.source_linux is None:
+                self.linux.close(self.report, preserve_volume=True)
+            else:
+                self.linux.close(self.report)
             if self.source_linux is not None:
                 original = self.report.setdefault("linux_original", {"ok": True})
-                self.source_linux.close(original)
+                if retain_source:
+                    self.source_linux.close(original, preserve_volume=True)
+                else:
+                    self.source_linux.close(original)
                 self.report["ok"] = (
                     self.report["ok"]
                     and original.get("owned_game_clean_exit", False)
@@ -576,7 +646,13 @@ def run_recovery_lab(args):
                 original_world_digest=(
                     runtime.original_world_digest if runtime.linux is not None else None
                 ),
+                current_access_stage=(
+                    runtime.stage_current_access
+                    if getattr(args, "access_policy", False)
+                    else None
+                ),
             )
+            runtime.verify_current_access_source()
         report["ok"] = True
     except Exception as error:
         report["error"] = type(error).__name__ + ": " + str(error)[:1800]

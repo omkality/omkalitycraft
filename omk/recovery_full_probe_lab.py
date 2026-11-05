@@ -7,7 +7,7 @@ import time
 from contextlib import ExitStack
 
 from omk.dj2_commands_lab import FIRST, SECOND, _place, _response
-from omk.dj2_lab import _copy_server
+from omk.dj2_lab import _console_sender, _copy_server
 from omk.forge_player import LabPlayer
 from omk.recovery_edges_lab import TAGS, entity_count
 from omk.recovery_full_lab import stage_full_world
@@ -119,7 +119,12 @@ def exercise_full_return(
     start,
     backup,
     original_world_digest=None,
+    current_access_stage=None,
 ):
+    if current_access_stage is not None:
+        from omk.recovery_access_lab import seed_access  # noqa: PLC0415
+
+        seed_access(_console_sender(old_server, lab / "server-output.log"), expect)
     backup("before-full-return")
     original = lab / "server"
     original_world_digest = original_world_digest or (
@@ -144,7 +149,14 @@ def exercise_full_return(
         lab=lab,
     )
     expect(True, "full_return_archive_bytes_readback_verified_before_start")
+    if current_access_stage is not None:
+        report["current_access"] = current_access_stage(dest)
+        expect(True, "current_access_lists_staged_before_replacement_start")
     console = start(dest)
+    if current_access_stage is not None:
+        from omk.recovery_access_lab import verify_access  # noqa: PLC0415
+
+        verify_access(client, sessions, mods, console, expect)
     with ExitStack() as stack:
         first, second = [
             stack.enter_context(LabPlayer(client, s, 25576, mods)) for s in sessions
