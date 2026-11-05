@@ -1,0 +1,139 @@
+{
+  "date": "2026-11-06",
+  "issues": [
+    81,
+    29,
+    49
+  ],
+  "accepted_player_release": false,
+  "live_worlds_accounts_or_profile_changed": false,
+  "dj2": "2.23.4",
+  "private_core": "0.2.9",
+  "private_implementation_commit": "53b418e",
+  "core_sha256": "28f71b16f295c54f3749e6ddce23d0c016153a09418eb73c7f8712cd2e3cf2ff",
+  "suites": {
+    "baseline": {
+      "conditions": 37,
+      "private_report_sha256": "1963c59e476a1a44e7c115d18522612cea175e6f6e6ca5c7e56ff1bdbf2dc60d",
+      "owned_game_clean_exit": true,
+      "game_crash_detected": false,
+      "owned_volume_removed_after_export": true,
+      "auth_removed": true
+    },
+    "world_effects": {
+      "conditions": 300,
+      "private_report_sha256": "1b0ff214c4091011c1b2ede0e44fb7b5961bfa1e89097e900cb9afaba7f13700",
+      "owned_game_clean_exit": true,
+      "game_crash_detected": false,
+      "owned_volume_removed_after_export": true,
+      "auth_removed": true
+    },
+    "sorting": {
+      "conditions": 220,
+      "private_report_sha256": "7eb80dd09d0f36c31f5679a297c2d385de2d3a3832ed0737198a37c332b85204",
+      "owned_game_clean_exit": true,
+      "game_crash_detected": false,
+      "owned_volume_removed_after_export": true,
+      "auth_removed": true
+    },
+    "rtp": {
+      "conditions": 50,
+      "private_report_sha256": "2932fc3b2aa59d492912594e34424faf540dea5e55b4f1253f396cf374d9d904",
+      "owned_game_clean_exit": true,
+      "game_crash_detected": false,
+      "owned_volume_removed_after_export": true,
+      "auth_removed": true
+    },
+    "claims": {
+      "conditions": 54,
+      "private_report_sha256": "609fefa4cce30a248b3499a17f5734d143e981d8e4548ea7303d5a38bfa3b4c7",
+      "owned_game_clean_exit": true,
+      "game_crash_detected": false,
+      "owned_volume_removed_after_export": true,
+      "temporary_auth_removed": true
+    },
+    "spawn": {
+      "conditions": 70,
+      "private_report_sha256": "ff2e2d7228348bdc11d42b99d9b6075860d9e0f474c85b2f2b31b8ec43bfddce",
+      "owned_game_clean_exit": true,
+      "game_crash_detected": false,
+      "owned_volume_removed_after_export": true,
+      "auth_removed": true
+    }
+  },
+  "runtime": {
+    "image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "cpus": 4,
+    "container_mib": 6144,
+    "heap_mib": 4096
+  },
+  "independent_checks": {
+    "checks": [
+      "stopped_world_archive_matches_recorded_digest",
+      "saved_foreign_server_biome_unchanged",
+      "saved_same_server_domain_biome_changed_natively",
+      "saved_wilderness_biome_changed_natively",
+      "server_team_remains_memberless_server_type",
+      "server_claim_remains_exact_overworld_chunk_zero",
+      "saved_players_keep_authenticated_uuids",
+      "restart_restores_enabled_guard_after_recorded_failure"
+    ],
+    "game_data_modified_by_reader": false
+  },
+  "author_content": {
+    "scripts": {
+      "files": 130,
+      "manifest_sha256": "6f105d9a695ca7e6f9f1eae1d13a2708c4dc877593909aeb906b534862e791f2",
+      "unchanged": true
+    },
+    "groovy": {
+      "files": 42,
+      "manifest_sha256": "c1ba1c80df78999296e1a4ac8f58a667f19e60c815edb0af34bb5bda844647ee",
+      "unchanged": true
+    },
+    "quests": {
+      "sha256": "ab4700ec69ca9883a06f1b6f93a4bf710e794c46363530c332f39e34b389bc77",
+      "unchanged": true
+    },
+    "core_item_quest_references": []
+  },
+  "native_method_review": {
+    "doTreeOfTimeEffect": {
+      "same_trace_without_line_numbers": true,
+      "target_sha256": "f93b755cbb48e064d2742f78a66e30fcf75970229ba047de3906e8636a37e76b"
+    },
+    "doTreeOfTransformationEffect": {
+      "same_trace_without_line_numbers": true,
+      "target_sha256": "5a46721c14256ae67d4cd29c4e007a5cc23011eb15f2eb01a1702a70dfd686fb"
+    }
+  },
+  "ordinary_windows_client": {
+    "probe_absent": true,
+    "candidate_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+    "source_file_count": 5274,
+    "client_exit_code": 0,
+    "client_exit_before_cleanup": 0,
+    "no_new_or_rewritten_crash_reports": true,
+    "no_task_or_fatal_markers": true,
+    "owned_game_clean_exit": true,
+    "owned_volume_removed_after_export": true,
+    "auth_removed": true,
+    "rendered_world_without_login_overlay": true,
+    "graphical_block_activation_verified": false,
+    "native_effect_activated_by_owner_console": true,
+    "post_exit_watch": {
+      "ok": true,
+      "phase": "post_exit_accepted",
+      "exit_code": 0,
+      "no_new_or_rewritten_reports": true,
+      "no_task_or_fatal_markers": true
+    }
+  },
+  "limits": [
+    "two reviewed native effect paths only",
+    "no full survival or quest completion",
+    "no Linux/macOS renderer acceptance",
+    "no production deployment",
+    "graphical activation unavailable due to capture/input failure"
+  ]
+}
