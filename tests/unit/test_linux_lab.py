@@ -99,3 +99,18 @@ def test_zero_exit_forge_crash_changes_success_report_to_failure(tmp_path):
     assert report["ok"] is False
     assert report["owned_game_clean_exit"] is False
     assert report["game_crash_detected"] is True
+
+
+def test_explicit_preservation_keeps_even_clean_exported_volume(tmp_path, monkeypatch):
+    server = LinuxServer(tmp_path, "owned-run", "unused-network")
+    server.process = SimpleNamespace(poll=lambda: 0)
+    server.volume_created = True
+    server.log.write_text("Stopping server\nSaving worlds\n")
+    monkeypatch.setattr("omk.dj2_linux_lab.inspect_owned", lambda *a: None)
+    calls = []
+    monkeypatch.setattr("omk.dj2_linux_lab.docker", lambda *a, **kw: calls.append(a))
+    report = {"ok": True, "stopped_world_tar_sha256": "previously-verified-export"}
+    server.close(report, preserve_volume=True)
+    assert report["owned_game_clean_exit"]
+    assert report["owned_volume_retained"] == server.volume
+    assert not calls and "owned_volume_removed_after_export" not in report

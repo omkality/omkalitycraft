@@ -1,5 +1,26 @@
 # Разработка OmkalityCraft
 
+## Текущие vanilla-допуски при world-return — 5 ноября 2026
+
+Linux full-return с `--access-policy` отдельно переносит текущие ops/bans/whitelist
+и whitelist-флаг после staging исторического мира. Целиком server.properties не
+копируется; сеть/RCON не подменяются историческими настройками. Списки копируются
+побайтно, источник читается readonly. Отсутствие готового access-маркера запрещает
+старт; незавершённая проверка сохраняет оригинальный volume даже с world-экспортом.
+
+Настоящий Linux DJ2 2.23.4 / Core 0.2.8 прошёл 120 серверных условий / пять стартов,
+12 независимых проверок файлов. Действующая сессия забаненного аккаунта отвергнута;
+OP-команда разрешена до deop и запрещена после, pardon разрешает вход, whitelist
+отвергает удалённого участника и допускает добавленного. Это управляемые изменения
+в новой копии; источник world/access не изменился. Оба stop чистые / OOM=false,
+свои volumes удалены после проверки экспортов, временный Drasl удалён.
+
+Unit/lifecycle: Windows 158 passed / 1 skip, Linux Docker 159 passed. Эти отказы
+mocked, не crash/power-loss проверка. [Порядок и границы](LINUX_WORLD_RETURN.md).
+Текущие FTB-ранги/исторические членства, Drasl reset/revocation, scheduler/retention
+и production-cutover остаются отдельными задачами #33/#35. Графический клиент не
+запускался, рабочий профиль и существующие данные не менялись. VPS пока не нужен.
+
 ## Полный Linux world-return — 5 ноября 2026
 
 `dj2-recovery --runtime linux-docker --edge-cases --full-backup-return` теперь

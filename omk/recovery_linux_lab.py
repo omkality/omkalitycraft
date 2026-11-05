@@ -155,7 +155,7 @@ class LinuxRecovery:
                     ).hexdigest()
         return hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()
 
-    def close(self, report):
+    def close(self, report, *, preserve_volume=False):
         report["linux_java_image"] = JAVA_IMAGE
         # backup() already removed the stopped container. Its verified TAR is
         # still required before close() may remove this lab's original volume.
@@ -172,4 +172,7 @@ class LinuxRecovery:
                 return
             report["stopped_world_tar_sha256"] = expected
             report["linux_container_outcome"] = self.checkpoint_stop
-        self.server.close(report)
+        if preserve_volume:
+            self.server.close(report, preserve_volume=True)
+        else:
+            self.server.close(report)

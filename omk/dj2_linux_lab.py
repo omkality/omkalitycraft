@@ -248,7 +248,7 @@ class LinuxServer:
         if self.process is not None and not report["owned_game_clean_exit"]:
             report["ok"] = False
 
-    def close(self, report):
+    def close(self, report, *, preserve_volume=False):
         try:
             if self.process is not None and self.process.poll() is None:
                 report["lab_cleanup_stop_requested"] = True
@@ -289,6 +289,7 @@ class LinuxServer:
                 docker("rm", "--force", self.name + "-helper")
             if (
                 self.volume_created
+                and not preserve_volume
                 and report.get("stopped_world_tar_sha256")
                 and report["owned_game_clean_exit"]
             ):
