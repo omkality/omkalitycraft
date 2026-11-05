@@ -1,0 +1,276 @@
+{
+  "date": "2026-11-05",
+  "issues": [
+    33,
+    34,
+    49
+  ],
+  "implementation_commit": "a33457e184d3828153c8520e5005280e8f8c1ed8",
+  "accepted_player_release": false,
+  "live_worlds_or_profile_changed": false,
+  "dj2": "2.23.4",
+  "scope": {
+    "real_linux_forge_server": true,
+    "protocol_players": 2,
+    "graphical_client": false,
+    "server_starts": 5,
+    "full_world_readback": true,
+    "actual_sigkill_or_power_loss_during_world_write": false,
+    "production_cutover": false
+  },
+  "runtime": {
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "observed_java": "Linux\nopenjdk version \"1.8.0_504\"\nOpenJDK Runtime Environment (Temurin)(build 1.8.0_504-b01)\nOpenJDK 64-Bit Server VM (Temurin)(build 25.504-b01, mixed mode)\n",
+    "cpus": 4,
+    "container_mib": 6144,
+    "heap_mib": 4096,
+    "private_core_version": "0.2.8",
+    "private_core_sha256": "ee86e32a913792854e25e37c93ae494b1903a8fbc75683883577986d32ea86ed",
+    "auth": "isolated Drasl 4.0.0-omk.1 + authlib-injector 1.2.8"
+  },
+  "worldedit": {
+    "source": "https://www.curseforge.com/minecraft/mc-mods/worldedit/files/2941712",
+    "sha256": "cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75",
+    "version": "6.1.10",
+    "mcmod_metadata": "6.1.10-SNAPSHOT;e6b38e8"
+  },
+  "artifacts": {
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "ironchest-1.12.2-7.0.72.847.jar": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f",
+    "ThermalExpansion-1.12.2-5.5.7.1-universal.jar": "f1cc8aeefcda2c00235bfb5ee7f76d731325aa324e90e84d7d232d88c1e6f472"
+  },
+  "native_checks": [
+    "linux_named_volume_case_sensitive_filesystem",
+    "full_backup_player_inventory_seeded",
+    "fixture_original_entity_exists",
+    "fixture_outside_entity_exists",
+    "cross_chunk_fixture_143_created",
+    "cross_chunk_fixture_144_created",
+    "machine_smelt_positive_control_before_snapshot",
+    "idle_machine_fixture_has_seeded_state",
+    "iron_chest_fixture_has_named_items",
+    "before-grief_snapshot_after_clean_stop",
+    "full_backup_player_inventory_really_changed",
+    "original_entity_really_removed",
+    "post_snapshot_entity_really_added",
+    "base_really_damaged",
+    "machine_state_really_damaged",
+    "before-restore_snapshot_after_clean_stop",
+    "normal_player_cannot_restore",
+    "operator_lists_actual_zip_snapshots",
+    "primary_restore_selection_passes_readonly_preflight",
+    "first_restore_vanilla_chest_named_inventory",
+    "first_restore_same_type_iron_chest_inventory",
+    "first_restore_machine_energy_orientation_inventory",
+    "first_restore_griefer_block_removed",
+    "first_restore_neighbor_chest_same_chunk_unchanged",
+    "first_restore_above_selection_same_chunk_unchanged",
+    "first_restore_west_of_selection_unchanged",
+    "first_restore_north_of_selection_unchanged",
+    "first_restore_below_selection_unchanged",
+    "first_restore_machine_block_metadata_unchanged",
+    "after_restore_native_snapshot_does_not_restore_destroyed_armor_stand",
+    "after_restore_native_snapshot_keeps_post_snapshot_armor_stand",
+    "after_restore_outside_entity_unchanged",
+    "undo_restores_damaged_air",
+    "undo_restores_damaged_machine",
+    "redo_vanilla_chest_named_inventory",
+    "redo_same_type_iron_chest_inventory",
+    "redo_machine_energy_orientation_inventory",
+    "redo_griefer_block_removed",
+    "redo_neighbor_chest_same_chunk_unchanged",
+    "redo_above_selection_same_chunk_unchanged",
+    "redo_west_of_selection_unchanged",
+    "redo_north_of_selection_unchanged",
+    "redo_below_selection_unchanged",
+    "redo_machine_block_metadata_unchanged",
+    "repeat_restore_vanilla_chest_named_inventory",
+    "repeat_restore_same_type_iron_chest_inventory",
+    "repeat_restore_machine_energy_orientation_inventory",
+    "repeat_restore_griefer_block_removed",
+    "repeat_restore_neighbor_chest_same_chunk_unchanged",
+    "repeat_restore_above_selection_same_chunk_unchanged",
+    "repeat_restore_west_of_selection_unchanged",
+    "repeat_restore_north_of_selection_unchanged",
+    "repeat_restore_below_selection_unchanged",
+    "repeat_restore_machine_block_metadata_unchanged",
+    "missing_snapshot_vanilla_chest_named_inventory",
+    "missing_snapshot_same_type_iron_chest_inventory",
+    "missing_snapshot_machine_energy_orientation_inventory",
+    "missing_snapshot_griefer_block_removed",
+    "missing_snapshot_neighbor_chest_same_chunk_unchanged",
+    "missing_snapshot_above_selection_same_chunk_unchanged",
+    "missing_snapshot_west_of_selection_unchanged",
+    "missing_snapshot_north_of_selection_unchanged",
+    "missing_snapshot_below_selection_unchanged",
+    "missing_snapshot_machine_block_metadata_unchanged",
+    "complete_cross_chunk_snapshot_passes_preflight",
+    "missing_chunk_rejected_before_apply_by_preflight",
+    "preflight_did_not_modify_live_block_143",
+    "preflight_did_not_modify_live_block_144",
+    "native_partial_restore_already_modified_available_chunk",
+    "native_partial_restore_left_missing_chunk_damaged",
+    "immediate_native_partial_undo_returns_lab_block_143",
+    "immediate_native_partial_undo_returns_lab_block_144",
+    "after-restore_snapshot_after_clean_stop",
+    "after_restart_vanilla_chest_named_inventory",
+    "after_restart_same_type_iron_chest_inventory",
+    "after_restart_machine_energy_orientation_inventory",
+    "after_restart_griefer_block_removed",
+    "after_restart_neighbor_chest_same_chunk_unchanged",
+    "after_restart_above_selection_same_chunk_unchanged",
+    "after_restart_west_of_selection_unchanged",
+    "after_restart_north_of_selection_unchanged",
+    "after_restart_below_selection_unchanged",
+    "after_restart_machine_block_metadata_unchanged",
+    "after_restart_native_snapshot_does_not_restore_destroyed_armor_stand",
+    "after_restart_native_snapshot_keeps_post_snapshot_armor_stand",
+    "after_restart_outside_entity_unchanged",
+    "restored_machine_smelt_after_full_restart",
+    "vanilla_chest_saved_tile_exists",
+    "vanilla_chest_complete_saved_nbt_matches_snapshot",
+    "iron_chest_saved_tile_exists",
+    "iron_chest_complete_saved_nbt_matches_snapshot",
+    "thermal_furnace_saved_tile_exists",
+    "thermal_furnace_complete_saved_nbt_matches_snapshot",
+    "neighbor_saved_tile_exists",
+    "neighbor_complete_saved_nbt_unchanged",
+    "before-full-return_snapshot_after_clean_stop",
+    "full_return_identical_runtime_mods",
+    "full_return_archive_bytes_readback_verified_before_start",
+    "full_return_vanilla_chest",
+    "full_return_iron_chest",
+    "full_return_thermal",
+    "full_return_old_neighbor_inventory",
+    "full_return_entity_original",
+    "full_return_entity_new",
+    "full_return_entity_outside",
+    "full_return_player_inventory",
+    "full_return_ftb_home_really_teleports",
+    "full_return_machine_really_smelts",
+    "full_return_outsider_unclaimed_positive_control",
+    "full_return_ftb_claim_blocks_outsider",
+    "full_return_ftb_owner_keeps_access",
+    "full_return_original_world_preserved"
+  ],
+  "independent_stopped_data": {
+    "checks": [
+      "saved_inventory_5_before_1_damaged_5_restored",
+      "saved_home_removed_in_current_state_and_restored_from_history",
+      "restored_ftb_player_matches_drasl_uuid_and_team_id",
+      "claimed_chunks_match_history_and_differ_from_damaged_state",
+      "team_owner_and_memberships_match_history",
+      "all_staged_files_match_original_zip_and_staging_manifest"
+    ],
+    "files": 267,
+    "source_archive_still_matches_hash": true
+  },
+  "full_return_staging": {
+    "files": 267,
+    "uncompressed_bytes": 12682647,
+    "readback_verified": true,
+    "manifest_sha256": "4e65bc883c3a51ec1a8452184bc9517fde7930ceefed81da98a23e3087953505"
+  },
+  "before_content_digest": "e386b57229a2105505ab31554a6d7efbc8e52c699343d493d98cf6560c748eaf",
+  "after_content_digest": "e386b57229a2105505ab31554a6d7efbc8e52c699343d493d98cf6560c748eaf",
+  "checkpoints": {
+    "before-grief": {
+      "files": 267,
+      "uncompressed_bytes": 12682647,
+      "bytes": 7601575,
+      "sha256": "4e14fdb8868386a6069a5b7120d6ad5cf9d015a0ac2377c96c747142ea07b070"
+    },
+    "before-restore": {
+      "files": 267,
+      "uncompressed_bytes": 12910468,
+      "bytes": 7844585,
+      "sha256": "ebb8b245a3d6bcf2474a6df7dbc13e18a33f75b562dd9b439d3c6a8c291d3c77"
+    },
+    "after-restore": {
+      "files": 267,
+      "uncompressed_bytes": 12959746,
+      "bytes": 7896437,
+      "sha256": "56b21adcd6deb381785c259729654a8b2b4f6b9e2e9041abf28c5c7afbcefd87"
+    },
+    "before-full-return": {
+      "files": 267,
+      "uncompressed_bytes": 12959751,
+      "bytes": 7905007,
+      "sha256": "da03b3ada446b742a7a280d1ad01b81fe247a04f87191f9ef4928fb879b189af"
+    }
+  },
+  "outcome": {
+    "ok": true,
+    "owned_game_clean_exit": true,
+    "game_crash_detected": false,
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "stopped_world_tar_sha256": "78ab32dbf156ffdb299e05e37e65ee7c9aa3894d5fbbfcd5f8bc457f39d59597",
+    "owned_volume_removed_after_export": true,
+    "temporary_auth_removed": true,
+    "linux_original": {
+      "ok": true,
+      "linux_java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+      "stopped_world_tar_sha256": "07249231387c0fb7628104e798fe40c5b9205fa285ebbb16ee0b226554d21073",
+      "linux_container_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "game_crash_detected": false,
+      "owned_game_clean_exit": true,
+      "owned_volume_removed_after_export": true
+    }
+  },
+  "focused_tests": {
+    "windows": {
+      "passed": 139,
+      "skipped": 1
+    },
+    "linux_docker": {
+      "image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "exit_code": 0,
+      "oom_killed": false,
+      "cpu_limit": 2,
+      "memory_mib": 1024,
+      "network": "none",
+      "source_mount": "readonly",
+      "mock_lifecycle_tests": true,
+      "real_minecraft": false,
+      "tail": [
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "140 passed, 2 warnings in 1.86s"
+      ],
+      "owned_container_removed": true
+    }
+  },
+  "excluded_attempts": [
+    {
+      "stage": "Initial Linux game startup",
+      "reason": "Stopped deliberately before acceptance to add missing-volume refusal; exit 143, not a clean-stop pass",
+      "raw_report_preserved": true,
+      "forensic_export_and_owned_volume_cleanup_verified": true
+    },
+    {
+      "stage": "Independent archive reader",
+      "reason": "Assumed an empty claims file after final unclaim; FTB actually deletes it. Corrected reader explicitly verifies absence before return and restored file after return",
+      "archives_and_game_not_modified": true
+    }
+  ],
+  "limits": [
+    "Fresh small lab world, 267 files / about 12 MiB uncompressed",
+    "Full contents staged, but gameplay only in dimension 0",
+    "No large networks, full quest progression or graphical client acceptance",
+    "Historical FTB rights restored; current Drasl, bans, ops, whitelist and rank policy need separate operational reconciliation",
+    "No production scheduler, retention, off-disk copy or live administrative apply"
+  ],
+  "private_raw_report_sha256": "bd5ea3fa0d921bfb9a7da4b124989c6d58b8e1fb2cb89ffbe28f534d251228ce"
+}
