@@ -73,6 +73,11 @@ def add_recovery_lab(parser):
         action="store_true",
         help="With Linux full return, preserve and exercise current vanilla access lists",
     )
+    parser.add_argument(
+        "--rank-policy",
+        action="store_true",
+        help="With --access-policy, preserve current FTB rank definitions and test home quotas",
+    )
 
 
 def _snapshot(server, dest, target):
@@ -313,6 +318,10 @@ def _exercise(
 
 
 def _validate_inputs(args):
+    if getattr(args, "rank_policy", False) and not getattr(
+        args, "access_policy", False
+    ):
+        raise ValueError("Rank policy requires --access-policy")
     if getattr(args, "access_policy", False) and (
         getattr(args, "runtime", "native") != "linux-docker"
         or not args.full_backup_return
@@ -429,6 +438,10 @@ class RecoveryRuntime:
                         getattr(self.args, "access_policy", False)
                         and not (self.lab / "current-access-staged.json").is_file()
                     )
+                    or (
+                        getattr(self.args, "rank_policy", False)
+                        and not (self.lab / "current-ranks-staged.json").is_file()
+                    )
                     or self.server.poll() != 0
                 ):
                     raise ValueError(
@@ -481,9 +494,45 @@ class RecoveryRuntime:
         from omk.recovery_access_lab import stage_access  # noqa: PLC0415
 
         archive, _ = self.export_current_access("before")
-        return stage_access(archive, destination, lab=self.lab)
+        result = stage_access(archive, destination, lab=self.lab)
+        if getattr(self.args, "rank_policy", False):
+            from omk.recovery_ranks_lab import stage_ranks  # noqa: PLC0415
+
+            archive, _ = self.export_current_ranks("before")
+            self.report["current_ranks"] = stage_ranks(
+                archive, destination, lab=self.lab
+            )
+        return result
+
+    def export_current_ranks(self, label):
+        from omk.dj2_linux_lab import inspect_owned  # noqa: PLC0415
+        from omk.recovery_ranks_lab import RANKS, read_ranks  # noqa: PLC0415
+
+        if label not in {"before", "after"}:
+            raise ValueError("Invalid rank checkpoint")
+        source = self.source_linux or self.linux
+        if source.checkpoint_export is None or source.server.process.poll() != 0:
+            raise ValueError("Current ranks require a stopped checkpoint")
+        if inspect_owned("volume", source.server.volume, source.server.run_id) is None:
+            raise ValueError("Current ranks source volume missing")
+        export = self.lab / ("current-ranks-" + label)
+        export.mkdir()
+        source.server.helper(
+            "test ! -e /export/ranks.tar && tar -C /srv -cf /export/ranks.tar " + RANKS,
+            export=export,
+            readonly_volume=True,
+        )
+        archive = export / "ranks.tar"
+        _, digest = read_ranks(archive)
+        return archive, digest
 
     def verify_current_access_source(self):
+        if getattr(self.args, "rank_policy", False):
+            _, digest = self.export_current_ranks("after")
+            self.expect(
+                digest == self.report["current_ranks"]["source_sha256"],
+                "current_rank_source_file_unchanged",
+            )
         if getattr(self.args, "access_policy", False):
             _, manifest = self.export_current_access("after")
             same = manifest == self.report["current_access"]["source_file_sha256"]
