@@ -1,0 +1,146 @@
+{
+  "date": "2026-11-06",
+  "issues": [
+    35
+  ],
+  "implementation_commit": "23c62ea270eb29c27aaad0ce0d4195fd15208758",
+  "accepted_player_release": false,
+  "live_accounts_worlds_or_profile_changed": false,
+  "production_reset_cli_implemented": false,
+  "scope": {
+    "real_linux_forge": true,
+    "real_drasl": true,
+    "graphical_client": false,
+    "server_starts": 1,
+    "full_restart": false
+  },
+  "runtime": {
+    "java": "Linux\nopenjdk version \"1.8.0_504\"\nOpenJDK Runtime Environment (Temurin)(build 1.8.0_504-b01)\nOpenJDK 64-Bit Server VM (Temurin)(build 25.504-b01, mixed mode)\n",
+    "image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "cpus": 4,
+    "container_mib": 6144,
+    "heap_mib": 4096,
+    "auth": "Drasl 4.0.0-omk.1 + authlib-injector 1.2.8",
+    "drasl_source_commit": "0fe488c087bbe792485e9c5dae751c6e5fbdc380"
+  },
+  "artifact_sha256": {
+    "OmkalityCore-0.2.9.jar": "28f71b16f295c54f3749e6ddce23d0c016153a09418eb73c7f8712cd2e3cf2ff",
+    "authlib-injector-1.2.8.jar": "9c7f4343e6c82034958ffb48c14a2cb0c85928be7283103ce17da00c6d5a7b10",
+    "FTBUtilities-5.4.1.131.jar": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a",
+    "FTBLib-5.4.7.2.jar": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac",
+    "ironchest-1.12.2-7.0.72.847.jar": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f",
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64"
+  },
+  "native_conditions": [
+    "recovery_actor_is_not_operator",
+    "account_uuid_is_not_game_uuid",
+    "game_token_cannot_manage_account",
+    "player_management_token_cannot_reset_another_account",
+    "game_uuid_not_accepted_as_account_uuid",
+    "initial_session_0_valid_positive_control",
+    "initial_session_1_valid_positive_control",
+    "normal_non_op_actor_completes_forge_handshake",
+    "initial_native_claim_has_fixture_owner",
+    "reset_preserves_drasl_account_uuid",
+    "old_password_rejected_after_reset",
+    "old_player_management_token_revoked",
+    "reset_session_0_refresh_rejected",
+    "reset_session_0_validate_rejected",
+    "reset_session_0_join_rejected",
+    "reset_session_1_refresh_rejected",
+    "reset_session_1_validate_rejected",
+    "reset_session_1_join_rejected",
+    "launcher_0_forgets_revoked_portable_session",
+    "launcher_1_forgets_revoked_portable_session",
+    "password_reset_alone_does_not_kick_live_player",
+    "explicit_console_kick_disconnects_live_player",
+    "old_token_real_login_denied",
+    "new_password_keeps_game_uuid",
+    "recovered_actor_keeps_inventory_and_xp",
+    "recovered_actor_keeps_working_home",
+    "recovered_actor_keeps_native_claim",
+    "admin_lock_confirmed",
+    "locked_account_rejects_correct_password",
+    "lock_session_0_refresh_rejected",
+    "lock_session_0_validate_rejected",
+    "lock_session_0_join_rejected",
+    "auth_lock_alone_does_not_kick_live_player",
+    "locked_actor_explicitly_disconnected",
+    "unlock_does_not_revive_session_0_refresh_rejected",
+    "unlock_does_not_revive_session_0_validate_rejected",
+    "unlock_does_not_revive_session_0_join_rejected",
+    "unlock_keeps_profile_identity",
+    "second_reset_session_0_refresh_rejected",
+    "second_reset_session_0_validate_rejected",
+    "second_reset_session_0_join_rejected",
+    "previous_recovery_password_rejected_after_second_reset",
+    "second_recovery_real_forge_login_succeeds",
+    "second_recovery_keeps_inventory_and_xp"
+  ],
+  "private_report_sha256": "e2d9558d4b1ed5f222f79e9977c078d9a656df5873f315499020b6708b7603cb",
+  "independent": {
+    "checks": [
+      "stopped_archive_matches_recorded_digest",
+      "same_authenticated_uuid_keeps_exact_inventory",
+      "same_authenticated_uuid_keeps_twelve_levels",
+      "ftb_identity_matches_final_authenticated_session",
+      "same_player_remains_original_team_owner",
+      "original_personal_home_remains_saved",
+      "original_overworld_claim_remains_exact",
+      "core_matches_previous_native_acceptance"
+    ],
+    "game_data_modified_by_reader": false
+  },
+  "cleanup": {
+    "owned_game_clean_exit": true,
+    "game_crash_detected": false,
+    "owned_volume_removed_after_export": true,
+    "temporary_auth_removed": true,
+    "stopped_world_tar_sha256": "c154943240c84506dae168ff29629c68b0915c0e3add2ffa8d79a856cc38f416",
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    }
+  },
+  "auth_reset_automatically_kicks_live_connection": false,
+  "explicit_lab_console_kicks_verified": true,
+  "early_attempts_not_accepted": [
+    {
+      "conditions_before_failure": 6,
+      "error_type": "RuntimeError",
+      "cause": "incorrect expectation of FTB UI notification as chat",
+      "game_crash_detected": false,
+      "owned_game_clean_exit": true,
+      "private_report_sha256": "e24155b676f833fa742130440448f83fbf011a72b6f43f2a3c313386a3a60fe0"
+    },
+    {
+      "conditions_before_failure": 22,
+      "error_type": "AttributeError",
+      "cause": "incorrect native probe result field name",
+      "game_crash_detected": false,
+      "owned_game_clean_exit": true,
+      "private_report_sha256": "85159a44725db5b52cb25ef05a28b4aacd8a464bf60f0a5324fca5fef4a1f0d7"
+    },
+    {
+      "conditions_before_failure": 24,
+      "error_type": "RuntimeError",
+      "cause": "incorrect expected NBT stack count type; reader confirmed int",
+      "game_crash_detected": false,
+      "owned_game_clean_exit": true,
+      "private_report_sha256": "9afa98703e5ff57d1d5340dd72ce57fc7d7fe95f6883a8337492483446390adc"
+    }
+  ],
+  "unit_tests": {
+    "focused_windows_passed": 76,
+    "focused_linux_docker_passed": 76,
+    "focused_commit": "23c62ea270eb29c27aaad0ce0d4195fd15208758",
+    "windows_full_passed": 715,
+    "windows_full_skipped": 6,
+    "windows_full_commit": "1d23ec5",
+    "mock_lifecycle": true,
+    "game_tests": false
+  }
+}
