@@ -1,3 +1,5 @@
 *
 !Dockerfile
 !one-use-invites.patch
+!session-revocation.patch
+!revocation_test.go

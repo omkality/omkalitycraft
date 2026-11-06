@@ -1,7 +1,7 @@
 services:
   drasl:
     # Pinned upstream + the reviewed atomic single-use invitation fix.
-    image: omkalitycraft-drasl:4.0.0-omk.1
+    image: omkalitycraft-drasl:4.0.0-omk.2
     pull_policy: never
     build:
       context: ../drasl
