@@ -32,6 +32,12 @@ from omk.profiles import PROJECT_ROOT
 
 def add_account_recovery_lab(parser):
     add_linux_runtime_inputs(parser)
+    parser.add_argument(
+        "--operator-workflow",
+        action="store_true",
+        help="Also exercise the owner recovery engine with real RCON",
+    )
+    parser.add_argument("--recovery-console-port", type=int, default=25577)
 
 
 def _accounts(compose, lab):
@@ -318,6 +324,7 @@ def _repeat_reset(accounts, target, password, recovered, mods, console, expect):
             ),
             "second_recovery_keeps_inventory_and_xp",
         )
+    accounts.final_recovered_session = final
 
 
 def run_account_recovery_lab(args):
@@ -334,7 +341,14 @@ def run_account_recovery_lab(args):
         "-f",
         str(PROJECT_ROOT / "deploy/auth-lab/compose.yaml"),
     ]
-    server = LinuxServer(lab, run, project + "_default")
+    if getattr(args, "operator_workflow", False):
+        from omk.account_recovery_probe import RecoveryServer  # noqa: PLC0415
+
+        server = RecoveryServer(
+            lab, run, project + "_default", rcon_port=args.recovery_console_port
+        )
+    else:
+        server = LinuxServer(lab, run, project + "_default")
     report = {
         "ok": False,
         "checks": [],
@@ -376,6 +390,11 @@ def run_account_recovery_lab(args):
             "recovery_actor_is_not_operator",
         )
         _exercise(accounts, mods, console, expect, report)
+        if getattr(args, "operator_workflow", False):
+            from omk.account_recovery_probe import exercise_owner  # noqa: PLC0415
+
+            state("owner_recovery_engine_real_rcon")
+            exercise_owner(accounts, mods, console, expect, report, lab, server)
         report["ok"] = True
     except Exception as error:
         # Authentication and network exceptions may carry credentials in their

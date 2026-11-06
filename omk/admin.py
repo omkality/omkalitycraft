@@ -7,7 +7,7 @@ import os
 import re
 import tempfile
 import tomllib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import UUID, uuid4
@@ -16,6 +16,7 @@ from omk.diagnostic_export import export_bundle
 from omk.diagnostics import BoundedLog, regular
 from omk.drasl import DraslClient, DraslError
 from omk.fs import resolved
+from omk.recovery_console import ConsoleConfig
 from omk.report_store import ReportStore
 
 
@@ -30,6 +31,7 @@ class OperatorConfig:
     auth_origin: str | None
     auth_file: Path
     reports_root: Path
+    recovery_consoles: dict[str, ConsoleConfig] = field(default_factory=dict)
 
 
 def _private_path(root: Path, value: str) -> Path:
@@ -57,7 +59,7 @@ def load_operator_config(path: Path) -> OperatorConfig:
     data = tomllib.loads(raw.decode("utf-8"))
     if data.get("schema") != 1 or set(data) - {"schema", "auth", "servers", "reports"}:
         raise AdminError("Invalid operator configuration schema")
-    servers = {}
+    servers, consoles = {}, {}
     entries = data.get("servers", {})
     if not isinstance(entries, dict) or len(entries) > 100:
         raise AdminError("Invalid server allowlist")
@@ -65,13 +67,17 @@ def load_operator_config(path: Path) -> OperatorConfig:
         if (
             not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,47}", name)
             or not isinstance(entry, dict)
-            or set(entry) != {"root"}
+            or set(entry) - {"root", "recovery"}
+            or "root" not in entry
         ):
             raise AdminError("Invalid server allowlist entry")
         if not isinstance(entry["root"], str) or not entry["root"]:
             raise AdminError("Invalid server folder")
         folder = Path(entry["root"])
         servers[name] = resolved(folder if folder.is_absolute() else private / folder)
+        if "recovery" in entry:
+            consoles[name] = ConsoleConfig(**entry["recovery"])
+            _private_path(private, consoles[name].credential_file)
     auth = data.get("auth", {})
     if not isinstance(auth, dict) or set(auth) - {"origin", "session_file"}:
         raise AdminError("Invalid operator authentication settings")
@@ -85,6 +91,7 @@ def load_operator_config(path: Path) -> OperatorConfig:
         origin,
         _private_path(private, auth.get("session_file", "drasl-session.json")),
         _private_path(private, reports.get("root", "client-reports")),
+        consoles,
     )
 
 
@@ -267,11 +274,14 @@ def client_reports(config, args):
 
 
 def add_admin_commands(sub):
+    from omk.account_recovery import add_recovery_parser  # noqa: PLC0415
+
     admin = sub.add_parser(
         "admin", help="Local operator tools; not part of the player launcher"
     )
     admin.add_argument("--config", type=Path, required=True)
     actions = admin.add_subparsers(dest="admin_action", required=True)
+    add_recovery_parser(actions)
     login = actions.add_parser(
         "login", help="Save a separate Drasl operator API credential"
     )
@@ -306,6 +316,8 @@ def run_admin(args):
     )
     if args.admin_action == "reports":
         operation += ":" + args.reports_action
+    if args.admin_action == "recover-account":
+        operation += ":" + args.recovery_action
     try:
         config = load_operator_config(args.config)
         if args.admin_action == "login":
@@ -316,6 +328,10 @@ def run_admin(args):
             result = server_diagnostics(config, args.server)
         elif args.admin_action == "reports":
             result = client_reports(config, args)
+        elif args.admin_action == "recover-account":
+            from omk.account_recovery import run_recovery  # noqa: PLC0415
+
+            result = run_recovery(config, args)
         else:
             result = {
                 "invite": lambda: create_invite(config),
