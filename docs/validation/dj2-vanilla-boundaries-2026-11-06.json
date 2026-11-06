@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "issue": 99,
+  "parent_issue": 29,
+  "pack": "Divine Journey 2 2.23.4 candidate",
+  "core": "0.2.11",
+  "private_core_sha256": "a1a4500ec62d4a87ade62af152274cd79a609e6fa55f26016b06621dca851f46",
+  "graphical_client": false,
+  "environment": {
+    "server_os": "Linux Docker",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "cpus": 4,
+    "memory_limit_bytes": 6442450944,
+    "heap_gib": 4
+  },
+  "runtime_pins": {
+    "minecraft_server.1.12.2.jar": "fe1f9274e6dad9191bf6e6e8e36ee6ebc737f373603df0946aafcded0d53167e",
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "FTBLib-5.4.7.2.jar": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac",
+    "FTBUtilities-5.4.1.131.jar": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a",
+    "!mixinbooter-10.7.jar": "8bb53080aede2d2b1e1c5f713bbf49a38f20add8caa3d52fabcdf8a536b55a18"
+  },
+  "runtime_origin": {
+    "source": "https://github.com/Divine-Journey-2/Divine-Journey-2/releases/download/2.23.4/Divine_Journey_2.23.4_Server_Pack.zip",
+    "archive_sha256": "692c820a636ab59a050ba560235e3af9852f598d18f5dad931271e4cbd729831",
+    "minecraft_jar": "Existing isolated Minecraft 1.12.2 server artifact; no runtime replacement",
+    "new_runtime_downloaded_for_this_change": false
+  },
+  "baseline": {
+    "core": "0.2.10",
+    "core_sha256": "438992170b8e56b4647bf0517e432c873146acd711d152ca5522eae57dbd17e3",
+    "conditions": 53,
+    "cases": 32,
+    "protected_destination_violations": 16,
+    "outgoing_to_wilderness_not_counted_as_violation": true,
+    "outcome": {
+      "clean_exit": true,
+      "exit_code": 0,
+      "fatal": false,
+      "oom_killed": false,
+      "own_game_and_auth_removed": true,
+      "stopped_world_tar_sha256": "d34e621c2e505c9de3d973e0d60fd31803c5f5a1064ab4b627f4a273b5710bd6"
+    }
+  },
+  "native": {
+    "accepted": true,
+    "conditions": 229,
+    "cases": 111,
+    "boots": 2,
+    "mechanisms": {
+      "piston_push": 12,
+      "sticky_pull": 12,
+      "water": 12,
+      "lava": 12,
+      "mixing_0": 12,
+      "mixing_1": 12,
+      "empty_head": 12,
+      "slime_side": 12,
+      "destroy_target": 12,
+      "survival_lever_push": 3
+    },
+    "survival_non_op_interactions": 3,
+    "live_reassignment_cases": 9,
+    "restart_cases": 27,
+    "negative_coordinates": true,
+    "native_12_13_piston_rules_preserved": true,
+    "all_owned_scopes_removed": true,
+    "outcome": {
+      "clean_exit": true,
+      "exit_code": 0,
+      "fatal": false,
+      "oom_killed": false,
+      "own_game_and_auth_removed": true,
+      "stopped_world_tar_sha256": "000acbb21a21fd6cadf101bfb1ba204e381719084d5f505355550d4b10e7cf75"
+    }
+  },
+  "independent": {
+    "checks": 161,
+    "saved_block_checks": 150,
+    "snapshots": 2,
+    "saved_mechanisms": {
+      "piston_push": 16,
+      "sticky_pull": 16,
+      "water": 16,
+      "lava": 16,
+      "mixing_0": 16,
+      "mixing_1": 16,
+      "empty_head": 16,
+      "slime_side": 16,
+      "destroy_target": 16,
+      "survival_lever_push": 6
+    },
+    "authenticated_uuids_and_claim_reassignment_verified": true,
+    "pre_restart_world_tar_sha256": "315b7f6d49973def8b28a991fa09d823632d274169acaba1562b388b689457d1",
+    "game_data_modified_by_reader": false
+  },
+  "existing_security_regressions": {
+    "accepted": true,
+    "conditions": 54,
+    "independent_checks": 8,
+    "boots": 1,
+    "scope": [
+      "declared_mod_list",
+      "Drasl_Forge_login",
+      "home_quota",
+      "permissions",
+      "containers_and_revocation",
+      "mute",
+      "vanilla_TNT"
+    ],
+    "outcome": {
+      "clean_exit": true,
+      "exit_code": 0,
+      "fatal": false,
+      "oom_killed": false,
+      "own_game_and_auth_removed": true,
+      "stopped_world_tar_sha256": "d16aa741d8d5a625fd04666aa514ae56bc93e1b0515847125160e3d32a01f644"
+    }
+  },
+  "controlled_pin_negative": {
+    "accepted": true,
+    "expected_startup_refusal": true,
+    "core_sha256": "a1a4500ec62d4a87ade62af152274cd79a609e6fa55f26016b06621dca851f46",
+    "fatal_detected": true,
+    "oom_killed": false,
+    "original_source_unchanged": true,
+    "changed_copy_sha256": "60bbe332cc2494cdc2c3d422eab2503d323bd11dd62fcd9dc03c53f28839635a",
+    "unchanged_jar_entry_payloads": 20554,
+    "failed_volume_removed_after_verified_export": true,
+    "own_auth_removed": true
+  },
+  "startup_catalog": {
+    "version_from_actual_Forge_mod_container": true,
+    "vanilla_guard_enabled": true,
+    "historical_static_version_mismatch_fixed": true
+  },
+  "repeated_build_digest_identical": true,
+  "cleanup_readback": {
+    "ok": true,
+    "completed_owned_scopes": 10,
+    "read_only": true,
+    "unrelated_resources_not_modified": true
+  },
+  "inconclusive_attempts": {
+    "fluid_reader_ambiguity": 2,
+    "pending_teleport_ack_interaction": 1,
+    "accepted_as_pass": false,
+    "game_crash": false,
+    "own_scopes_removed": true
+  },
+  "not_proven": [
+    "all_fire_sources",
+    "mod_fluids",
+    "trees",
+    "machines_and_pipes",
+    "AE2_PlaneFix",
+    "quest_acquisition",
+    "graphical_client",
+    "all_duplications",
+    "long_survival"
+  ],
+  "public_runtime_or_live_data_changed": false,
+  "new_backup_scheduler": false,
+  "private_fixture_and_core_sources_published": false
+}
