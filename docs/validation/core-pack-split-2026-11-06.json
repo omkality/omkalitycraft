@@ -1,0 +1,309 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "issue": 101,
+  "related_issues": [
+    29,
+    41,
+    49,
+    102
+  ],
+  "pack": "Divine Journey 2 2.23.4 candidate",
+  "components": {
+    "OmkalityCore": {
+      "version": "0.3.0",
+      "sha256": "c1daa224bcb3dd63985b15cf3a565817ecc13ada2846ef41448b758f93d31bcd",
+      "extension_api": 1
+    },
+    "OmkalityDJ2Fix": {
+      "version": "0.1.0",
+      "sha256": "8c9233500b1c8810e027a66cfc37209a621e8937350adf9bf8df1ed975eba462",
+      "required_core": "[0.3.0,0.4.0)",
+      "required_api": 1
+    },
+    "preserved_control": {
+      "version": "0.2.11",
+      "sha256": "a1a4500ec62d4a87ade62af152274cd79a609e6fa55f26016b06621dca851f46"
+    }
+  },
+  "private_implementation_commit": "e37f351ce52da5dfd60a493cc09dd0b525596815",
+  "environment": {
+    "server_os": "Linux Docker",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "cpus": 4,
+    "memory_limit_bytes": 6442450944,
+    "heap_gib": 4
+  },
+  "runtime_origin": {
+    "source": "https://github.com/Divine-Journey-2/Divine-Journey-2/releases/download/2.23.4/Divine_Journey_2.23.4_Server_Pack.zip",
+    "archive_sha256": "692c820a636ab59a050ba560235e3af9852f598d18f5dad931271e4cbd729831",
+    "minecraft_jar": "Existing isolated Minecraft 1.12.2 server artifact; no runtime replacement",
+    "new_runtime_downloaded_for_this_change": false
+  },
+  "runtime_pins": {
+    "minecraft_server.1.12.2.jar": "fe1f9274e6dad9191bf6e6e8e36ee6ebc737f373603df0946aafcded0d53167e",
+    "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "FTBLib-5.4.7.2.jar": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac",
+    "FTBUtilities-5.4.1.131.jar": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a",
+    "!mixinbooter-10.7.jar": "8bb53080aede2d2b1e1c5f713bbf49a38f20add8caa3d52fabcdf8a536b55a18",
+    "twilightforest-1.12.2-3.15.1.jar": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2",
+    "WR-CBE-1.12.2-2.3.2.33-universal.jar": "a8305c42e29f43abbad906c3c91c36ed0a1a6f949ff2bff9eec66499fb57f36e"
+  },
+  "minimal_forge": {
+    "accepted": true,
+    "conditions": 44,
+    "runs": {
+      "bare": {
+        "accepted": true,
+        "conditions": 7,
+        "private_report_sha256": "7ab9a8d1675b744c4d7d029eaccf5b67e3425477545b2b58e082a6948d5ebb2a",
+        "expected_startup_refusal": false,
+        "clean_game_exit": true,
+        "fatal_detected": false,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true
+      },
+      "ftb": {
+        "accepted": true,
+        "conditions": 15,
+        "private_report_sha256": "2b1de394ca65bf5250dc7dc250aeea03505b6e270dc8d072755094cacf5262b5",
+        "expected_startup_refusal": false,
+        "clean_game_exit": true,
+        "fatal_detected": false,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true
+      },
+      "ftb-disabled": {
+        "accepted": true,
+        "conditions": 7,
+        "private_report_sha256": "8c090a02ff1c5ad7479cdc21e41d60d01a6c85ca39dd74ddadd7941e01de78bd",
+        "expected_startup_refusal": false,
+        "clean_game_exit": true,
+        "fatal_detected": false,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true
+      },
+      "extension": {
+        "accepted": true,
+        "conditions": 7,
+        "private_report_sha256": "5e67d3ae746cfbedaa91b0dbaa85412367e5e52aa8bdfa6982109f459a775ee7",
+        "expected_startup_refusal": false,
+        "clean_game_exit": true,
+        "fatal_detected": false,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true
+      },
+      "missing-fix": {
+        "accepted": true,
+        "conditions": 2,
+        "private_report_sha256": "11c901f5cd4e382d6b80ac10250ae71a91e83fc074b8ef24f28678945a8db8f0",
+        "expected_startup_refusal": true,
+        "clean_game_exit": false,
+        "fatal_detected": true,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true
+      },
+      "wrong-extension": {
+        "accepted": true,
+        "conditions": 2,
+        "private_report_sha256": "926af1206351dc12756d381a637ac937dcf26337394c77abdb97ad0ff4c324a5",
+        "expected_startup_refusal": true,
+        "clean_game_exit": false,
+        "fatal_detected": true,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true
+      },
+      "wrong-api": {
+        "accepted": true,
+        "conditions": 2,
+        "private_report_sha256": "9136a911df57d0c2b4fd966ecdb69a18c30d725a0fd8cc4aa0c0c8d22dd8ddb6",
+        "expected_startup_refusal": true,
+        "clean_game_exit": false,
+        "fatal_detected": true,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true
+      },
+      "missing-capability": {
+        "accepted": true,
+        "conditions": 2,
+        "private_report_sha256": "1e94bcb33c29624a10025245f3ab1beae486234c36ae956e97dd236695cf8593",
+        "expected_startup_refusal": true,
+        "clean_game_exit": false,
+        "fatal_detected": true,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true
+      }
+    },
+    "wrong_version_and_api_use_private_test_extension": true,
+    "healthy_modes_have_two_real_Drasl_Forge_protocol_players": true,
+    "expected_refusals_are_not_healthy_gameplay": true
+  },
+  "full_dj2_regressions": {
+    "accepted": true,
+    "conditions": 881,
+    "runs": {
+      "claims": {
+        "accepted": true,
+        "conditions": 54,
+        "private_report_sha256": "e61cc89050eb11235a761fbb9debddb4a92167ba87c129fc4b5f88dded5231eb",
+        "expected_startup_refusal": false,
+        "clean_game_exit": true,
+        "fatal_detected": false,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true,
+        "boots": 1,
+        "independent_checks": 8,
+        "stopped_world_tar_sha256": "52c836973c3e5ffc5cc99f74510aab7b5553667b7a206ab4af894c1a946b5eff",
+        "private_independent_report_sha256": "32d6bb403917aba8181f69f21f1110622c43a55c4f5f9f680d0cdd0aa0166a24"
+      },
+      "vanilla": {
+        "accepted": true,
+        "conditions": 229,
+        "private_report_sha256": "74e66a21d83b3423eeade76008d5c28857cbe9d557a40f5ff6cc9c5ba2661e6e",
+        "expected_startup_refusal": false,
+        "clean_game_exit": true,
+        "fatal_detected": false,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true,
+        "boots": 2,
+        "cases": 111,
+        "independent_checks": 162,
+        "stopped_world_tar_sha256": "c5ce3a63363697fa7cb1285acd37a6fcd26095fa84152f1b56c29f73923766d1",
+        "private_independent_report_sha256": "74ceb8f670e8ec19aa54bdbe10a46d12467dbfd88238968db3da8988432fd48f"
+      },
+      "world-effects": {
+        "accepted": true,
+        "conditions": 300,
+        "private_report_sha256": "859723fe1db17a77f9641361c1d3a007428e9820cd962313611241b065279a4e",
+        "expected_startup_refusal": false,
+        "clean_game_exit": true,
+        "fatal_detected": false,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true,
+        "boots": 2,
+        "cases": 73,
+        "independent_checks": 8,
+        "stopped_world_tar_sha256": "a55da6af336aa06633899f7401985c86017f419515ebe23ec9614eca737bfcbb",
+        "private_independent_report_sha256": "84fe76ebdbef8f9d3474356bc18a34caa85f02bc22216ee2c0e6b5d7ac7753c0"
+      },
+      "sorting": {
+        "accepted": true,
+        "conditions": 220,
+        "private_report_sha256": "ca771f9967959db8392754c96bbbf74e48e3a354f05cfa7304081ac8e76828df",
+        "expected_startup_refusal": false,
+        "clean_game_exit": true,
+        "fatal_detected": false,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true,
+        "boots": 2,
+        "cases": 28,
+        "independent_checks": 9,
+        "stopped_world_tar_sha256": "3ea15f4343373ce0ee78c477e0fc87718aa27159a21c2370b7a0a4bd7b498d80",
+        "private_independent_report_sha256": "05f4c420760a539e0d51c37bafa10ae32e17b5830808aebcd888e552b6d62294"
+      },
+      "recovery": {
+        "accepted": true,
+        "conditions": 78,
+        "private_report_sha256": "cb203ca9bebd6d35dc71ec5d949ae20db61fdc86eedd1efb17f6c4c679a28355",
+        "expected_startup_refusal": false,
+        "clean_game_exit": true,
+        "fatal_detected": false,
+        "oom_killed": false,
+        "own_game_and_auth_removed": true,
+        "boots": 1,
+        "independent_checks": 8,
+        "stopped_world_tar_sha256": "0162a3843c487544cfcd6651450dd737c13869af1ce36f4a868e626eb4aa06d8",
+        "private_independent_report_sha256": "0648a12c0284c679697d288bdf1c6fc7132ad9efc541288ae5fe74f21766c4a5"
+      }
+    },
+    "independent_saved_data_checks": 195,
+    "saved_vanilla_block_checks": 150,
+    "all_healthy_starts_clean_without_fatal_or_oom": true
+  },
+  "old_core_to_split_world_upgrade": {
+    "accepted": true,
+    "conditions": 13,
+    "boots": 2,
+    "independent_checks": 10,
+    "same_Drasl_accounts_and_authenticated_uuids": true,
+    "inventory_xp_personal_home_claim_team_preserved": true,
+    "owner_and_non_owner_live_block_access_verified": true,
+    "old_world_snapshot_byte_identical": true,
+    "old_snapshot_sha256": "0a766a9bdaada44259da4d58963b1e6fe2ee6f4775be7cae7d52d46eac873709",
+    "final_snapshot_sha256": "d8424d4761d04b149b75a05c2719bd0ece006e6749a8235f1014008484d2b98a",
+    "private_report_sha256": "0acbcf024cc915631aa19727cc02f4689880ef5e4c5ccce4d177d62320c3318f",
+    "private_independent_report_sha256": "9865baf2fc600ecf1b73ed4001a4ee788f316d4d120ecce12178b36e369bc03a",
+    "clean_exit_no_fatal_or_oom": true,
+    "own_game_and_auth_removed": true,
+    "modpack_version_changed": false
+  },
+  "binary_and_build": {
+    "accepted": true,
+    "checks": 14,
+    "conditions": [
+      "core_has_no_mixin_bootstrap",
+      "core_has_no_pack_patches_or_mixin_configs",
+      "core_binary_has_no_fix_or_mixin_linkage",
+      "no_duplicate_core_fix_payloads",
+      "fix_owns_early_bootstrap",
+      "no_bundled_minecraft_or_ftb_classes",
+      "independent_core_build_without_mixinbooter_identical",
+      "independent_fix_build_without_ftblib_identical",
+      "accepted_monolithic_control_preserved",
+      "unchanged_implementation_FtbMuteGuard",
+      "unchanged_implementation_FtbRtpGuard",
+      "unchanged_implementation_FtbSpawnClaims",
+      "unchanged_implementation_FtbClaimDomains",
+      "unchanged_implementation_RecoveryConnections"
+    ],
+    "build_dependencies_resolved_from_existing_pinned_artifacts": true,
+    "core_without_mixinbooter_reproducible": true,
+    "fix_without_ftblib_reproducible": true,
+    "old_control_preserved": true,
+    "core_fix_duplicate_classes": false
+  },
+  "controlled_pin_negative": {
+    "accepted": true,
+    "expected_startup_refusal": true,
+    "fatal_detected": true,
+    "oom_killed": false,
+    "original_source_unchanged": true,
+    "changed_copy_sha256": "60bbe332cc2494cdc2c3d422eab2503d323bd11dd62fcd9dc03c53f28839635a",
+    "unchanged_jar_entry_payloads": 20554,
+    "only_zip_comment_changed": true,
+    "failed_volume_removed_after_verified_export": true,
+    "own_auth_removed": true
+  },
+  "local_checks": {
+    "windows_unit_passed": 1015,
+    "windows_unit_skipped": 11,
+    "ruff_passed": true,
+    "black_passed": true,
+    "black_files_checked": 239
+  },
+  "cleanup_readback": {
+    "ok": true,
+    "completed_owned_scopes": 29,
+    "read_only": true,
+    "unrelated_resources_modified": false
+  },
+  "inconclusive_attempts": {
+    "accepted_as_pass": false,
+    "fixture_setup_and_early_cleanup_recovery": true,
+    "all_owned_scopes_removed_after_verified_exports": true,
+    "minimal_same_uuid_reconnect_after_FML_refusal": "Open issue #102; connection refusal, not an authentication bypass or server crash; origin not established"
+  },
+  "limitations": [
+    "Protocol players are not rendered Minecraft clients.",
+    "RTP and spawn implementations are byte-identical to the old control, but dedicated full policy suites were not repeated on this pair.",
+    "The boundary lab profile deliberately does not enable community spawn/RTP policy.",
+    "Other Forge packs need their own profile and acceptance; other Minecraft versions need separate adapters.",
+    "This tests a Core artifact upgrade, not a full modpack version migration or quest progression.",
+    "Client adapter, signed player releases and live data were not changed.",
+    "Remaining trees, machines, AE2/PlaneFix and all-duplication coverage are not claimed."
+  ],
+  "graphical_client": false,
+  "public_runtime_or_live_data_changed": false,
+  "new_backup_scheduler": false,
+  "private_sources_binaries_fixtures_published": false
+}
