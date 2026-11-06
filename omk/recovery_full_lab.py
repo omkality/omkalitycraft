@@ -7,6 +7,8 @@ import stat
 import zipfile
 from pathlib import PurePosixPath
 
+from omk.backup_archive import validate_path_policy
+
 MAX_FILES = 20000
 MAX_TOTAL = 512 * 1024**2
 MAX_FILE = 128 * 1024**2
@@ -30,7 +32,10 @@ def _destination(server, backup, destination, lab):
             raise ValueError("Linked replacement runtime is forbidden")
 
 
-def _entries(archive):
+def _entries(archive, *, world_name="lab-world", path_policy="portable"):
+    validate_path_policy(path_policy)
+    if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", world_name):
+        raise ValueError("Invalid archive world root")
     entries = archive.infolist()
     if not 1 <= len(entries) <= MAX_FILES:
         raise ValueError("Invalid lab backup file count")
@@ -39,7 +44,7 @@ def _entries(archive):
         parts = info.filename.split("/")
         if (
             len(parts) < 2
-            or parts[0] != "lab-world"
+            or parts[0] != world_name
             or info.orig_filename != info.filename
             or info.is_dir()
             or "\\" in info.filename
@@ -47,7 +52,7 @@ def _entries(archive):
                 part in ("", ".", "..")
                 or any(ord(c) < 32 or c in ':*?"<>|' for c in part)
                 or part.endswith((".", " "))
-                or RESERVED.match(part)
+                or (path_policy == "portable" and RESERVED.match(part))
                 for part in parts
             )
             or stat.S_IFMT(info.external_attr >> 16) not in (0, stat.S_IFREG)
@@ -63,7 +68,7 @@ def _entries(archive):
             if prefixes.setdefault(prefix.casefold(), prefix) != prefix:
                 raise ValueError("Ambiguous path casing in lab backup")
         size += info.file_size
-    if "lab-world/level.dat" not in archive.namelist() or size > MAX_TOTAL:
+    if world_name + "/level.dat" not in archive.namelist() or size > MAX_TOTAL:
         raise ValueError("Missing level or oversized lab backup")
     # Reject file/directory collisions before creating anything.
     for name in names:

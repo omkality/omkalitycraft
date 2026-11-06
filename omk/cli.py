@@ -140,6 +140,12 @@ def main(argv: list[str] | None = None) -> int:
             help="Reserved-name Forge account and Linux-only backup restore",
         )
     )
+    add_linux_paths_lab(
+        lab_areas.add_parser(
+            "dj2-linux-policy",
+            help="Historical Linux world with current DJ2 access/ranks/FTB policy",
+        )
+    )
     lab_admin = lab_areas.add_parser(
         "admin", help="Disposable operator CLI and client crash inbox"
     )
@@ -256,12 +262,14 @@ def _lab_report(args):
         from omk.pack_install_lab import run_pack_install_args  # noqa: PLC0415
 
         return run_pack_install_args(args)
-    if args.area in {"dj2-linux-paths", "dj2-recovery"}:
+    if args.area in {"dj2-linux-paths", "dj2-linux-policy", "dj2-recovery"}:
         from omk.linux_paths_lab import run_linux_paths_lab  # noqa: PLC0415
+        from omk.linux_policy_lab import run_linux_policy_lab  # noqa: PLC0415
         from omk.recovery_lab import run_recovery_lab  # noqa: PLC0415
 
         report = {
             "dj2-linux-paths": run_linux_paths_lab,
+            "dj2-linux-policy": run_linux_policy_lab,
             "dj2-recovery": run_recovery_lab,
         }[args.area](args)
     elif args.area == "backup-safety":

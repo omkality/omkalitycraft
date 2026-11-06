@@ -14,7 +14,7 @@ from pathlib import Path
 from uuid import UUID
 
 from launcher.nbt import MAX_BYTES, Tag, read_nbt
-from omk.diagnostics import regular
+from omk.fs import regular
 from omk.recovery_full_lab import _entries
 
 PREFIX = "lab-world/data/ftb_lib/"
@@ -51,14 +51,15 @@ def authority_file(name):
     raise ValueError("Unreviewed FTB storage entry")
 
 
-def read_zip(path):
+def read_zip(path, *, world_name="lab-world", path_policy="portable"):
     result, total = {}, 0
     with zipfile.ZipFile(path) as archive:
-        entries, _ = _entries(archive)
+        entries, _ = _entries(archive, world_name=world_name, path_policy=path_policy)
+        prefix = world_name + "/data/ftb_lib/"
         for info in entries:
-            if not info.filename.startswith(PREFIX):
+            if not info.filename.startswith(prefix):
                 continue
-            name = info.filename.removeprefix(PREFIX)
+            name = info.filename.removeprefix(prefix)
             if not authority_file(name):
                 continue
             if info.file_size > MAX_BYTES or len(result) >= MAX_RECORDS:
@@ -71,8 +72,10 @@ def read_zip(path):
     return result
 
 
-def read_staged(server):
-    base = server / PREFIX
+def read_staged(server, *, world_name="lab-world"):
+    if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", world_name):
+        raise ValueError("Invalid FTB world root")
+    base = server / world_name / "data/ftb_lib"
     result, total = {}, 0
     if base.resolve() != base.absolute() or not base.is_dir():
         raise ValueError("Missing or linked staged FTB directory")

@@ -25,9 +25,12 @@ def add_linux_paths_lab(parser):
 
 
 class Lab:
+    PREFIX = "linux-paths-lab-"
+    STATUS = "linux-paths-status.json"
+
     def __init__(self, args):
         self.args = args
-        self.root = PROJECT_ROOT / ".local" / ("linux-paths-lab-" + uuid4().hex[:10])
+        self.root = PROJECT_ROOT / ".local" / (self.PREFIX + uuid4().hex[:10])
         self.root.mkdir()
         self.report = {
             "ok": False,
@@ -46,7 +49,7 @@ class Lab:
         self.source = self.target = self.backups = None
 
     def state(self, label):
-        (PROJECT_ROOT / ".local/linux-paths-status.json").write_text(
+        (PROJECT_ROOT / ".local" / self.STATUS).write_text(
             json.dumps({"phase": label, "report": self.report}), encoding="utf-8"
         )
 
@@ -61,7 +64,7 @@ class Lab:
         _wait_server(process, server.log, self.state)
         return _console_sender(process, server.log)
 
-    def checkpoint(self):
+    def checkpoint(self, *, name="source-checkpoint"):
         self.source.process.stdin.write(b"stop\n")
         self.source.process.stdin.flush()
         self.source.process.wait(timeout=60)
@@ -71,7 +74,7 @@ class Lab:
             data["State"]["ExitCode"] == 0 and not data["State"]["OOMKilled"],
             "source_clean_exit_without_oom",
         )
-        export = self.root / "source-checkpoint"
+        export = self.root / name
         export.mkdir()
         self.source.helper(
             "tar -C /srv -cf /export/world.tar lab-world",
@@ -91,7 +94,7 @@ class Lab:
             ),
         )
 
-    def restore_helper(self, action):
+    def restore_helper(self, action, *, current_policy=False):
         for name, owner in (
             (self.target.volume, self.target.run_id),
             (self.backups.volume, self.backups.run),
@@ -114,6 +117,25 @@ class Lab:
             "world_max_bytes": 512 * 1024**2,
             "policy": vars(LAB_POLICY),
         }
+        mounts = []
+        if current_policy:
+            from omk import admin_backups as owner  # noqa: PLC0415
+
+            if (
+                self.source.process.poll() != 0
+                or owner.checkpoint(owner.target_for(self.backups.operator, "dj2"))
+                != self.source_checkpoint
+            ):
+                raise ValueError("Current source lifecycle changed before policy stage")
+            mounts = [
+                "--mount",
+                f"type=volume,source={self.source.volume},target=/current,readonly",
+            ]
+            for filename in ("__init__.py", "nbt.py"):
+                mounts += [
+                    "--mount",
+                    f"type=bind,source={PROJECT_ROOT/'launcher'/filename},target=/src/launcher/{filename},readonly",
+                ]
         command = [
             "docker",
             "run",
@@ -144,6 +166,7 @@ class Lab:
             f"type=volume,source={self.target.volume},target=/restore",
             "--mount",
             f"type=bind,source={PROJECT_ROOT/'omk'},target=/src/omk,readonly",
+            *mounts,
             "--workdir",
             "/src",
             "--env",
@@ -151,7 +174,7 @@ class Lab:
             IMAGE,
             "python",
             "-m",
-            "omk.linux_world_restore",
+            "omk.linux_restore_policy" if current_policy else "omk.linux_world_restore",
         ]
         result = subprocess.run(
             command,
@@ -167,6 +190,12 @@ class Lab:
                 "Linux restore helper refused: "
                 + str(value.get("error_type", "InvalidResponse"))
             )
+        if (
+            current_policy
+            and owner.checkpoint(owner.target_for(self.backups.operator, "dj2"))
+            != self.source_checkpoint
+        ):
+            raise ValueError("Current source lifecycle changed during policy stage")
         return value
 
     def exercise(self):
@@ -256,11 +285,11 @@ class Lab:
         _cleanup(None, None, self.compose, self.report)
 
 
-def run_linux_paths_lab(args):
+def run_linux_paths_lab(args, *, lab_class=Lab):
     for path in (args.core, args.agent, args.mods_json):
         if not path.is_file():
             raise ValueError("Required Linux paths lab artifact missing")
-    lab = Lab(args)
+    lab = lab_class(args)
     try:
         lab.exercise()
         lab.report["ok"] = True
