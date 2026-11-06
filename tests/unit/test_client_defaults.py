@@ -1,3 +1,4 @@
+import copy
 import json
 from dataclasses import replace
 from pathlib import Path
@@ -7,7 +8,7 @@ import pytest
 from launcher.client_defaults import prepare_client_defaults
 from launcher.client_policy import ClientDefaults
 from launcher.nbt import Tag, read_nbt, write_nbt
-from launcher.releases import ReleaseError
+from launcher.releases import Release, ReleaseError
 from tests.unit.test_game_runner import fixture
 
 
@@ -78,6 +79,39 @@ def test_game_discarded_language_alias_is_not_reseeded_until_options_reset(tmp_p
     path.unlink()
     prepare_client_defaults(release, folder)
     assert "key_EN alias:88\n" in path.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize("minimum", [None, "0.3.0.dev11", "0.3.0.dev12"])
+def test_signed_key_defaults_require_a_capable_minimum_launcher(tmp_path, minimum):
+    _, release = setup(tmp_path)
+    payload = {
+        "pack_id": release.pack_id,
+        "version": release.version,
+        "minecraft": release.minecraft,
+        "platform": release.platform,
+        "loader": "forge",
+        "launch": copy.deepcopy(release.launch),
+        "files": [
+            {"path": name, "sha256": "a" * 64, "size": 1}
+            for name in [
+                release.launch["java"],
+                release.launch["agent"],
+                *release.launch["classpath"],
+            ]
+        ],
+    }
+    payload["launch"]["client_defaults"] = {"initial_keybindings": {"key.test": 37}}
+    payload["schema"] = 1 if minimum is None else 2
+    if minimum is not None:
+        payload["minimum_launcher_version"] = minimum
+    if minimum != "0.3.0.dev12":
+        with pytest.raises(ReleaseError):
+            Release.parse(payload, {})
+    else:
+        parsed = Release.parse(payload, {})
+        parsed.require_launcher("0.3.0.dev12")
+        with pytest.raises(ReleaseError, match="обновление"):
+            parsed.require_launcher("0.3.0.dev11")
 
 
 @pytest.mark.parametrize(

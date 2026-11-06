@@ -185,6 +185,12 @@ class Release:
             launch = payload["launch"]
             _validate_jvm_args(launch.get("jvm_args", []))
             defaults = ClientDefaults.parse(launch.get("client_defaults", {}))
+            if "initial_keybindings" in launch.get("client_defaults", {}) and (
+                minimum is None or Version(minimum) < Version("0.3.0.dev12")
+            ):
+                raise ValueError(
+                    "Initial keybindings require minimum launcher 0.3.0.dev12"
+                )
             for name in defaults.resourcepacks:
                 path = (
                     "resourcepacks/"
