@@ -121,7 +121,7 @@ def target_for(config, server):
     return dict(item)
 
 
-def docker(*args, stdin=None, timeout=30):
+def docker(*args, stdin=None, timeout=30, allowed_codes=(0,)):
     try:
         value = subprocess.run(
             ["docker", *args],
@@ -137,7 +137,7 @@ def docker(*args, stdin=None, timeout=30):
         raise AdminError(
             "Docker operation unavailable or timed out; inspect backup journal"
         ) from None
-    if value.returncode:
+    if value.returncode not in allowed_codes:
         raise AdminError("Docker operation failed; inspect backup journal")
     return value.stdout + value.stderr if args[0] == "logs" else value.stdout
 
@@ -297,13 +297,19 @@ def worker(target, request):
         "omk.cold_backup_worker",
         stdin=json.dumps(request),
         timeout=request["settings"]["timeout_seconds"],
+        allowed_codes=(0, 1),
     )
     if len(raw) > 65536:
         raise AdminError("Backup worker response exceeded limit")
     result = json.loads(raw)
     if result.get("ok") is not True:
+        kind = result.get("error_type", "InvalidResponse")
+        if not isinstance(kind, str) or not re.fullmatch(r"[A-Za-z]{1,64}", kind):
+            kind = "InvalidResponse"
         raise AdminError(
-            "Backup worker refused the operation; previous verified copies remain available"
+            "Backup worker refused the operation ("
+            + kind
+            + "); inspect stage, budgets and retained files"
         )
     return {key: value for key, value in result.items() if key != "ok"}
 
@@ -362,6 +368,7 @@ def read_record(config, operation):
         "prepared",
         "result",
         "failure_type",
+        "failure_reason",
     }
     if (
         value.get("schema") != 1
@@ -481,6 +488,8 @@ def run(config, operation, *, finish=False, environment=None):
                 record["result"] = worker(target, request_for(record, "publish"))
             except Exception as error:
                 record["failure_type"] = type(error).__name__
+                if isinstance(error, AdminError):
+                    record["failure_reason"] = str(error)
                 save(config, record, "incomplete")
                 raise AdminError(
                     "Backup incomplete; inspect journal and retained staging; never repeat run blindly"
