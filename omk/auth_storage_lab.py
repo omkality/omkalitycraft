@@ -6,6 +6,7 @@ import os
 import re
 import secrets
 import socket
+import stat
 import subprocess
 import time
 from urllib.error import URLError
@@ -196,7 +197,7 @@ class StorageLab:
             "--mount",
             f"type=volume,source={volume},target=/state",
             "--mount",
-            f"type=bind,source={self.root / 'backup'},target=/backup",
+            f"type=volume,source={self.backup_volume},target=/backup",
             "--mount",
             f"type=bind,source={PROJECT_ROOT / 'omk'},target=/src/omk,readonly",
             "--workdir",
@@ -210,6 +211,53 @@ class StorageLab:
             action,
         )
         return json.loads(result.stdout)
+
+    def export_backup(self):
+        self.owned_volume(self.backup_volume)
+        name = self.project + "-export"
+        self.docker(
+            "create",
+            "--name",
+            name,
+            "--network",
+            "none",
+            "--label",
+            LABEL + "=" + self.run,
+            "--mount",
+            f"type=volume,source={self.backup_volume},target=/backup,readonly",
+            HELPER,
+        )
+        try:
+            data = json.loads(self.docker("inspect", name).stdout)[0]
+            if (
+                data["Config"]["Labels"].get(LABEL) != self.run
+                or data["State"]["Running"]
+            ):
+                raise RuntimeError("Refusing an unowned or running export container")
+            # Docker client writes as the invoking host user. No privileged helper
+            # needs access to the host's mode-0700, non-root-owned private folder.
+            for file in ("state.tar", "state.json"):
+                self.docker(
+                    "cp", name + ":/backup/" + file, str(self.root / "backup" / file)
+                )
+                if os.name == "posix":
+                    exported = (self.root / "backup" / file).stat()
+                    if (
+                        exported.st_uid != os.getuid()
+                        or stat.S_IMODE(exported.st_mode) != 0o600
+                    ):
+                        raise RuntimeError(
+                            "Exported backup ownership or permissions are unsafe"
+                        )
+            from omk.auth_state_archive import digest  # noqa: PLC0415
+
+            self.check(
+                digest(self.root / "backup/state.tar")
+                == self.report["snapshot"]["sha256"],
+                "exported_backup_matches_snapshot",
+            )
+        finally:
+            self.docker("rm", name)
 
     def cleanup(self):
         clean = True
@@ -325,6 +373,7 @@ def _quarantine(lab, scope, cid, fixture):
 
 def _exercise(lab):
     source, target = lab.volume("original"), lab.volume("restored")
+    lab.backup_volume = lab.volume("backup")
     lab.original = lab.entrypoint("original", source)
     lab.start(lab.original)
     fixture = _fixture(lab)
@@ -362,6 +411,7 @@ def _exercise(lab):
     lab.check(True, "sigkill_preserves_remembered_session")
     lab.stop(lab.original)
     lab.report["snapshot"] = lab.helper(source, "omk.auth_state_archive", "snapshot")
+    lab.export_backup()
     lab.report["restore"] = lab.helper(target, "omk.auth_state_archive", "restore")
     # Simulate a revocation AFTER the backup. A blind restore would undo it.
     lab.start(lab.original)

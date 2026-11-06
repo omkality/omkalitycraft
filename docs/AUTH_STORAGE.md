@@ -128,5 +128,12 @@ uv run omk lab auth-storage
 Это проверка auth по настоящему HTTP, не графического Minecraft. Отдельный
 `dj2-account-recovery --operator-workflow` проверяет подключения Forge.
 
+Рабочий архив тоже сначала создаётся в отдельном Linux volume. Экспорт на хост
+выполняется Docker client через `docker cp` без `-a`: на Linux файлы принадлежат
+запустившему утилиту пользователю и имеют mode 600. Это устраняет зависимость
+capless root-helper от прав host bind directory (Docker Desktop на Windows не
+воспроизводил отказ Linux-каталога mode 700 владельца UID 1001; Linux CI его выявил).
+[Правила владения при Docker copy](https://docs.docker.com/reference/cli/docker/container/cp/).
+
 Этот сценарий включён в Linux CI, а локально выполняется на Docker Desktop.
 Существующие игровые миры и рабочие аккаунты в нём не используются.
