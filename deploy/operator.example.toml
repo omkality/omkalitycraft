@@ -11,3 +11,13 @@ root = "client-reports"
 [servers.dj2]
 # Relative to .omk-admin; replace with the actual, explicitly chosen server folder.
 root = "../servers/dj2"
+
+# Recovery needs a console for EVERY configured active server. RCON is unencrypted:
+# publish only on 127.0.0.1 and run the owner CLI on that host (or use an SSH tunnel).
+# This adapter is currently limited to tested Forge 1.12.2 command output.
+[servers.dj2.recovery]
+adapter = "omk-core112-rcon-v1"
+host = "127.0.0.1"
+port = 25577
+# Separate private JSON {"password":"..."}, mode 600; never a CLI argument.
+credential_file = "dj2-rcon.json"
