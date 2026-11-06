@@ -64,6 +64,27 @@ def target_for(config, server):
     doc = tomllib.loads(raw.decode())
     if set(doc) != {"schema", "servers"} or doc["schema"] != 1:
         raise AdminError("Invalid backup configuration schema")
+    entries = doc["servers"]
+    if (
+        not isinstance(entries, dict)
+        or not 1 <= len(entries) <= 100
+        or set(entries) - set(config.servers)
+    ):
+        raise AdminError("Backup targets must belong to the operator allowlist")
+    containers = []
+    volumes = []
+    for entry in entries.values():
+        if not isinstance(entry, dict) or any(
+            not isinstance(entry.get(key), str)
+            for key in ("container", "data_volume", "store_volume")
+        ):
+            raise AdminError("Invalid backup resource inventory")
+        containers.append(entry["container"])
+        volumes.extend((entry["data_volume"], entry["store_volume"]))
+    if len(set(containers)) != len(containers) or len(set(volumes)) != len(volumes):
+        raise AdminError(
+            "Each configured server requires distinct source/store volumes and container"
+        )
     item = doc["servers"].get(server, {})
     keys = {
         "container",
@@ -323,6 +344,34 @@ def journal(config, operation):
     return config.private / "backups" / (operation + ".json")
 
 
+def read_record(config, operation):
+    value = _read_json(journal(config, operation), config.private)
+    allowed = {
+        "schema",
+        "operation",
+        "server",
+        "target",
+        "settings",
+        "created_at",
+        "operator_root",
+        "checkpoint",
+        "source",
+        "history",
+        "stage",
+        "updated_at",
+        "prepared",
+        "result",
+        "failure_type",
+    }
+    if (
+        value.get("schema") != 1
+        or value.get("operation") != operation
+        or set(value) - allowed
+    ):
+        raise AdminError("Invalid backup journal schema or identity")
+    return value
+
+
 def save(config, record, stage):
     record.update(stage=stage, updated_at=datetime.now(UTC).isoformat())
     if len(json.dumps(record).encode()) > 65536:
@@ -365,7 +414,7 @@ def plan(config, server, environment=None):
                 _private_path(config.private, str(path.relative_to(config.private))),
                 config.private,
             )
-            if value.get("stage") not in {"planned", "complete"}:
+            if value.get("stage") not in {"planned", "complete", "cancelled"}:
                 raise AdminError(
                     "Finish or inspect the previous incomplete backup before planning"
                 )
@@ -388,7 +437,7 @@ def plan(config, server, environment=None):
 
 def run(config, operation, *, finish=False, environment=None):
     with locked(config):
-        record = _read_json(journal(config, operation), config.private)
+        record = read_record(config, operation)
         if record.get("schema") != 1 or record.get("operation") != operation:
             raise AdminError("Invalid backup journal")
         target = target_for(config, record["server"])
@@ -455,7 +504,7 @@ def add_backup_parser(actions):
     sub = parser.add_subparsers(dest="backup_action", required=True)
     for action in ("plan", "list"):
         sub.add_parser(action).add_argument("--server", required=True)
-    for action in ("run", "status", "finish"):
+    for action in ("run", "status", "finish", "cancel"):
         sub.add_parser(action).add_argument("--operation", required=True)
 
 
@@ -464,12 +513,38 @@ def run_backups(config, args):
         return plan(config, args.server)
     if args.backup_action in {"run", "finish"}:
         return run(config, args.operation, finish=args.backup_action == "finish")
+    if args.backup_action == "cancel":
+        return cancel(config, args.operation)
     if args.backup_action == "status":
         return {
             "ok": True,
-            **_read_json(journal(config, args.operation), config.private),
+            **read_record(config, args.operation),
         }
     target = target_for(config, args.server)
     local_engine()
     record = {"operation": uuid4().hex, "target": target, "settings": settings()}
     return {"ok": True, **worker(target, request_for(record, "list"))}
+
+
+def cancel(config, operation):
+    with locked(config):
+        record = read_record(config, operation)
+        if record.get("stage") not in {
+            "planned",
+            "preparing",
+            "incomplete",
+            "cancelled",
+        }:
+            raise AdminError("Publication may exist; use finish instead of cancel")
+        target = target_for(config, record["server"])
+        local_engine()
+        if (
+            target != record["target"]
+            or volume(target, True) != record["checkpoint"]["store"]
+        ):
+            raise AdminError("Backup target changed; cannot cancel automatically")
+        if docker("ps", "-q", "--filter", "volume=" + target["store_volume"]).strip():
+            raise AdminError("A backup worker is still active; wait before cancelling")
+        result = worker(target, request_for(record, "cancel"))
+        save(config, record, "cancelled")
+        return {"ok": True, "operation": operation, "stage": "cancelled", **result}

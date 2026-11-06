@@ -247,6 +247,8 @@ def execute(request, root=Path("/server"), storage=Path("/backup")):
         return acknowledge(storage, request)
     if action == "recover":
         return recover(storage, request)
+    if action == "cancel":
+        return cancel(storage, request)
     if action == "list":
         store = store_for(storage, request)
         return {
@@ -257,6 +259,28 @@ def execute(request, root=Path("/server"), storage=Path("/backup")):
             ),
         }
     raise ValueError("Unknown cold backup action")
+
+
+def cancel(storage, request):
+    from omk.backup_store import _json_read  # noqa: PLC0415
+
+    store = store_for(storage, request)
+    history = [] if store is None else store.inspect()
+    if history != request["history"] or (storage / "receipt.json").exists():
+        raise ValueError("Publication may exist; reconcile instead of cancelling")
+    prepared = storage / "prepared.json"
+    if (
+        prepared.exists()
+        and _json_read(prepared).get("operation") != request["operation"]
+    ):
+        raise ValueError("Staging belongs to another operation")
+    for name in ("incoming.zip", "prepared.json"):
+        if (storage / name).exists():
+            regular_file(storage / name)
+    for name in ("incoming.zip", "prepared.json"):
+        (storage / name).unlink(missing_ok=True)
+    _sync_directory(storage)
+    return {"cancelled": True, "previous_history_unchanged": True}
 
 
 if __name__ == "__main__":

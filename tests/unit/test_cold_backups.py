@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -85,6 +86,34 @@ def test_acknowledgement_can_resume_after_partial_cleanup(fixture):
     )
 
 
+def test_cancel_only_unpublished_staging_preserves_history(fixture):
+    root, storage, request = fixture
+    request["prepared"] = worker.prepare(root, storage, request)
+    assert worker.cancel(storage, request)["previous_history_unchanged"]
+    worker.cancel(storage, request)
+    assert worker.inspect_store(storage, request) == []
+
+
+def test_cancel_cannot_erase_committed_snapshot_or_receipt(fixture):
+    root, storage, request = fixture
+    request["prepared"] = worker.prepare(root, storage, request)
+    result = worker.publish(storage, request)
+    with pytest.raises(ValueError, match="Publication may exist"):
+        worker.cancel(storage, request)
+    assert (storage / "store" / result["id"] / "archive.zip").exists()
+    assert (storage / "receipt.json").exists()
+
+
+def test_status_rejects_foreign_private_json_instead_of_printing_credentials(tmp_path):
+    cfg, _ = config(tmp_path)
+    operation = "a" * 32
+    owner._write_private(
+        owner.journal(cfg, operation), cfg.private, {"api_token": "secret-fixture"}
+    )
+    with pytest.raises(AdminError, match="journal"):
+        owner.read_record(cfg, operation)
+
+
 def test_expanded_limits_are_configurable_without_allocating_large_fixture():
     files = {"world/region/r.0.0.mca": {"bytes": 1024**3, "sha256": "a" * 64}}
     with pytest.raises(ValueError):
@@ -105,6 +134,37 @@ def test_target_requires_configured_server_and_pinned_image(tmp_path):
     cfg, _ = config(tmp_path)
     with pytest.raises(AdminError, match="allowlist"):
         owner.target_for(cfg, "other")
+
+
+def test_two_servers_cannot_share_backup_volume(tmp_path):
+    cfg, _ = config(tmp_path)
+    cfg = replace(cfg, servers={**cfg.servers, "other": tmp_path / "other"})
+    target = {
+        "container": "source-a",
+        "data_volume": "data-a",
+        "store_volume": "store-a",
+        "label": "omkality.test",
+        "source_owner": "source-id",
+        "store_owner": "store-id",
+        "world": "world",
+        "image": owner.IMAGE,
+        "release": "fixture-v1",
+    }
+    other = {**target, "container": "source-b", "data_volume": "data-b"}
+    text = "schema=1\n"
+    for name, value in [("dj2", target), ("other", other)]:
+        text += (
+            "[servers."
+            + name
+            + "]\n"
+            + "\n".join(key + "=" + json.dumps(val) for key, val in value.items())
+            + "\n"
+        )
+    path = cfg.private / "backups.toml"
+    path.write_text(text)
+    path.chmod(0o600)
+    with pytest.raises(AdminError, match="distinct"):
+        owner.target_for(cfg, "dj2")
 
 
 def stopped():

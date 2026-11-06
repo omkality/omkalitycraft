@@ -273,6 +273,17 @@ class Lab:
             and value["pending"],
             "source_restart_blocks_publication_and_preserves_staging",
         )
+        result = owner.cancel(config, plan["operation"])
+        self.check(
+            result["previous_history_unchanged"],
+            "explicit_cancel_removes_only_unpublished_staging",
+        )
+        next_plan = owner.plan(config, "dj2", ENV)
+        result = owner.run(config, next_plan["operation"], environment=ENV)
+        self.check(
+            result["snapshot"]["sequence"] == 1,
+            "fresh_backup_succeeds_after_safe_cancel",
+        )
 
     def cleanup(self):
         for name in reversed(self.containers):
