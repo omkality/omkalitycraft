@@ -96,6 +96,13 @@ def main(argv: list[str] | None = None) -> int:
     server.add_subparsers(dest="action", required=True).add_parser("list")
     lab = sub.add_parser("lab", help="Disposable integration tests")
     lab_areas = lab.add_subparsers(dest="area", required=True)
+    from omk.mcmcp_lab import add_mcmcp_lab  # noqa: PLC0415
+
+    add_mcmcp_lab(
+        lab_areas.add_parser(
+            "dj2-mcp", help="Owned real Windows client / Linux server MCP lab"
+        )
+    )
     from omk.pack_install_lab import add_pack_install_lab  # noqa: PLC0415
 
     add_pack_install_lab(
@@ -237,8 +244,12 @@ def _lab_report(args):
         from omk.startup_trace_lab import run_startup_trace_lab  # noqa: PLC0415
 
         report = run_startup_trace_lab(args)
-    elif args.area == "dj2-linux":
-        report = run_linux_skin_lab(args)
+    elif args.area in {"dj2-mcp", "dj2-linux"}:
+        from omk.mcmcp_lab import run_mcmcp_lab  # noqa: PLC0415
+
+        report = {"dj2-mcp": run_mcmcp_lab, "dj2-linux": run_linux_skin_lab}[args.area](
+            args
+        )
     elif args.area in {"dj2-spawn", "dj2-claims", "dj2-account-recovery"}:
         from omk.dj2_account_recovery_lab import (  # noqa: PLC0415
             run_account_recovery_lab,

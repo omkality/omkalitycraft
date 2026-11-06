@@ -18,6 +18,15 @@ from omk.fs import resolved
 MAX_RESPONSE = 16 * 1024**2
 
 
+def _local_url(url):
+    match = (
+        re.fullmatch(r"http://127\.0\.0\.1:([0-9]{1,5})/mcp", url)
+        if isinstance(url, str)
+        else None
+    )
+    return bool(match and 1024 <= int(match[1]) <= 65535)
+
+
 class McpError(RuntimeError):
     """No response bodies, headers or credentials in exception messages."""
 
@@ -56,7 +65,7 @@ def _owned_connection(root: Path):
     config = lab / "portable/instances/dj2/config/mcmcp.cfg"
     if (
         connection.get("schema") != 1
-        or connection.get("url") != "http://127.0.0.1:25685/mcp"
+        or not _local_url(connection.get("url"))
         or Path(connection.get("config", "")) != config
         or connection.get("instance_name") != "OmkalityCraft DJ2 isolated " + run
         or resolved(config) != config
@@ -87,9 +96,7 @@ def _owned_connection(root: Path):
 
 class McpClient:
     def __init__(self, url: str, token: str, *, timeout=40):
-        if url != "http://127.0.0.1:25685/mcp" or not re.fullmatch(
-            r"[a-f0-9]{64}", token
-        ):
+        if not _local_url(url) or not re.fullmatch(r"[a-f0-9]{64}", token):
             raise McpError("Only the explicit local lab endpoint is supported")
         self.url, self._token, self.timeout = url, token, timeout
         self._session = None

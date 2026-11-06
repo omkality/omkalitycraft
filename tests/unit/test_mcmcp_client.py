@@ -96,11 +96,18 @@ def test_owned_header_source_keeps_token_separate_from_metadata(tmp_path, monkey
         "http://example.com/mcp",
         "http://127.0.0.1:25685/mcp?x=1",
         "http://user:pass@127.0.0.1:25685/mcp",
+        "http://127.0.0.1:0/mcp",
+        "http://127.0.0.1:65536/mcp",
+        "http://localhost:25685/mcp",
     ],
 )
 def test_transport_cannot_send_credential_to_arbitrary_url(url):
     with pytest.raises(McpError):
         McpClient(url, TOKEN)
+
+
+def test_explicit_alternate_loopback_port_is_supported():
+    assert McpClient("http://127.0.0.1:25785/mcp", TOKEN).url.endswith(":25785/mcp")
 
 
 def test_http_error_never_echoes_headers_body_or_url(monkeypatch):
