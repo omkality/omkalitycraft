@@ -227,12 +227,12 @@ def _recover(config, record, client, token, consoles, emit):
         if changed.get("isLocked") is not True:
             raise AdminError("Account unexpectedly unlocked during recovery")
         _save(config, record, "disconnecting")
-        players = [p["uuid"] for p in record["players"]]
+        players = {p["uuid"]: p["name"] for p in record["players"]}
         for console in consoles.values():
             console.disconnect(players)
         # Recheck every server and identity before the unlock request.
         for console in consoles.values():
-            if set(console.online()) & set(players):
+            if console.remaining(players):
                 raise AdminError("A game profile reappeared during recovery")
         if _checked_user(client, token, record).get("isLocked") is not True:
             raise AdminError("Account lock changed before completion")
@@ -281,6 +281,7 @@ def execute(config, account, *, resume=False, emit):
             raise AdminError("Planned account was locked by another operation")
         consoles = _consoles(config)
         for console in consoles.values():
+            console.ready()
             console.online()  # Preflight all servers before any account mutation.
         return _recover(config, record, client, token, consoles, emit)
 

@@ -1,5 +1,6 @@
 """Restricted loopback RCON adapter for verified Forge 1.12.2 recovery operations."""
 
+import json
 import re
 import socket
 import struct
@@ -17,12 +18,12 @@ class ConsoleConfig:
     port: int
     credential_file: str
     host: str = "127.0.0.1"
-    adapter: str = "forge112-rcon"
+    adapter: str = "omk-core112-rcon-v1"
 
     def __post_init__(self):
         if (
             self.host != "127.0.0.1"
-            or self.adapter != "forge112-rcon"
+            or self.adapter != "omk-core112-rcon-v1"
             or type(self.port) is not int
             or not 1024 <= self.port <= 65535
             or not isinstance(self.credential_file, str)
@@ -65,8 +66,8 @@ def _receive(stream, deadline):
 
 def command(config, password, text):
     # Only these fixed read/kick operations are exposed by this adapter.
-    if text != "list uuids" and not re.fullmatch(
-        r"kick [A-Za-z0-9_]{1,16} omk_account_recovery", text
+    if text not in {"list uuids", "list omk-recovery version"} and not re.fullmatch(
+        r"list omk-recovery (?:inspect|drain) [a-f0-9-]{36} [A-Za-z0-9_]{3,16}", text
     ):
         raise ConsoleError("Unsupported recovery console command")
     if (
@@ -133,20 +134,48 @@ class RecoveryConsole:
     def online(self):
         return online_players(command(self.config, self.password, "list uuids"))
 
+    def _recovery(self, suffix):
+        output = command(self.config, self.password, "list omk-recovery " + suffix)
+        if not output.startswith("OMK_RECOVERY_V1 "):
+            raise ConsoleError("Server lacks the required account recovery adapter")
+        try:
+            value = json.loads(output[len("OMK_RECOVERY_V1 ") :])
+        except ValueError:
+            raise ConsoleError("Invalid account recovery adapter response") from None
+        if (
+            not isinstance(value, dict)
+            or type(value.get("schema")) is not int
+            or value.get("schema") != 1
+        ):
+            raise ConsoleError("Invalid account recovery adapter schema")
+        return value
+
+    def ready(self):
+        if self._recovery("version") != {"schema": 1, "pending": True}:
+            raise ConsoleError("Server adapter does not cover pending connections")
+
+    def _counts(self, action, identity, name):
+        identity = str(UUID(identity))
+        value = self._recovery(f"{action} {identity} {name}")
+        if set(value) != {"schema", "active", "pending"} or any(
+            type(value[k]) is not int or not 0 <= value[k] <= 10000
+            for k in ("active", "pending")
+        ):
+            raise ConsoleError("Invalid account connection counts")
+        return value["active"] + value["pending"]
+
+    def remaining(self, players):
+        return sum(
+            self._counts("inspect", identity, name)
+            for identity, name in players.items()
+        )
+
     def disconnect(self, players):
-        for identity in set(self.online()) & set(players):
-            # Vanilla 1.12 kick resolves names, unlike list uuids. Select by UUID,
-            # then re-read that exact UUID's validated name immediately before kick.
-            current = self.online()
-            if identity in current:
-                command(
-                    self.config,
-                    self.password,
-                    f"kick {current[identity]} omk_account_recovery",
-                )
+        for identity, name in players.items():
+            self._counts("drain", identity, name)
         deadline = time.monotonic() + 8
         while time.monotonic() < deadline:
-            if not set(self.online()) & set(players):
+            if not self.remaining(players):
                 return
             time.sleep(0.2)
-        raise ConsoleError("Account still has a connected game profile")
+        raise ConsoleError("Account still has an active or pending game connection")

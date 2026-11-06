@@ -1,3 +1,4 @@
+import json
 import socket
 import struct
 import threading
@@ -47,47 +48,62 @@ def test_nonloopback_or_unknown_adapter_rejected(change):
         )
 
 
-def test_kick_selects_uuid_rechecks_name_and_checks_disconnect(monkeypatch):
-    first, unrelated = str(uuid4()), str(uuid4())
+def test_drain_selects_exact_uuid_and_counts_pending_connections(monkeypatch):
+    first = str(uuid4())
     calls = []
     replies = iter(
         [
-            f"There are 2/20 players online:target ({first}), other ({unrelated})",
-            f"There are 2/20 players online:target ({first}), other ({unrelated})",
-            "ignored kick output",
-            f"There are 1/20 players online:other ({unrelated})",
+            'OMK_RECOVERY_V1 {"schema":1,"pending":true}',
+            'OMK_RECOVERY_V1 {"schema":1,"active":1,"pending":1}',
+            'OMK_RECOVERY_V1 {"schema":1,"active":0,"pending":0}',
         ]
     )
     monkeypatch.setattr(
         module, "command", lambda _c, _p, text: calls.append(text) or next(replies)
     )
     client = module.RecoveryConsole(module.ConsoleConfig(25577, "rcon.json"), "secret")
-    client.disconnect([first])
+    client.ready()
+    client.disconnect({first: "target"})
     assert calls == [
-        "list uuids",
-        "list uuids",
-        "kick target omk_account_recovery",
-        "list uuids",
+        "list omk-recovery version",
+        f"list omk-recovery drain {first} target",
+        f"list omk-recovery inspect {first} target",
     ]
 
 
-def test_disappeared_uuid_never_kicks_new_owner_of_the_same_name(monkeypatch):
-    first, other = str(uuid4()), str(uuid4())
-    replies = iter(
-        [
-            f"There are 1/20 players online:target ({first})",
-            f"There are 1/20 players online:target ({other})",
-            f"There are 1/20 players online:target ({other})",
-        ]
-    )
-    calls = []
+@pytest.mark.parametrize(
+    "response",
+    [
+        "There are 0/20 players online:",
+        "OMK_RECOVERY_ERROR adapter_failure",
+        'OMK_RECOVERY_V1 {"schema":1,"pending":false}',
+    ],
+)
+def test_old_or_failed_guard_cannot_pass_preflight(monkeypatch, response):
+    monkeypatch.setattr(module, "command", lambda *a: response)
+    with pytest.raises(module.ConsoleError):
+        module.RecoveryConsole(
+            module.ConsoleConfig(25577, "rcon.json"), "secret"
+        ).ready()
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        {"schema": True, "active": 0, "pending": 0},
+        {"schema": 1, "active": 0, "pending": True},
+        {"schema": 1, "active": 0},
+        {"schema": 1, "active": -1, "pending": 0},
+    ],
+)
+def test_invalid_connection_counts_never_mean_disconnected(monkeypatch, value):
     monkeypatch.setattr(
-        module, "command", lambda _c, _p, text: calls.append(text) or next(replies)
+        module, "command", lambda *a: "OMK_RECOVERY_V1 " + json.dumps(value)
     )
-    module.RecoveryConsole(
-        module.ConsoleConfig(25577, "rcon.json"), "secret"
-    ).disconnect([first])
-    assert calls == ["list uuids"] * 3
+    with pytest.raises(module.ConsoleError):
+        module.RecoveryConsole(
+            module.ConsoleConfig(25577, "rcon.json"), "secret"
+        ).remaining({str(uuid4()): "target"})
 
 
 @pytest.mark.parametrize("command", ["stop", "kick @a", "list uuids\nstop"])

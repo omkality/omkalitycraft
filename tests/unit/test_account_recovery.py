@@ -51,6 +51,7 @@ def setup(tmp_path, monkeypatch):
     )
     console = Mock()
     console.online.return_value = {}
+    console.remaining.return_value = 0
     monkeypatch.setattr(recovery, "RecoveryConsole", lambda *a: console)
     return SimpleNamespace(
         config=cfg,
