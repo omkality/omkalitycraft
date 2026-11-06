@@ -213,6 +213,21 @@ def controller(fixture, tmp_path, monkeypatch):
     monkeypatch.setattr(owner, "volume", lambda *a: {})
     monkeypatch.setattr(owner, "checkpoint", lambda *a: dict(state))
     monkeypatch.setattr(owner, "worker", lambda t, r: worker.execute(r, root, storage))
+    actual_settings = owner.settings
+    fixture_env = {
+        "OMK_BACKUP_MAX_BYTES": str(128 * 1024**2),
+        "OMK_BACKUP_STAGING_BYTES": str(64 * 1024**2),
+        "OMK_BACKUP_RESERVE_BYTES": str(16 * 1024**2),
+        "OMK_BACKUP_WORLD_MAX_BYTES": str(1024**2),
+        "OMK_BACKUP_MAX_COUNT": "4",
+    }
+    monkeypatch.setattr(
+        owner,
+        "settings",
+        lambda environment=None: actual_settings(
+            {**fixture_env, **(environment or {})}
+        ),
+    )
     return cfg, path, root, storage, target
 
 
