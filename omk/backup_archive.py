@@ -23,7 +23,9 @@ def regular_file(path):
     return path.stat().st_size
 
 
-def validate_inventory(files):
+def validate_inventory(files, *, max_expanded_bytes=MAX_EXPANDED_BYTES):
+    if type(max_expanded_bytes) is not int or not 1 <= max_expanded_bytes <= 1024**4:
+        raise ValueError("Invalid expanded backup limit")
     if not isinstance(files, dict) or not 1 <= len(files) <= MAX_FILES:
         raise ValueError("Invalid backup inventory")
     total, names, prefixes = 0, set(), {}
@@ -54,21 +56,23 @@ def validate_inventory(files):
             not isinstance(entry, dict)
             or set(entry) != {"bytes", "sha256"}
             or type(entry["bytes"]) is not int
-            or not 0 <= entry["bytes"] <= MAX_EXPANDED_BYTES
+            or not 0 <= entry["bytes"] <= max_expanded_bytes
             or not isinstance(entry["sha256"], str)
             or not SHA256.fullmatch(entry["sha256"])
         ):
             raise ValueError("Invalid backup inventory entry")
         total += entry["bytes"]
-    if total > MAX_EXPANDED_BYTES or any(
+    if total > max_expanded_bytes or any(
         str(parent) in names for name in names for parent in PurePosixPath(name).parents
     ):
         raise ValueError("Oversized or conflicting backup inventory")
 
 
-def verify_archive(path, files, expected_sha256=None):
+def verify_archive(
+    path, files, expected_sha256=None, *, max_expanded_bytes=MAX_EXPANDED_BYTES
+):
     """Read every byte/CRC; an FTB success message is never the inventory source."""
-    validate_inventory(files)
+    validate_inventory(files, max_expanded_bytes=max_expanded_bytes)
     regular_file(path)
     with path.open("rb") as stream:
         digest = hashlib.file_digest(stream, "sha256").hexdigest()

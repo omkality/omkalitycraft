@@ -1,5 +1,12 @@
 # Журнал изменений
 
+## Не выпущено — административные холодные копии
+
+- `omk admin backups plan/run/status/list/finish/cancel`: приватный Docker allowlist, план inventory/runtime/lifecycle, prepare до publication, проверка повторного старта источника, journal без секретов. Finish подтверждает копию без повторной ротации; cancel касается только неопубликованной попытки при неизменной истории.
+- Лимиты мира/архивов/staging/reserve, TTL, helper CPU/RAM и число journal задаются env; expanded byte cap owner store больше не ограничен lab-default 512 MiB. Старые API/defaults сохранены.
+- Linux DJ2/Core 0.2.10: 137 игровых условий, 30 независимых проверок, четыре owner plan/run и полный возврат в новый volume. Ещё 13 real Docker/CLI условий проверили гонку, смерть процесса, отмену и sparse 600 MiB; это синтетический runtime, не падение Minecraft. Windows unit: 887/8 skipped; Linux focused: 192. [Протокол](docs/validation/dj2-owner-cold-backups-2026-11-06.json).
+- [Инструкция владельца](docs/COLD_BACKUPS.md). Scheduler, внешняя копия, исторические FTB memberships и production restore остаются в #33/#38. Мир/сервис автоматически не перезапускается, launcher UI не менялся.
+
 ## Не выпущено — управляемые копии Forge-мира
 
 - `dj2-recovery --managed-backups` публикует остановленный мир в отдельное управляемое Linux-хранилище по независимому перечню файлов и выбирает этот снимок для полного возврата в новый игровой volume. Источник readonly, новая копия проверяется до ротации старой.

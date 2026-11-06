@@ -12,7 +12,13 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from uuid import uuid4
 
-from omk.backup_archive import MAX_MANIFEST_BYTES, SHA256, regular_file, verify_archive
+from omk.backup_archive import (
+    MAX_EXPANDED_BYTES,
+    MAX_MANIFEST_BYTES,
+    SHA256,
+    regular_file,
+    verify_archive,
+)
 
 ENTRY = re.compile(r"(snapshot|pending|retired)-[a-f0-9]{32}")
 OWNER = {"schema": 1, "kind": "omk-managed-backup-store"}
@@ -96,14 +102,20 @@ class BackupPolicy:
 
 
 class BackupStore:
-    def __init__(self, root, policy):
+    def __init__(self, root, policy, *, max_expanded_bytes=MAX_EXPANDED_BYTES):
         self.root, self.policy = root, policy
+        if (
+            type(max_expanded_bytes) is not int
+            or not 1 <= max_expanded_bytes <= 1024**4
+        ):
+            raise ValueError("Invalid expanded backup limit")
+        self.max_expanded_bytes = max_expanded_bytes
         _directory(root)
         if _json_read(root / "owner.json") != OWNER:
             raise ValueError("Unowned backup store")
 
     @classmethod
-    def create(cls, root, policy):
+    def create(cls, root, policy, *, max_expanded_bytes=MAX_EXPANDED_BYTES):
         """Only a new directory; never adopt or clear existing backup data."""
         _directory(root.parent)
         root.mkdir()
@@ -114,7 +126,7 @@ class BackupStore:
             os.fsync(stream.fileno())
         _sync_directory(root)
         _sync_directory(root.parent)
-        return cls(root, policy)
+        return cls(root, policy, max_expanded_bytes=max_expanded_bytes)
 
     def _snapshots(self):
         _directory(self.root)
@@ -148,7 +160,12 @@ class BackupStore:
                 or manifest["bytes"] > self.policy.staging_bytes
             ):
                 raise ValueError("Invalid stored backup manifest")
-            verify_archive(entry / "archive.zip", manifest["files"], manifest["sha256"])
+            verify_archive(
+                entry / "archive.zip",
+                manifest["files"],
+                manifest["sha256"],
+                max_expanded_bytes=self.max_expanded_bytes,
+            )
             snapshots.append(
                 (
                     manifest["sequence"],
@@ -223,7 +240,9 @@ class BackupStore:
         size = regular_file(archive)
         if not 0 < size <= min(self.policy.staging_bytes, self.policy.max_bytes):
             raise ValueError("Backup exceeds staging or retention budget")
-        digest = verify_archive(archive, files)
+        digest = verify_archive(
+            archive, files, max_expanded_bytes=self.max_expanded_bytes
+        )
         with _lock(self.root):
             return self._publish(archive, files, size, digest)
 
@@ -255,7 +274,12 @@ class BackupStore:
         # On error do not guess that an incomplete directory is safe to erase.
         # It remains bounded to one staging attempt and is visible to the operator.
         self._copy(archive, pending / "archive.zip", size)
-        verify_archive(pending / "archive.zip", files, digest)
+        verify_archive(
+            pending / "archive.zip",
+            files,
+            digest,
+            max_expanded_bytes=self.max_expanded_bytes,
+        )
         _json_write(pending / "manifest.json", metadata)
         _sync_directory(pending)
         committed = self.root / pending.name.replace("pending-", "snapshot-", 1)

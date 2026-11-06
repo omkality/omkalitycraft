@@ -213,6 +213,10 @@ def _add_auth_labs(lab_areas):
     lab_areas.add_parser(
         "auth-storage", help="Owned persistent Drasl backup and isolated restore"
     )
+    lab_areas.add_parser(
+        "cold-backups",
+        help="Owned Docker cold backup CLI, race and process-death checks",
+    )
 
 
 def _report(args):
@@ -290,13 +294,16 @@ def _lab_report(args):
         report = run_client_crash_lab(args)
     elif args.area == "dj2":
         report = run_dj2_lab(args)
-    elif args.area in {"admin", "auth-storage"}:
+    elif args.area in {"admin", "auth-storage", "cold-backups"}:
         from omk.auth_storage_lab import run_auth_storage_lab  # noqa: PLC0415
+        from omk.cold_backup_lab import run_cold_backup_lab  # noqa: PLC0415
         from omk.operator_lab import operator_smoke  # noqa: PLC0415
 
-        report = {"admin": operator_smoke, "auth-storage": run_auth_storage_lab}[
-            args.area
-        ]()
+        report = {
+            "admin": operator_smoke,
+            "auth-storage": run_auth_storage_lab,
+            "cold-backups": run_cold_backup_lab,
+        }[args.area]()
     else:
         report = auth_smoke(
             with_gui=args.area == "launcher", expiry_only=args.action == "expiry"

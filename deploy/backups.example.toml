@@ -1,0 +1,15 @@
+# Copy to .omk-admin/backups.toml, mode 600. Server IDs must also exist in operator.toml.
+schema = 1
+
+[servers.dj2]
+container = "omk-dj2"
+data_volume = "omk-dj2-data"
+store_volume = "omk-dj2-backups"
+# Both volumes and the game container require matching deployment ownership labels.
+# Choose unique deployment IDs at initial provisioning; never relabel/adopt old data blindly.
+label = "omkality.server.id"
+source_owner = "REPLACE_WITH_SOURCE_DEPLOYMENT_ID"
+store_owner = "REPLACE_WITH_BACKUP_DEPLOYMENT_ID"
+world = "world"
+image = "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5"
+release = "dj2-2.23.4-candidate"

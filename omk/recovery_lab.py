@@ -83,6 +83,11 @@ def add_recovery_lab(parser):
         action="store_true",
         help="With Linux full return/access/ranks, use a managed Linux backup volume and test retention",
     )
+    parser.add_argument(
+        "--operator-backups",
+        action="store_true",
+        help="Use the owner cold-backup plan/run on stopped lab containers",
+    )
 
 
 def _snapshot(server, dest, target):
@@ -323,6 +328,10 @@ def _exercise(
 
 
 def _validate_inputs(args):
+    if getattr(args, "operator_backups", False) and not getattr(
+        args, "managed_backups", False
+    ):
+        raise ValueError("Operator backups require managed Linux full return")
     if getattr(args, "managed_backups", False) and (
         getattr(args, "runtime", "native") != "linux-docker"
         or not args.full_backup_return
@@ -456,6 +465,8 @@ class RecoveryRuntime:
             from omk import managed_world_backup_lab as managed  # noqa: PLC0415
 
             self.managed = managed.ManagedWorldBackups(self.lab)
+            if getattr(self.args, "operator_backups", False):
+                self.managed.enable_operator(self.linux)
 
     def start(self, replacement=None):
         if self.linux is not None:
@@ -575,7 +586,11 @@ class RecoveryRuntime:
     def backup(self, name):
         self.state("stopping_owned_lab_for_" + name)
         if self.linux is not None:
-            info = self.linux.backup(name)
+            info = (
+                self.linux.backup(name, keep_container=True)
+                if getattr(self.args, "operator_backups", False)
+                else self.linux.backup(name)
+            )
             _prepare_backup(self.lab, name, info, self.report)
             if self.managed is not None:
                 result = self.managed.publish(self.linux, name)
@@ -584,6 +599,19 @@ class RecoveryRuntime:
                     result["verified"],
                     name + "_managed_snapshot_matches_independent_world_inventory",
                 )
+                if getattr(self.args, "operator_backups", False):
+                    from omk.dj2_linux_lab import docker, inspect_owned  # noqa: PLC0415
+
+                    source = self.linux.server
+                    if inspect_owned("container", source.name, source.run_id) is None:
+                        raise ValueError(
+                            "Owned stopped source container missing after owner backup"
+                        )
+                    docker("rm", source.name)
+                    self.expect(
+                        result["operator_stage"] == "complete",
+                        name + "_owner_journal_complete",
+                    )
         else:
             _backup(self.server, self.stream, self.lab, self.dest, name, self.report)
         self.expect(True, name + "_snapshot_after_clean_stop")

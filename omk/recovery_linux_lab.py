@@ -87,7 +87,7 @@ class LinuxRecovery:
         process = self.server.start(snapshot_dir=self.snapshots)
         return process, self.server.log, self.server.collector
 
-    def backup(self, name):
+    def backup(self, name, *, keep_container=False):
         if name not in {
             "before-grief",
             "before-restore",
@@ -127,7 +127,8 @@ class LinuxRecovery:
                 hashlib.file_digest(file, "sha256").hexdigest(),
             )
         self.checkpoint_stop = container_outcome(data)
-        docker("rm", self.server.name)
+        if not keep_container:
+            docker("rm", self.server.name)
         return info
 
     def world_digest(self):
