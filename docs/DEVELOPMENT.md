@@ -21,7 +21,7 @@ F10/F8 и Circle/grid; настоящая F10 тоже открыла GUI. Indep
 не даёт повторно добавлять отброшенный Minecraft языковой alias и не сбрасывает
 личный выбор. Полная потеря options.txt возвращает начальные настройки.
 Минимальная версия для новых метаданных — dev12, проверяется и при подписи.
-Windows full unit 784 passed / 6 skipped, Linux Docker 136 passed, Ruff/Black;
+Windows full unit 786 passed / 6 skipped, Linux Docker 138 passed, Ruff/Black;
 ярлыки desktop app сохраняют профиль Codex через проверяемый bootstrap.
 Собран loopback EXE dev12,
 packaged Qt startup прошёл. Ошибки ранних fixture и различия с native game сохранены

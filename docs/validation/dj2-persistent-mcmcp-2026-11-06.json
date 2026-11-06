@@ -98,23 +98,30 @@
       "scope": "extended Linux install regressions with 128 MiB tmpfs",
       "accepted": false,
       "reason": "expected disk reserve guards rejected undersized lab disk; rerun with 1 GiB tmpfs, same 1 GiB memory limit; application guard unchanged"
+    },
+    {
+      "scope": "Linux cleanup fault fixture",
+      "accepted": false,
+      "reason": "Unordered glob could select latest pointer file instead of owned directory; fixture now filters directories; final 138 passed"
     }
   ],
   "unit_validation": {
     "current_focused_windows": 116,
-    "current_focused_linux_docker": 136,
+    "current_focused_linux_docker": 138,
     "lint": "Ruff and Black passed",
     "mocks_separate_from_native_game": true,
     "full_windows": {
-      "passed": 784,
+      "passed": 786,
       "skipped": 6
     },
-    "final_windows_log_sha256": "1a4a3df3f694f271ef5f703d3124054ebee64ebb15d04d6de270c8abe636b73d",
-    "linux_report_sha256": "db66a9c030a4f48fdbf8ca858bc548efa6c97d4c8462ac75fb41bf5044fd9974",
+    "final_windows_log_sha256": "ba29b62234cdec0cf66abf5f46cd2a72bdd0baa9fb3531d08b93cd3c4a3b2858",
+    "linux_report_sha256": "b203e4e6f7177c79b80dde0468fd7f975316a3009b23e911db7b12cc641ee615",
     "linux_image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
     "linux_memory_mib": 1024,
     "linux_tmpfs_limit_mib": 1024,
-    "linux_network": "none"
+    "linux_network": "none",
+    "final_cleanup_faults_windows": 18,
+    "cleanup_faults": "Missing client log and client-stop OSError mark failure without skipping owned server/auth/MCP cleanup"
   },
   "portable_preview": {
     "version": "0.3.0.dev12",

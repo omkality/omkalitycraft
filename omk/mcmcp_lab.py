@@ -190,6 +190,30 @@ def _console_commands(request):
     return commands
 
 
+def _finish_client(game, folder, report):
+    report["client_exit_before_cleanup"] = game.poll()
+    _stop_game(game)
+    game.diagnostics_done.wait(timeout=20)
+    crashes = {p.name: _sha(p) for p in (folder / "crash-reports").glob("*.txt")}
+    log = (folder / "logs/latest.log").read_text(encoding="utf-8", errors="replace")
+    report["no_new_or_rewritten_crash_reports"] = crashes == report.get(
+        "crash_baseline", {}
+    )
+    report["no_task_or_fatal_markers"] = not any(
+        s in log
+        for s in [
+            "Error executing task",
+            "Minecraft ran into a problem! Report saved to:",
+            'Exception in thread "Client thread"',
+        ]
+    )
+    report["ok"] = (
+        report["ok"]
+        and report["no_new_or_rewritten_crash_reports"]
+        and report["no_task_or_fatal_markers"]
+    )
+
+
 def run_mcmcp_lab(  # noqa: PLR0912, PLR0915 -- one ordered ownership and cleanup scope
     args,
 ):
@@ -388,31 +412,11 @@ def run_mcmcp_lab(  # noqa: PLR0912, PLR0915 -- one ordered ownership and cleanu
         )
     finally:
         if game is not None:
-            report["client_exit_before_cleanup"] = game.poll()
-            _stop_game(game)
-            game.diagnostics_done.wait(timeout=20)
-            crashes = {
-                p.name: _sha(p) for p in (folder / "crash-reports").glob("*.txt")
-            }
-            log = (folder / "logs/latest.log").read_text(
-                encoding="utf-8", errors="replace"
-            )
-            report["no_new_or_rewritten_crash_reports"] = crashes == report.get(
-                "crash_baseline", {}
-            )
-            report["no_task_or_fatal_markers"] = not any(
-                s in log
-                for s in [
-                    "Error executing task",
-                    "Minecraft ran into a problem! Report saved to:",
-                    'Exception in thread "Client thread"',
-                ]
-            )
-            report["ok"] = (
-                report["ok"]
-                and report["no_new_or_rewritten_crash_reports"]
-                and report["no_task_or_fatal_markers"]
-            )
+            try:
+                _finish_client(game, folder, report)
+            except Exception as error:
+                # Diagnostic/termination failures must not skip owned server/auth cleanup.
+                report.update(ok=False, client_cleanup_error_type=type(error).__name__)
         try:
             server.close(report)
         finally:

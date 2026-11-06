@@ -68,9 +68,8 @@ def test_register_and_unregister_never_change_default_gates(tmp_path, monkeypatc
     assert all(command[-1] == "deny" for command in commands[5:])
 
 
-def test_partial_registration_is_cleaned_and_the_one_probe_is_not_lab_probe(
-    tmp_path, monkeypatch
-):
+@pytest.fixture
+def isolated_candidate(tmp_path, monkeypatch):
     _, release, _ = fixture(tmp_path / "fixture")
     root = tmp_path / "repo"
     (root / ".local").mkdir(parents=True)
@@ -86,6 +85,7 @@ def test_partial_registration_is_cleaned_and_the_one_probe_is_not_lab_probe(
         client_defaults=None,
         client_port=25685,
         link_port=25680,
+        duration_minutes=1,
     )
     monkeypatch.setattr(lab, "PROJECT_ROOT", root)
     monkeypatch.setattr(
@@ -122,20 +122,71 @@ def test_partial_registration_is_cleaned_and_the_one_probe_is_not_lab_probe(
         return Namespace(install=install)
 
     monkeypatch.setattr(lab, "Installer", installer)
-    monkeypatch.setattr(
-        lab,
-        "LinuxServer",
-        lambda *a: Namespace(close=lambda r: r.update(owned_game_clean_exit=False)),
+    return root, args
+
+
+@pytest.mark.parametrize("failure", ["registration", "missing-log", "client-stop"])
+def test_failures_still_clean_owned_server_auth_and_permissions(
+    isolated_candidate, monkeypatch, failure
+):
+    root, args = isolated_candidate
+    close = Mock(side_effect=lambda r: r.update(owned_game_clean_exit=True))
+    server = Mock(close=close)
+    server.process.poll.return_value = None
+    monkeypatch.setattr(lab, "LinuxServer", lambda *a: server)
+    register = Mock(
+        side_effect=(
+            RuntimeError("registration failed after trust-root")
+            if failure == "registration"
+            else None
+        )
     )
-    register = Mock(side_effect=RuntimeError("registration failed after trust-root"))
     cleanup = Mock(return_value=True)
     auth = Mock(return_value=True)
     monkeypatch.setattr(lab, "_register", register)
     monkeypatch.setattr(lab, "_unregister", cleanup)
     monkeypatch.setattr(lab, "_cleanup", auth)
+    if failure != "registration":
+        monkeypatch.setattr(lab, "_accounts", lambda *a: (None, Mock(), None, None))
+
+        def copy_server(_args, scope):
+            dest = scope / "server"
+            dest.mkdir()
+            (dest / "server.properties").write_text("generate-structures=false\n")
+            return dest, None
+
+        def start(*a, **kw):
+            # A cleanly exited client may still have no log (early process failure).
+            owned_lab = next(
+                p for p in (root / ".local").glob("mcmcp-client-*") if p.is_dir()
+            )
+            (owned_lab / "native-finish").touch()
+            game = Mock()
+            game.poll.return_value = 0
+            game.process.pid = 123
+            return game
+
+        monkeypatch.setattr(lab, "_copy_server", copy_server)
+        monkeypatch.setattr(lab, "_wait_server", lambda *a: None)
+        monkeypatch.setattr(lab, "_console_sender", lambda *a: Mock())
+        monkeypatch.setattr(lab, "GameRunner", lambda *a: Namespace(start=start))
+        if failure == "client-stop":
+            monkeypatch.setattr(
+                lab,
+                "_stop_game",
+                Mock(side_effect=OSError("private diagnostic sentinel")),
+            )
     report = lab.run_mcmcp_lab(args)
     assert not report["ok"] and report["probe_absent"]
-    assert report["error_type"] == "RuntimeError"
+    if failure == "registration":
+        assert report["error_type"] == "RuntimeError"
+    else:
+        assert "error_type" not in report, report
+        assert report["client_cleanup_error_type"] == (
+            "FileNotFoundError" if failure == "missing-log" else "OSError"
+        )
+    assert "sentinel" not in str(report)
+    close.assert_called_once()
     cleanup.assert_called_once()
     auth.assert_called_once()
     assert report["orchestrator_permissions_removed"]
