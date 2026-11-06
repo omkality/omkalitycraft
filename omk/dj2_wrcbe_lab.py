@@ -24,6 +24,7 @@ from omk.dj2_linux_lab import (
     inspect_owned,
 )
 from omk.forge_player import LabPlayer
+from omk.mod_components import add_pack_inputs
 from omk.operator_lab import _cleanup
 from omk.profiles import PROJECT_ROOT
 
@@ -50,6 +51,7 @@ PIN_OVERRIDES = {
 
 
 def add_wrcbe_lab(parser):
+    add_pack_inputs(parser)
     for name in ("server-source", "agent", "core", "mods-json", "probe"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument(

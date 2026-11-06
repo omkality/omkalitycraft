@@ -15,6 +15,7 @@ from omk.dj2_linux_lab import (
     docker,
     inspect_owned,
 )
+from omk.mod_components import add_pack_inputs
 from omk.operator_lab import _cleanup
 from omk.profiles import PROJECT_ROOT
 from omk.startup_trace_fixture import build_startup_agent
@@ -113,6 +114,7 @@ class TraceServer(LinuxServer):
 
 
 def add_startup_trace_lab(parser):
+    add_pack_inputs(parser)
     for name in ("server-source", "agent", "core", "mods-json", "java", "compiler"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--boots", type=int, choices=range(1, 13), default=3)

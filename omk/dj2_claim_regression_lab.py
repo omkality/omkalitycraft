@@ -16,6 +16,7 @@ from omk.dj2_lab import (
     approved_mods,
 )
 from omk.dj2_linux_lab import JAVA_IMAGE, LinuxServer, inspect_owned
+from omk.mod_components import add_pack_inputs
 from omk.operator_lab import _cleanup
 from omk.profiles import PROJECT_ROOT
 
@@ -25,6 +26,7 @@ CATALOG_LIMIT = 4 * 1024**2
 
 
 def add_linux_runtime_inputs(parser):
+    add_pack_inputs(parser)
     for name in ("server-source", "agent", "core", "mods-json"):
         parser.add_argument("--" + name, type=Path, required=True)
 
@@ -84,6 +86,8 @@ def _artifact_hashes(args, dest):
         ),
         dest / "forge-1.12.2-14.23.5.2860.jar",
     ]
+    if getattr(args, "pack_fix", None) is not None:
+        paths.append(args.pack_fix)
     return {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
 
 

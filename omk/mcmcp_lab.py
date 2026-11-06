@@ -25,12 +25,14 @@ from omk.dj2_lab import (
 from omk.dj2_linux_lab import JAVA_IMAGE, LinuxServer
 from omk.fs import resolved
 from omk.mcmcp_orchestrator import idle_process, refresh_idle
+from omk.mod_components import add_pack_inputs
 from omk.operator_lab import _cleanup
 from omk.pack_install_lab import PackDirectory, PackWire
 from omk.profiles import PROJECT_ROOT
 
 
 def add_mcmcp_lab(parser):
+    add_pack_inputs(parser)
     for flag in [
         "release-dir",
         "trusted-public-keys",

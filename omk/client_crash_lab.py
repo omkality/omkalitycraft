@@ -20,12 +20,14 @@ from omk.client_crash_fixture import (
 from omk.dj2_commands_lab import FIRST
 from omk.dj2_lab import _accounts, _copy_server, _stop_game, _wait_server, approved_mods
 from omk.dj2_linux_lab import LinuxServer, clone_client
+from omk.mod_components import add_pack_inputs
 from omk.operator_lab import _cleanup, _denied, _start_api, _stop_api
 from omk.profiles import PROJECT_ROOT
 from omk.report_store import ReportStore
 
 
 def add_client_crash_lab(parser):
+    add_pack_inputs(parser)
     for name in (
         "server-source",
         "agent",

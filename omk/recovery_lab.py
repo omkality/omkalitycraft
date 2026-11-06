@@ -21,6 +21,7 @@ from omk.dj2_lab import (
     approved_mods,
 )
 from omk.forge_player import LabPlayer
+from omk.mod_components import add_pack_inputs
 from omk.profiles import PROJECT_ROOT
 from omk.recovery_edges_lab import (
     characterize_entities,
@@ -45,6 +46,7 @@ def _sha256(path):
 
 
 def add_recovery_lab(parser):
+    add_pack_inputs(parser)
     from pathlib import Path  # noqa: PLC0415
 
     for flag in ["server-source", "agent", "core", "mods-json", "worldedit"]:

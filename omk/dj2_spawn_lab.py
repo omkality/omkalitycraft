@@ -14,11 +14,13 @@ from omk.dj2_lab import _accounts, _console_sender, _copy_server, _wait_server
 from omk.dj2_linux_lab import JAVA_IMAGE, LinuxServer, docker, inspect_owned
 from omk.dj2_spawn_policy import write_spawn_policy
 from omk.forge_player import LabPlayer
+from omk.mod_components import add_pack_inputs
 from omk.operator_lab import _cleanup
 from omk.profiles import PROJECT_ROOT
 
 
 def add_spawn_lab(parser):
+    add_pack_inputs(parser)
     for name in ("server-source", "agent", "core", "mods-json"):
         parser.add_argument("--" + name, type=Path, required=True)
 
