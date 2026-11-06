@@ -6,6 +6,17 @@
   "source_commit": "3a9af5c05cd60d8b038de456e162662c5fe2d312",
   "license": "LGPL-2.1; retain upstream LICENSE.txt and notices",
   "license_source": "https://github.com/Mica-Technologies/MCMCP/blob/3a9af5c05cd60d8b038de456e162662c5fe2d312/LICENSE.txt",
+  "desktop_installer": {
+    "name": "MCMCP.Orchestrator_26.11.20_x64-setup.exe",
+    "source": "https://github.com/Mica-Technologies/MCMCP/releases/download/2026.11.02/MCMCP.Orchestrator_26.11.20_x64-setup.exe",
+    "sha256": "213e266b7dbe864c96ed5716ddf5992611f2b608a6a50ed8170575113f46a2f7",
+    "size": 2959953,
+    "app": {
+      "name": "mcmcp-orchestrator-app.exe",
+      "sha256": "9f4c1c6592ba7b3d8e3acfcce826320d538382a7a32ff3df61dc54f1b4bacd04",
+      "size": 9442816
+    }
+  },
   "artifacts": [
     {
       "name": "mcmcp-2026.11.02.jar",

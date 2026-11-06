@@ -5,6 +5,11 @@
   "language": "ru_ru",
   "force_unicode_font": false,
   "servers": [],
+  "initial_keybindings": {
+    "key.betterquesting.quests": 37,
+    "Переключить режим Очков с сенсорами": 88,
+    "Toggle Sensor Goggles Mode": 88
+  },
   "initial_configs": [
     {
       "path": "journeymap/config/5.7/journeymap.minimap.config",

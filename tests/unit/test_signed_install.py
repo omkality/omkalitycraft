@@ -11,6 +11,7 @@ from launcher.install import (
     current_platform,
 )
 from launcher.releases import ReleaseError, read_release, safe_path, sha256_file
+from launcher.version import VERSION
 from omk.publish import build_release, signing_key
 from tests.http_fixture import serve
 
@@ -147,6 +148,7 @@ def test_deleted_files_and_same_size_corruption_repair_without_resetting_maps(
                 platform=current_platform(),
                 launch=launch,
                 key=key,
+                minimum_launcher_version=VERSION,
             )
         ).encode(),
         keys,
@@ -196,6 +198,7 @@ def test_deleted_files_and_same_size_corruption_repair_without_resetting_maps(
                     platform=current_platform(),
                     launch=launch,
                     key=key,
+                    minimum_launcher_version=VERSION,
                 )
             ).encode(),
             keys,

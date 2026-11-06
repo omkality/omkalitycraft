@@ -1,5 +1,39 @@
 # Разработка OmkalityCraft
 
+## Постоянный Orchestrator и defaults dev12 — 6 ноября 2026
+
+Desktop MCMCP установлен в `.local/tooling/mcmcp-desktop/`, global/project Codex
+config использует официальный shim. Два одновременных подключения видят 70 tools;
+проверены перезапуск idle app и новый stdio session. Public `omk lab dj2-mcp`
+воспроизводит fresh Windows client + Linux server/auth и client restart без живых
+данных; GUI-политика этого upstream требует idle refresh после CLI changes.
+Каждый refresh проверяет точные EXE hashes, оба listener PID, state/port environment
+и дважды отсутствие активных игр. Это не атомарный lock от нового соединения.
+
+Финальный lab: один Linux Core 0.2.9 server, два Windows client starts. Начальная
+K открывает квесты, после остановки/редактирования личных lab-файлов сохранились
+F10/F8 и Circle/grid; настоящая F10 тоже открыла GUI. Independent saved NBT:
+тот же UUID-файл, 7 изумрудов, 12 уровней. Оба exit 0 до cleanup, по 55 секунд
+без новых reports/task fatal; Linux stop 0/OOM=false, свои volume/auth/MCP grants
+очищены. Default K/F12 и Square/no-grid восстановлены только в остановленном lab.
+
+Начальные keys — подписанные данные профиля, GUI не содержит DJ2-веток. Marker
+не даёт повторно добавлять отброшенный Minecraft языковой alias и не сбрасывает
+личный выбор. Полная потеря options.txt возвращает начальные настройки.
+Минимальная версия для новых метаданных — dev12, проверяется и при подписи.
+Windows full unit 786 passed / 6 skipped, Linux Docker 138 passed, Ruff/Black;
+ярлыки desktop app сохраняют профиль Codex через проверяемый bootstrap.
+Собран loopback EXE dev12,
+packaged Qt startup прошёл. Ошибки ранних fixture и различия с native game сохранены
+в [протоколе](MINECRAFT_MCP.md). Полная смена языка Galacticraft не принята.
+
+Native namespace чата всё ещё не загружен, #84 открыта; это не мешает проверенным
+MCP JSON-RPC вызовам через Python. После переподключения проверить native roster.
+Следующий блок основного плана — production owner recovery #35 и оставшиеся P0
+#29/#33/#34/#49. Сценарное прохождение #85 и массовая предгенерация #37 остаются
+позже; GTNH ещё не готов. Рабочий профиль/миры и публичные релизы не менялись,
+VPS пока не требуется.
+
 ## MCMCP и первые сценарии настоящего клиента — 6 ноября 2026
 
 Официальный MCMCP 2026.11.02 установлен только в отдельные test-only overlay
