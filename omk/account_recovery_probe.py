@@ -72,6 +72,8 @@ def exercise_owner(accounts, mods, console, expect, report, lab, server):
     )
     _write_private(private / "rcon.json", private, {"password": server.rcon_password})
     inventory = RecoveryConsole(cfg.recovery_consoles["dj2"], server.rcon_password)
+    inventory.ready()
+    expect(True, "owner_rcon_requires_connection_adapter_capability")
     expect(inventory.online() == {}, "owner_rcon_empty_inventory_positive_control")
     invitation = accounts.client.request(
         "POST", "/drasl/api/v3/invites", {}, accounts.admin["apiToken"]
@@ -89,6 +91,27 @@ def exercise_owner(accounts, mods, console, expect, report, lab, server):
             len(ids) == 2 and UUID(original.player_uuid) in {UUID(k) for k in ids},
             "owner_rcon_reports_real_uuid_inventory",
         )
+        for actor, request, label in [
+            (
+                player,
+                "/list omk-recovery version",
+                "owner_adapter_version_is_console_only",
+            ),
+            (
+                bystander,
+                f"/list omk-recovery drain {UUID(original.player_uuid)} {FIRST}",
+                "owner_adapter_drain_is_console_only",
+            ),
+        ]:
+            actor.messages.clear()
+            actor.command(request)
+            actor.wait(
+                lambda a=actor: any(
+                    "OMK_RECOVERY_ERROR console_only" in json.dumps(m)
+                    for m in tuple(a.messages)
+                )
+            )
+            expect(player.error is None and bystander.error is None, label)
         plan = prepare(cfg, FIRST)
         expect(
             len(plan["players"]) == 1 and plan["servers"] == ["dj2"],
