@@ -18,15 +18,17 @@ from omk.fs import regular
 from omk.profiles import PROJECT_ROOT
 
 
-def _source_volumes(config, server, entries):
+def _source_volumes(config):
+    # Iterate configured backup entries, not optional diagnostic-only servers.
+    # An invalid other entry must refuse instead of hiding an aliased volume.
+    with (config.private / "backups.toml").open("rb") as stream:
+        data = stream.read(65537)
+    if len(data) > 65536:
+        raise AdminError("Backup configuration exceeds limit")
+    entries = tomllib.loads(data.decode())["servers"]
     volumes = set()
-    for name in config.servers:
-        try:
-            item = backups.target_for(config, name)
-        except AdminError:
-            if name == server or name in entries:
-                raise
-            continue
+    for name in entries:
+        item = backups.target_for(config, name)
         volumes.update((item["data_volume"], item["store_volume"]))
     return volumes
 
@@ -51,7 +53,7 @@ def target_for(config, server, source):
     entries = doc["servers"]
     if not entries or set(entries) - set(config.servers):
         raise AdminError("Restore targets must belong to the operator allowlist")
-    volumes = _source_volumes(config, server, entries)
+    volumes = _source_volumes(config)
     targets = []
     for name, entry in entries.items():
         if (
