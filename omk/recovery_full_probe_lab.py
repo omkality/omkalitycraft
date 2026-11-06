@@ -165,6 +165,10 @@ def exercise_full_return(
     if current_access_stage is not None:
         report["current_access"] = current_access_stage(dest)
         expect(True, "current_access_lists_staged_before_replacement_start")
+    if not _authority_gate(
+        args, lab, dest, report, expect, original_world_digest, original_digest
+    ):
+        return
     console = start(dest)
     if current_access_stage is not None:
         from omk.recovery_access_lab import verify_access  # noqa: PLC0415
@@ -185,3 +189,43 @@ def exercise_full_return(
         report["full_return_original_digest_after"] == original_digest,
         "full_return_original_world_preserved",
     )
+
+
+def _authority_gate(
+    args, lab, dest, report, expect, original_world_digest, original_digest
+):
+    if getattr(args, "ftb_authority_policy", False):
+        from omk.ftb_restore_authority import stage_gate  # noqa: PLC0415
+
+        try:
+            report["ftb_authority"] = stage_gate(
+                lab / "backups/before-full-return.zip", dest, lab=lab
+            )
+        except ValueError as error:
+            if not getattr(args, "ftb_authority_conflict", False) or str(error) != (
+                "Current FTB authority differs from historical world; replacement start blocked"
+            ):
+                raise
+            comparison = json.loads((lab / "ftb-authority-comparison.json").read_text())
+            expect(
+                not comparison["compatible"],
+                "historical_revoked_ally_blocks_full_return",
+            )
+            expect(
+                "teams/omkrecovery.dat" in comparison["changed_records"],
+                "revoked_team_authority_difference_identified",
+            )
+            report["ftb_authority"] = comparison
+            report["replacement_start_blocked"] = True
+            report["full_return_original_digest_after"] = original_world_digest()
+            expect(
+                report["full_return_original_digest_after"] == original_digest,
+                "refused_return_preserves_original_world",
+            )
+            return False
+        if getattr(args, "ftb_authority_conflict", False):
+            raise ValueError(
+                "Expected historical FTB authority conflict was not detected"
+            )
+        expect(True, "current_ftb_authority_matches_historical_before_start")
+    return True

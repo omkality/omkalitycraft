@@ -9,7 +9,7 @@ import zipfile
 from uuid import uuid4
 
 from omk import recovery_mod_systems_lab as mod_systems
-from omk.dj2_commands_lab import FIRST, _place, _response
+from omk.dj2_commands_lab import FIRST, SECOND, _place, _response
 from omk.dj2_lab import (
     _accounts,
     _cleanup,
@@ -87,6 +87,16 @@ def add_recovery_lab(parser):
         "--operator-backups",
         action="store_true",
         help="Use the owner cold-backup plan/run on stopped lab containers",
+    )
+    parser.add_argument(
+        "--ftb-authority-policy",
+        action="store_true",
+        help="With Linux full return/ranks, refuse historical FTB authority changes",
+    )
+    parser.add_argument(
+        "--ftb-authority-conflict",
+        action="store_true",
+        help="With authority policy, seed a revoked historical ally and expect start refusal",
     )
 
 
@@ -268,7 +278,17 @@ def _restore_checks(actor, console, expect, report, snapshots, edge_cases):
 
 
 def _exercise(
-    client, session, mods, start, backup, expect, report, *, snapshots, edge_cases
+    client,
+    session,
+    mods,
+    start,
+    backup,
+    expect,
+    report,
+    *,
+    snapshots,
+    edge_cases,
+    authority_session=None,
 ):
     console = start()
     with LabPlayer(client, session, 25576, mods) as actor:
@@ -278,6 +298,14 @@ def _exercise(
             from omk.recovery_full_probe_lab import seed_full_return  # noqa: PLC0415
 
             seed_full_return(actor, console, expect)
+            if authority_session is not None:
+                with LabPlayer(client, authority_session, 25576, mods):
+                    _response(
+                        actor,
+                        "/team status " + SECOND + " ally",
+                        "commands.team.status.set",
+                    )
+                expect(True, "historical_ftb_ally_seeded_before_backup")
         if edge_cases:
             seed_edges(console, expect)
         _smelt(console, expect, "machine_smelt_positive_control_before_snapshot")
@@ -305,6 +333,13 @@ def _exercise(
             from omk.recovery_full_probe_lab import damage_full_return  # noqa: PLC0415
 
             damage_full_return(actor, console, expect)
+            if authority_session is not None:
+                _response(
+                    actor,
+                    "/team status " + SECOND + " none",
+                    "commands.team.status.set",
+                )
+                expect(True, "historical_ftb_ally_revoked_in_current_world")
         if edge_cases:
             damage_edges(console, expect)
         expect(_found(console, "130 241 130", "minecraft:air"), "base_really_damaged")
@@ -328,6 +363,14 @@ def _exercise(
 
 
 def _validate_inputs(args):
+    if getattr(args, "ftb_authority_conflict", False) and not getattr(
+        args, "ftb_authority_policy", False
+    ):
+        raise ValueError("FTB authority conflict requires --ftb-authority-policy")
+    if getattr(args, "ftb_authority_policy", False) and not getattr(
+        args, "rank_policy", False
+    ):
+        raise ValueError("FTB authority policy requires --rank-policy")
     if getattr(args, "operator_backups", False) and not getattr(
         args, "managed_backups", False
     ):
@@ -490,6 +533,14 @@ class RecoveryRuntime:
                     )
                 from omk.recovery_linux_lab import LinuxRecovery  # noqa: PLC0415
 
+                if getattr(self.args, "ftb_authority_policy", False):
+                    from omk.ftb_restore_authority import verify_gate  # noqa: PLC0415
+
+                    verify_gate(
+                        self.lab / "backups/before-full-return.zip",
+                        replacement,
+                        lab=self.lab,
+                    )
                 self.source_linux = self.linux
                 self.linux = LinuxRecovery(
                     replacement.parent,
@@ -755,6 +806,9 @@ def run_recovery_lab(args):
                 report,
                 snapshots=snapshots,
                 edge_cases=args.edge_cases,
+                authority_session=(
+                    session2 if getattr(args, "ftb_authority_conflict", False) else None
+                ),
             )
         from omk.recovery_nbt_lab import verify_snapshot_tiles  # noqa: PLC0415
 
