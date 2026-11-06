@@ -47,11 +47,12 @@ def test_nonloopback_or_unknown_adapter_rejected(change):
         )
 
 
-def test_kick_uses_only_uuid_and_checks_disconnect(monkeypatch):
+def test_kick_selects_uuid_rechecks_name_and_checks_disconnect(monkeypatch):
     first, unrelated = str(uuid4()), str(uuid4())
     calls = []
     replies = iter(
         [
+            f"There are 2/20 players online:target ({first}), other ({unrelated})",
             f"There are 2/20 players online:target ({first}), other ({unrelated})",
             "ignored kick output",
             f"There are 1/20 players online:other ({unrelated})",
@@ -62,7 +63,31 @@ def test_kick_uses_only_uuid_and_checks_disconnect(monkeypatch):
     )
     client = module.RecoveryConsole(module.ConsoleConfig(25577, "rcon.json"), "secret")
     client.disconnect([first])
-    assert calls == ["list uuids", f"kick {first} omk_account_recovery", "list uuids"]
+    assert calls == [
+        "list uuids",
+        "list uuids",
+        "kick target omk_account_recovery",
+        "list uuids",
+    ]
+
+
+def test_disappeared_uuid_never_kicks_new_owner_of_the_same_name(monkeypatch):
+    first, other = str(uuid4()), str(uuid4())
+    replies = iter(
+        [
+            f"There are 1/20 players online:target ({first})",
+            f"There are 1/20 players online:target ({other})",
+            f"There are 1/20 players online:target ({other})",
+        ]
+    )
+    calls = []
+    monkeypatch.setattr(
+        module, "command", lambda _c, _p, text: calls.append(text) or next(replies)
+    )
+    module.RecoveryConsole(
+        module.ConsoleConfig(25577, "rcon.json"), "secret"
+    ).disconnect([first])
+    assert calls == ["list uuids"] * 3
 
 
 @pytest.mark.parametrize("command", ["stop", "kick @a", "list uuids\nstop"])
@@ -106,10 +131,9 @@ def test_actual_loopback_framing_handles_split_packets_and_never_returns_sentine
                         2,
                         "list uuids",
                     )
-                    response = (
-                        module._packet(2, 0, "20 players online:")
-                        + module._packet(3, 0, "sentinel body")
-                    )
+                    response = module._packet(
+                        2, 0, "20 players online:"
+                    ) + module._packet(3, 0, "sentinel body")
                     for part in (response[:3], response[3:17], response[17:]):
                         stream.sendall(part)
             except Exception as error:

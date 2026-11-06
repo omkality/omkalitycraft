@@ -1,5 +1,6 @@
 """Exercise owner recovery only inside the explicit disposable Linux DJ2 lab."""
 
+import contextlib
 import json
 import secrets
 import socket
@@ -138,10 +139,53 @@ def exercise_owner(accounts, mods, console, expect, report, lab, server):
             ),
             "owner_reset_keeps_real_inventory_and_levels",
         )
+    _pending_login(cfg, accounts, renewed, mods, inventory, expect, report)
     console("save-all flush")
     report["owner_workflow"] = {
         "real_drasl_and_rcon_and_forge": True,
         "unrelated_actor_preserved": True,
         "interactive_terminal_delivery_automated": False,
-        "pending_pre_authenticated_handshake_tested": False,
+        "pending_pre_authenticated_handshake_tested": True,
     }
+
+
+def _pending_login(cfg, accounts, session, mods, inventory, expect, report):
+    # Hold a genuine authenticated connection before the Forge mod handshake.
+    pending = LabPlayer(accounts.client, session, 25576, mods)
+    with pending.login as held:
+        expect(
+            held[1].authenticated,
+            "owner_pending_login_passes_initial_auth_positive_control",
+        )
+        pending.login = contextlib.nullcontext(held)
+        report["pending_login_was_listed"] = (
+            str(UUID(session.player_uuid)) in inventory.online()
+        )
+        plan = prepare(cfg, FIRST)
+        delivered = []
+        result = execute(cfg, plan["account"], emit=delivered.append)
+        expect(
+            result["ok"] and len(delivered) == 1,
+            "owner_pending_login_recovery_engine_completed",
+        )
+        entered = False
+        try:
+            with pending:
+                entered = pending.entity_id is not None
+        except OSError, ValueError, RuntimeError:
+            pass
+        report["pending_login_survived_reset"] = entered
+        rejection_confirmed = not entered and "omk_account_recovery" in (
+            pending.error or ""
+        )
+        report["pending_login_explicit_rejection_confirmed"] = rejection_confirmed
+        expect(
+            rejection_confirmed,
+            "owner_pending_login_cannot_finish_after_token_revocation",
+        )
+    accounts.final_owner_password = delivered[0]
+    fresh = accounts.services[0].login(FIRST, delivered[0]).session
+    with LabPlayer(accounts.client, fresh, 25576, mods) as player:
+        expect(
+            player.dimension == 0, "owner_after_pending_reset_new_password_still_works"
+        )

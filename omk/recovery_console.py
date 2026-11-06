@@ -66,7 +66,7 @@ def _receive(stream, deadline):
 def command(config, password, text):
     # Only these fixed read/kick operations are exposed by this adapter.
     if text != "list uuids" and not re.fullmatch(
-        r"kick [a-f0-9-]{36} omk_account_recovery", text
+        r"kick [A-Za-z0-9_]{1,16} omk_account_recovery", text
     ):
         raise ConsoleError("Unsupported recovery console command")
     if (
@@ -135,11 +135,15 @@ class RecoveryConsole:
 
     def disconnect(self, players):
         for identity in set(self.online()) & set(players):
-            command(
-                self.config,
-                self.password,
-                f"kick {UUID(identity)} omk_account_recovery",
-            )
+            # Vanilla 1.12 kick resolves names, unlike list uuids. Select by UUID,
+            # then re-read that exact UUID's validated name immediately before kick.
+            current = self.online()
+            if identity in current:
+                command(
+                    self.config,
+                    self.password,
+                    f"kick {current[identity]} omk_account_recovery",
+                )
         deadline = time.monotonic() + 8
         while time.monotonic() < deadline:
             if not set(self.online()) & set(players):
