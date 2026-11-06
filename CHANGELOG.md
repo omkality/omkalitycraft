@@ -6,7 +6,8 @@
 - `omk lab dj2-mcp` создаёт свежие Windows client/Linux server/auth scope из явных проверенных входов, добавляет только test-only MCMCP и умеет повторно запустить клиент в том же lab. Разрешения ограничены точным endpoint; чужой активный мир блокирует обновление управляющего приложения. Другие ОС клиента пока не реализованы этим worker.
 - Начальные K для квестов и F12 для очков Galacticraft создаются только при отсутствии привязок. Явное отключение клавиши сохраняется; marker предотвращает повторное добавление отброшенного языкового alias. При полном удалении options.txt defaults создаются заново. Новый контракт требует минимум лаунчер 0.3.0.dev12 и отвергается издателем с более старым minimum.
 - Настоящие K и сохранённая F10 открыли GUI квестов; F10/F8, Circle/grid и UUID/7 изумрудов/12 уровней пережили перезапуск. Два клиентских exit 0, по 55 секунд без новых reports/fatal; Linux stop 0/OOM=false, собственные scope очищены. Тестовые K/F12 и Square/no-grid затем восстановлены. Это не полное прохождение или приёмка всех миров/трёх графических ОС.
-- [Версии и проверки](docs/MINECRAFT_MCP.md). Windows EXE dev12 собран и прошёл packaged Qt health smoke в изолированной папке; это loopback preview, публичного бинарного релиза/деплоя нет. Focused Windows/Linux Docker: по 116 passed, Ruff/Black.
+- Ручные ярлыки Orchestrator используют тот же project profile, что Codex; bootstrap проверяет оба EXE по закреплённым SHA-256 до открытия.
+- [Версии и проверки](docs/MINECRAFT_MCP.md). Windows EXE dev12 собран и прошёл packaged Qt health smoke в изолированной папке; это loopback preview, публичного бинарного релиза/деплоя нет. Windows full unit: 784 passed / 6 skipped; Linux Docker: 136 passed, Ruff/Black.
 
 ## Не выпущено — MCMCP для тестовой DJ2
 
