@@ -28,7 +28,11 @@ DONE = ".omk-world-staged.json"
 
 
 def _read(path):
-    if regular_file(path) > 65536:
+    try:
+        size = regular_file(path)
+    except OSError:
+        raise ValueError("World stage metadata is missing") from None
+    if size > 65536:
         raise ValueError("World stage metadata exceeds limit")
     return json.loads(path.read_bytes())
 
@@ -85,7 +89,12 @@ def _copy(archive, name, target, expected):
         or readback != expected["sha256"]
     ):
         raise ValueError("Staged world file failed hash readback")
-    _sync_directory(path.parent)
+    parent = path.parent
+    while parent.is_relative_to(target):
+        _sync_directory(parent)
+        if parent == target:
+            break
+        parent = parent.parent
 
 
 def execute(request, storage=Path("/backup/store"), target=Path("/restore")):
