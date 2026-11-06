@@ -212,6 +212,17 @@ def test_unreviewed_mod_pin_is_refused(tmp_path):
         gate.check_runtime(tmp_path)
 
 
+def test_aggregate_limit_counts_expanded_nbt_not_compressed_bytes(
+    tmp_path, records, monkeypatch
+):
+    _lab, dest, archive = staged(tmp_path, records)
+    monkeypatch.setattr(gate, "MAX_TOTAL", 100)
+    with pytest.raises(ValueError, match="exceeds limit"):
+        gate.read_zip(archive)
+    with pytest.raises(ValueError, match="exceeds limit"):
+        gate.read_staged(dest)
+
+
 def test_linked_ftb_file_is_refused(tmp_path, records):
     _lab, dest, _archive = staged(tmp_path, records)
     target = dest / gate.PREFIX / "players/owner.dat"

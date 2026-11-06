@@ -26,7 +26,7 @@ PINS = {
 }
 
 
-def nbt(raw):
+def unpack(raw):
     if len(raw) > MAX_BYTES:
         raise ValueError("FTB record exceeds compressed limit")
     if raw.startswith(b"\x1f\x8b"):
@@ -34,7 +34,11 @@ def nbt(raw):
         raw = inflater.decompress(raw, MAX_BYTES + 1)
         if len(raw) > MAX_BYTES or not inflater.eof or inflater.unused_data:
             raise ValueError("Invalid or oversized compressed FTB record")
-    return read_nbt(raw)[1]
+    return raw
+
+
+def nbt(raw):
+    return read_nbt(unpack(raw))[1]
 
 
 def authority_file(name):
@@ -57,14 +61,13 @@ def read_zip(path):
             name = info.filename.removeprefix(PREFIX)
             if not authority_file(name):
                 continue
-            total += info.file_size
-            if (
-                info.file_size > MAX_BYTES
-                or total > MAX_TOTAL
-                or len(result) >= MAX_RECORDS
-            ):
+            if info.file_size > MAX_BYTES or len(result) >= MAX_RECORDS:
                 raise ValueError("FTB authority snapshot exceeds limit")
-            result[name] = nbt(archive.read(info))
+            raw = unpack(archive.read(info))
+            total += len(raw)
+            if total > MAX_TOTAL:
+                raise ValueError("FTB authority snapshot exceeds limit")
+            result[name] = read_nbt(raw)[1]
     return result
 
 
@@ -88,14 +91,13 @@ def read_staged(server):
             raise ValueError("Nonregular staged FTB entry")
         if not authority_file(path.relative_to(base).as_posix()):
             continue
-        total += path.stat().st_size
-        if (
-            path.stat().st_size > MAX_BYTES
-            or total > MAX_TOTAL
-            or len(result) >= MAX_RECORDS
-        ):
+        if path.stat().st_size > MAX_BYTES or len(result) >= MAX_RECORDS:
             raise ValueError("FTB authority snapshot exceeds limit")
-        result[path.relative_to(base).as_posix()] = nbt(path.read_bytes())
+        raw = unpack(path.read_bytes())
+        total += len(raw)
+        if total > MAX_TOTAL:
+            raise ValueError("FTB authority snapshot exceeds limit")
+        result[path.relative_to(base).as_posix()] = read_nbt(raw)[1]
     return result
 
 
