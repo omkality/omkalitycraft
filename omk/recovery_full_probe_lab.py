@@ -107,6 +107,18 @@ def _claim(first, second, console, expect):
     )
 
 
+def ally_positive_control(other, console, expect):
+    _place(other, SECOND, (140.5, 241, 132.5), console)
+    console("gamemode 1 " + SECOND)
+    console("setblock 139 241 132 minecraft:stone")
+    other.dig(139, 241, 132)
+    time.sleep(0.5)
+    expect(
+        "Successfully found" in console("testforblock 139 241 132 minecraft:air"),
+        "historical_ally_really_can_edit_claim_before_revocation",
+    )
+
+
 def exercise_full_return(
     args,
     lab,
@@ -197,6 +209,13 @@ def _authority_gate(
     if getattr(args, "ftb_authority_policy", False):
         from omk.ftb_restore_authority import stage_gate  # noqa: PLC0415
 
+        if getattr(args, "reconcile_ftb_authority", False):
+            from omk.ftb_restore_reconcile import transfer  # noqa: PLC0415
+
+            report["ftb_authority_transfer"] = transfer(
+                lab / "backups/before-full-return.zip", dest, lab=lab
+            )
+            expect(True, "current_ftb_permissions_transferred_before_replacement_start")
         try:
             report["ftb_authority"] = stage_gate(
                 lab / "backups/before-full-return.zip", dest, lab=lab
@@ -223,7 +242,9 @@ def _authority_gate(
                 "refused_return_preserves_original_world",
             )
             return False
-        if getattr(args, "ftb_authority_conflict", False):
+        if getattr(args, "ftb_authority_conflict", False) and not getattr(
+            args, "reconcile_ftb_authority", False
+        ):
             raise ValueError(
                 "Expected historical FTB authority conflict was not detected"
             )
