@@ -1,0 +1,328 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "pack": "Divine Journey 2 2.23.4",
+  "scope_issue": 106,
+  "components": {
+    "OmkalityCore": {
+      "version": "0.3.2",
+      "sha256": "163029d0709310250979aa37e94db79fb73250242291ee312e184ef6d8583828"
+    },
+    "OmkalityDJ2Fix": {
+      "version": "0.1.1",
+      "sha256": "c070b6c8d0193dc64fb899ff995c8eff99f71ed6a5928577fb3a5857f98fdb54"
+    }
+  },
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "limits": {
+    "cpus": 4,
+    "container_memory_gib": 6,
+    "heap_gib": 4
+  },
+  "native_accepted": {
+    "tree_placement": {
+      "lab": ".local/tree-placement-cc7a06a85f",
+      "report_sha256": "0a4503c8c0e12a04a48d673e053f4a0afe4c888501dffcd3f7bfe9a31b813b8e",
+      "native_conditions": 136,
+      "cases": 14,
+      "boots": 1,
+      "native_report_ok": true,
+      "accepted_for_this_scope": true,
+      "world_sha256": "52655d464226e45fbe9c9eb6233cb909f7be3c248d92e22f32a15c8f30f37e5f",
+      "clean_exit": true,
+      "oom": false,
+      "graphical_client": false,
+      "owned_volume_removed": true,
+      "auth_removed": true,
+      "independent_conditions": 56,
+      "independent_report_sha256": "aa9dcdf9957303d291e7df0871fb4d18affabf6d3631828bb1a31b434969b09a"
+    },
+    "tile_rights_dimensions_restart_faults": {
+      "lab": ".local/placement-edges-646cc930a0",
+      "report_sha256": "cb18bc8f088952b8b999fa99da35b3d7dc696e3db7f987f9553607a55dfa289e",
+      "native_conditions": 89,
+      "cases": 10,
+      "boots": 2,
+      "native_report_ok": true,
+      "accepted_for_this_scope": true,
+      "world_sha256": "75faf10bf8d3766191635072ed9d0450bc5cb38cb3fd2f4ba5e181541f2c8612",
+      "clean_exit": true,
+      "oom": false,
+      "graphical_client": false,
+      "owned_volume_removed": true,
+      "auth_removed": true,
+      "independent_conditions": 30,
+      "independent_report_sha256": "1e967df94379ce8bc7f4c96eae20c13c2bb9d084998e05f1bff3ebe87efae4ce",
+      "pre_restart_world_sha256": "286a17f354cedae96b1a9a614f35f653f9e6705310c81f2bcf2781eaa396b0a5"
+    },
+    "minimal_forge": {
+      "bare": {
+        "lab": ".local/core-placement-bare-e16242a82d",
+        "report_sha256": "cc47dc1dabcdf2491a1f39a2c3049d22f54d5ddedb3479b12ba599dd381f5c82",
+        "native_conditions": 8,
+        "cases": 0,
+        "boots": 1,
+        "native_report_ok": true,
+        "accepted_for_this_scope": true,
+        "world_sha256": "73cfa33e2a5a730493f9771b4a7df03f2d1bfd11b1c7ca4d4b1dd63e8ea7e8b5",
+        "clean_exit": true,
+        "oom": false,
+        "graphical_client": false,
+        "owned_volume_removed": true,
+        "auth_removed": true,
+        "independent_conditions": 4,
+        "independent_report_sha256": "06473ffff311ce43f9e0482a1754ede8be3808804da8e71a43e50b9d12281f89"
+      },
+      "ftb-disabled": {
+        "lab": ".local/core-placement-ftb-disabled-6b410925b8",
+        "report_sha256": "d0b8b7ec3304ca7bd595fdfe567566caffbaa48d5f326a917f4bb4a5970ddfed",
+        "native_conditions": 8,
+        "cases": 0,
+        "boots": 1,
+        "native_report_ok": true,
+        "accepted_for_this_scope": true,
+        "world_sha256": "f09f2f4b1ce911fb97a557d1dc8939294a5277ce8c736c16639512110d927a56",
+        "clean_exit": true,
+        "oom": false,
+        "graphical_client": false,
+        "owned_volume_removed": true,
+        "auth_removed": true,
+        "independent_conditions": 4,
+        "independent_report_sha256": "06473ffff311ce43f9e0482a1754ede8be3808804da8e71a43e50b9d12281f89"
+      },
+      "ftb": {
+        "lab": ".local/core-placement-ftb-d680025bdf",
+        "report_sha256": "eaa6e42edc892b1f92d02b99894ab04e86d61a8e2f13eeeae2f2cd7dd71cad5f",
+        "native_conditions": 16,
+        "cases": 0,
+        "boots": 1,
+        "native_report_ok": true,
+        "accepted_for_this_scope": true,
+        "world_sha256": "278c83479430a0d7853b231a8c94dc4b2fc61f8827ce72dc1928cf96102f72f5",
+        "clean_exit": true,
+        "oom": false,
+        "graphical_client": false,
+        "owned_volume_removed": true,
+        "auth_removed": true,
+        "independent_conditions": 4,
+        "independent_report_sha256": "06473ffff311ce43f9e0482a1754ede8be3808804da8e71a43e50b9d12281f89"
+      }
+    },
+    "regressions": {
+      "claims": {
+        "lab": ".local/claim-regression-eeb66be237",
+        "report_sha256": "83574be093da674246ea7ba12aecf584b38cca5306c69c1552160f46a47fec10",
+        "native_conditions": 54,
+        "cases": 0,
+        "boots": 1,
+        "native_report_ok": true,
+        "accepted_for_this_scope": true,
+        "world_sha256": "1b1dfdadf5df667c508c23d327e89a1a1f46680b5dc027b84f1467ea6a51b988",
+        "clean_exit": true,
+        "oom": false,
+        "graphical_client": false,
+        "owned_volume_removed": true,
+        "auth_removed": true,
+        "independent_conditions": 8,
+        "independent_report_sha256": "32d6bb403917aba8181f69f21f1110622c43a55c4f5f9f680d0cdd0aa0166a24"
+      },
+      "spawn": {
+        "lab": ".local/spawn-policy-635302411d",
+        "report_sha256": "eb719fabf1bbac6b9e5bcab681cc4237c84e9d974d26ded899b9c22660687f64",
+        "native_conditions": 74,
+        "cases": 0,
+        "boots": 2,
+        "native_report_ok": true,
+        "accepted_for_this_scope": true,
+        "world_sha256": "79b69ab64778459228e0c3ebc54f06ce7caf8534a2582797252db5b8a31e5172",
+        "clean_exit": true,
+        "oom": false,
+        "graphical_client": false,
+        "owned_volume_removed": true,
+        "auth_removed": true,
+        "independent_conditions": 10,
+        "independent_report_sha256": "d5d78f33201e77156092b9cf496ad0539696c54da9b7c6da326447f3faee9794"
+      },
+      "rtp": {
+        "lab": ".local/rtp-dimensions-191e342760",
+        "report_sha256": "0548172197b2434450cd9b0046eb7dcee9bc7e07503f06477ec4f2fed939eef9",
+        "native_conditions": 50,
+        "cases": 0,
+        "boots": 1,
+        "native_report_ok": true,
+        "accepted_for_this_scope": true,
+        "world_sha256": "3fd483c25c6009d07cb9a17f54c6ed839835739f9121ce691647d30d6c1f4688",
+        "clean_exit": true,
+        "oom": false,
+        "graphical_client": false,
+        "owned_volume_removed": true,
+        "auth_removed": true,
+        "independent_conditions": 8,
+        "independent_report_sha256": "e249ce511f9f9fd260703ae0e0ceb68c07d45beff974ed7a02e9f838826167de"
+      }
+    }
+  },
+  "diagnostics": {
+    "unprotected_baseline": {
+      "lab": ".local/tree-placement-0a4f5a7207",
+      "report_sha256": "26f21e5a1aa64dd201f51d7e71c945bd91cdeb19fba00b84598d8c52222a8509",
+      "native_conditions": 118,
+      "cases": 14,
+      "boots": 1,
+      "native_report_ok": true,
+      "accepted_for_this_scope": false,
+      "world_sha256": "c2052fbbda1acf9c0ddf08ce6698fafb664ecc3cb73a8ea0c8571b89e35ac361",
+      "clean_exit": true,
+      "oom": false,
+      "graphical_client": false,
+      "owned_volume_removed": true,
+      "auth_removed": true,
+      "independent_conditions": 47,
+      "independent_report_sha256": "68485480dd2cbfb46d4de775706fc3f62c03a31b10e0148c386683af5c7993f6"
+    },
+    "unprotected_changed_cases": 8,
+    "rejected_rollback_candidate": {
+      "lab": ".local/placement-edges-1f32189cd1",
+      "report_sha256": "2b18d6d420ddf2696b362d79daf5ec776192175f3b55dfc0388ea896c9dc10ef",
+      "native_conditions": 10,
+      "cases": 1,
+      "boots": 1,
+      "native_report_ok": false,
+      "accepted_for_this_scope": false,
+      "world_sha256": "86bb8c0416859c1cf487cbfeeb132ca2dec63de19edbe8ab337dd91e85886e37",
+      "clean_exit": true,
+      "oom": false,
+      "graphical_client": false,
+      "owned_volume_removed": true,
+      "auth_removed": true,
+      "independent_conditions": 10,
+      "independent_report_sha256": "ee4a412082a2efa44a0971c2c5c215dd44c40adfa3aca29226a76c3b21fa22da"
+    },
+    "rejected_core_sha256": "2f00e56b4ef1e6802956d3eed7c4ac74e8ab169f7621e605102fff1246f829c6",
+    "candidate_added_drops_after_tile_restore": true,
+    "rejected_candidate_shipped": false,
+    "new_core_prior_fix_control": {
+      "lab": ".local/placement-edges-846c216c3b",
+      "report_sha256": "e29e77e5a58cc022c153df27ed0b2133745e3d8f4be42e0a50780bb68ace72ee",
+      "native_conditions": 10,
+      "cases": 1,
+      "boots": 1,
+      "native_report_ok": true,
+      "accepted_for_this_scope": false,
+      "world_sha256": "e0222b0644f09fd920312df411aa2eb763e97cd7ffb29be319b448fb5edd48b4",
+      "clean_exit": true,
+      "oom": false,
+      "graphical_client": false,
+      "owned_volume_removed": true,
+      "auth_removed": true,
+      "independent_conditions": 9,
+      "independent_report_sha256": "6092bd81159d17c88bd53b314fcf12eea09ef944e30186a64c1da1804bcf2923"
+    },
+    "early_incomplete_fixture_runs_not_accepted": 2,
+    "regression_wrapper_resumed_after_report_field_mismatch": true,
+    "security_reproduction_and_sources_public": false
+  },
+  "instrumentation": {
+    "primary_tree_fixture_seeded": false,
+    "tile_edges_fixture_seeded": true,
+    "controlled_runtime_provider_fault": true,
+    "native_survival_item_path": true,
+    "probe_in_runtime_components": false
+  },
+  "binary_checks": {
+    "conditions": 19,
+    "repeat_build_same_sha256": true,
+    "core_contains_mixin_or_pack_patches": false,
+    "prior_artifacts_preserved": true,
+    "existing_patch_implementation_class_bytes_unchanged": true,
+    "connection_adapter_class_bytes_unchanged": true,
+    "unchanged_resource_json_semantics": true
+  },
+  "local_python": {
+    "passed": 1059,
+    "skipped": 11,
+    "scope": [
+      "tests/unit",
+      "tests/ui"
+    ],
+    "ruff": true,
+    "black": true
+  },
+  "cleanup_readback": {
+    "ok": true,
+    "owned_scopes": 14,
+    "containers_volumes_networks_checked": true
+  },
+  "open_scope": [
+    29,
+    32,
+    33,
+    34,
+    37,
+    38,
+    49,
+    102,
+    105
+  ],
+  "limitations": [
+    "not_every_plant_or_machine",
+    "natural_growth_without_actor_not_accepted",
+    "quest_acquisition_not_accepted",
+    "graphical_client_not_repeated",
+    "no_load_test_or_vps_acceptance",
+    "generic_multiplace_atomicity_open",
+    "login_issue_102_open"
+  ],
+  "live_worlds_changed": false,
+  "player_releases_changed": false,
+  "new_backup_scheduler": false,
+  "vps_required_for_next_local_step": false,
+  "inputs": {
+    "forge": {
+      "version": "1.12.2-14.23.5.2860",
+      "source": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2860/forge-1.12.2-14.23.5.2860-universal.jar",
+      "sha256": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64"
+    },
+    "ftblib": {
+      "version": "5.4.7.2",
+      "source": "https://www.curseforge.com/minecraft/mc-mods/ftb-library-legacy-forge/files/2985811",
+      "sha256": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac"
+    },
+    "mixinbooter_compile": {
+      "version": "10.6",
+      "source": "https://github.com/CleanroomMC/MixinBooter/tree/05fc6c7b4b36a714c90eb4cc2f2364c681da0bc8",
+      "artifact_origin": "Existing DJ2 RU 2.21.3 mods/!mixinbooter-10.6.jar; no runtime upgrade",
+      "sha256": "c74998ccd73e6722b2b1f0d236c7b9c0b34572a892a3810d5e49557d96a356bd"
+    },
+    "compiler": {
+      "name": "Eclipse JDT ECJ",
+      "version": "3.26.0",
+      "source": "https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.26.0/ecj-3.26.0.jar",
+      "sha256": "ac0ba5876eaf7ebb47749a0d1be179c51f194b9dd0b875d1c09e1b530f5a2db5"
+    },
+    "pack_source": "https://github.com/Divine-Journey-2/Divine-Journey-2/releases/download/2.23.4/Divine_Journey_2.23.4_Server_Pack.zip",
+    "pack_archive_sha256": "692c820a636ab59a050ba560235e3af9852f598d18f5dad931271e4cbd729831",
+    "mixinbooter_runtime": {
+      "version": "10.7",
+      "member": "mods/!mixinbooter-10.7.jar",
+      "sha256": "8bb53080aede2d2b1e1c5f713bbf49a38f20add8caa3d52fabcdf8a536b55a18"
+    },
+    "twilightforest": {
+      "version": "3.15.1",
+      "member": "mods/twilightforest-1.12.2-3.15.1.jar",
+      "sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    "ftbutilities": {
+      "version": "5.4.1.131",
+      "sha256": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a"
+    }
+  },
+  "profiles_sha256": {
+    "community": "7f10aff55484725f980b2249cd1f7ee521490a04c26af459a8c90c08149a3e26",
+    "lab": "618da924cde027d20ceac46f0cdc1e74da03a80a1d8df0f650587fb3196d4a88"
+  },
+  "production_private_source_commit": "21b9ed73b8be3a45ae5991804c8db97340951681",
+  "accepted_native_conditions": 435,
+  "accepted_independent_conditions": 124,
+  "public_launch_accepted": false
+}
