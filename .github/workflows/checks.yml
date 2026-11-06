@@ -90,6 +90,9 @@ jobs:
       - run: docker compose -f deploy/auth-lab/compose.yaml build --pull
       - run: uv run --no-sync omk lab auth smoke
       - run: uv run --no-sync omk lab auth expiry
+      - run: docker pull python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925
+      - name: Persistent Drasl restart and isolated backup restore
+        run: uv run --no-sync omk lab auth-storage
       - run: uv run --no-sync omk lab admin smoke
 
   portable:

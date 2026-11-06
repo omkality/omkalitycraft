@@ -63,7 +63,7 @@ def test_owned_auth_cleanup_is_attempted_even_if_game_server_stop_fails(monkeypa
     report = {"ok": True}
     compose = ["docker", "compose", "--project-name", "omk-forge-lab-test-only"]
     _cleanup(None, None, compose, report)
-    assert run.call_args.args[0] == [*compose, "down", "--timeout", "5"]
+    assert run.call_args.args[0] == [*compose, "down", "--volumes", "--timeout", "5"]
     assert not report["ok"] and report["temporary_auth_removed"]
 
 

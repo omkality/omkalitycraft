@@ -39,7 +39,7 @@
  	if requirePlayer && client.Player == nil {
 --- /dev/null
 +++ b/omk_security.go
-@@ -0,0 +1,56 @@
+@@ -0,0 +1,59 @@
 +package main
 +
 +import (
@@ -80,6 +80,9 @@
 +			}
 +			app.SecurityMutex.Lock()
 +			defer app.SecurityMutex.Unlock()
++			if err := req.Context().Err(); err != nil {
++				return err
++			}
 +			return next(c)
 +		}
 +	}

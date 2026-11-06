@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -140,4 +141,27 @@ func TestOmkSlowBodyDoesNotHoldSecurityBoundary(t *testing.T) {
 	}
 	close(slow.release)
 	<-done
+}
+
+func TestOmkCanceledQueuedRequestCannotMutateLater(t *testing.T) {
+	app := &App{}
+	e := echo.New()
+	e.Use(app.serializeSecurityRequests())
+	var called atomic.Bool
+	e.POST("/operation", func(c *echo.Context) error { called.Store(true); return c.NoContent(204) })
+	ctx, cancel := context.WithCancel(context.Background())
+	request := httptest.NewRequest(http.MethodPost, "/operation", strings.NewReader("{}")).WithContext(ctx)
+	app.SecurityMutex.Lock()
+	done := make(chan struct{})
+	go func() { e.ServeHTTP(httptest.NewRecorder(), request); close(done) }()
+	cancel()
+	app.SecurityMutex.Unlock()
+	select {
+	case <-done:
+	case <-time.After(2 * time.Second):
+		t.Fatal("canceled operation stuck")
+	}
+	if called.Load() {
+		t.Fatal("canceled queued request mutated state")
+	}
 }
