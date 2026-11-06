@@ -222,6 +222,7 @@ def read_record(config, operation):
         "updated_at",
         "result",
         "failure_type",
+        "failure_reason",
     }
     if (
         value.get("schema") != 1
@@ -314,6 +315,8 @@ def run(config, operation, *, verify=False, environment=None):
             _stable(config, record)
         except Exception as error:
             record["failure_type"] = type(error).__name__
+            if isinstance(error, AdminError):
+                record["failure_reason"] = str(error)
             save(config, record, "incomplete")
             raise AdminError(
                 "Restore incomplete; retain target, inspect status and verify; never repeat apply"

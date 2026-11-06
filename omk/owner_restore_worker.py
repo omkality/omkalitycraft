@@ -29,6 +29,14 @@ DONE = ".omk-owner-restore-staged.json"
 MUTABLE_RUNTIME = {"server.properties", policy.RANKS}
 
 
+class CurrentBackupRequired(ValueError):
+    """The current world has no matching latest verified checkpoint."""
+
+
+class RuntimeArtifactsMismatch(ValueError):
+    """Prepared target JARs differ from the stopped current runtime."""
+
+
 def _runtime(root):
     files = runtime_files(root)
     return {
@@ -71,7 +79,9 @@ def _inputs(request, storage, target, current):
     latest_manifest = _json_read(latest / "manifest.json")
     files, current_world = source_summary(current, request)
     if files != latest_manifest["files"]:
-        raise ValueError("Make a fresh verified current-world backup before restoring")
+        raise CurrentBackupRequired(
+            "Make a fresh verified current-world backup before restoring"
+        )
     # Read and reconcile before any target write, including unknown-field refusal.
     policy.ftb.check_runtime(current)
     policy.ftb.check_runtime(target)
@@ -85,7 +95,9 @@ def _inputs(request, storage, target, current):
     policy.reconcile.merged_records(current_ftb, historical)
     runtime = _runtime(target)
     if runtime["artifacts"] != _runtime(current)["artifacts"]:
-        raise ValueError("Source and target runtime JAR inventories differ")
+        raise RuntimeArtifactsMismatch(
+            "Source and target runtime JAR inventories differ"
+        )
     return {
         **identity,
         "snapshot": request["snapshot"],
