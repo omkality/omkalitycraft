@@ -7,6 +7,7 @@ adopt an FTB backup directory, schedule jobs, or restore/publish a game service.
 import hashlib
 import json
 import os
+import re
 import shutil
 import zipfile
 from dataclasses import replace
@@ -28,28 +29,37 @@ LAB_POLICY = BackupPolicy(
 )
 
 
-def inventory(world):
-    if world.name != "lab-world" or world.is_symlink() or not world.is_dir():
-        raise ValueError("Expected a stopped lab-world directory")
+def inventory(world, *, world_name="lab-world", max_expanded_bytes=MAX_EXPANDED_BYTES):
+    if (
+        not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", world_name)
+        or world.name != world_name
+        or world.is_symlink()
+        or world.is_junction()
+        or not world.is_dir()
+    ):
+        raise ValueError("Expected the configured stopped world directory")
     result, size = {}, 0
     for directory, folders, filenames in os.walk(world, followlinks=False):
         base = Path(directory)
-        if any((base / folder).is_symlink() for folder in folders):
+        if any(
+            (base / folder).is_symlink() or (base / folder).is_junction()
+            for folder in folders
+        ):
             raise ValueError("Linked world directory")
         for filename in sorted(filenames):
             path = base / filename
             length = regular_file(path)
             size += length
-            if len(result) >= MAX_FILES or size > MAX_EXPANDED_BYTES:
+            if len(result) >= MAX_FILES or size > max_expanded_bytes:
                 raise ValueError("World exceeds snapshot budget")
             with path.open("rb") as file:
                 result[path.relative_to(world.parent).as_posix()] = {
                     "bytes": length,
                     "sha256": hashlib.file_digest(file, "sha256").hexdigest(),
                 }
-    if "lab-world/level.dat" not in result:
+    if world_name + "/level.dat" not in result:
         raise ValueError("World has no level marker")
-    validate_inventory(result)
+    validate_inventory(result, max_expanded_bytes=max_expanded_bytes)
     return result
 
 

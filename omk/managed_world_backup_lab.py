@@ -17,6 +17,7 @@ class ManagedWorldBackups:
         self.lab, self.run = lab, uuid4().hex[:12]
         self.volume = "omk-managed-backups-" + self.run
         self.records = {}
+        self.operator = None
         if docker("volume", "inspect", self.volume, check=False).returncode == 0:
             raise ValueError("A new backup volume is required")
         docker("volume", "create", "--label", LABEL + "=" + self.run, self.volume)
@@ -84,9 +85,65 @@ class ManagedWorldBackups:
     def publish(self, recovery, name):
         if name in self.records:
             raise ValueError("Checkpoint already published")
-        result = self.helper(recovery, "publish")
+        result = (
+            self.publish_operator(recovery)
+            if self.operator is not None
+            else self.helper(recovery, "publish")
+        )
         self.records[name] = result
         return result
+
+    def enable_operator(self, recovery):
+        from omk.admin import load_operator_config  # noqa: PLC0415
+        from omk.dj2_linux_lab import JAVA_IMAGE  # noqa: PLC0415
+
+        private = self.lab / ".omk-admin"
+        private.mkdir(mode=0o700)
+        config = private / "operator.toml"
+        config.write_text('schema=1\n[servers.dj2]\nroot="../server"\n')
+        config.chmod(0o600)
+        target = {
+            "container": recovery.server.name,
+            "data_volume": recovery.server.volume,
+            "store_volume": self.volume,
+            "label": LABEL,
+            "source_owner": recovery.server.run_id,
+            "store_owner": self.run,
+            "world": "lab-world",
+            "image": JAVA_IMAGE,
+            "release": "dj2-2.23.4-candidate",
+        }
+        path = private / "backups.toml"
+        path.write_text(
+            "schema=1\n[servers.dj2]\n"
+            + "\n".join(k + "=" + json.dumps(v) for k, v in target.items())
+        )
+        path.chmod(0o600)
+        self.operator = load_operator_config(config)
+        self.operator_environment = {
+            "OMK_BACKUP_MAX_BYTES": str(LAB_POLICY.max_bytes),
+            "OMK_BACKUP_MAX_COUNT": str(LAB_POLICY.max_count),
+            "OMK_BACKUP_STAGING_BYTES": str(LAB_POLICY.staging_bytes),
+            "OMK_BACKUP_RESERVE_BYTES": str(LAB_POLICY.reserve_bytes),
+            "OMK_BACKUP_WORLD_MAX_BYTES": str(512 * 1024**2),
+        }
+
+    def publish_operator(self, recovery):
+        from omk import admin_backups as owner  # noqa: PLC0415
+
+        self.verify_source(recovery)
+        planned = owner.plan(self.operator, "dj2", self.operator_environment)
+        result = owner.run(
+            self.operator, planned["operation"], environment=self.operator_environment
+        )["snapshot"]
+        return {
+            **result,
+            "inventory_files": planned["source"]["files"],
+            "inventory_sha256": planned["source"]["inventory_sha256"],
+            "uncompressed_bytes": planned["source"]["expanded_bytes"],
+            "operator_operation": planned["operation"],
+            "operator_stage": "complete",
+        }
 
     def copy_from_store(self, relative, destination):
         if destination.exists():
