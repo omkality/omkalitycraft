@@ -92,27 +92,7 @@ def exercise_owner(accounts, mods, console, expect, report, lab, server):
             len(ids) == 2 and UUID(original.player_uuid) in {UUID(k) for k in ids},
             "owner_rcon_reports_real_uuid_inventory",
         )
-        for actor, request, label in [
-            (
-                player,
-                "/list omk-recovery version",
-                "owner_adapter_version_is_console_only",
-            ),
-            (
-                bystander,
-                f"/list omk-recovery drain {UUID(original.player_uuid)} {FIRST}",
-                "owner_adapter_drain_is_console_only",
-            ),
-        ]:
-            actor.messages.clear()
-            actor.command(request)
-            actor.wait(
-                lambda a=actor: any(
-                    "OMK_RECOVERY_ERROR console_only" in json.dumps(m)
-                    for m in tuple(a.messages)
-                )
-            )
-            expect(player.error is None and bystander.error is None, label)
+        _console_denials(player, bystander, original, console, expect, lab)
         plan = prepare(cfg, FIRST)
         expect(
             len(plan["players"]) == 1 and plan["servers"] == ["dj2"],
@@ -215,3 +195,43 @@ def _pending_login(cfg, accounts, session, mods, inventory, expect, report):
         expect(
             player.dimension == 0, "owner_after_pending_reset_new_password_still_works"
         )
+
+
+def _console_denials(player, bystander, original, console, expect, lab):
+    # Test beyond vanilla permission denial: even an OP player must not drain others.
+    console("op " + FIRST)
+    console("op omk_bystander")
+    try:
+        for actor, request, label in [
+            (
+                player,
+                "/list omk-recovery version",
+                "owner_adapter_version_is_console_only",
+            ),
+            (
+                bystander,
+                f"/list omk-recovery drain {UUID(original.player_uuid)} {FIRST}",
+                "owner_adapter_drain_is_console_only",
+            ),
+        ]:
+            actor.messages.clear()
+            actor.command(request)
+            try:
+                actor.wait(
+                    lambda a=actor: any(
+                        "OMK_RECOVERY_ERROR console_only" in json.dumps(m)
+                        for m in tuple(a.messages)
+                    )
+                )
+            finally:
+                # Only game chat/error, no Drasl/RCON credentials; private lab evidence.
+                (lab / (label + ".json")).write_text(
+                    json.dumps(
+                        {"messages": list(actor.messages), "game_error": actor.error}
+                    ),
+                    encoding="utf-8",
+                )
+            expect(player.error is None and bystander.error is None, label)
+    finally:
+        console("deop " + FIRST)
+        console("deop omk_bystander")
