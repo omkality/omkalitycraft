@@ -178,7 +178,7 @@ def _copy_server(args, lab):
     return dest, mods
 
 
-def _accounts(compose, lab):
+def _accounts(compose, lab, *, first_username="omk_game_test"):
     subprocess.run(
         [*compose, "up", "--detach", "--pull", "never"],
         capture_output=True,
@@ -200,7 +200,7 @@ def _accounts(compose, lab):
     ]
     service = AccountService(client, FileSessionStore(lab / "account/session.json"))
     actor = service.prepare_registration(
-        "omk_game_test", invite, secrets.token_urlsafe(24)
+        first_username, invite, secrets.token_urlsafe(24)
     )
     session = service.register(actor).session
     invite2 = client.request("POST", "/drasl/api/v3/invites", {}, admin["apiToken"])[

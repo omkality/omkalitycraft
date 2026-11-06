@@ -29,7 +29,13 @@ LAB_POLICY = BackupPolicy(
 )
 
 
-def inventory(world, *, world_name="lab-world", max_expanded_bytes=MAX_EXPANDED_BYTES):
+def inventory(
+    world,
+    *,
+    world_name="lab-world",
+    max_expanded_bytes=MAX_EXPANDED_BYTES,
+    path_policy="portable",
+):
     if (
         not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", world_name)
         or world.name != world_name
@@ -59,12 +65,16 @@ def inventory(world, *, world_name="lab-world", max_expanded_bytes=MAX_EXPANDED_
                 }
     if world_name + "/level.dat" not in result:
         raise ValueError("World has no level marker")
-    validate_inventory(result, max_expanded_bytes=max_expanded_bytes)
+    validate_inventory(
+        result, max_expanded_bytes=max_expanded_bytes, path_policy=path_policy
+    )
     return result
 
 
-def snapshot(world, storage, policy):
-    files = inventory(world)  # Independent of the ZIP and its own manifest.
+def snapshot(world, storage, policy, *, path_policy="portable"):
+    files = inventory(
+        world, path_policy=path_policy
+    )  # Independent of the ZIP and its own manifest.
     staging = storage / "incoming.zip"
     if staging.exists():
         raise ValueError("Interrupted staging requires operator inspection")
@@ -77,7 +87,9 @@ def snapshot(world, storage, policy):
         raise OSError("Free-space reserve would be violated")
     root = storage / "store"
     store = (
-        BackupStore(root, policy) if root.exists() else BackupStore.create(root, policy)
+        BackupStore(root, policy, path_policy=path_policy)
+        if root.exists()
+        else BackupStore.create(root, policy, path_policy=path_policy)
     )
     with staging.open("xb") as output:
         with zipfile.ZipFile(
@@ -87,7 +99,7 @@ def snapshot(world, storage, policy):
                 archive.write(world.parent / name, name)
         output.flush()
         os.fsync(output.fileno())
-    if inventory(world) != files:
+    if inventory(world, path_policy=path_policy) != files:
         raise ValueError("Stopped world changed while snapshot was prepared")
     published = store.publish(staging, files)
     staging.unlink()  # Only this known input, after verified publication/retention.
@@ -102,8 +114,8 @@ def snapshot(world, storage, policy):
     }
 
 
-def fault_and_retention(world, storage, policy):
-    store = BackupStore(storage / "store", policy)
+def fault_and_retention(world, storage, policy, *, path_policy="portable"):
+    store = BackupStore(storage / "store", policy, path_policy=path_policy)
     before = store.inspect()
     if len(before) != policy.max_count:
         raise ValueError("Retention probe requires a full owned history")
@@ -114,16 +126,16 @@ def fault_and_retention(world, storage, policy):
         shutil.copyfileobj(source, target, length=1024**2)
     refused = False
     try:
-        BackupStore(storage / "store", replace(policy, max_bytes=1)).publish(
-            candidate, manifest["files"]
-        )
+        BackupStore(
+            storage / "store", replace(policy, max_bytes=1), path_policy=path_policy
+        ).publish(candidate, manifest["files"])
     except ValueError:
         refused = True
     finally:
         candidate.unlink()
     if not refused or store.inspect() != before:
         raise ValueError("Failed attempt modified the verified history")
-    result = snapshot(world, storage, policy)
+    result = snapshot(world, storage, policy, path_policy=path_policy)
     after = store.inspect()
     if (
         result["retired"] != 1
@@ -142,14 +154,31 @@ def fault_and_retention(world, storage, policy):
 if __name__ == "__main__":
     import sys
 
+    path_policy = (
+        "linux-server" if sys.argv[2:] == ["--linux-server-paths"] else "portable"
+    )
+    if sys.argv[2:] not in ([], ["--linux-server-paths"]):
+        raise ValueError("Unknown owned storage arguments")
     if sys.argv[1] == "publish":
-        report = snapshot(Path("/server/lab-world"), Path("/backup"), LAB_POLICY)
+        report = snapshot(
+            Path("/server/lab-world"),
+            Path("/backup"),
+            LAB_POLICY,
+            path_policy=path_policy,
+        )
     elif sys.argv[1] == "finish":
         report = fault_and_retention(
-            Path("/server/lab-world"), Path("/backup"), LAB_POLICY
+            Path("/server/lab-world"),
+            Path("/backup"),
+            LAB_POLICY,
+            path_policy=path_policy,
         )
     elif sys.argv[1] == "inspect":
-        report = {"snapshots": BackupStore(Path("/backup/store"), LAB_POLICY).inspect()}
+        report = {
+            "snapshots": BackupStore(
+                Path("/backup/store"), LAB_POLICY, path_policy=path_policy
+            ).inspect()
+        }
     else:
         raise ValueError("Unknown owned storage operation")
     print(json.dumps(report))

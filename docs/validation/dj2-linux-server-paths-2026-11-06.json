@@ -1,0 +1,144 @@
+{
+  "date": "2026-11-06",
+  "issue": 95,
+  "scope": "Linux server path policy; real CON Drasl/Forge account, owner cold backup and restoration directly into a new Linux volume; portable extraction defaults preserved",
+  "pack": "Divine Journey 2 2.23.4",
+  "core": "0.2.10",
+  "core_sha256": "438992170b8e56b4647bf0517e432c873146acd711d152ca5522eae57dbd17e3",
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "native": {
+    "accepted": true,
+    "conditions": 9,
+    "checks": [
+      "real_drasl_registration_accepts_CON",
+      "real_CON_forge_login_inventory_and_home_seeded",
+      "source_clean_exit_without_oom",
+      "real_ftb_con_dat_persisted_on_linux",
+      "owner_plan_run_backs_up_real_reserved_name",
+      "opaque_linux_store_export_verifies_on_host_without_extracting_CON",
+      "full_world_staged_and_reverified_inside_new_linux_volume",
+      "CON_inventory_survives_linux_restore_and_rejoin",
+      "FTB_reads_restored_con_dat_and_home_really_teleports"
+    ],
+    "server_starts": 2,
+    "source_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "replacement_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "all_owned_scopes_removed": true,
+    "host_extract_of_CON": false,
+    "inventory_files": 265,
+    "report_sha256": "32c998c359387f33f69b36f2677b364f69937988d1f0d338775c1a6fa74367e0"
+  },
+  "independent": {
+    "checks": [
+      "original_world_files_identical_before_backup_and_after_cleanup_export",
+      "real_ftb_saved_name_is_CON_before_and_after_restore",
+      "drasl_and_both_ftb_snapshots_have_same_uuid",
+      "reserved_home_persists_in_restored_real_ftb_file",
+      "both_real_player_inventory_files_contain_seven_emeralds",
+      "zip_contains_exact_native_con_dat_bytes_without_host_extraction",
+      "all_zip_files_match_separate_stopped_source_tar",
+      "archive_digest_matches_manifest_and_owner_snapshot_result",
+      "store_persists_explicit_linux_path_policy",
+      "linux_staging_receipt_and_prestart_inventory_match_source_plan",
+      "latest_worker_replay_matches_real_con_bytes_and_complete_inventory",
+      "both_owned_game_volumes_cleanly_stopped_exported_and_removed",
+      "owned_auth_and_backup_volumes_removed_after_verification"
+    ],
+    "writes_to_worlds": false,
+    "report_sha256": "32c998c359387f33f69b36f2677b364f69937988d1f0d338775c1a6fa74367e0",
+    "source_files": 265
+  },
+  "latest_worker_replay": {
+    "ok": true,
+    "checks": [
+      "initialize",
+      "stage",
+      "verify"
+    ],
+    "con_regular_file": true,
+    "con_sha256": "f7ab32400d324646ae6ef9c2f037f3f1de7716f53160e71993a714df3595b2ec",
+    "files": 265,
+    "inventory_sha256": "2d70314dd06d24e160c7a875c430bdcd25e3e4738cfbffcf99dcb909db8a2189",
+    "owned_volume_removed": true,
+    "worker_sha256": "05edc57ddd36709dbc7a6c8c0c979c690e0271140fd87dc99e5341848632f0c7",
+    "scope": "Latest worker stages captured real CON snapshot in a new Linux volume; no new Minecraft process",
+    "image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925"
+  },
+  "cold_cli_regression": {
+    "ok": true,
+    "checks": [
+      "concurrent_owner_cli_has_one_success",
+      "race_publishes_exactly_one_snapshot",
+      "controller_exits_before_publication_acknowledgement",
+      "uncertain_publication_remains_in_journal",
+      "explicit_finish_recovers_committed_snapshot_without_republication",
+      "third_snapshot_rotates_only_oldest",
+      "source_restart_blocks_publication_and_preserves_staging",
+      "explicit_cancel_removes_only_unpublished_staging",
+      "fresh_backup_succeeds_after_safe_cancel",
+      "changed_world_worker_refusal_is_recorded_without_request_contents",
+      "cancel_handles_failed_preparation_without_a_staged_archive",
+      "real_sparse_world_exceeds_old_512m_lab_limit",
+      "configured_expanded_limit_streams_600m_without_large_memory_buffer"
+    ],
+    "cleanup": true
+  },
+  "unit": {
+    "windows_passed": 967,
+    "windows_skipped": 10,
+    "windows_log_sha256": "1b1659c67dcfd03299368f0720dc9299176df38d20b5a313f3ee1e422510cd32",
+    "linux_focused": {
+      "image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "exit_code": 0,
+      "oom_killed": false,
+      "cpu_limit": 2,
+      "memory_mib": 1024,
+      "network": "none",
+      "source_mount": "readonly",
+      "mock_lifecycle_tests": true,
+      "real_minecraft": false,
+      "tail": [
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "274 passed, 2 warnings in 4.14s"
+      ],
+      "owned_container_removed": true
+    }
+  },
+  "code_provenance": {
+    "native_launch_commit": "fde0e71",
+    "worker_safety_commit": "643a725",
+    "test_import_fix": "c6a95da",
+    "note": "Native run began before worker safety additions (ancestor directory fsync, missing-receipt error normalization and free-space preflight). Current worker was replayed on the same captured real CON snapshot inside a new Linux volume, and tested with Linux fixtures. Archive format/copy semantics unchanged.",
+    "files": {
+      "omk/backup_archive.py": "260b5553466fee9b279bce8ca90e53c27b86e03d323bd5285b7ea1866fb79e71",
+      "omk/backup_store.py": "6eebf14aa1d82b8335d37b55a98762e9e5206859f1b3fe356058885f2431efe6",
+      "omk/cold_backup_worker.py": "1a56e4445f3f6914b70b5d52f9f9abe32657c77c14bf1cb9244ee9bb5c36b213",
+      "omk/linux_world_restore.py": "05edc57ddd36709dbc7a6c8c0c979c690e0271140fd87dc99e5341848632f0c7",
+      "omk/linux_paths_lab.py": "e358d4e8db61c9c66b8f5121a18e62879fb61912db95263a1cbe949e818220e2"
+    }
+  },
+  "limits": {
+    "public_profile_changed": false,
+    "private_core_changed": false,
+    "launcher_ui_changed": false,
+    "graphical_client_tested": false,
+    "gtnh_tested": false,
+    "production_cutover": false,
+    "existing_store_auto_migration": false,
+    "portable_extraction_of_reserved_names": false,
+    "remaining": "Production restore must coordinate current Drasl/access/ranks/FTB permissions, lifecycle, storage budget and off-host copies (#33/#38); old host-extract labs remain portable."
+  }
+}

@@ -64,8 +64,8 @@ def test_failure_never_changes_previous_verified_copy(fixture, monkeypatch, fail
     if failure == "changed-source":
         real = backup.inventory
 
-        def changing(path):
-            value = real(path)
+        def changing(path, **kwargs):
+            value = real(path, **kwargs)
             changing.calls += 1
             if changing.calls > 1:
                 value["lab-world/level.dat"]["sha256"] = "a" * 64

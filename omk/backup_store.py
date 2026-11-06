@@ -17,6 +17,7 @@ from omk.backup_archive import (
     MAX_MANIFEST_BYTES,
     SHA256,
     regular_file,
+    validate_path_policy,
     verify_archive,
 )
 
@@ -102,8 +103,16 @@ class BackupPolicy:
 
 
 class BackupStore:
-    def __init__(self, root, policy, *, max_expanded_bytes=MAX_EXPANDED_BYTES):
+    def __init__(
+        self,
+        root,
+        policy,
+        *,
+        max_expanded_bytes=MAX_EXPANDED_BYTES,
+        path_policy="portable",
+    ):
         self.root, self.policy = root, policy
+        self.path_policy = validate_path_policy(path_policy)
         if (
             type(max_expanded_bytes) is not int
             or not 1 <= max_expanded_bytes <= 1024**4
@@ -111,26 +120,51 @@ class BackupStore:
             raise ValueError("Invalid expanded backup limit")
         self.max_expanded_bytes = max_expanded_bytes
         _directory(root)
-        if _json_read(root / "owner.json") != OWNER:
+        if _json_read(root / "owner.json") != self.owner:
             raise ValueError("Unowned backup store")
 
+    @property
+    def owner(self):
+        return (
+            OWNER
+            if self.path_policy == "portable"
+            else {**OWNER, "schema": 2, "path_policy": self.path_policy}
+        )
+
     @classmethod
-    def create(cls, root, policy, *, max_expanded_bytes=MAX_EXPANDED_BYTES):
+    def create(
+        cls,
+        root,
+        policy,
+        *,
+        max_expanded_bytes=MAX_EXPANDED_BYTES,
+        path_policy="portable",
+    ):
         """Only a new directory; never adopt or clear existing backup data."""
+        validate_path_policy(path_policy)
         _directory(root.parent)
         root.mkdir()
-        _json_write(root / "owner.json", OWNER)
+        _json_write(
+            root / "owner.json",
+            (
+                OWNER
+                if path_policy == "portable"
+                else {**OWNER, "schema": 2, "path_policy": path_policy}
+            ),
+        )
         with (root / "lock").open("xb") as stream:
             stream.write(b"0")
             stream.flush()
             os.fsync(stream.fileno())
         _sync_directory(root)
         _sync_directory(root.parent)
-        return cls(root, policy, max_expanded_bytes=max_expanded_bytes)
+        return cls(
+            root, policy, max_expanded_bytes=max_expanded_bytes, path_policy=path_policy
+        )
 
     def _snapshots(self):
         _directory(self.root)
-        if _json_read(self.root / "owner.json") != OWNER:
+        if _json_read(self.root / "owner.json") != self.owner:
             raise ValueError("Unowned backup store")
         snapshots = []
         for entry in self.root.iterdir():
@@ -165,6 +199,7 @@ class BackupStore:
                 manifest["files"],
                 manifest["sha256"],
                 max_expanded_bytes=self.max_expanded_bytes,
+                path_policy=self.path_policy,
             )
             snapshots.append(
                 (
@@ -184,6 +219,21 @@ class BackupStore:
                 {"sequence": sequence, "id": entry.name, "bytes": size}
                 for sequence, entry, size in self._snapshots()
             ]
+
+    def readonly_snapshot(self, snapshot_id):
+        """Verified immutable input on a read-only mount; never acquires a write lock.
+
+        Caller binds the selected archive hash and must keep backup writers stopped.
+        A disappearing/changing source is an error, not an invitation to recreate it.
+        """
+        if not isinstance(snapshot_id, str) or not re.fullmatch(
+            r"snapshot-[a-f0-9]{32}", snapshot_id
+        ):
+            raise ValueError("Invalid snapshot identity")
+        if not any(entry.name == snapshot_id for _, entry, _ in self._snapshots()):
+            raise ValueError("Requested snapshot is not retained")
+        directory = self.root / snapshot_id
+        return directory / "archive.zip", _json_read(directory / "manifest.json")
 
     def _victims(self, snapshots, incoming_size):
         remaining, size = list(snapshots), sum(s[2] for s in snapshots) + incoming_size
@@ -241,7 +291,10 @@ class BackupStore:
         if not 0 < size <= min(self.policy.staging_bytes, self.policy.max_bytes):
             raise ValueError("Backup exceeds staging or retention budget")
         digest = verify_archive(
-            archive, files, max_expanded_bytes=self.max_expanded_bytes
+            archive,
+            files,
+            max_expanded_bytes=self.max_expanded_bytes,
+            path_policy=self.path_policy,
         )
         with _lock(self.root):
             return self._publish(archive, files, size, digest)
@@ -279,6 +332,7 @@ class BackupStore:
             files,
             digest,
             max_expanded_bytes=self.max_expanded_bytes,
+            path_policy=self.path_policy,
         )
         _json_write(pending / "manifest.json", metadata)
         _sync_directory(pending)

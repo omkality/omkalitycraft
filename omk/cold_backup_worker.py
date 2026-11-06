@@ -63,6 +63,7 @@ def source_summary(root, request):
         root / request["world"],
         world_name=request["world"],
         max_expanded_bytes=request["world_max_bytes"],
+        path_policy="linux-server",
     )
     return files, {
         "inventory_sha256": hashlib.sha256(
@@ -79,7 +80,10 @@ def store_for(storage, request, *, create=False):
     if any(path.name not in allowed or path.is_symlink() for path in storage.iterdir()):
         raise ValueError("Foreign files in backup volume")
     policy = BackupPolicy(**request["policy"])
-    kwargs = {"max_expanded_bytes": request["world_max_bytes"]}
+    kwargs = {
+        "max_expanded_bytes": request["world_max_bytes"],
+        "path_policy": "linux-server",
+    }
     root = storage / "store"
     if not root.exists() and create:
         return BackupStore.create(root, policy, **kwargs)
@@ -124,7 +128,10 @@ def prepare(root, storage, request):
     if source_summary(root, request)[1] != summary:
         raise ValueError("Stopped source changed during preparation")
     sha = verify_archive(
-        storage / "incoming.zip", files, max_expanded_bytes=request["world_max_bytes"]
+        storage / "incoming.zip",
+        files,
+        max_expanded_bytes=request["world_max_bytes"],
+        path_policy="linux-server",
     )
     _json_write(
         storage / "prepared.json",
@@ -154,6 +161,7 @@ def publish(storage, request):
         prepared["files"],
         prepared["sha256"],
         max_expanded_bytes=request["world_max_bytes"],
+        path_policy="linux-server",
     )
     store = store_for(storage, request)
     if store.inspect() != request["history"]:
@@ -187,6 +195,7 @@ def acknowledge(storage, request):
             manifest["files"],
             recovered["sha256"],
             max_expanded_bytes=request["world_max_bytes"],
+            path_policy="linux-server",
         )
     if (storage / "prepared.json").exists():
         prepared = _json_read(storage / "prepared.json")

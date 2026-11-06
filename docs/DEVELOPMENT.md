@@ -1,5 +1,28 @@
 # Разработка OmkalityCraft
 
+## Linux-имена FTB в бэкапах — 6 ноября 2026
+
+Исправлена #95: Linux cold worker использует явную `linux-server` path policy,
+которая разрешает Windows-reserved basename, сохраняя остальные проверки путей,
+ссылок, дубликатов, размеров/хешей/CRC. Generic default остаётся portable.
+Новый store сохраняет policy в owner schema 2; старые store не мигрируются автоматически.
+Новый data worker извлекает только в свежий инициализированный Linux target, пишет
+план/подтверждение, проверяет reserve и весь inventory. На Windows extraction запрещён;
+snapshot/manifest читаются без извлечения имён. Это staging, не production cutover.
+
+`dj2-linux-paths`: настоящий Drasl зарегистрировал CON; Linux DJ2/Core 0.2.10 создал
+`con.dat`, owner plan/run сохранил его, новый Linux volume загрузился и игрок вошёл
+с семью предметами и работающим home. **9 native условий / два старта**,
+**13 независимых проверок / 265 файлов**. Исходный мир неизменен, свои
+game/auth/backup тома очищены; stop 0/OOM=false. Последний worker дополнительно
+повторил stage/verify того же снимка в Linux. Это сервер/протокол, не GUI.
+
+Windows unit **967 passed / 10 skipped**, focused Linux Docker **274 passed**;
+13 real Docker cold CLI регрессий прошли. [Процедура/папки](LINUX_SERVER_PATHS.md),
+[протокол](validation/dj2-linux-server-paths-2026-11-06.json).
+Согласование текущих полномочий, production owner restore, backup-window,
+storage/off-host и VPS acceptance остаются в #33/#38. VPS пока не нужен.
+
 ## Текущие права FTB в историческом мире — 6 ноября 2026
 
 Явный `--reconcile-ftb-authority` перед строгой сверкой переносит известные текущие

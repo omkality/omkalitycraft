@@ -7,6 +7,11 @@ volume. Это локальная утилита владельца с прав�
 даёт полномочия владельца; Docker labels защищают от случайного выбора чужого
 ресурса, а не от администратора того же Docker daemon.
 
+Linux worker использует `linux-server` path policy и новый owner schema 2, чтобы
+сохранять FTB-файлы вроде `con.dat`. Portable defaults прежние. Существующие store
+не мигрируются/не усыновляются автоматически; их policy должна совпадать с reader.
+[Совместимость, Linux staging и приёмка CON](LINUX_SERVER_PATHS.md).
+
 ## Подготовка
 
 1. Использовать контейнерную среду с данными на Linux FS, именованными source/store

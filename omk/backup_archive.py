@@ -23,7 +23,16 @@ def regular_file(path):
     return path.stat().st_size
 
 
-def validate_inventory(files, *, max_expanded_bytes=MAX_EXPANDED_BYTES):
+def validate_path_policy(value):
+    if not isinstance(value, str) or value not in {"portable", "linux-server"}:
+        raise ValueError("Unknown backup path policy")
+    return value
+
+
+def validate_inventory(
+    files, *, max_expanded_bytes=MAX_EXPANDED_BYTES, path_policy="portable"
+):
+    validate_path_policy(path_policy)
     if type(max_expanded_bytes) is not int or not 1 <= max_expanded_bytes <= 1024**4:
         raise ValueError("Invalid expanded backup limit")
     if not isinstance(files, dict) or not 1 <= len(files) <= MAX_FILES:
@@ -39,7 +48,7 @@ def validate_inventory(files, *, max_expanded_bytes=MAX_EXPANDED_BYTES):
                 or len(part.encode("utf-8")) > 255
                 or any(ord(c) < 32 or c in '\\:*?"<>|' for c in part)
                 or part.endswith((".", " "))
-                or RESERVED.match(part)
+                or (path_policy == "portable" and RESERVED.match(part))
                 for part in parts
             )
         ):
@@ -69,10 +78,17 @@ def validate_inventory(files, *, max_expanded_bytes=MAX_EXPANDED_BYTES):
 
 
 def verify_archive(
-    path, files, expected_sha256=None, *, max_expanded_bytes=MAX_EXPANDED_BYTES
+    path,
+    files,
+    expected_sha256=None,
+    *,
+    max_expanded_bytes=MAX_EXPANDED_BYTES,
+    path_policy="portable",
 ):
     """Read every byte/CRC; an FTB success message is never the inventory source."""
-    validate_inventory(files, max_expanded_bytes=max_expanded_bytes)
+    validate_inventory(
+        files, max_expanded_bytes=max_expanded_bytes, path_policy=path_policy
+    )
     regular_file(path)
     with path.open("rb") as stream:
         digest = hashlib.file_digest(stream, "sha256").hexdigest()

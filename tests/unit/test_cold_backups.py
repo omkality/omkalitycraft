@@ -38,7 +38,7 @@ def fixture(tmp_path):
 def test_prepare_does_not_publish_then_recover_acknowledge_are_idempotent(fixture):
     root, storage, request = fixture
     request["prepared"] = worker.prepare(root, storage, request)
-    store = BackupStore(storage / "store", LAB_POLICY)
+    store = BackupStore(storage / "store", LAB_POLICY, path_policy="linux-server")
     assert store.inspect() == []
     result = worker.publish(storage, request)
     assert len(store.inspect()) == 1
@@ -333,7 +333,10 @@ def test_lost_host_journal_write_after_publish_is_reconciled_once(
     assert (
         len(
             BackupStore(
-                storage / "store", LAB_POLICY, max_expanded_bytes=16 * 1024**3
+                storage / "store",
+                LAB_POLICY,
+                max_expanded_bytes=16 * 1024**3,
+                path_policy="linux-server",
             ).inspect()
         )
         == 1
