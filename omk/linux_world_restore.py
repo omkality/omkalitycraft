@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import sys
 import zipfile
 from pathlib import Path
@@ -139,6 +140,16 @@ def execute(request, storage=Path("/backup/store"), target=Path("/restore")):
             raise ValueError(
                 "World stage requires a new empty world; never repeat partial extraction"
             )
+        required = (
+            sum(row["bytes"] for row in manifest["files"].values())
+            + 4096 * len(manifest["files"])
+            + 65536
+        )
+        if (
+            shutil.disk_usage(target).free
+            < required + request["policy"]["reserve_bytes"]
+        ):
+            raise OSError("World stage free-space reserve would be violated")
         _json_write(target / PLAN, plan)
         _sync_directory(target)
         world.mkdir(mode=0o700)

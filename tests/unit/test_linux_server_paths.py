@@ -1,6 +1,7 @@
 import hashlib
 import json
 import sys
+from types import SimpleNamespace
 import zipfile
 from uuid import uuid4
 
@@ -59,6 +60,38 @@ def test_linux_policy_rejects_case_collisions_and_unknown_policy():
         validate_inventory(inventory, path_policy="linux-server")
     with pytest.raises(ValueError):
         validate_inventory(files(), path_policy="unreviewed")
+
+
+@pytest.mark.parametrize("char", ["*", "?", "|", "<", ">", '"'])
+def test_linux_policy_keeps_other_nonportable_character_guards(char):
+    with pytest.raises(ValueError):
+        validate_inventory(files("world/a" + char + "b"), path_policy="linux-server")
+
+
+def test_linux_policy_rejects_a_zip_symlink_even_with_reserved_basename(tmp_path):
+    inventory = files()
+    path = tmp_path / "linked.zip"
+    with zipfile.ZipFile(path, "w") as file:
+        file.writestr("world/level.dat", b"level")
+        info = zipfile.ZipInfo("world/data/ftb_lib/players/con.dat")
+        info.create_system = 3
+        info.external_attr = 0o120777 << 16
+        file.writestr(info, b"data")
+    with pytest.raises(ValueError):
+        verify_archive(path, inventory, path_policy="linux-server")
+
+
+def test_insufficient_space_never_creates_a_world(tmp_path, monkeypatch):
+    store, result, _archive, _inventory = make_store(tmp_path, reserved=False)
+    target = tmp_path / "target"
+    target.mkdir()
+    req = request(result)
+    monkeypatch.setattr(restore.sys, "platform", "linux")
+    restore.execute({**req, "action": "initialize"}, store.root, target)
+    monkeypatch.setattr(restore.shutil, "disk_usage", lambda _: SimpleNamespace(free=0))
+    with pytest.raises(OSError):
+        restore.execute({**req, "action": "stage"}, store.root, target)
+    assert not (target / "world").exists() and not (target / restore.PLAN).exists()
 
 
 def make_store(tmp_path, reserved=True):
