@@ -1,5 +1,11 @@
 # Журнал изменений
 
+## Не выпущено — Linux-имена в серверных бэкапах
+
+- Исправлена #95: явная Linux server policy допускает FTB-файлы вроде `con.dat`; portable defaults и остальные guards сохранены. Policy связана с новым owner schema 2, старые store автоматически не переименовываются/не мигрируются.
+- Закрытый Linux data worker stage/verify работает с новым томом без host extraction, требует bound plan/receipt и reserve. Не переключает сервис и не перезаписывает мир.
+- Реальный CON прошёл Drasl/Forge, owner backup, Linux restore, повторный вход, inventory/home: 9 native условий, 13 независимых проверок/265 файлов. Свои тома очищены. Windows unit 967/10 skipped, Linux focused 274, cold CLI regression 13. [Процедура](docs/LINUX_SERVER_PATHS.md), [протокол](docs/validation/dj2-linux-server-paths-2026-11-06.json).
+
 ## Не выпущено — перенос актуальных прав FTB
 
 - Явный `--reconcile-ftb-authority` сохраняет известные актуальные полномочия в новом историческом мире при стабильных identity. Неизвестные изменения блокируются. План/подтверждение и повторное построение результата из архивов защищают от частичного применения и подмены marker.
