@@ -1,0 +1,10 @@
+# Copy to .omk-admin/restores.toml, mode 600; never adopt an existing world volume.
+# The server must also be configured in operator.toml and backups.toml.
+schema = 1
+
+[servers.dj2]
+data_volume = "omk-dj2-restore-NEW_OPERATION"
+owner = "REPLACE_WITH_FRESH_RESTORE_DEPLOYMENT_ID"
+label = "omkality.server.id"
+image = "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5"
+release = "dj2-2.23.4-candidate"
