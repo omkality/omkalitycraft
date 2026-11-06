@@ -1,6 +1,6 @@
 {
   "date": "2026-11-06",
-  "source_head": "b9e646bd43fe06e97c381213d206878051bb55fa",
+  "source_head": "b7e9f31e32f6d81ca15997eaeb84456e9a3e0191",
   "issue": 38,
   "real_drasl_linux_docker": true,
   "production_entrypoint_used": true,
@@ -10,35 +10,36 @@
   "image_id": "sha256:51c185ec27c1896ed1cf6a5c20fd395722a8d8eaf3c9ad4149683c5e16c4b400",
   "scope": "new labelled original and restored Linux volumes; fixed shared runtime; dynamic loopback port",
   "checks": [
-    "owned_omk-auth-storage-e6600afd5b14-original",
-    "persistent_mount_omk-auth-storage-e6600afd5b14-original",
-    "runtime_limits_omk-auth-storage-e6600afd5b14-original",
-    "clean_stop_omk-auth-storage-e6600afd5b14-original",
-    "owned_omk-auth-storage-e6600afd5b14-original",
-    "persistent_mount_omk-auth-storage-e6600afd5b14-original",
-    "runtime_limits_omk-auth-storage-e6600afd5b14-original",
+    "owned_omk-auth-storage-a7cadb375682-original",
+    "persistent_mount_omk-auth-storage-a7cadb375682-original",
+    "runtime_limits_omk-auth-storage-a7cadb375682-original",
+    "clean_stop_omk-auth-storage-a7cadb375682-original",
+    "owned_omk-auth-storage-a7cadb375682-original",
+    "persistent_mount_omk-auth-storage-a7cadb375682-original",
+    "runtime_limits_omk-auth-storage-a7cadb375682-original",
     "recreate_preserves_uuid_skin_model_signing_key",
     "recreate_preserves_remembered_game_session",
     "recreate_preserves_password_hash",
     "owned_sigkill_is_injected_not_oom",
-    "owned_omk-auth-storage-e6600afd5b14-original",
-    "persistent_mount_omk-auth-storage-e6600afd5b14-original",
-    "runtime_limits_omk-auth-storage-e6600afd5b14-original",
+    "owned_omk-auth-storage-a7cadb375682-original",
+    "persistent_mount_omk-auth-storage-a7cadb375682-original",
+    "runtime_limits_omk-auth-storage-a7cadb375682-original",
     "sigkill_preserves_identity_skin_and_key",
     "sigkill_preserves_remembered_session",
-    "clean_stop_omk-auth-storage-e6600afd5b14-original",
-    "owned_omk-auth-storage-e6600afd5b14-original",
-    "persistent_mount_omk-auth-storage-e6600afd5b14-original",
-    "runtime_limits_omk-auth-storage-e6600afd5b14-original",
-    "clean_stop_omk-auth-storage-e6600afd5b14-original",
-    "owned_omk-auth-storage-e6600afd5b14-quarantine",
-    "persistent_mount_omk-auth-storage-e6600afd5b14-quarantine",
-    "runtime_limits_omk-auth-storage-e6600afd5b14-quarantine",
+    "clean_stop_omk-auth-storage-a7cadb375682-original",
+    "exported_backup_matches_snapshot",
+    "owned_omk-auth-storage-a7cadb375682-original",
+    "persistent_mount_omk-auth-storage-a7cadb375682-original",
+    "runtime_limits_omk-auth-storage-a7cadb375682-original",
+    "clean_stop_omk-auth-storage-a7cadb375682-original",
+    "owned_omk-auth-storage-a7cadb375682-quarantine",
+    "persistent_mount_omk-auth-storage-a7cadb375682-quarantine",
+    "runtime_limits_omk-auth-storage-a7cadb375682-quarantine",
     "restore_has_no_published_ports",
-    "clean_stop_omk-auth-storage-e6600afd5b14-quarantine",
-    "owned_omk-auth-storage-e6600afd5b14-restored",
-    "persistent_mount_omk-auth-storage-e6600afd5b14-restored",
-    "runtime_limits_omk-auth-storage-e6600afd5b14-restored",
+    "clean_stop_omk-auth-storage-a7cadb375682-quarantine",
+    "owned_omk-auth-storage-a7cadb375682-restored",
+    "persistent_mount_omk-auth-storage-a7cadb375682-restored",
+    "runtime_limits_omk-auth-storage-a7cadb375682-restored",
     "restore_cannot_revive_old_api_game_join_or_password_access",
     "restore_cannot_revive_unused_invitation",
     "restored_player_retains_identity_and_stays_locked",
@@ -49,7 +50,7 @@
   "snapshot": {
     "sqlite_integrity": true,
     "files": 6,
-    "sha256": "e602b76c52a229375a4cfdd10c636adbd1b8ffe8b2f5f5bf8806052f1089add5"
+    "sha256": "dcec1f9d309085fc51a0629d9b8b07c8fc4be7aa50f3751cabe104effc3ae71d"
   },
   "restore": {
     "sqlite_integrity": true,
@@ -65,7 +66,7 @@
     "browser_credentials_revoked": 2
   },
   "cleanup": true,
-  "raw_report_sha256": "6251d9925e0bd46c96495db84704a7a0518d6483972e642f668ed5143a608dd3",
+  "raw_report_sha256": "81491d46c9521641f8093b5cc45c494aa036d14801e63b2db99ab337bbfe478b",
   "units": {
     "windows_passed": 849,
     "windows_skipped": 6,
@@ -101,6 +102,10 @@
     "Backup is private plaintext containing keys/tokens; never publish it"
   ],
   "early_attempts": [
+    {
+      "accepted": false,
+      "reason": "Linux CI exposed capless root write refusal to UID1001 host directory; reproduced on a Linux volume and fixed using Linux backup volume plus Docker client export"
+    },
     {
       "accepted": false,
       "reason": "Storage fixture omitted required clientToken in validate; fixed and full run repeated"
