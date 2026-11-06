@@ -98,6 +98,11 @@ def add_recovery_lab(parser):
         action="store_true",
         help="With authority policy, seed a revoked historical ally and expect start refusal",
     )
+    parser.add_argument(
+        "--reconcile-ftb-authority",
+        action="store_true",
+        help="With authority policy, explicitly transfer reviewed current FTB permissions",
+    )
 
 
 def _snapshot(server, dest, target):
@@ -299,12 +304,18 @@ def _exercise(
 
             seed_full_return(actor, console, expect)
             if authority_session is not None:
-                with LabPlayer(client, authority_session, 25576, mods):
+                with LabPlayer(client, authority_session, 25576, mods) as other:
                     _response(
                         actor,
                         "/team status " + SECOND + " ally",
                         "commands.team.status.set",
                     )
+                    if report.get("reconcile_ftb_authority"):
+                        from omk.recovery_full_probe_lab import (  # noqa: PLC0415
+                            ally_positive_control,
+                        )
+
+                        ally_positive_control(other, console, expect)
                 expect(True, "historical_ftb_ally_seeded_before_backup")
         if edge_cases:
             seed_edges(console, expect)
@@ -362,7 +373,11 @@ def _exercise(
         _smelt(console, expect, "restored_machine_smelt_after_full_restart")
 
 
-def _validate_inputs(args):
+def _validate_authority_flags(args):
+    if getattr(args, "reconcile_ftb_authority", False) and not getattr(
+        args, "ftb_authority_policy", False
+    ):
+        raise ValueError("FTB authority transfer requires --ftb-authority-policy")
     if getattr(args, "ftb_authority_conflict", False) and not getattr(
         args, "ftb_authority_policy", False
     ):
@@ -371,6 +386,10 @@ def _validate_inputs(args):
         args, "rank_policy", False
     ):
         raise ValueError("FTB authority policy requires --rank-policy")
+
+
+def _validate_inputs(args):
+    _validate_authority_flags(args)
     if getattr(args, "operator_backups", False) and not getattr(
         args, "managed_backups", False
     ):
@@ -536,6 +555,16 @@ class RecoveryRuntime:
                 if getattr(self.args, "ftb_authority_policy", False):
                     from omk.ftb_restore_authority import verify_gate  # noqa: PLC0415
 
+                    if getattr(self.args, "reconcile_ftb_authority", False):
+                        from omk.ftb_restore_reconcile import (  # noqa: PLC0415
+                            verify_transfer,
+                        )
+
+                        verify_transfer(
+                            self.lab / "backups/before-full-return.zip",
+                            replacement,
+                            lab=self.lab,
+                        )
                     verify_gate(
                         self.lab / "backups/before-full-return.zip",
                         replacement,
@@ -732,6 +761,7 @@ def run_recovery_lab(args):
         "edge_cases": args.edge_cases,
         "mod_systems": getattr(args, "mod_systems", False),
         "full_backup_return": args.full_backup_return,
+        "reconcile_ftb_authority": getattr(args, "reconcile_ftb_authority", False),
         "runtime": args.runtime,
         "lab_folder": str(lab.relative_to(PROJECT_ROOT)),
         "candidate": {
