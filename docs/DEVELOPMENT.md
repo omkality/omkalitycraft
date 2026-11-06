@@ -1,5 +1,28 @@
 # Разработка OmkalityCraft
 
+## Исторический Linux-мир с текущими правами — 6 ноября 2026
+
+`dj2-linux-policy` связывает Linux stage с актуальными bans/OP/whitelist/ranks
+и известными FTB-полномочиями. Свежая копия текущего мира создаётся перед возвратом;
+источник/store readonly. План/receipt и весь inventory перепроверяются перед Forge.
+Raw verify не разрешает обойти частичное применение policy. Пароли/Drasl не копируются;
+прочие target properties сохранены. Это lab, не production restore/cutover.
+
+Linux DJ2 2.23.4/Core 0.2.10: **19 native условий / три старта**,
+**25 независимых проверок / 273 исторических файлов**.
+CON вернул 7 вещей и старый home, сохранив текущий бан другого аккаунта, whitelist,
+снятую OP, quota homes и отзыв ally. Союзник раньше действительно ломал приват;
+после возврата не может, владелец может, вне привата guest может. Исходник неизменен,
+stop 0/OOM=false, свои game/auth/backup тома очищены. LabPlayer — протокол, не GUI.
+
+Отдельно **10 Linux FS/process проверок**: SIGKILL после первой замены,
+два процесса/один writer, настоящий ENOSPC tmpfs. Это synthetic fixture с pinned FTB
+JAR, не краш Minecraft. Windows unit **977 passed / 11 skipped**, focused Linux **285**.
+[Порядок/папки/ограничения](LINUX_CURRENT_POLICY.md),
+[обезличенный протокол](validation/dj2-linux-current-policy-2026-11-06.json).
+Production owner workflow, изменившиеся identity, backup-window, общий budget/off-host
+и VPS acceptance остаются в #33/#38. VPS для следующей локальной работы пока не нужен.
+
 ## Linux-имена FTB в бэкапах — 6 ноября 2026
 
 Исправлена #95: Linux cold worker использует явную `linux-server` path policy,

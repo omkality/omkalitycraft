@@ -1,5 +1,11 @@
 # Журнал изменений
 
+## Не выпущено — Linux-восстановление с текущими правами
+
+- Новый lab объединяет historical world с текущими bans/OP/whitelist/ranks/FTB на Linux. Полная проверка перед Forge; raw verifier не допускает обхода незавершённого policy stage. Drasl и пароли не откатываются.
+- Реальный DJ2 2.23.4/Core 0.2.10: 19 условий/3 старта, 25 независимых проверок. Вещи/home возвращены, ban/whitelist/deop/quota/отзыв ally сохранены; настоящий доступ к блокам проверен. Исходник неизменен, свои тома очищены.
+- 10 Linux FS/process fault checks (SIGKILL/гонка/ENOSPC), Windows unit 977/11 skipped, Linux focused 285. [Процедура](docs/LINUX_CURRENT_POLICY.md), [протокол](docs/validation/dj2-linux-current-policy-2026-11-06.json). Production cutover/scheduler/off-host остаются в #33/#38.
+
 ## Не выпущено — Linux-имена в серверных бэкапах
 
 - Исправлена #95: явная Linux server policy допускает FTB-файлы вроде `con.dat`; portable defaults и остальные guards сохранены. Policy связана с новым owner schema 2, старые store автоматически не переименовываются/не мигрируются.
