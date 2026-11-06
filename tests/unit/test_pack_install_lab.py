@@ -8,6 +8,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from launcher.install import current_platform
+from launcher.version import VERSION
 from omk.pack_install_lab import run_pack_install_lab
 from omk.pack_process_lab import run_pack_process_lab
 from omk.publish import build_release
@@ -64,6 +65,7 @@ def pack_releases(tmp_path):
             platform=current_platform(),
             launch=launch,
             key=key,
+            minimum_launcher_version=VERSION,
         )
         (root / "manifest.json").write_text(json.dumps(envelope), encoding="utf-8")
         roots.append(root)
