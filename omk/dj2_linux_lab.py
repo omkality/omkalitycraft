@@ -26,6 +26,7 @@ from omk.dj2_lab import (
 )
 from omk.forge_player import LabPlayer
 from omk.logging_runtime import stage_logging_runtime
+from omk.mod_components import add_pack_inputs
 from omk.profiles import PROJECT_ROOT
 
 JAVA_IMAGE = "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5"
@@ -308,6 +309,7 @@ class LinuxServer:
 
 
 def add_linux_skin_lab(parser):
+    add_pack_inputs(parser)
     for name in ("server-source", "agent", "core", "mods-json"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--client-source", type=Path)

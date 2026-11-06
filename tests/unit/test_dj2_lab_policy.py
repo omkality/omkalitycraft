@@ -1,6 +1,7 @@
 import json
 import threading
 import time
+import zipfile
 from argparse import Namespace
 from unittest.mock import Mock
 
@@ -8,6 +9,7 @@ import pytest
 
 from omk.dj2_lab import (
     _catalog_report,
+    _check_guard,
     _cleanup,
     _console_sender,
     _copy_server,
@@ -15,6 +17,31 @@ from omk.dj2_lab import (
     _wait_server,
     approved_mods,
 )
+
+
+@pytest.mark.parametrize("provided", ["neither", "fix", "profile"])
+def test_modular_dj2_lab_rejects_missing_pair_before_creating_state(tmp_path, provided):
+    core = tmp_path / "core.jar"
+    with zipfile.ZipFile(core, "w") as archive:
+        archive.writestr("net/omkality/api/CoreServices.class", b"marker")
+    fix = tmp_path / "fix.jar"
+    fix.write_bytes(b"fixture")
+    profile = tmp_path / "profile.properties"
+    profile.write_text("schema=1\nid=fixture\n")
+    lab = tmp_path / "not-created"
+    args = Namespace(
+        core=core,
+        pack_fix=fix if provided == "fix" else None,
+        server_profile=profile if provided == "profile" else None,
+    )
+    with pytest.raises(ValueError, match="explicit pack fix and server profile"):
+        _copy_server(args, lab)
+    assert not lab.exists()
+
+
+def test_guard_negative_control_cannot_silently_mutate_an_absent_mod():
+    with pytest.raises(ValueError, match="must mutate an existing mod"):
+        _check_guard(None, None, {"forge": "fixture"}, None)
 
 
 def test_approved_mods_accept_legacy_empty_version_and_normal_r_suffix(tmp_path):
@@ -79,7 +106,10 @@ def test_owned_auth_cleanup_survives_log_collector_failure(monkeypatch):
     assert report["log_collection_failed"] and not report["ok"]
 
 
-def test_fresh_server_copy_excludes_existing_worlds_credentials_and_roles(tmp_path):
+@pytest.mark.parametrize("modular", [False, True])
+def test_fresh_server_copy_excludes_existing_worlds_credentials_and_roles(
+    tmp_path, modular
+):
     source = tmp_path / "existing-server"
     (source / "config").mkdir(parents=True)
     (source / "mods").mkdir()
@@ -99,6 +129,15 @@ def test_fresh_server_copy_excludes_existing_worlds_credentials_and_roles(tmp_pa
     (source / "mods/old-omkality.jar").write_bytes(b"legacy private core")
     core = tmp_path / "test-core.jar"
     core.write_bytes(b"explicit lab core")
+    extras = {}
+    if modular:
+        with zipfile.ZipFile(core, "w") as archive:
+            archive.writestr("net/omkality/api/CoreServices.class", b"fixture marker")
+        fix = tmp_path / "fix.jar"
+        fix.write_bytes(b"explicit pack fix")
+        profile = tmp_path / "profile.properties"
+        profile.write_text("schema=1\nid=fixture\n")
+        extras = {"pack_fix": fix, "server_profile": profile}
     mods = tmp_path / "mods.json"
     mods.write_text('{"fixture":"1"}')
     lab = tmp_path / "owned-lab"
@@ -107,12 +146,17 @@ def test_fresh_server_copy_excludes_existing_worlds_credentials_and_roles(tmp_pa
         p.relative_to(source): p.read_bytes() for p in source.rglob("*") if p.is_file()
     }
     dest, _ = _copy_server(
-        Namespace(server_source=source, core=core, mods_json=mods), lab
+        Namespace(server_source=source, core=core, mods_json=mods, **extras), lab
     )
     assert not (dest / "world").exists() and not (dest / "ops.json").exists()
     assert not (dest / "vintagefix").exists()
     assert not (dest / "mods/old-omkality.jar").exists()
     assert (dest / "mods/OmkalityCore.jar").read_bytes() == core.read_bytes()
+    if modular:
+        assert (dest / "mods/OmkalityPackFix.jar").read_bytes() == fix.read_bytes()
+        assert (
+            dest / "config/omkalitycore-profile.properties"
+        ).read_bytes() == profile.read_bytes()
     assert (dest / "groovy/postInit/pack.groovy").read_bytes() == (
         source / "groovy/postInit/pack.groovy"
     ).read_bytes()

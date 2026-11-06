@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import time
 import traceback
+import zipfile
 from contextlib import ExitStack
 from pathlib import Path
 from uuid import uuid4
@@ -26,6 +27,7 @@ from omk.drasl import DraslClient
 from omk.forge_player import LabPlayer
 from omk.lab import skin_fixture
 from omk.logging_runtime import stage_logging_runtime
+from omk.mod_components import add_pack_inputs
 from omk.profiles import PROJECT_ROOT
 
 
@@ -50,6 +52,7 @@ def approved_mods(path):
 
 
 def add_dj2_lab(parser):
+    add_pack_inputs(parser)
     for flag in ["server-source", "java", "agent", "core", "mods-json"]:
         parser.add_argument("--" + flag, type=Path, required=True)
     parser.add_argument("--client-root", type=Path)
@@ -113,6 +116,19 @@ def _validate(args):
 
 
 def _copy_server(args, lab):
+    pack_fix = getattr(args, "pack_fix", None)
+    profile = getattr(args, "server_profile", None)
+    modular_core = False
+    if zipfile.is_zipfile(args.core):
+        with zipfile.ZipFile(args.core) as archive:
+            modular_core = "net/omkality/api/CoreServices.class" in archive.namelist()
+    if (modular_core or pack_fix is not None) and (pack_fix is None or profile is None):
+        raise ValueError(
+            "This DJ2 lab requires an explicit pack fix and server profile"
+        )
+    for path in (pack_fix, profile):
+        if path is not None and not path.is_file():
+            raise ValueError("Required lab extension input missing")
     source = args.server_source.resolve()
     dest = lab / "server"
     dest.mkdir()
@@ -148,6 +164,10 @@ def _copy_server(args, lab):
         if (source / name).exists():
             shutil.copy2(source / name, dest / name)
     shutil.copy2(args.core.resolve(), dest / "mods/OmkalityCore.jar")
+    if pack_fix is not None:
+        shutil.copy2(pack_fix.resolve(), dest / "mods/OmkalityPackFix.jar")
+    if profile is not None:
+        shutil.copy2(profile.resolve(), dest / "config/omkalitycore-profile.properties")
     configure_remapper(dest / "config/normalasm.cfg")
     mods = approved_mods(args.mods_json)
     assert all("\n" not in v and "\\" not in v for v in mods.values())
@@ -397,12 +417,17 @@ def _check_claims(first, second, console, expect):
     expect("Successfully found" in found, "ftb_claim_allows_owner_block_break")
 
 
-def _check_guard(client, session, mods, expect):
+def _check_guard(client, session, mods, expect, *, mod_id="ftbutilities"):
+    if mod_id not in mods:
+        raise ValueError("Guard negative control must mutate an existing mod")
     for name, bad in [
         ("extra", dict(mods, omk_lab_extra="1.0")),
-        ("missing", {k: v for k, v in mods.items() if k != "ftbutilities"}),
-        ("version", {**mods, "ftbutilities": "0.0-lab"}),
+        ("missing", {k: v for k, v in mods.items() if k != mod_id}),
+        ("version", {**mods, mod_id: "0.0-lab"}),
     ]:
+        # Let the server retire the previous connection for this UUID before
+        # starting another deliberately rejected login (especially on bare Forge).
+        time.sleep(0.5)
         try:
             with LabPlayer(client, session, 25576, bad):
                 pass
