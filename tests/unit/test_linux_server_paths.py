@@ -1,8 +1,8 @@
 import hashlib
 import json
 import sys
-from types import SimpleNamespace
 import zipfile
+from types import SimpleNamespace
 from uuid import uuid4
 
 import pytest
