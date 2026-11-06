@@ -5,7 +5,7 @@
 новая система приватов и не команда эксплуатации рабочего сервера.
 
 ```text
-uv run omk lab dj2-claims --suite all --server-source PATH_TO_DJ2_SERVER --agent PATH_TO_AUTHLIB_1_2_8 --core PATH_TO_PRIVATE_CORE_0_2_8 --mods-json PATH_TO_VERIFIED_MOD_LIST
+uv run omk lab dj2-claims --suite all --server-source PATH_TO_DJ2_SERVER --agent PATH_TO_AUTHLIB_1_2_8 --core PATH_TO_REVIEWED_PRIVATE_CORE --mods-json PATH_TO_VERIFIED_MOD_LIST
 ```
 
 Для отдельного опыта доступны `--suite claim-edges` и `--suite explosions`.
@@ -74,3 +74,14 @@ Final stop: exit 0 / fatal=false / OOM=false; собственный volume уд
 сохранён, свои ресурсы убраны. Каталог принятого запуска — 2 407 226 байт; лимит
 повышен до bounded 4 МиБ, добавлена unit-регрессия валидного файла больше 2 МиБ.
 Полный игровой прогон затем выполнен заново на свежем мире.
+
+## Повтор с Core 0.2.11 — 6 ноября 2026
+
+Тот же `all` набор на новом Linux-мире DJ2 2.23.4 прошёл **54 условия и 8 независимых
+проверок** с итоговым артефактом Core 0.2.11. Состояния claim/mute/vanilla адаптеров
+и версия из фактически загруженного Forge mod container сверены отдельно.
+Stop 0 / fatal=false / OOM=false, собственные game/auth scopes очищены после экспорта.
+Это регрессия прежней защиты, дополнительно к новым сценариям
+[ванильных границ](DJ2_VANILLA_BOUNDARIES.md); её отдельное покрытие и ограничения
+не заменяются общим числом проверок. Хеш итогового JAR и результаты — в
+[протоколе](validation/dj2-vanilla-boundaries-2026-11-06.json).
