@@ -399,7 +399,9 @@ def auth_smoke(*, with_gui: bool = False, expiry_only: bool = False) -> dict[str
         )
     finally:
         try:
-            report["cleanup"] = docker("down", "--timeout", "5").returncode == 0
+            report["cleanup"] = (
+                docker("down", "--volumes", "--timeout", "5").returncode == 0
+            )
         except OSError, subprocess.SubprocessError:
             report["cleanup"] = False
         report["ok"] = report["ok"] and report["cleanup"]

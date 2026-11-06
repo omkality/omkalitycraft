@@ -1,0 +1,36 @@
+# One Drasl process owns this SQLite volume. Both lab and deployment extend it.
+services:
+  drasl:
+    image: omkalitycraft-drasl:4.0.0-omk.2
+    pull_policy: never
+    build:
+      context: ../drasl
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: ${OMK_AUTH_CPUS:-1.0}
+    mem_limit: ${OMK_AUTH_MEMORY:-384m}
+    pids_limit: ${OMK_AUTH_PIDS:-128}
+    stop_grace_period: ${OMK_AUTH_STOP_TIMEOUT:-20s}
+    environment:
+      # Upstream treats ANY nonempty value (even "false") as enabling debug.
+      DRASL_DEBUG: ""
+      GOMEMLIMIT: ${OMK_AUTH_GO_MEMORY:-300MiB}
+    logging:
+      driver: local
+      options:
+        max-size: ${OMK_AUTH_LOG_SIZE:-10m}
+        max-file: ${OMK_AUTH_LOG_FILES:-3}
+    volumes:
+      - type: volume
+        source: drasl-state
+        target: /var/lib/drasl
+        volume: {nocopy: true}
+      - type: bind
+        source: ../../launcher/assets/skins/default-slim.png
+        target: /var/lib/drasl/default-skin/default-slim.png
+        read_only: true
+    tmpfs:
+      - /tmp:mode=1777,size=${OMK_AUTH_TMP_SIZE:-32m}
+    deploy:
+      replicas: 1

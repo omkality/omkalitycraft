@@ -62,7 +62,7 @@ def _cleanup(api_process, stream, compose):
         clean = False
     try:
         result = subprocess.run(
-            [*compose, "down", "--timeout", "5"],
+            [*compose, "down", "--volumes", "--timeout", "5"],
             capture_output=True,
             timeout=30,
             check=False,

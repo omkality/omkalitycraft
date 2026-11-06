@@ -5,6 +5,8 @@
 конфигурации; старые списки игроков, ранги и миры не импортировались.
 
 6 ноября (dev12) добавлена воспроизводимая owner-команда `omk lab dj2-mcp` ниже.
+Позже в тот же день принята DJ2-операция `omk admin recover-account`:
+78 native условий / 8 независимых проверок на постоянном auth volume; команды владельца добавлены ниже.
 Снимок полного игрового реестра остаётся датированным своей исходной проверкой;
 добавление лабораторного CLI не переаттестует все 438 игровых команд.
 
@@ -77,6 +79,11 @@
 | `uv run omk lab pack-install --hard-kill …` | Принудительное завершение собственного процесса установки и докачка новым процессом; 15 условий на полной DJ2. Не потеря питания, не существующие instances; [границы](../SIGNED_PACK_INSTALL.md) |
 | `uv run omk admin --config .omk-admin/operator.toml access revoke-invite --invitation-file <файл>` | Отозвать один неиспользованный код регистрации. Drasl отклоняет этот код; другие приглашения и аккаунты сохраняются. Не блокировка уже зарегистрированного игрока; [инструкция](../ADMIN.md) |
 | `uv run omk admin --help` | Закрытая утилита владельца: серверная диагностика, клиентские отчёты, приглашения; [инструкция](../ADMIN.md) |
+| `uv run omk admin --config .omk-admin/operator.toml recover-account plan --username PlayerName` | Проверить существующий аккаунт, игровые UUID и все настроенные серверы; создать приватный план без изменения аккаунта. [Настройка](../ACCOUNT_RECOVERY.md#утилита-владельца) |
+| `uv run omk admin --config .omk-admin/operator.toml recover-account run --account ACCOUNT_UUID` | Сброс с отзывом токенов и активных/незавершённых подключений; один новый пароль в приватном терминале. Требуются Drasl admin и Core 0.2.10/RCON-only адаптер каждого сервера. Это account UUID из плана, не игровой UUID. |
+| `uv run omk admin --config .omk-admin/operator.toml recover-account status --account ACCOUNT_UUID` | Прочитать приватный journal этапов без пароля; не считать потерянный ответ доказательством lock/unlock. |
+| `uv run omk admin --config .omk-admin/operator.toml recover-account resume --account ACCOUNT_UUID` | Явно продолжить проверенную незавершённую операцию с новой сменой секрета; успешную операцию повторять нельзя. |
+| `uv run omk lab dj2-account-recovery --operator-workflow …` | Свежие Linux DJ2/Drasl + loopback RCON, 73 условия и экспорт для независимой сверки; не принимает реальный account UUID. |
 | `uv run omk lab admin smoke` | Реальные Drasl/HTTP и проверки границы игрок/владелец |
 | `uv run omk lab client-crash --help` | Настоящий управляемый краш DJ2, очередь без сети и закрытый экспорт; [аргументы и изоляция](../CLIENT_CRASH_TESTING.md), 27 проверок прошли |
 | `uv run omk lab dj2-recovery --help` | Отдельный стенд отката выделенной базы из снимка, никогда не рабочие миры |
@@ -99,6 +106,8 @@
 | `uv run omk server list` | Настроенные профили и их статус |
 | `uv run omk launcher --help` | Адреса/API и отдельная переносимая папка лаунчера |
 | `uv run omk lab auth smoke` | Одноразовый Drasl: регистрация, UUID, сессии, скины |
+| `uv run omk auth configure --output .omk-admin/drasl.toml` | Создать приватный конфиг постоянного Drasl из валидированных `OMK_AUTH_*`; существующий не перезаписывать. [Настройки и запуск](../AUTH_STORAGE.md) |
+| `uv run omk lab auth-storage` | Свежие Linux volume: recreate/SIGKILL, SQLite/скины/ключи, полный backup, новый том и изолированный restore с отзывом прежних доступов. Никаких рабочих аккаунтов. |
 | `uv run omk lab auth expiry` | Настоящее истечение токена |
 | `uv run omk lab launcher smoke` | Qt + настоящий временный Drasl |
 | `uv run omk lab dj2 --help` | Новый loopback Forge/FTB/Core-стенд с двумя тестовыми игроками |

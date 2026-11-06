@@ -1,0 +1,118 @@
+{
+  "date": "2026-11-06",
+  "source_head": "b7e9f31e32f6d81ca15997eaeb84456e9a3e0191",
+  "issue": 38,
+  "real_drasl_linux_docker": true,
+  "production_entrypoint_used": true,
+  "existing_accounts_worlds_changed": false,
+  "graphical_minecraft": false,
+  "image": "omkalitycraft-drasl:4.0.0-omk.2",
+  "image_id": "sha256:51c185ec27c1896ed1cf6a5c20fd395722a8d8eaf3c9ad4149683c5e16c4b400",
+  "scope": "new labelled original and restored Linux volumes; fixed shared runtime; dynamic loopback port",
+  "checks": [
+    "owned_omk-auth-storage-a7cadb375682-original",
+    "persistent_mount_omk-auth-storage-a7cadb375682-original",
+    "runtime_limits_omk-auth-storage-a7cadb375682-original",
+    "clean_stop_omk-auth-storage-a7cadb375682-original",
+    "owned_omk-auth-storage-a7cadb375682-original",
+    "persistent_mount_omk-auth-storage-a7cadb375682-original",
+    "runtime_limits_omk-auth-storage-a7cadb375682-original",
+    "recreate_preserves_uuid_skin_model_signing_key",
+    "recreate_preserves_remembered_game_session",
+    "recreate_preserves_password_hash",
+    "owned_sigkill_is_injected_not_oom",
+    "owned_omk-auth-storage-a7cadb375682-original",
+    "persistent_mount_omk-auth-storage-a7cadb375682-original",
+    "runtime_limits_omk-auth-storage-a7cadb375682-original",
+    "sigkill_preserves_identity_skin_and_key",
+    "sigkill_preserves_remembered_session",
+    "clean_stop_omk-auth-storage-a7cadb375682-original",
+    "exported_backup_matches_snapshot",
+    "owned_omk-auth-storage-a7cadb375682-original",
+    "persistent_mount_omk-auth-storage-a7cadb375682-original",
+    "runtime_limits_omk-auth-storage-a7cadb375682-original",
+    "clean_stop_omk-auth-storage-a7cadb375682-original",
+    "owned_omk-auth-storage-a7cadb375682-quarantine",
+    "persistent_mount_omk-auth-storage-a7cadb375682-quarantine",
+    "runtime_limits_omk-auth-storage-a7cadb375682-quarantine",
+    "restore_has_no_published_ports",
+    "clean_stop_omk-auth-storage-a7cadb375682-quarantine",
+    "owned_omk-auth-storage-a7cadb375682-restored",
+    "persistent_mount_omk-auth-storage-a7cadb375682-restored",
+    "runtime_limits_omk-auth-storage-a7cadb375682-restored",
+    "restore_cannot_revive_old_api_game_join_or_password_access",
+    "restore_cannot_revive_unused_invitation",
+    "restored_player_retains_identity_and_stays_locked",
+    "safe_restore_preserves_uuid_skin_and_signing_key",
+    "owner_can_restore_access_to_same_player",
+    "old_credentials_remain_invalid_after_player_unlock"
+  ],
+  "snapshot": {
+    "sqlite_integrity": true,
+    "files": 6,
+    "sha256": "dcec1f9d309085fc51a0629d9b8b07c8fc4be7aa50f3751cabe104effc3ae71d"
+  },
+  "restore": {
+    "sqlite_integrity": true,
+    "files": 6,
+    "quarantine_required": true
+  },
+  "quarantine": {
+    "credentials_rotated": 2,
+    "invitations_revoked": 1,
+    "non_owner_accounts_locked": true
+  },
+  "browser_sessions": {
+    "browser_credentials_revoked": 2
+  },
+  "cleanup": true,
+  "raw_report_sha256": "81491d46c9521641f8093b5cc45c494aa036d14801e63b2db99ab337bbfe478b",
+  "units": {
+    "windows_passed": 849,
+    "windows_skipped": 6,
+    "linux_docker_passed": 152,
+    "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "linux_network": "none",
+    "linux_source": "readonly"
+  },
+  "go_image_build_tests": 4,
+  "other_real_http_labs": {
+    "smoke": {
+      "ok": true,
+      "checks": 19,
+      "cleanup": true
+    },
+    "expiry": {
+      "ok": true,
+      "checks": 7,
+      "cleanup": true
+    },
+    "operator": {
+      "ok": true,
+      "checks": 16,
+      "cleanup": true
+    }
+  },
+  "limits": [
+    "Local Docker Desktop Linux VM, not a public VPS deployment",
+    "TLS, routing, off-host backup, retention and target-host capacity remain in issue 38",
+    "Lab archive budget 128 MiB, not production retention",
+    "Emergency restore rotates access and locks non-owner accounts; ordinary restarts preserve login",
+    "No configured OIDC identities in this username/password acceptance",
+    "Backup is private plaintext containing keys/tokens; never publish it"
+  ],
+  "early_attempts": [
+    {
+      "accepted": false,
+      "reason": "Linux CI exposed capless root write refusal to UID1001 host directory; reproduced on a Linux volume and fixed using Linux backup volume plus Docker client export"
+    },
+    {
+      "accepted": false,
+      "reason": "Storage fixture omitted required clientToken in validate; fixed and full run repeated"
+    },
+    {
+      "accepted": false,
+      "reason": "Overlapping auth smoke refused occupied loopback port; repeated sequentially after native cleanup"
+    }
+  ]
+}

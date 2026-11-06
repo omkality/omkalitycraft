@@ -1,0 +1,164 @@
+--- a/main.go
++++ b/main.go
+@@ -87,6 +87,7 @@
+ 	DefaultLocale              *gotext.Locale
+ 	LocaleTags                 []language.Tag
+ 	HeartbeatLruList           *list.List
++	SecurityMutex              sync.Mutex
+ 	HeartbeatMutex             sync.RWMutex
+ 	HeartbeatSaltMap           map[ServerKey]heartbeatSaltEntry
+ }
+@@ -194,6 +195,7 @@
+ 	if app.Config.BodyLimit.Enable {
+ 		e.Use(middleware.BodyLimit(1024 * app.Config.BodyLimit.SizeLimitKiB))
+ 	}
++	e.Use(app.serializeSecurityRequests())
+ 
+ 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+ 		AllowOrigins: []string{"*"},
+--- a/model.go
++++ b/model.go
+@@ -3,7 +3,6 @@
+ import (
+ 	"crypto/md5"
+ 	"database/sql"
+-	"errors"
+ 	"net/mail"
+ 	"net/url"
+ 	"strings"
+@@ -393,8 +392,8 @@
+ 		return nil, NewUserError(Tr("token version is not current"))
+ 	}
+ 	client.LastUsedAt = time.Now()
+-	if err := app.DB.Save(&client).Error; err != nil {
+-		return nil, errors.New("couldn't update client LastUsedAt")
++	if err := recordClientUse(app.DB, &client); err != nil {
++		return nil, err
+ 	}
+ 
+ 	if requirePlayer && client.Player == nil {
+--- /dev/null
++++ b/omk_security.go
+@@ -0,0 +1,59 @@
++package main
++
++import (
++	"bytes"
++	"github.com/labstack/echo/v5"
++	"gorm.io/gorm"
++	"io"
++	"net/http"
++	"strings"
++)
++
++// One active Drasl process owns this SQLite state. Serialize complete security
++// requests (including Bind authentication), so a request authenticated before
++// reset cannot save old User/Client/Player fields after it. Immutable texture
++// and frontend files stay parallel, including self-hosted texture downloads.
++func (app *App) serializeSecurityRequests() echo.MiddlewareFunc {
++	return func(next echo.HandlerFunc) echo.HandlerFunc {
++		return func(c *echo.Context) error {
++			req := c.Request()
++			read := req.Method == http.MethodGet || req.Method == http.MethodHead
++			route := c.Path()
++			static := strings.HasSuffix(route, "*") && (strings.Contains(route, "/textures/texture/") || strings.HasSuffix(route, "/web/public*"))
++			if read && static {
++				return next(c)
++			}
++			// Slow uploads must not hold the security lock. Bound the buffered body.
++			if req.Body != nil && req.Body != http.NoBody {
++				const limit = 4 * 1024 * 1024
++				data, err := io.ReadAll(io.LimitReader(req.Body, limit+1))
++				req.Body.Close()
++				if err != nil {
++					return err
++				}
++				if len(data) > limit {
++					return NewUserErrorWithCode(http.StatusRequestEntityTooLarge, Tr("Request body too large."))
++				}
++				req.Body = io.NopCloser(bytes.NewReader(data))
++			}
++			app.SecurityMutex.Lock()
++			defer app.SecurityMutex.Unlock()
++			if err := req.Context().Err(); err != nil {
++				return err
++			}
++			return next(c)
++		}
++	}
++}
++
++// Touch only usage metadata; never save a stale Client version over revocation.
++func recordClientUse(db *gorm.DB, client *Client) error {
++	result := db.Model(&Client{}).Where("uuid = ? AND version = ?", client.UUID, client.Version).Update("last_used_at", client.LastUsedAt)
++	if result.Error != nil {
++		return result.Error
++	}
++	if result.RowsAffected != 1 {
++		return NewUserError(Tr("client authorization changed"))
++	}
++	return nil
++}
+--- a/player.go
++++ b/player.go
+@@ -582,12 +582,18 @@
+ 		return nil
+ 	}
+ 	result := db.Model(Client{}).Where("player_uuid = ?", player.UUID).Update("version", gorm.Expr("version + ?", 1))
+-	return result.Error
++	if result.Error != nil {
++		return result.Error
++	}
++	return db.Model(&Player{}).Where("uuid = ?", player.UUID).Update("server_id", nil).Error
+ }
+ 
+ func (app *App) InvalidateUser(db *gorm.DB, user *User) error {
+ 	result := db.Model(Client{}).Where("user_uuid = ?", user.UUID).Update("version", gorm.Expr("version + ?", 1))
+-	return result.Error
++	if result.Error != nil {
++		return result.Error
++	}
++	return db.Model(&Player{}).Where("user_uuid = ?", user.UUID).Update("server_id", nil).Error
+ }
+ 
+ func (app *App) DeletePlayer(caller *User, player *Player) error {
+--- a/session.go
++++ b/session.go
+@@ -128,6 +128,13 @@
+ 	var player Player
+ 	result := app.DB.Preload("User").First(&player, "name = ?", playerName)
+ 	user := player.User
++	// Never authenticate a locked local account through a saved or fallback approval.
++	if result.Error == nil && user.IsLocked {
++		if legacy {
++			return (*c).String(http.StatusOK, "NO")
++		}
++		return (*c).NoContent(http.StatusForbidden)
++	}
+ 	// If the error isn't "not found", throw.
+ 	if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+ 		return result.Error
+--- a/user.go
++++ b/user.go
+@@ -559,10 +559,7 @@
+ 
+ 		if password != nil {
+ 			// If password was changed, invalidate all clients
+-			if err := tx.Model(Client{}).
+-				Where("user_uuid = ?", user.UUID).
+-				Update("version", gorm.Expr("version + ?", 1)).
+-				Error; err != nil {
++			if err := app.InvalidateUser(tx, &user); err != nil {
+ 				return err
+ 			}
+ 		} else if resetMinecraftToken {
+@@ -579,6 +576,9 @@
+ 				Error; err != nil {
+ 				return err
+ 			}
++			if err := tx.Model(&Player{}).Where("user_uuid = ?", user.UUID).Update("server_id", nil).Error; err != nil {
++				return err
++			}
+ 		}
+ 
+ 		if err := tx.Save(&user).Error; err != nil {

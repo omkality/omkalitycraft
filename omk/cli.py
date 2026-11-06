@@ -90,6 +90,9 @@ def main(argv: list[str] | None = None) -> int:
     add_storage_commands(sub)
     add_locale_commands(sub)
     add_upgrade_commands(sub)
+    from omk.auth_config import add_auth_commands  # noqa: PLC0415
+
+    add_auth_commands(sub)
     sub.add_parser("doctor", help="Check local development prerequisites (read-only)")
     _add_launcher_parser(sub)
     server = sub.add_parser("server", help="Inspect configured server profiles")
@@ -185,12 +188,7 @@ def main(argv: list[str] | None = None) -> int:
             help="Real graphical DJ2 crash and private incident delivery lab",
         )
     )
-    lab_auth = lab_areas.add_parser("auth")
-    lab_auth_actions = lab_auth.add_subparsers(dest="action", required=True)
-    lab_auth_actions.add_parser("smoke")
-    lab_auth_actions.add_parser(
-        "expiry", help="Verify a genuinely expired game session"
-    )
+    _add_auth_labs(lab_areas)
     lab_launcher = lab_areas.add_parser(
         "launcher", help="Real Qt UI with disposable Drasl accounts"
     )
@@ -207,7 +205,21 @@ def main(argv: list[str] | None = None) -> int:
     return 0 if report["ok"] else 1
 
 
+def _add_auth_labs(lab_areas):
+    lab_auth = lab_areas.add_parser("auth")
+    actions = lab_auth.add_subparsers(dest="action", required=True)
+    actions.add_parser("smoke")
+    actions.add_parser("expiry", help="Verify a genuinely expired game session")
+    lab_areas.add_parser(
+        "auth-storage", help="Owned persistent Drasl backup and isolated restore"
+    )
+
+
 def _report(args):
+    if args.command == "auth":
+        from omk.auth_config import configure  # noqa: PLC0415
+
+        return configure(args.output)
     if args.command == "upgrade":
         return audit_registry_files(args)
     if args.command == "locale":
@@ -278,10 +290,13 @@ def _lab_report(args):
         report = run_client_crash_lab(args)
     elif args.area == "dj2":
         report = run_dj2_lab(args)
-    elif args.area == "admin":
+    elif args.area in {"admin", "auth-storage"}:
+        from omk.auth_storage_lab import run_auth_storage_lab  # noqa: PLC0415
         from omk.operator_lab import operator_smoke  # noqa: PLC0415
 
-        report = operator_smoke()
+        report = {"admin": operator_smoke, "auth-storage": run_auth_storage_lab}[
+            args.area
+        ]()
     else:
         report = auth_smoke(
             with_gui=args.area == "launcher", expiry_only=args.action == "expiry"

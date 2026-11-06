@@ -504,7 +504,7 @@ def run_linux_skin_lab(args):
             owned["other"].__exit__(None, None, None)
         server.close(report)
         result = subprocess.run(
-            [*compose, "down", "--timeout", "5"],
+            [*compose, "down", "--volumes", "--timeout", "5"],
             capture_output=True,
             timeout=40,
             check=False,

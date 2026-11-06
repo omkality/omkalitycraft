@@ -10,6 +10,7 @@ import secrets
 import subprocess
 import time
 from types import SimpleNamespace
+from urllib.parse import urlencode
 from uuid import UUID, uuid4
 
 from launcher.accounts import AccountService
@@ -32,6 +33,12 @@ from omk.profiles import PROJECT_ROOT
 
 def add_account_recovery_lab(parser):
     add_linux_runtime_inputs(parser)
+    parser.add_argument(
+        "--operator-workflow",
+        action="store_true",
+        help="Also exercise the owner recovery engine with real RCON",
+    )
+    parser.add_argument("--recovery-console-port", type=int, default=25577)
 
 
 def _accounts(compose, lab):
@@ -138,6 +145,25 @@ def _old_token_login(client, session, expect):
     )
 
 
+def _approval(client, session, expect, label):
+    ticket = secrets.token_hex(20)
+    client.request(
+        "POST",
+        "/session/minecraft/join",
+        {
+            "accessToken": session.access_token,
+            "selectedProfile": UUID(session.player_uuid).hex,
+            "serverId": ticket,
+        },
+    )
+    path = "/session/minecraft/hasJoined?" + urlencode(
+        {"username": session.player_name, "serverId": ticket}
+    )
+    profile = client.request("GET", path)
+    expect(UUID(profile["id"]) == UUID(session.player_uuid), label)
+    return path
+
+
 def _permissions(accounts, expect):
     client, session = accounts.client, accounts.sessions[0]
     user_id = accounts.user["user"]["uuid"]
@@ -201,6 +227,9 @@ def _exercise(accounts, mods, console, expect, report):
             _contains(player, "omkrecovery"), "initial_native_claim_has_fixture_owner"
         )
         _response(player, "/sethome recovery", "ftbutilities.lang.homes.set")
+        approval = _approval(
+            client, session, expect, "pre_reset_join_approval_positive_control"
+        )
         password = secrets.token_urlsafe(24)
         updated = client.request(
             "PATCH",
@@ -209,6 +238,11 @@ def _exercise(accounts, mods, console, expect, report):
             token,
         )
         expect(updated["uuid"] == user_id, "reset_preserves_drasl_account_uuid")
+        _denied(
+            lambda: client.request("GET", approval),
+            expect,
+            "reset_revokes_previous_join_approval",
+        )
         _denied(
             lambda: client.authenticate(FIRST, accounts.password, uuid4().hex),
             expect,
@@ -258,19 +292,15 @@ def _exercise(accounts, mods, console, expect, report):
         expect(True, "recovered_actor_keeps_working_home")
         _response(player, "/chunks info", "commands.chunks.info.text")
         expect(_contains(player, "omkrecovery"), "recovered_actor_keeps_native_claim")
-        locked = client.request("PATCH", target, {"isLocked": True}, token)
-        expect(locked["isLocked"] is True, "admin_lock_confirmed")
-        _denied(
-            lambda: client.authenticate(FIRST, password, uuid4().hex),
-            expect,
-            "locked_account_rejects_correct_password",
+        approval = _lock_actor(
+            accounts, recovered, password, target, player, console, expect
         )
-        _invalid_sessions(accounts, [recovered], expect, "lock")
-        _still_connected(
-            player, console, expect, "auth_lock_alone_does_not_kick_live_player"
-        )
-        _kick(player, console, expect, "locked_actor_explicitly_disconnected")
     client.request("PATCH", target, {"isLocked": False}, token)
+    _denied(
+        lambda: client.request("GET", approval),
+        expect,
+        "unlock_does_not_revive_previous_join_approval",
+    )
     _repeat_reset(accounts, target, password, recovered, mods, console, expect)
     console("save-all flush")
     report.update(
@@ -278,6 +308,31 @@ def _exercise(accounts, mods, console, expect, report):
         explicit_lab_console_kicks_verified=True,
         production_reset_cli_implemented=False,
     )
+
+
+def _lock_actor(accounts, recovered, password, target, player, console, expect):
+    client, token = accounts.client, accounts.admin["apiToken"]
+    approval = _approval(
+        client, recovered, expect, "pre_lock_join_approval_positive_control"
+    )
+    locked = client.request("PATCH", target, {"isLocked": True}, token)
+    expect(locked["isLocked"] is True, "admin_lock_confirmed")
+    _denied(
+        lambda: client.request("GET", approval),
+        expect,
+        "lock_revokes_previous_join_approval",
+    )
+    _denied(
+        lambda: client.authenticate(FIRST, password, uuid4().hex),
+        expect,
+        "locked_account_rejects_correct_password",
+    )
+    _invalid_sessions(accounts, [recovered], expect, "lock")
+    _still_connected(
+        player, console, expect, "auth_lock_alone_does_not_kick_live_player"
+    )
+    _kick(player, console, expect, "locked_actor_explicitly_disconnected")
+    return approval
 
 
 def _repeat_reset(accounts, target, password, recovered, mods, console, expect):
@@ -318,6 +373,7 @@ def _repeat_reset(accounts, target, password, recovered, mods, console, expect):
             ),
             "second_recovery_keeps_inventory_and_xp",
         )
+    accounts.final_recovered_session = final
 
 
 def run_account_recovery_lab(args):
@@ -334,7 +390,14 @@ def run_account_recovery_lab(args):
         "-f",
         str(PROJECT_ROOT / "deploy/auth-lab/compose.yaml"),
     ]
-    server = LinuxServer(lab, run, project + "_default")
+    if getattr(args, "operator_workflow", False):
+        from omk.account_recovery_probe import RecoveryServer  # noqa: PLC0415
+
+        server = RecoveryServer(
+            lab, run, project + "_default", rcon_port=args.recovery_console_port
+        )
+    else:
+        server = LinuxServer(lab, run, project + "_default")
     report = {
         "ok": False,
         "checks": [],
@@ -376,6 +439,11 @@ def run_account_recovery_lab(args):
             "recovery_actor_is_not_operator",
         )
         _exercise(accounts, mods, console, expect, report)
+        if getattr(args, "operator_workflow", False):
+            from omk.account_recovery_probe import exercise_owner  # noqa: PLC0415
+
+            state("owner_recovery_engine_real_rcon")
+            exercise_owner(accounts, mods, console, expect, report, lab, server)
         report["ok"] = True
     except Exception as error:
         # Authentication and network exceptions may carry credentials in their
