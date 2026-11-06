@@ -152,6 +152,16 @@ def run_spawn_lab(args):
         "lab": lab.relative_to(PROJECT_ROOT).as_posix(),
         "checks": [],
         "core_sha256": hashlib.sha256(args.core.read_bytes()).hexdigest(),
+        "pack_fix_sha256": (
+            hashlib.sha256(args.pack_fix.read_bytes()).hexdigest()
+            if getattr(args, "pack_fix", None)
+            else None
+        ),
+        "server_profile_sha256": (
+            hashlib.sha256(args.server_profile.read_bytes()).hexdigest()
+            if getattr(args, "server_profile", None)
+            else None
+        ),
         "linux_java_image": JAVA_IMAGE,
         "boot_count": 0,
     }
