@@ -96,6 +96,8 @@ def _path(config, account):
 
 def _save(config, record, stage):
     record.update(stage=stage, updated_at=datetime.now(UTC).isoformat())
+    if len(json.dumps(record, ensure_ascii=False).encode("utf-8")) > 65536:
+        raise AdminError("Account recovery journal exceeded its limit")
     _write_private(_path(config, record["account"]), config.private, record)
     if os.name != "nt":
         fd = os.open(config.private / "recovery", os.O_RDONLY)
