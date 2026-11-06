@@ -61,6 +61,84 @@ class OwnerRestoreLab(PolicyLab):
         self.report["runtime_artifact_diff"] = json.loads(result)
         self.state("runtime_artifact_inventory_before_owner_plan")
 
+    def prepare_generated_dependencies(self):
+        """Lab preparation only: complete a new runtime from its stopped source.
+
+        Forge extracts embedded core JARs on first launch. Do not weaken the
+        owner worker's equality check or overwrite any pre-existing target JAR.
+        """
+        diff = self.report["runtime_artifact_diff"]
+        if any(
+            not name.startswith(("mods/memory_repo/", "mods/1.12.2/"))
+            or row["source"] is None
+            or row["target"] is not None
+            for name, row in diff.items()
+        ):
+            raise ValueError("Fresh lab runtime has an unexpected artifact difference")
+        source = admin_backups.target_for(self.backups.operator, "dj2")
+        if admin_backups.checkpoint(source) != self.source_checkpoint:
+            raise ValueError("Source lifecycle changed before runtime preparation")
+        script = """import hashlib,json,os,shutil,sys
+from pathlib import Path
+from omk.fs import regular
+from omk.backup_store import _sync_directory
+changes=json.load(sys.stdin)
+for name,row in changes.items():
+ src=Path('/current')/name; dst=Path('/restore')/name
+ assert regular(src,Path('/current')) and not dst.exists() and not dst.is_symlink()
+ assert hashlib.sha256(src.read_bytes()).hexdigest()==row['source']
+ dst.parent.mkdir(parents=True,exist_ok=True)
+ assert dst.parent.resolve().is_relative_to(Path('/restore'))
+ with src.open('rb') as i,dst.open('xb') as o:
+  shutil.copyfileobj(i,o,1024**2);o.flush();os.fsync(o.fileno())
+ assert regular(dst,Path('/restore')) and hashlib.sha256(dst.read_bytes()).hexdigest()==row['source']
+ _sync_directory(dst.parent)
+print(json.dumps({'copied_embedded_jars':len(changes)}))
+"""
+        result = admin_backups.docker(
+            "run",
+            "--rm",
+            "--pull",
+            "never",
+            "-i",
+            "--network",
+            "none",
+            "--read-only",
+            "--memory",
+            "512m",
+            "--cpus",
+            "1",
+            "--cap-drop",
+            "ALL",
+            "--mount",
+            f"type=volume,source={self.source.volume},target=/current,readonly",
+            "--mount",
+            f"type=volume,source={self.target.volume},target=/restore",
+            "--mount",
+            f"type=bind,source={self.root.parent.parent/'omk'},target=/src/omk,readonly",
+            "--workdir",
+            "/src",
+            "--env",
+            "PYTHONDONTWRITEBYTECODE=1",
+            admin_backups.IMAGE,
+            "python",
+            "-c",
+            script,
+            stdin=json.dumps(diff),
+            timeout=180,
+        )
+        self.report["embedded_runtime_preparation"] = {
+            **json.loads(result),
+            "files": diff,
+        }
+        if admin_backups.checkpoint(source) != self.source_checkpoint:
+            raise ValueError("Source lifecycle changed during runtime preparation")
+        self.runtime_artifacts()
+        self.check(
+            not self.report["runtime_artifact_diff"],
+            "prepared_runtime_matches_actual_embedded_source_jars",
+        )
+
     def cli(self, action, *, success=True):
         args = (
             ["--server", "dj2", "--snapshot", self.snapshot["id"]]
@@ -115,6 +193,7 @@ class OwnerRestoreLab(PolicyLab):
         self.target = LinuxServer(root, uuid4().hex[:10], self.source.network)
         self.target.prepare(dest, self.args, self.client)
         self.runtime_artifacts()
+        self.prepare_generated_dependencies()
         entry = {
             "data_volume": self.target.volume,
             "owner": self.target.run_id,
