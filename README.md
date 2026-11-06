@@ -88,6 +88,7 @@ uv run omk admin --config .omk-admin/operator.toml reports export --id REPORT_ID
 `.local/recovery-status.json`. Сырые крашлоги, БД и сессии не публиковать в Git.
 
 - [Текущее состояние и следующий этап](docs/DEVELOPMENT.md)
+- [MCMCP: управление лабораторной Minecraft и ограничения пилота](docs/MINECRAFT_MCP.md)
 - [Миры, предгенерация, RTP и бюджет диска из env](docs/WORLDS_AND_STORAGE.md)
 - [Онлайн серверов и его env-настройки](docs/SERVER_STATUS.md)
 - [Env-настройки и запуск API в Docker](docs/API_RUNTIME.md)

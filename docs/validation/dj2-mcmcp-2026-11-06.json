@@ -1,0 +1,136 @@
+{
+  "date": "2026-11-06",
+  "issues": [
+    84,
+    85,
+    86,
+    32,
+    37,
+    49
+  ],
+  "accepted_player_release": false,
+  "live_accounts_worlds_or_profile_changed": false,
+  "mcp_installed_only_in_isolated_client": true,
+  "runtime": {
+    "pack": "DJ2 2.23.4",
+    "core": "0.2.9",
+    "candidate_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+    "server_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "server_cpus": 4,
+    "container_mib": 6144,
+    "heap_mib": 4096,
+    "client_os": "Windows",
+    "server_os": "Linux Docker"
+  },
+  "tools": {
+    "client": 64,
+    "orchestrator_total": 70,
+    "protocol": "2025-06-18",
+    "http_calls_verified": true,
+    "official_stdio_calls_verified": true,
+    "configured_stdio_offline_restart": {
+      "ok": true,
+      "configured_stdio_startup_while_game_closed": true,
+      "tool_count": 70,
+      "connected_count": 0,
+      "native_codex_namespace_call_verified": false,
+      "server_info": {
+        "name": "mcmcp-orchestrator",
+        "title": "MCMCP Orchestrator",
+        "version": "26.11.20"
+      },
+      "orchestrator_eof_exit_code": 1
+    },
+    "codex_cli_config_discovery": true,
+    "native_codex_namespace_call_verified": false
+  },
+  "runs": [
+    {
+      "run": "9659844205b1",
+      "structures_enabled": false,
+      "client_exit_before_cleanup": 0,
+      "post_exit_observation_seconds": 55,
+      "no_new_reports_or_task_fatal_markers": true,
+      "server_exit_code": 0,
+      "server_oom_killed": false,
+      "owned_volume_auth_removed": true,
+      "world_archive_sha256": "6d04861cf5c806ca8df6251a5ed3fbadeaca48367dce5bc51ac8dc12af1915fb",
+      "native_report_sha256": "07abc65db39e848e43395a82b9e05930b27fd1dcb2614fc036165faa28be3b91",
+      "post_exit_report_sha256": "64c9783c5e8ab96e9bd023a33d648df398eb8dec6aae015a50abb7624be7b395"
+    },
+    {
+      "run": "0224b79840c6",
+      "structures_enabled": true,
+      "client_exit_before_cleanup": 0,
+      "post_exit_observation_seconds": 55,
+      "no_new_reports_or_task_fatal_markers": true,
+      "server_exit_code": 0,
+      "server_oom_killed": false,
+      "owned_volume_auth_removed": true,
+      "world_archive_sha256": "df44d0d30a6fe541d7ce3fee5eaf31f804c5865abc36a03a7e2e6bea8f6b5bb4",
+      "native_report_sha256": "4742ebc7e7fba8e342e6104266835426dbba13c86cf6fb9064d49e2ab78a80e6",
+      "post_exit_report_sha256": "64c9783c5e8ab96e9bd023a33d648df398eb8dec6aae015a50abb7624be7b395",
+      "independent_saved_player_check": {
+        "same_uuid_file": true,
+        "dimension": 0,
+        "xp_level": 12,
+        "emerald_count": 7
+      },
+      "rejoin_readiness": {
+        "mcp_connect_returned_timeout": true,
+        "waiting_chunks": 50,
+        "later_gui_none_world_loaded": true,
+        "state_and_saved_nbt_verified": true
+      },
+      "screenshots": {
+        "omk-mcp-controls-0224b79840c6.png": "c7bce24faee183b579a1bc0992269030de9dc679a521e0070c73cacd2116597d",
+        "omk-mcp-eden-structures-0224b79840c6.png": "d78d35478dac0f238babf5974bf33c1093fdec567e08076f4028b272d9eb9f6a",
+        "omk-mcp-questbook-0224b79840c6.png": "0c745643960cbb9f78cf1b2e791d7f43bf1aa507b4df181339490538f41811ef",
+        "omk-mcp-questbook-open-0224b79840c6.png": "b7c50026075233fe478bc1b85255bfe491112452429ae03844bb39fea4c8bf06",
+        "omk-mcp-questbook-raw-0224b79840c6.png": "313376d754ad3a124ea9ab6aa28fb6e13a5e6c470c082af719cde2ea5d634e91",
+        "omk-mcp-questchapters-0224b79840c6.png": "2d4dea414e01b762ed0ef91f74350c1db145575010fade157bfe405f69969b29"
+      }
+    }
+  ],
+  "observed_actions": [
+    "player_inventory_reads",
+    "real_chest_gui",
+    "creative_inventory",
+    "controls_and_key_rebinding",
+    "normal_keyboard_K_after_conflict_removal",
+    "MCP_navigation_of_Russian_quest_chapters",
+    "give_and_xp_with_saved_nbt_check",
+    "creative_flight",
+    "overworld_Eden_overworld",
+    "Eden_rendered_islands_and_entities",
+    "independent_server_dimension_and_TPS",
+    "GUI_disconnect_rejoin",
+    "MCP_client_quit"
+  ],
+  "limitations": [
+    "synthetic_key_K_does_not_equal_real_keyboard_event",
+    "initial_K_conflicts_BetterQuesting_Galacticraft",
+    "first_fixture_generate_structures_false_not_structure_acceptance",
+    "Recurrent_Complex_population_compatibility_warning_requires_structure_validation",
+    "wide_connect_radius_timed_out_despite_real_join",
+    "headless_strict_bootstrap_not_usable_as_documented_in_this_release",
+    "orchestrator_eof_exit_1",
+    "not_full_progression_or_machine_load_or_three_OS_acceptance"
+  ],
+  "artifact_bom": "profiles/lab/mcmcp.json",
+  "private_raw_locations": [
+    ".local/mcmcp-client-<run>/",
+    ".local/tooling/mcmcp-orchestrator-state/"
+  ],
+  "unit_validation": {
+    "implementation_commit": "6cc4af4",
+    "windows_focused_passed": 47,
+    "linux_focused_passed": 47,
+    "mcp_unit_cases": 23,
+    "mocked_transport_lifecycle": true,
+    "linux_image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "linux_report_sha256": "d057c2316f5940b3ade0cdf20ab50e7de0935b6ac5cd7d9844b17b2a451f1a37",
+    "linux_network": "none",
+    "lint": "Ruff and Black passed"
+  }
+}

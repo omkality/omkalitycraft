@@ -1,5 +1,13 @@
 # Журнал изменений
 
+## Не выпущено — MCMCP для тестовой DJ2
+
+- Закреплены официальный MCMCP 2026.11.02 и Windows Orchestrator, источник/лицензия/SHA-256. Локальный Codex настроен на stdio; диагностический HTTP client проверяет отдельный owned lab и не передаёт bearer через системный proxy/redirect.
+- Два настоящих Windows-клиента с отдельными Linux DJ2 2.23.4 / Core 0.2.9 проверили GUI/контейнер, игровые команды, Эдем и возврат, disconnect/rejoin и штатное закрытие. Оба Java exit 0 до cleanup, ещё 55 секунд без новых reports; Linux stop exit 0 / OOM=false. Во втором мире структуры включены, сохранённый NBT независимо подтвердил 7 изумрудов и 12 уровней.
+- Сохранены ограничения: synthetic K, конфликт K Galacticraft/квестов (#86), таймаут слишком широкого readiness-радиуса, Recurrent Complex population warning в Эдеме. Конфигурация Codex принята CLI и запустила stdio offline; вызов из нового native namespace чата ещё не проверен (#84).
+- #85 хранит будущую сценарную регрессию/базу знаний с бюджетом первого пилота. #32/#37 дополнены ресурсным TP с настройками `/spawn` и финальной предгенерацией ресурсного/постоянных миров. Массовая генерация и полное прохождение не запускались; рабочие профили/миры и player release не менялись. [Протокол](docs/MINECRAFT_MCP.md).
+- Focused mocked unit: Windows/Linux Docker по 47 passed; Ruff/Black. Это проверка транспортного helper и portable-session регрессий, не графический Linux/macOS Minecraft.
+
 ## Не выпущено — стенд восстановления аккаунта
 
 - `omk lab dj2-account-recovery` проверяет реальные Drasl reset/lock и Forge-подключения в свежем Linux Docker-стенде. На финальном коде прошли 44 native условия и 8 независимых проверок сохранённых файлов; stop чистый / OOM=false, свои auth/volume удалены.
