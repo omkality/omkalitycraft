@@ -78,6 +78,7 @@ class ManagedWorldBackups:
             "-m",
             "omk.stopped_world_backup",
             action,
+            *(["--linux-server-paths"] if self.operator is not None else []),
             timeout=180,
         )
         return json.loads(result.stdout)
@@ -191,7 +192,11 @@ class ManagedWorldBackups:
     def finish(self, recovery):
         result = self.helper(recovery, "finish")
         self.copy_from_store("store", self.lab / "managed-store")
-        verified = BackupStore(self.lab / "managed-store", LAB_POLICY).inspect()
+        verified = BackupStore(
+            self.lab / "managed-store",
+            LAB_POLICY,
+            path_policy="linux-server" if self.operator is not None else "portable",
+        ).inspect()
         if verified != result["history"]:
             raise ValueError("Host backup export differs from Linux store")
         return {**result, "host_export_verified": True}
