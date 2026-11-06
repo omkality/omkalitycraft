@@ -141,10 +141,12 @@ def test_idle_refresh_only_stops_owned_control_app_and_reconnects(
     proc.wait.assert_called_once_with(timeout=10)
 
 
-def test_stdio_rpc_error_does_not_expose_response_content():
+def test_stdio_rpc_error_does_not_expose_response_content(monkeypatch):
     client = OrchestratorClient("owned.exe", "state")
     client.process = Mock()
-    client.messages.put({"id": 1, "error": {"message": "secret-sentinel"}})
+    monkeypatch.setattr(
+        client, "_receive", lambda: {"id": 1, "error": {"message": "secret-sentinel"}}
+    )
     with pytest.raises(McpError) as error:
         client.request("tools/list")
     assert "secret-sentinel" not in str(error.value)

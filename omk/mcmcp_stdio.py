@@ -3,9 +3,8 @@
 import contextlib
 import json
 import os
-import queue
 import subprocess
-import threading
+import time
 
 from omk.mcmcp_client import McpError
 
@@ -28,20 +27,32 @@ class OrchestratorClient:
         }
         self.process = None
         self.counter = 0
-        self.messages = queue.Queue(maxsize=32)
+        self.buffer = bytearray()
 
-    def _read(self):
-        while line := self.process.stdout.readline(16 * 1024**2 + 1):
-            try:
-                if len(line) > 16 * 1024**2:
-                    raise ValueError("large frame")
-                message = json.loads(line)
+    def _receive(self):
+        deadline = time.monotonic() + 30
+        while time.monotonic() < deadline:
+            if b"\n" in self.buffer:
+                line, _, rest = self.buffer.partition(b"\n")
+                self.buffer = bytearray(rest)
+                try:
+                    message = json.loads(line)
+                except ValueError:
+                    raise McpError("Invalid Orchestrator JSON frame") from None
                 if isinstance(message, dict) and "id" in message:
-                    self.messages.put(message, timeout=1)
-            except ValueError, queue.Full:
-                self.messages.put(None, timeout=1)
-                return
-        self.messages.put(None, timeout=1)
+                    return message
+                continue  # bounded protocol notifications, not responses
+            try:
+                chunk = os.read(self.process.stdout.fileno(), 65536)
+            except BlockingIOError:
+                time.sleep(0.01)
+                continue
+            if not chunk:
+                raise McpError("Orchestrator closed its output")
+            self.buffer.extend(chunk)
+            if len(self.buffer) > 16 * 1024**2:
+                raise McpError("Orchestrator frame too large")
+        raise McpError("Orchestrator response timed out")
 
     def request(self, method, params=None, *, notification=False):
         self.counter += 1
@@ -55,8 +66,8 @@ class OrchestratorClient:
             self.process.stdin.flush()
             if notification:
                 return None
-            reply = self.messages.get(timeout=30)
-        except OSError, queue.Empty:
+            reply = self._receive()
+        except OSError:
             raise McpError("Orchestrator response unavailable") from None
         if (
             not isinstance(reply, dict)
@@ -75,9 +86,10 @@ class OrchestratorClient:
             stderr=subprocess.DEVNULL,
             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
         )
-        self.reader = threading.Thread(target=self._read, daemon=True)
-        self.reader.start()
         try:
+            # Python 3.12+ supports nonblocking anonymous pipes on Windows too.
+            # No blocked reader thread can keep close() stuck when an app restarts.
+            os.set_blocking(self.process.stdout.fileno(), False)
             result = self.request(
                 "initialize",
                 {
@@ -105,7 +117,6 @@ class OrchestratorClient:
         except subprocess.TimeoutExpired:
             self.process.terminate()
             self.process.wait(timeout=5)
-        self.reader.join(timeout=2)
         self.process.stdout.close()
 
     def roster(self):
