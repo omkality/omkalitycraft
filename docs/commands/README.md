@@ -89,6 +89,10 @@
 | `uv run omk admin --config .omk-admin/operator.toml backups list --server dj2` | Проверенная история snapshots и признак незавершённого staging, не список миров для игроков. |
 | `uv run omk admin --config .omk-admin/operator.toml backups finish --operation ID` | Явно подтвердить уже опубликованную копию после обрыва без перепубликации/повторной ротации. |
 | `uv run omk admin --config .omk-admin/operator.toml backups cancel --operation ID` | Отменить только неопубликованный staging при неизменной истории и отсутствии работающего helper; подтверждённые snapshots/source не удаляются. |
+| `uv run omk admin --config .omk-admin/operator.toml restores plan --server dj2 --snapshot SNAPSHOT_ID` | Readonly план отдельного Linux target; требует свежий backup текущего мира и совместимый runtime. [Настройка/ограничения](../OWNER_RESTORES.md) |
+| `uv run omk admin --config .omk-admin/operator.toml restores apply --operation ID` | Один раз подготовить historical world с текущими правами в отдельном volume; сервис не запускается/не переключается. |
+| `uv run omk admin --config .omk-admin/operator.toml restores verify --operation ID` | Заново проверить полный результат; подтвердить завершённую запись после потери acknowledgement. Частичный target не принимается. |
+| `uv run omk admin --config .omk-admin/operator.toml restores status --operation ID` | Приватный журнал состояния/фиксированной причины отказа без credentials. |
 | `uv run omk lab dj2-account-recovery --operator-workflow …` | Свежие Linux DJ2/Drasl + loopback RCON, 73 условия и экспорт для независимой сверки; не принимает реальный account UUID. |
 | `uv run omk lab admin smoke` | Реальные Drasl/HTTP и проверки границы игрок/владелец |
 | `uv run omk lab client-crash --help` | Настоящий управляемый краш DJ2, очередь без сети и закрытый экспорт; [аргументы и изоляция](../CLIENT_CRASH_TESTING.md), 27 проверок прошли |
@@ -112,6 +116,7 @@
 | `uv run omk lab dj2-recovery --runtime linux-docker --edge-cases --full-backup-return --access-policy --rank-policy --ftb-authority-policy --ftb-authority-conflict --reconcile-ftb-authority …` | Явный перенос известных текущих полномочий при стабильных identity; исторические homes/claims сохраняются, частичный перенос не запускается. Только новый Docker lab. [Порядок/журналы](../FTB_AUTHORITY_TRANSFER.md) |
 | `uv run omk lab dj2-linux-paths --server-source … --agent … --core … --mods-json …` | Новый CON account, Linux Forge и owner cold backup; восстановление в Linux volume, повторный вход/inventory/home. Только свежие lab volumes. [Параметры/папки](../LINUX_SERVER_PATHS.md) |
 | `uv run omk lab dj2-linux-policy --server-source … --agent … --core … --mods-json …` | Исторический Linux-мир с текущими bans/OP/whitelist/ranks/FTB; проверка перед Forge. Только свежие lab volumes. [Порядок/ограничения/папки](../LINUX_CURRENT_POLICY.md) |
+| `uv run omk lab dj2-owner-restore --server-source … --agent … --core … --mods-json …` | Реальный Linux DJ2/Drasl/CON через owner restore CLI, отдельный target и текущие права. Только fresh lab volumes; [папки/приёмка](../OWNER_RESTORES.md) |
 | `uv run python scripts/smoke_api_container.py` | Настоящий Linux API/Compose: env, лимиты, два workers и чистый stop; [17 условий на Granian 2.8.6](../API_RUNTIME.md) |
 | `uv run python scripts/diagnose_api_shutdown.py --cycles 3` | Изолированные остановки API со сбором раздельных стеков при задержке; не подключает auth/игроков |
 | `uv run python scripts/diagnose_api_shutdown.py --race --cycles 3` | Синтетическая регрессия гонки Granian в отдельном ASGI fixture, без изменения приложения API; [сравнение и границы](../API_RUNTIME.md) |

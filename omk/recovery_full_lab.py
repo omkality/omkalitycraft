@@ -32,8 +32,16 @@ def _destination(server, backup, destination, lab):
             raise ValueError("Linked replacement runtime is forbidden")
 
 
-def _entries(archive, *, world_name="lab-world", path_policy="portable"):
+def _entries(
+    archive, *, world_name="lab-world", path_policy="portable", max_expanded_bytes=None
+):
     validate_path_policy(path_policy)
+    if max_expanded_bytes is not None and (
+        type(max_expanded_bytes) is not int or not 1 <= max_expanded_bytes <= 1024**4
+    ):
+        raise ValueError("Invalid archive expanded limit")
+    total_limit = MAX_TOTAL if max_expanded_bytes is None else max_expanded_bytes
+    file_limit = MAX_FILE if max_expanded_bytes is None else max_expanded_bytes
     if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", world_name):
         raise ValueError("Invalid archive world root")
     entries = archive.infolist()
@@ -60,7 +68,7 @@ def _entries(archive, *, world_name="lab-world", path_policy="portable"):
         ):
             raise ValueError("Unsafe lab backup entry")
         name = info.filename.casefold()
-        if name in names or not 0 <= info.file_size <= MAX_FILE:
+        if name in names or not 0 <= info.file_size <= file_limit:
             raise ValueError("Duplicate or oversized lab backup entry")
         names.add(name)
         for length in range(1, len(parts) + 1):
@@ -68,7 +76,7 @@ def _entries(archive, *, world_name="lab-world", path_policy="portable"):
             if prefixes.setdefault(prefix.casefold(), prefix) != prefix:
                 raise ValueError("Ambiguous path casing in lab backup")
         size += info.file_size
-    if world_name + "/level.dat" not in archive.namelist() or size > MAX_TOTAL:
+    if world_name + "/level.dat" not in archive.namelist() or size > total_limit:
         raise ValueError("Missing level or oversized lab backup")
     # Reject file/directory collisions before creating anything.
     for name in names:

@@ -1,5 +1,12 @@
 # Журнал изменений
 
+## Не выпущено — owner restore staging
+
+- Закрытые `restores plan/apply/verify/status`: явный отдельный Linux volume, актуальный чисто остановленный source, обязательный свежий backup, bound plan и полная проверка перед запуском. Не создаёт расписание, не запускает/переключает сервер. Verify восстанавливает подтверждение завершённой записи; повторный apply и частичная копия отклоняются.
+- Настоящий DJ2/Core 0.2.10/CON: 24 условий/3 старта, 30 независимых проверок. Возврат прогресса с сохранением текущих прав, source неизменен, свои тома очищены. Стенд дополняет шесть embedded core JAR из source; строгая runtime-проверка сохранена.
+- 14 real Docker/CLI fault checks и 4 Linux ENOSPC checks, Windows unit 1010/11 skipped, Linux focused 318. [Инструкция](docs/OWNER_RESTORES.md), [протокол](docs/validation/dj2-owner-restore-2026-11-06.json).
+- Для production закреплён один периодический backup writer/планировщик; одновременные FTB и managed расписания не допускаются. Cutover/backup-window/storage/off-host остаются в #33/#38.
+
 ## Не выпущено — Linux-восстановление с текущими правами
 
 - Новый lab объединяет historical world с текущими bans/OP/whitelist/ranks/FTB на Linux. Полная проверка перед Forge; raw verifier не допускает обхода незавершённого policy stage. Drasl и пароли не откатываются.

@@ -51,10 +51,17 @@ def authority_file(name):
     raise ValueError("Unreviewed FTB storage entry")
 
 
-def read_zip(path, *, world_name="lab-world", path_policy="portable"):
+def read_zip(
+    path, *, world_name="lab-world", path_policy="portable", max_expanded_bytes=None
+):
     result, total = {}, 0
     with zipfile.ZipFile(path) as archive:
-        entries, _ = _entries(archive, world_name=world_name, path_policy=path_policy)
+        entries, _ = _entries(
+            archive,
+            world_name=world_name,
+            path_policy=path_policy,
+            max_expanded_bytes=max_expanded_bytes,
+        )
         prefix = world_name + "/data/ftb_lib/"
         for info in entries:
             if not info.filename.startswith(prefix):

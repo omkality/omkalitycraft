@@ -1,0 +1,233 @@
+{
+  "date": "2026-11-06",
+  "issue": 33,
+  "scope": "Owner-only CLI plan/apply/verify/status for a separate stopped Linux target, latest current-world backup required; historical progress plus current access/ranks/known FTB; no lifecycle/promotion or scheduler",
+  "pack": "Divine Journey 2 2.23.4",
+  "core": "0.2.10",
+  "core_sha256": "438992170b8e56b4647bf0517e432c873146acd711d152ca5522eae57dbd17e3",
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+  "native": {
+    "accepted": true,
+    "conditions": 24,
+    "checks": [
+      "historical_ally_can_really_edit_claim",
+      "source_clean_exit_without_oom",
+      "real_ftb_con_dat_persisted_on_linux",
+      "historical_owner_backup_verified_before_current_policy_changes",
+      "current_revoke_ban_whitelist_deop_and_home_quota_seeded",
+      "source_clean_exit_without_oom",
+      "real_ftb_con_dat_persisted_on_linux",
+      "historical_and_latest_current_world_backups_exported_verified",
+      "prepared_runtime_matches_actual_embedded_source_jars",
+      "owner_plan_requires_latest_backup_of_actual_current_world",
+      "real_owner_cli_apply_stages_historical_world_and_current_rights",
+      "second_owner_cli_apply_refused_without_retry",
+      "owner_cli_status_remains_staged_after_refused_repeat",
+      "owner_cli_full_verify_immediately_before_forge_start",
+      "current_ban_rejects_same_valid_drasl_session_after_restore",
+      "historical_op_is_not_revived",
+      "current_one_home_rank_applies_to_historical_saved_home",
+      "historical_inventory_restored_instead_of_current_one_emerald",
+      "historical_home_really_teleports_with_current_policy",
+      "explicit_pardon_allows_same_guest_session_positive_control",
+      "current_whitelist_enforced_after_restore",
+      "guest_can_edit_unclaimed_positive_control",
+      "revoked_ally_cannot_edit_historical_claim",
+      "non_op_owner_keeps_claim_access"
+    ],
+    "server_starts": 3,
+    "source_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "replacement_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "all_owned_scopes_removed": true,
+    "source_world_unchanged": true,
+    "host_extract_of_CON": false,
+    "historical_files": 273,
+    "current_files": 274,
+    "report_sha256": "0e2d62f08268ab48cfe813a2245d6a045745febb4ae2905db549d93901a43ab5"
+  },
+  "independent": {
+    "checks": [
+      "entire_stopped_current_world_remains_byte_identical",
+      "exact_current_ops.json",
+      "exact_current_banned-players.json",
+      "exact_current_banned-ips.json",
+      "exact_current_whitelist.json",
+      "exact_current_local_ftbutilities_ranks.txt",
+      "prestart_no_old_owner_op_and_current_guest_ban_present",
+      "prestart_current_whitelist_enabled",
+      "linux_reserved_name_preserved_through_policy_overlay",
+      "same_drasl_uuid_in_old_current_restored_ftb",
+      "historical_home_restored_without_current_home_reset",
+      "old_ally_revocation_survives_historical_claim_return",
+      "team_identity_owner_remain_stable",
+      "historical_claims_preserved_semantically",
+      "real_player_inventory_7_then_1_then_restored_7",
+      "owner_snapshot_1_matches_separate_stopped_tar",
+      "snapshot_1_archive_manifest_digest_match",
+      "owner_snapshot_2_matches_separate_stopped_tar",
+      "snapshot_2_archive_manifest_digest_match",
+      "complete_receipt_is_bound_to_exact_plan_bytes",
+      "prestart_runtime_files_match_bound_after_hashes",
+      "full_world_inventory_reverified_immediately_before_forge",
+      "source_clean_exit_no_oom_export_and_volume_removed",
+      "replacement_clean_exit_no_oom_export_and_volume_removed",
+      "owned_auth_and_backup_volumes_removed",
+      "owner_volume_plan_matches_private_host_plan",
+      "owner_receipt_binds_exact_owner_plan_bytes",
+      "apply_and_separate_cli_verify_match_same_complete_receipt",
+      "private_journal_acknowledges_same_staged_data_without_promotion",
+      "closed_cli_actions_audited_without_credentials"
+    ],
+    "writes_to_worlds": false,
+    "report_sha256": "0e2d62f08268ab48cfe813a2245d6a045745febb4ae2905db549d93901a43ab5",
+    "historical_files": 273,
+    "current_files": 274
+  },
+  "cli_faults": {
+    "ok": true,
+    "scope": "real Docker/owner CLI with captured real FTB NBT and synthetic Python runtime; no Minecraft process",
+    "checks": [
+      "two_real_owner_cli_processes_have_one_apply_success",
+      "race_winner_fully_verified_by_separate_cli",
+      "repeated_apply_refused",
+      "controller_exits_after_data_receipt_before_journal_ack",
+      "uncertain_stage_retained_in_private_journal",
+      "uncertain_apply_is_not_repeated",
+      "verify_recovers_complete_stage_without_reapplying",
+      "real_worker_process_exits_after_first_world_file",
+      "partial_data_write_recorded_as_incomplete",
+      "partial_target_cannot_be_reapplied_or_verified",
+      "source_restart_after_plan_blocks_apply",
+      "stale_source_refusal_occurs_before_applying",
+      "active_target_volume_blocks_apply",
+      "all_fault_cases_preserve_current_source_bytes"
+    ],
+    "owned_scopes_removed": true
+  },
+  "filesystem_enospc": {
+    "ok": true,
+    "checks": [
+      "real_tmpfs_ENOSPC_after_owner_plan_has_no_complete_receipt",
+      "ENOSPC_target_refuses_verify",
+      "ENOSPC_target_refuses_apply",
+      "current_source_unchanged_after_ENOSPC"
+    ],
+    "real_minecraft": false,
+    "pinned_ftb_jars_verified": true,
+    "cpu": 1,
+    "memory_mib": 512,
+    "network": "none",
+    "tmpfs_mib": 16,
+    "owned_container_removed": true
+  },
+  "preflight_refusals": {
+    "attempts": 2,
+    "no_world_write": true,
+    "cause": "Fresh lab runtime lacked six embedded Forge core dependencies; equality guard retained. Lab preparation copies only missing embedded JARs from the stopped readonly source with hash readback.",
+    "all_failed_owned_scopes_removed": true,
+    "removed_retained_volumes": 5,
+    "source_and_backup_exports_verified": true
+  },
+  "embedded_runtime_origins": {
+    "mods/memory_repo/com/enderio/core/EnderCore/1.12.2-0.5.78/EnderCore-1.12.2-0.5.78-core.jar": {
+      "sha256": "f6602f9c1c6bb27bbbaf38f7f32a5e71d4d356ab75b21930b032b68b343fd30d",
+      "source_mod": "EnderCore-1.12.2-0.5.78.jar",
+      "source_mod_sha256": "adbd309f6c8001c38c4630aa701cdc5ea59fa7ee9ffa770e21f56b160adb443c",
+      "embedded_entry": "META-INF/libraries/EnderCore-1.12.2-0.5.78-core.jar"
+    },
+    "mods/memory_repo/info/loenwind/autoconfig/AutoConfig/1.12.2-1.0.2/AutoConfig-1.12.2-1.0.2.jar": {
+      "sha256": "07e017e50b918f9a1ddbc01777b24e74204155730e75628c68e923c4b2e559df",
+      "source_mod": "EnderIO-1.12.2-5.3.72.jar",
+      "source_mod_sha256": "9b5e7756af35a191de8bc8f010c0f7c7ffc2e1e056a69ec265d1dd5ce90d19b4",
+      "embedded_entry": "META-INF/libraries/AutoConfig-1.12.2-1.0.2.jar"
+    },
+    "mods/memory_repo/info/loenwind/autosave/AutoSave/1.12.2-1.0.11/AutoSave-1.12.2-1.0.11.jar": {
+      "sha256": "8b40573a923098b7505dc3a7333ea7994f99fdca5d1507f200959779f768e14b",
+      "source_mod": "EnderIO-1.12.2-5.3.72.jar",
+      "source_mod_sha256": "9b5e7756af35a191de8bc8f010c0f7c7ffc2e1e056a69ec265d1dd5ce90d19b4",
+      "embedded_entry": "META-INF/libraries/AutoSave-1.12.2-1.0.11.jar"
+    },
+    "mods/1.12.2/ChickenASM-1.12-1.0.2.7.jar": {
+      "sha256": "54c063e72abb6af999d80b94a2f1c9593c6ef0bb7769f3410d2a49f47c1ba3b0",
+      "source_mod": "ForgeMultipart-1.12.2-2.6.2.83-universal.jar",
+      "source_mod_sha256": "25718bd80799a608c45299d13d86e5d67248f07a3c00657c690948b1821835ce",
+      "embedded_entry": "ChickenASM-1.12-1.0.2.7.jar"
+    },
+    "mods/memory_repo/blusunrize/ImmersiveEngineering-core/0.12-98/ImmersiveEngineering-core-0.12-98.jar": {
+      "sha256": "a36f7fe0b2971df39bc7f14df3e5fb13695025a60d32b865e8f5c06659d552c2",
+      "source_mod": "ImmersiveEngineering-0.12-98.jar",
+      "source_mod_sha256": "1dceb974d037dae7161f9a8e9f78cb33dfaad9e3adf02d14d52a3024eb961e58",
+      "embedded_entry": "META-INF/libraries/ImmersiveEngineering-0.12-98-core.jar"
+    },
+    "mods/memory_repo/tyra314/toolprogression-core/1.12.2-1.6.12/toolprogression-core-1.12.2-1.6.12.jar": {
+      "sha256": "d28be2c81876dd6393ec621a20e32ba9020e03e10f0e28f0f43b556383e61af2",
+      "source_mod": "toolprogression-1.12.2-1.6.12.jar",
+      "source_mod_sha256": "077e0153a7347e86e75970cc900f09323b89b01effb6fb322db2591137eb354e",
+      "embedded_entry": "META-INF/libraries/toolprogression-1.12.2-1.6.12-core.jar"
+    }
+  },
+  "unit": {
+    "windows_passed": 1010,
+    "windows_skipped": 11,
+    "windows_log_sha256": "dffbea1fda1b775d7a1c14e79b8c35699236cb96baf4d813f8a937d722d4a27a",
+    "linux_focused": {
+      "image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "exit_code": 0,
+      "oom_killed": false,
+      "cpu_limit": 2,
+      "memory_mib": 1024,
+      "network": "none",
+      "source_mount": "readonly",
+      "mock_lifecycle_tests": true,
+      "real_minecraft": false,
+      "tail": [
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "318 passed, 2 warnings in 4.97s"
+      ],
+      "owned_container_removed": true
+    },
+    "large_archive_limit_test": "600 MiB ZIP metadata only; no claim of real large-world restore acceptance"
+  },
+  "code_provenance": {
+    "native_launch_commit": "3033cc7",
+    "staging_worker_commit": "aa7e105",
+    "note": "Error-category/journal diagnostics update was committed before native owner plan/apply/verify spawned their helpers; worker and controller files unchanged afterward.",
+    "files": {
+      "omk/admin_restores.py": "1f42c1f9be035895284e6819c484e61553453a79f008f87ac93f386ff94d09ce",
+      "omk/owner_restore_worker.py": "891c0e6901c1f26ba69fe8831cda1784dc8d0f628854d1b89f912a17595cef84",
+      "omk/owner_restore_lab.py": "a610661a45c37e8a66ad12a6d94fc61fd12287520061ccf6943f6e667491b61b",
+      "omk/linux_paths_lab.py": "fa6b3d8fb7364876bf3b23335f2fffe47a67a4ed2cec0f869b21106a26480609",
+      "omk/linux_restore_policy.py": "1c75543dc4f9edf7e60dd1a7d125a261ddb4fe049a44c28f4d1138cbb064b143",
+      "omk/cold_backup_worker.py": "327685648eff35665b434bca3eab5492b3264cca28a8786f53384a366ae464c4",
+      "omk/ftb_restore_authority.py": "cfd714359b44b131d5dc8a14d128038063d1d955fc76413aecb6fcabf40e3902",
+      "omk/recovery_full_lab.py": "57e106753fe963b23f82ce81cbbf62adda4cba7281bd7ba90ccb48d8f283ddd2"
+    }
+  },
+  "limits": {
+    "public_profile_changed": false,
+    "private_core_changed": false,
+    "launcher_ui_changed": false,
+    "graphical_client_tested": false,
+    "gtnh_tested": false,
+    "production_cutover": false,
+    "scheduler_added": false,
+    "live_data_changed": false,
+    "multi_file_atomicity": false,
+    "backup_policy": "One active periodic writer/scheduler and one total storage budget. No parallel FTB and managed schedules; explicit tested transition required.",
+    "remaining": "Production lifecycle/promotion, damaged or lost current source, changed FTB identity sets, a single backup window/scheduler, storage budget/off-host encrypted copies and VPS acceptance remain #33/#38."
+  }
+}

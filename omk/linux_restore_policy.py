@@ -104,7 +104,10 @@ def _expected(request, storage, target, current):
         raise ValueError("Historical world stage receipt differs from source")
     data, current_ftb, summary = _current(current, request["world"])
     historical = ftb.read_zip(
-        archive, world_name=request["world"], path_policy="linux-server"
+        archive,
+        world_name=request["world"],
+        path_policy="linux-server",
+        max_expanded_bytes=request["world_max_bytes"],
     )
     merged = reconcile.merged_records(current_ftb, historical)
     payload = dict(data)

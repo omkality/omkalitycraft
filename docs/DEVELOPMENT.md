@@ -1,5 +1,34 @@
 # Разработка OmkalityCraft
 
+## Закрытый owner restore staging — 6 ноября 2026
+
+`omk admin restores plan/apply/verify/status` работает с явным новым Linux volume,
+текущим чисто остановленным источником и опубликованными snapshots. Требует свежую
+проверенную копию фактического текущего мира; связывает lifecycle/volume/settings/
+runtime/архив/FTB, держит общий lock с cold backups. Входные тома readonly;
+target writable только при apply. Устаревший/использованный план не повторяется.
+Verify подтверждает завершённую запись после потери host acknowledgement; частичный
+target не принимается. Пароли/Drasl не переносятся из истории. Это staging, не cutover.
+
+Linux DJ2 2.23.4/Core 0.2.10/CON: **24 native условий / 3 старта**,
+**30 независимых проверок**. Исторические вещи/home/claims вернулись,
+текущие ban/whitelist/deop/home quota/отзыв ally сохранились; реальное ломание блоков
+проверено. Исходник byte-identical; stop 0/OOM=false, свои game/auth/backup тома очищены.
+LabPlayer — протокол, не GUI. Два ранних preflight отказали до записи: свежий runtime
+не содержал шести извлечённых Forge core JAR. Lab теперь явно готовит их из source,
+все SHA сверены с embedded bytes существующих модов; guard не ослаблен, загрузок нет.
+Пять оставшихся томов этих опытов очищены после сверки экспортов.
+
+Отдельно **14 real Docker/CLI fault checks + 4 tmpfs ENOSPC checks**, synthetic
+runtime/FTB fixtures, не падение Minecraft. Windows unit **1010/11 skipped**,
+focused Linux **318**. [Команды, папки, ограничения](OWNER_RESTORES.md),
+[протокол](validation/dj2-owner-restore-2026-11-06.json).
+
+В production будет **один** периодический backup writer/планировщик и общий бюджет;
+не запускаем FTB и managed расписания параллельно. Этот этап расписания не добавляет.
+Lifecycle/promotion, повреждённый current source, изменившиеся identity, единое
+backup-window/storage/off-host и VPS acceptance остаются #33/#38. VPS пока не нужен.
+
 ## Исторический Linux-мир с текущими правами — 6 ноября 2026
 
 `dj2-linux-policy` связывает Linux stage с актуальными bans/OP/whitelist/ranks

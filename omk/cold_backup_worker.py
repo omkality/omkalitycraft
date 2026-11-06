@@ -22,7 +22,7 @@ def digest(value):
     ).hexdigest()
 
 
-def runtime_digest(root):
+def runtime_files(root):
     records, total = {}, 0
     paths = [*root.glob("*.jar"), root / "server.properties"]
     for folder in (
@@ -55,7 +55,11 @@ def runtime_digest(root):
             records[path.relative_to(root).as_posix()] = hashlib.file_digest(
                 file, "sha256"
             ).hexdigest()
-    return digest(records)
+    return records
+
+
+def runtime_digest(root):
+    return digest(runtime_files(root))
 
 
 def source_summary(root, request):
