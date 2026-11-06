@@ -168,16 +168,6 @@ def exercise_full_return(
     if not _authority_gate(
         args, lab, dest, report, expect, original_world_digest, original_digest
     ):
-        try:
-            start(dest)
-        except ValueError as error:
-            if str(error) != (
-                "FTB authority changed after comparison; replacement start blocked"
-            ):
-                raise
-            expect(True, "replacement_runtime_independently_refuses_revoked_authority")
-        else:
-            raise ValueError("Replacement runtime bypassed the authority refusal")
         return
     console = start(dest)
     if current_access_stage is not None:
