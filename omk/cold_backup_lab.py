@@ -201,7 +201,51 @@ class Lab:
             "third_snapshot_rotates_only_oldest",
         )
         self.restart_case()
+        self.changed_world_case()
         self.large_case()
+
+    def changed_world_case(self):
+        config, _ = self.configure("changed-world", self.volume("changed-store"))
+        planned = owner.plan(config, "dj2", ENV)
+        owner.docker(
+            "run",
+            "--rm",
+            "--pull",
+            "never",
+            "--network",
+            "none",
+            "--label",
+            LABEL + "=" + self.run,
+            "--memory",
+            "128m",
+            "--cpus",
+            "1",
+            "--read-only",
+            "--cap-drop",
+            "ALL",
+            "--mount",
+            f"type=volume,source={self.data},target=/srv",
+            owner.IMAGE,
+            "python",
+            "-c",
+            'from pathlib import Path; Path("/srv/world/level.dat").write_bytes(b"changed-world-fixture")',
+        )
+        try:
+            owner.run(config, planned["operation"], environment=ENV)
+        except AdminError:
+            pass
+        else:
+            raise RuntimeError("Changed world was accepted as the planned source")
+        record = owner.read_record(config, planned["operation"])
+        self.check(
+            "ValueError" in record.get("failure_reason", "")
+            and record["stage"] == "incomplete",
+            "changed_world_worker_refusal_is_recorded_without_request_contents",
+        )
+        self.check(
+            owner.cancel(config, planned["operation"])["previous_history_unchanged"],
+            "cancel_handles_failed_preparation_without_a_staged_archive",
+        )
 
     def large_case(self):
         owner.docker(
