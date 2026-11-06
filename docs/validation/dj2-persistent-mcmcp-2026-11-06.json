@@ -1,0 +1,154 @@
+{
+  "date": "2026-11-06",
+  "issues": [
+    84,
+    86,
+    36,
+    49
+  ],
+  "accepted_player_release": false,
+  "production_profile_or_worlds_changed": false,
+  "native_start_commit": "59c6eed",
+  "launcher_metadata_contract_commit": "14426a7",
+  "persistent_install": {
+    "release": "2026.11.02",
+    "orchestrator_version": "26.11.20",
+    "bom": "profiles/lab/mcmcp.json",
+    "global_and_project_codex_config": true,
+    "global_discovery_outside_project": true,
+    "loopback_only": true,
+    "transport": "official stdio shim to shared desktop app",
+    "multiple_clients": {
+      "ok": true,
+      "concurrent_shims": 2,
+      "tools_per_client": 70,
+      "shim_exit_codes": [
+        0,
+        0
+      ],
+      "app_still_running": true
+    },
+    "idle_app_restart_and_new_session_verified": true,
+    "native_codex_namespace_call_verified": false
+  },
+  "native_scope": {
+    "run": "mcmcp-client-0f33a410f67e",
+    "pack": "DJ2 2.23.4",
+    "core": "0.2.9",
+    "client_os": "Windows",
+    "server_os": "Linux Docker",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "server_cpus": 4,
+    "container_mib": 6144,
+    "heap_mib": 4096,
+    "candidate_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+    "test_only_defaults_sha256": "81f2cdbaa69ffa5a1a259c43692e8d9de57d7630cd6046937fdeab9adc4c9c8c",
+    "server_starts": 1,
+    "client_starts": 2,
+    "client_exit_codes": [
+      0,
+      0
+    ],
+    "post_exit_watch_seconds_per_client": 55,
+    "no_new_reports_or_task_fatal_markers": true,
+    "server_exit_code": 0,
+    "server_oom_killed": false,
+    "own_volume_auth_and_mcp_permissions_removed": true
+  },
+  "accepted_behaviors": {
+    "first_real_K_opens_quest_GUI": true,
+    "fresh_goggles_binding": "F12",
+    "custom_binding_changes": "edited stopped owned lab options, not GUI rebind",
+    "runtime_after_restart": {
+      "quest": "F10",
+      "goggles": "F8"
+    },
+    "real_F10_opens_quest_GUI_after_restart": true,
+    "custom_JourneyMap_Circle_and_grid_preserved": true,
+    "discarded_English_alias_not_readded": true,
+    "independent_saved_player_NBT": {
+      "same_uuid_file": true,
+      "dimension": 0,
+      "emerald_count": 7,
+      "xp_level": 12
+    },
+    "defaults_restored_only_in_stopped_lab": {
+      "only_completed_owned_lab": true,
+      "quest_key": "K",
+      "goggles_key": "F12",
+      "shape": "Square",
+      "grid": false,
+      "options_sha256": "22d32b5a0bbaef63c5f0b60b3f17a93b222d08eb6191ba63380cc17b4f3578b9",
+      "map_sha256": "409330151302673cd857ca50f81f896a9dd655e96cf282d98c7536d1e3d41c5a",
+      "game_not_restarted_after_restoration": true
+    }
+  },
+  "earlier_attempts": [
+    {
+      "run": "mcmcp-client-a2450f1beadb",
+      "accepted": false,
+      "reason": "overbroad probe name check rejected author TheOneProbe before a game started; fixed with focused regression"
+    },
+    {
+      "run": "mcmcp-client-294d65e9683a",
+      "accepted_as_final": false,
+      "reason": "initial runtime keys and HTTP worked, app did not reload CLI policy; stale CU window after resize did not prove K; new final lab repeated with idle refresh and fresh window lookup"
+    },
+    {
+      "scope": "extended Linux install regressions with 128 MiB tmpfs",
+      "accepted": false,
+      "reason": "expected disk reserve guards rejected undersized lab disk; rerun with 1 GiB tmpfs, same 1 GiB memory limit; application guard unchanged"
+    }
+  ],
+  "unit_validation": {
+    "current_focused_windows": 116,
+    "current_focused_linux_docker": 136,
+    "lint": "Ruff and Black passed",
+    "mocks_separate_from_native_game": true,
+    "full_windows": {
+      "passed": 784,
+      "skipped": 6
+    },
+    "final_windows_log_sha256": "1a4a3df3f694f271ef5f703d3124054ebee64ebb15d04d6de270c8abe636b73d",
+    "linux_report_sha256": "db66a9c030a4f48fdbf8ca858bc548efa6c97d4c8462ac75fb41bf5044fd9974",
+    "linux_image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "linux_memory_mib": 1024,
+    "linux_tmpfs_limit_mib": 1024,
+    "linux_network": "none"
+  },
+  "portable_preview": {
+    "version": "0.3.0.dev12",
+    "file": "OmkalityCraft-0.3.0.dev12-windows-x64.zip",
+    "sha256": "f965e2f15ee0eb38020575254f215943ad0b0493f88c8bf88dc0863fbd5b6451",
+    "actual_packaged_Qt_health_smoke": true,
+    "loopback_deployment_only": true,
+    "public_release_published": false
+  },
+  "raw_sha256": {
+    "native-validation.json": "0864d809791943d5608707f3ae1b8caa29b939ff63067b38c432a093c4f23b7c",
+    "mcp-post-exit-watch.json": "64c9783c5e8ab96e9bd023a33d648df398eb8dec6aae015a50abb7624be7b395",
+    "physical-K-proof.json": "a333df5afd1e2518ac9bdf659e94847ee8e5dbd01658f3fc17c3496675813fd1",
+    "physical-F10-proof.json": "a333df5afd1e2518ac9bdf659e94847ee8e5dbd01658f3fc17c3496675813fd1",
+    "custom-settings-fixture.json": "a07df58a4e8f16f87c35e8c95abc4042f4033bd5bcb53e2983884cd1d3461791",
+    "restart-launcher-settings-proof.json": "c1c7fe95924c928d9013645ae2d4e383386dd0f7045d7d50b8b5b05d54228cf6",
+    "restarted-runtime-proof.json": "be8bca0046881355bce14914de4da7f13ef240bc55d65ba367f7fc4e2d107258",
+    "final-player-before-quit.json": "695538ae98a034baf080073296e278775c3c44b59580c273981e4833030c909f",
+    "restored-owner-lab-defaults.json": "d8f81bda66387c62fd2a364592ed60c3bd92bb78d23aaf3b64ec2847cb0404e4",
+    "first-client.log": "96bf17e154c111c586858ed932c97a0f58808ee760cc2a6443fa0e88466bb330"
+  },
+  "world_archive_sha256": "44c8ce93206f44d8c7f60c5000afd2dcaba75287698ae03aa098491d3dabd03b",
+  "screenshots_sha256": {
+    "omk-dev12-custom-F10-opens-quests-0f33a410f67e.png": "020427a2dfb17924fcc54c7c70a7c916c5ad3e6fda2391b99db5756c30d2e38b",
+    "omk-dev12-custom-map-after-restart-0f33a410f67e.png": "7474b247893cc046672fecd46ca72f133c826a04d72de8ce52abc5ddceee879d",
+    "omk-dev12-goggles-F12-0f33a410f67e.png": "42fafe51c67245d576e8d430e4bc3a575772bdf565a9318c1d87dc74e84c7a3e",
+    "omk-dev12-K-opens-quests-0f33a410f67e.png": "e8d78ab46d0207e8c84c7a7db2aeb8213ab377fbff54a4a3ffbb2ae16505af55"
+  },
+  "limits": [
+    "not a full progression, structure, long survival or all-mod compatibility test",
+    "native Codex namespace still requires discovery after reconnect; actual MCP JSON-RPC via Python was verified",
+    "MCP UI-thread timeout during initial Forge loading is not a game crash",
+    "idle checks are not an atomic lock against a new foreign game appearing",
+    "Galacticraft per-language custom key migration not implemented",
+    "no mass pregeneration or live deployment"
+  ]
+}

@@ -1,19 +1,34 @@
-# DJ2 client defaults
+# Начальные клиентские настройки DJ2
 
-`dj2.json` is the `launch.client_defaults` fragment for the signed DJ2 release.
-Merge it into the local launch-profile JSON before `omk release pack`; populate
-`servers` with the actual compatible server when its address exists. No public
-server address is configured yet. The release signature covers this fragment.
+`dj2.json` — фрагмент `launch.client_defaults` подписанного выпуска DJ2. Объединить
+его с локальным launch-profile перед `omk release pack`; `servers` заполнять только
+реальным совместимым сервером после появления адреса. Сейчас публичного адреса нет.
+Эти настройки покрывает подпись release, а не произвольный локальный GUI override.
 
-JourneyMap 1.12.2 5.7.1p3 uses the 5.7 config directory. Initial primary minimap
-is square, top-right, with no grid; full map also has no grid. These two configs
-are copied from the owner's archived client; maps, waypoints, worlds and account
-files are excluded. Each config is seeded only when absent. Player changes are
-never overwritten, including after pack upgrades. The secondary minimap retains
-JourneyMap defaults. The launcher explicitly allowlists these JSON settings paths;
-adding other formats/versions requires a small adapter change and tests.
+JourneyMap 1.12.2 5.7.1p3 использует каталог 5.7. Основная миникарта квадратная,
+справа сверху, без сетки; полная карта тоже без сетки. JSON взяты из архивного
+клиента владельца без карт, точек, миров или аккаунтов. Файлы создаются только
+при отсутствии: личные изменения сохраняются при следующих запусках/обновлениях.
+Вторая миникарта сохраняет defaults JourneyMap. Пути этих JSON явно разрешены
+адаптером; новые форматы/версии требуют отдельного изменения и проверки.
 
-Original config SHA256 (before stripping comments):
+`initial_keybindings` добавляет только отсутствующие начальные привязки.
+Квесты — K (LWJGL 37), очки Galacticraft — F12 (88). У Galacticraft ID привязки
+локализован, поэтому профиль содержит русское и английское имена. Существующая привязка
+со значением 0 тоже считается осознанным выбором и не заменяется. Уже существующий
+конфликт K/K надо один раз устранить в Controls; этот код не сбрасывает старые настройки.
+
+`.omk-initial-keybindings.json` отмечает применённые defaults: Minecraft удаляет
+неиспользуемый языковой alias, и его нельзя добавлять заново при каждом запуске.
+При полном удалении options.txt начальные настройки создаются снова. Проверяемый
+профиль — русский DJ2; перенос пользовательских Galacticraft keys при смене языка
+не объявляется решённым (это локализованные ID самого мода).
+
+Новые метаданные требуют лаунчер 0.3.0.dev12: при подписи следующего выпуска
+не понижать `minimum_launcher_version`. Рабочие подписанные payload не менялись
+лишь из-за редактирования этого JSON.
+
+SHA256 исходных конфигов до удаления комментариев:
 
 - `journeymap.minimap.config`: `2f6547ec4c7f641c8c8b0ab253be1ff38fe772623face15aa47ae4704818fc20`
 - `journeymap.fullmap.config`: `d806478e5ae5ded9e595197bf62d31a3d147596e6781cbc3940b6ea18b7fa1c1`

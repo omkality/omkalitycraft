@@ -1,5 +1,91 @@
 # MCMCP для лабораторной DJ2
 
+## Постоянная установка и повторяемый стенд
+
+После первого пилота установлен официальный desktop Orchestrator 26.11.20 в
+`.local/tooling/mcmcp-desktop/` (installer и оба EXE закреплены в BOM ниже).
+В пользовательском `~/.codex/config.toml` и локальных project configs зарегистрирован
+`omk_dj2_lab` через **shim**, а не отдельный `serve` для каждого чата. Проверены два
+одновременных shim: каждый видит 70 tools, оба завершаются с exit 0, приложение
+продолжает работать. Состояние остаётся внутри проекта. Автозапуск при входе в
+Windows отдельно не включался; официальный shim поднимает приложение по требованию.
+`.local/tooling/` — постоянная установка, её нельзя удалять вместе с отдельными
+завершёнными `mcmcp-client-*` scopes. После переноса проекта нужно обновить абсолютные
+пути в Codex config.
+
+Финальный повторяемый worker прошёл один Linux server start и два Windows client
+start: настоящая K открыла квесты на чистых настройках, после редактирования только
+остановленных lab-файлов сохранились F10/F8 и Circle/grid. Настоящая F10 снова
+открыла GUI. UUID/7 изумрудов/12 уровней подтверждены клиентом и независимым reader
+сохранённого NBT. Оба exit 0, по 55 секунд без новых reports; Linux stop 0/OOM=false,
+свои volume/auth/разрешения MCP очищены. K/F12 и Square/no-grid восстановлены только
+в остановленном lab после проверки; рабочие пользовательские файлы не менялись.
+[Санитизированный протокол](validation/dj2-persistent-mcmcp-2026-11-06.json).
+
+`omk lab dj2-mcp --help` описывает постоянную команду стенда. Нужны явные пути к
+проверенному подписанному release-dir/публичным ключам и его ожидаемый digest,
+server-source, approved player mods, private Core, authlib-injector, MCMCP JAR,
+Orchestrator CLI и отдельному state-dir внутри `.local`. Пример для этого workspace:
+
+```powershell
+python -m omk lab dj2-mcp `
+  --release-dir .local/dj2-update-b7bf0b8afca6/content/releases/dj2/windows-x64 `
+  --trusted-public-keys .local/dj2-update-b7bf0b8afca6/trusted-public-keys.json `
+  --expected-release-sha256 d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084 `
+  --server-source .local/dj2-target-core028-d78c2856f5/server `
+  --mods-json .local/dj2-rendered-c2e79626ea/approved-real-client-mods.json `
+  --core ../omkalitycore/build/OmkalityCore-0.2.9.jar `
+  --agent data/content/releases/dj2/windows-x64/files/agent/authlib-injector-1.2.8.jar `
+  --mcmcp-jar .local/tooling/mcmcp-2026.11.02.jar `
+  --orchestrator-cli C:/Users/omka/Projects/minecraft_server/omkalitycraft/.local/tooling/mcmcp-desktop/mcmcp-orchestrator.exe `
+  --orchestrator-state C:/Users/omka/Projects/minecraft_server/omkalitycraft/.local/tooling/mcmcp-orchestrator-state `
+  --client-defaults profiles/client-defaults/dj2.json
+```
+
+Это Windows x64 client + Linux Docker server; другие графические ОС не объявляются
+готовыми. MCP порты задаются `--client-port`, `--link-port`, `--bridge-port`;
+Minecraft/Drasl используют существующий contract стенда 25576/25586. При занятом
+порту чужой процесс не останавливается. `--duration-minutes` ограничивает сессию
+(default 90, максимум 180); превышение времени — незавершённый, а не успешный тест.
+
+Новый worker всегда делает свежую установку/мир/auth, явно добавляя test-only
+MCMCP overlay. Необязательный `--client-defaults` — отдельный тестовый override с
+SHA в отчёте; исходная подпись не изменяется и такой overlay нельзя выдавать игрокам.
+Пол строится до первого входа, структуры включены. Рабочие миры не копируются.
+
+Последний scope указан в `.local/mcmcp-client-latest.json`; отчёт —
+`native-validation.json`, endpoint — `instance_endpoint` из него. До управления
+проверять roster и фактические PID/path/name. `scripts/mcmcp_lab_doctor.py` сверяет
+HTTP endpoint с собственным процессом. Секреты только в game cfg/состоянии shim.
+Endpoint появляется раньше завершения Forge loading: перед игровыми действиями
+нужны worldLoaded/playerPresent и ожидаемый GUI. Таймаут main-thread задачи во время
+первоначальной загрузки сам по себе не является крашем.
+
+Управление worker: JSON `native-control.json` в его lab, `action=console` и массив
+`commands` (1–24 коротких строки), либо `action=restart-client` **после** штатного
+`client_quit` и наблюдаемого exit 0. Restart сохраняет тот же тестовый мир/аккаунт,
+снова применяет defaults, поэтому годится для проверки личных настроек.
+`native-finish` принимает только штатно закрытые клиенты; перед ним отдельно
+проверять логи/постусловия и выдерживать окно наблюдения. `native-stop` означает
+незавершённую проверку. Cleanup останавливает только свои server/auth, экспортирует
+мир и удаляет свой volume лишь после успешного clean export.
+
+Desktop Orchestrator этого выпуска не перечитывает CLI policy во время работы.
+Поэтому worker проверяет отсутствие подключённых игр, точные hashes обоих EXE,
+PID обоих loopback listeners и state/port environment, затем обновляет **только
+бездействующее управляющее приложение**. Перед остановкой roster проверяется
+повторно. Это не атомарная блокировка появления стороннего клиента; проверки
+снижают риск гонки, но не дают такой гарантии. Игра/сервер этой операцией не
+останавливаются. При обнаружении другого активного мира операция отказывает.
+После cleanup удаляется точный trusted-root и policy этого lab переводится в Deny,
+затем то же обновление делает отказ действующим. Ошибка cleanup не считается успехом.
+
+JSONL reader использует неблокирующий pipe Python 3.14 с timeout и лимитом 16 МиБ:
+закрытие фонового reader-потока при перезапуске приложения могло зависать.
+Источник поведения pipes: [Python os.set_blocking](https://docs.python.org/3.14/library/os.html#os.set_blocking).
+
+## Первый пилот: границы исходной проверки
+
 Пилот 6 ноября 2026: MCMCP управляет настоящим Windows-клиентом DJ2 2.23.4,
 подключённым к свежему Linux Forge-серверу в Docker. Это инструмент владельца,
 не часть пользовательского лаунчера или публичного сервера. Рабочий профиль,
@@ -33,18 +119,23 @@ Orchestrator сообщает версию `26.11.20`; это строка оф�
 первого успешного подключения он сохраняет 64 игровых + 6 собственных инструментов.
 HTTP endpoint оставлен только для независимой диагностики.
 
-В локальных `.codex/config.toml` корня workspace и репозитория добавлен
-`mcp_servers.omk_dj2_lab`. Файлы локальные и не коммитятся. Шаблон для другой машины:
+В локальных `.codex/config.toml` корня workspace, репозитория и пользовательском
+config зарегистрирован `mcp_servers.omk_dj2_lab`. Они не коммитятся. Текущий шаблон:
 
 ```toml
 [mcp_servers.omk_dj2_lab]
 command = "C:/absolute/path/mcmcp-orchestrator.exe"
-args = ["--state-dir", "C:/absolute/path/isolated-state", "--link-port", "25680", "serve"]
+args = ["--state-dir", "C:/absolute/path/isolated-state", "shim", "--mcp-port", "25681"]
 enabled = true
 required = false
 startup_timeout_sec = 60
 tool_timeout_sec = 90
 supports_parallel_tool_calls = false
+
+[mcp_servers.omk_dj2_lab.env]
+MCMCP_ORCHESTRATOR_HOME = "C:/absolute/path/isolated-state"
+MCMCP_LINK_PORT = "25680"
+MCMCP_MCP_PORT = "25681"
 ```
 
 `codex mcp get omk_dj2_lab` проверяет, что конфигурация обнаружена. Project config
@@ -56,9 +147,11 @@ supports_parallel_tool_calls = false
 После следующего открытия/переподключения чата сначала проверить `mcmcp_instances`.
 Не перезапускать приложение Codex автоматически ради такой проверки.
 
-Запускать только один Orchestrator на его link port. Диагностический пилот
-останавливается перед запуском процесса Codex; два `serve` на одном порту конфликтуют.
-Не менять настройки других MCP servers и не включать GUI Orchestrator параллельно.
+Один desktop Orchestrator владеет link/bridge ports; несколько официальных shim
+подключаются к нему одновременно. Не запускать старый `serve` на том же порту.
+При добавлении config через CLI обнаружена нормализация чужой node_repl-записи;
+её исходные настройки восстановлены побайтно из приватной копии. Финальная запись
+добавлена без изменения остальных настроек Codex; конфигурационные backup не в Git.
 
 ## Ограничение доступа
 
