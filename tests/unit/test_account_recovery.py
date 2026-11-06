@@ -1,5 +1,7 @@
 import copy
 import json
+import subprocess
+import sys
 from dataclasses import replace
 from types import SimpleNamespace
 from unittest.mock import Mock
@@ -211,6 +213,32 @@ def test_parallel_operator_attempt_cannot_enter_mutation(setup):
     with recovery._locked(setup.config), pytest.raises(OSError):
         recovery.execute(setup.config, setup.account, emit=pytest.fail)
     assert not setup.passwords
+
+
+def test_crashed_process_releases_recovery_lock_and_parallel_process_is_rejected(setup):
+    script = (
+        "import os,sys\nfrom pathlib import Path\n"
+        "from omk.admin import load_operator_config\n"
+        "from omk.account_recovery import _locked\n"
+        "try:\n"
+        " with _locked(load_operator_config(Path(sys.argv[1]))): os._exit(73)\n"
+        "except OSError: os._exit(74)\n"
+    )
+
+    def child():
+        return subprocess.run(
+            [sys.executable, "-c", script, str(setup.path)],
+            capture_output=True,
+            timeout=10,
+            check=False,
+        )
+
+    with recovery._locked(setup.config):
+        assert child().returncode == 74
+    result = child()
+    assert result.returncode == 73 and not result.stdout and not result.stderr
+    with recovery._locked(setup.config):
+        pass
 
 
 def test_cli_refuses_nonterminal_password_output_before_mutation(
