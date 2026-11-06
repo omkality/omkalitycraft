@@ -244,6 +244,35 @@ def test_full_journal_before_lock_never_mutates_account(setup, monkeypatch):
     assert not setup.user["isLocked"] and not setup.passwords
 
 
+def test_interactive_cli_displays_password_once_outside_json_and_audit(
+    setup, monkeypatch, capsys
+):
+    recovery.prepare(setup.config, "test_player")
+    monkeypatch.setattr("omk.admin.load_operator_config", lambda _: setup.config)
+    monkeypatch.setattr(recovery.sys.stdin, "isatty", lambda: True)
+    monkeypatch.setattr(recovery.sys.stderr, "isatty", lambda: True)
+    assert (
+        main(
+            [
+                "admin",
+                "--config",
+                str(setup.path),
+                "recover-account",
+                "run",
+                "--account",
+                setup.account,
+            ]
+        )
+        == 0
+    )
+    captured = capsys.readouterr()
+    assert json.loads(captured.out)["stage"] == "complete"
+    secret = setup.passwords[0]
+    assert captured.err.count(secret) == 1 and secret not in captured.out
+    assert secret not in (setup.config.private / "audit.jsonl").read_text()
+    assert secret not in json.dumps(recovery.status(setup.config, setup.account))
+
+
 def test_journal_failure_after_reset_does_not_unlock_account(setup, monkeypatch):
     recovery.prepare(setup.config, "test_player")
     original = recovery._save
