@@ -1,5 +1,36 @@
 # Разработка OmkalityCraft
 
+## Закрытая cold-backup утилита владельца — 6 ноября 2026
+
+`omk admin backups plan/run/status/list/finish/cancel` создаёт копию остановленного
+Linux Docker мира по приватному allowlist. План связывает container/image/volumes,
+inventory мира, fingerprint runtime и env-политику; prepare отделён от publication.
+Повторный lifecycle-check перед публикацией отвергает старт источника во время чтения.
+Неоднозначный run не повторяется. `finish` подтверждает committed sequence/хеш без
+новой ротации; `cancel` удаляет только доказанно неопубликованный staging при
+неизменной истории. Источник readonly, helper без сети/Docker socket, ресурсы ограничены.
+
+Настоящий DJ2 2.23.4/Core 0.2.10/persistent Drasl прошёл **137 игровых условий**,
+четыре owner plan/run и пять стартов; **30 независимых проверок** файлов/journals.
+Восстановление inventory/home/claim/сущностей/плавки, текущих допусков и рангов
+сохранено. Source unchanged, stop 0/fatal/OOM=false; свои data/auth scopes очищены.
+Отдельные 13 real Docker/CLI условий используют synthetic runtime: гонка двух
+процессов, os._exit(73), finish без перепубликации, source restart/change, безопасный
+cancel и sparse 600 MiB при helper memory 512 MiB. Не называть это Minecraft crash.
+
+Введён явный expanded-byte limit owner store вместо прежнего общего lab cap 512 MiB;
+старые defaults сохранены. Worker budgets/TTL/CPU/RAM/journal cap задаются env,
+ошибочные значения не отражаются в сообщениях. Windows unit **887 passed / 8 skipped**,
+focused Linux Docker **192 passed**; filesystem ENOSPC/4 SIGKILL пройдены отдельно.
+[Команды, конфиг, лимиты и папки](COLD_BACKUPS.md),
+[обезличенный протокол](validation/dj2-owner-cold-backups-2026-11-06.json).
+
+Это рабочая ручная cold-copy операция, не scheduler, не автоматический stop/start
+и не production restore/cutover. Off-host storage, общий бюджет VPS и сверка старых
+FTB memberships остаются в #33/#38; частичный откат #34 отдельно. Исторический
+world zip не содержит runtime/config/Drasl: они требуют собственных сохраняемых
+артефактов/политики. VPS для локальной приёмки по-прежнему не нужен.
+
 ## Управляемые копии настоящего Forge-мира — 6 ноября 2026
 
 `dj2-recovery --managed-backups` связал независимый inventory остановленного Linux
