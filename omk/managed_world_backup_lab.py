@@ -91,7 +91,10 @@ class ManagedWorldBackups:
     def copy_from_store(self, relative, destination):
         if destination.exists():
             raise ValueError("Managed export must not overwrite existing evidence")
-        inspect_owned("volume", self.volume, self.run)
+        if inspect_owned("volume", self.volume, self.run) is None:
+            raise ValueError(
+                "Missing owned backup volume; never create one during export"
+            )
         name = self.volume + "-export"
         docker(
             "create",

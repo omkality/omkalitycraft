@@ -139,3 +139,17 @@ def test_managed_source_requires_verified_stopped_checkpoint(monkeypatch, failur
     )
     with pytest.raises(ValueError, match="verified stopped"):
         adapter.verify_source(recovery)
+
+
+def test_export_missing_volume_refuses_before_docker_can_create_it(
+    tmp_path, monkeypatch
+):
+    adapter = object.__new__(ManagedWorldBackups)
+    adapter.volume, adapter.run = "owned-backup", "fixture-run"
+    monkeypatch.setattr("omk.managed_world_backup_lab.inspect_owned", lambda *a: None)
+    monkeypatch.setattr(
+        "omk.managed_world_backup_lab.docker",
+        lambda *a, **k: pytest.fail("Docker mount attempted"),
+    )
+    with pytest.raises(ValueError, match="never create"):
+        adapter.copy_from_store("store", tmp_path / "new-export")
