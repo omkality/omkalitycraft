@@ -8,6 +8,7 @@ import time
 from uuid import UUID
 
 from omk.account_recovery import execute, prepare, status
+from omk.account_recovery_abort_lab import abrupt_exit
 from omk.admin import OperatorConfig, _write_private
 from omk.dj2_commands_lab import FIRST
 from omk.dj2_linux_lab import JAVA_IMAGE, LinuxServer
@@ -163,12 +164,14 @@ def exercise_owner(accounts, mods, console, expect, report, lab, server):
             "owner_reset_keeps_real_inventory_and_levels",
         )
     _pending_login(cfg, accounts, renewed, mods, inventory, expect, report)
+    abrupt_exit(cfg, accounts, mods, expect, report)
     console("save-all flush")
     report["owner_workflow"] = {
         "real_drasl_and_rcon_and_forge": True,
         "unrelated_actor_preserved": True,
         "interactive_terminal_delivery_automated": False,
         "pending_pre_authenticated_handshake_tested": True,
+        "process_exit_before_password_delivery_tested": True,
     }
 
 
