@@ -350,6 +350,16 @@ def run_rtp_lab(args):
         "checks": [],
         "lab": lab.relative_to(PROJECT_ROOT).as_posix(),
         "core_sha256": hashlib.sha256(args.core.read_bytes()).hexdigest(),
+        "pack_fix_sha256": (
+            hashlib.sha256(args.pack_fix.read_bytes()).hexdigest()
+            if getattr(args, "pack_fix", None)
+            else None
+        ),
+        "server_profile_sha256": (
+            hashlib.sha256(args.server_profile.read_bytes()).hexdigest()
+            if getattr(args, "server_profile", None)
+            else None
+        ),
         "java_image": JAVA_IMAGE,
         "destinations": [],
     }
