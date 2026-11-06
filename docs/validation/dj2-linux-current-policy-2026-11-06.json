@@ -1,0 +1,158 @@
+{
+  "date": "2026-11-06",
+  "issue": 33,
+  "scope": "Historical Linux world with reserved-name account; current vanilla access lists, whitelist flag, ranks and known FTB authority overlaid and fully reverified before Forge; no production cutover",
+  "pack": "Divine Journey 2 2.23.4",
+  "core": "0.2.10",
+  "core_sha256": "438992170b8e56b4647bf0517e432c873146acd711d152ca5522eae57dbd17e3",
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+  "native": {
+    "accepted": true,
+    "conditions": 19,
+    "checks": [
+      "historical_ally_can_really_edit_claim",
+      "source_clean_exit_without_oom",
+      "real_ftb_con_dat_persisted_on_linux",
+      "historical_owner_backup_verified_before_current_policy_changes",
+      "current_revoke_ban_whitelist_deop_and_home_quota_seeded",
+      "source_clean_exit_without_oom",
+      "real_ftb_con_dat_persisted_on_linux",
+      "historical_and_latest_current_world_backups_exported_verified",
+      "full_current_policy_verified_immediately_before_forge_start",
+      "current_ban_rejects_same_valid_drasl_session_after_restore",
+      "historical_op_is_not_revived",
+      "current_one_home_rank_applies_to_historical_saved_home",
+      "historical_inventory_restored_instead_of_current_one_emerald",
+      "historical_home_really_teleports_with_current_policy",
+      "explicit_pardon_allows_same_guest_session_positive_control",
+      "current_whitelist_enforced_after_restore",
+      "guest_can_edit_unclaimed_positive_control",
+      "revoked_ally_cannot_edit_historical_claim",
+      "non_op_owner_keeps_claim_access"
+    ],
+    "server_starts": 3,
+    "source_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "replacement_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "all_owned_scopes_removed": true,
+    "source_world_unchanged": true,
+    "host_extract_of_CON": false,
+    "historical_files": 273,
+    "current_files": 274,
+    "policy_files": 7,
+    "report_sha256": "bc40e7bbafa4acac3a247745d48fe205a7049edba05673529bca3f82a6edfa2d"
+  },
+  "independent": {
+    "checks": [
+      "entire_stopped_current_world_remains_byte_identical",
+      "exact_current_ops.json",
+      "exact_current_banned-players.json",
+      "exact_current_banned-ips.json",
+      "exact_current_whitelist.json",
+      "exact_current_local_ftbutilities_ranks.txt",
+      "prestart_no_old_owner_op_and_current_guest_ban_present",
+      "prestart_current_whitelist_enabled",
+      "linux_reserved_name_preserved_through_policy_overlay",
+      "same_drasl_uuid_in_old_current_restored_ftb",
+      "historical_home_restored_without_current_home_reset",
+      "old_ally_revocation_survives_historical_claim_return",
+      "team_identity_owner_remain_stable",
+      "historical_claims_preserved_semantically",
+      "real_player_inventory_7_then_1_then_restored_7",
+      "owner_snapshot_1_matches_separate_stopped_tar",
+      "snapshot_1_archive_manifest_digest_match",
+      "owner_snapshot_2_matches_separate_stopped_tar",
+      "snapshot_2_archive_manifest_digest_match",
+      "complete_receipt_is_bound_to_exact_plan_bytes",
+      "prestart_runtime_files_match_bound_after_hashes",
+      "full_world_inventory_reverified_immediately_before_forge",
+      "source_clean_exit_no_oom_export_and_volume_removed",
+      "replacement_clean_exit_no_oom_export_and_volume_removed",
+      "owned_auth_and_backup_volumes_removed"
+    ],
+    "writes_to_worlds": false,
+    "report_sha256": "bc40e7bbafa4acac3a247745d48fe205a7049edba05673529bca3f82a6edfa2d",
+    "historical_files": 273,
+    "current_files": 274
+  },
+  "filesystem_faults": {
+    "ok": true,
+    "checks": [
+      "SIGKILL_after_first_replacement_has_no_receipt",
+      "partial_target_refuses_verify",
+      "partial_target_refuses_raw-verify",
+      "partial_target_refuses_stage",
+      "killed_writer_does_not_change_current_source",
+      "two_real_processes_have_exactly_one_policy_writer",
+      "race_winner_is_fully_reverifiable",
+      "real_tmpfs_ENOSPC_after_plan_has_no_receipt",
+      "ENOSPC_target_refuses_verify",
+      "ENOSPC_target_refuses_raw-verify"
+    ],
+    "real_minecraft": false,
+    "pinned_ftb_jars_verified": true,
+    "cpu": 1,
+    "memory_mib": 512,
+    "network": "none",
+    "tmpfs_mib": 16,
+    "owned_container_removed": true
+  },
+  "unit": {
+    "windows_passed": 977,
+    "windows_skipped": 11,
+    "windows_log_sha256": "547d117114b1a7a58a5f4c43bf38c7d35959dfdefd65fd0e1e87396c44d12415",
+    "linux_focused": {
+      "image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "exit_code": 0,
+      "oom_killed": false,
+      "cpu_limit": 2,
+      "memory_mib": 1024,
+      "network": "none",
+      "source_mount": "readonly",
+      "mock_lifecycle_tests": true,
+      "real_minecraft": false,
+      "tail": [
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "285 passed, 2 warnings in 4.55s"
+      ],
+      "owned_container_removed": true
+    }
+  },
+  "code_provenance": {
+    "native_launch_commit": "fdb9037",
+    "worker_unchanged_since_launch": true,
+    "files": {
+      "omk/linux_restore_policy.py": "9af3f4ad8643eaa4a91b07fa10a69d75b3a13c61359f4034aaae0ad2025523c7",
+      "omk/linux_policy_lab.py": "f9cc1e63b122861db6e1ba004e8a46184b3cbc8d02671bd67003c86b8430d621",
+      "omk/linux_paths_lab.py": "e471a0a64d3e069be9cac06fe595cb6f5fa3486acef067685b984c798ab758ba",
+      "omk/linux_world_restore.py": "c79fcd8935e10eafa4bd8527fba742a53992d367992e9803d4904c35d6ab00a9",
+      "omk/ftb_restore_authority.py": "aeeb3579c9e21577e8aea0e1ec17cb9d3592d8067da376a306d1ba6a3b2ebf9a",
+      "omk/ftb_restore_reconcile.py": "e01db3c6e74e5af0d4c9cb1da4c405c957b5169fe3ec429fe555646e3863a486",
+      "omk/fs.py": "440bb85dd64572412c2399fd3d7e8b1b8df3941d06e437312a087cc0c4cd2477"
+    }
+  },
+  "limits": {
+    "public_profile_changed": false,
+    "private_core_changed": false,
+    "launcher_ui_changed": false,
+    "graphical_client_tested": false,
+    "gtnh_tested": false,
+    "production_cutover": false,
+    "drasl_historical_restore": false,
+    "multi_file_atomicity": false,
+    "remaining": "Production owner restore/cutover and backup window, changed FTB identity sets, shared storage budget, off-host encrypted copies and VPS acceptance remain open in #33/#38."
+  }
+}

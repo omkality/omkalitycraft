@@ -14,7 +14,10 @@ from pathlib import Path
 
 import psutil
 
-from omk.fs import resolved
+from omk.fs import (
+    regular as _regular,
+    resolved,
+)
 
 MIB = 1024 * 1024
 LINE_LIMIT = 32768
@@ -49,17 +52,7 @@ def redact(text: str, secrets=(), paths=()) -> str:
 
 
 def regular(path: Path, root: Path) -> bool:
-    """Do not follow any symlink/junction, including parents, even inside root."""
-    try:
-        relative = path.relative_to(root)
-        current = root
-        for part in ("", *relative.parts):
-            current = current / part
-            if current.is_symlink() or current.is_junction():
-                return False
-        return path.is_file() and resolved(path).is_relative_to(resolved(root))
-    except OSError, ValueError:
-        return False
+    return _regular(path, root)
 
 
 class BoundedLog:

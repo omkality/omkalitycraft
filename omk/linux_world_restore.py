@@ -26,6 +26,7 @@ from omk.stopped_world_backup import inventory
 OWNER = ".omk-world-stage-owner.json"
 PLAN = ".omk-world-stage-plan.json"
 DONE = ".omk-world-staged.json"
+POLICY_MARKERS = (".omk-current-policy-plan.json", ".omk-current-policy-staged.json")
 
 
 def _read(path):
@@ -161,6 +162,13 @@ def execute(request, storage=Path("/backup/store"), target=Path("/restore")):
         _sync_directory(target)
         return {"staged": True, **plan}
     if request["action"] == "verify":
+        if any(
+            (target / name).exists() or (target / name).is_symlink()
+            for name in POLICY_MARKERS
+        ):
+            raise ValueError(
+                "Current-policy operation requires its full policy verifier"
+            )
         if _read(target / PLAN) != plan or _read(target / DONE) != plan:
             raise ValueError("World stage has no complete bound receipt")
         _verify(world, archive, manifest, request)
