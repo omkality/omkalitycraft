@@ -87,8 +87,14 @@ def command(config, password, text):
         else:
             raise ConsoleError("Invalid recovery console authentication response")
         # A second read-only command marks the end of a possibly split response.
-        stream.sendall(_packet(2, 2, text) + _packet(3, 2, "list uuids"))
-        output = []
+        # Older Minecraft RCON reads one request at a time; do not pipeline requests
+        # into the same TCP write. Wait for the first response before the delimiter.
+        stream.sendall(_packet(2, 2, text))
+        number, kind, body = _receive(stream, deadline)
+        if number != 2 or kind != 0:
+            raise ConsoleError("Invalid recovery console response identity")
+        output = [body]
+        stream.sendall(_packet(3, 2, "list uuids"))
         for _ in range(32):
             number, kind, body = _receive(stream, deadline)
             if number == 3 and kind == 0:

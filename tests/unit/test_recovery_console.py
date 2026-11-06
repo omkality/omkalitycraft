@@ -99,14 +99,15 @@ def test_actual_loopback_framing_handles_split_packets_and_never_returns_sentine
                         2,
                         "list uuids",
                     )
+                    # Do not require the client to pipeline an unread next command.
+                    stream.sendall(module._packet(2, 0, "There are 0/"))
                     assert module._receive(stream, time.monotonic() + 3) == (
                         3,
                         2,
                         "list uuids",
                     )
                     response = (
-                        module._packet(2, 0, "There are 0/")
-                        + module._packet(2, 0, "20 players online:")
+                        module._packet(2, 0, "20 players online:")
                         + module._packet(3, 0, "sentinel body")
                     )
                     for part in (response[:3], response[3:17], response[17:]):
