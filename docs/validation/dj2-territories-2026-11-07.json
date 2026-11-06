@@ -1,0 +1,768 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "scope": "FTB connected territory quota; public deployment unchanged",
+  "issue": 31,
+  "components": {
+    "Core": {
+      "version": "0.3.3",
+      "sha256": "0bac3eb415b93b54ceb5e01d22daafa437c2d471b4fdb7669736780a015923ed",
+      "private_implementation_commit": "edc0218"
+    },
+    "DJ2Fix": {
+      "version": "0.1.2",
+      "sha256": "e54cbeaa85d517e393a389927bcd5171ad9638fc7e8c5daff33c21990065da36",
+      "unchanged": true
+    }
+  },
+  "runtime": {
+    "pack": "Divine Journey 2",
+    "version": "2.23.4",
+    "loader": "Forge 1.12.2 / 14.23.5.2860",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "cpus": 4,
+    "container_memory_bytes": 6442450944,
+    "heap": "4G",
+    "graphical_client": false
+  },
+  "ftb_artifacts": {
+    "FTBUtilities-5.4.1.131.jar": {
+      "sha256": "e458fe39aba9ba28122496e54f826e4f61df515ed1f8d0c70cc9e56f67a5404a",
+      "source": "https://github.com/FTBTeam/FTB-Utilities/tree/1e1f208fd8cd7136a0e9005eaa77c806e84643d9"
+    },
+    "FTBLib-5.4.7.2.jar": {
+      "sha256": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac",
+      "source": "https://github.com/FTBTeam/FTB-Library-Legacy/tree/47586e9a1bb60e6229ce05d75b3d88ae82ef963a"
+    }
+  },
+  "primary": {
+    "lab": ".local/territories-f57b7ac245",
+    "boots": 2,
+    "checks": [
+      "actual_territory_adapter_enabled",
+      "accepted_position_1",
+      "accepted_position_2",
+      "accepted_position_3",
+      "accepted_position_4",
+      "fourth_command_region_denied",
+      "accepted_position_6",
+      "accepted_position_7",
+      "gui_packet_does_not_bypass_region_limit",
+      "accepted_position_9",
+      "accepted_position_10",
+      "readonly_observer_success_11",
+      "before_bridge_unclaim_exact_claims_territoryowner",
+      "before_bridge_unclaim_members_territoryowner",
+      "accepted_position_14",
+      "readonly_observer_success_15",
+      "bridge_command_unclaim_denied_without_removing_claim",
+      "bridge_packet_unclaim_denied",
+      "accepted_position_18",
+      "accepted_position_19",
+      "accepted_position_20",
+      "whole_region_packet_removal_allowed",
+      "accepted_position_22",
+      "accepted_position_23",
+      "accepted_position_24",
+      "accepted_position_25",
+      "accepted_position_26",
+      "batch_merges_existing_regions_before_adding_new_region",
+      "readonly_observer_success_28",
+      "single_player_three_regions_exact_claims_territoryowner",
+      "single_player_three_regions_members_territoryowner",
+      "accepted_position_31",
+      "accepted_position_32",
+      "accepted_position_33",
+      "accepted_position_34",
+      "denied_current_quota_500_0",
+      "readonly_observer_success_36",
+      "two_players_six_regions_exact_claims_territoryowner",
+      "two_players_six_regions_members_territoryowner",
+      "accepted_position_39",
+      "accepted_position_40",
+      "accepted_position_41",
+      "accepted_position_42",
+      "denied_current_quota_800_0",
+      "readonly_observer_success_44",
+      "three_players_nine_regions_exact_claims_territoryowner",
+      "three_players_nine_regions_members_territoryowner",
+      "readonly_observer_success_47",
+      "three_players_exact_150_native_chunk_budget_exact_claims_territoryowner",
+      "three_players_exact_150_native_chunk_budget_members_territoryowner",
+      "readonly_observer_success_50",
+      "whole_batch_cleanup_returns_to_19_chunks_exact_claims_territoryowner",
+      "whole_batch_cleanup_returns_to_19_chunks_members_territoryowner",
+      "readonly_observer_success_53",
+      "member_left_existing_nine_regions_preserved_exact_claims_territoryowner",
+      "member_left_existing_nine_regions_preserved_members_territoryowner",
+      "accepted_position_56",
+      "accepted_position_57",
+      "denied_current_quota_202_1",
+      "accepted_position_59",
+      "denied_current_quota_800_0",
+      "readonly_observer_success_61",
+      "over_budget_allows_adjacent_recovery_only_exact_claims_territoryowner",
+      "over_budget_allows_adjacent_recovery_only_members_territoryowner",
+      "accepted_position_64",
+      "accepted_position_65",
+      "denied_current_quota_30_0",
+      "readonly_observer_success_67",
+      "identical_coordinates_separate_dimensions_exact_claims_territoryowner",
+      "identical_coordinates_separate_dimensions_members_territoryowner",
+      "accepted_position_70",
+      "accepted_position_71",
+      "accepted_position_72",
+      "denied_current_quota_-9_1",
+      "accepted_position_74",
+      "readonly_observer_success_75",
+      "negative_axes_and_diagonal_not_connected_exact_claims_territoryowner",
+      "negative_axes_and_diagonal_not_connected_members_territoryowner",
+      "readonly_observer_success_78",
+      "duplicate_and_pending_packet_claims_cannot_exceed_budget_exact_claims_territoryowner",
+      "duplicate_and_pending_packet_claims_cannot_exceed_budget_members_territoryowner",
+      "accepted_position_81",
+      "readonly_observer_success_82",
+      "revoked_member_cannot_unclaim_previous_team_exact_claims_territoryowner",
+      "revoked_member_cannot_unclaim_previous_team_members_territoryowner",
+      "revoked_member_cannot_unclaim_previous_team_exact_claims_territoryother",
+      "revoked_member_cannot_unclaim_previous_team_members_territoryother",
+      "accepted_position_87",
+      "readonly_observer_success_88",
+      "single_player_exact_50_native_chunk_budget_exact_claims_territoryowner",
+      "single_player_exact_50_native_chunk_budget_members_territoryowner",
+      "single_player_exact_50_native_chunk_budget_exact_claims_territoryother",
+      "single_player_exact_50_native_chunk_budget_members_territoryother",
+      "accepted_position_93",
+      "readonly_observer_success_94",
+      "quota_handler_does_not_grant_foreign_unclaim_permission_exact_claims_territoryowner",
+      "quota_handler_does_not_grant_foreign_unclaim_permission_members_territoryowner",
+      "quota_handler_does_not_grant_foreign_unclaim_permission_exact_claims_territoryother",
+      "quota_handler_does_not_grant_foreign_unclaim_permission_members_territoryother",
+      "accepted_position_99",
+      "readonly_observer_success_100",
+      "memberless_server_claims_not_limited_to_zero_exact_claims_territoryowner",
+      "memberless_server_claims_not_limited_to_zero_members_territoryowner",
+      "memberless_server_claims_not_limited_to_zero_exact_claims_territoryother",
+      "memberless_server_claims_not_limited_to_zero_members_territoryother",
+      "memberless_server_claims_not_limited_to_zero_exact_claims_territoryserver",
+      "memberless_server_claims_not_limited_to_zero_members_territoryserver",
+      "readonly_observer_success_107",
+      "oversized_request_rejected_without_mutation_exact_claims_territoryowner",
+      "oversized_request_rejected_without_mutation_members_territoryowner",
+      "oversized_request_rejected_without_mutation_exact_claims_territoryother",
+      "oversized_request_rejected_without_mutation_members_territoryother",
+      "oversized_request_rejected_without_mutation_exact_claims_territoryserver",
+      "oversized_request_rejected_without_mutation_members_territoryserver",
+      "readonly_observer_success_114",
+      "controlled_reflection_failure_injected",
+      "accepted_position_116",
+      "readonly_observer_success_117",
+      "adapter_failure_preserves_claims_exact_claims_territoryowner",
+      "adapter_failure_preserves_claims_members_territoryowner",
+      "adapter_failure_preserves_claims_exact_claims_territoryother",
+      "adapter_failure_preserves_claims_members_territoryother",
+      "adapter_failure_preserves_claims_exact_claims_territoryserver",
+      "adapter_failure_preserves_claims_members_territoryserver",
+      "quota_adapter_failed_closed",
+      "readonly_observer_success_125",
+      "failed_adapter_denies_further_changes_exact_claims_territoryowner",
+      "failed_adapter_denies_further_changes_members_territoryowner",
+      "failed_adapter_denies_further_changes_exact_claims_territoryother",
+      "failed_adapter_denies_further_changes_members_territoryother",
+      "failed_adapter_denies_further_changes_exact_claims_territoryserver",
+      "failed_adapter_denies_further_changes_members_territoryserver",
+      "accepted_position_132",
+      "ordinary_block_placement_after_quota_failure",
+      "one_bounded_adapter_error",
+      "clean_first_start_before_restart",
+      "readonly_observer_success_136",
+      "restart_preserves_claims_and_membership_exact_claims_territoryowner",
+      "restart_preserves_claims_and_membership_members_territoryowner",
+      "restart_preserves_claims_and_membership_exact_claims_territoryother",
+      "restart_preserves_claims_and_membership_members_territoryother",
+      "restart_preserves_claims_and_membership_exact_claims_territoryserver",
+      "restart_preserves_claims_and_membership_members_territoryserver",
+      "restart_restores_guard_after_fault",
+      "accepted_position_144",
+      "accepted_position_145",
+      "denied_current_quota_1000_0",
+      "readonly_observer_success_147",
+      "over_budget_multi_step_merge_recovery_after_restart_exact_claims_territoryowner",
+      "over_budget_multi_step_merge_recovery_after_restart_members_territoryowner",
+      "over_budget_multi_step_merge_recovery_after_restart_exact_claims_territoryother",
+      "over_budget_multi_step_merge_recovery_after_restart_members_territoryother",
+      "over_budget_multi_step_merge_recovery_after_restart_exact_claims_territoryserver",
+      "over_budget_multi_step_merge_recovery_after_restart_members_territoryserver",
+      "accepted_position_154",
+      "denied_current_quota_1000_0"
+    ],
+    "driver_sha256": "2d43414825b5082a74a9568906d2fa7f1070e33837b1a077d1245c9e74b44135",
+    "probe_sha256": "d53c4fb7d2d783f549c3f39c7667a7574e023098e3ff87eb1530a8a6e8001927",
+    "policy": {
+      "schema": 1,
+      "regions_per_member": 3,
+      "max_request_chunks": 1024,
+      "max_graph_chunks": 20000
+    },
+    "final_claim_counts": {
+      "territoryowner": 31,
+      "territoryother": 50,
+      "territoryserver": 9
+    },
+    "final_members": {
+      "territoryowner": 2,
+      "territoryother": 1,
+      "territoryserver": 0
+    },
+    "independent": {
+      "ok": true,
+      "checks": [
+        "archive_digest_0",
+        "isolated_world_0",
+        "exact_unique_native_claims_0_territoryowner",
+        "native_membership_0_territoryowner",
+        "exact_unique_native_claims_0_territoryother",
+        "native_membership_0_territoryother",
+        "exact_unique_native_claims_0_territoryserver",
+        "memberless_server_team_0",
+        "over_budget_bases_preserved_and_later_merged_0",
+        "other_teams_remain_connected_0",
+        "authenticated_native_identity_0_omk_game_test",
+        "player_returns_overworld_0_omk_game_test",
+        "saved_player_team_0_omk_game_test",
+        "authenticated_native_identity_0_omk_other_test",
+        "player_returns_overworld_0_omk_other_test",
+        "saved_player_team_0_omk_other_test",
+        "authenticated_native_identity_0_omk_third_test",
+        "player_returns_overworld_0_omk_third_test",
+        "saved_player_team_0_omk_third_test",
+        "archive_digest_1",
+        "isolated_world_1",
+        "exact_unique_native_claims_1_territoryowner",
+        "native_membership_1_territoryowner",
+        "exact_unique_native_claims_1_territoryother",
+        "native_membership_1_territoryother",
+        "exact_unique_native_claims_1_territoryserver",
+        "memberless_server_team_1",
+        "over_budget_bases_preserved_and_later_merged_1",
+        "other_teams_remain_connected_1",
+        "authenticated_native_identity_1_omk_game_test",
+        "player_returns_overworld_1_omk_game_test",
+        "saved_player_team_1_omk_game_test",
+        "authenticated_native_identity_1_omk_other_test",
+        "player_returns_overworld_1_omk_other_test",
+        "saved_player_team_1_omk_other_test",
+        "authenticated_native_identity_1_omk_third_test",
+        "player_returns_overworld_1_omk_third_test",
+        "saved_player_team_1_omk_third_test"
+      ],
+      "stages": [
+        {
+          "archive_sha256": "e21836d8524ff263b8d259a0d3eec0dd28916ad25b691f004ddd36fe4f3603a7",
+          "claims": {
+            "territoryowner": 21,
+            "territoryother": 50,
+            "territoryserver": 9
+          },
+          "regions": {
+            "territoryowner": 9,
+            "territoryother": 1,
+            "territoryserver": 1
+          }
+        },
+        {
+          "archive_sha256": "103bfdcf667e8873fcf05d0da0a91bce3f2a0d276011c12cb37ecc95e9204114",
+          "claims": {
+            "territoryowner": 31,
+            "territoryother": 50,
+            "territoryserver": 9
+          },
+          "regions": {
+            "territoryowner": 8,
+            "territoryother": 1,
+            "territoryserver": 1
+          }
+        }
+      ],
+      "baseline": false
+    },
+    "clean_exit": true,
+    "oom": false
+  },
+  "protection_regression": {
+    "lab": ".local/claim-regression-7296452ff3",
+    "checks": [
+      "private_ftb_mute_guard_initialized_on_real_server_enabled",
+      "private_ftb_claim_guard_initialized_on_real_server_enabled",
+      "neither_authenticated_actor_is_an_operator",
+      "two_authenticated_protocol_players_complete_real_forge_handshake",
+      "private_server_core_loaded_explicit_client_policy",
+      "three_homes_allowed_and_fourth_denied_for_normal_player",
+      "normal_player_cannot_fly_god_op_manage_global_warps_or_read_others_homes",
+      "rtp_available_to_normal_player_in_initial_profile",
+      "home_origin_platform_created_on_loaded_chunk",
+      "home_command_really_teleports_player_after_warmup",
+      "non_owner_can_break_unclaimed_test_block_positive_control",
+      "ftb_claim_blocks_non_owner_block_break",
+      "ftb_claim_allows_owner_block_break",
+      "server_guard_rejects_extra_declared_mod_list",
+      "server_guard_rejects_missing_declared_mod_list",
+      "server_guard_rejects_version_declared_mod_list",
+      "unclaimed_double_chest_has_54_slots",
+      "unclaimed_double_chest_transfer_from_opposite_half_control",
+      "non_owner_places_unclaimed_chest_next_to_claimed_half",
+      "guard_blocks_boundary_double_chest_theft",
+      "owner_can_use_boundary_double_chest_positive_control",
+      "vanilla_chest_team_member_transfer_positive_control",
+      "vanilla_chest_guard_closes_revoked_member_container",
+      "iron_chest_team_member_transfer_positive_control",
+      "iron_chest_guard_closes_revoked_member_container",
+      "vanilla_chest_attacker_starts_without_item",
+      "vanilla_chest_unclaimed_transfer_positive_control",
+      "vanilla_chest_claimed_open_denied_to_non_owner",
+      "vanilla_chest_closed_window_click_does_not_steal_claimed_item",
+      "vanilla_chest_claimed_owner_transfer_positive_control",
+      "vanilla_chest_closed_window_replay_preserves_single_item_count",
+      "iron_chest_attacker_starts_without_item",
+      "iron_chest_unclaimed_transfer_positive_control",
+      "iron_chest_claimed_open_denied_to_non_owner",
+      "iron_chest_closed_window_click_does_not_steal_claimed_item",
+      "iron_chest_claimed_owner_transfer_positive_control",
+      "iron_chest_closed_window_replay_preserves_single_item_count",
+      "moderator_inherits_three_home_limit_without_op",
+      "moderator_denied_gameplay_advantages_and_permission_escalation",
+      "moderator_mute_blocks_public_chat",
+      "muted_command_blocked_me",
+      "muted_command_blocked_tell",
+      "muted_command_blocked_msg",
+      "muted_command_blocked_w",
+      "muted_player_keeps_non_chat_home_commands",
+      "moderator_unmute_restores_chat",
+      "unmute_restores_vanilla_action_and_private_message_commands",
+      "chat_command_guard_honors_ftb_chat_speak_permission",
+      "clearing_chat_speak_override_restores_command",
+      "moderator_kick_without_op",
+      "tnt_unclaimed_target_exists",
+      "tnt_destroys_unclaimed_block_control",
+      "ftb_default_claim_prevents_tnt_block_damage_inside_claim",
+      "ftb_tnt_at_claim_border_preserves_claimed_and_breaks_unclaimed_block"
+    ],
+    "independent": {
+      "checks": [
+        "stopped_export_matches_recorded_hash",
+        "saved_ftb_players_match_authenticated_uuids",
+        "saved_claim_team_owner_matches_first_player",
+        "excluded_player_not_saved_as_team_member",
+        "saved_homes_remain_personal_three_and_one",
+        "saved_claim_is_exact_overworld_chunk_zero",
+        "saved_startup_catalog_confirms_version_and_active_adapters",
+        "critical_artifacts_match_previously_pinned_bom",
+        "required_territory_policy_active_during_protection_suite"
+      ],
+      "changes_to_game_data": false
+    },
+    "policy_context": {
+      "policy_sha256": "d17282bc64101c2e6500be29ec2b4725867a8a241897f2d9f3689e0e8a1391df",
+      "staged_profile_sha256": "6ce2b0f889a2b8948bb5c47b5df20e8da239bd6d84a32ae776177105528ab571",
+      "required_capability": "ftb.territories",
+      "driver_sha256": "fa4d6c3f9b7a71c309ef29eda192c3a38173bd03d6d439f8081de1b3fec58f7b"
+    },
+    "clean_exit": true,
+    "oom": false
+  },
+  "minimal_forge": {
+    "working_modes": [
+      {
+        "mode": "bare",
+        "lab": ".local/territory-minimal-bare-96bed9778b",
+        "checks": [
+          "generic_core_without_pack_extension",
+          "no_dj2_or_bootstrap_mods",
+          "generic_connections_active",
+          "real_authenticated_protocol_actor",
+          "no_ftb_class_resolution_when_absent"
+        ],
+        "clean_exit": true
+      },
+      {
+        "mode": "ftb-optional",
+        "lab": ".local/territory-minimal-ftb-optional-69ec17744f",
+        "checks": [
+          "generic_core_without_pack_extension",
+          "no_dj2_or_bootstrap_mods",
+          "generic_connections_active",
+          "real_authenticated_protocol_actor",
+          "optional_territory_state",
+          "region_0_native_outcome",
+          "region_10_native_outcome"
+        ],
+        "clean_exit": true
+      },
+      {
+        "mode": "quota-one",
+        "lab": ".local/territory-minimal-quota-one-d549ba89c7",
+        "checks": [
+          "generic_core_without_pack_extension",
+          "no_dj2_or_bootstrap_mods",
+          "generic_connections_active",
+          "real_authenticated_protocol_actor",
+          "optional_territory_state",
+          "region_0_native_outcome",
+          "region_10_native_outcome"
+        ],
+        "clean_exit": true
+      }
+    ],
+    "expected_startup_refusals": [
+      {
+        "mode": "bad-number",
+        "lab": ".local/territory-minimal-bad-number-19d09e7fb9",
+        "checks": [
+          "specific_startup_refusal",
+          "refusal_before_any_player_join"
+        ],
+        "export_sha256": "0cda0b5db34a2b29f35fa531e1ebfeee79b5f796db1b051c0b8df5727e791e98"
+      },
+      {
+        "mode": "bad-pin",
+        "lab": ".local/territory-minimal-bad-pin-98d9a956a6",
+        "checks": [
+          "source_ftb_unchanged",
+          "specific_startup_refusal",
+          "refusal_before_any_player_join"
+        ],
+        "export_sha256": "7646f1e3469a6779d8cbb3f3e5df4da537969b00469503138cdf0ce392d6192c"
+      },
+      {
+        "mode": "bad-schema",
+        "lab": ".local/territory-minimal-bad-schema-2f4871c6f9",
+        "checks": [
+          "specific_startup_refusal",
+          "refusal_before_any_player_join"
+        ],
+        "export_sha256": "4da3bea4171456ffa2544b74941ea1b2ec37f32488c249a0c360f525c0ca4ae7"
+      },
+      {
+        "mode": "disabled",
+        "lab": ".local/territory-minimal-disabled-ef0e64c57d",
+        "checks": [
+          "specific_startup_refusal",
+          "refusal_before_any_player_join"
+        ],
+        "export_sha256": "41ff78379b0b2e17d826a87f14125f63fa6819b31063aa0075bf17bf6fdb64d7"
+      },
+      {
+        "mode": "missing-ftb",
+        "lab": ".local/territory-minimal-missing-ftb-d43a0757b2",
+        "checks": [
+          "specific_startup_refusal",
+          "refusal_before_any_player_join"
+        ],
+        "export_sha256": "519671749d11d61cc5709f77802a20472b9540885117318d24128834bb012237"
+      },
+      {
+        "mode": "missing-policy",
+        "lab": ".local/territory-minimal-missing-policy-9abb6c4a96",
+        "checks": [
+          "specific_startup_refusal",
+          "refusal_before_any_player_join"
+        ],
+        "export_sha256": "27624002d26cf534b73dd29495e6b91cc3d430353d43e9679f298834c6bc05c9"
+      }
+    ],
+    "independent": {
+      "ok": true,
+      "stages": [
+        {
+          "mode": "bare",
+          "lab": ".local/territory-minimal-bare-96bed9778b",
+          "checks": [
+            "stopped_archive_digest",
+            "isolated_world",
+            "authenticated_player_file",
+            "no_ftb_store_without_ftb"
+          ],
+          "archive_sha256": "13c2d8e93f1f5d1d6f1547bf27597cc4532abc645ce59ebe9b1a5a1156c4c35c"
+        },
+        {
+          "mode": "ftb-optional",
+          "lab": ".local/territory-minimal-ftb-optional-69ec17744f",
+          "checks": [
+            "stopped_archive_digest",
+            "isolated_world",
+            "authenticated_player_file",
+            "native_ftb_identity_and_team",
+            "native_team_owner",
+            "exact_saved_claims_for_environment_policy"
+          ],
+          "archive_sha256": "8dd007046c8da66e094fbd8c6c9da607c2b2949b69fbd8744d2ca88dcc045eca"
+        },
+        {
+          "mode": "quota-one",
+          "lab": ".local/territory-minimal-quota-one-d549ba89c7",
+          "checks": [
+            "stopped_archive_digest",
+            "isolated_world",
+            "authenticated_player_file",
+            "native_ftb_identity_and_team",
+            "native_team_owner",
+            "exact_saved_claims_for_environment_policy"
+          ],
+          "archive_sha256": "d8bb2928bf6bb14adbaf8138a90eecc42d462fc9e5d7fdd96483d15c071f823a"
+        }
+      ]
+    }
+  },
+  "jvm_oracle": {
+    "gameplay": false,
+    "cases": 305,
+    "conditions": 627,
+    "report": ".local/territory-topology-oracle.json"
+  },
+  "composition": {
+    "ok": true,
+    "checks": [
+      "only_reviewed_binding_and_version_class_families_changed",
+      "only_optional_territory_classes_added",
+      "core_has_no_pack_patch_bootstrap_or_fixture",
+      "all_shared_api_classes_byte_identical",
+      "unchanged_META-INF/MANIFEST.MF",
+      "unchanged_net/omkality/api/ClaimAccess$Scope.class",
+      "unchanged_net/omkality/api/ClaimAccess.class",
+      "unchanged_net/omkality/api/CoreServices.class",
+      "unchanged_net/omkality/api/PlayerPlacementAccess$Scope.class",
+      "unchanged_net/omkality/api/PlayerPlacementAccess.class",
+      "unchanged_net/omkality/api/ServerExtension.class",
+      "unchanged_net/omkality/CommandCatalog$1.class",
+      "unchanged_net/omkality/CommandCatalog.class",
+      "unchanged_net/omkality/FtbClaimDomains.class",
+      "unchanged_net/omkality/FtbClaimGuard.class",
+      "unchanged_net/omkality/FtbMuteGuard.class",
+      "unchanged_net/omkality/FtbPlayerPlacement$1.class",
+      "unchanged_net/omkality/FtbPlayerPlacement.class",
+      "unchanged_net/omkality/FtbRtpGuard.class",
+      "unchanged_net/omkality/FtbSpawnClaims.class",
+      "unchanged_net/omkality/RecoveryConnections.class",
+      "unchanged_net/omkality/ServerProfile.class",
+      "accepted_dj2fix_byte_identical",
+      "repeat_core_build_same_sha256"
+    ],
+    "core_sha256": "0bac3eb415b93b54ceb5e01d22daafa437c2d471b4fdb7669736780a015923ed",
+    "fix_sha256": "e54cbeaa85d517e393a389927bcd5171ad9638fc7e8c5daff33c21990065da36",
+    "changed": [
+      "net/omkality/FtbIntegration$1$1.class",
+      "net/omkality/FtbIntegration$1.class",
+      "net/omkality/FtbIntegration.class",
+      "net/omkality/OmkalityCore.class",
+      "net/omkality/OptionalIntegrations.class"
+    ],
+    "added": [
+      "net/omkality/ClaimTopology$Point.class",
+      "net/omkality/ClaimTopology.class",
+      "net/omkality/FtbTerritories$1$1.class",
+      "net/omkality/FtbTerritories$1.class",
+      "net/omkality/FtbTerritories.class"
+    ]
+  },
+  "uncapped_baseline": {
+    "lab": ".local/territories-6e847146d1",
+    "core_sha256": "163029d0709310250979aa37e94db79fb73250242291ee312e184ef6d8583828",
+    "native_conditions": 8,
+    "regions": 6,
+    "independent": {
+      "ok": true,
+      "checks": [
+        "archive_digest_0",
+        "isolated_world_0",
+        "exact_unique_native_claims_0_territoryowner",
+        "native_membership_0_territoryowner",
+        "baseline_retains_six_disconnected_regions",
+        "authenticated_native_identity_0_omk_game_test",
+        "player_returns_overworld_0_omk_game_test",
+        "authenticated_native_identity_0_omk_other_test",
+        "player_returns_overworld_0_omk_other_test"
+      ],
+      "stages": [
+        {
+          "archive_sha256": "96fe3f83b0537b80b34a096d8569b2a372896994d79eed7365c57ee0d49658dc",
+          "claims": {
+            "territoryowner": 6
+          },
+          "regions": {
+            "territoryowner": 6
+          }
+        }
+      ],
+      "baseline": true
+    },
+    "counted_as_new_core_acceptance": false
+  },
+  "diagnostics": {
+    "rejected_or_incomplete": [
+      {
+        "lab": ".local/territories-35de092512",
+        "core_sha256": "8b666c4c05322a86fe57d13a6bd774a645158422fce95a4ecbc97c0bed5ef6b0",
+        "checks_before_stop": 0,
+        "accepted": false
+      },
+      {
+        "lab": ".local/territories-67daf25a19",
+        "core_sha256": "584f802d8b8d7492ee2a811c6703a738650c38d75618e07816087f13cc09e411",
+        "checks_before_stop": 16,
+        "accepted": false
+      },
+      {
+        "lab": ".local/territories-85d3cc0efa",
+        "core_sha256": "836b98302987168b41d0bcae4673c046cd4491f133f7c0e12bbd4e9719474941",
+        "checks_before_stop": 12,
+        "accepted": false
+      },
+      {
+        "lab": ".local/territories-a87be6105f",
+        "core_sha256": "0bac3eb415b93b54ceb5e01d22daafa437c2d471b4fdb7669736780a015923ed",
+        "checks_before_stop": 133,
+        "accepted": false
+      },
+      {
+        "lab": ".local/territories-d4f12684c1",
+        "core_sha256": "25fe34038567b9e6f6644fa655d485362382a67e3eba3dbef8b668437d7f87ff",
+        "checks_before_stop": 0,
+        "accepted": false
+      },
+      {
+        "lab": ".local/territories-de387b23f4",
+        "core_sha256": "a0517e8a8d3a9e21afeb3e964f60f8c33ce7e191bd85fc7ca255659796ad38fd",
+        "checks_before_stop": 0,
+        "accepted": false
+      },
+      {
+        "lab": ".local/territories-f04b2b33b9",
+        "core_sha256": "0bac3eb415b93b54ceb5e01d22daafa437c2d471b4fdb7669736780a015923ed",
+        "checks_before_stop": 48,
+        "accepted": false
+      }
+    ],
+    "counted_as_acceptance": false,
+    "details": "Three startup binding attempts, two unreleased command-wrapper candidates and two incomplete fixture attempts excluded."
+  },
+  "cleanup_readback": {
+    "ok": true,
+    "owned_scopes": 19,
+    "scopes": [
+      {
+        "lab": ".local/territories-35de092512",
+        "archive_sha256": "05956b6dab66cde959fe5ab33ef3f3e21fbfc98750336aff88324b10ba95b705",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territories-67daf25a19",
+        "archive_sha256": "3c1e9e43689891a49d6513862e0420083245eb08616964bcce5c6aec901a55d9",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territories-6e847146d1",
+        "archive_sha256": "96fe3f83b0537b80b34a096d8569b2a372896994d79eed7365c57ee0d49658dc",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territories-85d3cc0efa",
+        "archive_sha256": "d201260a92c2551ee4c637b90b23fcc75d7463176c7119327095779f50683947",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territories-a87be6105f",
+        "archive_sha256": "eacb3299e0beac98066420b5b23ca9aa36010193c176cd27d111146be800a4c3",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territories-d4f12684c1",
+        "archive_sha256": "24103b88dd30e1825406b22cc9d7d089dd9a52e0e45c37fcd2c9fedffcc8ed48",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territories-de387b23f4",
+        "archive_sha256": "10376dbe1913e3c7aba727d6de7153046b9343881992201c9579b455efe164b2",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territories-f04b2b33b9",
+        "archive_sha256": "e50e6fb25e8d8bb0c2ca6b5309a9b8b0b307e6430c3a1417da78fa7f4e9343c0",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territories-f57b7ac245",
+        "archive_sha256": "103bfdcf667e8873fcf05d0da0a91bce3f2a0d276011c12cb37ecc95e9204114",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territory-minimal-bad-number-19d09e7fb9",
+        "archive_sha256": "4dba1ef5e07822f2623007c94db9a185e99387686028354ff532ad2f5705299e",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territory-minimal-bad-pin-98d9a956a6",
+        "archive_sha256": "95edbbe11b3185aafd7bafdc3e75d4941b67bf899755a09f50046d586edb6726",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territory-minimal-bad-schema-2f4871c6f9",
+        "archive_sha256": "57f0a0cc4fdb08069339d0e85b7e34e10d438307a82dfa86e62778842a40eeb3",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territory-minimal-bare-96bed9778b",
+        "archive_sha256": "13c2d8e93f1f5d1d6f1547bf27597cc4532abc645ce59ebe9b1a5a1156c4c35c",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territory-minimal-disabled-ef0e64c57d",
+        "archive_sha256": "21a1be10c48fc4da46a19b4c7bc12920f32b0e7bb2c1c473afd4bdc0e4c538cc",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territory-minimal-ftb-optional-69ec17744f",
+        "archive_sha256": "8dd007046c8da66e094fbd8c6c9da607c2b2949b69fbd8744d2ca88dcc045eca",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territory-minimal-missing-ftb-d43a0757b2",
+        "archive_sha256": "b30d175acbe1079913e0ef3d670c6df190e31d84122a17fdec769d4c22dbb5ce",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territory-minimal-missing-policy-9abb6c4a96",
+        "archive_sha256": "2e2816fa848bf622c5eabd12029507347b7c5c79803b757e84872f65568dd887",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/territory-minimal-quota-one-d549ba89c7",
+        "archive_sha256": "d8bb2928bf6bb14adbaf8138a90eecc42d462fc9e5d7fdd96483d15c071f823a",
+        "docker_scope_absent": true
+      },
+      {
+        "lab": ".local/claim-regression-7296452ff3",
+        "archive_sha256": "fcb3dbe7f975345a9eb100b6af789ac66547cd7b97cfc6c4197ecc6aad7ef1d8",
+        "docker_scope_absent": true
+      }
+    ]
+  },
+  "validation": {
+    "dj2_native_conditions": 210,
+    "minimal_conditions_including_preflight": 32,
+    "minimal_expected_refusal_modes": 6,
+    "independent_new_core_conditions": 63,
+    "jvm_conditions_not_native": 627,
+    "windows_unit_passed": 1040,
+    "windows_ui_passed": 44,
+    "windows_skipped": 12,
+    "public_ruff_black": "passed",
+    "new_private_python_ruff_black": "passed"
+  },
+  "boundaries": [
+    "Native FTB commands and encoded GUI messages; no rendered GUI or cross-OS game acceptance.",
+    "FTB remains the only claim/permission store; no rollback or item/quest bans.",
+    "Existing production profiles/worlds, client adapter, releases and backup schedules unchanged.",
+    "GTNH, resource world, arbitrary server mods and operator bypass are outside this acceptance.",
+    "Other issue scopes including 29, 32, 33, 34, 37, 38, 49, 102 and 105 stay open."
+  ]
+}

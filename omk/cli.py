@@ -20,6 +20,7 @@ from omk.profiles import PROJECT_ROOT, load_profiles
 from omk.registry_audit import add_upgrade_commands, audit_registry_files
 from omk.release_cli import add_release_commands, prepare_release
 from omk.storage_policy import add_storage_commands, storage_plan
+from omk.territory_policy import add_policy_commands, run_policy
 
 
 def doctor() -> dict[str, Any]:
@@ -88,6 +89,7 @@ def main(argv: list[str] | None = None) -> int:
     add_release_commands(sub)
     add_admin_commands(sub)
     add_storage_commands(sub)
+    add_policy_commands(sub)
     add_locale_commands(sub)
     add_upgrade_commands(sub)
     from omk.auth_config import add_auth_commands  # noqa: PLC0415
@@ -247,6 +249,8 @@ def _report(args):
         return audit_locale_files(args)
     if args.command == "storage":
         return storage_plan()
+    if args.command == "policy":
+        return run_policy(args)
     if args.command == "release":
         report = prepare_release(args)
     elif args.command == "admin":
