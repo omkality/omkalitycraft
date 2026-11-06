@@ -1,0 +1,55 @@
+{
+  "date": "2026-11-06",
+  "issue": 84,
+  "native_codex_namespace": true,
+  "game_available": true,
+  "minecraft": "1.12.2",
+  "mcmcp": "2026.11.02",
+  "candidate_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+  "core_version": "0.2.10",
+  "core_sha256": "438992170b8e56b4647bf0517e432c873146acd711d152ca5522eae57dbd17e3",
+  "read_only_calls": [
+    "mcmcp_endpoint_info",
+    "client_connection_info",
+    "client_player_state",
+    "client_gui_state"
+  ],
+  "result": {
+    "verified_expected_pid": true,
+    "world_loaded": true,
+    "player_present": true,
+    "dimension": 0,
+    "health": 20,
+    "online_players": 1,
+    "screen": "GuiIngameMenu",
+    "login_overlay": false
+  },
+  "shutdown": {
+    "native_client_quit": true,
+    "client_exit_before_cleanup": 0,
+    "observed_seconds": 55,
+    "no_new_or_rewritten_reports": true,
+    "no_task_or_fatal_markers": true,
+    "server": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "auth_removed": true,
+    "owned_volume_removed_after_export": true,
+    "orchestrator_permissions_removed": true
+  },
+  "raw_sha256": {
+    "native-validation.json": "ce42f120a18fd3185b2eaec0447ad1be2b8e37a9f04d345f8dfa46e664a04e3d",
+    "native-codex-readonly.json": "4793c6157948c174cbd4bd2116a9565548134e20c4593ab0b394c80bc095f8a2",
+    "mcp-post-exit-watch.json": "64c9783c5e8ab96e9bd023a33d648df398eb8dec6aae015a50abb7624be7b395"
+  },
+  "limits": [
+    "Not a complete progression or all-mod test",
+    "Test-only MCP overlay; not shipped to players",
+    "Not a launcher startup performance benchmark",
+    "No deployment or player profile promotion"
+  ]
+}

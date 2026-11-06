@@ -1,5 +1,14 @@
 # Разработка OmkalityCraft
 
+## Native MCMCP после перезагрузки — 6 ноября 2026
+
+Принят native namespace #84: настоящий Windows DJ2 вошёл на Linux Core 0.2.10;
+roster/endpoint/PID/connection/player/gui прочитаны инструментами чата, штатный
+native quit дал exit 0 и чистые 55 секунд. Собственный стенд очищен.
+[Протокол](validation/dj2-native-codex-mcp-2026-11-06.json). Это не прохождение #85.
+Ускорение загрузки — необязательная #89 после P0: сначала замеры обычного
+клиента/кешей, без обещаний ускорения и смены авторского Forge. VPS пока не нужен.
+
 ## Утилита восстановления аккаунта и незавершённый вход — 6 ноября 2026
 
 `omk admin recover-account plan/run/status/resume` работает с существующим Drasl

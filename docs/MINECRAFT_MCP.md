@@ -1,5 +1,19 @@
 # MCMCP для лабораторной DJ2
 
+## Native Codex после перезагрузки — 6 ноября 2026
+
+Новый namespace `omk_dj2_lab` появился в инструментах чата. Через него проверены
+roster, endpoint/PID, `client_connection_info`, `client_player_state` и
+`client_gui_state` настоящего Windows DJ2 2.23.4, вошедшего на свежий Linux Forge
+с приватным Core 0.2.10. Мир/игрок присутствовали, dimension 0, 20 HP; открыто
+обычное меню паузы фонового окна, не плашка входа. Затем native `client_quit`
+дал exit 0; 55 секунд без новых reports/task/fatal, server stop 0/OOM=false,
+свои auth/volume/MCP permissions очищены, управляющее приложение продолжило работу.
+
+[Обезличенный протокол](validation/dj2-native-codex-mcp-2026-11-06.json).
+Это закрывает проверку подключения #84; не прохождение #85, не массовая
+предгенерация и не измерение времени запуска обычного клиента без test-only MCP.
+
 ## Постоянная установка и повторяемый стенд
 
 После первого пилота установлен официальный desktop Orchestrator 26.11.20 в
