@@ -276,6 +276,7 @@ def client_reports(config, args):
 def add_admin_commands(sub):
     from omk.account_recovery import add_recovery_parser  # noqa: PLC0415
     from omk.admin_backups import add_backup_parser  # noqa: PLC0415
+    from omk.admin_restores import add_restore_parser  # noqa: PLC0415
 
     admin = sub.add_parser(
         "admin", help="Local operator tools; not part of the player launcher"
@@ -284,6 +285,7 @@ def add_admin_commands(sub):
     actions = admin.add_subparsers(dest="admin_action", required=True)
     add_recovery_parser(actions)
     add_backup_parser(actions)
+    add_restore_parser(actions)
     login = actions.add_parser(
         "login", help="Save a separate Drasl operator API credential"
     )
@@ -320,8 +322,12 @@ def run_admin(args):
         operation += ":" + args.reports_action
     if args.admin_action == "recover-account":
         operation += ":" + args.recovery_action
-    if args.admin_action == "backups":
-        operation += ":" + args.backup_action
+    if args.admin_action in {"backups", "restores"}:
+        operation += ":" + (
+            args.backup_action
+            if args.admin_action == "backups"
+            else args.restore_action
+        )
     try:
         config = load_operator_config(args.config)
         if args.admin_action == "login":
@@ -336,10 +342,13 @@ def run_admin(args):
             from omk.account_recovery import run_recovery  # noqa: PLC0415
 
             result = run_recovery(config, args)
-        elif args.admin_action == "backups":
+        elif args.admin_action in {"backups", "restores"}:
             from omk.admin_backups import run_backups  # noqa: PLC0415
+            from omk.admin_restores import run_restores  # noqa: PLC0415
 
-            result = run_backups(config, args)
+            result = {"backups": run_backups, "restores": run_restores}[
+                args.admin_action
+            ](config, args)
         else:
             result = {
                 "invite": lambda: create_invite(config),
