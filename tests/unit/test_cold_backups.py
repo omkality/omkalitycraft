@@ -1,4 +1,5 @@
 import json
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -9,6 +10,7 @@ from omk import (
 from omk.admin import AdminError
 from omk.backup_archive import validate_inventory
 from omk.backup_store import BackupStore
+from omk.cli import main
 from omk.stopped_world_backup import LAB_POLICY
 from tests.unit.test_operator_commands import config
 
@@ -199,3 +201,80 @@ def test_controller_never_publishes_if_source_restarts_after_prepare(
     assert value["stage"] == "incomplete"
     with pytest.raises(AdminError):
         owner.run(cfg, record["operation"], environment={})
+
+
+def controller(fixture, tmp_path, monkeypatch):
+    root, storage, _ = fixture
+    cfg, path = config(tmp_path)
+    target = {"world": "world"}
+    state = {"store": {}, "id": "same-container"}
+    monkeypatch.setattr(owner, "target_for", lambda *a: dict(target))
+    monkeypatch.setattr(owner, "local_engine", lambda: None)
+    monkeypatch.setattr(owner, "volume", lambda *a: {})
+    monkeypatch.setattr(owner, "checkpoint", lambda *a: dict(state))
+    monkeypatch.setattr(owner, "worker", lambda t, r: worker.execute(r, root, storage))
+    return cfg, path, root, storage, target
+
+
+@pytest.mark.parametrize("change", ["expired", "policy", "target"])
+def test_changed_plan_refuses_before_preparing(fixture, tmp_path, monkeypatch, change):
+    cfg, _, _, _, target = controller(fixture, tmp_path, monkeypatch)
+    record = owner.plan(cfg, "dj2", {})
+    environment = {}
+    if change == "expired":
+        record["created_at"] = (datetime.now(UTC) - timedelta(hours=2)).isoformat()
+        owner.save(cfg, record, "planned")
+    elif change == "policy":
+        environment = {"OMK_BACKUP_MAX_COUNT": "3"}
+    else:
+        target["world"] = "other"
+    monkeypatch.setattr(
+        owner, "worker", lambda *a: pytest.fail("Preparation attempted")
+    )
+    with pytest.raises(AdminError):
+        owner.run(cfg, record["operation"], environment=environment)
+
+
+def test_lost_host_journal_write_after_publish_is_reconciled_once(
+    fixture, tmp_path, monkeypatch
+):
+    cfg, _, _, storage, _ = controller(fixture, tmp_path, monkeypatch)
+    record = owner.plan(cfg, "dj2", {})
+    original = owner.save
+
+    def disk_failure(config, value, stage):
+        if stage == "published":
+            raise OSError("private-disk-error")
+        return original(config, value, stage)
+
+    monkeypatch.setattr(owner, "save", disk_failure)
+    with pytest.raises(OSError):
+        owner.run(cfg, record["operation"], environment={})
+    persisted = owner._read_json(owner.journal(cfg, record["operation"]), cfg.private)
+    assert persisted["stage"] == "publishing"
+    monkeypatch.setattr(owner, "save", original)
+    result = owner.run(cfg, record["operation"], finish=True, environment={})
+    assert result["snapshot"]["sequence"] == 1
+    assert (
+        len(
+            BackupStore(
+                storage / "store", LAB_POLICY, max_expanded_bytes=16 * 1024**3
+            ).inspect()
+        )
+        == 1
+    )
+
+
+def test_plan_cli_exposes_hashes_without_runtime_secrets(
+    fixture, tmp_path, monkeypatch, capsys
+):
+    _cfg, path, root, _, _ = controller(fixture, tmp_path, monkeypatch)
+    (root / "server.properties").write_text("rcon.password=private-fixture-secret")
+    assert (
+        main(["admin", "--config", str(path), "backups", "plan", "--server", "dj2"])
+        == 0
+    )
+    output = capsys.readouterr()
+    assert "private-fixture-secret" not in output.out + output.err
+    value = json.loads(output.out)
+    assert value["stage"] == "planned" and len(value["source"]["runtime_sha256"]) == 64
