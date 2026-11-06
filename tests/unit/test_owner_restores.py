@@ -1,5 +1,7 @@
 import copy
+import json
 import zipfile
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -223,6 +225,144 @@ def test_status_refuses_foreign_credentials(controller):
     owner._write_private(path, cfg.private, {"api_token": "secret-fixture"})
     with pytest.raises(AdminError, match="journal"):
         owner.read_record(cfg, "a" * 32)
+
+
+def write_targets(cfg, filename, entries):
+    text = "schema=1\n"
+    for name, value in entries.items():
+        text += (
+            "[servers."
+            + name
+            + "]\n"
+            + "\n".join(k + "=" + json.dumps(v) for k, v in value.items())
+            + "\n"
+        )
+    path = cfg.private / filename
+    path.write_text(text)
+    path.chmod(0o600)
+
+
+@pytest.fixture
+def targets(tmp_path):
+    cfg, _ = config(tmp_path)
+    source = {
+        "container": "source",
+        "data_volume": "source-data",
+        "store_volume": "source-store",
+        "label": "omkality.test",
+        "source_owner": "source-owner",
+        "store_owner": "store-owner",
+        "world": "world",
+        "image": backups.IMAGE,
+        "release": "fixture-v1",
+    }
+    dest = {
+        "data_volume": "replacement",
+        "label": "omkality.test",
+        "owner": "replacement-owner",
+        "image": backups.IMAGE,
+        "release": "fixture-v1",
+    }
+    write_targets(cfg, "backups.toml", {"dj2": source})
+    write_targets(cfg, "restores.toml", {"dj2": dest})
+    return cfg, source, dest
+
+
+def test_explicit_target_accepts_diagnostic_only_peer(targets, tmp_path):
+    cfg, source, dest = targets
+    cfg = replace(cfg, servers={**cfg.servers, "diagnostics_only": tmp_path / "other"})
+    assert owner.target_for(cfg, "dj2", source) == dest
+
+
+@pytest.mark.parametrize(
+    "change", ["source-alias", "store-alias", "image", "release", "identifier"]
+)
+def test_restore_target_config_refuses_aliases_and_changed_release(targets, change):
+    cfg, source, dest = targets
+    key, value = {
+        "source-alias": ("data_volume", source["data_volume"]),
+        "store-alias": ("data_volume", source["store_volume"]),
+        "image": ("image", "unpinned:latest"),
+        "release": ("release", "other-release"),
+        "identifier": ("owner", "unsafe,readonly"),
+    }[change]
+    dest[key] = value
+    write_targets(cfg, "restores.toml", {"dj2": dest})
+    with pytest.raises(AdminError):
+        owner.target_for(cfg, "dj2", source)
+
+
+def test_invalid_peer_cannot_hide_an_aliased_backup_volume(targets, tmp_path):
+    cfg, source, dest = targets
+    cfg = replace(cfg, servers={**cfg.servers, "peer": tmp_path / "peer"})
+    peer = {
+        **source,
+        "container": "peer",
+        "data_volume": "peer-data",
+        "store_volume": "peer-store",
+        "image": "bad",
+    }
+    dest["data_volume"] = "peer-store"
+    write_targets(cfg, "backups.toml", {"dj2": source, "peer": peer})
+    write_targets(cfg, "restores.toml", {"dj2": dest})
+    with pytest.raises(AdminError):
+        owner.target_for(cfg, "dj2", source)
+
+
+@pytest.mark.parametrize("active", [True, False])
+def test_destination_requires_owned_and_inactive_volume(targets, monkeypatch, active):
+    _, _, target = targets
+    rows = [
+        {
+            "Name": target["data_volume"],
+            "CreatedAt": "created",
+            "Labels": {target["label"]: target["owner"]},
+        }
+    ]
+
+    def docker(*args, **_):
+        return (
+            "active-id"
+            if args[0] == "ps" and active
+            else ("" if args[0] == "ps" else json.dumps(rows))
+        )
+
+    monkeypatch.setattr(backups, "docker", docker)
+    if active:
+        with pytest.raises(AdminError, match="active"):
+            owner.destination(target)
+    else:
+        assert owner.destination(target)["volume"] == target["data_volume"]
+
+
+def test_planning_worker_uses_readonly_inputs_without_session_directory(
+    targets, monkeypatch
+):
+    _, source, target = targets
+    source.update(store_volume="store", data_volume="source")
+    record = {
+        "source": source,
+        "target": target,
+        "settings": backups.settings({}),
+        "operation": "a" * 32,
+        "snapshot": "snapshot-" + "a" * 32,
+    }
+    seen = []
+
+    def docker(*args, **kwargs):
+        seen.extend(args)
+        assert "password" not in kwargs["stdin"]
+        return '{"ok":true,"result":{"planned":true}}'
+
+    monkeypatch.setattr(backups, "docker", docker)
+    assert owner.worker(record, "plan")["planned"]
+    assert "type=volume,source=replacement,target=/restore,readonly" in seen
+    assert "type=volume,source=source,target=/current,readonly" in seen
+    assert "type=volume,source=store,target=/backup,readonly" in seen
+    assert not any(
+        "auth_token" in value or "target=/src/launcher,readonly" in value
+        for value in seen
+    )
 
 
 def test_large_non_ftb_entry_limit_is_explicit_and_does_not_allocate_payload():
