@@ -1,0 +1,451 @@
+{
+  "date": "2026-11-06",
+  "issues": [
+    33,
+    34,
+    49
+  ],
+  "source_head": "36b96ff",
+  "scope": "fresh disposable Linux Forge/Drasl and original/replacement/backup volumes; protocol clients",
+  "existing_accounts_worlds_modified": false,
+  "graphical_client": false,
+  "real_forge": {
+    "accepted": true,
+    "pack": "DJ2 2.23.4",
+    "starts": 5,
+    "conditions": [
+      "linux_named_volume_case_sensitive_filesystem",
+      "full_backup_player_inventory_seeded",
+      "fixture_original_entity_exists",
+      "fixture_outside_entity_exists",
+      "cross_chunk_fixture_143_created",
+      "cross_chunk_fixture_144_created",
+      "machine_smelt_positive_control_before_snapshot",
+      "idle_machine_fixture_has_seeded_state",
+      "iron_chest_fixture_has_named_items",
+      "before-grief_managed_snapshot_matches_independent_world_inventory",
+      "before-grief_snapshot_after_clean_stop",
+      "full_backup_player_inventory_really_changed",
+      "original_entity_really_removed",
+      "post_snapshot_entity_really_added",
+      "base_really_damaged",
+      "machine_state_really_damaged",
+      "before-restore_managed_snapshot_matches_independent_world_inventory",
+      "before-restore_snapshot_after_clean_stop",
+      "normal_player_cannot_restore",
+      "operator_lists_actual_zip_snapshots",
+      "primary_restore_selection_passes_readonly_preflight",
+      "first_restore_vanilla_chest_named_inventory",
+      "first_restore_same_type_iron_chest_inventory",
+      "first_restore_machine_energy_orientation_inventory",
+      "first_restore_griefer_block_removed",
+      "first_restore_neighbor_chest_same_chunk_unchanged",
+      "first_restore_above_selection_same_chunk_unchanged",
+      "first_restore_west_of_selection_unchanged",
+      "first_restore_north_of_selection_unchanged",
+      "first_restore_below_selection_unchanged",
+      "first_restore_machine_block_metadata_unchanged",
+      "after_restore_native_snapshot_does_not_restore_destroyed_armor_stand",
+      "after_restore_native_snapshot_keeps_post_snapshot_armor_stand",
+      "after_restore_outside_entity_unchanged",
+      "undo_restores_damaged_air",
+      "undo_restores_damaged_machine",
+      "redo_vanilla_chest_named_inventory",
+      "redo_same_type_iron_chest_inventory",
+      "redo_machine_energy_orientation_inventory",
+      "redo_griefer_block_removed",
+      "redo_neighbor_chest_same_chunk_unchanged",
+      "redo_above_selection_same_chunk_unchanged",
+      "redo_west_of_selection_unchanged",
+      "redo_north_of_selection_unchanged",
+      "redo_below_selection_unchanged",
+      "redo_machine_block_metadata_unchanged",
+      "repeat_restore_vanilla_chest_named_inventory",
+      "repeat_restore_same_type_iron_chest_inventory",
+      "repeat_restore_machine_energy_orientation_inventory",
+      "repeat_restore_griefer_block_removed",
+      "repeat_restore_neighbor_chest_same_chunk_unchanged",
+      "repeat_restore_above_selection_same_chunk_unchanged",
+      "repeat_restore_west_of_selection_unchanged",
+      "repeat_restore_north_of_selection_unchanged",
+      "repeat_restore_below_selection_unchanged",
+      "repeat_restore_machine_block_metadata_unchanged",
+      "missing_snapshot_vanilla_chest_named_inventory",
+      "missing_snapshot_same_type_iron_chest_inventory",
+      "missing_snapshot_machine_energy_orientation_inventory",
+      "missing_snapshot_griefer_block_removed",
+      "missing_snapshot_neighbor_chest_same_chunk_unchanged",
+      "missing_snapshot_above_selection_same_chunk_unchanged",
+      "missing_snapshot_west_of_selection_unchanged",
+      "missing_snapshot_north_of_selection_unchanged",
+      "missing_snapshot_below_selection_unchanged",
+      "missing_snapshot_machine_block_metadata_unchanged",
+      "complete_cross_chunk_snapshot_passes_preflight",
+      "missing_chunk_rejected_before_apply_by_preflight",
+      "preflight_did_not_modify_live_block_143",
+      "preflight_did_not_modify_live_block_144",
+      "native_partial_restore_already_modified_available_chunk",
+      "native_partial_restore_left_missing_chunk_damaged",
+      "immediate_native_partial_undo_returns_lab_block_143",
+      "immediate_native_partial_undo_returns_lab_block_144",
+      "after-restore_managed_snapshot_matches_independent_world_inventory",
+      "after-restore_snapshot_after_clean_stop",
+      "after_restart_vanilla_chest_named_inventory",
+      "after_restart_same_type_iron_chest_inventory",
+      "after_restart_machine_energy_orientation_inventory",
+      "after_restart_griefer_block_removed",
+      "after_restart_neighbor_chest_same_chunk_unchanged",
+      "after_restart_above_selection_same_chunk_unchanged",
+      "after_restart_west_of_selection_unchanged",
+      "after_restart_north_of_selection_unchanged",
+      "after_restart_below_selection_unchanged",
+      "after_restart_machine_block_metadata_unchanged",
+      "after_restart_native_snapshot_does_not_restore_destroyed_armor_stand",
+      "after_restart_native_snapshot_keeps_post_snapshot_armor_stand",
+      "after_restart_outside_entity_unchanged",
+      "restored_machine_smelt_after_full_restart",
+      "vanilla_chest_saved_tile_exists",
+      "vanilla_chest_complete_saved_nbt_matches_snapshot",
+      "iron_chest_saved_tile_exists",
+      "iron_chest_complete_saved_nbt_matches_snapshot",
+      "thermal_furnace_saved_tile_exists",
+      "thermal_furnace_complete_saved_nbt_matches_snapshot",
+      "neighbor_saved_tile_exists",
+      "neighbor_complete_saved_nbt_unchanged",
+      "current_access_fixture_commands_issued",
+      "current_rank_fixture_command_issued",
+      "before-full-return_managed_snapshot_matches_independent_world_inventory",
+      "before-full-return_snapshot_after_clean_stop",
+      "full_return_identical_runtime_mods",
+      "full_return_source_exported_from_verified_managed_store",
+      "full_return_archive_bytes_readback_verified_before_start",
+      "current_access_lists_staged_before_replacement_start",
+      "current_ban_survives_historical_world_return",
+      "current_op_permission_survives_world_return",
+      "explicit_deop_removes_operator_permission",
+      "same_session_rejoins_after_explicit_pardon",
+      "current_whitelist_is_enforced_after_world_return",
+      "current_home_quota_survives_historical_world_return",
+      "explicit_rank_increase_allows_second_home",
+      "explicit_rank_decrease_is_enforced_again",
+      "full_return_vanilla_chest",
+      "full_return_iron_chest",
+      "full_return_thermal",
+      "full_return_old_neighbor_inventory",
+      "full_return_entity_original",
+      "full_return_entity_new",
+      "full_return_entity_outside",
+      "full_return_player_inventory",
+      "full_return_ftb_home_really_teleports",
+      "full_return_machine_really_smelts",
+      "full_return_outsider_unclaimed_positive_control",
+      "full_return_ftb_claim_blocks_outsider",
+      "full_return_ftb_owner_keeps_access",
+      "full_return_original_world_preserved",
+      "current_rank_source_file_unchanged",
+      "current_access_source_files_unchanged",
+      "managed_quota_failure_preserves_history",
+      "managed_new_copy_verified_before_retirement",
+      "managed_store_export_independently_verified"
+    ],
+    "worldedit": {
+      "source": "https://www.curseforge.com/minecraft/mc-mods/worldedit/files/2941712",
+      "sha256": "cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75",
+      "version": "6.1.10",
+      "mcmod_metadata": "6.1.10-SNAPSHOT;e6b38e8"
+    },
+    "artifacts": {
+      "forge-1.12.2-14.23.5.2860.jar": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+      "ironchest-1.12.2-7.0.72.847.jar": "29d3a4115d67b83eb542b618eb64db40db23a7f009a0f4dc9a396101d6f8491f",
+      "ThermalExpansion-1.12.2-5.5.7.1-universal.jar": "f1cc8aeefcda2c00235bfb5ee7f76d731325aa324e90e84d7d232d88c1e6f472"
+    },
+    "private_core_sha256": "438992170b8e56b4647bf0517e432c873146acd711d152ca5522eae57dbd17e3",
+    "linux_java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "container": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "source_container": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "fatal": false,
+    "source_fatal": false
+  },
+  "managed_snapshots": {
+    "before-grief": {
+      "id": "snapshot-58edb504d77045d088efe03b234f4529",
+      "sequence": 1,
+      "sha256": "3afbf091e443f5abeb4909d8a1411d375af559c67465de46c11f05f1115a3a7e",
+      "verified": true,
+      "retired": 0,
+      "inventory_files": 267,
+      "inventory_sha256": "97257c1b4dd88c89742d7a6f54a800c1a3ba9e3fa70a37105e0a3871d7c51be9",
+      "uncompressed_bytes": 12674464,
+      "snapshots": [
+        {
+          "sequence": 1,
+          "id": "snapshot-58edb504d77045d088efe03b234f4529",
+          "bytes": 7194347
+        }
+      ]
+    },
+    "before-restore": {
+      "id": "snapshot-51fce7c6267a47d78253c9a877ab7a5d",
+      "sequence": 2,
+      "sha256": "7b93f89dbdde5c1600ae968f52c07f630da0198056b87eec39ef826cda6cd7aa",
+      "verified": true,
+      "retired": 0,
+      "inventory_files": 267,
+      "inventory_sha256": "eccaa2d8be39c33a2feb5fd54cb7b2f2059d2c838b78bbdc675524673ba2c296",
+      "uncompressed_bytes": 12918680,
+      "snapshots": [
+        {
+          "sequence": 1,
+          "id": "snapshot-58edb504d77045d088efe03b234f4529",
+          "bytes": 7194347
+        },
+        {
+          "sequence": 2,
+          "id": "snapshot-51fce7c6267a47d78253c9a877ab7a5d",
+          "bytes": 7434678
+        }
+      ]
+    },
+    "after-restore": {
+      "id": "snapshot-59464da3a4d34336a132e40f2f145f0d",
+      "sequence": 3,
+      "sha256": "774577b7281424eff9002cec34c948d4803d9b5f35e3547d9c932aa4eab837f0",
+      "verified": true,
+      "retired": 0,
+      "inventory_files": 267,
+      "inventory_sha256": "05396ad9f4c117c0de1b2d63b9b03d8fd3ce57b775b9ad1c8204b15ebf3ddb1b",
+      "uncompressed_bytes": 12935197,
+      "snapshots": [
+        {
+          "sequence": 1,
+          "id": "snapshot-58edb504d77045d088efe03b234f4529",
+          "bytes": 7194347
+        },
+        {
+          "sequence": 2,
+          "id": "snapshot-51fce7c6267a47d78253c9a877ab7a5d",
+          "bytes": 7434678
+        },
+        {
+          "sequence": 3,
+          "id": "snapshot-59464da3a4d34336a132e40f2f145f0d",
+          "bytes": 7455746
+        }
+      ]
+    },
+    "before-full-return": {
+      "id": "snapshot-bfa2bccd71794705a128ce81fe484757",
+      "sequence": 4,
+      "sha256": "8f0ea221c05961d7514bed29eb5f02a37c54fda5c5a05cb6244c75f765d6ff88",
+      "verified": true,
+      "retired": 0,
+      "inventory_files": 267,
+      "inventory_sha256": "9f2528d997a639362833ad0d0fc3a858d2cd0302d900d180e3d998c3a7d12296",
+      "uncompressed_bytes": 12935194,
+      "snapshots": [
+        {
+          "sequence": 1,
+          "id": "snapshot-58edb504d77045d088efe03b234f4529",
+          "bytes": 7194347
+        },
+        {
+          "sequence": 2,
+          "id": "snapshot-51fce7c6267a47d78253c9a877ab7a5d",
+          "bytes": 7434678
+        },
+        {
+          "sequence": 3,
+          "id": "snapshot-59464da3a4d34336a132e40f2f145f0d",
+          "bytes": 7455746
+        },
+        {
+          "sequence": 4,
+          "id": "snapshot-bfa2bccd71794705a128ce81fe484757",
+          "bytes": 7462094
+        }
+      ]
+    }
+  },
+  "managed_retention": {
+    "quota_refused_without_history_change": true,
+    "new_verified_before_retirement": true,
+    "retired": 1,
+    "history": [
+      {
+        "sequence": 2,
+        "id": "snapshot-51fce7c6267a47d78253c9a877ab7a5d",
+        "bytes": 7434678
+      },
+      {
+        "sequence": 3,
+        "id": "snapshot-59464da3a4d34336a132e40f2f145f0d",
+        "bytes": 7455746
+      },
+      {
+        "sequence": 4,
+        "id": "snapshot-bfa2bccd71794705a128ce81fe484757",
+        "bytes": 7462094
+      },
+      {
+        "sequence": 5,
+        "id": "snapshot-fc4fae82af354238b8278978176eaa16",
+        "bytes": 7462094
+      }
+    ],
+    "host_export_verified": true
+  },
+  "selected_archive": {
+    "sha256": "3afbf091e443f5abeb4909d8a1411d375af559c67465de46c11f05f1115a3a7e",
+    "files": 267,
+    "expanded_bytes": 12674464,
+    "staging_readback_verified": true
+  },
+  "independent_saved_data_checks": {
+    "world": [
+      "saved_inventory_5_before_1_damaged_5_restored",
+      "saved_home_removed_in_current_state_and_restored_from_history",
+      "restored_ftb_player_matches_drasl_uuid_and_team_id",
+      "claimed_chunks_match_history_and_differ_from_damaged_state",
+      "team_owner_and_memberships_match_history",
+      "all_staged_files_match_original_zip_and_staging_manifest"
+    ],
+    "ranks": [
+      "current_rank_archive_has_one_bounded_regular_allowlisted_file",
+      "source_rank_bytes_identical_before_after",
+      "current_home_quota_is_one_instead_of_fresh_default",
+      "staged_rank_bytes_and_plan_hash_match_current_source"
+    ],
+    "access": [
+      "operator_uuid_matches_first_account",
+      "banned_uuid_matches_second_account",
+      "whitelist_contains_both_account_uuids",
+      "runtime_uses_current_whitelist_flag",
+      "four_access_lists_are_exact_current_bytes",
+      "source_access_manifests_unchanged"
+    ],
+    "managed": [
+      "four_verified_snapshots_in_order",
+      "selected_managed_archive_matches_its_independent_source_inventory",
+      "managed_files_match_separate_stopped_world_export",
+      "full_restore_plan_uses_managed_copy",
+      "exported_history_retains_last_four_and_retires_only_oldest",
+      "fifth_copy_matches_stopped_source_checkpoint",
+      "source_world_content_remains_unchanged",
+      "both_stopped_world_exports_match_recorded_hashes",
+      "all_three_owned_data_volumes_removed_after_verified_export"
+    ]
+  },
+  "current_access_source_unchanged": true,
+  "current_rank_source_unchanged": true,
+  "historical_team_memberships_reconciled": false,
+  "drasl_rolled_back_with_world": false,
+  "original_world_content_unchanged": true,
+  "owned_game_auth_backup_scopes_removed": true,
+  "raw_report_sha256": "a4e6bab7a02072a4b8c711252d7a80ac68d40d2f4395da74c7ede9b4d24020ec",
+  "stopped_original_tar_sha256": "5afa7e6800b602196b439857bf3239772da737e5cfeed87b2bb152e272aa9a33",
+  "stopped_restored_tar_sha256": "f41fd1fd5feda743a506d39f90117bdcd5a6d782b146f84028d813bed357f66c",
+  "synthetic_filesystem_faults": {
+    "image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "probe": {
+      "ok": true,
+      "python": "3.14.2",
+      "rotation": {
+        "published": 4,
+        "retained_sequences": [
+          3,
+          4
+        ],
+        "restored_files": 3,
+        "restore_readback_verified": true,
+        "synthetic_input": true
+      },
+      "disk_full": {
+        "errno": 28,
+        "filesystem": "16 MiB tmpfs",
+        "previous_copies_unchanged": true,
+        "verified_sequences": [
+          1,
+          2
+        ],
+        "retry_blocked": true
+      },
+      "process_crashes": [
+        {
+          "phase": "copy",
+          "signal": "SIGKILL",
+          "verified_sequences": [
+            1,
+            2
+          ],
+          "retry_blocked": true,
+          "lock_released_by_os": true
+        },
+        {
+          "phase": "committed",
+          "signal": "SIGKILL",
+          "verified_sequences": [
+            1,
+            2,
+            3
+          ],
+          "retry_blocked": true,
+          "lock_released_by_os": true
+        },
+        {
+          "phase": "retiring",
+          "signal": "SIGKILL",
+          "verified_sequences": [
+            2,
+            3
+          ],
+          "retry_blocked": true,
+          "lock_released_by_os": true
+        },
+        {
+          "phase": "retired-data-deleted",
+          "signal": "SIGKILL",
+          "verified_sequences": [
+            2,
+            3
+          ],
+          "retry_blocked": true,
+          "lock_released_by_os": true
+        }
+      ]
+    },
+    "container_removed": true
+  },
+  "unit_tests": {
+    "windows_passed": 860,
+    "windows_skipped": 8,
+    "linux_focused_passed": 165,
+    "source_head": "fa17616",
+    "later_review_guard": "Missing backup volume is rejected before Docker may create one; positive native path unchanged",
+    "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "linux_source": "readonly",
+    "linux_network": "none",
+    "windows_log_sha256": "62980d534bc2fbba89c1f3525963f6e51939932016b5587ec6f5f25642e990fc"
+  },
+  "limits": [
+    "This is a lab bridge, not a production backup scheduler or owner plan/apply/cutover",
+    "Actual Forge round trip uses clean stops; SIGKILL/ENOSPC fault inputs are synthetic, not Minecraft server crashes",
+    "Functional fixtures are dimension 0; inventory includes all saved files but not in-game visits to every dimension",
+    "Historical FTB memberships/role assignments require reconciliation before a public restore",
+    "No large AE2/multiblock base or production-sized world/performance acceptance in this run",
+    "Lab policy: 4 retained copies, 128 MiB history, 64 MiB staging, 32 MiB reserve; not VPS budgets",
+    "FTB retention, off-host encrypted copy and deployment monitoring remain in issues 33/38",
+    "WorldEdit partial-snapshot restore remains non-atomic; existing issue 34 remains open"
+  ]
+}

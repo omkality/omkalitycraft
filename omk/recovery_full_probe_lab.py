@@ -120,6 +120,7 @@ def exercise_full_return(
     backup,
     original_world_digest=None,
     current_access_stage=None,
+    restore_source=None,
 ):
     if current_access_stage is not None:
         from omk.recovery_access_lab import seed_access  # noqa: PLC0415
@@ -145,10 +146,18 @@ def exercise_full_return(
         == tree_digest(dest / "mods", jars_only=True),
         "full_return_identical_runtime_mods",
     )
+    archive, expected = (
+        restore_source()
+        if restore_source is not None
+        else (
+            lab / "backups/before-grief.zip",
+            report["backups"]["before-grief"]["sha256"],
+        )
+    )
     report["full_return_stage"] = stage_full_world(
         old_server,
-        lab / "backups/before-grief.zip",
-        report["backups"]["before-grief"]["sha256"],
+        archive,
+        expected,
         dest / "lab-world",
         lab=lab,
     )

@@ -78,6 +78,11 @@ def add_recovery_lab(parser):
         action="store_true",
         help="With --access-policy, preserve current FTB rank definitions and test home quotas",
     )
+    parser.add_argument(
+        "--managed-backups",
+        action="store_true",
+        help="With Linux full return/access/ranks, use a managed Linux backup volume and test retention",
+    )
 
 
 def _snapshot(server, dest, target):
@@ -318,6 +323,15 @@ def _exercise(
 
 
 def _validate_inputs(args):
+    if getattr(args, "managed_backups", False) and (
+        getattr(args, "runtime", "native") != "linux-docker"
+        or not args.full_backup_return
+        or not args.edge_cases
+        or not getattr(args, "rank_policy", False)
+    ):
+        raise ValueError(
+            "Managed backup lab requires Linux full return, edge cases, access and ranks"
+        )
     if getattr(args, "rank_policy", False) and not getattr(
         args, "access_policy", False
     ):
@@ -426,6 +440,22 @@ class RecoveryRuntime:
         self.linux = self.server = self.stream = None
         self.source_linux = None
         self.access_verified = False
+        self.managed = None
+
+    def prepare_linux(self, network, snapshots):
+        if self.args.runtime != "linux-docker":
+            return
+        from omk.recovery_linux_lab import LinuxRecovery  # noqa: PLC0415
+
+        self.linux = LinuxRecovery(self.lab, network, snapshots)
+        self.report["linux_java_runtime"] = self.linux.prepare(
+            self.dest, self.args, self.client
+        )
+        self.expect(True, "linux_named_volume_case_sensitive_filesystem")
+        if getattr(self.args, "managed_backups", False):
+            from omk import managed_world_backup_lab as managed  # noqa: PLC0415
+
+            self.managed = managed.ManagedWorldBackups(self.lab)
 
     def start(self, replacement=None):
         if self.linux is not None:
@@ -547,9 +577,38 @@ class RecoveryRuntime:
         if self.linux is not None:
             info = self.linux.backup(name)
             _prepare_backup(self.lab, name, info, self.report)
+            if self.managed is not None:
+                result = self.managed.publish(self.linux, name)
+                self.report.setdefault("managed_backups", {})[name] = result
+                self.expect(
+                    result["verified"],
+                    name + "_managed_snapshot_matches_independent_world_inventory",
+                )
         else:
             _backup(self.server, self.stream, self.lab, self.dest, name, self.report)
         self.expect(True, name + "_snapshot_after_clean_stop")
+
+    def managed_source(self):
+        result = self.managed.restore_source(self.source_linux or self.linux)
+        self.expect(True, "full_return_source_exported_from_verified_managed_store")
+        return result
+
+    def finish_managed(self):
+        if self.managed is not None:
+            result = self.managed.finish(self.source_linux or self.linux)
+            self.report["managed_backup_final"] = result
+            self.expect(
+                result["quota_refused_without_history_change"],
+                "managed_quota_failure_preserves_history",
+            )
+            self.expect(
+                result["new_verified_before_retirement"],
+                "managed_new_copy_verified_before_retirement",
+            )
+            self.expect(
+                result["host_export_verified"],
+                "managed_store_export_independently_verified",
+            )
 
     def close(self, compose):
         if self.linux is not None:
@@ -580,6 +639,8 @@ class RecoveryRuntime:
             )
         else:
             _cleanup(self.server, self.stream, compose, self.report)
+        if self.managed is not None:
+            self.managed.close(self.report)
 
 
 def run_recovery_lab(args):
@@ -641,12 +702,7 @@ def run_recovery_lab(args):
         dest, mods, snapshots = _prepare_recovery_server(args, lab, report)
         client, _, session, session2 = _accounts(compose, lab)
         runtime = RecoveryRuntime(args, lab, dest, client, report, state, expect)
-        if args.runtime == "linux-docker":
-            from omk.recovery_linux_lab import LinuxRecovery  # noqa: PLC0415
-
-            runtime.linux = LinuxRecovery(lab, compose[3] + "_default", snapshots)
-            report["linux_java_runtime"] = runtime.linux.prepare(dest, args, client)
-            expect(True, "linux_named_volume_case_sensitive_filesystem")
+        runtime.prepare_linux(compose[3] + "_default", snapshots)
 
         if report["mod_systems"]:
             mod_systems.exercise(
@@ -700,8 +756,12 @@ def run_recovery_lab(args):
                     if getattr(args, "access_policy", False)
                     else None
                 ),
+                restore_source=(
+                    runtime.managed_source if runtime.managed is not None else None
+                ),
             )
             runtime.verify_current_access_source()
+            runtime.finish_managed()
         report["ok"] = True
     except Exception as error:
         report["error"] = type(error).__name__ + ": " + str(error)[:1800]
