@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "scope": "owner-only isolated Forge 1.12.2 lab; never a player release",
+  "version": "2026.11.02",
+  "source": "https://github.com/Mica-Technologies/MCMCP",
+  "source_commit": "3a9af5c05cd60d8b038de456e162662c5fe2d312",
+  "license": "LGPL-2.1; retain upstream LICENSE.txt and notices",
+  "license_source": "https://github.com/Mica-Technologies/MCMCP/blob/3a9af5c05cd60d8b038de456e162662c5fe2d312/LICENSE.txt",
+  "artifacts": [
+    {
+      "name": "mcmcp-2026.11.02.jar",
+      "source": "https://github.com/Mica-Technologies/MCMCP/releases/download/2026.11.02/mcmcp-2026.11.02.jar",
+      "sha256": "e2c3cb80c6e45a11c7e2835b46e0183bf0e5f5f15ca1c3acef5f4fe02818e182",
+      "size": 1773144,
+      "java_class_major": 52
+    },
+    {
+      "name": "mcmcp-orchestrator-2026.11.02-x86_64-pc-windows-msvc.zip",
+      "source": "https://github.com/Mica-Technologies/MCMCP/releases/download/2026.11.02/mcmcp-orchestrator-2026.11.02-x86_64-pc-windows-msvc.zip",
+      "sha256": "be7ae58994c82bd14063bb36da052e7ef900057217cb973f2af79732f08d5cd7",
+      "size": 1425921,
+      "executable": {
+        "name": "mcmcp-orchestrator.exe",
+        "sha256": "c8da553b3615d936d0a74487545b3ea23e4ded30a6d71f6ceff9c8e5ee6c73ff",
+        "size": 3366912,
+        "reported_version": "26.11.20"
+      }
+    }
+  ]
+}
