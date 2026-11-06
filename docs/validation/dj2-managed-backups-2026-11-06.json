@@ -428,13 +428,15 @@
     "container_removed": true
   },
   "unit_tests": {
-    "windows_passed": 859,
+    "windows_passed": 860,
     "windows_skipped": 8,
-    "linux_focused_passed": 164,
+    "linux_focused_passed": 165,
+    "source_head": "fa17616",
+    "later_review_guard": "Missing backup volume is rejected before Docker may create one; positive native path unchanged",
     "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
     "linux_source": "readonly",
     "linux_network": "none",
-    "windows_log_sha256": "785d76c3660373c2b9f3a667b0411010fb569b9cce8d738bf08614e56a143f6d"
+    "windows_log_sha256": "62980d534bc2fbba89c1f3525963f6e51939932016b5587ec6f5f25642e990fc"
   },
   "limits": [
     "This is a lab bridge, not a production backup scheduler or owner plan/apply/cutover",

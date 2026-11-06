@@ -18,7 +18,7 @@ fatal/OOM=false; два игровых volume, backup volume и свой auth sc
 
 Отдельный синтетический Linux filesystem lab повторно прошёл реальный ENOSPC и
 четыре SIGKILL-фазы транзакции. Это не падение настоящего Minecraft. Windows unit
-859 passed / 8 skipped, focused Linux Docker 164 passed; Ruff/Black.
+860 passed / 8 skipped, focused Linux Docker 165 passed; Ruff/Black.
 [Процедура/папки](LINUX_WORLD_RETURN.md#управляемые-копии-остановленного-мира).
 Серверные прогоны продолжаем в Linux Docker с ограниченными ресурсами.
 
