@@ -55,6 +55,7 @@ class ClientDefaults:
     unicode_font: bool | None = None
     servers: tuple[DefaultServer, ...] = ()
     initial_configs: tuple[InitialConfig, ...] = ()
+    initial_keybindings: tuple[tuple[str, int], ...] = ()
 
     @classmethod
     def parse(cls, value: dict):
@@ -64,6 +65,7 @@ class ClientDefaults:
             "force_unicode_font",
             "servers",
             "initial_configs",
+            "initial_keybindings",
         }:
             raise ValueError("Invalid client defaults")
         packs = value.get("required_resourcepacks", [])
@@ -96,7 +98,24 @@ class ClientDefaults:
         for server in servers:
             _validate_server(server)
         configs = _initial_configs(value.get("initial_configs", []))
-        return cls(tuple(packs), language, unicode_font, servers, configs)
+        keys = value.get("initial_keybindings", {})
+        if (
+            not isinstance(keys, dict)
+            or len(keys) > 64
+            or any(
+                not isinstance(name, str)
+                or not 1 <= len(name) <= 160
+                or not name.isprintable()
+                or any(char in name for char in ":=")
+                or type(code) is not int
+                or not 0 <= code <= 255
+                for name, code in keys.items()
+            )
+        ):
+            raise ValueError("Invalid initial keybindings")
+        return cls(
+            tuple(packs), language, unicode_font, servers, configs, tuple(keys.items())
+        )
 
 
 def _validate_server(server: DefaultServer) -> None:

@@ -48,11 +48,36 @@ def _options(folder: Path, defaults: ClientDefaults) -> None:
         changed["lang"] = defaults.language
     if defaults.unicode_font is not None:
         changed["forceUnicodeFont"] = str(defaults.unicode_font).lower()
-    if all(options.get(key) == value for key, value in changed.items()):
-        return
-    output = [line for line in lines if line.split(":", 1)[0] not in changed]
-    output.extend(f"{key}:{value}" for key, value in changed.items())
-    _replace(folder, "options.txt", ("\n".join(output) + "\n").encode())
+    key_record = local_file(folder, ".omk-initial-keybindings.json")
+    previous_keys = set()
+    if defaults.initial_keybindings and path.exists() and key_record.exists():
+        if key_record.stat().st_size > 32768:
+            raise ValueError("Initial keybinding record too large")
+        record = json.loads(key_record.read_text(encoding="utf-8"))
+        values = record.get("bindings")
+        if (
+            record.get("schema") != 1
+            or not isinstance(values, list)
+            or len(values) > 64
+            or any(not isinstance(v, str) or not 1 <= len(v) <= 160 for v in values)
+        ):
+            raise ValueError("Invalid initial keybinding record")
+        previous_keys = set(values)
+    for binding, code in defaults.initial_keybindings:
+        key = "key_" + binding
+        if binding not in previous_keys and key not in options:
+            changed[key] = str(code)
+    if any(options.get(key) != value for key, value in changed.items()):
+        output = [line for line in lines if line.split(":", 1)[0] not in changed]
+        output.extend(f"{key}:{value}" for key, value in changed.items())
+        _replace(folder, "options.txt", ("\n".join(output) + "\n").encode())
+    if defaults.initial_keybindings:
+        data = json.dumps(
+            {"schema": 1, "bindings": [k for k, _ in defaults.initial_keybindings]},
+            ensure_ascii=False,
+        ).encode()
+        if not key_record.exists() or key_record.read_bytes() != data:
+            atomic_write(key_record, data)
 
 
 def _servers(folder: Path, defaults: ClientDefaults) -> None:
@@ -146,6 +171,7 @@ def prepare_client_defaults(release: Release, folder: Path) -> None:
             defaults.resourcepacks
             or defaults.language
             or defaults.unicode_font is not None
+            or defaults.initial_keybindings
         ):
             _options(folder, defaults)
         _servers(folder, defaults)

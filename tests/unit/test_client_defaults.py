@@ -38,6 +38,69 @@ def test_first_run_seeds_font_language_and_only_compatible_server(tmp_path: Path
     assert len(servers) == 1 and servers[0].value["ip"].value == "127.0.0.1:25576"
 
 
+def test_initial_keys_fill_missing_values_without_resetting_personal_choices(tmp_path):
+    folder, release = setup(tmp_path)
+    keys = {"key.betterquesting.quests": 37, "Переключить режим Очков с сенсорами": 88}
+    release.launch["client_defaults"]["initial_keybindings"] = keys
+    prepare_client_defaults(release, folder)
+    path = folder / "options.txt"
+    initial = path.read_text(encoding="utf-8")
+    assert "key_key.betterquesting.quests:37\n" in initial
+    assert "key_Переключить режим Очков с сенсорами:88\n" in initial
+    personal = initial.replace("quests:37", "quests:24").replace(
+        "сенсорами:88", "сенсорами:0"
+    )
+    path.write_text(personal, encoding="utf-8")
+    prepare_client_defaults(release, folder)
+    prepare_client_defaults(release, folder)
+    assert path.read_text(encoding="utf-8") == personal
+
+
+def test_key_defaults_work_without_font_or_language_settings(tmp_path):
+    folder, release = setup(tmp_path)
+    release.launch["client_defaults"] = {"initial_keybindings": {"key.test": 88}}
+    prepare_client_defaults(release, folder)
+    assert "key_key.test:88\n" in (folder / "options.txt").read_text()
+
+
+def test_game_discarded_language_alias_is_not_reseeded_until_options_reset(tmp_path):
+    folder, release = setup(tmp_path)
+    release.launch["client_defaults"]["initial_keybindings"] = {
+        "RU alias": 88,
+        "EN alias": 88,
+    }
+    prepare_client_defaults(release, folder)
+    path = folder / "options.txt"
+    personal = path.read_text(encoding="utf-8").replace("key_EN alias:88\n", "")
+    path.write_text(personal, encoding="utf-8")
+    prepare_client_defaults(release, folder)
+    assert path.read_text(encoding="utf-8") == personal
+    path.unlink()
+    prepare_client_defaults(release, folder)
+    assert "key_EN alias:88\n" in path.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    "keys",
+    [
+        [],
+        {"x\nlang": 1},
+        {"x:y": 1},
+        {"x\u2028y": 1},
+        {"x": True},
+        {"x": 256},
+        {"x": -1},
+        {"x": "88"},
+        {"": 1},
+        {"x" * 161: 1},
+        {str(i): 1 for i in range(65)},
+    ],
+)
+def test_invalid_key_defaults_are_rejected_before_writing(keys):
+    with pytest.raises(ValueError):
+        ClientDefaults.parse({"initial_keybindings": keys})
+
+
 def test_defaults_merge_without_resetting_player_options_or_other_servers(
     tmp_path: Path,
 ):
