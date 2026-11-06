@@ -6,7 +6,7 @@
 
 6 ноября (dev12) добавлена воспроизводимая owner-команда `omk lab dj2-mcp` ниже.
 Позже в тот же день принята DJ2-операция `omk admin recover-account`:
-73 native условия / 8 независимых проверок; команды владельца добавлены ниже.
+78 native условий / 8 независимых проверок на постоянном auth volume; команды владельца добавлены ниже.
 Снимок полного игрового реестра остаётся датированным своей исходной проверкой;
 добавление лабораторного CLI не переаттестует все 438 игровых команд.
 
@@ -106,6 +106,8 @@
 | `uv run omk server list` | Настроенные профили и их статус |
 | `uv run omk launcher --help` | Адреса/API и отдельная переносимая папка лаунчера |
 | `uv run omk lab auth smoke` | Одноразовый Drasl: регистрация, UUID, сессии, скины |
+| `uv run omk auth configure --output .omk-admin/drasl.toml` | Создать приватный конфиг постоянного Drasl из валидированных `OMK_AUTH_*`; существующий не перезаписывать. [Настройки и запуск](../AUTH_STORAGE.md) |
+| `uv run omk lab auth-storage` | Свежие Linux volume: recreate/SIGKILL, SQLite/скины/ключи, полный backup, новый том и изолированный restore с отзывом прежних доступов. Никаких рабочих аккаунтов. |
 | `uv run omk lab auth expiry` | Настоящее истечение токена |
 | `uv run omk lab launcher smoke` | Qt + настоящий временный Drasl |
 | `uv run omk lab dj2 --help` | Новый loopback Forge/FTB/Core-стенд с двумя тестовыми игроками |

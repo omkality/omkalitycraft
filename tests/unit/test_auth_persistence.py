@@ -8,6 +8,7 @@ from unittest.mock import Mock
 
 import pytest
 
+from omk import auth_state_browser
 from omk.auth_config import configure, render_config
 from omk.auth_restore_quarantine import quarantine
 from omk.auth_state_archive import restore, snapshot
@@ -53,6 +54,48 @@ def test_corrupt_snapshot_does_not_write_to_restore_target(tmp_path):
     with pytest.raises(ValueError, match="digest"):
         restore(target, archive)
     assert list(target.iterdir()) == []
+
+
+def test_snapshot_includes_committed_wal_rows(tmp_path):
+    original, target = tmp_path / "original", tmp_path / "restored"
+    state(original)
+    target.mkdir()
+    # No transaction is running. Keep a connection open solely to retain the WAL.
+    db = sqlite3.connect(original / "drasl.db")
+    try:
+        db.execute("PRAGMA journal_mode=WAL")
+        db.execute("PRAGMA wal_autocheckpoint=0")
+        db.execute("INSERT INTO example VALUES ('committed-in-wal')")
+        db.commit()
+        assert (original / "drasl.db-wal").stat().st_size > 0
+        archive = tmp_path / "state.tar"
+        snapshot(original, archive)
+        restore(target, archive)
+        with sqlite3.connect(target / "drasl.db") as copy:
+            assert copy.execute("SELECT value FROM example").fetchall() == [
+                ("retained",),
+                ("committed-in-wal",),
+            ]
+    finally:
+        db.close()
+
+
+def test_offline_browser_adapter_revokes_every_cookie_without_touching_identity(
+    tmp_path, monkeypatch
+):
+    path = tmp_path / "drasl.db"
+    connect = sqlite3.connect
+    with connect(path) as db:
+        db.execute("CREATE TABLE users (uuid TEXT, browser_token TEXT, is_locked BOOL)")
+        db.execute("INSERT INTO users VALUES ('owner', 'old-cookie', 0)")
+        db.execute("INSERT INTO users VALUES ('player', 'other-cookie', 1)")
+    monkeypatch.setattr(auth_state_browser.sqlite3, "connect", lambda _: connect(path))
+    assert auth_state_browser.clear() == {"browser_credentials_revoked": 2}
+    with connect(path) as db:
+        assert db.execute("SELECT * FROM users").fetchall() == [
+            ("owner", None, 0),
+            ("player", None, 1),
+        ]
 
 
 @pytest.mark.parametrize(
