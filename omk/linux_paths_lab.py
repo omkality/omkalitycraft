@@ -27,6 +27,7 @@ def add_linux_paths_lab(parser):
 class Lab:
     PREFIX = "linux-paths-lab-"
     STATUS = "linux-paths-status.json"
+    PRESERVE_FAILED_SOURCE = False
 
     def __init__(self, args):
         self.args = args
@@ -276,7 +277,14 @@ class Lab:
         for key, server in (("source", self.source), ("replacement", self.target)):
             if server:
                 result = self.report.setdefault(key, {"ok": True})
-                server.close(result)
+                server.close(
+                    result,
+                    preserve_volume=(
+                        key == "source"
+                        and self.PRESERVE_FAILED_SOURCE
+                        and not self.report["ok"]
+                    ),
+                )
                 self.report["ok"] &= result.get(
                     "owned_game_clean_exit", False
                 ) and result.get("owned_volume_removed_after_export", False)

@@ -6,6 +6,7 @@ import subprocess
 import sys
 from uuid import uuid4
 
+from omk import admin_backups
 from omk.dj2_lab import _copy_server
 from omk.dj2_linux_lab import JAVA_IMAGE, LABEL, LinuxServer
 from omk.linux_paths_lab import (
@@ -18,6 +19,47 @@ from omk.linux_policy_lab import POLICY_FILES, PolicyLab
 class OwnerRestoreLab(PolicyLab):
     PREFIX = "owner-restore-lab-"
     STATUS = "owner-restore-status.json"
+    PRESERVE_FAILED_SOURCE = True
+
+    def runtime_artifacts(self):
+        script = (
+            "import json; from pathlib import Path; from omk.cold_backup_worker import runtime_files; "
+            "a=runtime_files(Path('/current')); b=runtime_files(Path('/restore')); "
+            "names={n for n in a.keys()|b.keys() if n.endswith('.jar')}; "
+            "print(json.dumps({n:{'source':a.get(n),'target':b.get(n)} for n in names if a.get(n)!=b.get(n)}))"
+        )
+        result = admin_backups.docker(
+            "run",
+            "--rm",
+            "--pull",
+            "never",
+            "--network",
+            "none",
+            "--read-only",
+            "--memory",
+            "512m",
+            "--cpus",
+            "1",
+            "--cap-drop",
+            "ALL",
+            "--mount",
+            f"type=volume,source={self.source.volume},target=/current,readonly",
+            "--mount",
+            f"type=volume,source={self.target.volume},target=/restore,readonly",
+            "--mount",
+            f"type=bind,source={self.root.parent.parent/'omk'},target=/src/omk,readonly",
+            "--workdir",
+            "/src",
+            "--env",
+            "PYTHONDONTWRITEBYTECODE=1",
+            admin_backups.IMAGE,
+            "python",
+            "-c",
+            script,
+            timeout=180,
+        )
+        self.report["runtime_artifact_diff"] = json.loads(result)
+        self.state("runtime_artifact_inventory_before_owner_plan")
 
     def cli(self, action, *, success=True):
         args = (
@@ -72,6 +114,7 @@ class OwnerRestoreLab(PolicyLab):
         dest, _ = _copy_server(self.args, root)
         self.target = LinuxServer(root, uuid4().hex[:10], self.source.network)
         self.target.prepare(dest, self.args, self.client)
+        self.runtime_artifacts()
         entry = {
             "data_volume": self.target.volume,
             "owner": self.target.run_id,
