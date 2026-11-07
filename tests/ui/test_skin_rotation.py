@@ -30,8 +30,8 @@ def test_drag_rotates_and_tilts_without_changing_skin(qtbot, view):
     qtbot.mousePress(view, Qt.MouseButton.LeftButton, pos=QPoint(90, 100))
     qtbot.mouseMove(view, QPoint(160, 140))
     qtbot.mouseRelease(view, Qt.MouseButton.LeftButton, pos=QPoint(160, 140))
-    assert view.get_angle() != before
-    assert view._pitch != -12
+    assert view.get_angle() < before
+    assert view._pitch > -12
     assert view.image == image
     assert view.animation.state() == QAbstractAnimation.State.Paused
     assert view.cursor().shape() == Qt.CursorShape.OpenHandCursor
