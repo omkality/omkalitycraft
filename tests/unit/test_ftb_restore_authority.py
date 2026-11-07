@@ -97,6 +97,31 @@ def test_progress_fields_can_rollback_without_changing_authority(records):
     assert current == original  # Comparing must not mutate either snapshot.
 
 
+def test_ownerless_server_team_matches_native_ftb_and_keeps_authority(records):
+    team = records["teams/base.dat"]
+    team["Type"] = Tag(8, "server")
+    del team["Owner"]
+    original = copy.deepcopy(records)
+    assert gate.compare(records, original)["compatible"]
+    assert records == original
+    changed = copy.deepcopy(records)
+    changed["teams/base.dat"]["Owner"] = Tag(8, "owner")
+    assert not gate.compare(changed, records)["compatible"]
+    changed = copy.deepcopy(records)
+    changed["teams/base.dat"]["FakePlayerStatus"] = Tag(8, "none")
+    assert not gate.compare(changed, records)["compatible"]
+
+
+def test_player_team_still_requires_owner_and_server_owner_must_be_text(records):
+    del records["teams/base.dat"]["Owner"]
+    with pytest.raises(ValueError, match="identity field"):
+        gate.projection(records)
+    records["teams/base.dat"]["Type"] = Tag(8, "server")
+    records["teams/base.dat"]["Owner"] = Tag(3, 1)
+    with pytest.raises(ValueError, match="identity field"):
+        gate.projection(records)
+
+
 @pytest.mark.parametrize(
     "change", ["duplicate", "missing-team", "wrong-id", "bad-type", "missing-universe"]
 )
