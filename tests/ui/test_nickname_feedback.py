@@ -116,3 +116,30 @@ def test_overlong_clipboard_input_reports_length_and_never_exceeds_limit(window)
     edit.paste()
     assert len(edit.text()) == 16
     assert edit.notice_timer.isActive() and "16" in QToolTip.text()
+
+
+@pytest.mark.parametrize("notice", [False, True])
+def test_tooltip_background_has_transparent_corners(qtbot, window, notice):
+    edit = window.login_name
+    edit.setFocus()
+    if notice:
+        qtbot.keyClicks(edit, "!")
+    else:
+        QToolTip.showText(
+            edit.mapToGlobal(QPoint(0, edit.height())), edit.toolTip(), edit
+        )
+    qtbot.waitUntil(QToolTip.isVisible)
+    tip = next(
+        widget
+        for widget in QApplication.topLevelWidgets()
+        if widget.windowType() == Qt.WindowType.ToolTip and widget.isVisible()
+    )
+    image = tip.grab().toImage()
+    for point in (
+        image.rect().topLeft(),
+        image.rect().topRight(),
+        image.rect().bottomLeft(),
+        image.rect().bottomRight(),
+    ):
+        assert image.pixelColor(point).alpha() == 0
+    assert image.pixelColor(image.rect().center()).alpha() > 0
