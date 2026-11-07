@@ -11,6 +11,7 @@ import re
 
 from launcher.nbt import Tag, read_nbt, write_nbt
 from omk import resource_reset_inventory as audit
+from omk.ftb_dimension_references import ftb_record
 
 
 def landing(value):
@@ -58,41 +59,6 @@ def player(root, dimension, position):
         result["Spawns"] = Tag(
             9, (child, [v for v in rows if audit._tag(v.value, "Dim", 3) != dimension])
         )
-    return result
-
-
-def _utilities(data, dimension):
-    homes = audit._tag(data, "Homes", 10)
-    for key in list(homes):
-        if audit._position_dimension(homes[key]) == dimension:
-            del homes[key]
-    if (
-        "LastDeath" in data
-        and audit._position_dimension(data["LastDeath"]) == dimension
-    ):
-        data["LastDeath"] = Tag(11, [])
-    if "teleportTracker" in data:
-        tracker = audit._tag(data, "teleportTracker", 10)
-        for key, value in list(tracker.items()):
-            if value.kind != 10:
-                raise ValueError("Unreviewed teleport tracker entry")
-            if audit._tag(value.value, "dimension", 3) == dimension:
-                del tracker[key]
-
-
-def ftb_record(root, dimension, *, universe=False, claims=False):
-    result = copy.deepcopy(root)
-    if claims:
-        audit._tag(result, "ClaimedChunks", 10).pop(str(dimension), None)
-        return result
-    actor = audit._tag(result, "FakePlayer", 10) if universe else result
-    _utilities(audit._tag(audit._tag(actor, "Data", 10), "ftbutilities", 10), dimension)
-    if universe:
-        data = audit._tag(audit._tag(result, "Data", 10), "ftbutilities", 10)
-        warps = audit._tag(data, "Warps", 10)
-        for key in list(warps):
-            if audit._position_dimension(warps[key]) == dimension:
-                del warps[key]
     return result
 
 
