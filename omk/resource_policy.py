@@ -9,6 +9,7 @@ from pathlib import Path
 from omk.dj2_rtp_policy import rtp_plan, write_rtp_policy
 from omk.dj2_spawn_policy import spawn_plan
 from omk.profiles import PROJECT_ROOT
+from omk.resource_generation import additional_generator_patches
 from omk.territory_policy import territory_plan, write_territory_policy
 
 PROFILE = PROJECT_ROOT / "profiles/server-defaults/dj2/resource-world.json"
@@ -75,6 +76,7 @@ def resource_plan(environ=None):
             "ftb.spawn",
             "ftb.rtp",
             "ftb.territories",
+            "fix.resource.generation",
         ],
     }
 
@@ -93,6 +95,8 @@ def jed_dimension(plan):
                     "id": plan["dimension"],
                     "name": "omk_resource",
                     "suffix": "_omk_resource",
+                    "require_exact_match": True,
+                    "allow_different_id": False,
                     "keeploaded": False,
                     "worldprovider": "WorldProviderSurfaceJED",
                 },
@@ -152,16 +156,23 @@ def resource_generator_patch(source_config: Path, dimension: int):
     }
 
 
+def resource_generator_bundle(source_config, plan):
+    """Validate all selected pack inputs before creating any output directory."""
+    text, ub = resource_generator_patch(source_config, plan["dimension"])
+    patches, metadata = additional_generator_patches(source_config, plan["dimension"])
+    plan["generator_patch"] = ub
+    plan["generation_patches"] = [ub, *metadata]
+    return {"undergroundbiomes.cfg": text.encode("utf-8"), **patches}
+
+
 def prepare_resource_bundle(
     output: Path, environ=None, *, source_config: Path | None = None
 ):
     values = os.environ if environ is None else environ
     plan = resource_plan(values)
-    patch = None
+    patches = {}
     if source_config is not None:
-        patch, plan["generator_patch"] = resource_generator_patch(
-            source_config, plan["dimension"]
-        )
+        patches = resource_generator_bundle(source_config, plan)
     else:
         plan["generator_patch"] = {"pending": True}
     output = Path(output)
@@ -174,10 +185,10 @@ def prepare_resource_bundle(
     config = output / "config"
     jed = config / "justenoughdimensions"
     jed.mkdir(parents=True)
-    if patch is not None:
-        (config / "undergroundbiomes.cfg").write_text(
-            patch, encoding="utf-8", newline=""
-        )
+    for relative, content in patches.items():
+        target = config / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
     (jed / "dimensions.json").write_text(
         json.dumps(jed_dimension(plan), indent=2) + "\n", encoding="utf-8"
     )
