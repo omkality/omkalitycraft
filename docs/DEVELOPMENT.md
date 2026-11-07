@@ -1,5 +1,38 @@
 # Разработка OmkalityCraft
 
+## Data staging ресурсного сброса — 7 ноября 2026
+
+Внутренний Linux worker строит новую копию мира из **последнего проверенного
+backup, точно совпадающего с текущим источником**. Пустой target, эксклюзивный
+план до записи, SHA source/runtime/result, бюджет/staging/reserve, fsync и
+независимый verify перед receipt. Старые ресурсная DIM/внешняя запись только
+исключаются из копии; source/store read-only. Нового backup writer нет.
+
+Разобраны player NBT/`.dat_old`, Forge respawn без удаления основной кровати,
+FTB homes/warps/claims/back и current/legacy JED. Остальные файлы/неизвестные
+данные сохраняются. Транспорт в ресурсе, неизвестный формат, изменение источника,
+неподходящий ID и неполный target отклоняются. Отдельно исправлен реальный отказ
+переноса FTB authority для ownerless server team; текущие запреты и отсутствие
+владельца сохраняются вместо исторических. Red/green regression подтверждён.
+
+Docker: **27 условий** data worker, **11** независимых проверок данных внутри
+Linux и **23** независимых stopped TAR-проверки. Native архив: 320 → 301 файл,
+ровно 19 исключённых и три изменённых записи; прочие байты основного мира,
+квестов, Astral data и 1444 server claims сохранены. Гонка оставляет одного
+writer; реальная маленькая tmpfs, смерть процесса, повтор и подмена region
+дают отказ. Пять успешных data scopes / 26 своих volumes очищены и сверены.
+Windows unit/UI: **1231 passed / 12 skipped**, Ruff/Black.
+
+**Minecraft после reset в этом этапе не запускался**. Непустые beds/back/warps,
+`.dat_old` и JED tracker проверены синтетически; native архив их не содержал.
+Owner CLI остаётся inspect-only. `ready_for_start=false`: нужны безопасная точка,
+модовые порталы/shared saved data, online/offline эвакуация и native restart с
+квестами; затем owner lifecycle/controller и полноценная приёмка #32.
+[Устройство и ограничения](RESOURCE_RESET_STAGING.md),
+[протокол](validation/dj2-resource-reset-staging-2026-11-07.json).
+Core/Fix, рабочие миры, границы, manifest, releases и расписания не менялись.
+`ready_for_players=false`; VPS для этого шага не нужен.
+
 ## Read-only проверка перед сбросом — 7 ноября 2026
 
 `omk admin resource-resets inspect` читает явно настроенный остановленный Linux

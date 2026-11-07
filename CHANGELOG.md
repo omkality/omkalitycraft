@@ -1,5 +1,12 @@
 # Журнал изменений
 
+## Не выпущено — подготовка копии ресурсного сброса
+
+- Внутренний Linux data worker готовит пустой target из свежего проверенного backup: исключает старую ресурсную DIM/внешний marker, переносит известные offline-ссылки player/FTB/JED, сохраняет остальные данные. План до записи, полная сверка результата, запрет перезаписи/повтора частичной копии. Source/store read-only; owner CLI пока inspect-only.
+- Сохраняется кровать основного мира при очистке выбранного ресурсного respawn. Перенос актуальных FTB-полномочий теперь принимает штатную server team без Owner, не возвращая исторического владельца или отозванные права.
+- Docker: 27 условий, 11 независимых проверок данных и 23 stopped TAR-проверки; маленькая tmpfs, конкуренция writers, прерывание и подмена файлов. Пять своих scopes / 26 volumes очищены. Windows unit/UI 1231/12 skipped, Ruff/Black. [Устройство](docs/RESOURCE_RESET_STAGING.md), [протокол](docs/validation/dj2-resource-reset-staging-2026-11-07.json).
+- Native reset/restart, безопасная точка входа, модовые порталы и рабочая owner-команда ещё впереди. Копия не разрешена к запуску, `ready_for_players=false`; Core/Fix, player releases и расписания не менялись.
+
 ## Не выпущено — read-only проверка ресурсных ссылок
 
 - Владелец может выполнить `omk admin --config .omk-admin/operator.toml resource-resets inspect --server dj2 --dimension -18000`: сводка player/FTB/JED ссылок в остановленном Linux Docker source, без изменения мира. Plan/apply/wipe пока отсутствуют; порталы требуют отдельных адаптеров.
