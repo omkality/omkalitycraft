@@ -36,6 +36,12 @@ uv run omk admin --config .omk-admin/operator.toml login --username operator
 Minecraft OP, игровые ранги и административная роль Drasl — разные вещи.
 Ни одна команда ниже не выдаёт OP, fly, god или бонусы игровому аккаунту.
 
+Для остановленного ресурсного мира добавлена
+[проверка ссылок перед сбросом](RESOURCE_RESET_INSPECTION.md):
+`omk admin --config .omk-admin/operator.toml resource-resets inspect --server dj2 --dimension -18000`.
+Она читает явно настроенный Linux Docker source, не требует Drasl login и не
+выполняет план/apply/wipe. Сводка и ограничения описаны в отдельной памятке.
+
 ## Доступ по приглашениям
 
 Ручная выдача зрителям за участие в сообществе и расчёт баллов:

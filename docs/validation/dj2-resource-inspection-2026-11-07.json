@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "profile": "dj2",
+  "pack_version": "2.23.4",
+  "scope": "real Linux data worker; stopped native TAR; no Minecraft launch or owner lifecycle acceptance",
+  "real_minecraft_started": false,
+  "owner_lifecycle_source": "real Docker metadata fixture; not a new Minecraft process",
+  "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+  "source_archive_sha256": "d6abb503f9873d1dabc3f7576b7e998a32dc09a172e7704bfd9e0e81cecc4e4f",
+  "checks": [
+    "fresh_unique_volume",
+    "pinned_runtime_FTBLib-5.4.7.2.jar",
+    "pinned_runtime_FTBUtilities-5.4.1.131.jar",
+    "pinned_runtime_justenoughdimensions-1.12.2-1.6.0-dev.20211009.214847.jar",
+    "native_nbt_worker_inspection",
+    "native_offline_position",
+    "native_resource_home_only",
+    "native_claim_dimensions",
+    "astral_data_left_opaque",
+    "no_apply_or_backup_claim",
+    "refused_dimension_0",
+    "refused_dimension_-1",
+    "refused_dimension_-9",
+    "refused_dimension_-18001",
+    "refused_action_apply",
+    "refused_action_wipe",
+    "refused_action_plan",
+    "world_budget_refusal",
+    "docker_mount_enforces_readonly",
+    "repeat_and_source_inventory_unchanged",
+    "native_archive_unchanged",
+    "owner_cli_real_docker_checkpoint_fixture",
+    "owner_cli_same_world_inventory",
+    "owner_cli_no_auth_or_network_required",
+    "owner_cli_private_audit",
+    "interrupted_worker_reports_failure",
+    "interrupted_owned_helper_removed"
+  ],
+  "references": {
+    "primary_player_records": 1,
+    "primary_positions_in_resource": 1,
+    "backup_positions_in_resource": 0,
+    "player_spawn_references": 0,
+    "opaque_player_files": 2,
+    "mounted_player_records": 0,
+    "ftb_homes": 1,
+    "ftb_warps": 0,
+    "ftb_legacy_back_death": 0,
+    "resource_claimed_chunks": 196,
+    "other_claimed_chunks": 1444,
+    "jed_player_dimensions": 0
+  },
+  "world_inventory_sha256": "05326cd613c4b07cf29434d0078dc3a319956851a1216acfd836c772f541655e",
+  "world_changes": false,
+  "reset_plan": false,
+  "can_apply": false,
+  "backup_verified": false,
+  "owned_scope_cleaned": true,
+  "ready_for_players": false,
+  "not_covered": [
+    "reset execution",
+    "backup restore",
+    "portal adapters",
+    "quest progress after reset",
+    "new game boot"
+  ],
+  "excluded_attempts": "early read-only validator refusals; one prestart metadata fixture logging error; owned resources cleaned",
+  "validation": {
+    "windows_unit_ui": {
+      "passed": 1188,
+      "skipped": 12
+    },
+    "focused_unit": {
+      "passed": 153,
+      "skipped": 1
+    },
+    "ruff": "passed",
+    "black": "passed"
+  }
+}

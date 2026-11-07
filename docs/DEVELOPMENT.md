@@ -1,5 +1,31 @@
 # Разработка OmkalityCraft
 
+## Read-only проверка перед сбросом — 7 ноября 2026
+
+`omk admin resource-resets inspect` читает явно настроенный остановленный Linux
+Docker source: player NBT/резервные записи/respawn, FTB homes/warps/claims/back,
+JED dimensions. Общий owner lock, checkpoint до/после, SHA закреплённых JAR,
+resource policy и paired ownership markers; source/rootfs readonly, без сети,
+backup mount и Docker socket. Ошибки формата/identity/drift отклоняются; таймаут
+не оставляет свой helper при доступном daemon. Это **не reset plan/apply** и не
+проверка пригодности бэкапа; модовые порталы остаются непрочитанными.
+
+На native save найден корректный ownerless server team FTB. Валидатор теперь
+принимает его без выдумывания владельца; обычные команды по-прежнему требуют
+Owner, изменение Owner/fake-player permissions по-прежнему различается.
+
+Linux data worker и полный owner CLI — **27 условий**, включая Docker metadata
+fixture, read-only enforcement, отказы ID/действий и очистку прерванного helper.
+Архив взят из прежнего игрового опыта; нового Minecraft boot или wipe здесь нет.
+Неполные ранние проверки исключены, свои ресурсы очищены. Windows unit/UI:
+**1188 passed / 12 skipped**, focused **153/1**, Ruff/Black.
+[Команда/папки/ограничения](RESOURCE_RESET_INSPECTION.md),
+[протокол](validation/dj2-resource-inspection-2026-11-07.json).
+Далее #32: исполняемый план новой копии со свежим backup, перенос offline/online
+игроков и ссылок, порталы, прерывания и квесты после настоящего reset/restart.
+Core/Fix, рабочие миры, границы, расписания и player releases не менялись.
+`ready_for_players=false`; VPS для этого шага не требуется.
+
 ## Графический ресурсный мир и контракт сброса — 7 ноября 2026
 
 Настоящий Windows-клиент/MCMCP + Linux Docker: на неизменных Core **0.3.5** /

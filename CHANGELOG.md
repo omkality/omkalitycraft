@@ -1,5 +1,11 @@
 # Журнал изменений
 
+## Не выпущено — read-only проверка ресурсных ссылок
+
+- Владелец может выполнить `omk admin --config .omk-admin/operator.toml resource-resets inspect --server dj2 --dimension -18000`: сводка player/FTB/JED ссылок в остановленном Linux Docker source, без изменения мира. Plan/apply/wipe пока отсутствуют; порталы требуют отдельных адаптеров.
+- Проверяются ownership/runtime pins, полный inventory и lifecycle checkpoint. Worker без сети/socket/backup mount, source readonly; очистка прерванного helper ограничена его точной identity.
+- Исправлен отказ валидатора полномочий для штатной server team FTB без Owner; сравнение всё ещё обнаруживает смену владельца/прав. 27 Docker-условий на native archive и metadata fixture; нового игрового запуска/сброса нет. Windows unit/UI 1188/12 skipped, Ruff/Black. [Памятка](docs/RESOURCE_RESET_INSPECTION.md), [протокол](docs/validation/dj2-resource-inspection-2026-11-07.json). #32 остаётся открытой, Core/Fix и player releases не менялись.
+
 ## Не выпущено — графический ресурсный мир и подготовка сброса
 
 - Настоящий Windows-клиент через MCMCP и сервер Linux Docker проверили `/resource`, `/spawn`, межмировой home, rejoin, скин/мини-карту и защиту спавна. На исходном Core 0.3.5 / DJ2Fix 0.1.3 при server view-distance=6 получены и отрисованы 49/49 чанков. Граница проверена отдельно.
