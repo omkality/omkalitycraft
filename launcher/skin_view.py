@@ -5,7 +5,9 @@ from typing import override
 
 from PySide6.QtCore import (
     Property,
+    QAbstractAnimation,
     QEasingCurve,
+    QEvent,
     QPointF,
     QPropertyAnimation,
     QRectF,
@@ -13,8 +15,10 @@ from PySide6.QtCore import (
 )
 from PySide6.QtGui import (
     QColor,
+    QEnterEvent,
     QHideEvent,
     QImage,
+    QMouseEvent,
     QPainter,
     QPolygonF,
     QShowEvent,
@@ -38,8 +42,13 @@ class SkinView(QWidget):
         self.image = default_skin()
         self.model = DEFAULT_SKIN_MODEL
         self._angle = -25.0
+        self._pitch = -12.0
+        self._drag_position: QPointF | None = None
+        self._hovered = False
         self.setMinimumSize(180, 245)
         self.setObjectName("skinPreview")
+        self.setCursor(Qt.CursorShape.OpenHandCursor)
+        self.setToolTip("Зажмите левую кнопку мыши и потяните, чтобы повернуть скин.")
         self.animation = QPropertyAnimation(self, b"angle", self)
         self.animation.setStartValue(-25.0)
         self.animation.setEndValue(335.0)
@@ -69,7 +78,7 @@ class SkinView(QWidget):
 
     def _project(self, point: tuple[float, float, float]) -> tuple[QPointF, float]:
         x, y, z = point
-        angle, pitch = math.radians(self._angle), math.radians(-12)
+        angle, pitch = math.radians(self._angle), math.radians(self._pitch)
         rx, rz = x * math.cos(angle) + z * math.sin(angle), -x * math.sin(
             angle
         ) + z * math.cos(angle)
@@ -197,9 +206,72 @@ class SkinView(QWidget):
     @override
     def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
-        self.animation.start()
+        self._hovered = self.underMouse()
+        if not self._hovered:
+            self._resume_rotation()
 
     @override
     def hideEvent(self, event: QHideEvent) -> None:
-        self.animation.stop()
+        self._pause_rotation()
+        self._drag_position = None
+        self._hovered = False
+        self.setCursor(Qt.CursorShape.OpenHandCursor)
         super().hideEvent(event)
+
+    def _pause_rotation(self) -> None:
+        if self.animation.state() == QAbstractAnimation.State.Running:
+            self.animation.pause()
+
+    def _resume_rotation(self) -> None:
+        # Restart from the manually selected pose, preserving the 45s revolution.
+        # Resuming the old interpolation directly would snap back after dragging.
+        angle = self._angle
+        self.animation.stop()
+        self.animation.setStartValue(angle)
+        self.animation.setEndValue(angle + 360)
+        self.animation.start()
+
+    @override
+    def enterEvent(self, event: QEnterEvent) -> None:
+        self._hovered = True
+        self._pause_rotation()
+        super().enterEvent(event)
+
+    @override
+    def leaveEvent(self, event: QEvent) -> None:
+        self._hovered = False
+        if self._drag_position is None and self.isVisible():
+            self._resume_rotation()
+        super().leaveEvent(event)
+
+    @override
+    def mousePressEvent(self, event: QMouseEvent) -> None:
+        if event.button() != Qt.MouseButton.LeftButton:
+            super().mousePressEvent(event)
+            return
+        self._pause_rotation()
+        self._drag_position = event.position()
+        self.setCursor(Qt.CursorShape.ClosedHandCursor)
+        event.accept()
+
+    @override
+    def mouseMoveEvent(self, event: QMouseEvent) -> None:
+        if self._drag_position is None:
+            super().mouseMoveEvent(event)
+            return
+        delta = event.position() - self._drag_position
+        self._drag_position = event.position()
+        self._pitch = max(-45.0, min(35.0, self._pitch + delta.y() * 0.35))
+        self.set_angle(self._angle + delta.x() * 0.65)
+        event.accept()
+
+    @override
+    def mouseReleaseEvent(self, event: QMouseEvent) -> None:
+        if event.button() != Qt.MouseButton.LeftButton or self._drag_position is None:
+            super().mouseReleaseEvent(event)
+            return
+        self._drag_position = None
+        self.setCursor(Qt.CursorShape.OpenHandCursor)
+        if not self._hovered and self.isVisible():
+            self._resume_rotation()
+        event.accept()
