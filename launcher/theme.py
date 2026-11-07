@@ -2,9 +2,11 @@
 
 from pathlib import Path
 from string import Template
+from typing import override
 
+from PySide6.QtCore import QEvent, QObject, Qt
 from PySide6.QtGui import QFont, QFontDatabase
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QWidget
 
 ASSETS = Path(__file__).resolve().parent / "assets"
 
@@ -22,7 +24,24 @@ WARNING = "#e4bc84"
 ERROR = "#edacaa"
 
 
+class _TooltipSurface(QObject):
+    @override
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if (
+            event.type() == QEvent.Type.Polish
+            and isinstance(watched, QWidget)
+            and watched.windowType() == Qt.WindowType.ToolTip
+        ):
+            # Rounded QSS paints only the panel; its native window also needs alpha.
+            # Polish runs before the window is shown, as required by Qt.
+            watched.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        return False
+
+
 def install_font(app: QApplication) -> None:
+    if not hasattr(app, "_omk_tooltip_surface"):
+        app._omk_tooltip_surface = _TooltipSurface(app)
+        app.installEventFilter(app._omk_tooltip_surface)
     if not app.property("omkBoldFontsLoaded"):
         for name in ("Rubik.ttf", "Monocraft-Bold.ttf"):
             if QFontDatabase.addApplicationFont(str(ASSETS / "fonts" / name)) < 0:
