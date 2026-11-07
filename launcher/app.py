@@ -166,6 +166,7 @@ class LauncherWindow(QMainWindow):
         auto_restore: bool = True,
         installer: Installer | None = None,
         runner: GameRunner | None = None,
+        update_warning: str = "",
     ) -> None:
         super().__init__()
         self.service = service
@@ -210,7 +211,7 @@ class LauncherWindow(QMainWindow):
         self.progress.setRange(0, 0)
         self.progress.hide()
         layout.addWidget(self.progress)
-        layout.addWidget(SocialFooter())
+        layout.addWidget(SocialFooter(update_warning))
         self.setCentralWidget(root)
         self._setup_server_status(runner)
         self._setup_installation(installer, runner)
