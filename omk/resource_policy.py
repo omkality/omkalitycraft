@@ -76,6 +76,7 @@ def resource_plan(environ=None):
             "ftb.spawn",
             "ftb.rtp",
             "ftb.territories",
+            "fix.resource.generation",
         ],
     }
 
@@ -94,6 +95,8 @@ def jed_dimension(plan):
                     "id": plan["dimension"],
                     "name": "omk_resource",
                     "suffix": "_omk_resource",
+                    "require_exact_match": True,
+                    "allow_different_id": False,
                     "keeploaded": False,
                     "worldprovider": "WorldProviderSurfaceJED",
                 },

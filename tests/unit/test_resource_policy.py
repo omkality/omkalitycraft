@@ -74,6 +74,8 @@ def test_jed_options_do_not_override_or_automatically_wipe_worlds():
     assert not dimension["override"] and not dimension["unregister"]
     assert not dimension["temporary_dimension"]
     assert not dimension["dimensiontype"]["keeploaded"]
+    assert dimension["dimensiontype"]["require_exact_match"]
+    assert not dimension["dimensiontype"]["allow_different_id"]
     assert (
         "world_template" not in dimension and "post_deletion_command" not in dimension
     )
