@@ -6,10 +6,11 @@
   "scope": "Linux data-only staging from native stopped archive; no Minecraft restart or owner apply",
   "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
   "source_archive_sha256": "d6abb503f9873d1dabc3f7576b7e998a32dc09a172e7704bfd9e0e81cecc4e4f",
-  "candidate_archive_sha256": "56ab776e64fce2fd66ae761c911bc0dfa0beaa184872874b7e73eadd32dbd26f",
+  "candidate_archive_sha256": "c3be43d80cbedf1e3cef699980b103340eeac0aab24197363986a7b0057afd3d",
   "source_code_sha256": {
     "omk/resource_reset_stage.py": "b3e75d92b8c7fa37d7b71b0ebb63024f6c947a3d14aca17eb71dec15ada4a213",
-    "omk/resource_reset_transform.py": "7e23631ca5bb908cdce45cc9dbcb8d1f4186ee8a98db9e6d6374cabbe946c659",
+    "omk/resource_reset_transform.py": "3d49b35d8ab4533b600490adb77d7d666e6750548ee79b64fbd58e743b86f3ce",
+    "omk/ftb_dimension_references.py": "d13b65167e678f0ef66f9b89e7c7b1770cfbef749669b46b8296ac1b797b474a",
     "omk/ftb_restore_reconcile.py": "1cc81543a29d43608fbdc0dcb2c12ba583e47b6f773cbd0ffbba95cc59d480c1"
   },
   "docker_conditions": [
@@ -20,6 +21,7 @@
     "native_ownerless_team_reconcile",
     "old_owner_not_reattached_and_current_rules_preserved",
     "synthetic_forge_respawn_keeps_main_bed",
+    "common_ftb_filter_native_overworld_and_resource",
     "native_archive_plan",
     "native_offline_player_detected",
     "exact_native_player_home_claim_edit_count",
@@ -108,7 +110,7 @@
   "promoted": false,
   "validation": {
     "windows_unit_ui": {
-      "passed": 1231,
+      "passed": 1249,
       "skipped": 12
     },
     "ruff": "passed",
@@ -116,8 +118,24 @@
     "ownerless_team_regression": "failed before narrow fix; passed after"
   },
   "cleanup": {
-    "successful_data_scopes": 5,
-    "owned_volumes_removed": 26,
+    "successful_data_scopes": 6,
+    "owned_volumes_removed": 32,
     "owned_containers_or_volumes_remaining": false
-  }
+  },
+  "generic_ftb_reference_dimensions": [
+    0,
+    -1,
+    1,
+    7,
+    17,
+    50,
+    66,
+    420,
+    425,
+    -100,
+    14676,
+    -18000,
+    314159
+  ],
+  "generic_wipe_contract": "Clear all claims, homes, public warps and known back/death links in the selected dimension; preserve all other dimensions and authority. Does not authorize wipe execution."
 }
