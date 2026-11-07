@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "ready_for_players": false,
+  "scope": "Windows graphical client against owned Linux Docker DJ2; resource transition acceptance at server view-distance 6 only",
+  "accepted_runtime": {
+    "dj2": "2.23.4",
+    "minecraft": "1.12.2",
+    "forge": "14.23.5.2860",
+    "core": "0.3.5",
+    "core_sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1",
+    "dj2fix": "0.1.3",
+    "dj2fix_sha256": "9063ad85f144c93dddf9282f0b67cc369488773dea8a4a094e7400452ec61eaa",
+    "jed": "1.6.0-dev.20211009.214847",
+    "jed_sha256": "6840d8ad69059f90c4288c317bf88284a4ccd716d06cc0aa0d37d20b2693dd8f",
+    "client_adapter": "0.1.0",
+    "server_java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "server_view_distance": 6,
+    "server_cpu_limit": 4,
+    "server_memory_limit_gib": 6,
+    "server_heap_gib": 4,
+    "client_heap_mib": 6144,
+    "max_players": 20,
+    "watchdog_ms": 60000
+  },
+  "automation": {
+    "mcmcp": "2026.11.02",
+    "mcmcp_sha256": "e2c3cb80c6e45a11c7e2835b46e0183bf0e5f5f15ca1c3acef5f4fe02818e182",
+    "server_probe_sha256": "9895697a14952d35a79ad1a1f3cb7e6d0be4c7a12240f6e42747451f0f488885",
+    "probe_world_mutation": false,
+    "probe_max_samples": 32,
+    "normal_actor_op": false,
+    "creative_rendering_fixture": true,
+    "signed_client_source_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+    "jed_and_mcmcp_test_only_overlay": true
+  },
+  "controls": [
+    {
+      "core": "0.3.5",
+      "server_view_distance": 3,
+      "cold_entry_missing_chunks": 5,
+      "client_checked_chunks": 16,
+      "reproduced_fresh_twice": true,
+      "server_sample_age_ticks": 200,
+      "server_ready_and_sent_chunks": 14,
+      "server_sample_total_chunks": 49,
+      "rejoin_recovers_client": true,
+      "accepted": false
+    },
+    {
+      "core": "0.3.6 experimental, source reverted",
+      "sha256": "fc6eab5ac72ab8ff3a444232ae4236371cab3632777041711ba1c51ee77d1aaa",
+      "server_view_distance": 3,
+      "cold_entry_missing_chunks": 7,
+      "client_checked_chunks": 16,
+      "accepted": false,
+      "published": false
+    }
+  ],
+  "single_variable_comparison": {
+    "component_inventory": {
+      "mods": {
+        "files": 209,
+        "identical": true
+      },
+      "config": {
+        "files": 1489,
+        "identical": true
+      },
+      "scripts": {
+        "files": 130,
+        "identical": true
+      },
+      "groovy": {
+        "files": 42,
+        "identical": true
+      }
+    },
+    "server_properties_diff": {
+      "view-distance": [
+        "3",
+        "6"
+      ]
+    }
+  },
+  "accepted_gui": {
+    "first_resource_entry": true,
+    "main_and_resource_checked_chunks_each": 49,
+    "missing": 0,
+    "render_queue_empty": true,
+    "server_independent_ready_and_sent_chunks": 49,
+    "resource_dimension": -18000,
+    "resource_spawn": [
+      16.5,
+      70.0,
+      -15.5
+    ],
+    "native_spawn_warmup_seconds": 5,
+    "native_home_warmup_seconds": 3,
+    "spawn_return": true,
+    "cross_world_home": true,
+    "resource_rejoin": true,
+    "no_stuck_login_screen": true,
+    "default_skin_rendered": true,
+    "square_minimap_no_grid": true,
+    "spawn_break_denied": true,
+    "non_op_setwarp_denied": true,
+    "boundary_seen_in_separate_original_core_run": true,
+    "positive_x_border": 8192,
+    "client_x_clamped_to": 8191.7
+  },
+  "rtp": {
+    "default_policy": {
+      "minimum": 1000,
+      "maximum": 5461,
+      "chunk_loads": 8
+    },
+    "fresh_unpregenerated_attempts": 2,
+    "result": "expected no safe point; no position/dimension change; no forced generation",
+    "success_at_working_radius_after_pregen_tested": false
+  },
+  "independent_stopped_audit": {
+    "checks": [
+      "completed_owned_scope",
+      "accepted_runtime_configuration",
+      "clean_server_exit",
+      "no_docker_oom",
+      "volume_removed_after_export",
+      "stopped_archive_hash",
+      "bounded_archive_inventory",
+      "unique_archive_paths",
+      "regular_world_only_paths",
+      "saved_core_version",
+      "saved_pack_fix_version",
+      "saved_jed_version",
+      "isolated_world_identity",
+      "resource_generator_preserved",
+      "resource_border_preserved",
+      "matching_ownership_records",
+      "exact_resource_ownership",
+      "offline_player_in_resource",
+      "saved_position_after_home_and_failed_rtp",
+      "saved_player_health",
+      "saved_experience",
+      "exact_initial_inventory_without_rejoin_duplication",
+      "cross_world_homes_saved",
+      "claims_only_in_expected_dimensions",
+      "exact_unique_spawn_claims_0",
+      "exact_unique_spawn_claims_-18000",
+      "unauthorized_warp_not_saved",
+      "quest_progress_in_archive",
+      "source_archive_unchanged_by_audit"
+    ],
+    "count": 29,
+    "world_archive_sha256": "d6abb503f9873d1dabc3f7576b7e998a32dc09a172e7704bfd9e0e81cecc4e4f",
+    "reset_reference_inventory": {
+      "schema": 1,
+      "kind": "read_only_reset_reference_inventory",
+      "archive_sha256": "d6abb503f9873d1dabc3f7576b7e998a32dc09a172e7704bfd9e0e81cecc4e4f",
+      "dimension": -18000,
+      "offline_players_in_resource": 1,
+      "resource_homes": 1,
+      "other_world_homes": 1,
+      "resource_server_claims": 196,
+      "other_world_server_claims": 1444,
+      "player_claims_covered": false,
+      "portal_adapters_reviewed": false,
+      "actionable_reset_plan": false,
+      "world_changes": false
+    }
+  },
+  "lifecycle": {
+    "client_processes": [
+      {
+        "scope": "fdbd73a18f13",
+        "client_exits": [
+          0
+        ],
+        "no_new_crash_reports": true,
+        "no_task_or_fatal_markers": true,
+        "server_exit": 0,
+        "oom_killed": false,
+        "world_archive_sha256": "39b606c7c21d3d3dd72a0b350d7102e2ab71fd93e31745660d7102e4ea1843f8",
+        "owned_cleanup_verified": true
+      },
+      {
+        "scope": "d5afe1c94733",
+        "client_exits": [
+          0
+        ],
+        "no_new_crash_reports": true,
+        "no_task_or_fatal_markers": true,
+        "server_exit": 0,
+        "oom_killed": false,
+        "world_archive_sha256": "db97ac342634e38b3b34c7a122fc98ab95a2a7cfe0e64b21a56052d065688378",
+        "owned_cleanup_verified": true
+      },
+      {
+        "scope": "96068962c80f",
+        "client_exits": [
+          0
+        ],
+        "no_new_crash_reports": true,
+        "no_task_or_fatal_markers": true,
+        "server_exit": 0,
+        "oom_killed": false,
+        "world_archive_sha256": "cada2c11b017c6dc2a341196125219a76c674d33533343ed2c17f5ba68933f77",
+        "owned_cleanup_verified": true
+      }
+    ],
+    "accepted_peer": {
+      "scope": "184a13c60b35",
+      "server_exit": 0,
+      "oom_killed": false,
+      "world_archive_sha256": "d6abb503f9873d1dabc3f7576b7e998a32dc09a172e7704bfd9e0e81cecc4e4f",
+      "owned_volume_removed_after_export": true
+    },
+    "excluded_peer_prestart": {
+      "scope": "4bd4e70a7e76",
+      "cause": "fixture port mapping assertion; no game started",
+      "owned_volume_removed_after_proving_no_world": true
+    },
+    "all_five_owned_scopes_verified_absent": true
+  },
+  "validation": {
+    "focused_unit_passed": 61,
+    "ruff_black": true,
+    "production_java_changes": false,
+    "new_core_release": false
+  },
+  "not_completed": [
+    "root cause or minimum view distance; view 4/5 not measured",
+    "fullscreen JourneyMap hotkey automation",
+    "safe owner reset/apply and failure controls",
+    "player claims and portal reset adapters",
+    "quest progress after reset",
+    "client manifest and guide",
+    "working-radius RTP after final pregen",
+    "VPS runtime/operations/offhost backup acceptance"
+  ],
+  "no_live_migration_or_wipe": true,
+  "backup_writer_changed": false
+}
