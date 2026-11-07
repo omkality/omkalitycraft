@@ -145,10 +145,9 @@ def main() -> int:
             service,
             installer=installer,
             runner=GameRunner(root, reports_url=config["api_url"]),
+            update_warning=update_warning,
         )
         window.setWindowTitle(f"OmkalityCraft · {VERSION}")
-        if update_warning:
-            window.centralWidget().layout().addWidget(QLabel(update_warning))
         window.show()
         if args.health_file is not None:
             QTimer.singleShot(

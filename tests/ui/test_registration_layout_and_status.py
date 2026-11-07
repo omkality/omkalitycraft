@@ -99,6 +99,31 @@ def test_small_registration_scrolls_instead_of_clipping_input_text(qtbot, window
     )
 
 
+def test_update_notice_has_space_above_social_links_at_minimum_size(qtbot, window):
+    preview = LauncherWindow(
+        window.service,
+        auto_restore=False,
+        update_warning="Не удалось проверить обновления. Используется рабочая версия лаунчера.",
+    )
+    qtbot.addWidget(preview)
+    preview.resize(1020, 680)
+    preview.show()
+    notice = preview.findChild(QLabel, "launcherUpdateNotice")
+    links = [
+        preview.findChild(QLabel, "social_" + name)
+        for name in ("youtube", "twitch", "kick", "telegram")
+    ]
+    qtbot.waitUntil(lambda: all(link.width() > 0 for link in links))
+    assert (
+        min(link.geometry().top() for link in links) - notice.geometry().bottom() >= 16
+    )
+    for widget in [notice, *links]:
+        assert preview.rect().contains(widget.mapTo(preview, widget.rect().topLeft()))
+        assert preview.rect().contains(
+            widget.mapTo(preview, widget.rect().bottomRight())
+        )
+
+
 def test_online_poll_is_coalesced_and_unavailable_does_not_show_zero(qtbot, window):
     window._authenticated(window.service.login("test_player", "test-password"))
     release = threading.Event()
