@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "scope": "Windows renderer-only DJ2 2.23.4; no server or world",
+  "ready_for_players": false,
+  "python_focused": {
+    "passed": 56,
+    "ui_session_store": "isolated temporary FakeDrasl fixture"
+  },
+  "packaged_windows_startup": "health acknowledgement observed from executable in isolated root",
+  "java_helper_checks": 14,
+  "cosmetic_abi_targets": 2,
+  "original_wrong_target_negative_control": "rejected before ECJ",
+  "private_client_version": "0.1.1",
+  "private_client_sha256": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a",
+  "repeated_build_sha_identical": true,
+  "prior_network_class_files_unchanged": 7,
+  "native_screens": [
+    "main menu",
+    "options",
+    "sound",
+    "multiplayer",
+    "singleplayer selection",
+    "mods"
+  ],
+  "native_exit_code": 0,
+  "native_crash_reports": 0,
+  "native_window_title_observed": "OmkalityCraft · Divine Journey 2 · 2.23.4",
+  "visual_loading_review": "owner confirmed updated loading and menu in chat",
+  "featured_server_removed": true,
+  "new_player_world_created": false,
+  "native_atlas_changed_pixels": 12000,
+  "native_atlas_pixels_outside_button_rows_preserved": true,
+  "screenshots": [
+    {
+      "name": "obsidian-menu-native-final-v5-20261108.png",
+      "sha256": "e63fe40b05597ca42d71e3cd0179e646e7a1812722b62a3214182a6af265c024"
+    },
+    {
+      "name": "obsidian-options-native-v5-20261108.png",
+      "sha256": "39f3fc2886e443a740bd96c8b1f988c6b2ace451328676082c4c84453ad7e661"
+    },
+    {
+      "name": "obsidian-servers-native-v5-20261108.png",
+      "sha256": "ab6e5b4e5bbb0f5f6ebf395fd09ff600adedf9094b2d15ee8df2b6cfc38d2882"
+    },
+    {
+      "name": "obsidian-sound-native-v5-20261108.png",
+      "sha256": "279ccdc9c8e2e6b9f6cddb7a87ff814260d4d1540920de572f52577ea4c33b80"
+    }
+  ],
+  "excluded_trials": [
+    {
+      "reason": "initial wrong anonymous Forge class target caused Mixin startup failure",
+      "sha256": "315ea294dd32f1e753dc021fde6f5939f8509c9dfa77de93176535660718b43b"
+    },
+    {
+      "reason": "successful corrected startup followed by forced timeout cleanup due to missing harness method; not a clean-exit check"
+    }
+  ],
+  "limitations": [
+    "prototype appearance overlay not in signed player pack",
+    "no server authentication or gameplay acceptance in renderer-only lab",
+    "graphical Linux/macOS not tested",
+    "individual mod screens with custom textures need separate review"
+  ]
+}
