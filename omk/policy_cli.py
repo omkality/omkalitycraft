@@ -4,7 +4,7 @@ from pathlib import Path
 
 from omk.resource_policy import (
     prepare_resource_bundle,
-    resource_generator_patch,
+    resource_generator_bundle,
     resource_plan,
 )
 from omk.territory_policy import territory_plan, write_territory_policy
@@ -42,9 +42,7 @@ def run_policy(args):
         if args.output is None:
             plan = resource_plan()
             if args.source_config is not None:
-                _, plan["generator_patch"] = resource_generator_patch(
-                    args.source_config, plan["dimension"]
-                )
+                resource_generator_bundle(args.source_config, plan)
             return {"ok": True, "policy": plan, "writes": False}
         return {
             "ok": True,

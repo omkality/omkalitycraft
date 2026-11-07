@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "reviewed_pack": "2.23.4",
+  "cofh_files": [
+    "cofh/world/00_minecraft.json",
+    "cofh/world/01_thermalfoundation_ores.json",
+    "cofh/world/02_thermalfoundation_oil.json",
+    "cofh/world/03_thermalfoundation_clathrates.json"
+  ],
+  "cofh_reviewed_memberships": [
+    "cofh/world/01_thermalfoundation_ores.json/oil_ore",
+    "cofh/world/01_thermalfoundation_ores.json/amber",
+    "cofh/world/01_thermalfoundation_ores.json/aquamarine"
+  ],
+  "forge_files": [
+    {
+      "file": "Extreme Reactors/Extreme Reactors.cfg",
+      "rules": [{
+        "path": ["worldgen", "dimensionWhitelist"], "kind": "I",
+        "reference": "0", "mode": "whitelist",
+        "flags": [{"path": ["worldgen", "useBlacklist"], "value": "false"}]
+      }]
+    },
+    {
+      "file": "natura.cfg",
+      "rules": [{
+        "path": ["worldgen", "Overworld World Generation Dimension Whitelist"],
+        "kind": "I", "reference": "0", "mode": "whitelist"
+      }]
+    },
+    {
+      "file": "integrateddynamics.cfg",
+      "rules": [
+        {"path": ["worldgeneration", "biome_meneglin.meneglinBiomeDimensionBlacklist"],
+          "kind": "I", "reference": "0", "mode": "blacklist"},
+        {"path": ["worldgeneration", "general.wildMenrilTreeDimensionBlacklist"],
+          "kind": "I", "reference": "0", "mode": "blacklist"}
+      ]
+    },
+    {
+      "file": "thaumcraftfix.cfg",
+      "rules": [
+        {"path": ["general", "world", "crystals", "dimList"],
+          "kind": "S", "reference": "overworld", "mode": "whitelist",
+          "flags": [
+            {"path": ["general", "world", "crystals", "controlCrystals"], "value": "true"},
+            {"path": ["general", "world", "crystals", "dimListIsAllowList"], "value": "true"}
+          ]},
+        {"path": ["general", "world", "vegetation", "dimList"],
+          "kind": "S", "reference": "overworld", "mode": "whitelist",
+          "flags": [
+            {"path": ["general", "world", "vegetation", "controlVegetation"], "value": "true"},
+            {"path": ["general", "world", "vegetation", "dimListIsAllowList"], "value": "true"}
+          ]}
+      ]
+    }
+  ]
+}

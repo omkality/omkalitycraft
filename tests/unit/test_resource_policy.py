@@ -7,6 +7,7 @@ import omk.resource_policy as policy
 from omk.cli import main
 from omk.resource_policy import jed_dimension, prepare_resource_bundle, resource_plan
 from omk.stopped_world_backup import inventory
+from tests.unit.test_resource_generation import source_fixture
 
 
 def test_policy_bundle_is_offline_exclusive_and_hash_complete(tmp_path):
@@ -118,7 +119,7 @@ def test_readonly_cli_plan_does_not_create_files(tmp_path, monkeypatch, capsys):
 
 def test_generator_patch_preserves_source_and_existing_settings(tmp_path):
     source = tmp_path / "source"
-    source.mkdir()
+    source_fixture(source)
     raw = b"general {\r\n S:IncludedDimensions=0,7\r\n B:OreGeneration=true\r\n}\r\n"
     original = source / "undergroundbiomes.cfg"
     original.write_bytes(raw)
