@@ -173,8 +173,12 @@ def projection(records):
         elif name.startswith("teams/"):
             if _text(root, "ID") != Path(name).stem:
                 raise ValueError("Ambiguous FTB team identity")
-            for field in ("Owner", "Type", "FakePlayerStatus"):
-                _text(root, field)
+            team_type = _text(root, "Type")
+            # FTBLib omits Owner when its server team has no player owner.
+            # Preserve that absence in the canonical snapshot; never invent one.
+            if "Owner" in root or team_type != "server":
+                _text(root, "Owner")
+            _text(root, "FakePlayerStatus")
             if root.get("Players", Tag(0, None)).kind != 10:
                 raise ValueError("Invalid FTB team status map")
     return _canonical(records)
