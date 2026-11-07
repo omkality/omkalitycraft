@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "minecraft": "1.12.2",
+  "dimension": -18000,
+  "identity": "omkalitycraft.dj2.resource",
+  "reserved_dimensions": [0, -1, 1, 2, 4, 7, 17, 50, 51, 52, 53, 66, 420, 421, 422, 423, 424, 425, 426, 427, -9, -26, -27, -28, -29, -30, -31, -100, -9999, -11325, 14676],
+  "registry_source": "https://raw.githubusercontent.com/Divine-Journey-2/Divine-Journey-2/2.23.4/readme/SERVER_INFO.md",
+  "artifact": {
+    "mod_id": "justenoughdimensions",
+    "version": "1.6.0-dev.20211009.214847",
+    "filename": "justenoughdimensions-1.12.2-1.6.0-dev.20211009.214847.jar",
+    "sha256": "6840d8ad69059f90c4288c317bf88284a4ccd716d06cc0aa0d37d20b2693dd8f",
+    "url": "https://cdn.modrinth.com/data/SG4FX30b/versions/NgxVBfzW/justenoughdimensions-1.12.2-1.6.0-dev.20211009.214847.jar",
+    "metadata": "https://api.modrinth.com/v2/version/NgxVBfzW",
+    "source": "https://github.com/maruohon/justenoughdimensions/tree/b3929ed6b0775954dd3eba463de9b528ba4a3769",
+    "sides": ["client", "server"]
+  }
+}

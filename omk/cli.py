@@ -16,11 +16,11 @@ from omk.dj2_lab import add_dj2_lab, run_dj2_lab
 from omk.dj2_linux_lab import add_linux_skin_lab, run_linux_skin_lab
 from omk.lab import auth_smoke
 from omk.locale_cli import add_locale_commands, audit_locale_files
+from omk.policy_cli import add_policy_commands, run_policy
 from omk.profiles import PROJECT_ROOT, load_profiles
 from omk.registry_audit import add_upgrade_commands, audit_registry_files
 from omk.release_cli import add_release_commands, prepare_release
 from omk.storage_policy import add_storage_commands, storage_plan
-from omk.territory_policy import add_policy_commands, run_policy
 
 
 def doctor() -> dict[str, Any]:

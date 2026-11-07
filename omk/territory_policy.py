@@ -39,29 +39,3 @@ def write_territory_policy(config_directory: Path, environ=None):
         for key, value in plan.items():
             file.write(f"{key}={value}\n")
     return plan
-
-
-def add_policy_commands(sub):
-    policy = sub.add_parser("policy", help="Prepare new offline server policy files")
-    actions = policy.add_subparsers(dest="policy_action", required=True)
-    territories = actions.add_parser(
-        "dj2-territories", help="FTB territories per team member"
-    )
-    territories.add_argument(
-        "--config-directory",
-        type=Path,
-        help="Write exclusively into this existing staging directory",
-    )
-
-
-def run_policy(args):
-    if args.policy_action != "dj2-territories":
-        raise ValueError("Unknown policy")
-    if args.config_directory is None:
-        return {"ok": True, "policy": territory_plan(), "writes": False}
-    return {
-        "ok": True,
-        "policy": write_territory_policy(args.config_directory),
-        "file": str(args.config_directory / POLICY_FILE),
-        "exclusive_create": True,
-    }
