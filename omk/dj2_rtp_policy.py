@@ -62,7 +62,7 @@ def _worlds(path):
         raise ValueError("Invalid OMK_DJ2_RTP_PROFILE") from None
 
 
-def write_rtp_policy(config_directory: Path, environ=None):
+def rtp_plan(environ=None):
     values = os.environ if environ is None else environ
     minimum = _number(values, "OMK_DJ2_RTP_MIN_DISTANCE", 1000, 0, 100000)
     maximum = _number(values, "OMK_DJ2_RTP_MAX_DISTANCE", 5461, 1, 100000)
@@ -73,15 +73,6 @@ def write_rtp_policy(config_directory: Path, environ=None):
     if minimum >= maximum:
         raise ValueError("Invalid RTP distance range")
     rows = _worlds(Path(values.get("OMK_DJ2_RTP_PROFILE", DEFAULT_PROFILE)))
-    folder = Path(config_directory)
-    if not folder.is_dir() or any(p.is_symlink() for p in (folder, *folder.parents)):
-        raise ValueError("A real offline config directory is required")
-    worlds = ";".join(f'{r["id"]}:{r["mode"]}:{r["min_y"]}:{r["max_y"]}' for r in rows)
-    with (folder / POLICY_FILE).open("x", encoding="ascii", newline="\n") as file:
-        file.write(
-            f"version=1\nminimum={minimum}\nmaximum={maximum}\nborder_percent={percent}\n"
-            f"attempts={attempts}\nchunk_loads={loads}\nretry_seconds={retry}\nworlds={worlds}\n"
-        )
     return {
         "minimum": minimum,
         "maximum": maximum,
@@ -91,3 +82,22 @@ def write_rtp_policy(config_directory: Path, environ=None):
         "retry_seconds": retry,
         "worlds": rows,
     }
+
+
+def write_rtp_policy(config_directory: Path, environ=None):
+    plan = rtp_plan(environ)
+    folder = Path(config_directory)
+    if not folder.is_dir() or any(p.is_symlink() for p in (folder, *folder.parents)):
+        raise ValueError("A real offline config directory is required")
+    worlds = ";".join(
+        f'{r["id"]}:{r["mode"]}:{r["min_y"]}:{r["max_y"]}' for r in plan["worlds"]
+    )
+    with (folder / POLICY_FILE).open("x", encoding="ascii", newline="\n") as file:
+        file.write(
+            "version=1\n"
+            + "".join(
+                f"{key}={value}\n" for key, value in plan.items() if key != "worlds"
+            )
+            + f"worlds={worlds}\n"
+        )
+    return plan

@@ -1,0 +1,438 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "scope": "DJ2 resource world server foundation; not full issue 32 readiness",
+  "ready_for_players": false,
+  "implementation": {
+    "core": "0.3.4",
+    "core_sha256": "8c3a214d3cfb5408252f8bc66c93f1314d161adabaad068c7c77ebb8c9fc6b56",
+    "dj2fix": "0.1.2",
+    "dj2fix_sha256": "e54cbeaa85d517e393a389927bcd5171ad9638fc7e8c5daff33c21990065da36",
+    "minecraft": "1.12.2",
+    "forge": "14.23.5.2860",
+    "dj2": "2.23.4",
+    "jed": {
+      "mod_id": "justenoughdimensions",
+      "version": "1.6.0-dev.20211009.214847",
+      "filename": "justenoughdimensions-1.12.2-1.6.0-dev.20211009.214847.jar",
+      "sha256": "6840d8ad69059f90c4288c317bf88284a4ccd716d06cc0aa0d37d20b2693dd8f",
+      "url": "https://cdn.modrinth.com/data/SG4FX30b/versions/NgxVBfzW/justenoughdimensions-1.12.2-1.6.0-dev.20211009.214847.jar",
+      "metadata": "https://api.modrinth.com/v2/version/NgxVBfzW",
+      "source": "https://github.com/maruohon/justenoughdimensions/tree/b3929ed6b0775954dd3eba463de9b528ba4a3769",
+      "sides": [
+        "client",
+        "server"
+      ]
+    }
+  },
+  "runtime": {
+    "image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "heap_gib": 4,
+    "container_memory_gib": 6,
+    "cpus": 4,
+    "bind": "loopback",
+    "graphical_client": false
+  },
+  "validation": {
+    "full_dj2_lab_conditions": 98,
+    "minimal_lab_conditions": 90,
+    "startup_controls": 10,
+    "expected_startup_refusals": 8,
+    "control_conditions": 67,
+    "independent_world_conditions": 71,
+    "independent_control_conditions": 60,
+    "unit_ui_passed": 1113,
+    "unit_ui_skipped": 12,
+    "ruff_black": true,
+    "composition": {
+      "ok": true,
+      "checks": 36,
+      "unchanged_members": 25,
+      "changed_previous_classes": 3,
+      "core_sha256": "8c3a214d3cfb5408252f8bc66c93f1314d161adabaad068c7c77ebb8c9fc6b56"
+    },
+    "conditions_include_preflight_and_metadata": true
+  },
+  "accepted_labs": [
+    {
+      "lab": ".local/resource-probe-e7065e7549",
+      "full_dj2": false,
+      "lab_conditions": 90,
+      "independent_conditions": 33,
+      "boots": 2,
+      "world_after_sha256": "9a45eded6e981908c0c878d33efc945c2e944242e6afab9fcd630c1969ee5b0b",
+      "world_before_restart_sha256": "b4bcdbd87644d65db28fb6bb262b5c868955c266eac32ca5d4ca66f35bf2fab0",
+      "idle_resource": {
+        "unloaded": true,
+        "forced_chunks": 0,
+        "loaded_chunks": 0
+      },
+      "container_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "native_checks_sha256": "fdd03feaf12b74db0289d17303376e19ea6e80eb15700d6f5f807b3446dd7166"
+    },
+    {
+      "lab": ".local/resource-probe-414e480822",
+      "full_dj2": true,
+      "lab_conditions": 98,
+      "independent_conditions": 38,
+      "boots": 2,
+      "world_after_sha256": "1dc1058006f383fee457de55a6b856fba72ed4e79f6ef2c3bea238f849177cb5",
+      "world_before_restart_sha256": "e1e2e2c3309ba17d41b3510d44bd3f6b350e5a11ea5499fc539b2e0f0e100418",
+      "idle_resource": {
+        "unloaded": true,
+        "forced_chunks": 0,
+        "loaded_chunks": 0
+      },
+      "container_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "native_checks_sha256": "fdd03feaf12b74db0289d17303376e19ea6e80eb15700d6f5f807b3446dd7166"
+    }
+  ],
+  "controls": [
+    {
+      "lab": ".local/resource-negative-missing-data-46ec2c30fc",
+      "mode": "missing-data",
+      "lab_conditions": 8,
+      "expected_startup_refusal": true,
+      "world_after_sha256": "a9be44409e4b32e8d521d5c16f8e97959cdaec02dad00749f1b51e3c3e349e86"
+    },
+    {
+      "lab": ".local/resource-negative-missing-ledger-479bff36c6",
+      "mode": "missing-ledger",
+      "lab_conditions": 7,
+      "expected_startup_refusal": true,
+      "world_after_sha256": "cbb5565ecc7dff9544f03f0e6657068198eeb6439f951f38dd6d6d081d306d03"
+    },
+    {
+      "lab": ".local/resource-negative-wrong-owner-64e22ffe20",
+      "mode": "wrong-owner",
+      "lab_conditions": 7,
+      "expected_startup_refusal": true,
+      "world_after_sha256": "1a47e6dbcab46c2788df80bb58e4712d93ab14844c61e07f4053ca39e097cde5"
+    },
+    {
+      "lab": ".local/resource-negative-wrong-seed-d3b438c93f",
+      "mode": "wrong-seed",
+      "lab_conditions": 7,
+      "expected_startup_refusal": true,
+      "world_after_sha256": "6304538832300ac9d85def352c1a54fffb3e18c704587d5b5f7e1cfece9cc0f9"
+    },
+    {
+      "lab": ".local/resource-negative-wrong-provider-e3efa5eb85",
+      "mode": "wrong-provider",
+      "lab_conditions": 7,
+      "expected_startup_refusal": true,
+      "world_after_sha256": "7cab95da857ea397f8c8283183f3aab411c9d04d019f6d3e2b24f1b12a8cc042"
+    },
+    {
+      "lab": ".local/resource-negative-bad-pin-c50bca2abf",
+      "mode": "bad-pin",
+      "lab_conditions": 7,
+      "expected_startup_refusal": true,
+      "world_after_sha256": "9d8316fe1ec3033e95aac293e519c6e0470122fb2a34b8b66b122925a3684bda"
+    },
+    {
+      "lab": ".local/resource-negative-bad-config-hash-cec0db4ea9",
+      "mode": "bad-config-hash",
+      "lab_conditions": 7,
+      "expected_startup_refusal": true,
+      "world_after_sha256": "18b2703fc1c23c2917d61fbb021026626fc4ba4defeca4ebe1ca187063c0a135"
+    },
+    {
+      "lab": ".local/resource-negative-missing-jed-4b8f26b82c",
+      "mode": "missing-jed",
+      "lab_conditions": 7,
+      "expected_startup_refusal": true,
+      "world_after_sha256": "be100273b15ad75857610dc481261cbc951b897f54528a5a78e68fd2d3f3d512"
+    },
+    {
+      "lab": ".local/resource-negative-optional-f20b2e7d35",
+      "mode": "optional",
+      "lab_conditions": 5,
+      "expected_startup_refusal": false,
+      "world_after_sha256": "ca05ef8b718d84d8eed130dfe71135894ab94216648a11a47d6f9c6577fd168a"
+    },
+    {
+      "lab": ".local/resource-negative-bare-18a08359fe",
+      "mode": "bare",
+      "lab_conditions": 5,
+      "expected_startup_refusal": false,
+      "world_after_sha256": "3d5bc98ca38e060d0eedfee4b8936801c555bb94ffd0667eee8444aeb18c31cb"
+    }
+  ],
+  "cleanup_readback": {
+    "ok": true,
+    "owned_scopes": 33,
+    "remaining_owned_resources": 0
+  },
+  "scope_inventory": [
+    {
+      "lab": ".local/resource-probe-0c625cb6ea",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "75fb4454d4f2dcb8effb1f60b55d5a13f3b3bf79458b2e7de0cdf673e022a151",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-1490cc3e07",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "ea80fb97b0a00470dd3b077158c7acbfe6ff157a28437b51b3a32a6fdb212d6f",
+      "reviewed_cleanup_receipt": true
+    },
+    {
+      "lab": ".local/resource-probe-31a7280c88",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "0c28b7ee88f648ba7e971fc742dac6bdffc95d15897b2f340dd70a357ae6b086",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-353bfd30e7",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "9b4f7ca169ea9076d717869fbc0d4bc974fce992979f9057201dfffde92634f4",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-414e480822",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "1dc1058006f383fee457de55a6b856fba72ed4e79f6ef2c3bea238f849177cb5",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-5fcec5ea51",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "0a7d16326e643391dcbe079af4ede1f9ebf9f5207c368b361a2e17eb3525b8df",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-8de6856ff2",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "f8f485add5bc642f6fc4cbfe65853f02d990767b907d04764e83bf7d4e4f53a1",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-91c5212458",
+      "reported_ok": true,
+      "accepted": false,
+      "world_archive_sha256": "e29d8d8e0b38f39ce6fb2626e93cff959d6b90448034164cbcd4292764b8035e",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-99d7125f5c",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "8b66c3a0fabf3c126c6435081098ecff437ace36b2c4e3444ab1d67ba64884d9",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-b1f4235fc3",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "4962aed19e0a705227b48ac1a96f4369ca9cdb674a88bf4236846a4240fdbec1",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-b352a88694",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "331a7af7dbdf248fd2fe1947894c05f94726d5486b55bf403ea0df54ccdd7c2c",
+      "reviewed_cleanup_receipt": true
+    },
+    {
+      "lab": ".local/resource-probe-c300afdf08",
+      "reported_ok": true,
+      "accepted": false,
+      "world_archive_sha256": "0f48f1d7546bde9d1febf1fb60dbca235fc81e36345f569f7e297b61e6ebee54",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-ca21373b1b",
+      "reported_ok": true,
+      "accepted": false,
+      "world_archive_sha256": "4c89edc136a13dae372060cf666b9fd0e40b8f3c99e0006863a9006b93bf0f7b",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-ce061b662f",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "2d0462abcea3972beda24315d55a1e734542603060e8044a7dff2cce9ef81dc3",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-d9750c606d",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "03b7bf2271533cb19871897f9ef8846d5a6ed04d4f739fd9032a2bda9259409b",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-e2fd8e1557",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "f1b0641033a0ab03057cbcc8a7103ef663d8ec69da1662d41f8620ed6187afa9",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-e7065e7549",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "9a45eded6e981908c0c878d33efc945c2e944242e6afab9fcd630c1969ee5b0b",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-eb4a77f16b",
+      "reported_ok": true,
+      "accepted": false,
+      "world_archive_sha256": "115fcce530c11f97736ffaae9ea03ba8c8cf6f5265453f3227eaba0a3196a4ed",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-ec8d1434c1",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "c6c01012b92e430fee1ab868991578145a751a68fbaadb4087eb88f2dd76d06a",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-f47e5b6f93",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "0c619f26f89a0f882e8c3f8eb001ad650f24a82e54838fa468858c2ea72b5590",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-f9c1e0d5dc",
+      "reported_ok": true,
+      "accepted": false,
+      "world_archive_sha256": "d4a8d08d90fd8a14c00763083aafb6a884c15e9bcd459467892ec451cf8a8ee1",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-probe-fc516f1f92",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": "d39a198c80e731781b57ba23ff50d2734aa8fab7c96e1aaafca2592b4433abcd",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-negative-bad-config-hash-cec0db4ea9",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "18b2703fc1c23c2917d61fbb021026626fc4ba4defeca4ebe1ca187063c0a135",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-negative-bad-pin-c50bca2abf",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "9d8316fe1ec3033e95aac293e519c6e0470122fb2a34b8b66b122925a3684bda",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-negative-bare-18a08359fe",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "3d5bc98ca38e060d0eedfee4b8936801c555bb94ffd0667eee8444aeb18c31cb",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-negative-missing-data-46ec2c30fc",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "a9be44409e4b32e8d521d5c16f8e97959cdaec02dad00749f1b51e3c3e349e86",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-negative-missing-jed-4b8f26b82c",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "be100273b15ad75857610dc481261cbc951b897f54528a5a78e68fd2d3f3d512",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-negative-missing-ledger-479bff36c6",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "cbb5565ecc7dff9544f03f0e6657068198eeb6439f951f38dd6d6d081d306d03",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-negative-optional-b38547ca84",
+      "reported_ok": false,
+      "accepted": false,
+      "world_archive_sha256": null,
+      "reviewed_cleanup_receipt": true
+    },
+    {
+      "lab": ".local/resource-negative-optional-f20b2e7d35",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "ca05ef8b718d84d8eed130dfe71135894ab94216648a11a47d6f9c6577fd168a",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-negative-wrong-owner-64e22ffe20",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "1a47e6dbcab46c2788df80bb58e4712d93ab14844c61e07f4053ca39e097cde5",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-negative-wrong-provider-e3efa5eb85",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "7cab95da857ea397f8c8283183f3aab411c9d04d019f6d3e2b24f1b12a8cc042",
+      "reviewed_cleanup_receipt": false
+    },
+    {
+      "lab": ".local/resource-negative-wrong-seed-d3b438c93f",
+      "reported_ok": true,
+      "accepted": true,
+      "world_archive_sha256": "6304538832300ac9d85def352c1a54fffb3e18c704587d5b5f7e1cfece9cc0f9",
+      "reviewed_cleanup_receipt": false
+    }
+  ],
+  "lab_overrides": {
+    "rtp_minimum": 8,
+    "rtp_maximum": 12,
+    "temporary_resource_border_center": [
+      256,
+      256
+    ],
+    "temporary_resource_diameter": 64,
+    "expanded_resource_diameter": 32768,
+    "timers": "short native FTB timers for fixtures",
+    "actors": "authenticated protocol actors; not rendered clients"
+  },
+  "remaining": [
+    "rendered client with pinned JED and updated client manifest",
+    "CoFH Overworld-compatible resource whitelists and representative resources/structures",
+    "owner-only recorded backup/evacuation/stop/reset transaction and crash recovery",
+    "offline player positions, homes, claims and portals across reset",
+    "final pregeneration and VPS deployment acceptance"
+  ],
+  "not_performed": [
+    "live deployment or data migration",
+    "world deletion/reset",
+    "new backup scheduler",
+    "player launcher release",
+    "full quest progression"
+  ]
+}
