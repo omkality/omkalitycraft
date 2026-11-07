@@ -16,12 +16,15 @@ from PySide6.QtWidgets import (
     QDialogButtonBox,
     QFileDialog,
     QFormLayout,
+    QFrame,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
     QMainWindow,
     QMessageBox,
     QProgressBar,
     QPushButton,
+    QScrollArea,
     QStackedWidget,
     QTabWidget,
     QVBoxLayout,
@@ -75,6 +78,34 @@ def field(name: str, placeholder: str = "", *, password: bool = False) -> QLineE
 
 def nickname_field(name: str) -> QLineEdit:
     return NicknameField(name)
+
+
+def auth_container() -> tuple[QWidget, QVBoxLayout]:
+    page = QScrollArea()
+    page.setFrameShape(QFrame.Shape.NoFrame)
+    page.setWidgetResizable(True)
+    page.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    content = QWidget()
+    outer = QVBoxLayout(content)
+    outer.setContentsMargins(0, 28, 0, 0)
+    outer.addStretch(1)
+    panel = QWidget()
+    panel.setObjectName("authPanel")
+    panel.setMaximumWidth(650)
+    layout = QVBoxLayout(panel)
+    layout.setContentsMargins(28, 26, 28, 26)
+    layout.setSpacing(18)
+    heading = label("Добро пожаловать")
+    heading.setStyleSheet("font-size:23px")
+    layout.addWidget(heading)
+    row = QHBoxLayout()
+    row.addStretch()
+    row.addWidget(panel, 1)
+    row.addStretch()
+    outer.addLayout(row)
+    outer.addStretch(2)
+    page.setWidget(content)
+    return page, layout
 
 
 def button(
@@ -220,13 +251,13 @@ class LauncherWindow(QMainWindow):
             caption.setFixedHeight(edit.sizeHint().height())
 
     def _auth_page(self) -> QWidget:
-        page = QWidget()
-        layout = QVBoxLayout(page)
-        layout.addWidget(label("Войти или присоединиться к сообществу"))
+        page, layout = auth_container()
         tabs = QTabWidget()
         self.auth_tabs = tabs
         layout.addWidget(tabs)
         signup, login = QWidget(), QWidget()
+        for form_page in (signup, login):
+            form_page.setProperty("authForm", True)
         signup_layout, login_layout = QFormLayout(signup), QFormLayout(login)
         for form in (signup_layout, login_layout):
             form.setFormAlignment(
@@ -252,13 +283,6 @@ class LauncherWindow(QMainWindow):
         signup_layout.addRow("Приглашение", self.invitation)
         self.show_signup_password = QCheckBox("Показать пароль")
         self.show_signup_password.setObjectName("showSignupPassword")
-        checkmark = (ASSETS / "checkmark.svg").as_posix().replace('"', r"\"")
-        self.show_signup_password.setStyleSheet(
-            "QCheckBox { spacing:9px; }"
-            "QCheckBox::indicator { width:16px; height:16px; border:1px solid #789e92;"
-            " border-radius:3px; background:#1a272f; }"
-            f'QCheckBox::indicator:checked {{ background:#78dcaf; image:url("{checkmark}"); }}'
-        )
         self.show_signup_password.toggled.connect(self._show_signup_password)
         signup_layout.addRow("", self.show_signup_password)
         self.register_button = button(
@@ -306,7 +330,6 @@ class LauncherWindow(QMainWindow):
                 muted=True,
             )
         )
-        layout.addStretch()
         return page
 
     def _home_page(self) -> Dashboard:

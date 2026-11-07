@@ -27,8 +27,6 @@ class SocialFooter(QWidget):
             )
             link.setObjectName("social_" + name.lower())
             link.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            link.setStyleSheet(
-                "background:#17252b;border:1px solid #2a3a42;border-radius:12px;padding:7px 20px"
-            )
+            link.setProperty("socialLink", True)
             row.addWidget(link)
         row.addStretch()

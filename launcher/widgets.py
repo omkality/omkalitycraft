@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
 from launcher.install import Progress
 from launcher.memory import MemorySnapshot
 from launcher.memory_widget import MemoryControl
-from launcher.theme import ASSETS
+from launcher.theme import ASSETS, ICE, MUTED, SUCCESS, WARNING
 from omk.profiles import ServerProfile
 
 
@@ -41,7 +41,7 @@ def external_label(text: str, url: str, *, icon_name: str | None = None) -> QLab
         channel = QUrl.fromLocalFile(str(ASSETS / icon_name)).toString()
         prefix = f'<img src="{html.escape(channel, quote=True)}" width="16" height="16">&nbsp;&nbsp;'
     widget = QLabel(
-        f'<a href="{html.escape(url, quote=True)}" style="color:#a9d6c8;text-decoration:none">'
+        f'<a href="{html.escape(url, quote=True)}" style="color:{ICE};text-decoration:none">'
         f'{prefix}{html.escape(text)}&nbsp;<img src="{html.escape(icon, quote=True)}" width="11" height="11"></a>'
     )
     widget.setTextInteractionFlags(
@@ -82,7 +82,7 @@ class BusyButton(QPushButton):
         if self._busy:
             painter = QPainter(self)
             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-            painter.setPen(QPen(QColor("#a5efd1"), 2.2))
+            painter.setPen(QPen(QColor(ICE), 2.2))
             painter.drawArc(
                 17, self.height() // 2 - 6, 12, 12, self._angle * 16, 250 * 16
             )
@@ -109,8 +109,8 @@ class PackCard(QFrame):
         self.setProperty("panel", True)
         self.setObjectName("pack_" + profile.id)
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(19, 17, 19, 17)
-        layout.setSpacing(9)
+        layout.setContentsMargins(22, 17, 22, 17)
+        layout.setSpacing(8)
         layout.addLayout(self._header(profile))
         description = QLabel(profile.description)
         description.setObjectName("description_" + profile.id)
@@ -133,7 +133,7 @@ class PackCard(QFrame):
             "Планируется" if profile.status == "planned" else "Не установлена"
         )
         self.state_label.setObjectName("state_" + profile.id)
-        self.state_label.setStyleSheet("color:#9bb1b6;background:transparent")
+        self.state_label.setStyleSheet(f"color:{MUTED};background:transparent")
         state_row = QHBoxLayout()
         state_row.addWidget(self.state_label)
         self.online_label = QLabel("Сервер готовится")
@@ -215,11 +215,11 @@ class PackCard(QFrame):
 
     def set_local_state(self, state: dict) -> None:
         self.state_label.setWordWrap(False)
-        self.state_label.setStyleSheet("color:#9bb1b6;background:transparent")
+        self.state_label.setStyleSheet(f"color:{MUTED};background:transparent")
         self.installed = state.get("state") == "installed"
         if self.installed:
             self.state_label.setText("Установлена · " + state["version"])
-            self.state_label.setStyleSheet("color:#92d5b8;background:transparent")
+            self.state_label.setStyleSheet(f"color:{SUCCESS};background:transparent")
             self.action.setText("Играть")
         elif state.get("state") == "incomplete":
             self.state_label.setText("Загрузка не завершена")
@@ -227,7 +227,7 @@ class PackCard(QFrame):
 
     def update_progress(self, progress: Progress) -> None:
         self.state_label.setWordWrap(False)
-        self.state_label.setStyleSheet("color:#9bb1b6;background:transparent")
+        self.state_label.setStyleSheet(f"color:{MUTED};background:transparent")
         self.progress.show()
         self.cancel.show()
         self.action.set_busy(
@@ -251,11 +251,11 @@ class PackCard(QFrame):
             self.installed = True
             self.action.setText("Играть")
             self.state_label.setText("Установлена · готова к игре")
-            self.state_label.setStyleSheet("color:#92d5b8;background:transparent")
+            self.state_label.setStyleSheet(f"color:{SUCCESS};background:transparent")
         else:
             self.action.setText(
                 "Повторить" if self.installed else "Продолжить загрузку"
             )
             self.state_label.setWordWrap(True)
-            self.state_label.setStyleSheet("color:#e6bd7a;background:transparent")
+            self.state_label.setStyleSheet(f"color:{WARNING};background:transparent")
             self.state_label.setText(message or "Загрузка не завершена")

@@ -30,13 +30,13 @@ class Dashboard(QWidget):
         self.preferences = preferences or Preferences()
         machine = machine or MemorySnapshot.read()
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(0, 12, 0, 0)
+        layout.setContentsMargins(0, 24, 0, 0)
         layout.setSpacing(22)
         content = QWidget()
         packs = QVBoxLayout(content)
         packs.setContentsMargins(0, 0, 8, 0)
-        heading = QLabel("Выберите своё приключение")
-        heading.setStyleSheet("font-size:21px")
+        heading = QLabel("Ваши сборки")
+        heading.setStyleSheet("font-size:23px;margin-bottom:6px")
         packs.addWidget(heading)
         self.cards: dict[str, PackCard] = {}
         for profile in load_profiles():
@@ -71,6 +71,7 @@ class Dashboard(QWidget):
 
     def _account_panel(self) -> QFrame:
         account = QFrame()
+        account.setObjectName("accountPanel")
         account.setProperty("panel", True)
         account.setMinimumWidth(265)
         account.setMaximumWidth(300)
@@ -80,6 +81,9 @@ class Dashboard(QWidget):
         self.greeting.setObjectName("greeting")
         self.greeting.setStyleSheet("font-size:21px")
         panel.addWidget(self.greeting)
+        caption = QLabel("Ваш персонаж")
+        caption.setProperty("muted", True)
+        panel.addWidget(caption)
         self.skin_preview = SkinView()
         panel.addWidget(self.skin_preview, 1)
         self.upload_button = BusyButton("Загрузить скин…")

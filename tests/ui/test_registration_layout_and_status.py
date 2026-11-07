@@ -76,6 +76,29 @@ def test_nickname_typing_accepts_legacy_java_alphabet_and_limits_length(window):
         )
 
 
+def test_small_registration_scrolls_instead_of_clipping_input_text(qtbot, window):
+    window.auth_tabs.setCurrentIndex(1)
+    window.resize(1020, 680)
+    qtbot.waitUntil(lambda: window.height() == 680)
+    for edit in (
+        window.signup_name,
+        window.signup_password,
+        window.signup_repeat,
+        window.invitation,
+    ):
+        assert edit.height() >= edit.sizeHint().height()
+    assert window.register_button.height() >= window.register_button.sizeHint().height()
+    window.auth_page.ensureWidgetVisible(window.register_button, 0, 8)
+    viewport = window.auth_page.viewport()
+    qtbot.waitUntil(
+        lambda: viewport.rect().contains(
+            window.register_button.mapTo(
+                viewport, window.register_button.rect().bottomRight()
+            )
+        )
+    )
+
+
 def test_online_poll_is_coalesced_and_unavailable_does_not_show_zero(qtbot, window):
     window._authenticated(window.service.login("test_player", "test-password"))
     release = threading.Event()
