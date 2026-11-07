@@ -276,6 +276,7 @@ def client_reports(config, args):
 def add_admin_commands(sub):
     from omk.account_recovery import add_recovery_parser  # noqa: PLC0415
     from omk.admin_backups import add_backup_parser  # noqa: PLC0415
+    from omk.admin_resource_reset import add_resource_reset_parser  # noqa: PLC0415
     from omk.admin_restores import add_restore_parser  # noqa: PLC0415
 
     admin = sub.add_parser(
@@ -286,6 +287,7 @@ def add_admin_commands(sub):
     add_recovery_parser(actions)
     add_backup_parser(actions)
     add_restore_parser(actions)
+    add_resource_reset_parser(actions)
     login = actions.add_parser(
         "login", help="Save a separate Drasl operator API credential"
     )
@@ -315,19 +317,17 @@ def add_admin_commands(sub):
 
 def run_admin(args):
     config = None
-    operation = args.admin_action + (
-        ":" + args.access_action if args.admin_action == "access" else ""
-    )
-    if args.admin_action == "reports":
-        operation += ":" + args.reports_action
-    if args.admin_action == "recover-account":
-        operation += ":" + args.recovery_action
-    if args.admin_action in {"backups", "restores"}:
-        operation += ":" + (
-            args.backup_action
-            if args.admin_action == "backups"
-            else args.restore_action
-        )
+    operation = args.admin_action
+    suffix = {
+        "access": "access_action",
+        "reports": "reports_action",
+        "recover-account": "recovery_action",
+        "backups": "backup_action",
+        "restores": "restore_action",
+        "resource-resets": "resource_reset_action",
+    }.get(args.admin_action)
+    if suffix:
+        operation += ":" + getattr(args, suffix)
     try:
         config = load_operator_config(args.config)
         if args.admin_action == "login":
@@ -342,6 +342,10 @@ def run_admin(args):
             from omk.account_recovery import run_recovery  # noqa: PLC0415
 
             result = run_recovery(config, args)
+        elif args.admin_action == "resource-resets":
+            from omk.admin_resource_reset import run_resource_reset  # noqa: PLC0415
+
+            result = run_resource_reset(config, args)
         elif args.admin_action in {"backups", "restores"}:
             from omk.admin_backups import run_backups  # noqa: PLC0415
             from omk.admin_restores import run_restores  # noqa: PLC0415
