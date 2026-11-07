@@ -262,7 +262,7 @@ class SkinView(QWidget):
         delta = event.position() - self._drag_position
         self._drag_position = event.position()
         self._pitch = max(-45.0, min(35.0, self._pitch + delta.y() * 0.35))
-        self.set_angle(self._angle + delta.x() * 0.65)
+        self.set_angle(self._angle - delta.x() * 0.65)
         event.accept()
 
     @override
