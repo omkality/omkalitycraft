@@ -49,9 +49,10 @@ def _names(values, known):
 
 
 def _team(current, target, known, *, fake=False):
-    owner = _tag(current, "Owner", 8)
-    if not (fake and owner == "FakeForgePlayer"):
-        _names([owner], known)
+    if "Owner" in current or _tag(current, "Type", 8) != "server":
+        owner = _tag(current, "Owner", 8)
+        if not (fake and owner == "FakeForgePlayer"):
+            _names([owner], known)
     players = _tag(current, "Players", 10)
     _names(players, known)
     if any(

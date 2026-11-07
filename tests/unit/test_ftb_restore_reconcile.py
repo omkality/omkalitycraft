@@ -76,6 +76,25 @@ def test_current_revocation_and_historical_homes_are_both_preserved(snapshots):
     assert snapshots == original
 
 
+def test_ownerless_server_team_transfers_current_rules_without_old_owner(snapshots):
+    current, historical = snapshots
+    for snapshot in snapshots:
+        snapshot["teams/base.dat"]["Type"] = Tag(8, "server")
+    del current["teams/base.dat"]["Owner"]
+    current["teams/base.dat"]["Data"].value["ftbutilities"].value["EditBlocks"] = Tag(
+        8, "none"
+    )
+    original = copy.deepcopy(snapshots)
+    result = merge.merged_records(current, historical)
+    assert "Owner" not in result["teams/base.dat"]
+    assert not result["teams/base.dat"]["Players"].value
+    assert result["teams/base.dat"]["Data"].value["ftbutilities"].value[
+        "EditBlocks"
+    ] == Tag(8, "none")
+    assert gate.compare(current, result)["compatible"]
+    assert snapshots == original
+
+
 @pytest.mark.parametrize(
     "change", ["member", "owner", "mod", "invite", "open", "fake", "rule", "fake-team"]
 )
