@@ -7,8 +7,8 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
 - Track actionable bugs and open work in GitHub Issues; inspect existing issues to avoid duplicates.
   Use the DJ2 launch milestone/tracker #41, priorities and concrete acceptance criteria.
   Link PRs to issues and close only the scope actually implemented and tested; DEVELOPMENT.md
-  keeps decisions/evidence, rather than a second full backlog. Keep detailed security reproductions
-  and private Core sources outside public issues.
+  keeps decisions/evidence, rather than a second full backlog. Keep detailed unfinished security
+  reproductions and raw private lab data outside public issues.
 - Keep the launcher simple: nickname, chosen password with confirmation, one-use invitation,
   remembered revocable game session. Never persist account passwords in the launcher.
   Authentication belongs to Drasl + authlib-injector. Do not restore Telegram or custom password security.
@@ -18,8 +18,9 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
   Do not claim that portable files are encrypted or protected from the user's own processes.
 - Python owns launcher/API/operations; version-specific Forge integration uses adapters and Java as needed.
   Use FTB/ServerUtilities for claims and available commands. Keep pack logic outside GUI code.
-- Never commit `.env`, session tokens, keys, account databases, worlds, modpack payloads or OmkalityCore.
-  OmkalityCore is outside this public repository by the user's explicit choice.
+- Never commit `.env`, session tokens, keys, account databases, worlds or modpack payloads.
+  The user authorized owned mod sources under `mods/`. The old `../omkalitycore` Git history,
+  native security lab and raw validation stay private; do not import that directory wholesale.
 - Use temporary test data and isolated lab containers. No tests against existing player data.
   Do not delete/wipe worlds, reset schemas or flush live services.
 - Do not claim a profile, security control or mod works before the relevant real test passes.
