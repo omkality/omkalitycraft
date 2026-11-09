@@ -12,6 +12,7 @@ __pycache__/
 data/
 client/
 launcher/
+mods/
 userdata/
 .local/
 .omk-admin/
