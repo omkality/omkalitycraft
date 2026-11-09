@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "issue": 128,
+  "status": "native-main-acceptance-lifecycle-pending",
+  "pack": "Divine Journey 2 2.23.4",
+  "forge": "1.12.2-14.23.5.2860",
+  "mekanism": {
+    "version": "9.8.3.390",
+    "sha256": "17573e0c3b2ff9d071a719a06a84c8cd89ca26d1ea3bd7f6e9f3842c4df88ea1",
+    "source": "profiles/server-defaults/dj2/reset-preflight.json"
+  },
+  "components": {
+    "core": {
+      "version": "0.3.5",
+      "file": "OmkalityCore-0.3.5.jar",
+      "sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1"
+    },
+    "dj2fix": {
+      "version": "0.1.4",
+      "file": "OmkalityDJ2Fix-0.1.4.jar",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client": {
+      "version": "0.1.1",
+      "file": "OmkalityClient-0.1.1.jar",
+      "sha256": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+    }
+  },
+  "baseline_red": {
+    "version": "0.1.3",
+    "real_forge": true,
+    "independent_checks": 28,
+    "insufficient_server_condition_reproduced": true
+  },
+  "native_main": {
+    "ok": true,
+    "checks": 65,
+    "independent_checks": 91,
+    "security_acceptance": true,
+    "non_op_survival": true,
+    "both_hands": true,
+    "public_frequency": true,
+    "world_unload_reload": true,
+    "unchanged_inventory_on_refusal": true,
+    "native_cost_preserved": true,
+    "clean_server_exit": true,
+    "oom_killed": false,
+    "owned_game_volume_removed": true,
+    "owned_auth_removed": true
+  },
+  "lifecycle": {
+    "accepted": false,
+    "status": "pending"
+  },
+  "build": {
+    "schema": 1,
+    "ok": true,
+    "rounds": [
+      {
+        "core": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1",
+        "dj2fix": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b",
+        "client": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+      },
+      {
+        "core": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1",
+        "dj2fix": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b",
+        "client": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+      }
+    ],
+    "matches_accepted_jars": true,
+    "class_counts": {
+      "core": 30,
+      "dj2fix": 26,
+      "client": 11
+    },
+    "graphical_or_gameplay_test": false
+  },
+  "windows_unit_ui": {
+    "passed": 1324,
+    "skipped": 12,
+    "offscreen": true
+  },
+  "environment": {
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "server_heap_bytes": 4294967296,
+    "container_memory_bytes": 6442450944,
+    "cpus": 4,
+    "graphical_client": false,
+    "hard_pvp_acceptance": false
+  },
+  "owner_reset_enabled": false,
+  "ready_for_players": false,
+  "limits": [
+    "Server-condition adapter, not a complete Mekanism/protocol audit",
+    "Native restart/reset compatibility is pending",
+    "No working worlds, player manifests or player releases changed"
+  ]
+}

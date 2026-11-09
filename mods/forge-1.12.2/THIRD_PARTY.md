@@ -5,6 +5,12 @@
 [`build-tools.json`](build-tools.json): Eclipse ECJ, Minecraft Forge, FTBLib,
 MixinBooter и Log4j API. Права и лицензии этих проектов сохраняются за авторами.
 
+Серверные адаптеры используют установленные моды сборки без их включения в наши
+JAR. В частности, для переносимого телепортера закреплён Mekanism 9.8.3.390 из
+официального server pack DJ2 2.23.4; источник и SHA256 архива/мода сохранены в
+`profiles/server-defaults/dj2/reset-preflight.json`, точный runtime SHA256 — также
+в `packs/dj2/resources/adapters/dj2-artifacts.properties`.
+
 Log4j API 2.15.0 соответствует compile-time API в manifest закреплённого Forge;
 Log4j Core не загружается этой сборкой. Это не установка или понижение версии
 логирования работающего Minecraft-сервера.
