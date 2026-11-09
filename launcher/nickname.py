@@ -70,9 +70,15 @@ class NicknameField(QLineEdit):
         point = self.mapToGlobal(QPoint(0, self.height() + 6))
         screen = QGuiApplication.screenAt(point) or self.screen()
         available = screen.availableGeometry().adjusted(8, 8, -8, -8)
-        self.notice.setMaximumWidth(min(480, available.width()))
         self.notice.setText(self.notice_text)
-        self.notice.adjustSize()
+        self.notice.ensurePolished()
+        width = min(
+            480,
+            available.width(),
+            self.notice.fontMetrics().horizontalAdvance(self.notice_text) + 26,
+        )
+        self.notice.setFixedWidth(width)
+        self.notice.resize(width, self.notice.heightForWidth(width))
         self.notice.move(
             min(
                 max(point.x(), available.left()),
