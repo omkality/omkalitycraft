@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -123,6 +124,59 @@ def test_bad_file_hash_never_becomes_installed(repository, tmp_path: Path):
         with pytest.raises(ReleaseError):
             installer.install(installer.client.fetch("dj2"), lambda _: None)
         assert installer.local_state("dj2")["state"] == "incomplete"
+
+
+@pytest.mark.parametrize("replacement_name", ["old.jar", "new.jar"])
+def test_unmanaged_discovery_cache_survives_check_repair_and_pack_update(
+    repository, tmp_path: Path, replacement_name: str
+):
+    root, files, envelope, keys, key = repository
+    with serve(root) as (url, requests):
+        installer = Installer(tmp_path / "portable", ReleaseClient(url, keys))
+        release = installer.client.fetch("dj2")
+        folder = installer.install(release, lambda _: None)
+        cache = folder / "vintagefix/transformerCache/jarDiscoverer.cache"
+        cache.parent.mkdir(parents=True)
+        # A byte sentinel tests ownership, not VintageFix's binary cache parser.
+        sentinel = b"local runtime cache owned by the mod"
+        cache.write_bytes(sentinel)
+        requests.clear()
+        installer.install(release, lambda _: None)
+        assert requests == []
+        assert cache.read_bytes() == sentinel
+
+        (folder / "mods/old.jar").unlink()
+        installer.install(release, lambda _: None)
+        assert len(requests) == 1
+        assert (folder / "mods/old.jar").read_bytes() == (
+            files / "mods/old.jar"
+        ).read_bytes()
+        assert cache.read_bytes() == sentinel
+
+        os.utime(folder / "mods/old.jar", (1, 1))
+        if replacement_name != "old.jar":
+            (files / "mods/old.jar").unlink()
+        (files / "mods" / replacement_name).write_bytes(b"new reviewed mod version")
+        updated = build_release(
+            files,
+            pack_id="dj2",
+            version="2.0",
+            minecraft="1.12.2",
+            platform=current_platform(),
+            launch=envelope["manifest"]["launch"],
+            key=key,
+        )
+        (files.parent / "manifest.json").write_text(json.dumps(updated))
+        updated_release = installer.client.fetch("dj2")
+        requests.clear()
+        installer.install(updated_release, lambda _: None)
+        assert len(requests) == 1
+        if replacement_name != "old.jar":
+            assert not (folder / "mods/old.jar").exists()
+        installed = folder / "mods" / replacement_name
+        assert installed.read_bytes() == b"new reviewed mod version"
+        assert installed.stat().st_mtime_ns != 1_000_000_000
+        assert cache.read_bytes() == sentinel
 
 
 def test_deleted_files_and_same_size_corruption_repair_without_resetting_maps(
