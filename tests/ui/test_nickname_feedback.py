@@ -120,6 +120,16 @@ def test_overlong_clipboard_input_reports_length_and_never_exceeds_limit(window)
     assert edit.notice_timer.isActive() and "16" in QToolTip.text()
 
 
+def test_leaving_nickname_cancels_queued_keyboard_notice(qtbot, window):
+    edit = window.login_name
+    edit.setFocus()
+    qtbot.keyClicks(edit, "!")
+    window.login_password.setFocus()
+    QApplication.processEvents()
+    assert not edit.notice_timer.isActive()
+    assert window.login_password.hasFocus()
+
+
 @pytest.mark.parametrize("notice", [False, True])
 def test_tooltip_background_has_transparent_corners(qtbot, window, notice):
     edit = window.login_name
