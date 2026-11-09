@@ -7,6 +7,7 @@ import pytest
 from omk import admin_resource_reset as owner
 from omk.admin import AdminError
 from omk.cli import main
+from omk.resource_reset_preflight import settings as preflight_settings
 from tests.unit.test_operator_commands import config
 
 TARGET = {
@@ -14,6 +15,32 @@ TARGET = {
     "store_volume": "store-not-mounted",
     "world": "world",
 }
+
+
+def test_preflight_cli_uses_owner_lock_and_validated_policy(
+    controller, capsys, monkeypatch
+):
+    _settings, path, worker = controller
+    monkeypatch.setenv("OMK_RESET_LANDING_RADIUS", "7")
+    assert (
+        main(
+            [
+                "admin",
+                "--config",
+                str(path),
+                "resource-resets",
+                "inspect",
+                "--server",
+                "dj2",
+                "--dimension",
+                "-18000",
+                "--preflight",
+            ]
+        )
+        == 0
+    )
+    assert json.loads(capsys.readouterr().out)["can_apply"] is False
+    assert worker.call_args.kwargs["preflight_options"]["landing_radius"] == 7
 
 
 def reply():
@@ -133,6 +160,54 @@ def test_worker_is_networkless_readonly_and_never_mounts_store_or_docker_socket(
     assert all("store-not-mounted" not in v and "docker.sock" not in v for v in mounts)
     assert "--publish" not in args and "--privileged" not in args
     assert json.loads(kwargs["stdin"])["world_max_bytes"] == 123456
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        None,
+        "schema",
+        "adapter",
+        "policy",
+        "dimension",
+        "world_inventory_sha256",
+        "world_changes",
+        "ready_for_start",
+        "portal_adapters_reviewed",
+    ],
+)
+def test_preflight_worker_response_preserves_readonly_identity(monkeypatch, fault):
+    options = preflight_settings({})
+    value = reply()
+    proof = {
+        "schema": 1,
+        "adapter": "dj2-2.23.4-forge112-reset-preflight-v1",
+        "policy": options,
+        "dimension": -18000,
+        "world_inventory_sha256": value["world_inventory_sha256"],
+        "world_changes": False,
+        "ready_for_start": False,
+        "portal_adapters_reviewed": False,
+    }
+    if fault:
+        proof[fault] = "invalid"
+    value["preflight"] = proof
+    docker = Mock(return_value=json.dumps({"ok": True, "result": value}))
+    monkeypatch.setattr(owner.backups, "docker", docker)
+    if fault:
+        with pytest.raises(AdminError, match="preflight"):
+            owner.worker(
+                TARGET, -18000, owner.backups.settings({}), preflight_options=options
+            )
+    else:
+        assert (
+            owner.worker(
+                TARGET, -18000, owner.backups.settings({}), preflight_options=options
+            )
+            == value
+        )
+        query = json.loads(docker.call_args.kwargs["stdin"])
+        assert query["action"] == "preflight" and query["options"] == options
 
 
 @pytest.mark.parametrize(

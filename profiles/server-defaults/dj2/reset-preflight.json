@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "adapter": "dj2-2.23.4-forge112-reset-preflight-v1",
+  "artifact_inventory": "profiles/upgrade-inputs/dj2-2.23.4-client.json",
+  "source_archive": "https://github.com/Divine-Journey-2/Divine-Journey-2/releases/download/2.23.4/Divine_Journey_2.23.4_Server_Pack.zip",
+  "source_archive_sha256": "692c820a636ab59a050ba560235e3af9852f598d18f5dad931271e4cbd729831",
+  "artifacts": {
+    "mcjtylib-1.12-3.5.4.jar": "af7d2b3c421329e7b97202302a072867e7c9bd73c5b8fab9bdb3a76fbfe474e3",
+    "rftools-1.12-7.73.jar": "558c38d0f7852d17a03aef81e4bd6cc2f28e60db8a8749c710c9ee829f2de0a4",
+    "Mekanism-1.12.2-9.8.3.390.jar": "17573e0c3b2ff9d071a719a06a84c8cd89ca26d1ea3bd7f6e9f3842c4df88ea1",
+    "enderutilities-1.12.2-0.7.15.jar": "c0a604aac57853f76f16e21958b02f4d6adbc543c20dda67eb1088ca91ba618c",
+    "WR-CBE-1.12.2-2.3.2.33-universal.jar": "a8305c42e29f43abbad906c3c91c36ed0a1a6f949ff2bff9eec66499fb57f36e"
+  },
+  "nonportal_binary_patterns": [
+    "(?:[^/]+/)?RedstoneEther/(?:fmap|node[12])\\.dat",
+    "RedstoneEther/(?:dimMap|fprop|gprop)\\.dat"
+  ]
+}
