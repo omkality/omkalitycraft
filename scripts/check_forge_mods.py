@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -50,6 +51,8 @@ def main():
             "--network",
             "none",
             "--read-only",
+            "--user",
+            f"{os.getuid()}:{os.getgid()}" if os.name == "posix" else "0:0",
             "--cap-drop",
             "ALL",
             "--security-opt",

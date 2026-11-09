@@ -2,6 +2,8 @@
 
 import hashlib
 import io
+import os
+import stat
 import tempfile
 import unittest
 import zipfile
@@ -72,6 +74,16 @@ class BuildSafetyTests(unittest.TestCase):
         )
         self.assertEqual(result.read_bytes(), self.data)
         self.assertEqual([p.name for p in self.root.iterdir()], ["input.jar"])
+
+    @unittest.skipUnless(os.name == "posix", "POSIX bind-mount permission contract")
+    def test_public_compile_input_is_readable_across_container_users(self):
+        result = ensure_input(
+            "compiler",
+            self.root,
+            self.pins,
+            opener=Mock(return_value=Response(self.data)),
+        )
+        self.assertEqual(stat.S_IMODE(result.stat().st_mode), 0o644)
 
     def test_corrupt_download_leaves_no_usable_artifact(self):
         with self.assertRaisesRegex(ValueError, "Downloaded dependency hash mismatch"):
