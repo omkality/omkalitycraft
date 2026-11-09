@@ -1,0 +1,235 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "status": "accepted-isolated-native-rftools-transport-and-reset-controls",
+  "scope": {
+    "pack": "Divine Journey 2 2.23.4",
+    "loader": "Forge 1.12.2 / 14.23.5.2860",
+    "real_minecraft_server": true,
+    "protocol_player_actions": true,
+    "gameplay_actor_op_granted": false,
+    "graphical_client": false,
+    "production_data_changed": false,
+    "owner_wipe_enabled": false,
+    "ready_for_players": false
+  },
+  "artifacts": {
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "core_version": "0.3.5",
+    "pack_fix_version": "0.1.3",
+    "core_sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1",
+    "pack_fix_sha256": "9063ad85f144c93dddf9282f0b67cc369488773dea8a4a094e7400452ec61eaa",
+    "mods_sha256": {
+      "mcjtylib-1.12-3.5.4.jar": "af7d2b3c421329e7b97202302a072867e7c9bd73c5b8fab9bdb3a76fbfe474e3",
+      "rftools-1.12-7.73.jar": "558c38d0f7852d17a03aef81e4bd6cc2f28e60db8a8749c710c9ee829f2de0a4",
+      "Mekanism-1.12.2-9.8.3.390.jar": "17573e0c3b2ff9d071a719a06a84c8cd89ca26d1ea3bd7f6e9f3842c4df88ea1",
+      "enderutilities-1.12.2-0.7.15.jar": "c0a604aac57853f76f16e21958b02f4d6adbc543c20dda67eb1088ca91ba618c",
+      "WR-CBE-1.12.2-2.3.2.33-universal.jar": "a8305c42e29f43abbad906c3c91c36ed0a1a6f949ff2bff9eec66499fb57f36e"
+    },
+    "test_only_probe_sha256": "34243ff6c84d4e801d01c3149c7bba7469b7d1290482982918d8800439b7c056",
+    "private_fixture_source_sha256": {
+      "rftools_transport_lab.py": "3b897e0084e62d4fa6b16728d389b6f3a64f064308aa96437bb18c43f9c6ed7c",
+      "audit_rftools_transport.py": "f2a70fbc15f6fb412cea3fc5065c134f97560a085e7da4a68f72569700144113",
+      "build_portal_transport_probe.py": "f71cc8d76df914ae8131f51102a84226508e0679096473ce2e690afc57ceb5cb"
+    },
+    "profile_sha256": "ef0a9b09d3ac3380c7c21721646e2ff6bb975e1d5d0895dc03a9a004f71612e6"
+  },
+  "native": {
+    "conditions": 45,
+    "labels": [
+      "native_setup_healthy",
+      "real_transmitter_dials_real_resource_receiver",
+      "native_getDrops_keeps_receiver_id_in_block_item",
+      "native_state_healthy",
+      "real_beam_teleport_reaches_resource_without_damage",
+      "native_state_healthy",
+      "native_basic_porter_refuses_interdim_cost_without_consuming_charge",
+      "native_state_healthy",
+      "real_porter_use_returns_to_main_and_consumes_energy",
+      "with-links_clean_stop",
+      "saved_world_selects_landing",
+      "preflight_detects_real_receiver_block_item",
+      "native_registry_and_bound_items_block_auto_reset",
+      "native_state_healthy",
+      "physical_devices_keep_ids_and_dial_across_restart",
+      "native_forget_healthy",
+      "registry_removal_leaves_loaded_receiver_and_orphaned_sender",
+      "native_state_healthy",
+      "unchanged_cached_receiver_does_not_spontaneously_reregister",
+      "native_restore-drop_healthy",
+      "native_restored_block_item_reassigns_old_id_to_new_world",
+      "native_clear_healthy",
+      "fixture_unlinks_transmitter_and_retained_receiver_item",
+      "unlink_preserves_both_resource_porter_energy_values",
+      "advanced_porter_keeps_main_world_target",
+      "clean-source_clean_stop",
+      "native_unlinked_source_passes_known_link_gate",
+      "stage_resolves_auto_position_from_same_verified_source",
+      "auto_stage_receipt_reverified",
+      "only_new_candidate_receives_runtime_copy",
+      "real_offline_player_uses_auto_selected_safe_landing",
+      "native_state_healthy",
+      "old_physical_resource_receiver_not_restored_after_reset",
+      "both_main_receivers_keep_native_ids_after_reset",
+      "native_state_healthy",
+      "native_actor_ready_before_protected_placement",
+      "native_state_healthy",
+      "ftb_claims_deny_block_placement_inside_server_spawn",
+      "native_state_healthy",
+      "native_actor_ready_before_wilderness_placement",
+      "native_state_healthy",
+      "normal_block_placement_of_unlinked_drop_allocates_fresh_id",
+      "native_redial-main_healthy",
+      "native_state_healthy",
+      "real_transmitter_still_teleports_to_main_receiver_after_reset"
+    ],
+    "full_forge_starts": 3,
+    "clean_stops": 3,
+    "oom_killed": false,
+    "crash_markers": false,
+    "memory_limit_bytes": 6442450944,
+    "nano_cpus": 4000000000,
+    "fixture_mode": "Creative/peaceful/no mob spawning for deterministic actions only; no deployment PvP/Hard acceptance claimed",
+    "known_links_before": 6,
+    "known_links_after": 0,
+    "landing": {
+      "found": true,
+      "schema": 1,
+      "kind": "forge112-saved-vanilla-floor-air-server-claim",
+      "position": [
+        11,
+        72,
+        254
+      ],
+      "saved_spawn": [
+        16,
+        64,
+        248
+      ],
+      "chunks_read": 6,
+      "radius": 16,
+      "vertical": 8,
+      "max_chunks": 32,
+      "world_changes": false,
+      "generation": false,
+      "native_revalidation_required": true
+    },
+    "receiver_block_item_and_physical_sender_detected": true,
+    "basic_porter_capacity_rf": 20000,
+    "advanced_porter_capacity_rf": 1000000,
+    "configured_interdimensional_porter_cost_rf": 150000,
+    "claim_block_placement_denied": true,
+    "wilderness_block_placement_allocates_new_id": true
+  },
+  "independent_saved_data": {
+    "ok": true,
+    "checks": [
+      "regular_archive_with-links",
+      "regular_archive_clean-source",
+      "regular_archive_auto-staged",
+      "regular_archive_world-after",
+      "one_actor_bound",
+      "one_actor_unlinked",
+      "one_actor_staged",
+      "one_actor_restarted",
+      "same_account_survives_stage_and_restart",
+      "actual_native_receiver_drop_item",
+      "native_block_drop_stores_resource_receiver_id",
+      "only_reviewed_resource_item_bindings_changed",
+      "main_porter_nbt_unchanged",
+      "advanced_porter_main_target_preserved",
+      "resource_porter_charge_preserved",
+      "receiver_drop_charge_preserved",
+      "stage_preserves_exact_inventory_nbt",
+      "creative_native_placement_preserves_carried_item_nbt",
+      "three_real_receiver_registry_rows",
+      "unbind_keeps_counter_and_only_main_destinations",
+      "both_main_destination_rows_preserved",
+      "data_stage_preserves_registry_bytes_semantics",
+      "fresh_placement_never_reuses_removed_id",
+      "new_id_belongs_to_normally_placed_main_receiver",
+      "native_restart_keeps_original_main_registry_rows",
+      "physical_resource_receiver_saved_with_same_id",
+      "physical_sender_saved_resource_dial",
+      "native_cleared_sender_has_no_old_target",
+      "native_sender_redialed_to_main_after_reset",
+      "all_main_physical_receiver_ids_match_registry",
+      "unused_main_receiver_charge_unchanged",
+      "old_resource_directory_excluded_from_candidate",
+      "offline_player_evacuated_to_main",
+      "offline_player_uses_frozen_landing",
+      "final_player_saved_at_actual_main_receiver",
+      "every_other_retained_world_file_unchanged",
+      "native_fixture_does_not_enable_owner_wipe"
+    ],
+    "counts": {
+      "with_links_files": 318,
+      "clean_files": 340,
+      "staged_files": 321,
+      "final_files": 340,
+      "unchanged_retained_files": 319
+    },
+    "archives_sha256": {
+      "with-links.tar": "f64f4c0c01ffcd1307e79d1ae17ea318a94bc65a909e3283039020ec38c68ed5",
+      "clean-source.tar": "7ec4f9f27ff794206a522c8a07e79444316c361c947374510d1c482d50b71e18",
+      "auto-staged.tar": "833299af7335ecef31a0dc846e793b4d0795b13c2ab0772d6d1977529dcd1be2",
+      "world-after.tar": "6660ed06a89a35ea1077fe65569dc0bfb6a478748b1701c8ab1b3c2a035f44ea"
+    }
+  },
+  "verification": {
+    "windows_unit_ui": {
+      "passed": 1322,
+      "skipped": 12,
+      "warnings": 3
+    },
+    "focused_windows": {
+      "passed": 115
+    },
+    "linux_docker_saved_data_worker_fault_controls": {
+      "passed": 55
+    },
+    "red_green_regressions": [
+      "Receiver item destinationId with and without its registry",
+      "Legitimate unbound -1 vs unresolved transmitter dial",
+      "Missing/unbound porter target with a leftover tpTimer"
+    ],
+    "ruff_black_diff_check": true
+  },
+  "cleanup": {
+    "ok": true,
+    "native_scopes": [
+      "ff2d32a6bdc5",
+      "3d8056e1b25b",
+      "2fa4520ffd76",
+      "ec6d0c72f7fd",
+      "b4552ec31d4c",
+      "327d2eb36d45"
+    ],
+    "game_volumes_removed": 12,
+    "auth_volumes_removed": 6,
+    "late_diagnostic_empty_volume_removed": true,
+    "diagnostic_lifecycle_race_excluded_from_operator_policy_evidence": true,
+    "unrelated_projects_changed": false
+  },
+  "excluded_attempts": [
+    "Reused generation fixture required the resource-lab flag; initial startup refusal excluded.",
+    "Reflection over a mod item loaded a client-only tooltip signature; test-only observer corrected to common-side APIs, and catches LinkageError. Not a player-triggered pack failure.",
+    "A basic porter was incorrectly expected to cross dimensions; confirmed 20000 RF capacity vs 150000 RF native cost, then tested the proper expected refusal and advanced porter success.",
+    "One early placement snapshot was inconclusive; another run with OP legitimately allowed placement and invalidated the claim-denial expectation. Final run used no OP grant and explicit native readiness before input.",
+    "A late diagnostic raced completed fixture cleanup and recreated an empty unnamed-label volume; verified empty and removed, and excluded from operator-list evidence."
+  ],
+  "limits": [
+    "Selective unbind performed by gated private fixture only; no production transport mutation adapter or owner wipe",
+    "Native getDrops creates a controlled stack; no player duplication exploit reproduced",
+    "Other RFTools dialers, private receiver access, every bag/capability and other mod portal networks remain unreviewed",
+    "Incomplete porter timer danger and -1 sentinel distinctions have synthetic regression coverage plus installed native serializer inspection",
+    "No graphical client or cross-platform Minecraft gameplay acceptance",
+    "Global empty operator-list policy is a deployment requirement; this fixture validates ordinary actor claim behavior and does not attest every server account list",
+    "Online evacuation, maintenance/start barrier and interrupted owner recovery remain open"
+  ],
+  "decisions": {
+    "administration": "No OP for player accounts, including the owner; console/owner operations only",
+    "rust_tui": "Later idea for an owner-only interface over shared omk operations; no implementation started"
+  }
+}
