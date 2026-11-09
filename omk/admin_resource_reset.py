@@ -9,6 +9,10 @@ from omk.admin import AdminError
 from omk.cold_backup_worker import digest
 from omk.profiles import PROJECT_ROOT
 from omk.resource_reset_inventory import validate_dimension
+from omk.resource_reset_preflight import (
+    options_checked,
+    settings as preflight_settings,
+)
 
 
 def _cleanup_failed_worker(name, operation):
@@ -38,7 +42,7 @@ def _cleanup_failed_worker(name, operation):
     backups.docker("rm", "--force", ids[0])
 
 
-def worker(target, dimension, settings):
+def worker(target, dimension, settings, *, preflight_options=None):
     operation = uuid4().hex
     name = "omk-resource-inspect-" + operation
     args = [
@@ -85,6 +89,8 @@ def worker(target, dimension, settings):
         "dimension": dimension,
         "world_max_bytes": settings["world_max_bytes"],
     }
+    if preflight_options is not None:
+        request.update(action="preflight", options=options_checked(preflight_options))
     try:
         raw = backups.docker(
             *args,
@@ -129,10 +135,25 @@ def worker(target, dimension, settings):
         or not re.fullmatch(r"[a-f0-9]{64}", value["world_inventory_sha256"])
     ):
         raise AdminError("Inspection worker returned a different source identity")
+    if preflight_options is not None:
+        proof = value.get("preflight")
+        if (
+            not isinstance(proof, dict)
+            or type(proof.get("schema")) is not int
+            or proof.get("schema") != 1
+            or proof.get("adapter") != "dj2-2.23.4-forge112-reset-preflight-v1"
+            or proof.get("world_changes") is not False
+            or proof.get("ready_for_start") is not False
+            or proof.get("portal_adapters_reviewed") is not False
+            or proof.get("policy") != preflight_options
+            or proof.get("dimension") != dimension
+            or proof.get("world_inventory_sha256") != value["world_inventory_sha256"]
+        ):
+            raise AdminError("Invalid read-only preflight identity/result")
     return value
 
 
-def inspect(config, server, dimension, environment=None):
+def inspect(config, server, dimension, environment=None, *, preflight=False):
     try:
         validate_dimension(dimension)
     except ValueError:
@@ -144,7 +165,10 @@ def inspect(config, server, dimension, environment=None):
         backups.local_engine()
         settings = backups.settings(environment)
         before = backups.checkpoint(target)
-        result = worker(target, dimension, settings)
+        kwargs = (
+            {"preflight_options": preflight_settings(environment)} if preflight else {}
+        )
+        result = worker(target, dimension, settings, **kwargs)
         if (
             backups.target_for(config, server) != target
             or backups.checkpoint(target) != before
@@ -163,7 +187,14 @@ def add_resource_reset_parser(actions):
     command = sub.add_parser("inspect")
     command.add_argument("--server", required=True)
     command.add_argument("--dimension", type=int, required=True)
+    command.add_argument(
+        "--preflight",
+        action="store_true",
+        help="Read saved landing geometry and known mod links; never wipe",
+    )
 
 
 def run_resource_reset(config, args):
-    return inspect(config, args.server, args.dimension)
+    return inspect(
+        config, args.server, args.dimension, preflight=getattr(args, "preflight", False)
+    )
