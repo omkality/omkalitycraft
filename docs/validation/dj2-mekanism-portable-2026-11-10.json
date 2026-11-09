@@ -2,7 +2,7 @@
   "schema": 1,
   "date": "2026-11-10",
   "issue": 128,
-  "status": "native-main-acceptance-lifecycle-pending",
+  "status": "native-server-guard-and-restart-reset-accepted",
   "pack": "Divine Journey 2 2.23.4",
   "forge": "1.12.2-14.23.5.2860",
   "mekanism": {
@@ -50,8 +50,28 @@
     "owned_auth_removed": true
   },
   "lifecycle": {
-    "accepted": false,
-    "status": "pending"
+    "accepted": true,
+    "native_checks": 59,
+    "independent_checks": 62,
+    "starts": 3,
+    "portable_refusal_after_restart": true,
+    "portable_refusal_after_reset": true,
+    "charged_native_use_after_reset": true,
+    "separate_owners_and_main_network_preserved": true,
+    "old_resource_endpoint_absent": true,
+    "file_counts": [
+      325,
+      348,
+      329,
+      346
+    ],
+    "changed_at_stage_count": 2,
+    "unchanged_retained_files": 327,
+    "omitted_files": 19,
+    "clean_server_exit": true,
+    "oom_killed": false,
+    "owned_game_volumes_removed": true,
+    "owned_auth_removed": true
   },
   "build": {
     "schema": 1,
@@ -93,7 +113,14 @@
   "ready_for_players": false,
   "limits": [
     "Server-condition adapter, not a complete Mekanism/protocol audit",
-    "Native restart/reset compatibility is pending",
+    "Native server protocol tests, no new graphical client or Hard/PvP acceptance",
+    "Owner wipe/controller and other portal adapters remain in issue 32",
     "No working worlds, player manifests or player releases changed"
+  ],
+  "excluded_controls": [
+    "Candidate pilot kept the exact 0.1.3 fixture profile; rejected before game acceptance",
+    "Early extended control did not wait for the real spawn cooldown",
+    "Early lifecycle observer target unloaded during added checkpoint work; repeat used an authenticated witness",
+    "A fixture run was stopped before an invalid control path; corrected imports and lint checked before the accepted repeat"
   ]
 }
