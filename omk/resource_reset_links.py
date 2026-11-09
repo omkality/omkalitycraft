@@ -124,8 +124,10 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                 if (
                     context.startswith("rftools:")
                     and tag.kind == 3
+                    # Native receiver/porter -1 is unbound; transmitter destId is not.
+                    and not (tag.value == -1 and key != "destId")
                     and (
-                        key == "destId"
+                        key in {"destId", "destinationId"}
                         or (
                             "porter" in context
                             and re.fullmatch(r"target(?:[0-7])?", key)

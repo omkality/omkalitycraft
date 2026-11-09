@@ -374,6 +374,67 @@ def test_advanced_porter_slots_and_nested_item_containers_are_scanned(saved):
     assert len(matches) == 1 and matches[0]["nbt_path"].endswith("/target0")
 
 
+@pytest.mark.parametrize("registry_present", [True, False])
+def test_native_receiver_block_drop_keeps_a_receiver_id_and_must_be_reported(
+    saved, registry_present
+):
+    server, world, _, _ = saved
+    link_save(world)
+    if not registry_present:
+        (world / "data/TPDestinations.dat").unlink()
+    encoded(
+        world / "playerdata/block-drop.dat",
+        {
+            "Inventory": compound_list(
+                [
+                    {
+                        "id": Tag(8, "rftools:matter_receiver"),
+                        "tag": Tag(
+                            10,
+                            {
+                                "destinationId": Tag(3, 7),
+                                "Energy": Tag(4, 500000),
+                                "tpName": Tag(8, "keep name"),
+                            },
+                        ),
+                    }
+                ]
+            )
+        },
+    )
+    result = links.inspect_links(
+        server, "world", -18000, inventory(world, world_name="world")
+    )
+    rows = [r for r in result["examples"] if r["file"] == "playerdata/block-drop.dat"]
+    assert len(rows) == 1 and rows[0]["nbt_path"].endswith("/destinationId")
+    assert rows[0]["kind"] == (
+        "rftools.receiver-id" if registry_present else "rftools.unresolved-receiver-id"
+    )
+
+
+@pytest.mark.parametrize(
+    "item,key,expected",
+    [
+        ("matter_receiver", "destinationId", 0),
+        ("charged_porter", "target", 0),
+        ("advanced_charged_porter", "target7", 0),
+        ("matter_transmitter", "destId", 1),
+    ],
+)
+def test_native_unbound_minus_one_is_not_confused_with_a_stale_dial(
+    saved, item, key, expected
+):
+    server, world, _, _ = saved
+    encoded(
+        world / "data/sentinel.nbt",
+        {"id": Tag(8, "rftools:" + item), "tag": Tag(10, {key: Tag(3, -1)})},
+    )
+    result = links.inspect_links(
+        server, "world", -18000, inventory(world, world_name="world")
+    )
+    assert result["finding_count"] == expected
+
+
 def test_preflight_detects_concurrent_world_change(saved, monkeypatch):
     server, world, _, _ = saved
     original = preflight.inspect_links
