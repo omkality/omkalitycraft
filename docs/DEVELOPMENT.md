@@ -1,5 +1,23 @@
 # Разработка OmkalityCraft
 
+## Нативный restart после ресурсного сброса — 9 ноября 2026
+
+На новой копии из свежего backup полной DJ2 2.23.4 в Linux Docker прошли offline
+эвакуация, очистка ресурсных homes/warps/claims, сохранение основного мира, вещей,
+опыта и двух нативных retrieval-квестов; повторный restart и `/resource`/`/spawn`.
+Core 0.3.5 / DJ2Fix 0.1.3 не менялись. 107 условий (28 нового reset этапа),
+четыре штатных запуска, 39 независимых stopped TAR/NBT/QuestProgress проверок.
+352 → 331 файл, ровно пять рассмотренных изменений; 1445 иных claims сохранены,
+старый ресурсный player claim убран, новые 196 server claims спавна восстановлены.
+Ранние ошибки фикстуры исключены; три своих scopes/девять game volumes и три
+auth volumes очищены. Другие проекты и постоянный UI-preview не менялись.
+
+Это **не owner-wipe и не автоматическое разрешение старта**: safety произвольной
+точки/порталы/shared data, online-эвакуация и lifecycle/recovery ещё предстоят.
+Owner CLI inspect-only; `ready_for_players=false`. Нового backup writer нет.
+[Правила и границы проверки](RESOURCE_RESET_RESTART.md),
+[протокол](validation/dj2-resource-reset-restart-2026-11-09.json). #32 открыта.
+
 ## Оформление и новые решения — 8 ноября 2026
 
 По запросу владельца пробуем obsidian black + ice gray: Qt-палитра, форма входа,
