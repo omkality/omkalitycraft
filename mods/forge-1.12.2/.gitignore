@@ -1,0 +1,7 @@
+/tools/
+/build/
+__pycache__/
+*.jar
+/lab/
+/validation/
+*.log

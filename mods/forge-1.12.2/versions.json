@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "artifacts": {
+    "core": {
+      "version": "0.3.5",
+      "file": "OmkalityCore-0.3.5.jar",
+      "sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1"
+    },
+    "dj2fix": {
+      "version": "0.1.3",
+      "file": "OmkalityDJ2Fix-0.1.3.jar",
+      "sha256": "9063ad85f144c93dddf9282f0b67cc369488773dea8a4a094e7400452ec61eaa"
+    },
+    "client": {
+      "version": "0.1.1",
+      "file": "OmkalityClient-0.1.1.jar",
+      "sha256": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+    }
+  }
+}

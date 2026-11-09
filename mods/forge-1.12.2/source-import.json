@@ -1,0 +1,271 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "origin": "Clean source-only import; original Git history and native lab stay private",
+  "original_source_files_sha256_lf": [
+    {
+      "path": "build.py",
+      "sha256": "3a0508564f4e40b476d4fb589a7f0e8d31e05636d609412ded0aed85b8e60286"
+    },
+    {
+      "path": "client/abi/net/minecraft/network/INetHandler.java",
+      "sha256": "5fb8e00e6fdff1c3eabfe73d3e9bd21e480b1fdcdf4593b4675488d442d5e3fe"
+    },
+    {
+      "path": "client/abi/net/minecraft/network/NetworkManager.java",
+      "sha256": "0e3cab5bd0d80bf06f0b6a3ce5ca953abf9fbdf8849614590139b83244a468a7"
+    },
+    {
+      "path": "client/abi/net/minecraft/network/Packet.java",
+      "sha256": "8d27c53c01e12bcd246eb9c90436210ed23297672164ac2f646f400470aed3c3"
+    },
+    {
+      "path": "client/build.py",
+      "sha256": "1ae2b86df5007b4ec5dd5fe6aa1bc7c2c35e494d04565a07bda2637448433dd4"
+    },
+    {
+      "path": "client/resources/assets/omkalityclient/appearance/loading.png",
+      "sha256": "31589d0779be22bc013bae62074b41c55ee7e89203bc96554b3534c228546bd3"
+    },
+    {
+      "path": "client/resources/mixins.omkalityclient.appearance.json",
+      "sha256": "6e99a2174591bcc60b178270a83ad4367374cfbc54e8431fb3785da9d69b2397"
+    },
+    {
+      "path": "client/resources/mixins.omkalityclient.network.json",
+      "sha256": "d092e59ef653c339c12d76356f885b0b94081658f44463d66bfd0aa918f1844b"
+    },
+    {
+      "path": "client/src/net/omkality/client/ClientNetworkTasks.java",
+      "sha256": "280bba0bb5f100631e676a46f619604631bddef20b10ce39394ec63efe934ac7"
+    },
+    {
+      "path": "client/src/net/omkality/client/NetworkPacketBridge.java",
+      "sha256": "de346421d0d6404966a437ff21003b12b6d3725983e4280f3f70e4115d8a7297"
+    },
+    {
+      "path": "client/src/net/omkality/client/OmkalityClient.java",
+      "sha256": "ac3086a8a27ee67ff27d37a383544a7f4b1b37265ff8990ceebc88e531a879ad"
+    },
+    {
+      "path": "client/src/net/omkality/client/bootstrap/OmkalityClientLoader.java",
+      "sha256": "07caa48f167245efb7d76bbcf304afd260301107e78c74df75f14260b219adfb"
+    },
+    {
+      "path": "client/src/net/omkality/client/mixin/ForgeSplashLogoMixin.java",
+      "sha256": "909383144ae107dfc8bf0ad99ddcc9ee41f17edacbc5de2c1cfcded81d685192"
+    },
+    {
+      "path": "client/src/net/omkality/client/mixin/ForgeSplashTintMixin.java",
+      "sha256": "f257bda6745b408289dca6c02e32825137a9a228378863c59f518e5e5ee92a14"
+    },
+    {
+      "path": "client/src/net/omkality/client/mixin/MinecraftTaskMixin.java",
+      "sha256": "711cbf4062f793fa7630007bc90d4b5f0ef663564feb6bb2ba00646950ae3646"
+    },
+    {
+      "path": "client/src/net/omkality/client/mixin/NetworkManagerScopeMixin.java",
+      "sha256": "453b3a075a74123faa6baa8ee2c50cba5e92d41cabc677a2943d339ae4c5f8d7"
+    },
+    {
+      "path": "client/test/net/omkality/client/ClientNetworkTasksTest.java",
+      "sha256": "5e5ea31c965009bf4b953896c6f3d6e78b9fb1b0cfd9c40e91172953edae2589"
+    },
+    {
+      "path": "client/verify_targets.py",
+      "sha256": "f65a31f5155fea7a44ceed36a389dc753e71575db42a2b6ddb1cbe2c5c42a2f1"
+    },
+    {
+      "path": "integrations/ftb/src/net/omkality/ClaimTopology.java",
+      "sha256": "2255567328d9221d8674ad04471fd0839e88188d1defffdd0efa632c7342f7a2"
+    },
+    {
+      "path": "integrations/ftb/src/net/omkality/FtbClaimDomains.java",
+      "sha256": "9c7c8a424710593efd4c63c0c4787ae59b8f47fcb15dc8e112f0b55066043346"
+    },
+    {
+      "path": "integrations/ftb/src/net/omkality/FtbClaimGuard.java",
+      "sha256": "b8be73b0ec98e15700adbad55905d993b5117d1868c0960f643e56ff3c42c4c1"
+    },
+    {
+      "path": "integrations/ftb/src/net/omkality/FtbIntegration.java",
+      "sha256": "eee81f876d700ae2c65eb5ae400559ac2325b0ace483cf6a22240d77c7f50a5c"
+    },
+    {
+      "path": "integrations/ftb/src/net/omkality/FtbMuteGuard.java",
+      "sha256": "163c64a160222807189797d1e66763f9f95a0969ef46d69072136ea2194ca097"
+    },
+    {
+      "path": "integrations/ftb/src/net/omkality/FtbPlayerPlacement.java",
+      "sha256": "87c38c72b6ed261c89cd67a8b52b2fa975e39c98aeae7293dc9273c4a461158b"
+    },
+    {
+      "path": "integrations/ftb/src/net/omkality/FtbResourceWorld.java",
+      "sha256": "d78e94101bd339c6b83f0af37dacd10f2fb405a6c53995a80b5859f7e73b2c89"
+    },
+    {
+      "path": "integrations/ftb/src/net/omkality/FtbRtpGuard.java",
+      "sha256": "9748a42fefc338ebd024c06afc8ed6d60427d557aa48ab98026b294db8471afc"
+    },
+    {
+      "path": "integrations/ftb/src/net/omkality/FtbSpawnClaims.java",
+      "sha256": "e8ab5797574dbfbc309c5c89b5a1c400d34d8873b5531cad951429a4ab7459f4"
+    },
+    {
+      "path": "integrations/ftb/src/net/omkality/FtbTerritories.java",
+      "sha256": "ef48763400ca8e4af6df94ae38acaea58cc0d7d52a0d63aff1ddee36c50e986b"
+    },
+    {
+      "path": "packs/dj2/profile.properties",
+      "sha256": "aabd5ee4c0e7648a6f570912631dcb67f1c06c6c16e57a5be7f061031860c905"
+    },
+    {
+      "path": "packs/dj2/resources/adapters/dj2-artifacts.properties",
+      "sha256": "5f4d3333478a5fb70c186bd2b81d931b6c188cefd7e191f49c2e6768cfe1fb26"
+    },
+    {
+      "path": "packs/dj2/resources/mixins.omkalitydj2fix.ae2.json",
+      "sha256": "28e227a41ab29aa2f023520eb3a0b1cc1064ecac6077a607336b7e25b6c1d1ec"
+    },
+    {
+      "path": "packs/dj2/resources/mixins.omkalitydj2fix.twilight.json",
+      "sha256": "a821835b814155d8c814eaf9a675979899a4f0569d3fdcb8dbffa3e50a1d7300"
+    },
+    {
+      "path": "packs/dj2/resources/mixins.omkalitydj2fix.vanilla.json",
+      "sha256": "7e7551c0161f1d2b2794652a217d2ccaac31e8f4303f2df73f53e0b1a706f99e"
+    },
+    {
+      "path": "packs/dj2/resources/mixins.omkalitydj2fix.wrcbe.json",
+      "sha256": "7c8edf98dddf6c763781d346a351d56f693681b63c48478bc2b3868df50f6f61"
+    },
+    {
+      "path": "packs/dj2/src/net/omkality/dj2/OmkalityDJ2Fix.java",
+      "sha256": "7709fbd6522498303ddb751967a4b284059167d98d3211b3d1cadd8bc3cc701b"
+    },
+    {
+      "path": "packs/dj2/src/net/omkality/dj2/OmkalityEarlyMixinPlugin.java",
+      "sha256": "a4d870286baa68d0001d4d07bd9490958569a7745752d2095233dc91e50071ac"
+    },
+    {
+      "path": "packs/dj2/src/net/omkality/dj2/OmkalityMixinLoader.java",
+      "sha256": "98607e886761bbb425f852581d31f4192985f1c2d56819efa6bbd0c13f75fe2c"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/AePlaneGuard.java",
+      "sha256": "9ff6d38df92776a42d497f5cab6ab1a49c893013c734d61a7a7e8262f6234f20"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/ResourceGenerationGuard.java",
+      "sha256": "4b7088e260e7ef7628060f3a6a755d83e6a143aa58fe9ab4027c170574d16ff3"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/TwilightBeanGuard.java",
+      "sha256": "a7280bb9034bd40847a582cd5d8d6d838828f3ab75a3af5579b21f8d36e4b1eb"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/TwilightSortingGuard.java",
+      "sha256": "f33049fa7d2dcfa26765e6458c8d6ca6217132c835170b669d74b836fffa1c52"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/TwilightWorldEffectGuard.java",
+      "sha256": "18c97d49f9d5326ba4858ec083b3a0e8ba59f16edbf74ed6845efbfed5f37a90"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/VanillaBoundaryGuard.java",
+      "sha256": "ede7e1ba164888d2443e4ba5e37fbe706a11417e6183be24c90ed45387ae4266"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/VerifiedArtifacts.java",
+      "sha256": "9a46fad38034c36079909acce8c39943a86a2f6b0f61373075b54918e4d282f6"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/WrcbeShutdownGuard.java",
+      "sha256": "b3e9849576b0914c88db6bc937515d59e99591a14957b8f3999a17fdeea5906a"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/AeAnnihilationMixin.java",
+      "sha256": "b886d9be78d9ba9925cac32fb13c50019be54be06ec4127ca0ffa900138de795"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/AeFluidAnnihilationMixin.java",
+      "sha256": "c152fc5096a8defcdb06a60c815d955de84e3ad87aa54db283f24d435391caea"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/AeFluidFormationMixin.java",
+      "sha256": "10b66bc8dd412cdeecbd92320d6ece59e95b67f70440b5d8025331ab420c8e31"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/AeFormationMixin.java",
+      "sha256": "ab1288ea31c1fde68da27b506aedae385fd6d6752e615c123284bb71ac4e1ce9"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/AeIdentityMixin.java",
+      "sha256": "dc6f929e8600dd7d3d90a14b348ff86be9f13aab5ab0950ea9e1167300b43a55"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/TwilightBeanMixin.java",
+      "sha256": "1905f03fbfe4a2758401ca2ac8dcf2e7c646fc3b8ecf091a3d184024fa1852a2"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/TwilightSortingMixin.java",
+      "sha256": "1d6e902c702e34d6cbddfe28956016d099fd26ec37b1db57eb6ac207224a7a91"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/TwilightWorldEffectsMixin.java",
+      "sha256": "c6b9c3a68a68765ab38cc6e8104b16f4b9c18bd712429341b5ec2e54aee329c0"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/VanillaLiquidMixin.java",
+      "sha256": "1e3e3df3df185d2009aaac1e87320881951dfaad3c9c3403cb864dccab7e9321"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/VanillaMixingMixin.java",
+      "sha256": "1761c3966a5d20cd945c8f3ddd4dfa90ab11820de56376642fbb230ff45c1b4b"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/VanillaPistonMixin.java",
+      "sha256": "b6f2ac63cc2bd0f69e48dc9da58191bd08e568316ee8f9b33af539d6f50751a9"
+    },
+    {
+      "path": "patches/src/net/omkality/patches/mixin/WrcbeWorldTickMixin.java",
+      "sha256": "44752d5d3579d63f36190d156c8b8bbfeb79862ed3b21a9712ad70387934003a"
+    },
+    {
+      "path": "src/net/omkality/CommandCatalog.java",
+      "sha256": "ad0613ac57ba492643868a61790222a79e6efe5f22e90cc1935567749d4780a8"
+    },
+    {
+      "path": "src/net/omkality/OmkalityCore.java",
+      "sha256": "932a83d84d99b32ccfe736a20a29700571a76857016361411801d836948161d6"
+    },
+    {
+      "path": "src/net/omkality/OptionalIntegrations.java",
+      "sha256": "beaaf1388a5f82b2389d2ba84aba0a0c20e2e783051cc3928ba19b2d822415e6"
+    },
+    {
+      "path": "src/net/omkality/RecoveryConnections.java",
+      "sha256": "a8cd7c1ac95e7c832e4bc20ed22cc7313e822e48b1f6b9e1936cdbb73ba850c5"
+    },
+    {
+      "path": "src/net/omkality/ServerProfile.java",
+      "sha256": "9ae30989b5ea4b145763d4c9960b4b310a3d6a7e51cb1e27b9d9d6f7604c111e"
+    },
+    {
+      "path": "src/net/omkality/api/ClaimAccess.java",
+      "sha256": "14e9e8df03122c1a1fe6550f6e5e9f8f6a798ed5e3cf1646704c11551e16dc5e"
+    },
+    {
+      "path": "src/net/omkality/api/CoreServices.java",
+      "sha256": "b640ba97611f9ac336523e9baf5e9eeaf111b0313928260321fab95076656de8"
+    },
+    {
+      "path": "src/net/omkality/api/PlayerPlacementAccess.java",
+      "sha256": "fdaab4404583fd903c955f8ba73468f849908955f123c5972059eb718364a9f5"
+    },
+    {
+      "path": "src/net/omkality/api/ServerExtension.java",
+      "sha256": "a966f9062bef4d872d0865d657c8755a80e17e1e3992ee4c5ef97aa608b60757"
+    }
+  ]
+}
