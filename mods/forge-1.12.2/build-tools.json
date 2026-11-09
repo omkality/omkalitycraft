@@ -1,0 +1,40 @@
+{
+  "compiler": {
+    "name": "Eclipse JDT ECJ",
+    "version": "3.26.0",
+    "source": "https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.26.0/ecj-3.26.0.jar",
+    "sha256": "ac0ba5876eaf7ebb47749a0d1be179c51f194b9dd0b875d1c09e1b530f5a2db5",
+    "filename": "ecj-3.26.0.jar",
+    "download": "https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.26.0/ecj-3.26.0.jar"
+  },
+  "forge": {
+    "version": "1.12.2-14.23.5.2860",
+    "source": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2860/forge-1.12.2-14.23.5.2860-universal.jar",
+    "sha256": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "filename": "forge-1.12.2-14.23.5.2860-universal.jar",
+    "download": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2860/forge-1.12.2-14.23.5.2860-universal.jar"
+  },
+  "ftblib": {
+    "version": "5.4.7.2",
+    "source": "https://www.curseforge.com/minecraft/mc-mods/ftb-library-legacy-forge/files/2985811",
+    "sha256": "623fc574f0227fec6cc9e26c3879a605f9b4499c0078ff085291901a5495a6ac",
+    "filename": "FTBLib-5.4.7.2.jar",
+    "download": "https://mediafilez.forgecdn.net/files/2985/811/FTBLib-5.4.7.2.jar"
+  },
+  "mixinbooter": {
+    "version": "10.6",
+    "source": "https://github.com/CleanroomMC/MixinBooter/tree/05fc6c7b4b36a714c90eb4cc2f2364c681da0bc8",
+    "artifact_origin": "Existing DJ2 RU 2.21.3 mods/!mixinbooter-10.6.jar; no runtime upgrade",
+    "sha256": "c74998ccd73e6722b2b1f0d236c7b9c0b34572a892a3810d5e49557d96a356bd",
+    "filename": "mixinbooter-10.6.jar",
+    "download": "https://maven.cleanroommc.com/zone/rong/mixinbooter/10.6/mixinbooter-10.6.jar"
+  },
+  "log4j_api": {
+    "version": "2.15.0",
+    "filename": "log4j-api-2.15.0.jar",
+    "source": "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.15.0/log4j-api-2.15.0.jar",
+    "download": "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.15.0/log4j-api-2.15.0.jar",
+    "sha256": "c8c33e7e8e05496dae69cf0caac8c3092cffd937a164526e92922d2d566d0a55",
+    "scope": "Compile-only API from the pinned Forge manifest; no logging implementation is bundled or deployed"
+  }
+}
