@@ -48,7 +48,7 @@
     },
     "graphical_or_gameplay_test": false
   },
-  "build_safety_python_tests": 12,
+  "build_safety_python_tests": 13,
   "java_client_helper_conditions_per_build": 14,
   "forge_splash_abi_targets_per_build": 2,
   "secret_scan": {
@@ -74,5 +74,12 @@
     "Known issue 128 remains open; no server guard changed",
     "No deployed worlds, accounts, manifests or player releases changed",
     "No external JARs or old Git history published"
-  ]
+  ],
+  "linux_permissions_regression": {
+    "red_reproduced": true,
+    "green_passed": true,
+    "cause": "NamedTemporaryFile retained 0600 after verified promotion; no-capability Docker UID could not read it",
+    "fix": "Verified compile-only cache files promoted/repaired to 0644; Linux compiler runs with workspace UID/GID, restrictions unchanged",
+    "workspace_uid_output_control_passed": true
+  }
 }

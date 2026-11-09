@@ -54,6 +54,9 @@ def ensure_input(name, cache, pins, *, opener=urlopen, max_bytes=32 * 1024**2):
                     output.write(block)
             if digest.hexdigest() != pin["sha256"]:
                 raise ValueError("Downloaded dependency hash mismatch: " + name)
+        temporary.chmod(
+            0o644
+        )  # Public compile inputs must cross a Linux bind-mount UID boundary.
         os.replace(temporary, target)
         return target
     finally:
@@ -67,7 +70,10 @@ def main():
     args = parser.parse_args()
     pins = json.loads((ROOT / "build-tools.json").read_text(encoding="utf-8"))
     for name in pins:
-        ensure_input(name, args.cache, pins)
+        path = ensure_input(name, args.cache, pins)
+        path.chmod(
+            0o644
+        )  # Repair an older verified cache before the read-only container mount.
         print(name + ": verified " + pins[name]["sha256"])
 
 
