@@ -27,8 +27,8 @@ jobs:
         with:
           version: "0.11.12"
       - run: uv sync --locked --no-default-groups --group shared --group api --group dev
-      - run: uv run --no-sync ruff check api omk launcher scripts tests app.py
-      - run: uv run --no-sync black --check api omk launcher scripts tests app.py
+      - run: uv run --no-sync ruff check api omk launcher scripts tests mods app.py
+      - run: uv run --no-sync black --check api omk launcher scripts tests mods app.py
       - run: uv run --no-sync pytest tests/unit -q
       - name: Disposable Linux backup filesystem faults
         run: |
@@ -74,6 +74,17 @@ jobs:
         run: docker compose -f deploy/auth-lab/compose.yaml build --pull
       - if: runner.os == 'Linux'
         run: uv run --no-sync omk lab launcher smoke
+
+  forge_mods:
+    name: Forge mods source boundary and reproducible build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - run: python3 scripts/check_mod_sources.py
+      - run: python3 scripts/check_forge_mods.py
 
   drasl:
     name: Real Drasl authentication protocol
