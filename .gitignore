@@ -43,7 +43,7 @@ data/
 Thumbs.db
 
 # custom
-client/
+/client/
 launcher/auth_token.json
 omkalitycore/
 *.sqlite
