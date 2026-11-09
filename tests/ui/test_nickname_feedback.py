@@ -121,11 +121,7 @@ def test_overlong_clipboard_input_reports_length_and_never_exceeds_limit(window)
 @pytest.mark.parametrize("notice", [False, True])
 def test_tooltip_background_has_transparent_corners(qtbot, window, notice):
     edit = window.login_name
-    window.activateWindow()
     edit.setFocus()
-    # Deliver initial activation/focus events before starting the short-lived hint.
-    QApplication.processEvents()
-    qtbot.waitUntil(edit.hasFocus)
     if notice:
         qtbot.keyClicks(edit, "!")
     else:

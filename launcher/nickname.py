@@ -3,7 +3,7 @@
 from typing import override
 
 from PySide6.QtCore import QPoint, QRect, QRegularExpression, QTimer
-from PySide6.QtGui import QFocusEvent, QRegularExpressionValidator
+from PySide6.QtGui import QFocusEvent, QKeyEvent, QRegularExpressionValidator
 from PySide6.QtWidgets import QLineEdit, QToolTip
 
 from launcher.accounts import USERNAME_PATTERN
@@ -21,6 +21,8 @@ class NicknameField(QLineEdit):
         )
         self.setToolTip("3–16 символов: A–Z, a–z, 0–9 и _.")
         self.notice_text = ""
+        self._editing_key = False
+        self._pending_notice = False
         self.notice_timer = QTimer(self)
         self.notice_timer.setSingleShot(True)
         self.notice_timer.setInterval(2200)
@@ -33,6 +35,13 @@ class NicknameField(QLineEdit):
             if len(self.text()) >= self.maxLength()
             else "Для ника подходят только латинские буквы, цифры и _."
         )
+        if self._editing_key:
+            # macOS QToolTip closes on KeyRelease; show feedback after that event.
+            self._pending_notice = True
+        else:
+            self._show_notice()
+
+    def _show_notice(self) -> None:
         QToolTip.showText(
             self.mapToGlobal(QPoint(0, self.height() + 6)),
             self.notice_text,
@@ -48,6 +57,22 @@ class NicknameField(QLineEdit):
             QToolTip.hideText()
 
     @override
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        self._editing_key = True
+        try:
+            super().keyPressEvent(event)
+        finally:
+            self._editing_key = False
+
+    @override
+    def keyReleaseEvent(self, event: QKeyEvent) -> None:
+        super().keyReleaseEvent(event)
+        if self._pending_notice:
+            self._pending_notice = False
+            self._show_notice()
+
+    @override
     def focusOutEvent(self, event: QFocusEvent) -> None:
+        self._pending_notice = False
         self._hide_notice()
         super().focusOutEvent(event)
