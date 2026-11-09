@@ -65,6 +65,7 @@ def test_rejected_character_is_not_inserted_and_notice_does_not_steal_focus(
     edit.setFocus()
     qtbot.keyClicks(edit, "Alex")
     qtbot.keyClicks(edit, "!")
+    qtbot.waitUntil(edit.notice_timer.isActive)
     assert edit.text() == "Alex" and edit.hasFocus()
     assert "латинские" in QToolTip.text()
     assert edit.notice_timer.isActive()
@@ -99,6 +100,7 @@ def test_ime_and_length_limit_have_feedback_but_editing_deleting_and_undo_work(
     qtbot.keyClicks(edit, "Abc_0123456789012")
     assert len(edit.text()) == 16 and edit.hasAcceptableInput()
     qtbot.keyClicks(edit, "3")
+    qtbot.waitUntil(lambda: "16" in QToolTip.text())
     assert len(edit.text()) == 16 and "16" in QToolTip.text()
     qtbot.keyClick(edit, Qt.Key.Key_Backspace)
     assert len(edit.text()) == 15
@@ -128,8 +130,8 @@ def test_tooltip_background_has_transparent_corners(qtbot, window, notice):
         QToolTip.showText(
             edit.mapToGlobal(QPoint(0, edit.height())), edit.toolTip(), edit
         )
-    assert QToolTip.text() == (edit.notice_text if notice else edit.toolTip())
     qtbot.waitUntil(QToolTip.isVisible)
+    assert QToolTip.text() == (edit.notice_text if notice else edit.toolTip())
     tip = next(
         widget
         for widget in QApplication.topLevelWidgets()

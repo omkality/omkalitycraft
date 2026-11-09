@@ -68,6 +68,10 @@ class NicknameField(QLineEdit):
     def keyReleaseEvent(self, event: QKeyEvent) -> None:
         super().keyReleaseEvent(event)
         if self._pending_notice:
+            QTimer.singleShot(0, self._show_pending_notice)
+
+    def _show_pending_notice(self) -> None:
+        if self._pending_notice:
             self._pending_notice = False
             self._show_notice()
 
