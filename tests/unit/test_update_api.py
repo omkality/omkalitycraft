@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+from litestar.middleware import rate_limit
 from litestar.testing import TestClient
 
 from api.app import create_app
@@ -35,8 +36,13 @@ def test_readonly_update_routes_and_content_guards(
         )
 
 
-def test_cdn_rate_limit_rejects_excess_requests():
+def test_cdn_rate_limit_rejects_excess_requests(monkeypatch: pytest.MonkeyPatch):
+    # Keep all requests in the same integer-second window, even across :59.999.
+    window_time = 1_700_000_000.25
+    monkeypatch.setattr(rate_limit, "time", lambda: window_time)
     with TestClient(create_app(requests_per_second=2)) as client:
         assert client.get("/health").status_code == 200
         assert client.get("/health").status_code == 200
         assert client.get("/health").status_code == 429
+        window_time += 1
+        assert client.get("/health").status_code == 200
