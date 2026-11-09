@@ -1,5 +1,29 @@
 # Разработка OmkalityCraft
 
+## Безопасная точка и известные модовые ссылки — 9 ноября 2026
+
+Owner `resource-resets inspect --preflight` читает защищённый сохранённый спавн,
+Anvil/NEID и известные NBT-ссылки модов, включая числовые приёмники/осиротевшие
+ID RFTools и Ender Utilities Target. Внутренний data stage принимает `position:"auto"`
+и замораживает proof/policy в плане. Env-лимиты не требуют коммитов. Неподдерживаемый
+формат, отсутствие безопасной точки, известные ссылки или source/runtime drift
+дают отказ; обход всех возможных модовых сериализаторов не заявляется.
+
+Полная DJ2 в Linux Docker: 20 условий / три чистых запуска, заблокированный
+смещённый спавн → соседняя точка, offline-вход в candidate. Нативные serializers
+RFTools/Ender Utilities и Mekanism Frequency; 29 независимых TAR/NBT проверок,
+339 → 321 файл, два изменения, остальные 319 retained файлов побайтно сохранены.
+Настоящий owner Docker-worker дал тот же proof. Linux fault controls 47;
+Windows unit/UI 1314 passed / 12 skipped, focused 146, Ruff/Black. Повторный
+полный опыт также прошёл; ранние ошибки фикстур исключены. Свои четыре native
+scopes / восемь game + четыре auth volumes и отдельный readonly probe очищены.
+
+Core 0.3.5 / DJ2Fix 0.1.3 не менялись. Полноценные transport adapters, online
+эвакуация и owner lifecycle/recovery впереди: `ready_for_start=false`,
+`portal_adapters_reviewed=false`, `ready_for_players=false`. #32 открыта.
+[Команда, профили и ограничения](RESOURCE_RESET_PREFLIGHT.md),
+[протокол](validation/dj2-resource-preflight-2026-11-09.json). VPS пока не нужен.
+
 ## Нативный restart после ресурсного сброса — 9 ноября 2026
 
 На новой копии из свежего backup полной DJ2 2.23.4 в Linux Docker прошли offline
