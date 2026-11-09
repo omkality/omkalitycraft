@@ -65,14 +65,13 @@ def test_rejected_character_is_not_inserted_and_notice_does_not_steal_focus(
     edit.setFocus()
     qtbot.keyClicks(edit, "Alex")
     qtbot.keyClicks(edit, "!")
-    qtbot.waitUntil(edit.notice_timer.isActive)
     assert edit.text() == "Alex" and edit.hasFocus()
-    assert "латинские" in QToolTip.text()
+    assert "латинские" in edit.notice.text() and edit.notice.isVisible()
     assert edit.notice_timer.isActive()
     qtbot.keyClicks(edit, "_01")
     assert edit.text() == "Alex_01"
     qtbot.waitUntil(lambda: not edit.notice_timer.isActive(), timeout=3000)
-    qtbot.waitUntil(lambda: not QToolTip.isVisible(), timeout=1000)
+    assert not edit.notice.isVisible()
 
 
 @pytest.mark.parametrize("value", ["bad name", "bad-name", "Игрок", "a\u200bb", "a😀b"])
@@ -100,8 +99,7 @@ def test_ime_and_length_limit_have_feedback_but_editing_deleting_and_undo_work(
     qtbot.keyClicks(edit, "Abc_0123456789012")
     assert len(edit.text()) == 16 and edit.hasAcceptableInput()
     qtbot.keyClicks(edit, "3")
-    qtbot.waitUntil(lambda: "16" in QToolTip.text())
-    assert len(edit.text()) == 16 and "16" in QToolTip.text()
+    assert len(edit.text()) == 16 and "16" in edit.notice.text()
     qtbot.keyClick(edit, Qt.Key.Key_Backspace)
     assert len(edit.text()) == 15
     edit.undo()
@@ -117,16 +115,18 @@ def test_overlong_clipboard_input_reports_length_and_never_exceeds_limit(window)
     QApplication.clipboard().setText("Abc_01234567890123")
     edit.paste()
     assert len(edit.text()) == 16
-    assert edit.notice_timer.isActive() and "16" in QToolTip.text()
+    assert edit.notice_timer.isActive() and "16" in edit.notice.text()
 
 
-def test_leaving_nickname_cancels_queued_keyboard_notice(qtbot, window):
+def test_leaving_nickname_hides_validation_notice(qtbot, window):
     edit = window.login_name
     edit.setFocus()
     qtbot.keyClicks(edit, "!")
+    assert edit.notice.isVisible()
     window.login_password.setFocus()
     QApplication.processEvents()
     assert not edit.notice_timer.isActive()
+    assert not edit.notice.isVisible()
     assert window.login_password.hasFocus()
 
 
@@ -140,12 +140,18 @@ def test_tooltip_background_has_transparent_corners(qtbot, window, notice):
         QToolTip.showText(
             edit.mapToGlobal(QPoint(0, edit.height())), edit.toolTip(), edit
         )
-    qtbot.waitUntil(QToolTip.isVisible)
-    assert QToolTip.text() == (edit.notice_text if notice else edit.toolTip())
-    tip = next(
-        widget
-        for widget in QApplication.topLevelWidgets()
-        if widget.windowType() == Qt.WindowType.ToolTip and widget.isVisible()
+    qtbot.waitUntil(edit.notice.isVisible if notice else QToolTip.isVisible)
+    assert (edit.notice.text() if notice else QToolTip.text()) == (
+        edit.notice_text if notice else edit.toolTip()
+    )
+    tip = (
+        edit.notice
+        if notice
+        else next(
+            widget
+            for widget in QApplication.topLevelWidgets()
+            if widget.windowType() == Qt.WindowType.ToolTip and widget.isVisible()
+        )
     )
     image = tip.grab().toImage()
     for point in (

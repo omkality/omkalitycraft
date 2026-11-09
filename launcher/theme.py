@@ -22,6 +22,11 @@ ICE = "#dbe7f2"
 SUCCESS = "#afcec5"
 WARNING = "#e4bc84"
 ERROR = "#edacaa"
+TOOLTIP_STYLE = (
+    "font-family:'Rubik';font-size:15px;font-weight:700;"
+    f"color:{TEXT};background:{RAISED};border:1px solid {WARNING};"
+    "border-radius:9px;padding:8px 11px;"
+)
 
 
 class _TooltipSurface(QObject):
@@ -103,7 +108,7 @@ QCheckBox { padding: 8px 0; spacing:9px; }
 QCheckBox::indicator { width:16px; height:16px; border:1px solid #8295a7; border-radius:4px; background:#0e1217; }
 QCheckBox::indicator:checked { background:$ice; image:url("$checkmark"); }
 QCheckBox::indicator:focus { border-color:$ice; }
-QToolTip { color: $text; background: $raised; border: 1px solid $warning; border-radius: 9px; padding: 8px 11px; }
+QToolTip { $tooltip_style }
 QScrollArea, QScrollArea > QWidget > QWidget { background: transparent; }
 QScrollBar:vertical { background:$background; width:8px; margin:0; }
 QScrollBar::handle:vertical { background:#3c4856; border-radius:4px; min-height:32px; }
@@ -118,5 +123,6 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height:0; }
     ice=ICE,
     warning=WARNING,
     error=ERROR,
+    tooltip_style=TOOLTIP_STYLE,
     checkmark=(ASSETS / "checkmark.svg").as_posix().replace('"', r"\""),
 )
