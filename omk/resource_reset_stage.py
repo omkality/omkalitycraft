@@ -15,6 +15,7 @@ from pathlib import Path
 
 from omk import (
     resource_reset_inventory as audit,
+    resource_reset_preflight,
     resource_reset_transform as transform,
 )
 from omk.backup_store import (
@@ -64,7 +65,8 @@ def _request(request):
     ):
         raise ValueError("Invalid Linux resource staging request")
     audit.validate_dimension(request["dimension"])
-    transform.landing(request["position"])
+    if request["position"] != "auto":
+        transform.landing(request["position"])
     BackupPolicy(**request["policy"])
 
 
@@ -101,8 +103,21 @@ def _inputs(request, source, storage, target):
         request["dimension"],
         world_max_bytes=request["world_max_bytes"],
     )
+    position, preflight = request["position"], None
+    if position == "auto":
+        preflight = resource_reset_preflight.preflight(
+            source,
+            request["world"],
+            request["dimension"],
+            world_max_bytes=request["world_max_bytes"],
+        )
+        if not preflight["can_stage_data"]:
+            raise ValueError(
+                "Resource auto stage needs reviewed landing and no known mod links/opaque records"
+            )
+        position = preflight["landing"]["position"]
     payloads = transform.changes(
-        source, request["world"], request["dimension"], request["position"], files
+        source, request["world"], request["dimension"], position, files
     )
     result = transform.result_inventory(
         files, payloads, request["world"], request["dimension"]
@@ -115,7 +130,7 @@ def _inputs(request, source, storage, target):
         "operation": request["operation"],
         "world": request["world"],
         "dimension": request["dimension"],
-        "position": request["position"],
+        "position": position,
         "snapshot": request["snapshot"],
         "archive_sha256": manifest["sha256"],
         "source": source_identity,
@@ -138,6 +153,9 @@ def _inputs(request, source, storage, target):
         "landing_verified": False,
         "portal_adapters_reviewed": False,
     }
+    if preflight is not None:
+        plan["preflight"] = preflight
+        plan["landing_geometry_verified"] = True
     return archive, manifest, payloads, result, plan
 
 

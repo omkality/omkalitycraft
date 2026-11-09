@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "status": "accepted-isolated-native-geometry-and-known-link-preflight",
+  "scope": {
+    "pack": "Divine Journey 2 2.23.4",
+    "loader": "Forge 1.12.2 / 14.23.5.2860",
+    "real_minecraft_server": true,
+    "graphical_client": false,
+    "protocol_players": true,
+    "production_data_changed": false,
+    "owner_wipe_enabled": false,
+    "ready_for_players": false
+  },
+  "artifacts": {
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "server_mod_sha256": {
+      "OmkalityCore.jar": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1",
+      "OmkalityPackFix.jar": "9063ad85f144c93dddf9282f0b67cc369488773dea8a4a094e7400452ec61eaa",
+      "mcjtylib-1.12-3.5.4.jar": "af7d2b3c421329e7b97202302a072867e7c9bd73c5b8fab9bdb3a76fbfe474e3",
+      "rftools-1.12-7.73.jar": "558c38d0f7852d17a03aef81e4bd6cc2f28e60db8a8749c710c9ee829f2de0a4",
+      "Mekanism-1.12.2-9.8.3.390.jar": "17573e0c3b2ff9d071a719a06a84c8cd89ca26d1ea3bd7f6e9f3842c4df88ea1",
+      "enderutilities-1.12.2-0.7.15.jar": "c0a604aac57853f76f16e21958b02f4d6adbc543c20dda67eb1088ca91ba618c",
+      "WR-CBE-1.12.2-2.3.2.33-universal.jar": "a8305c42e29f43abbad906c3c91c36ed0a1a6f949ff2bff9eec66499fb57f36e"
+    },
+    "profile_sha256": "ef0a9b09d3ac3380c7c21721646e2ff6bb975e1d5d0895dc03a9a004f71612e6",
+    "test_only_probe_sha256": "826ced574f3349d82535f2c5a5a2d35e5a4de68a962689a360c1a278d30463eb",
+    "private_fixture_sha256": {
+      "resource_preflight_lab.py": "92f371f67b6b7f6f4559a7a8bdd75c0efe8b8a8b76b054bd2a86f3144a1721a2",
+      "audit_resource_preflight.py": "dd9d62b2a9802020b9e2045a7a77732c1edaa5cda70fbd1a3948c2700c28913b",
+      "build_reset_preflight_probe.py": "b43b0d54872dfa7adb94bc45328216e5277340ff5f2dc62b979b5d67296dce45",
+      "run_preflight_unit_linux.py": "791f0ec012009724bb7e96639bc46c017fdb27e4ac5c92f7248101a71fbcc3eb"
+    },
+    "research_tool": {
+      "name": "CFR",
+      "version": "0.152",
+      "source": "https://repo.maven.apache.org/maven2/org/benf/cfr/0.152/cfr-0.152.jar",
+      "sha256": "f686e8f3ded377d7bc87d216a90e9e9512df4156e75b06c655a16648ae8765b2"
+    },
+    "fixture_source_note": "Hashes describe retained reproducible sources; import formatting, explicit check=False and failure-volume bookkeeping were normalized after the successful run. The test-only JAR hash is the executed artifact."
+  },
+  "native": {
+    "conditions": 20,
+    "labels": [
+      "native_platform_healthy",
+      "native_seed_healthy",
+      "native_mekanism_frequency_does_not_persist_active_coords",
+      "with-links_clean_stop",
+      "saved_world_selects_landing",
+      "blocked_spawn_uses_nearby_floor_without_fixed_coordinates",
+      "native_registry_and_bound_items_block_auto_reset",
+      "native_check_healthy",
+      "offline_selection_matches_real_forge_geometry",
+      "native_clear_healthy",
+      "unlink_keeps_native_porter_energy",
+      "native_receiver_ids_never_reused",
+      "clean-source_clean_stop",
+      "native_unlinked_source_passes_known_link_gate",
+      "stage_resolves_auto_position_from_same_verified_source",
+      "auto_stage_receipt_reverified",
+      "only_new_candidate_receives_runtime_copy",
+      "real_offline_player_uses_auto_selected_safe_landing",
+      "native_check_healthy",
+      "candidate_landing_revalidated_in_native_forge"
+    ],
+    "full_forge_starts": 3,
+    "clean_stops": 3,
+    "oom_killed": false,
+    "crash_markers": false,
+    "memory_limit_bytes": 6442450944,
+    "nano_cpus": 4000000000,
+    "fixture_policy": "Peaceful/no mob spawning for deterministic fixture only; no deployment PvP/Hard acceptance claimed",
+    "owner_docker_worker_matches_frozen_proof": true,
+    "known_links_before": 3,
+    "known_links_after": 0,
+    "landing": {
+      "found": true,
+      "schema": 1,
+      "kind": "forge112-saved-vanilla-floor-air-server-claim",
+      "position": [
+        121,
+        180,
+        -77
+      ],
+      "saved_spawn": [
+        123,
+        180,
+        -75
+      ],
+      "chunks_read": 1,
+      "radius": 16,
+      "vertical": 8,
+      "max_chunks": 32,
+      "world_changes": false,
+      "generation": false,
+      "native_revalidation_required": true
+    },
+    "reference_chunks_before": 720,
+    "reference_chunks_after": 1165,
+    "nonportal_wrcbe_records": 78
+  },
+  "independent_saved_data": {
+    "ok": true,
+    "checks": [
+      "archive_regular_members_with-links",
+      "archive_regular_members_clean-source",
+      "archive_regular_members_auto-staged",
+      "archive_regular_members_world-after",
+      "one_native_player",
+      "one_native_player",
+      "one_native_player",
+      "one_native_player",
+      "player_identity_preserved",
+      "four_native_control_items",
+      "only_resource_crystal_target_removed",
+      "only_resource_porter_target_removed",
+      "resource_porter_charge_preserved",
+      "main_world_bindings_unchanged",
+      "data_stage_preserves_all_inventory_nbt",
+      "native_restart_preserves_all_inventory_nbt",
+      "native_registry_control_destinations",
+      "resource_receiver_unregistered",
+      "main_receiver_preserved",
+      "receiver_ids_monotonic_after_unlink",
+      "data_stage_does_not_rewrite_registry",
+      "native_restart_keeps_registry_and_id_counter",
+      "blocked_saved_spawn_resolves_deterministically",
+      "offline_resource_player_evacuated",
+      "staged_player_uses_selected_point",
+      "native_player_lands_at_selected_point",
+      "old_resource_dimension_excluded_from_candidate",
+      "data_receipt_not_owner_start_approval",
+      "all_other_retained_world_bytes_unchanged"
+    ],
+    "counts": {
+      "with_links_files": 315,
+      "clean_files": 339,
+      "staged_files": 321,
+      "final_files": 338,
+      "unchanged_retained_files": 319
+    },
+    "archives_sha256": {
+      "with-links.tar": "20c55a03f592bdcb99b170598711c8854ec325a64a727dae30e0fb7bc31fee77",
+      "clean-source.tar": "225ab48ef23dd71720716afd8311cb9ed2904238ba4740d1445de81f815677ab",
+      "auto-staged.tar": "02a0923a519c6ed500ca2a9dfc053b38028edab0b5e7e6165dac583277522430",
+      "world-after.tar": "9e86f500925e268c72a11e3e068f8c9aeab21f5045219233cb30d481e07f9c5f"
+    }
+  },
+  "verification": {
+    "windows_unit_ui": {
+      "passed": 1314,
+      "skipped": 12,
+      "warnings": 3
+    },
+    "focused_windows": {
+      "passed": 146
+    },
+    "linux_docker_saved_data_worker_fault_controls": {
+      "passed": 47,
+      "runtime": "Pinned Linux Python; portable pytest package reused, native Windows extensions not used"
+    },
+    "ruff_black_diff_check": true,
+    "inventory_digest_regression": "Red/green: new proof must use the existing owner inspection inventory identity encoding"
+  },
+  "cleanup": {
+    "ok": true,
+    "native_scopes": [
+      "c636d423ca97",
+      "f0e11921df08",
+      "82abb8b9648e",
+      "d2913fd3c097"
+    ],
+    "native_volumes_removed": 8,
+    "auth_volumes_removed": 4,
+    "readonly_probe_volume_removed": true,
+    "unrelated_projects_changed": false
+  },
+  "excluded_attempts": [
+    "Initial test probe used an unavailable integer Coord4D constructor; fixed from the installed class descriptor. Forge stopped cleanly.",
+    "Initial vanilla stone fixture was transformed by Underground Biomes and correctly failed conservative floor review. RFTools fixture also needed its native save registration. Not accepted as a successful native run.",
+    "Broad Linux unit collection using Windows binary dependencies failed import before tests. Excluded; Linux saved-data/worker tests ran without those extensions."
+  ],
+  "limits": [
+    "Read-only discovery; no production portal cleanup or owner reset/start command",
+    "Native registry/item serializers tested; real working RFTools receiver/transmitter frames and all teleport operations not tested",
+    "Mekanism frequency serializer roundtrip is not live teleporter network restoration acceptance",
+    "Advanced Porter slots, nested containers, malformed saves and generic dimension links have synthetic fault coverage",
+    "Other mod serializers/caches remain unreviewed; coverage_complete=false and portal_adapters_reviewed=false",
+    "Offline geometry needs native revalidation under maintenance before an owner evacuation",
+    "No new backup writer, schedules, modpack update, release or deployment"
+  ],
+  "next": [
+    "Native transport adapters and reviewed unbinding for the remaining mechanisms",
+    "Online evacuation, maintenance/start barriers, interrupted operation recovery and owner lifecycle",
+    "Separate public profile, guide and VPS acceptance after the resource-reset milestone"
+  ]
+}

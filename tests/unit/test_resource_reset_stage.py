@@ -18,6 +18,46 @@ from tests.unit.test_resource_reset_inventory import (
 LIMITS = BackupPolicy(32 * 1024**2, 3, 16 * 1024**2, 1)
 
 
+def test_auto_point_is_frozen_in_plan_and_changed_preflight_refuses_stage(
+    data, monkeypatch
+):
+    request, source, storage, target, _ = data
+    proof = {
+        "can_stage_data": True,
+        "landing": {"position": [12, 100, 15]},
+        "policy": {"radius": 16},
+    }
+    monkeypatch.setattr(
+        stage.resource_reset_preflight, "preflight", lambda *a, **k: proof.copy()
+    )
+    request.update(position="auto", action="plan")
+    plan = stage.execute(request, source, storage, target)
+    assert plan["position"] == [12, 100, 15] and plan["landing_geometry_verified"]
+    assert not plan["landing_verified"] and not plan["ready_for_start"]
+    proof["policy"] = {"radius": 8}
+    with pytest.raises(ValueError, match="changed"):
+        stage.execute(
+            {**request, "action": "stage", "expected": plan}, source, storage, target
+        )
+    assert not list(target.iterdir())
+
+
+def test_auto_stage_refuses_unknown_portals_or_no_safe_point_before_write(
+    data, monkeypatch
+):
+    request, source, storage, target, _ = data
+    monkeypatch.setattr(
+        stage.resource_reset_preflight,
+        "preflight",
+        lambda *a, **k: {"can_stage_data": False},
+    )
+    with pytest.raises(ValueError, match="known mod links"):
+        stage.execute(
+            {**request, "position": "auto", "action": "plan"}, source, storage, target
+        )
+    assert not list(target.iterdir())
+
+
 @pytest.fixture
 def data(sample, tmp_path, monkeypatch):
     server, world, entity, player, _records = sample
