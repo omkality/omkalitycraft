@@ -101,6 +101,19 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
         if isinstance(root, dict):
             if "id" in root and root["id"].kind == 8:
                 context = root["id"].value
+            target = root.get("target")
+            if (
+                context.startswith("rftools:")
+                and "porter" in context
+                and "tpTimer" in root
+                and (
+                    not isinstance(target, Tag)
+                    or target.kind != 3
+                    or target.value == -1
+                )
+            ):
+                # onUpdate resolves a target even after incomplete manual unbinding.
+                add(file, path + "/tpTimer", "rftools.incomplete-porter-timer")
             for key, tag in root.items():
                 if key in skip:
                     continue

@@ -435,6 +435,24 @@ def test_native_unbound_minus_one_is_not_confused_with_a_stale_dial(
     assert result["finding_count"] == expected
 
 
+@pytest.mark.parametrize("target", [None, -1])
+def test_unbinding_a_porter_without_cancelling_its_timer_is_not_clean(saved, target):
+    server, world, _, _ = saved
+    fields = {"tpTimer": Tag(3, 0), "Energy": Tag(3, 12345)}
+    if target is not None:
+        fields["target"] = Tag(3, target)
+    encoded(
+        world / "data/inflight.nbt",
+        {"id": Tag(8, "rftools:charged_porter"), "tag": Tag(10, fields)},
+    )
+    result = links.inspect_links(
+        server, "world", -18000, inventory(world, world_name="world")
+    )
+    assert any(
+        row["kind"] == "rftools.incomplete-porter-timer" for row in result["examples"]
+    )
+
+
 def test_preflight_detects_concurrent_world_change(saved, monkeypatch):
     server, world, _, _ = saved
     original = preflight.inspect_links
