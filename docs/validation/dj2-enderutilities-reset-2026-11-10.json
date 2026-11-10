@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "issues": [
+    32,
+    41
+  ],
+  "status": "accepted-player-location-target-adapter-and-native-reset-rebind-restart",
+  "pack": "Divine Journey 2 2.23.4",
+  "forge": "1.12.2-14.23.5.2860",
+  "enderutilities": {
+    "version": "0.7.15",
+    "file": "enderutilities-1.12.2-0.7.15.jar",
+    "sha256": "c0a604aac57853f76f16e21958b02f4d6adbc543c20dda67eb1088ca91ba618c",
+    "source": "profiles/server-defaults/dj2/reset-preflight.json"
+  },
+  "components_unchanged": {
+    "core": {
+      "version": "0.3.5",
+      "file": "OmkalityCore-0.3.5.jar",
+      "sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1"
+    },
+    "dj2fix": {
+      "version": "0.1.4",
+      "file": "OmkalityDJ2Fix-0.1.4.jar",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client": {
+      "version": "0.1.1",
+      "file": "OmkalityClient-0.1.1.jar",
+      "sha256": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+    }
+  },
+  "adapter": "enderutilities-0.7.15-player-location-target-v1",
+  "preflight_profile": "dj2-2.23.4-forge112-reset-preflight-v2",
+  "preflight_profile_sha256": "02ec232931bdf0824e5d8d8f70b0473ef098d65c566f75cdb1b6805ec7015490",
+  "native": {
+    "ok": true,
+    "checks": 39,
+    "independent_checks": 56,
+    "starts": 3,
+    "survival_non_op_actor": true,
+    "graphical_client": false,
+    "native_item_use": true,
+    "native_unbind_reference_matches": true,
+    "reviewed_references": 6,
+    "unhandled_references_in_fixture": 0,
+    "source_read_only_at_stage": true,
+    "fresh_verified_backup": true,
+    "primary_and_dat_old_rewritten": true,
+    "selected_and_unselected_modules": true,
+    "other_world_targets_charge_selection_and_nbt_preserved": true,
+    "unbound_native_use_no_partial_effect": true,
+    "retained_main_target_native_cost": 5000,
+    "old_resource_structure_absent": true,
+    "ordinary_sneak_block_rebind": true,
+    "rebind_persists_after_restart": true,
+    "exact_remaining_charge_native_use": true,
+    "health_20_xp_12_sentinel_7_preserved": true,
+    "file_counts": [
+      317,
+      298,
+      342,
+      342
+    ],
+    "changed_at_stage_count": 3,
+    "unchanged_retained_files": 295,
+    "omitted_files": 19,
+    "archive_sha256": {
+      "reset-source.tar": "c527af9121ec4bdee49ae89d739457eb907f61091f5eb5df04d766b584211f8c",
+      "auto-staged.tar": "7195f92a481d1ce287199359d6c051db9b2bca4580673d58d3dda7ca4e578e54",
+      "candidate-rebound.tar": "e2732630dbd7e2150adf6ee07b773c0bcca2ebcd8ed49291d80b7f27ecbf14fa",
+      "world-after.tar": "fa0c3b7a4c0e2bddf02fa9850d9c80f94984765692cb1ad400111d1b245e4b9f"
+    },
+    "clean_server_exit": true,
+    "oom_killed": false,
+    "all_owned_game_and_auth_volumes_removed_after_export": true,
+    "observer_version": "0.1.1",
+    "observer_sha256": "38c988b72628d889f2ef2e94af301eb66a667743c2397ab47e18e9e02ff9e18e"
+  },
+  "synthetic": {
+    "new_cases": 46,
+    "linux_focused_passed": 128,
+    "windows_unit_ui_passed": 1370,
+    "windows_unit_ui_skipped": 12,
+    "ui_offscreen": true,
+    "ruff": "passed",
+    "black": "passed",
+    "stage_preflight_in_unit_fixture": "mocked; real preflight accepted separately in Linux native scenario"
+  },
+  "environment": {
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "container_memory_bytes": 6442450944,
+    "server_heap_bytes": 4294967296,
+    "cpus": 4,
+    "hard_pvp_acceptance": false,
+    "linux_test_dependencies": "Linux wheels from committed uv.lock, verified URL/size/SHA256; no Windows extensions"
+  },
+  "excluded_controls": [
+    "Initial native pilot covered item use only, not a full reset lifecycle",
+    "First full fixture compared a Java Properties escaped registry value without decoding; clean game, incomplete lifecycle",
+    "Initial Linux unit collection reused Windows binary dependencies; corrected with hash-verified Linux wheels from uv.lock"
+  ],
+  "limits": [
+    "Only player Inventory loose tier-0 location crystals and Ender Porter modules; other tiers/storage remain unreviewed",
+    "Unknown known-reference paths and opaque records still block auto stage",
+    "No graphical client or Hard/PvP acceptance in this scenario",
+    "No new dimension wipe permissions; policy remains resource-only",
+    "Other portal adapters, online evacuation and owner barrier/cutover/recovery remain open",
+    "No working server/world, game manifest or player release changed"
+  ],
+  "owner_reset_enabled": false,
+  "ready_for_start": false,
+  "portal_adapters_reviewed": false,
+  "ready_for_players": false
+}
