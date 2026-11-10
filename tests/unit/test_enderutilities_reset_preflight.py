@@ -55,7 +55,15 @@ def test_only_exact_supported_paths_can_be_staged_and_source_is_read_only(ready)
 
 @pytest.mark.parametrize(
     "storage",
-    ["capability", "enderchest", "bag", "region", "unknown-player-file", "tier"],
+    [
+        "capability",
+        "enderchest",
+        "bag",
+        "region",
+        "unknown-player-file",
+        "tier",
+        "ambiguous-key",
+    ],
 )
 def test_unreviewed_storage_or_tier_remains_blocking(ready, storage):
     server, world, root, chunk = ready
@@ -78,6 +86,8 @@ def test_unreviewed_storage_or_tier_remains_blocking(ready, storage):
     elif storage == "tier":
         item["Damage"] = Tag(2, 1)
         root["Inventory"].value[1].append(Tag(10, item))
+    elif storage == "ambiguous-key":
+        root["Inventory"].value[1][0].value["tag/Target"] = item["tag"].value["Target"]
     elif storage == "region":
         chunk["TileEntities"] = compound_list(
             [

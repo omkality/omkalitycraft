@@ -34,6 +34,15 @@
   "adapter": "enderutilities-0.7.15-player-location-target-v1",
   "preflight_profile": "dj2-2.23.4-forge112-reset-preflight-v2",
   "preflight_profile_sha256": "02ec232931bdf0824e5d8d8f70b0473ef098d65c566f75cdb1b6805ec7015490",
+  "final_scanner_native_source_replay": {
+    "ok": true,
+    "same_frozen_native_preflight": true,
+    "handled_references": 6,
+    "unhandled_references": 0,
+    "final_scanner_sha256": "cb6c9852628188a7582aa722f79da8653aacac3e7f49d41a4baaa46f299db5c3",
+    "runtime_started": false,
+    "source_read_only": true
+  },
   "native": {
     "ok": true,
     "checks": 39,
@@ -79,10 +88,11 @@
     "observer_sha256": "38c988b72628d889f2ef2e94af301eb66a667743c2397ab47e18e9e02ff9e18e"
   },
   "synthetic": {
-    "new_cases": 46,
-    "linux_focused_passed": 128,
-    "windows_unit_ui_passed": 1370,
+    "new_cases": 47,
+    "linux_focused_passed": 129,
+    "windows_unit_ui_passed": 1371,
     "windows_unit_ui_skipped": 12,
+    "ambiguous_nbt_key_admission_red_green": true,
     "ui_offscreen": true,
     "ruff": "passed",
     "black": "passed",
