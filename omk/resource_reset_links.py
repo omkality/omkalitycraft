@@ -10,7 +10,10 @@ import re
 from pathlib import Path
 
 from launcher.nbt import Tag
-from omk import forge112_regions as anvil
+from omk import (
+    enderutilities_reset as ender,
+    forge112_regions as anvil,
+)
 from omk.ftb_restore_authority import nbt
 from omk.resource_reset_inventory import _read
 from omk.resource_reset_landing import world_path
@@ -24,6 +27,7 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
     *,
     max_chunks=100000,
     nonportal_patterns=(),
+    enderutilities_targets=False,
 ):
     if type(max_chunks) is not int or not 1 <= max_chunks <= 1000000:
         raise ValueError("Invalid mod reference scan budget")
@@ -34,11 +38,17 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
     known_receiver_ids = set()
     findings, opaque = [], []
     chunks_read, nodes, nonportal = 0, 0, 0
+    eligible, reviewed = set(), 0
 
     def add(file, path, kind):
+        nonlocal reviewed
         if len(findings) >= 2000:
             raise ValueError("Too many dimension references for reviewed reset")
-        findings.append({"file": file, "nbt_path": path, "kind": kind})
+        finding = {"file": file, "nbt_path": path, "kind": kind}
+        if kind == "enderutilities.target" and path in eligible:
+            finding["staging_adapter"] = ender.ADAPTER
+            reviewed += 1
+        findings.append(finding)
 
     for name in sorted(files):
         if (
@@ -168,6 +178,7 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                     walk(child, file, path + "/" + str(index), context, depth=depth + 1)
 
     for name, kind in records:
+        eligible = set()
         relative = name.removeprefix(prefix)
         if kind == "region":
             region = anvil.Region(server / name, world)
@@ -188,6 +199,11 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
             skip = (
                 {"Dimension", "SpawnDimension", "Spawns"} if kind == "player" else set()
             )
+            if enderutilities_targets and re.fullmatch(
+                r"playerdata/[a-f0-9-]{36}\.(?:dat|dat_old)", relative
+            ):
+                _candidate, paths = ender.unbind_player_targets(root, dimension)
+                eligible = set(paths)
             if Path(relative).name in {"level.dat", "level.dat_old"}:
                 skip.add("FML")  # Registry IDs are not bound teleport destinations.
             walk(root, relative, skip=skip)
@@ -195,6 +211,8 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
         "schema": 1,
         "dimension": dimension,
         "finding_count": len(findings),
+        "handled_finding_count": reviewed,
+        "unhandled_finding_count": len(findings) - reviewed,
         "findings_sha256": hashlib.sha256(
             json.dumps(findings, sort_keys=True).encode()
         ).hexdigest(),

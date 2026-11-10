@@ -10,7 +10,10 @@ import hashlib
 import re
 
 from launcher.nbt import Tag, read_nbt, write_nbt
-from omk import resource_reset_inventory as audit
+from omk import (
+    enderutilities_reset as ender,
+    resource_reset_inventory as audit,
+)
 from omk.ftb_dimension_references import ftb_record
 
 
@@ -96,7 +99,7 @@ def _kind(name, world):
     return None
 
 
-def changes(server, world, dimension, position, files):
+def changes(server, world, dimension, position, files, *, enderutilities_targets=False):
     """Sparse bytes only; even unchanged NBT compression is preserved verbatim."""
     position = landing(position)
     payloads = {}
@@ -109,6 +112,8 @@ def changes(server, world, dimension, position, files):
         label, root = read_nbt(audit.ftb.unpack(raw))
         if kind == "player":
             result = player(root, dimension, position)
+            if enderutilities_targets:
+                result, _removed = ender.unbind_player_targets(result, dimension)
         elif kind == "jed":
             result = jed_record(root, dimension)
         else:

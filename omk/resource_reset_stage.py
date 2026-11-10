@@ -14,6 +14,7 @@ import zipfile
 from pathlib import Path
 
 from omk import (
+    enderutilities_reset as ender,
     resource_reset_inventory as audit,
     resource_reset_preflight,
     resource_reset_transform as transform,
@@ -113,11 +114,19 @@ def _inputs(request, source, storage, target):
         )
         if not preflight["can_stage_data"]:
             raise ValueError(
-                "Resource auto stage needs reviewed landing and no known mod links/opaque records"
+                "Resource auto stage needs reviewed landing; known mod links require "
+                "reviewed adapters and opaque records are forbidden"
             )
         position = preflight["landing"]["position"]
     payloads = transform.changes(
-        source, request["world"], request["dimension"], position, files
+        source,
+        request["world"],
+        request["dimension"],
+        position,
+        files,
+        enderutilities_targets=bool(
+            preflight and ender.ADAPTER in preflight.get("adapters", {})
+        ),
     )
     result = transform.result_inventory(
         files, payloads, request["world"], request["dimension"]
