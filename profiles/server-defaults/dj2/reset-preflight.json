@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "adapter": "dj2-2.23.4-forge112-reset-preflight-v1",
+  "adapter": "dj2-2.23.4-forge112-reset-preflight-v2",
   "artifact_inventory": "profiles/upgrade-inputs/dj2-2.23.4-client.json",
   "source_archive": "https://github.com/Divine-Journey-2/Divine-Journey-2/releases/download/2.23.4/Divine_Journey_2.23.4_Server_Pack.zip",
   "source_archive_sha256": "692c820a636ab59a050ba560235e3af9852f598d18f5dad931271e4cbd729831",

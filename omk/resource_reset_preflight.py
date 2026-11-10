@@ -8,6 +8,7 @@ import json
 import os
 from pathlib import Path
 
+from omk import enderutilities_reset as ender
 from omk.cold_backup_worker import digest
 from omk.fs import regular
 from omk.profiles import PROJECT_ROOT
@@ -78,6 +79,7 @@ def preflight(
     raw = PROFILE.read_bytes()
     profile = json.loads(raw)
     pins = artifacts(server, profile)
+    ender_enabled = pins.get(ender.ARTIFACT) == ender.SHA256
 
     def snapshot():
         return inventory(
@@ -108,6 +110,7 @@ def preflight(
         before,
         max_chunks=policy["reference_chunks"],
         nonportal_patterns=profile["nonportal_binary_patterns"],
+        enderutilities_targets=ender_enabled,
     )
     if (
         snapshot() != before
@@ -127,9 +130,19 @@ def preflight(
         "policy": policy,
         "landing": landing,
         "links": links,
+        "adapters": (
+            {
+                ender.ADAPTER: {
+                    "artifact_sha256": ender.SHA256,
+                    "handled_references": links["handled_finding_count"],
+                }
+            }
+            if ender_enabled
+            else {}
+        ),
         "can_stage_data": bool(
             landing["found"]
-            and not links["finding_count"]
+            and not links["unhandled_finding_count"]
             and not links["opaque_record_count"]
         ),
         "world_changes": False,
