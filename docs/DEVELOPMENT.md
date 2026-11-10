@@ -16,7 +16,10 @@
 Очищенный модуль заново привязывается обычным sneak + block use, работает
 между мирами и после restart; старая ресурсная площадка отсутствует.
 
-46 новых синтетических тестов; Windows unit/UI 1370/12 skipped, Ruff/Black.
+47 новых синтетических тестов; Linux focused 129, Windows unit/UI 1371/12 skipped,
+Ruff/Black. Неоднозначные NBT-ключи экранируются до сопоставления с допущенными
+путями; дефект воспроизведён отрицательным контролем, итоговый scanner повторно
+проверен на том же native source с полным совпадением frozen preflight.
 Core 0.3.5 / DJ2Fix 0.1.4 / Client 0.1.1 и player manifests не менялись.
 Это не графическая или Hard/PvP приёмка. Рабочий owner wipe закрыт;
 `ready_for_start=false`, `ready_for_players=false`, #32/#41 открыты.

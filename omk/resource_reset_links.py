@@ -127,7 +127,8 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
             for key, tag in root.items():
                 if key in skip:
                     continue
-                here = path + "/" + key
+                # Keep diagnostic paths unambiguous before adapter admission.
+                here = path + "/" + key.replace("~", "~0").replace("/", "~1")
                 normalized = key.replace("_", "").lower()
                 dim_key = normalized in {
                     "dim",
