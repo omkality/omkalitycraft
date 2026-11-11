@@ -1,0 +1,40 @@
+services:
+  ingress:
+    image: haproxy:3.2.26-alpine3.24@sha256:1c3568e520453cc8ba98c39501febcf450429c80e6cc27ecad779961d76e597c
+    pull_policy: never
+    container_name: ${OMK_INGRESS_CONTAINER:?Set an explicit owned ingress name}
+    user: "0:0"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: "no"
+    cpus: ${OMK_INGRESS_CPUS:-0.5}
+    mem_limit: ${OMK_INGRESS_MEMORY_MIB:-64}m
+    pids_limit: ${OMK_INGRESS_PIDS:-64}
+    command: [haproxy, -W, -db, -f, /usr/local/etc/haproxy/haproxy.cfg]
+    labels:
+      omkality.ingress.owner: ${OMK_INGRESS_OWNER:?Set an explicit ingress owner}
+    ports:
+      - "127.0.0.1:${OMK_INGRESS_HOST_PORT:-25580}:${OMK_INGRESS_CONTAINER_PORT:-25565}"
+    volumes:
+      - type: bind
+        source: ${OMK_INGRESS_CONFIG_DIR:?Set the absolute private prepared config directory}
+        target: /usr/local/etc/haproxy
+        read_only: true
+      - type: volume
+        source: ingress-control
+        target: /run/omk-ingress
+        volume: {nocopy: true}
+    networks: [project-private]
+    logging:
+      driver: local
+      options: {max-size: 10m, max-file: "3"}
+volumes:
+  ingress-control:
+    name: ${OMK_INGRESS_CONTROL_VOLUME:?Set a fresh private control volume name}
+    labels:
+      omkality.ingress.owner: ${OMK_INGRESS_CONTROL_OWNER:?Set a fresh control owner}
+networks:
+  project-private:
+    name: ${OMK_INGRESS_NETWORK:?Set an existing owned project bridge}
+    external: true
