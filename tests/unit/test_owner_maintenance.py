@@ -220,7 +220,10 @@ def test_interrupted_stop_reconciles_without_second_command(flow, monkeypatch):
     assert actions.count("stop") == 1 and not state["running"]
 
 
-def test_interrupted_start_reconciles_without_second_start(flow, monkeypatch):
+@pytest.mark.parametrize("crash_type", [KeyboardInterrupt, AdminError])
+def test_interrupted_start_reconciles_without_second_start(
+    flow, monkeypatch, crash_type
+):
     op, backup = stop_and_backup(flow)
     cfg, _, _, actions = flow
     original = backups.docker
@@ -228,11 +231,11 @@ def test_interrupted_start_reconciles_without_second_start(flow, monkeypatch):
     def crash(*args, **kwargs):
         value = original(*args, **kwargs)
         if args[0] == "start":
-            raise KeyboardInterrupt
+            raise crash_type("Controller lost the start outcome")
         return value
 
     monkeypatch.setattr(backups, "docker", crash)
-    with pytest.raises(KeyboardInterrupt):
+    with pytest.raises(crash_type):
         owner.execute(cfg, op, "start", backup_operation=backup["operation"])
     assert owner.read_record(cfg, op)["stage"] == "start-requested"
     assert owner.execute(cfg, op, "reconcile")["stage"] == "complete"

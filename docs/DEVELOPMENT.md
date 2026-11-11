@@ -1,5 +1,37 @@
 # Разработка OmkalityCraft
 
+## Остановка, копия и возврат того же контейнера — 11 ноября 2026
+
+Owner-only `omk admin maintenance` фиксирует pinned container/volume identities,
+runtime и точный loopback RCON binding. Штатная остановка принимается только по
+clean Docker checkpoint; запуск того же immutable ID требует завершённый backup
+этой остановки и readonly повторную проверку фактического архива/world/runtime.
+`Done` дополняется Core readiness и 15 секундами устойчивого состояния.
+Durable intents / `reconcile` не повторяют lifecycle-команды; stopped `cancel`
+оставляет источник выключенным. Пределы задаются env, журналы ограничены.
+
+Полная DJ2 2.23.4 в Linux Docker: 34 native / 58 независимых условий, три clean
+старта/stop, два Drasl-аккаунта, две копии. 317 / 344 / 344 world-файла;
+весь фактический ZIP побайтно совпадает с соответствующим остановленным миром.
+Типизированные Inventory, XP, UUID, survival и основной мир сохранены.
+Прерывания после stop/start приняты через reconcile; предыдущая копия и
+параллельное окно отвергнуты. Собственные game/auth/store scopes очищены
+после экспорта. Отдельный real Docker + fake RCON контроль остаётся synthetic.
+
+50 новых synthetic тестов; Linux focused 143, Windows unit/UI 1435/12 skipped,
+Ruff/Black/secret scan. Пять ранних неподтверждённых прогонов исключены;
+ограничения доказательств явно сохранены в протоколе. Подготовка игровых
+состояний идёт через stdin-очередь; произвольные world-команды vanilla RCON
+не добавлены. Allowlist восстановления аккаунта прежняя.
+
+Core 0.3.5 / DJ2Fix 0.1.4 / Client 0.1.1 и player releases прежние. Это
+same-container maintenance, не promotion новой копии и не owner wipe.
+Единственный периодический writer/off-host copy, барьер и cutover/recovery
+остаются в #33/#32; #41 открыт. Графическая, Hard/PvP и полная quest-приёмка
+этим шагом не повторяются. VPS пока не нужен.
+[Руководство](OWNER_MAINTENANCE.md),
+[обезличенный протокол](validation/dj2-owner-maintenance-2026-11-11.json).
+
 ## EnderItems: доступ, reset и restart — 11 ноября 2026
 
 Python-адаптер v2 расширен стандартным 27-слотовым EnderItems в `.dat`/`.dat_old`.

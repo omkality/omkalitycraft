@@ -15,6 +15,10 @@ owner-операции `omk`. Наличие команд в реестре ни
 Снимок полного игрового реестра остаётся датированным своей исходной проверкой;
 добавление лабораторного CLI не переаттестует все 438 игровых команд.
 
+11 ноября добавлено owner-only окно `maintenance`: остановка → существующий
+backup → возврат того же Docker-контейнера и `reconcile` после прерывания.
+34 native / 58 независимых условий полной DJ2; подробности и команды ниже.
+
 ## Где смотреть
 
 | Раздел | Содержимое |
@@ -89,6 +93,12 @@ owner-операции `omk`. Наличие команд в реестре ни
 | `uv run omk admin --config .omk-admin/operator.toml recover-account run --account ACCOUNT_UUID` | Сброс с отзывом токенов и активных/незавершённых подключений; один новый пароль в приватном терминале. Требуются Drasl admin и Core 0.2.10/RCON-only адаптер каждого сервера. Это account UUID из плана, не игровой UUID. |
 | `uv run omk admin --config .omk-admin/operator.toml recover-account status --account ACCOUNT_UUID` | Прочитать приватный journal этапов без пароля; не считать потерянный ответ доказательством lock/unlock. |
 | `uv run omk admin --config .omk-admin/operator.toml recover-account resume --account ACCOUNT_UUID` | Явно продолжить проверенную незавершённую операцию с новой сменой секрета; успешную операцию повторять нельзя. |
+| `uv run omk admin --config .omk-admin/operator.toml maintenance plan --server dj2` | План обслуживания запущенного owned Docker-контейнера, точный loopback RCON binding и runtime hash. [Порядок и границы](../OWNER_MAINTENANCE.md) |
+| `uv run omk admin --config .omk-admin/operator.toml maintenance stop --operation M` | Штатная `stop`, durable intent, ожидание exit 0 и чистого stop log; без force kill |
+| `uv run omk admin --config .omk-admin/operator.toml maintenance start --operation M --backup-operation B` | Только тот же immutable container ID после завершённой копии этой остановки; readonly повторная проверка данных/архива и стабильной готовности |
+| `uv run omk admin --config .omk-admin/operator.toml maintenance status --operation M` | Приватный stage без паролей и содержимого Docker Env/Args |
+| `uv run omk admin --config .omk-admin/operator.toml maintenance reconcile --operation M` | Подтвердить уже выполненный stop/start после прерывания утилиты, без повторной отправки lifecycle-команды |
+| `uv run omk admin --config .omk-admin/operator.toml maintenance cancel --operation M` | Закрыть неизменённый `planned`/`stopped`; остановленный сервер остаётся выключенным |
 | `uv run omk admin --config .omk-admin/operator.toml backups plan --server dj2` | Приватный план копии остановленного Docker-мира: image/container/volumes, inventory/runtime hash и env-политика. [Настройка](../COLD_BACKUPS.md) |
 | `uv run omk admin --config .omk-admin/operator.toml resource-resets inspect --server dj2 --dimension -18000` | Read-only сводка player/FTB/JED ссылок ресурсного мира в остановленном Linux Docker volume. [Настройка и границы проверки](../RESOURCE_RESET_INSPECTION.md). Сброс не выполняет. |
 | `uv run omk admin --config .omk-admin/operator.toml resource-resets inspect --server dj2 --dimension -18000 --preflight` | Дополнительно: консервативная точка около защищённого спавна, сохранённые NBT-ссылки модов и ID RFTools. [Лимиты и неполное покрытие](../RESOURCE_RESET_PREFLIGHT.md). Только владелец, read-only, без wipe/отвязки. |
