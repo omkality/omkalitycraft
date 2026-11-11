@@ -1,5 +1,38 @@
 # Разработка OmkalityCraft
 
+## Owner loopback candidate lifecycle — 11 ноября 2026
+
+`resource-resets slot-plan/create/start/stop/status/reconcile/release` создаёт
+проверочный контейнер вокруг sealed кандидата. Явный Forge template, pinned
+image/JAR, public Drasl metadata и owned bridge; game/RCON только loopback.
+Source остаётся выключенным, source/store read-only при proof. Сохраняются
+полный runtime receipt, immutable container ID и durable lifecycle intents.
+При потере ответа reconcile проверяет факты без повторных lifecycle-команд.
+Чистый stop и bounded private log предшествуют release; volume сохраняется.
+Parent abandon запрещён до подтверждённого release, даже если контейнера уже нет.
+
+Linux Docker / полная DJ2 2.23.4: 42 native / 130 independent условий. Два
+Drasl-аккаунта, один backup, два старта source и один owner-start кандидата.
+Потеря каждого из четырёх ответов восстановлена, оба игрока вошли, `/resource`
+работает, прежний source вернулся. 320 исходных world-файлов неизменны во время
+trial; 302 файла кандидата и 2015 runtime-файлов сверены. Typed вещи/XP/UUID,
+остальные FTB homes/claims и исходный ресурс сохранены. Все own scopes удалены
+после экспорта. Один fixture-export отказ исключён; источник сверён и сохранён.
+
+55 новых synthetic случаев; Windows 1579 unit/UI / 16 skipped, Linux focused
+385; Ruff/Black/source boundary/credential-pattern scan. Invalid transition
+guard дополнительно проверен red/green после native, успешный путь неизменен.
+Core 0.3.5 / DJ2Fix 0.1.4 / Client 0.1.1 и player releases прежние. PlaneFix fake
+OP policy не менялась; readiness не является permissions/игровой приёмкой.
+
+Следующий этап #32/#33 — закрыть вход при переключении и проверить explicit
+cutover/recovery; online-эвакуация, оставшиеся модовые ссылки, общее ограничение
+хранения и один scheduler отдельно. Restart после stop внутри того же slot,
+публичное переключение и wipe любого измерения пока не поддерживаются.
+`ready_for_players=false`; #41 открыта. VPS для следующего изолированного этапа
+пока не нужен. [Команды и пределы](OWNER_CANDIDATE_SLOTS.md),
+[протокол](validation/dj2-owner-candidate-slot-2026-11-11.json).
+
 ## Окружение reset-кандидата и пробный запуск — 11 ноября 2026
 
 Owner `resource-resets runtime-plan/runtime-stage/runtime-verify` готовит точные

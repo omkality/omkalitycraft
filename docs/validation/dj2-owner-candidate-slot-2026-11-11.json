@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "date": "2026-11-11",
+  "issues": [
+    32,
+    33,
+    41
+  ],
+  "status": "accepted-owner-controlled-loopback-candidate-lifecycle-only",
+  "implementation_commit": "5e0f5ae65ce751cbfdb122b0fd34ee4ed3ab87d2",
+  "pack": "Divine Journey 2 2.23.4",
+  "forge": "1.12.2-14.23.5.2860",
+  "components_unchanged": {
+    "core": {
+      "version": "0.3.5",
+      "file": "OmkalityCore-0.3.5.jar",
+      "sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1"
+    },
+    "dj2fix": {
+      "version": "0.1.4",
+      "file": "OmkalityDJ2Fix-0.1.4.jar",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client": {
+      "version": "0.1.1",
+      "file": "OmkalityClient-0.1.1.jar",
+      "sha256": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+    }
+  },
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+  "template": {
+    "adapter": "forge112-cold-candidate-v1",
+    "path": "profiles/runtime/forge112-server.json",
+    "sha256": "e7f26e86e751e06c3f36846c53fa49b3a9beb3ac417efb7a0b9430d4dc8875d3"
+  },
+  "native": {
+    "ok": true,
+    "conditions": 42,
+    "independent_conditions": 130,
+    "source_boots": 2,
+    "candidate_boots": 1,
+    "drasl_accounts": 2,
+    "cold_backups": 1,
+    "graphical_client": false,
+    "source_world_files_byte_identical_during_trial": 320,
+    "candidate_world_files_before_start": 302,
+    "runtime_files": 2015,
+    "runtime_bytes": 480187632,
+    "case_sensitive_path_groups": 34,
+    "candidate_memory_mib": 6144,
+    "candidate_cpus": 4,
+    "candidate_heap_mib": 4096,
+    "lost_create_start_stop_remove_reconciled_without_repeating_command": true,
+    "actual_owner_cli_create_start_stop_release": true,
+    "immutable_container_identity": true,
+    "loopback_game_and_rcon_only": true,
+    "original_stays_off_during_candidate_trial": true,
+    "private_release_log_bounded_and_hash_verified": true,
+    "release_removes_only_container_and_keeps_volume": true,
+    "unconfirmed_release_blocks_parent_abandon": true,
+    "explicit_parent_abandon_then_original_resume": true,
+    "typed_inventory_xp_uuid_and_other_ftb_data_preserved": true,
+    "resource_home_stays_removed_and_other_homes_claims_preserved": true,
+    "original_resource_identity_retained": true,
+    "candidate_resource_regenerates_with_same_frozen_policy": true,
+    "actual_backup_zip_crc_sha_and_every_archived_byte_verified": true,
+    "all_owned_scopes_removed_after_export": true,
+    "archive_sha256": {
+      "checkpoints/backups.tar": "c2ab7b4bf4e27815bfef913bf7340f294e8b86947fb5d4600a66926cfea491c1",
+      "checkpoints/candidate-after-slot.tar": "7d15cfa5a0e566bd2b6c98bfeda2429ff8c8b1450ca431e598cb8b591e4bdd8d",
+      "checkpoints/candidate-sealed.tar": "c7e97c9b2b6c7c7d70535d65a416d49fb255c48d56ee70781700c842bfc55951",
+      "checkpoints/source-after-runtime.tar": "b89619f7dd8ab34885368f7f26cb3d2f42ca38ae27f38295fdc370667fc62246",
+      "checkpoints/source-after-trial.tar": "b89619f7dd8ab34885368f7f26cb3d2f42ca38ae27f38295fdc370667fc62246",
+      "checkpoints/source-before.tar": "b89619f7dd8ab34885368f7f26cb3d2f42ca38ae27f38295fdc370667fc62246",
+      "checkpoints/source-final.tar": "c0fc0d5448ecb638854bc8c280524ed772d8e73cef9b85b5f5e81534c702723b",
+      "checkpoints/source-runtime.tar": "5203780793145ddadccbcec95979e8aa2e6d8b4ad814646ece18e2197a2cc87f"
+    }
+  },
+  "synthetic": {
+    "new_cases": 55,
+    "windows_unit_ui_passed": 1579,
+    "windows_skipped": 16,
+    "linux_focused_passed": 385,
+    "linux_image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "linux_memory_mib": 1024,
+    "linux_cpus": 2,
+    "linux_network": "none",
+    "linux_source_readonly": true,
+    "owned_linux_container_removed": true,
+    "real_minecraft_in_unit_tests": false
+  },
+  "regression": {
+    "create_reconciliation_accepts_only_owned_container_before_unused_volume_guard": true,
+    "planned_release_does_not_require_absent_initial_container_snapshot": true,
+    "invalid_transitions_refuse_before_initial_snapshot_lookup": true,
+    "red_then_green_tests": true,
+    "last_post_native_change": "guard invalid transition before initial identity lookup; successful lifecycle unchanged"
+  },
+  "excluded_early_runs": {
+    "count": 1,
+    "accepted_as_native_validation": false,
+    "reason": "private exporter incorrectly required zero references after a clean stopped candidate; no game crash",
+    "source_unchanged": true,
+    "candidate_cleanly_released_and_owned_scopes_removed_after_export": true
+  },
+  "boundaries": {
+    "owner_loopback_container_lifecycle": true,
+    "public_ingress_or_cutover": false,
+    "online_evacuation": false,
+    "new_mod_transport_adapters": false,
+    "wipe_any_dimension": false,
+    "full_quest_or_hard_pvp_acceptance": false,
+    "ready_for_players": false,
+    "new_jars": false,
+    "player_release": false,
+    "vps_deployment": false,
+    "periodic_backup_writer_added": false,
+    "fake_planefix_operator_policy_changed": false,
+    "raw_labs_credentials_world_payloads_private": true
+  },
+  "source_checks": {
+    "ruff": true,
+    "black": true,
+    "public_mod_source_boundary": true,
+    "changed_source_credential_pattern_scan": true,
+    "private_fixture_credential_pattern_scan": true
+  }
+}
