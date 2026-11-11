@@ -1,5 +1,25 @@
 # Разработка OmkalityCraft
 
+## Linux-права несекретного ingress template — 12 ноября 2026
+
+Воспроизведён реальный different-UID отказ HAProxy: leaf `700` / file `600`
+другого host owner не читаются root-контейнером с ALL caps dropped. `prepare`
+теперь готовит только несекретный leaf `755` / template `644`; приватный parent
+`700`, credentials и admin socket `600` прежние. Legacy leaf исправляется при
+повторном prepare только после точного content proof и отсутствия unknown files.
+
+Настоящий pinned HAProxy/Linux Docker: 7 условий, UID 12345 против container UID0,
+legacy negative и исправленный positive config-check, реальный closed runtime с
+нулём sessions, socket 600, clean stop и удаление собственных scopes. Два новых
+unit случая; Windows 1705 / 31 skipped, Linux focused 526, Ruff/Black.
+Это proxy-приёмка, Minecraft не запускался. Игровой функционал/порты не менялись.
+
+PR #140 и #141 приняты в dev после 9/9 CI каждый. Следующий объём #33 остаётся
+общим budget/scheduler/off-host; #32 — остальными transport adapters/online
+evacuation, затем graphical и VPS deployment #38/#41.
+[Права и повторная подготовка](OWNER_INGRESS.md),
+[протокол](validation/ingress-linux-uid-2026-11-12.json).
+
 ## Read-only учёт диска — 12 ноября 2026
 
 `omk admin storage inspect --server dj2` считает метаданные source/store и явно
