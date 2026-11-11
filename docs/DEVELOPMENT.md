@@ -1,5 +1,37 @@
 # Разработка OmkalityCraft
 
+## Owner resource staging и барьер возврата — 11 ноября 2026
+
+`omk admin resource-resets` готовит отдельный data-only target только из
+остановленного maintenance window и завершённого cold backup этой остановки.
+Source/store read-only; один stage в пустой явно принадлежащий target, durable
+intent и readonly verify после потери acknowledgement. `list` возвращает ID без
+Docker. Пока кандидат не abandoned, исходное окно не start/cancel; abandon
+сохраняет файлы и разрешает возврат исходного immutable контейнера.
+
+Общий реестр restore/reset исключает совпадение с любыми source/store/peer
+volumes. Политика и preflight env заморожены. Исправлен obsolete v1 gate в
+inspection: adapter/SHA берётся из текущего reviewed data profile, проверяется
+до/после worker. Red/green регрессия и future-profile/hash-race контроли прошли.
+
+Полная DJ2 2.23.4 / Linux Docker: 30 native + 70 independent условий. Два
+аккаунта, два старта исходного сервера, один реальный backup, два отдельных
+кандидата (один после потери ответа stage). При обеих подготовках 320 исходных
+world-файлов прежние; каждый target 302 файла / 4 изменения / 18 исключений.
+Ресурсные home/197 claims очищены; остальные home/1444 claims, FTB authority,
+typed inventory/XP/UUID сохранены. Барьер и явный abandon проверены. Исходник
+запущен с прежним ресурсом; все собственные Docker scopes очищены после экспорта.
+
+44 новых synthetic случая; Windows 1425 unit + 55 UI / 12 skipped, Linux focused
+282; Ruff/Black. Один ранний fixture-прогон с конвертированным Underground Biomes
+каменным полом исключён; железная платформа принята без ослабления allowlist.
+Графический клиент/кандидат не запускались. Core 0.3.5 / DJ2Fix 0.1.4 / Client
+0.1.1 прежние. Переключение, online evacuation, более широкие адаптеры и реальная
+игровая высадка после reset остаются в #32; единый scheduler/off-host budget —
+в #33; #41 открыт. VPS пока не нужен.
+[Руководство](OWNER_RESOURCE_STAGING.md),
+[обезличенный протокол](validation/dj2-owner-resource-staging-2026-11-11.json).
+
 ## Остановка, копия и возврат того же контейнера — 11 ноября 2026
 
 Owner-only `omk admin maintenance` фиксирует pinned container/volume identities,

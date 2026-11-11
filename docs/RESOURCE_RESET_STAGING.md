@@ -3,8 +3,9 @@
 Следующий слой после [read-only inspection](RESOURCE_RESET_INSPECTION.md) —
 внутренний Linux worker `omk.resource_reset_stage`. Он строит **новую копию данных**
 из свежего проверенного backup, не меняет источник и не запускает сервер.
-Owner CLI пока предоставляет только `resource-resets inspect`: рабочей команды
-сброса и автоматического переключения томов ещё нет.
+Owner CLI связывает worker с остановкой, completed backup и отдельным пустым
+volume через `plan/stage/verify`; рабочего wipe и переключения томов ещё нет.
+[Порядок, барьер запуска и восстановление](OWNER_RESOURCE_STAGING.md).
 
 Опциональная `position:"auto"` выбирает точку по сохранённой геометрии защищённого
 спавна и требует чистого прохода известных модовых ссылок. [Профиль, env-лимиты,
@@ -32,8 +33,8 @@ Owner CLI пока предоставляет только `resource-resets insp
 
 Source и backup монтируются read-only, запись разрешена только в новый target.
 Helper работает без сети, Docker socket и дополнительных capabilities, с pinned
-Python image. Контроллеру будущей рабочей операции ещё предстоят ownership/lifecycle
-проверки и общая owner-блокировка на всём протяжении процедуры.
+Python image. Owner controller проверяет ownership/lifecycle и держит общую
+блокировку; переключение на кандидата остаётся отдельной задачей.
 
 ## Рассмотренные изменения
 
