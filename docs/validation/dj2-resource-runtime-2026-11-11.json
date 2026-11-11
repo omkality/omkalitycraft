@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "date": "2026-11-11",
+  "issues": [
+    32,
+    33,
+    41
+  ],
+  "status": "accepted-cold-runtime-seal-and-private-trial-only",
+  "implementation_commit": "15bbaeeef6f61288119f3753d276655671f6fa5e",
+  "pack": "Divine Journey 2 2.23.4",
+  "forge": "1.12.2-14.23.5.2860",
+  "components_unchanged": {
+    "core": {
+      "version": "0.3.5",
+      "file": "OmkalityCore-0.3.5.jar",
+      "sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1"
+    },
+    "dj2fix": {
+      "version": "0.1.4",
+      "file": "OmkalityDJ2Fix-0.1.4.jar",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client": {
+      "version": "0.1.1",
+      "file": "OmkalityClient-0.1.1.jar",
+      "sha256": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+    }
+  },
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+  "runtime_adapter": "forge112-cold-runtime-v1",
+  "native": {
+    "ok": true,
+    "conditions": 49,
+    "independent_conditions": 121,
+    "source_boots": 2,
+    "candidate_trial_boots": 2,
+    "drasl_accounts": 2,
+    "cold_backups": 1,
+    "graphical_client": false,
+    "original_world_files_unchanged_during_runtime_and_trial": 320,
+    "candidate_world_files_before_trial": 302,
+    "runtime_files": 2015,
+    "runtime_bytes": 480187632,
+    "case_sensitive_path_groups": 34,
+    "all_runtime_access_eula_bytes_match_source": true,
+    "empty_private_java_work_directories": true,
+    "lost_reply_after_completed_runtime_write_recovered_readonly": true,
+    "repeated_write_refused": true,
+    "data_verify_cannot_downgrade_runtime_state": true,
+    "same_candidate_container_restarted": true,
+    "two_clean_trial_stops": true,
+    "no_game_operators": true,
+    "typed_inventory_xp_uuid_gamemode_preserved_after_both_trial_boots": true,
+    "resource_home_stays_removed_and_other_homes_claims_preserved": true,
+    "regenerated_resource_uses_same_frozen_seed_and_ownership_policy": true,
+    "trial_container_reference_blocks_abandon": true,
+    "explicit_abandon_then_original_same_container_resume": true,
+    "original_resource_identity_and_player_dimensions_retained": true,
+    "actual_backup_zip_crc_sha_and_all_archived_bytes_match_original": true,
+    "all_owned_scopes_removed_after_export": true,
+    "archive_sha256": {
+      "checkpoints/backups.tar": "d9df358d22ec976967aaf2a3aafb7d4733893ecc51e0a956bc7d2f770a26ad84",
+      "checkpoints/candidate-after-first.tar": "b7529bde1d5cb9a7f5d8cf80e577ef6fe26b2fe6a4fd17dd6105617a1e195e14",
+      "checkpoints/candidate-final.tar": "5bac55c66d9612448fe86628bee1305cce2d92e658f13df61fa2bf742ded945d",
+      "checkpoints/candidate-sealed.tar": "e9fb6fa91e26f1d0f55b914527156ba3b77d9e281593a3278aa7d1a92767af1f",
+      "checkpoints/source-after-runtime.tar": "9cac7620f652deaa4ebbf4ce9917de3df522c78d7b96ae8e78477a56fd02c98c",
+      "checkpoints/source-after-trial.tar": "9cac7620f652deaa4ebbf4ce9917de3df522c78d7b96ae8e78477a56fd02c98c",
+      "checkpoints/source-before.tar": "9cac7620f652deaa4ebbf4ce9917de3df522c78d7b96ae8e78477a56fd02c98c",
+      "checkpoints/source-final.tar": "d2ed87bf479057b9e08b1a0e6843bfbe30a5b9b7c296c2abccec3b6f63a1d35f",
+      "checkpoints/source-runtime.tar": "93e2b8032c7d136e314e419864538d970ad06c0a0c2929d42ea9a2ccdc17f061"
+    }
+  },
+  "synthetic": {
+    "new_cases": 48,
+    "windows_unit_ui_passed": 1524,
+    "windows_skipped": 16,
+    "linux_focused_passed": 330,
+    "linux_image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "linux_memory_mib": 1024,
+    "linux_cpus": 2,
+    "linux_network": "none",
+    "linux_source_readonly": true,
+    "owned_linux_container_removed": true,
+    "real_minecraft_in_unit_tests": false
+  },
+  "regression": {
+    "runtime_casefold_reproduced_on_actual_pack": true,
+    "unit_failed_before_fix_and_passed_after_fix": true,
+    "world_archive_validation_unchanged": true,
+    "linux_runtime_preserves_distinct_case_sensitive_paths": true
+  },
+  "excluded_early_runs": {
+    "count": 2,
+    "accepted_as_native_validation": false,
+    "reasons": [
+      "runtime reused portable archive cross-file casefold; fixed narrowly for Linux runtime",
+      "fixture read restart log before creating it; Minecraft kept running and was cleanly stopped before export"
+    ],
+    "both_sources_unchanged_and_own_scopes_removed_after_export": true
+  },
+  "boundaries": {
+    "source_and_store_readonly": true,
+    "target_written_once": true,
+    "owner_container_create_or_start": false,
+    "owner_cutover_or_live_wipe": false,
+    "online_evacuation": false,
+    "new_mod_transport_adapters": false,
+    "full_quest_or_hard_pvp_acceptance": false,
+    "ready_for_start": false,
+    "ready_for_players": false,
+    "new_jars": false,
+    "player_release": false,
+    "vps_deployment": false,
+    "periodic_backup_writer_added": false,
+    "raw_labs_and_runtime_payloads_private": true
+  },
+  "source_checks": {
+    "ruff": true,
+    "black": true,
+    "public_mod_source_boundary": true,
+    "public_changed_source_secret_scan": true,
+    "private_fixture_source_secret_scan": true
+  }
+}

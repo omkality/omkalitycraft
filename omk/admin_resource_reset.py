@@ -204,7 +204,7 @@ def inspect(config, server, dimension, environment=None, *, preflight=False):
 def add_resource_reset_parser(actions):
     parser = actions.add_parser(
         "resource-resets",
-        help="Resource inspection and separate data-only staging; no live wipe",
+        help="Resource inspection and separate cold candidate preparation; no live wipe",
     )
     sub = parser.add_subparsers(dest="resource_reset_action", required=True)
     command = sub.add_parser("inspect")

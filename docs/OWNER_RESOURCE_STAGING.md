@@ -2,7 +2,8 @@
 
 `omk admin resource-resets` связывает проверенную остановку, завершённую копию
 и **отдельный пустой Linux volume**. Команды `plan`, `stage`, `verify`, `status`,
-`list`, `abandon` доступны только в локальной утилите владельца. Источник и backup
+`list`, `abandon` и отдельная подготовка runtime доступны только в локальной
+утилите владельца. Источник и backup
 монтируются read-only. Серверный endpoint не переключается; кандидат получает
 `ready_for_start=false`.
 
@@ -72,6 +73,84 @@ FTB homes/claims/warps/back/death, позиции игроков и извест
 `verify` заново читает архив, источник, замороженный план, receipt и **каждый**
 файл кандидата. `staged` означает готовность копии данных к следующему этапу
 проверки, а не разрешение запуска.
+
+## Проверенная копия серверного окружения
+
+После успешного data stage можно подготовить вокруг него окружение остановленного
+источника. Это всё ещё отдельный неиспользуемый target, без запуска и переключения:
+
+```console
+uv run omk admin --config .omk-admin/operator.toml resource-resets runtime-plan --operation R
+uv run omk admin --config .omk-admin/operator.toml resource-resets runtime-stage --operation R
+uv run omk admin --config .omk-admin/operator.toml resource-resets runtime-verify --operation R
+```
+
+План фиксирует SHA и размер всех известных runtime-файлов: корневые JAR,
+`server.properties`, `mods/`, `libraries/`, `config/`, `scripts/`, `groovy/`,
+`resources/`, `local/`, `.omk/authlib-injector.jar` и `.omk/log4j2.xml`.
+Дополнительно сохраняются точные текущие `eula.txt`, `ops.json`,
+`banned-players.json`, `banned-ips.json`, `whitelist.json`. Существующее согласие
+EULA должно быть `true`; непустой список OP отклоняется, поскольку на наших
+серверах игровых операторов не будет. Утилита не меняет права ради прохождения
+проверки. `level-name` обязан совпасть с подготовленным миром.
+
+Корневые logs/crash-reports/caches/backup и прочие неизвестные корневые файлы
+не копируются. Содержимое перечисленных runtime-каталогов сохраняется целиком.
+`.omk/tmp/` и `.omk/java-home/` создаются пустыми. Копия
+`server.properties` содержит исходный RCON-пароль: она остаётся только в
+приватном Linux volume. Вывод CLI и receipt содержат fingerprints и счётчики,
+без содержимого конфигураций. Нельзя публиковать сам runtime volume.
+
+Для размера действует общий `OMK_BACKUP_STAGING_BYTES`: учитываются **мир вместе
+с runtime**, число файлов и запас метаданных. Свободное место повторно проверяется
+с `OMK_BACKUP_RESERVE_BYTES` до записи. Структурный предел известного runtime —
+20 тысяч файлов / 8 ГиБ; он совпадает с пределом fingerprint источника.
+Неизвестные дополнительные файлы, каталоги, симлинки и hardlinks отклоняются.
+Регистр Linux-путей сохраняется: разные по регистру имена не объединяются.
+Это отдельная политика runtime, она не меняет валидацию world ZIP.
+
+`runtime-stage` записывается один раз. Состояния журнала:
+`runtime-planned → runtime-writing → runtime-ready`; при ошибке контроллера —
+`runtime-incomplete`. После потери ответа вызывается `runtime-verify`, а не
+повторная запись. Проверяются весь runtime, прежний data receipt и каждый файл
+мира. Частичный результат остаётся для разбора; полного receipt у него нет.
+
+После `runtime-plan` обычный data `verify` намеренно не используется: он не должен
+сбросить состояние окружения обратно в `staged`. `status/list` показывают общий
+stage и признак `runtime_prepared`. Барьер maintenance остаётся до явного
+`abandon`. Любая ссылка target на running/stopped container/helper блокирует
+операции. Подготовка окружения не создаёт игровой контейнер, не одобряет cutover и не
+обходит оставшиеся проверки модовых ссылок. Все ready-флаги остаются `false`.
+
+### Приёмка окружения и trial — 11 ноября 2026
+
+Полная DJ2 2.23.4 в Linux Docker: **49 native / 121 independent условий**.
+Два аккаунта Drasl, один холодный backup, два старта исходника и два отдельных
+lab-only старта одного кандидата. До trial в нём 302 world-файла и 2015 runtime-файлов
+(480187632 байта). Каждый runtime-файл побайтно совпадает с исходником;
+34 группы имён с разным регистром сохранены раздельно. В момент упаковки обе
+рабочие Java-папки пустые. Все 320 исходных world-файлов неизменны при подготовке
+и trial. Потеря ответа после завершённой записи восстановлена readonly verify.
+
+Оба аккаунта вошли в новую копию, ресурс создался без старой DIM и пережил restart.
+Frozen seed/ownership policy не менялись: это регенерация, не автоматическая
+смена сида. Полные типизированные Inventory/XP/UUID сохранены; ресурсный home
+не вернулся, другой home и claims остальных измерений сохранились. После clean
+stop и удаления только своего trial container явный abandon разрешил исходный
+restart с прежним ресурсом. Все свои Docker scopes очищены после экспорта.
+
+Два ранних опыта исключены: casefold gate, воспроизведённый и исправленный
+red/green, и гонка fixture restart-log до его создания. Во втором случае
+Minecraft продолжал работать и был штатно остановлен перед экспортом/очисткой.
+Исходники обоих опытов не изменились. 48 новых synthetic случаев; Windows
+1524 unit/UI / 16 skipped, Linux focused 330. Ни один опыт не выдаётся за
+графическую или полную quest/Hard/PvP приёмку.
+
+Trial запускается только приватной lab-фикстурой в свежих собственных volumes.
+Owner controller не создаёт игровой контейнер и не предоставляет start/cutover:
+immutable deployment slot, закрытие внешнего входа и переключение/recovery
+остаются в #32/#33. JAR и player releases прежние, VPS пока не нужен.
+[Обезличенный протокол](validation/dj2-resource-runtime-2026-11-11.json).
 
 ## Барьер и восстановление после прерывания
 
