@@ -1,0 +1,13 @@
+# Private .omk-admin/candidate-slots.toml, mode 600. No public game port.
+schema = 1
+[servers.dj2]
+container = "omk-dj2-candidate-NEW_ID"
+network = "omk-private-bridge"
+network_label = "omkality.network.id"
+network_owner = "REPLACE_WITH_NETWORK_OWNER"
+game_host_port = 25578
+rcon_host_port = 25579
+game_container_port = 25565
+rcon_container_port = 25575
+auth_url = "http://drasl:25585/authlib-injector"
+metadata_file = "slot-authlib-metadata.json"
