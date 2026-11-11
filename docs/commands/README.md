@@ -93,6 +93,13 @@ backup → возврат того же Docker-контейнера и `reconcil
 | `uv run omk admin --config .omk-admin/operator.toml recover-account run --account ACCOUNT_UUID` | Сброс с отзывом токенов и активных/незавершённых подключений; один новый пароль в приватном терминале. Требуются Drasl admin и Core 0.2.10/RCON-only адаптер каждого сервера. Это account UUID из плана, не игровой UUID. |
 | `uv run omk admin --config .omk-admin/operator.toml recover-account status --account ACCOUNT_UUID` | Прочитать приватный journal этапов без пароля; не считать потерянный ответ доказательством lock/unlock. |
 | `uv run omk admin --config .omk-admin/operator.toml recover-account resume --account ACCOUNT_UUID` | Явно продолжить проверенную незавершённую операцию с новой сменой секрета; успешную операцию повторять нельзя. |
+| `uv run omk admin --config .omk-admin/operator.toml ingress prepare --server dj2` | Создать приватный закрытый HAProxy template; контейнер не создаёт. [Подготовка и env](../OWNER_INGRESS.md) |
+| `uv run omk admin --config .omk-admin/operator.toml ingress inspect --server dj2` | Текущие closed/TCP sessions и immutable fingerprint; loopback only |
+| `uv run omk admin --config .omk-admin/operator.toml ingress plan --server dj2 --state closed` | План закрытия входа; для открытия `--state open`, только после готовности source и завершения pending операций |
+| `uv run omk admin --config .omk-admin/operator.toml ingress apply --operation I` | Одна фиксированная enable/disable команда после durable intent; повтор запрещён |
+| `uv run omk admin --config .omk-admin/operator.toml ingress status --operation I` | Только сохранённая сводка, без Docker; не непрерывный мониторинг |
+| `uv run omk admin --config .omk-admin/operator.toml ingress verify --operation I` | Подтвердить факты после потерянного ответа без повторной записи |
+| `uv run omk admin --config .omk-admin/operator.toml ingress cancel --operation I` | Отменить незавершённый intent только при проверенном закрытом входе; не открывает сервер |
 | `uv run omk admin --config .omk-admin/operator.toml maintenance plan --server dj2` | План обслуживания запущенного owned Docker-контейнера, точный loopback RCON binding и runtime hash. [Порядок и границы](../OWNER_MAINTENANCE.md) |
 | `uv run omk admin --config .omk-admin/operator.toml maintenance stop --operation M` | Штатная `stop`, durable intent, ожидание exit 0 и чистого stop log; без force kill |
 | `uv run omk admin --config .omk-admin/operator.toml maintenance start --operation M --backup-operation B` | Только тот же immutable container ID после завершённой копии этой остановки; readonly повторная проверка данных/архива и стабильной готовности |
