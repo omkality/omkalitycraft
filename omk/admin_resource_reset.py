@@ -228,12 +228,28 @@ def add_resource_reset_parser(actions):
         "runtime-plan",
         "runtime-stage",
         "runtime-verify",
+        "slot-plan",
+        "slot-create",
+        "slot-start",
+        "slot-stop",
+        "slot-status",
+        "slot-reconcile",
+        "slot-release",
     ):
         sub.add_parser(action).add_argument("--operation", required=True)
     sub.add_parser("list").add_argument("--server", required=True)
 
 
 def run_resource_reset(config, args):
+    if args.resource_reset_action.startswith("slot-"):
+        from omk import candidate_slots as slots  # noqa: PLC0415
+
+        action = args.resource_reset_action.removeprefix("slot-")
+        return (
+            slots.plan(config, args.operation)
+            if action == "plan"
+            else slots.execute(config, args.operation, action)
+        )
     if args.resource_reset_action != "inspect":
         from omk import admin_reset_staging as staging  # noqa: PLC0415
 

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "adapter": "forge112-cold-candidate-v1",
+  "main": "net.minecraftforge.fml.relauncher.ServerLaunchWrapper",
+  "forge": {
+    "path": "forge-1.12.2-14.23.5.2860.jar",
+    "sha256": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "source": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2860/forge-1.12.2-14.23.5.2860-universal.jar"
+  },
+  "agent": {
+    "path": ".omk/authlib-injector.jar",
+    "sha256": "9c7f4343e6c82034958ffb48c14a2cb0c85928be7283103ce17da00c6d5a7b10",
+    "source": "https://github.com/yushijinhun/authlib-injector/releases/download/v1.2.8/authlib-injector-1.2.8.jar"
+  }
+}

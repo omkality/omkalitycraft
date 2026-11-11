@@ -98,7 +98,13 @@ def target_for(config, server, source, filename):
     return selected
 
 
-def destination(target, *, unused=False):
+def destination(target, *, unused=False, allowed_container=None):
+    if allowed_container is not None and (
+        not unused or not re.fullmatch(r"[a-f0-9]{64}", allowed_container)
+    ):
+        raise AdminError(
+            "Only an explicit immutable candidate container may be allowed"
+        )
     rows = json.loads(backups.docker("volume", "inspect", target["data_volume"]))
     if (
         len(rows) != 1
@@ -106,9 +112,11 @@ def destination(target, *, unused=False):
         or (rows[0].get("Labels") or {}).get(target["label"]) != target["owner"]
     ):
         raise AdminError("Staging volume identity is not explicitly owned")
-    if backups.docker(
-        "ps", "-aq" if unused else "-q", "--filter", "volume=" + target["data_volume"]
-    ).strip():
+    args = ["ps", "-aq" if unused else "-q"]
+    if allowed_container:
+        args += ["--no-trunc"]
+    refs = backups.docker(*args, "--filter", "volume=" + target["data_volume"]).split()
+    if set(refs) - ({allowed_container} if allowed_container else set()):
         raise AdminError(
             "Staging volume is referenced by a container/helper"
             if unused

@@ -164,7 +164,7 @@ def backup_for(config, record):
     return backup
 
 
-def stable(config, record):
+def stable(config, record, *, allowed_container=None):
     window = maintenance.read_record(config, record["maintenance_operation"])
     if (
         window.get("stage") != "stopped"
@@ -183,7 +183,11 @@ def stable(config, record):
     maintenance.current(config, window)
     if (
         backups.checkpoint(record["source"]) != record["checkpoint"]
-        or owner_volumes.destination(record["target"], unused=True)
+        or owner_volumes.destination(
+            record["target"],
+            unused=True,
+            **({"allowed_container": allowed_container} if allowed_container else {}),
+        )
         != record["destination"]
     ):
         raise AdminError("Resource staging source lifecycle or destination changed")
@@ -194,12 +198,16 @@ def stable(config, record):
         )
 
 
-def worker(record, action):
+def worker(record, action, *, allowed_container=None):
     source, target, policy = record["source"], record["target"], record["settings"]
     # Never let Docker create an absent named volume on --mount.
     backups.volume(source)
     backups.volume(source, True)
-    owner_volumes.destination(target, unused=True)
+    owner_volumes.destination(
+        target,
+        unused=True,
+        **({"allowed_container": allowed_container} if allowed_container else {}),
+    )
     request = {
         "schema": 1,
         "action": action,
@@ -452,6 +460,10 @@ def execute(config, operation, action, environment=None):
         ):
             return status(record)
         backups.local_engine()
+        if action == "abandon":
+            from omk.candidate_slots import require_clear  # noqa: PLC0415
+
+            require_clear(config, operation)
         stable(config, record)
         if action == "abandon":
             save(config, record, "abandoned")
