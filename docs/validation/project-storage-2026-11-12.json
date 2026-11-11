@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "milestone": "project-storage-census-and-budget",
+  "runtime": {
+    "real_owner_cli": true,
+    "local_linux_docker": true,
+    "real_drasl": true,
+    "drasl_image_id": "sha256:51c185ec27c1896ed1cf6a5c20fd395722a8d8eaf3c9ad4149683c5e16c4b400",
+    "real_minecraft_started": false,
+    "game_fixture": "two isolated copies of accepted DJ2 exports; not GTNH acceptance",
+    "named_volumes": 10,
+    "files": 7700,
+    "auth_files": 6
+  },
+  "acceptance": {
+    "conditions": 38,
+    "independent_file_counts_and_logical_bytes": true,
+    "every_game_backup_staging_auth_shared_sha256_before_after_unchanged": true,
+    "real_auth_accounts_skin_signing_identity_survive_restart": true,
+    "one_filesystem_not_multiplied_ten_times": true,
+    "unattributed_host_usage_charged_conservatively": true,
+    "secret_payloads_not_emitted": true,
+    "owned_scopes_removed": true
+  },
+  "tests": {
+    "new_cases": 42,
+    "windows_passed": 1734,
+    "windows_skipped": 44,
+    "linux_focused_passed": 568,
+    "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "linux_cpus": 2,
+    "linux_memory_mib": 1024,
+    "unattributed_usage_regression_red_green": true
+  },
+  "boundaries": {
+    "metadata_only": true,
+    "configured_volumes_only": true,
+    "host_disk_complete": false,
+    "atomic_snapshot": false,
+    "backup_integrity_verified": false,
+    "enforced": false,
+    "admission_approved": false,
+    "existing_backup_store_policy_read": false,
+    "scheduler_added": false,
+    "automatic_deletion_added": false,
+    "live_vps_changed": false
+  }
+}

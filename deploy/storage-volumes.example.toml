@@ -1,0 +1,24 @@
+# Copy to .omk-admin/storage.toml, mode 600. This does not create or relabel volumes.
+# Use actual existing volume names and ownership labels on the local Docker engine.
+schema = 1
+
+[volumes.auth]
+# Example for: docker compose -p omk-auth -f deploy/auth/compose.yaml ...
+volume = "omk-auth_drasl-state"
+label = "com.docker.compose.project"
+owner = "omk-auth"
+
+# Optional shared volumes: uncomment only after explicit provisioning.
+# Never point these entries at game/source/store/target volumes or at each other.
+# [volumes.content]
+# volume = "omk-content"
+# label = "omkality.project.owner"
+# owner = "REPLACE_WITH_DEPLOYMENT_ID"
+# [volumes.reports]
+# volume = "omk-client-reports"
+# label = "omkality.project.owner"
+# owner = "REPLACE_WITH_DEPLOYMENT_ID"
+# [volumes.exports]
+# volume = "omk-private-export-staging"
+# label = "omkality.project.owner"
+# owner = "REPLACE_WITH_DEPLOYMENT_ID"
