@@ -209,13 +209,18 @@ def _write_edit(target, name, data):
         parent = parent.parent
 
 
-def _verified(request, source, storage, target):
+def _verified(request, source, storage, target, *, extra_roots=()):
     _archive, _manifest, _payloads, result, plan = _inputs(
         request, source, storage, target
     )
     if plan != request["expected"] or _read(target / PLAN) != plan:
         raise ValueError("Resource source, backup or recorded plan changed")
-    if {p.name for p in target.iterdir()} - {request["world"], PLAN, DONE}:
+    if {p.name for p in target.iterdir()} - {
+        request["world"],
+        PLAN,
+        DONE,
+        *extra_roots,
+    }:
         raise ValueError("Foreign files in resource staging target")
     actual = inventory(
         target / request["world"],
