@@ -134,6 +134,8 @@ def preparation(config, server, environment=None):
     folder.mkdir(parents=True, exist_ok=True, mode=0o700)
     path = folder / "haproxy.cfg"
     expected = template.render(spec, policy, target["container"]).encode()
+    if {p.name for p in folder.iterdir()} - {"haproxy.cfg"}:
+        raise AdminError("Ingress config directory contains unknown files")
     if path.exists():
         if not regular(path, config.private) or path.read_bytes() != expected:
             raise AdminError(
@@ -147,6 +149,11 @@ def preparation(config, server, environment=None):
             stream.write(expected)
             stream.flush()
             os.fsync(stream.fileno())
+    # Only this generated non-secret leaf is mounted into HAProxy. The private
+    # host parent remains closed. Container root with ALL capabilities dropped
+    # cannot read another host UID's mode-600 file or traverse its mode-700 leaf.
+    path.chmod(0o644)
+    folder.chmod(0o755)
     return {
         "ok": True,
         "config_dir": str(folder),
@@ -271,6 +278,13 @@ def capture(config, server, policy=None):
         not regular(path, config.private)
         or path.read_bytes() != expected
         or {p.name for p in folder.iterdir()} != {"haproxy.cfg"}
+        or (
+            os.name != "nt"
+            and (
+                path.stat().st_mode & 0o777 != 0o644
+                or folder.stat().st_mode & 0o777 != 0o755
+            )
+        )
     ):
         raise AdminError(
             "Ingress config is missing, linked, changed or has unknown files"
