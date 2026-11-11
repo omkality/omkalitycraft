@@ -1,5 +1,6 @@
-"""Owner-only inspection of stopped resource references; no reset implementation."""
+"""Owner resource inspection and separate candidate preparation; no live wipe."""
 
+import hashlib
 import json
 import re
 from uuid import uuid4
@@ -10,6 +11,7 @@ from omk.cold_backup_worker import digest
 from omk.profiles import PROJECT_ROOT
 from omk.resource_reset_inventory import validate_dimension
 from omk.resource_reset_preflight import (
+    PROFILE as PREFLIGHT_PROFILE,
     options_checked,
     settings as preflight_settings,
 )
@@ -42,7 +44,25 @@ def _cleanup_failed_worker(name, operation):
     backups.docker("rm", "--force", ids[0])
 
 
+def frozen_preflight_profile():
+    with PREFLIGHT_PROFILE.open("rb") as stream:
+        profile_raw = stream.read(65537)
+    profile = json.loads(profile_raw) if len(profile_raw) <= 65536 else {}
+    profile_id = profile.get("adapter")
+    if (
+        type(profile.get("schema")) is not int
+        or profile.get("schema") != 1
+        or not isinstance(profile_id, str)
+        or not re.fullmatch(r"[a-z0-9_.-]{1,128}", profile_id)
+    ):
+        raise AdminError("Invalid preflight data profile")
+    return profile_raw, profile_id
+
+
 def worker(target, dimension, settings, *, preflight_options=None):
+    profile_raw, profile_id = (
+        frozen_preflight_profile() if preflight_options is not None else (None, None)
+    )
     operation = uuid4().hex
     name = "omk-resource-inspect-" + operation
     args = [
@@ -141,7 +161,9 @@ def worker(target, dimension, settings, *, preflight_options=None):
             not isinstance(proof, dict)
             or type(proof.get("schema")) is not int
             or proof.get("schema") != 1
-            or proof.get("adapter") != "dj2-2.23.4-forge112-reset-preflight-v1"
+            or proof.get("adapter") != profile_id
+            or proof.get("profile_sha256") != hashlib.sha256(profile_raw).hexdigest()
+            or PREFLIGHT_PROFILE.read_bytes() != profile_raw
             or proof.get("world_changes") is not False
             or proof.get("ready_for_start") is not False
             or proof.get("portal_adapters_reviewed") is not False
@@ -181,7 +203,8 @@ def inspect(config, server, dimension, environment=None, *, preflight=False):
 
 def add_resource_reset_parser(actions):
     parser = actions.add_parser(
-        "resource-resets", help="Read-only resource reference inspection; no wipe"
+        "resource-resets",
+        help="Resource inspection and separate data-only staging; no live wipe",
     )
     sub = parser.add_subparsers(dest="resource_reset_action", required=True)
     command = sub.add_parser("inspect")
@@ -192,9 +215,31 @@ def add_resource_reset_parser(actions):
         action="store_true",
         help="Read saved landing geometry and known mod links; never wipe",
     )
+    command = sub.add_parser("plan")
+    command.add_argument("--server", required=True)
+    command.add_argument("--dimension", type=int, required=True)
+    command.add_argument("--maintenance-operation", required=True)
+    command.add_argument("--backup-operation", required=True)
+    for action in ("stage", "verify", "status", "abandon"):
+        sub.add_parser(action).add_argument("--operation", required=True)
+    sub.add_parser("list").add_argument("--server", required=True)
 
 
 def run_resource_reset(config, args):
+    if args.resource_reset_action != "inspect":
+        from omk import admin_reset_staging as staging  # noqa: PLC0415
+
+        if args.resource_reset_action == "list":
+            return staging.list_operations(config, args.server)
+        if args.resource_reset_action == "plan":
+            return staging.plan(
+                config,
+                args.server,
+                args.dimension,
+                args.maintenance_operation,
+                args.backup_operation,
+            )
+        return staging.execute(config, args.operation, args.resource_reset_action)
     return inspect(
         config, args.server, args.dimension, preflight=getattr(args, "preflight", False)
     )

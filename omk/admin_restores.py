@@ -5,106 +5,25 @@ automatic lifecycle, volume creation/adoption, promotion or deletion is provided
 """
 
 import json
-import os
 import re
-import tomllib
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from omk import admin_backups as backups
+from omk import (
+    admin_backups as backups,
+    owner_volumes,
+)
 from omk.admin import AdminError, _read_json, _write_private
 from omk.backup_store import _sync_directory
-from omk.fs import regular
 from omk.profiles import PROJECT_ROOT
 
 
-def _source_volumes(config):
-    # Iterate configured backup entries, not optional diagnostic-only servers.
-    # An invalid other entry must refuse instead of hiding an aliased volume.
-    with (config.private / "backups.toml").open("rb") as stream:
-        data = stream.read(65537)
-    if len(data) > 65536:
-        raise AdminError("Backup configuration exceeds limit")
-    entries = tomllib.loads(data.decode())["servers"]
-    volumes = set()
-    for name in entries:
-        item = backups.target_for(config, name)
-        volumes.update((item["data_volume"], item["store_volume"]))
-    return volumes
-
-
 def target_for(config, server, source):
-    path = config.private / "restores.toml"
-    if not regular(path, config.private) or (
-        os.name != "nt" and path.stat().st_mode & 0o077
-    ):
-        raise AdminError("Use a private mode-600 .omk-admin/restores.toml")
-    with path.open("rb") as stream:
-        data = stream.read(65537)
-    if len(data) > 65536:
-        raise AdminError("Restore configuration exceeds limit")
-    doc = tomllib.loads(data.decode())
-    if (
-        set(doc) != {"schema", "servers"}
-        or doc["schema"] != 1
-        or not isinstance(doc["servers"], dict)
-    ):
-        raise AdminError("Invalid restore configuration schema")
-    entries = doc["servers"]
-    if not entries or set(entries) - set(config.servers):
-        raise AdminError("Restore targets must belong to the operator allowlist")
-    volumes = _source_volumes(config)
-    targets = []
-    for name, entry in entries.items():
-        if (
-            not isinstance(entry, dict)
-            or set(entry) != {"data_volume", "owner", "label", "image", "release"}
-            or any(not isinstance(v, str) for v in entry.values())
-        ):
-            raise AdminError("Invalid restore target")
-        if any(
-            not backups.RESOURCE.fullmatch(entry[k])
-            for k in ("data_volume", "owner", "release")
-        ) or (
-            not re.fullmatch(r"omkality\.[a-z0-9_.-]{1,64}", entry["label"])
-            or not backups.PINS.fullmatch(entry["image"])
-        ):
-            raise AdminError("Invalid restore resource or image pin")
-        configured = source if name == server else backups.target_for(config, name)
-        if (
-            entry["image"] != configured["image"]
-            or entry["release"] != configured["release"]
-        ):
-            raise AdminError(
-                "Restore target must use the current pinned release and image"
-            )
-        targets.append(entry["data_volume"])
-    if len(set(targets)) != len(targets) or set(targets) & volumes:
-        raise AdminError(
-            "Restore volumes must be distinct from every source/store/restore target"
-        )
-    if server not in entries:
-        raise AdminError("Server has no explicit restore target")
-    return dict(entries[server])
+    return owner_volumes.target_for(config, server, source, "restores.toml")
 
 
 def destination(target):
-    rows = json.loads(backups.docker("volume", "inspect", target["data_volume"]))
-    if (
-        len(rows) != 1
-        or rows[0]["Name"] != target["data_volume"]
-        or ((rows[0].get("Labels") or {}).get(target["label"]) != target["owner"])
-    ):
-        raise AdminError("Restore volume identity is not explicitly owned")
-    if backups.docker(
-        "ps", "-q", "--filter", "volume=" + target["data_volume"]
-    ).strip():
-        raise AdminError("Restore volume is mounted by an active container")
-    return {
-        "volume": target["data_volume"],
-        "created": rows[0]["CreatedAt"],
-        "owner": target["owner"],
-    }
+    return owner_volumes.destination(target)
 
 
 def worker(record, action):

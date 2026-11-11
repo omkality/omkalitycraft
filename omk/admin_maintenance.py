@@ -438,6 +438,9 @@ def execute(config, operation, action, *, backup_operation=None, environment=Non
             return status(record)
         value = current(config, record)
         if action == "cancel":
+            from omk.admin_reset_staging import require_clear  # noqa: PLC0415
+
+            require_clear(config, operation)
             if record["stage"] not in {"planned", "stopped"} or (
                 value != record["initial"]
                 if record["stage"] == "planned"
@@ -483,6 +486,9 @@ def request_stop(config, record, value, environment):
 
 
 def request_start(config, record, backup_operation):
+    from omk.admin_reset_staging import require_clear  # noqa: PLC0415
+
+    require_clear(config, record["operation"])
     if record["stage"] != "stopped":
         raise AdminError("Unsupported maintenance stage or action")
     if backups.checkpoint(record["target"]) != record["checkpoint"]:

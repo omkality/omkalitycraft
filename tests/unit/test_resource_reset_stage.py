@@ -18,6 +18,46 @@ from tests.unit.test_resource_reset_inventory import (
 LIMITS = BackupPolicy(32 * 1024**2, 3, 16 * 1024**2, 1)
 
 
+def test_auto_stage_receives_frozen_owner_preflight_options(data, monkeypatch):
+    request, source, storage, target, _ = data
+    options = stage.resource_reset_preflight.settings({"OMK_RESET_LANDING_RADIUS": "7"})
+
+    def preflight(*args, **kwargs):
+        assert kwargs["options"] is not None
+        return {
+            "can_stage_data": True,
+            "landing": {"position": [8, 100, 8]},
+            "policy": dict(kwargs["options"]),
+        }
+
+    monkeypatch.setattr(stage.resource_reset_preflight, "preflight", preflight)
+    request.update(action="plan", position="auto", preflight_options=options)
+    expected = stage.execute(request, source, storage, target)
+    assert expected["preflight"]["policy"]["landing_radius"] == 7
+    changed = {
+        **request,
+        "action": "stage",
+        "expected": expected,
+        "preflight_options": {**options, "landing_radius": 8},
+    }
+    with pytest.raises(ValueError, match="changed"):
+        stage.execute(changed, source, storage, target)
+    assert not list(target.iterdir())
+
+
+@pytest.mark.parametrize("bad", [{}, {"landing_radius": True}])
+def test_invalid_preflight_options_are_refused_before_target_write(data, bad):
+    request, source, storage, target, _ = data
+    with pytest.raises(ValueError):
+        stage.execute(
+            {**request, "action": "plan", "position": "auto", "preflight_options": bad},
+            source,
+            storage,
+            target,
+        )
+    assert not list(target.iterdir())
+
+
 def test_auto_point_is_frozen_in_plan_and_changed_preflight_refuses_stage(
     data, monkeypatch
 ):

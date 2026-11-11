@@ -1,0 +1,11 @@
+# Copy to private .omk-admin/resource-resets.toml, mode 600.
+# Use a new explicitly labelled EMPTY volume, distinct from every other target.
+schema = 1
+
+[servers.dj2]
+data_volume = "omk-dj2-resource-candidate-NEW_OPERATION"
+owner = "REPLACE_WITH_FRESH_CANDIDATE_ID"
+label = "omkality.server.id"
+image = "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5"
+release = "dj2-2.23.4-candidate"
+dimension = -18000
