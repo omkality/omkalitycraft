@@ -7,10 +7,12 @@ runtime и точный loopback RCON binding. Штатная остановка
 clean Docker checkpoint; запуск того же immutable ID требует завершённый backup
 этой остановки и readonly повторную проверку фактического архива/world/runtime.
 `Done` дополняется Core readiness и 15 секундами устойчивого состояния.
+Порядок stop/start проверяется по меткам одного Docker engine, независимо от
+расхождения часов VM и хоста; host intent timestamp остаётся полем аудита.
 Durable intents / `reconcile` не повторяют lifecycle-команды; stopped `cancel`
 оставляет источник выключенным. Пределы задаются env, журналы ограничены.
 
-Полная DJ2 2.23.4 в Linux Docker: 34 native / 58 независимых условий, три clean
+Полная DJ2 2.23.4 в Linux Docker: 34 native / 60 независимых условий, три clean
 старта/stop, два Drasl-аккаунта, две копии. 317 / 344 / 344 world-файла;
 весь фактический ZIP побайтно совпадает с соответствующим остановленным миром.
 Типизированные Inventory, XP, UUID, survival и основной мир сохранены.
@@ -18,7 +20,7 @@ Durable intents / `reconcile` не повторяют lifecycle-команды; 
 параллельное окно отвергнуты. Собственные game/auth/store scopes очищены
 после экспорта. Отдельный real Docker + fake RCON контроль остаётся synthetic.
 
-50 новых synthetic тестов; Linux focused 143, Windows unit/UI 1435/12 skipped,
+51 новых synthetic тестов; Linux focused 144, Windows unit/UI 1436/12 skipped,
 Ruff/Black/secret scan. Пять ранних неподтверждённых прогонов исключены;
 ограничения доказательств явно сохранены в протоколе. Подготовка игровых
 состояний идёт через stdin-очередь; произвольные world-команды vanilla RCON
