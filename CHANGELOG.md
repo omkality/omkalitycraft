@@ -1,5 +1,21 @@
 # Журнал изменений
 
+## Не выпущено — установка подготовленного мира
+
+- Owner `world-cutovers` переносит sealed ресурсный мир в тот же stopped source:
+  сохраняет runtime/auth/proxy/порты и прежний мир, не запускает Forge сам.
+- Два fsynced перемещения и durable intent: потерянный ответ проверяется
+  read-only, продолжение явное, повторного копирования нет. Возврат только до
+  первого start; после принятых игровых изменений такой откат запрещён.
+- Отзываемое разрешение одной попытки блокирует запоздавший Docker helper.
+  Отмена, подтверждение и interrupted metadata commit не удаляют поколения.
+- DJ2/Linux Docker: 61 native / 134 independent условий, два аккаунта,
+  три старта одного source, две копии; установленные/прежние миры, вещи/XP/FTB
+  сверены. Обычные backup/restart работают после установки; игровых крашей нет.
+- Windows 1687 / 16 skipped, Linux focused 493; отдельно 17 Linux FS fault
+  условий (два SIGKILL, ENOSPC) и два UID-контроля. Новый periodic writer и player
+  release не добавлены. [Порядок и границы](docs/OWNER_WORLD_CUTOVERS.md).
+
 ## Не выпущено — закрытый вход при обслуживании
 
 - Owner `ingress` использует pinned HAProxy TCP с одним исходным сервером,

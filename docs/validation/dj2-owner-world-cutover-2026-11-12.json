@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "milestone": "owner-cold-same-container-world-installation",
+  "environment": {
+    "real_forge": true,
+    "pack": "DJ2 2.23.4",
+    "graphical_client": false,
+    "local_linux_docker": true,
+    "source_boots": 3,
+    "target_boots": 0,
+    "drasl_accounts": 2,
+    "owner_backups": 2,
+    "source_cpus": 4,
+    "source_memory_mib": 6144,
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925"
+  },
+  "artifacts": {
+    "core": {
+      "version": "0.3.5",
+      "sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1"
+    },
+    "fix": {
+      "version": "0.1.4",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client_version_unchanged": "0.1.1",
+    "controller_receipt_sha256": "51a8581cca30187c990b884a1f26846419b8e9f655f8848535428f0f34c5b191"
+  },
+  "acceptance": {
+    "native_conditions": 61,
+    "independent_conditions": 134,
+    "source_world_files": 324,
+    "sealed_world_files": 306,
+    "runtime_files": 2015,
+    "runtime_bytes": 480187632,
+    "retained_files": 632,
+    "source_byte_identical_after_prestart_revert": true,
+    "installed_matches_sealed": true,
+    "sealed_target_unchanged": true,
+    "retained_generations_exact": true,
+    "inventory_xp_uuid_preserved": true,
+    "other_ftb_homes_claims_authority_preserved": true,
+    "resource_links_cleaned_by_frozen_adapter": true,
+    "new_resource_regenerates": true,
+    "ordinary_backup_and_restart_after_commit": true,
+    "lost_apply_and_revert_ack_verified": true,
+    "interrupted_metadata_commit_completed_without_world_write": true,
+    "same_immutable_container_source_volume_access_runtime": true,
+    "no_game_crash_or_oom": true,
+    "owned_scopes_removed_after_export": true
+  },
+  "synthetic_checks": {
+    "new_unit_cases": 39,
+    "windows_passed": 1687,
+    "windows_skipped": 16,
+    "linux_focused_passed": 493,
+    "linux_unit_memory_mib": 1024,
+    "linux_unit_cpus": 2,
+    "linux_fs_fault_conditions": 17,
+    "actual_child_sigkills": 2,
+    "real_tmpfs_enospc": true,
+    "revoked_late_helper_refused": true,
+    "different_uid_permission_controls": 2,
+    "real_minecraft_faults": false
+  },
+  "limits": [
+    "loopback owner workflow only",
+    "root-owned source adapter only",
+    "only current allowlisted resource reset adapter",
+    "no automatic post-boot rollback",
+    "two renames require explicit recovery after interruption",
+    "no scheduler, retained-generation deletion or off-host copy",
+    "graphical landing after installation and external deployment untested"
+  ],
+  "ready_for_players": false,
+  "live_vps_changed": false,
+  "player_release_changed": false
+}
