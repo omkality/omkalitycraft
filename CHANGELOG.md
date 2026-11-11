@@ -1,5 +1,24 @@
 # Журнал изменений
 
+## Не выпущено — проверочный запуск копии владельцем
+
+- Добавлены `resource-resets slot-plan/create/start/stop/status/reconcile/release`:
+  отдельный контейнер по reviewed Forge template, game/RCON только loopback,
+  явные лимиты CPU/RAM/PIDs и pinned runtime. Исходный сервер остаётся выключенным.
+- Перед первым стартом повторно сверяются runtime/world и ports, public Drasl
+  metadata и immutable identities. Durable intent и reconcile переживают потерю
+  ответа create/start/stop/remove без повторной lifecycle-команды.
+- Release требует clean stop, удерживает bounded private log с SHA и удаляет
+  только контейнер. Volume сохраняется; родительский abandon заблокирован до
+  подтверждения release. Автоматического force kill и публичного cutover нет.
+- Полная DJ2 в Linux Docker: 42 native / 130 independent условий, два аккаунта,
+  один backup и три чистых boot. Исходные 320 файлов неизменны при trial;
+  вещи/опыт и FTB-данные сохранены, source вернулся. Один fixture-export отказ
+  исключён; все собственные scopes удалены после экспорта.
+- 55 новых synthetic случаев, Windows 1579 unit/UI / 16 skipped, Linux focused
+  385. JAR/player releases и backup schedules не менялись; VPS пока не нужен.
+  [Команды, настройки и границы](docs/OWNER_CANDIDATE_SLOTS.md).
+
 ## Не выпущено — окружение ресурсного кандидата
 
 - Добавлены owner-only `resource-resets runtime-plan/runtime-stage/runtime-verify`:
