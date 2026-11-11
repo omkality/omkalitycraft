@@ -125,6 +125,14 @@ backup → возврат того же Docker-контейнера и `reconcil
 | `uv run omk admin --config .omk-admin/operator.toml resource-resets slot-stop --operation S` | Штатная RCON-остановка копии и clean Docker checkpoint; без force kill. |
 | `uv run omk admin --config .omk-admin/operator.toml resource-resets slot-reconcile --operation S` | Подтвердить результат прерванного create/start/stop/release по фактам, не отправляя lifecycle-команду повторно. |
 | `uv run omk admin --config .omk-admin/operator.toml resource-resets slot-release --operation S` | После clean stop либо до первого запуска удержать bounded private log и удалить только контейнер, сохранив volume. Затем разрешён `abandon R`, после него — возврат исходника. |
+| `uv run omk admin --config .omk-admin/operator.toml world-cutovers plan --resource-operation R` | План установки sealed мира в тот же остановленный source; backup, закрытый вход и ноль соединений обязательны. [Порядок и восстановление](../OWNER_WORLD_CUTOVERS.md) |
+| `uv run omk admin --config .omk-admin/operator.toml world-cutovers apply --operation C` | Одна копия нового мира и два fsynced перемещения; прежний мир сохраняется, Forge не запускается. |
+| `uv run omk admin --config .omk-admin/operator.toml world-cutovers status --operation C` | Сохранённый этап без Docker; не проверка текущей готовности. |
+| `uv run omk admin --config .omk-admin/operator.toml world-cutovers verify --operation C` | Read-only полная сверка после прерывания и отзыв старой попытки записи; повторного копирования нет. |
+| `uv run omk admin --config .omk-admin/operator.toml world-cutovers recover --operation C` | Явно завершить оставшиеся перемещения полных проверенных поколений. Частичную копию не достраивает. |
+| `uv run omk admin --config .omk-admin/operator.toml world-cutovers revert --operation C` | Вернуть прежний мир только до первого start; новый мир сохраняется в `rejected`. После boot отклоняется. |
+| `uv run omk admin --config .omk-admin/operator.toml world-cutovers cancel --operation C` | Отменить попытку только при нетронутом прежнем мире и отсутствии перемещений; частичные файлы сохраняются. |
+| `uv run omk admin --config .omk-admin/operator.toml world-cutovers commit --operation C` | После `maintenance start M --backup-operation B` подтвердить установленный мир двумя журналами. Повтор после обрыва не меняет world; вход открывается отдельно. |
 | `uv run omk admin --config .omk-admin/operator.toml backups run --operation ID` | Подготовить и проверить world ZIP, повторно сверить lifecycle, опубликовать новую копию до ротации старых. Контейнер остаётся остановленным. |
 | `uv run omk admin --config .omk-admin/operator.toml backups status --operation ID` | Прочитать journal с проверкой схемы/identity; не содержит исходных runtime credentials. |
 | `uv run omk admin --config .omk-admin/operator.toml backups list --server dj2` | Проверенная история snapshots и признак незавершённого staging, не список миров для игроков. |

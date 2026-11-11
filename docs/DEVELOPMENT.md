@@ -1,5 +1,42 @@
 # Разработка OmkalityCraft
 
+## Установка нового мира в тот же контейнер — 12 ноября 2026
+
+Owner `world-cutovers plan/apply/verify/recover/revert/cancel/commit/status`
+устанавливает sealed не запущенный ресурсный кандидат в прежний stopped source.
+Runtime/auth/proxy/порты/backup binding прежние; меняется только world directory.
+Прежний мир удерживается рядом. Два fsynced перемещения восстанавливаются явно,
+повторного копирования нет; возврат разрешён только до первого start.
+Потерянный commit заканчивается изменением журналов, без перезаписи world.
+
+Старая попытка получает отзываемый nonce: запоздавший helper не пишет после
+отмены/подтверждения. Linux проверен с другим host UID и ALL caps dropped;
+публичное readonly зеркало содержит только fence, приватный журнал остаётся 600.
+Pending установка блокирует обычные backup/restore/maintenance/open операции.
+После commit обычные backup и restart используют стандартный путь.
+
+Полная DJ2 2.23.4 / Linux Docker: 61 native / 134 independent условий, два
+Drasl-аккаунта, три старта того же source, ни одного target boot, две копии.
+324 исходных файла точно сохранены после pre-start revert; установленные
+306 world-файлов совпадают с sealed target. 2015 runtime-файлов / 480187632 байта
+прежние; 632 файла удержанной истории сверены. Вещи/XP/UUID, остальные FTB homes,
+claims/authority сохранены; новый ресурс создаётся и переживает обычный restart.
+Игровых крашей/OOM нет, own scopes удалены после экспорта.
+
+39 новых synthetic случаев; Windows 1687 unit/UI / 16 skipped, Linux focused
+493. Отдельно Linux Docker: 17 FS fault условий, два настоящих SIGKILL между
+перемещениями и реальный tmpfs ENOSPC; плюс два different-UID permission контроля.
+Это синтетические данные, не игровые краши. Ruff/Black/source boundary пройдены.
+Core 0.3.5 / Fix 0.1.4 / Client 0.1.1, player releases и periodic writer прежние.
+
+Следующий этап #33 — read-only учёт active/retained/staging/backup/logs и общего
+свободного резерва; затем единый scheduler/off-host budget. #32 сохраняет online
+evacuation, оставшиеся adapters/порталы и wipe других разрешённых миров.
+Root-owned source adapter и loopback admission пока обязательны. Графическая
+высадка после установки, публичный ingress и VPS deploy отдельно; #41 открыт,
+`ready_for_players=false`. [Команды](OWNER_WORLD_CUTOVERS.md),
+[обезличенный протокол](validation/dj2-owner-world-cutover-2026-11-12.json).
+
 ## Закрытый вход перед обслуживанием — 12 ноября 2026
 
 Owner `ingress prepare/inspect/plan/apply/verify/status/cancel` управляет одним

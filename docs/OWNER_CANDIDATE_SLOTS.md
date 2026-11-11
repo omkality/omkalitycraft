@@ -93,6 +93,10 @@ uv run omk admin --config .omk-admin/operator.toml resource-resets abandon --ope
 uv run omk admin --config .omk-admin/operator.toml maintenance start --operation M --backup-operation B
 ```
 
+Для установки неизменённого, **не запущенного** sealed кандидата вместо abandon
+используется отдельный [world-cutovers](OWNER_WORLD_CUTOVERS.md). Trial с запуском
+меняет world; после него прежний seal не принимается для установки.
+
 `M` и `B` — исходное maintenance window и его backup. Пока slot не `released`,
 `abandon` запрещён; пока родитель не `abandoned`, исходник не стартует и окно
 нельзя отменить. Этот путь возвращает прежний сервер, а не продвигает кандидата.
