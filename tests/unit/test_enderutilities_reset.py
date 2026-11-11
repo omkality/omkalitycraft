@@ -144,7 +144,7 @@ def test_unreviewed_crystal_tiers_are_not_rewritten(damage):
     assert root == result and not paths
 
 
-def test_unknown_containers_capabilities_and_end_inventory_are_not_traversed():
+def test_unknown_containers_and_capabilities_are_not_traversed():
     nested = crystal(-18000)
     root = player(
         {
@@ -155,7 +155,6 @@ def test_unknown_containers_capabilities_and_end_inventory_are_not_traversed():
             "tag": Tag(10, {"Items": Tag(9, (10, [Tag(10, nested)]))}),
         }
     )
-    root["EnderItems"] = Tag(9, (10, [Tag(10, nested)]))
     root["ForgeCaps"] = Tag(10, {"bag": Tag(9, (10, [Tag(10, nested)]))})
     result, paths = unbind_player_targets(root, -18000)
     assert root == result and not paths

@@ -1,4 +1,4 @@
-"""Pinned location-crystal unbinding in saved player Inventory, never live data.
+"""Pinned target unbinding in saved player Inventory/EnderItems, never live data.
 
 Only loose tier-0 crystals and the Items modules of Ender Porters are reviewed.
 Other storage/tier/serializer paths remain findings in the general preflight.
@@ -11,7 +11,7 @@ from launcher.nbt import Tag
 
 ARTIFACT = "enderutilities-1.12.2-0.7.15.jar"
 SHA256 = "c0a604aac57853f76f16e21958b02f4d6adbc543c20dda67eb1088ca91ba618c"
-ADAPTER = "enderutilities-0.7.15-player-location-target-v1"
+ADAPTER = "enderutilities-0.7.15-player-location-target-v2"
 CRYSTAL = "enderutilities:linkcrystal"
 PORTER = "enderutilities:enderporter"
 TARGET_FIELDS = {
@@ -81,24 +81,18 @@ def _target(stack, dimension, path, removed):
     removed.append(path + "/tag/Target/Dim")
 
 
-def unbind_player_targets(root, dimension):
-    """Return an independent tree and exact removable finding paths; source is intact."""
-    if type(dimension) is not int or not -(2**31) <= dimension < 2**31:
-        raise ValueError("Invalid target dimension")
-    if not isinstance(root, dict):
-        raise ValueError("Invalid saved player root")
-    result, removed = copy.deepcopy(root), []
-    if "Inventory" not in result:
-        return result, removed
-    rows = _rows(result["Inventory"], 41)
+def _inventory(root, key, slots, dimension, removed):
+    if key not in root:
+        return
+    rows = _rows(root[key], len(slots))
     occupied = set()
     for index, stack in enumerate(rows):
         slot = _field(stack, "Slot", {1})
-        if slot not in {*range(36), *range(100, 104), -106} or slot in occupied:
+        if slot not in slots or slot in occupied:
             raise ValueError("Unreviewed or duplicate player inventory slot")
         occupied.add(slot)
         name = _field(stack, "id", {8})
-        path = f"/Inventory/{index}"
+        path = f"/{key}/{index}"
         if name == CRYSTAL:
             _target(stack, dimension, path, removed)
         elif name == PORTER and _field(stack, "Damage", {2}) in {0, 1}:
@@ -116,4 +110,17 @@ def unbind_player_targets(root, dimension):
                     raise ValueError("Unreviewed or duplicate module slot")
                 used.add(number)
                 _target(module, dimension, f"{path}/tag/Items/{module_index}", removed)
+
+
+def unbind_player_targets(root, dimension):
+    """Return an independent tree and exact removable finding paths; source is intact."""
+    if type(dimension) is not int or not -(2**31) <= dimension < 2**31:
+        raise ValueError("Invalid target dimension")
+    if not isinstance(root, dict):
+        raise ValueError("Invalid saved player root")
+    result, removed = copy.deepcopy(root), []
+    _inventory(
+        result, "Inventory", {*range(36), *range(100, 104), -106}, dimension, removed
+    )
+    _inventory(result, "EnderItems", set(range(27)), dimension, removed)
     return result, removed

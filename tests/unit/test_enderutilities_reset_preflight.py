@@ -57,7 +57,7 @@ def test_only_exact_supported_paths_can_be_staged_and_source_is_read_only(ready)
     "storage",
     [
         "capability",
-        "enderchest",
+        "ender-bag",
         "bag",
         "region",
         "unknown-player-file",
@@ -70,8 +70,16 @@ def test_unreviewed_storage_or_tier_remains_blocking(ready, storage):
     item = crystal(-18000, slot=2)
     if storage == "capability":
         root["ForgeCaps"] = Tag(10, {"bag": compound_list([item])})
-    elif storage == "enderchest":
-        root["EnderItems"] = compound_list([item])
+    elif storage == "ender-bag":
+        root["EnderItems"] = compound_list(
+            [
+                {
+                    "id": Tag(8, "minecraft:chest"),
+                    "Slot": Tag(1, 2),
+                    "tag": Tag(10, {"Items": compound_list([item])}),
+                }
+            ]
+        )
     elif storage == "bag":
         root["Inventory"].value[1].append(
             Tag(
@@ -123,6 +131,21 @@ def test_missing_pin_disables_adapter_and_artifact_change_refuses(ready):
     (server / "mods" / ender.ARTIFACT).write_bytes(b"changed")
     with pytest.raises(ValueError, match="artifact"):
         preflight.preflight(server, "world", -18000)
+
+
+def test_both_native_player_inventory_roots_are_admitted_without_source_write(ready):
+    server, world, root, _ = ready
+    root["EnderItems"] = compound_list([crystal(-18000, 26), porter(0)])
+    encoded(world / "playerdata" / PLAYER, root)
+    before = inventory(world, world_name="world")
+    result = preflight.preflight(server, "world", -18000)
+    assert result["can_stage_data"] and result["links"]["handled_finding_count"] == 4
+    assert result["links"]["unhandled_finding_count"] == 0
+    assert (
+        sum("/EnderItems/" in x["nbt_path"] for x in result["links"]["examples"]) == 2
+    )
+    assert not result["ready_for_start"]
+    assert inventory(world, world_name="world") == before
 
 
 def test_unknown_resource_target_schema_refuses_before_any_write(ready):
