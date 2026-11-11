@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "milestone": "haproxy-different-host-uid-config-access",
+  "real_linux_docker": true,
+  "actual_haproxy": true,
+  "real_minecraft": false,
+  "image": "haproxy:3.2.26-alpine3.24@sha256:1c3568e520453cc8ba98c39501febcf450429c80e6cc27ecad779961d76e597c",
+  "host_owner_uid": 12345,
+  "container_uid": 0,
+  "capabilities": "ALL dropped",
+  "acceptance": {
+    "conditions": 7,
+    "legacy_700_leaf_600_file_permission_denied": true,
+    "explicit_prepare_keeps_exact_config_bytes": true,
+    "leaf_755_file_644_readable": true,
+    "private_parent_700": true,
+    "real_closed_runtime_zero_sessions": true,
+    "admin_socket_600": true,
+    "clean_stop_no_oom": true,
+    "owned_scopes_removed": true
+  },
+  "source_config_sha256": "d5a583452267e7f40e2177f27ac15032ee7e8b531147c0c3a1d5df9256c6ba55",
+  "tests": {
+    "new_cases": 2,
+    "windows_passed": 1705,
+    "windows_skipped": 31,
+    "linux_focused_passed": 526
+  },
+  "live_deployment_changed": false,
+  "player_release_changed": false,
+  "ready_for_players": false
+}

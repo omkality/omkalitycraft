@@ -35,12 +35,23 @@ Drasl и существующие игровые данные здесь не с
    существующий project bridge и его label. Control volume не может совпадать
    с source, backup или staging volume. Внутренний backend port — игровой,
    никогда не RCON. `config_dir` должен быть внутри `ingress-config/`.
-3. Выполните подготовку. Она только создаёт приватный `haproxy.cfg` с LF;
+3. Выполните подготовку. Она создаёт единственный несекретный `haproxy.cfg` с LF;
    существующие отличающиеся байты никогда не перезаписывает:
 
 ```console
 uv run omk admin --config .omk-admin/operator.toml ingress prepare --server dj2
 ```
+
+На Linux `.omk-admin` остаётся `700`, operator/ingress/RCON credentials — `600`.
+В контейнер монтируется только отдельный `config_dir`: его права `755`, у
+сгенерированного `haproxy.cfg` — `644`. Без этого container root с ALL capabilities
+удалёнными не прочитает конфиг другого host UID. Файл содержит только маршрут и
+параметры proxy, без паролей; Unix admin socket сохраняет `600`.
+
+Для старого leaf с `700/600` повторный `prepare` исправляет только права после
+сверки точных ожидаемых байтов. Если внутри есть посторонний файл либо содержимое
+изменено, подготовка отказывается и не расширяет доступ. Перед owner-командами
+сверяются и ожидаемые Unix-права; вручную менять файлы deployment не следует.
 
 4. Подготовьте переменные окружения из
    [Compose](../deploy/ingress/compose.yaml): `OMK_INGRESS_CONTAINER`,

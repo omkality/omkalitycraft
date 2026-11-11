@@ -1,5 +1,16 @@
 # Журнал изменений
 
+## Не выпущено — чтение ingress config на Linux
+
+- Исправлен подтверждённый HAProxy `Permission denied`, когда host UID отличается
+  от root контейнера с ALL caps dropped. Несекретный leaf имеет `755`, template
+  `644`; приватный host parent, credentials и admin socket остаются закрытыми.
+- Повторный `prepare` исправляет legacy-права только для точного ожидаемого
+  шаблона без посторонних файлов. Owner capture отвергает неправильные Unix-права.
+- 7 условий на настоящем HAProxy/Linux Docker, отрицательный и положительный
+  контроль, closed runtime и clean stop. Windows 1705 / 31 skipped, Linux focused
+  526; Minecraft не запускался. [Пояснение](docs/OWNER_INGRESS.md).
+
 ## Не выпущено — отчёт по диску для владельца
 
 - `omk admin storage inspect` считает active/retained/partial worlds, logs,
