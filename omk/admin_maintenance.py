@@ -386,8 +386,14 @@ def wait_started(config, record):
         if not value["running"] or value["started"] == record["initial"]["started"]:
             raise AdminError("Start is unconfirmed; reconcile without repeating start")
         started = datetime.fromisoformat(value["started"].replace("Z", "+00:00"))
-        if started < datetime.fromisoformat(record["start_requested_at"]):
-            raise AdminError("Container boot predates the recorded start intent")
+        # Host and Docker VM clocks can differ even on a local engine. Both
+        # lifecycle timestamps must come from that same engine; the controller's
+        # start_requested_at is an audit field, not a cross-clock admission gate.
+        finished = datetime.fromisoformat(
+            record["checkpoint"]["finished"].replace("Z", "+00:00")
+        )
+        if started <= finished:
+            raise AdminError("Container boot does not follow the recorded clean stop")
         if boot is not None and value != boot:
             raise AdminError("Source lifecycle changed during start readiness")
         boot = value

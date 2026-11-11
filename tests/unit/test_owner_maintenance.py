@@ -54,7 +54,7 @@ def flow(tmp_path, monkeypatch):
     point = {
         "container": "a" * 64,
         "started": "old",
-        "finished": "finished",
+        "finished": (datetime.now(UTC) - timedelta(seconds=60)).isoformat(),
         "source": {},
         "store": {},
     }
@@ -357,6 +357,28 @@ def test_fatal_after_done_during_stability_period_is_refused(flow, monkeypatch):
     with pytest.raises(AdminError, match="fatal"):
         owner.execute(cfg, op, "start", backup_operation=backup["operation"])
     assert owner.read_record(cfg, op)["stage"] == "start-requested"
+
+
+def test_engine_clock_behind_host_still_accepts_boot_after_its_own_stop(
+    flow, monkeypatch
+):
+    op, backup = stop_and_backup(flow)
+    cfg, state, _, _ = flow
+    original = backups.docker
+
+    def docker(*args, **kwargs):
+        result = original(*args, **kwargs)
+        if args[0] == "start":
+            # Docker VM is 30 seconds behind the controller. Its new boot is
+            # still later than its previous clean stop (60 seconds ago).
+            state["started"] = (datetime.now(UTC) - timedelta(seconds=30)).isoformat()
+        return result
+
+    monkeypatch.setattr(backups, "docker", docker)
+    assert (
+        owner.execute(cfg, op, "start", backup_operation=backup["operation"])["stage"]
+        == "complete"
+    )
 
 
 def test_intermittent_console_readiness_resets_stability_interval(flow, monkeypatch):
