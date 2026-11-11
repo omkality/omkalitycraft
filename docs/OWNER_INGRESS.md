@@ -133,3 +133,5 @@ Minecraft видит адрес proxy, а не исходный IP игрока:
 cutover к новому миру, online evacuation и общий storage budget ещё требуют
 отдельной приёмки. `ready_for_players=false` сохраняется. Это не средство
 обхода сетевых блокировок и не обещание доступности из любого провайдера.
+
+[Протокол проверки полной DJ2 в Linux Docker](validation/dj2-owner-ingress-2026-11-12.json): 62 native / 185 independent условий. Два Drasl-аккаунта; графическая приёмка отдельно.

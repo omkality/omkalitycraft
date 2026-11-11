@@ -1,5 +1,21 @@
 # Журнал изменений
 
+## Не выпущено — закрытый вход при обслуживании
+
+- Owner `ingress` использует pinned HAProxy TCP с одним исходным сервером,
+  только loopback. После boot/restart вход закрыт; повторное открытие явное.
+- Maintenance stop требует закрытия до intent. Новые подключения блокируются,
+  текущие сохраняются до штатной остановки Forge с сохранением игроков.
+- Durable open/close intent и readonly verify переживают потерянный ответ без
+  повтора команды. Изменение proxy/source/config/bridge и pending операции
+  запрещают открытие; stale intent после restart отменяется при закрытом входе.
+- Реальная DJ2/Linux Docker: 62 native / 185 independent условий;
+  два аккаунта, backup, trial и возврат source, все own scopes экспортированы
+  и удалены. Два ранних fixture/validation отказа исключены, игровых крашей нет.
+- 69 новых synthetic случаев; Windows 1648 unit/UI / 16 skipped, Linux focused
+  454. Графическая игра, публичный cutover и VPS deploy отдельно; JAR/player
+  releases не менялись. [Порядок, env и IP-ограничения](docs/OWNER_INGRESS.md).
+
 ## Не выпущено — проверочный запуск копии владельцем
 
 - Добавлены `resource-resets slot-plan/create/start/stop/status/reconcile/release`:
