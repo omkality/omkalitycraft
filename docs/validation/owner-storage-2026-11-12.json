@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "milestone": "owner-readonly-volume-space-accounting",
+  "runtime": {
+    "local_linux_docker": true,
+    "real_owner_cli": true,
+    "real_minecraft_started": false,
+    "fixture": "fresh isolated copies of accepted DJ2 world-cutover exports",
+    "volumes": 4,
+    "filesystem_groups": 1,
+    "files": 5324,
+    "retained_files": 632
+  },
+  "acceptance": {
+    "conditions": 16,
+    "logical_file_bytes_and_counts_match_independent_archives": true,
+    "every_file_sha256_before_after_unchanged": true,
+    "shared_free_space_not_multiplied": true,
+    "owned_volumes_removed": 4,
+    "no_live_vps_changes": true
+  },
+  "tests": {
+    "new_cases": 31,
+    "windows_passed": 1703,
+    "windows_skipped": 31,
+    "linux_focused_passed": 524,
+    "linux_memory_mib": 1024,
+    "linux_cpus": 2,
+    "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "readonly_source": true,
+    "network": "none",
+    "minimum_free_observation_regression_red_green": true
+  },
+  "boundaries": {
+    "metadata_only": true,
+    "all_game_volume_mounts_readonly": true,
+    "atomic_snapshot": false,
+    "backup_integrity_verified": false,
+    "host_disk_complete": false,
+    "scheduler_added": false,
+    "automatic_deletion_added": false,
+    "orphan_volumes_and_docker_logs_classified": false,
+    "drasl_storage_classified": false
+  },
+  "ready_for_players": false
+}

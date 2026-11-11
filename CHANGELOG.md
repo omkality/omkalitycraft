@@ -1,5 +1,18 @@
 # Журнал изменений
 
+## Не выпущено — отчёт по диску для владельца
+
+- `omk admin storage inspect` считает active/retained/partial worlds, logs,
+  pack backups, managed store и настроенные reset/restore volumes. Не меняет
+  файлы и не создаёт второй backup writer.
+- Logical/allocated bytes раздельны; свободный резерв общего Linux filesystem
+  учитывается один раз. Есть env-лимиты обхода, отказ при изменении данных и
+  небезопасных типах файлов; содержимое файлов в отчёт не попадает.
+- Реальная CLI/Linux Docker: 16 условий на четырёх свежих томах с 5324 файлами
+  из принятых DJ2 экспортов; все байты до/после прежние. 31 synthetic случай,
+  Linux focused 524. Это наблюдение текущих volumes, не полный бюджет VPS или
+  integrity-проверка backup. [Команда и пределы](docs/OWNER_STORAGE.md).
+
 ## Не выпущено — установка подготовленного мира
 
 - Owner `world-cutovers` переносит sealed ресурсный мир в тот же stopped source:
