@@ -38,7 +38,7 @@ Worker не имеет сети, Docker socket и записи в source. Ком
 | Механизм установленной DJ2 2.23.4 | Что установлено / что проверяет этот этап |
 |---|---|
 | RFTools 7.73 + McJtyLib 3.5.4 | `data/TPDestinations.dat` хранит dimension → приёмник, а Charged Porter — только **числовой ID** приёмника. Проверяются registry, основной `target`, `target0…7` Advanced Porter, `destId` передатчиков и **`destinationId` переносимых приёмников**. Неизвестный ID тоже блокирует подготовку: удаление registry не должно скрывать оставшийся предмет. |
-| Ender Utilities 0.7.15 | `tag.Target.Dim` и вложенные сохранённые NBT-ссылки, в том числе предметы в контейнерах. Для location crystals tier 0 в player Inventory/модулях Ender Porter принят узкий staging-адаптер: удаляется только Target нужного мира, сохраняются остальные NBT. Неизвестные хранилища и tiers остаются блокирующими. [Границы и нативный тест](RESOURCE_RESET_ENDERUTILITIES.md). |
+| Ender Utilities 0.7.15 | `tag.Target.Dim` и вложенные сохранённые NBT-ссылки, в том числе предметы в контейнерах. Для location crystals tier 0 в player Inventory, стандартном 27-слотовом EnderItems и модулях Ender Porter принят staging-адаптер v2: удаляется только Target нужного мира. Неизвестные хранилища и tiers остаются блокирующими. [Inventory](RESOURCE_RESET_ENDERUTILITIES.md), [эндер-сундук](RESOURCE_RESET_ENDERCHEST.md). |
 | Mekanism 9.8.3.390 | Нативная сериализация Frequency сохраняет имя/владельца/public, **не activeCoords**. Частоту команды удалять не требуется. Реальные рамки, restart/reset и переносимый телепортер проверены отдельно; это не универсальная миграция сетей. [Рамки](RESOURCE_RESET_MEKANISM.md), [переносимое устройство](DJ2_MEKANISM_PORTABLE.md). |
 | WR-CBE 2.3.2.33 | `RedstoneEther/fmap.dat`, `node1.dat`, `node2.dat`, глобальные `dimMap.dat`, `fprop.dat`, `gprop.dat` — redstone-хранилища, не привязки игрока к порталу. Считаются отдельно после проверки SHA мода; байты сохраняются. Это не новая миграция WRCBE shared state. |
 | Остальные механизмы | Общий проход ищет dim/dimension-поля и известные 4-компонентные координаты в сохранённых NBT, inventories, TileEntities и Entities всех **сохраняемых** миров. Это эвристическая диагностика, а не доказательство полного покрытия. |
@@ -94,7 +94,7 @@ RFTools Dimensions, обычные и сюжетные порталы/ракет
 адаптера. Сейчас такой адаптер принят только для описанных выше player targets
 Ender Utilities, при точном SHA мода. Proof включает счётчики handled/unhandled.
 Доказательство включается в замороженный план; его изменение запрещает stage.
-Профиль `dj2-2.23.4-forge112-reset-preflight-v2` требует нового плана вместо v1.
+Профиль `dj2-2.23.4-forge112-reset-preflight-v3` требует нового плана вместо v1/v2.
 Ручная позиция остаётся прежним внутренним data-only режимом для лабораторий.
 Даже чистый preflight оставляет `coverage_complete=false`,
 `portal_adapters_reviewed=false`, `landing_verified=false`, `ready_for_start=false`.

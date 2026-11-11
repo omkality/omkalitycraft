@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "date": "2026-11-11",
+  "issues": [
+    32,
+    41
+  ],
+  "status": "accepted-ender-chest-player-target-adapter-and-native-container-reset-restart",
+  "pack": "Divine Journey 2 2.23.4",
+  "forge": "1.12.2-14.23.5.2860",
+  "enderutilities": {
+    "version": "0.7.15",
+    "file": "enderutilities-1.12.2-0.7.15.jar",
+    "sha256": "c0a604aac57853f76f16e21958b02f4d6adbc543c20dda67eb1088ca91ba618c",
+    "source": "profiles/server-defaults/dj2/reset-preflight.json"
+  },
+  "components_unchanged": {
+    "core": {
+      "version": "0.3.5",
+      "file": "OmkalityCore-0.3.5.jar",
+      "sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1"
+    },
+    "dj2fix": {
+      "version": "0.1.4",
+      "file": "OmkalityDJ2Fix-0.1.4.jar",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client": {
+      "version": "0.1.1",
+      "file": "OmkalityClient-0.1.1.jar",
+      "sha256": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+    }
+  },
+  "adapter": "enderutilities-0.7.15-player-location-target-v2",
+  "preflight_profile": "dj2-2.23.4-forge112-reset-preflight-v3",
+  "preflight_profile_sha256": "3dcca8ce729175fb0224b54150cfab0884272610faa4fe1b120f55973e45e4a0",
+  "native": {
+    "ok": true,
+    "conditions": 81,
+    "independent_conditions": 107,
+    "starts": 3,
+    "survival_non_op_actors": 2,
+    "graphical_client": false,
+    "ordinary_ender_chest_window": true,
+    "native_container_transfers": 8,
+    "transfer_full_nbt_and_item_count_preserved": true,
+    "protocol_prediction_confirmations": "negative; transfer acceptance uses authoritative server saves, not graphical client prediction",
+    "two_account_storage_isolation_before_and_after_reset": true,
+    "reviewed_references_in_both_player_copies": 12,
+    "primary_and_dat_old_updated": true,
+    "native_unbind_semantics_match": true,
+    "source_read_only_at_stage": true,
+    "fresh_verified_backup": true,
+    "other_targets_charge_selection_and_unknown_nbt_preserved": true,
+    "retrieved_unbound_use_no_partial_effect": true,
+    "retrieved_main_target_native_cost": 5000,
+    "old_resource_structure_absent": true,
+    "ordinary_rebind_return_to_storage_and_restart": true,
+    "stored_rebound_items_retrieved_and_used_after_restart": true,
+    "health_and_both_inventory_sentinels_and_xp_preserved": true,
+    "file_counts": [
+      323,
+      304,
+      348,
+      348
+    ],
+    "changed_at_stage_count": 3,
+    "unchanged_retained_files": 301,
+    "other_account_records_byte_preserved_at_stage": 1,
+    "omitted_files": 19,
+    "archive_sha256": {
+      "reset-source.tar": "398a606878c2d922e2152066828cfb3bb368d2dff82e6a84a849f54d39e7a94e",
+      "auto-staged.tar": "2a1b730deba09ba911eb479830ac7e2c5b8fbedec544790eea5dc59a88b5e1b7",
+      "candidate-rebound.tar": "a20338166622fcf74c042323eb260392d4ef7abda5bb9e672e7a324d41685e88",
+      "world-after.tar": "9c7b762eef5f108032e3c8c822543068d661086c85afd3bedcdae35d0edc22d6"
+    },
+    "observer_version": "0.1.1",
+    "observer_sha256": "909aa24e4f26dacbcea8d1d1e1342a510e4cc5ee310be50b1d3e167d85f52297",
+    "clean_server_exit": true,
+    "oom_killed": false,
+    "own_game_and_auth_resources_removed_after_export": true
+  },
+  "synthetic": {
+    "new_cases": 14,
+    "adapter_focused_passed": 61,
+    "linux_focused_passed": 143,
+    "windows_unit_ui_passed": 1385,
+    "windows_unit_ui_skipped": 12,
+    "ui_offscreen": true,
+    "ender_only_root_red_green": true,
+    "stage_geometry_and_admission_in_unit_fixture": "mocked; real native preflight/stage verified separately",
+    "ruff": "passed",
+    "black": "passed"
+  },
+  "environment": {
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "container_memory_bytes": 6442450944,
+    "server_heap_bytes": 4294967296,
+    "cpus": 4,
+    "hard_pvp_acceptance": false
+  },
+  "excluded_controls": [
+    "First fixture clicked before client teleport acknowledgement; clean server, incomplete lifecycle",
+    "Second fixture reached staged native storage but clicked during server movement reconciliation; clean server, incomplete lifecycle",
+    "Third fixture completed the first native transfer but compared unspecified compound field order as raw bytes; typed values matched, incomplete lifecycle"
+  ],
+  "fixture_transport_guard": "Cleared server teleport-pending state observed at server tick end before container interaction",
+  "limits": [
+    "Only standard 27-slot player EnderItems and reviewed Inventory stacks/modules",
+    "Nested bags, capabilities, world containers/entities, other devices and crystal tiers remain unreviewed",
+    "No new graphical client or Hard/PvP acceptance",
+    "No expansion of resource-only wipe allowlist",
+    "Other portal adapters and owner evacuation/barrier/cutover/recovery remain open",
+    "No working game world, player manifest or player release changed"
+  ],
+  "owner_reset_enabled": false,
+  "ready_for_start": false,
+  "portal_adapters_reviewed": false,
+  "ready_for_players": false
+}
