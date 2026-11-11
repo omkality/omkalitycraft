@@ -1,5 +1,35 @@
 # Разработка OmkalityCraft
 
+## Проектный census и проверка бюджетов — 12 ноября 2026
+
+`omk admin storage estate` объединяет все серверы из backups.toml и явные
+auth/content/reports/exports volumes из приватного storage.toml. Считываются
+только метаданные; ownership/config identities сверяются до/после. Общие тома
+не могут совпадать с source/store/staging, обязательный auth не пропускается.
+Старый per-server inspect сохраняет прежний контракт.
+
+Объём категорий сопоставляется с единым OMK_STORAGE_* планом. Общий filesystem
+не складывается по числу mounts; остаток вне census/reserved blocks виден отдельно
+и консервативно учитывается в system. Для нескольких FS один общий бюджет не
+объявляется пригодным. Declared caps текущего CLI сравниваются суммарно: два
+backup лимита по 48 ГиБ не считаются совместимыми с project backup budget 48 ГиБ.
+Существующие store policies не читаются и не мигрируются этим наблюдением.
+
+Настоящая CLI/Linux Docker: 38 условий, десять новых томов, 7700 файлов, две
+независимые копии принятых DJ2 экспортов и настоящий Drasl. Учёт сверён независимо,
+все SHA game/store/staging/auth/shared до/после прежние; секреты не выведены.
+Drasl после restart сохранил account/skin/signature. Own scopes удалены; Minecraft
+не запускался, вторая копия не является приёмкой GTNH. 42 новых synthetic случая,
+Linux focused 568; Windows 1734 unit/UI / 44 skipped (13 новых Linux-only cases
+проверены в Docker). Артефакты зафиксированы в протоколе. Учёт unknown
+host usage принят red/green. Ruff/Black/source boundary.
+
+Следующий этап #33 — выбор и приёмка одного periodic writer/scheduler, reserve
+перед записью, retention и encrypted off-host. Census — не quota/atomic snapshot,
+не backup integrity proof и не допуск игроков; `admission_approved=false`.
+#38/#41 остаются открытыми; VPS не менялся.
+[Реестр/команда](PROJECT_STORAGE.md), [протокол](validation/project-storage-2026-11-12.json).
+
 ## Linux-права несекретного ingress template — 12 ноября 2026
 
 Воспроизведён реальный different-UID отказ HAProxy: leaf `700` / file `600`

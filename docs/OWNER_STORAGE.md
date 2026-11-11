@@ -1,5 +1,9 @@
 # Учёт места владельцем
 
+Для всех настроенных серверов и общих auth/CDN/diagnostic volumes появился
+отдельный [проектный отчёт `storage estate`](PROJECT_STORAGE.md). Интерфейс ниже
+сохраняет прежний per-server scope и не требует нового реестра.
+
 ```console
 uv run omk admin --config .omk-admin/operator.toml storage inspect --server dj2
 ```
