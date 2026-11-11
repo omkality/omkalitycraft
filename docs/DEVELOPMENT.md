@@ -1,5 +1,44 @@
 # Разработка OmkalityCraft
 
+## Окружение reset-кандидата и пробный запуск — 11 ноября 2026
+
+Owner `resource-resets runtime-plan/runtime-stage/runtime-verify` готовит точные
+известные runtime/access/EULA-файлы вокруг завершённого data stage. Один writer,
+source/store read-only, полный receipt и readonly recovery потерянного ответа.
+Считается общий world+runtime staging budget и свободный резерв; права и
+согласие EULA не меняются ради запуска, непустые OP отклоняются. Корневые
+логи/cache/backup не наследуются, рабочие Java-каталоги создаются пустыми.
+Барьер maintenance и все ready-флаги сохраняются.
+
+Реальный отказ на pack case-sensitive путях воспроизведён в Linux red/green.
+Runtime сохраняет регистр; world ZIP validator не менялся. В принятом runtime
+34 группы разных по регистру путей. Symlink/hardlink/неизвестные target files,
+изменение source/access, частичная копия и повторная запись отклоняются.
+
+Полная DJ2 2.23.4 / Linux Docker: 49 native / 121 independent условий. Два
+исходных старта и два lab-only старта кандидата, два Drasl-аккаунта, один backup.
+Все 320 исходных world-файлов неизменны во время подготовки и trial; в кандидате
+302 файла. Все 2015 runtime-файлов / 480187632 байта совпадают с источником.
+Вещи/XP/UUID сохранены; resource home не возвращается, другой home и claims
+остальных миров сохраняются. Новый ресурс создаётся с прежней frozen policy/seed
+и переживает restart. После удаления своего trial container и abandon исходник
+возвращён со своим прежним ресурсом. Свои scopes очищены после экспорта.
+
+Два ранних опыта исключены: runtime casefold gate (исправлен) и fixture race
+создания restart-log (не Minecraft crash). У обоих исходник неизменён, собственные
+resources очищены после экспорта. 48 новых synthetic случаев; Windows 1524
+unit/UI / 16 skipped, Linux focused 330; Ruff/Black/source boundary/secret scan.
+
+Core 0.3.5 / DJ2Fix 0.1.4 / Client 0.1.1 и player releases прежние. Это проверенная
+упаковка окружения с отдельным приватным trial, не owner create/start/cutover.
+Следующий этап #32/#33 — явный immutable deployment slot, закрытый внешний вход
+до приёмки, журнал переключения и возврат при неясном исходе. Нельзя просто
+клонировать Docker Inspect Env/Args или автоматически откатывать уже принятые
+игровые изменения. Online evacuation, оставшиеся adapters и графическая проверка
+также открыты; #41 остаётся открыт. VPS пока не нужен.
+[Команды](OWNER_RESOURCE_STAGING.md),
+[протокол](validation/dj2-resource-runtime-2026-11-11.json).
+
 ## Owner resource staging и барьер возврата — 11 ноября 2026
 
 `omk admin resource-resets` готовит отдельный data-only target только из

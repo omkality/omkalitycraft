@@ -1,4 +1,4 @@
-"""Owner preparation of a separate reset candidate; no promotion or live wipe."""
+"""Owner preparation of a separate reset candidate/runtime; no live promotion."""
 
 import json
 import re
