@@ -276,6 +276,7 @@ def client_reports(config, args):
 def add_admin_commands(sub):
     from omk.account_recovery import add_recovery_parser  # noqa: PLC0415
     from omk.admin_backups import add_backup_parser  # noqa: PLC0415
+    from omk.admin_maintenance import add_maintenance_parser  # noqa: PLC0415
     from omk.admin_resource_reset import add_resource_reset_parser  # noqa: PLC0415
     from omk.admin_restores import add_restore_parser  # noqa: PLC0415
 
@@ -286,6 +287,7 @@ def add_admin_commands(sub):
     actions = admin.add_subparsers(dest="admin_action", required=True)
     add_recovery_parser(actions)
     add_backup_parser(actions)
+    add_maintenance_parser(actions)
     add_restore_parser(actions)
     add_resource_reset_parser(actions)
     login = actions.add_parser(
@@ -323,6 +325,7 @@ def run_admin(args):
         "reports": "reports_action",
         "recover-account": "recovery_action",
         "backups": "backup_action",
+        "maintenance": "maintenance_action",
         "restores": "restore_action",
         "resource-resets": "resource_reset_action",
     }.get(args.admin_action)
@@ -346,6 +349,10 @@ def run_admin(args):
             from omk.admin_resource_reset import run_resource_reset  # noqa: PLC0415
 
             result = run_resource_reset(config, args)
+        elif args.admin_action == "maintenance":
+            from omk.admin_maintenance import run_maintenance  # noqa: PLC0415
+
+            result = run_maintenance(config, args)
         elif args.admin_action in {"backups", "restores"}:
             from omk.admin_backups import run_backups  # noqa: PLC0415
             from omk.admin_restores import run_restores  # noqa: PLC0415

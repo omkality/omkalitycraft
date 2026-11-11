@@ -1,0 +1,6 @@
+# Copy to the private .omk-admin/maintenance.toml (mode 600).
+# The host loopback port and credential path belong to operator.toml recovery.
+schema = 1
+
+[servers.dj2]
+rcon_container_port = 25575
