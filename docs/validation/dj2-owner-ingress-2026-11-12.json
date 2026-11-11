@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "timezone": "Europe/Moscow",
+  "issues": [
+    32,
+    33,
+    41
+  ],
+  "status": "accepted-owner-loopback-single-source-admission-only",
+  "implementation_commit": "bb30fd1d7362c3b43efe1144b7a45dd9ca5aa5ef",
+  "pack": "Divine Journey 2 2.23.4",
+  "forge": "1.12.2-14.23.5.2860",
+  "components_unchanged": {
+    "core": {
+      "version": "0.3.5",
+      "file": "OmkalityCore-0.3.5.jar",
+      "sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1"
+    },
+    "dj2fix": {
+      "version": "0.1.4",
+      "file": "OmkalityDJ2Fix-0.1.4.jar",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client": {
+      "version": "0.1.1",
+      "file": "OmkalityClient-0.1.1.jar",
+      "sha256": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+    }
+  },
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+  "ingress_image": "haproxy:3.2.26-alpine3.24@sha256:1c3568e520453cc8ba98c39501febcf450429c80e6cc27ecad779961d76e597c",
+  "native": {
+    "ok": true,
+    "conditions": 62,
+    "independent_conditions": 185,
+    "source_boots": 2,
+    "candidate_boots": 1,
+    "drasl_accounts": 2,
+    "cold_backups": 1,
+    "graphical_client": false,
+    "fixed_source_only": true,
+    "loopback_only": true,
+    "source_files_byte_identical_during_trial": 324,
+    "candidate_world_files": 306,
+    "runtime_files": 2015,
+    "runtime_bytes": 480187632,
+    "frozen_controller_sha256": "bbd927890f695ead49c0817a6dc795bef4fe0395c42aefaf2b387ad56355ecc4",
+    "closed_on_proxy_boot_and_restart": true,
+    "existing_authenticated_forge_connections_survive_close": true,
+    "new_connections_refused_when_closed": true,
+    "open_gate_refuses_stop_before_intent": true,
+    "pending_maintenance_refuses_open": true,
+    "lost_open_close_ack_recovered_without_repeat": true,
+    "stale_intent_after_proxy_restart_explicitly_cancelled": true,
+    "source_return_does_not_open_ingress": true,
+    "original_players_positions_inventory_xp_uuid_preserved": true,
+    "original_and_candidate_clean_exit_without_oom": true,
+    "all_owned_scopes_removed_after_export": true,
+    "checkpoints_sha256": {
+      "backups.tar": "5a20c937b0d02edee707dd2cc3e6872a40b3b47dec9167098183847f4af75569",
+      "candidate-after-slot.tar": "e4564ba095020ad0f4a8bc868f3c3733a0b19b8dd048af7e38c207dc6b16eaac",
+      "candidate-sealed.tar": "5c08323ffbf31cdc5956a599a8848ee3b949e461f4aebe1b8f416e9e1309e37e",
+      "source-after-runtime.tar": "dd8e60559b5a540133dab0a4f51c0f90981e1907a86f0c2fc1cc5c4aacbc934c",
+      "source-after-trial.tar": "dd8e60559b5a540133dab0a4f51c0f90981e1907a86f0c2fc1cc5c4aacbc934c",
+      "source-before.tar": "dd8e60559b5a540133dab0a4f51c0f90981e1907a86f0c2fc1cc5c4aacbc934c",
+      "source-final.tar": "63548745f5d0e605a1d1340b7b2076344fa5aedffaee78146801d2e7c08077f1",
+      "source-runtime.tar": "f99a41952143aa3cb0107f0ce9effa8df23a56e2c0bbd0c2b88c09be4aeb80f0"
+    }
+  },
+  "synthetic": {
+    "new_cases": 69,
+    "windows_unit_ui_passed": 1648,
+    "windows_skipped": 16,
+    "linux_focused_passed": 454,
+    "linux_image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "linux_memory_mib": 1024,
+    "linux_cpus": 2,
+    "linux_network": "none",
+    "linux_source_readonly": true,
+    "compose_default_and_overridden_limits_agree": true,
+    "real_minecraft_in_unit_tests": false
+  },
+  "regression": {
+    "exact_compose_readonly_bind_serialization_red_green": true,
+    "foreign_extra_mount_still_refused": true,
+    "maintenance_plan_has_stage_before_ingress_guard": true,
+    "fixture_uses_frozen_controller_and_helper_tree": true
+  },
+  "excluded_early_runs": {
+    "count": 2,
+    "reasons": [
+      "Exact Compose read-only bind serialization refused before any player join; fixed with red/green control",
+      "Test fixture imported controller while its helper contract was being edited; acceptance now uses a frozen source tree"
+    ],
+    "game_crash": false,
+    "clean_stop_export_and_scoped_cleanup": true
+  },
+  "limits": [
+    "No public ingress, VPS deployment, profile switch, promotion or cutover",
+    "TCP proxy does not preserve individual client source IP; PROXY support and per-client policy need separate acceptance",
+    "Closing preserves existing sessions; clean server stop performs saving and disconnect",
+    "No pretty Minecraft maintenance message or continuous monitoring",
+    "Online evacuation, all-dimension reset adapters, one backup scheduler and total storage budget remain open",
+    "PlaneFix fake OP policy unchanged; this is not full permissions or graphical gameplay acceptance"
+  ],
+  "ready_for_players": false,
+  "promoted": false,
+  "player_release_changed": false
+}

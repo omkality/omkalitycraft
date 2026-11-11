@@ -1,5 +1,34 @@
 # Разработка OmkalityCraft
 
+## Закрытый вход перед обслуживанием — 12 ноября 2026
+
+Owner `ingress prepare/inspect/plan/apply/verify/status/cancel` управляет одним
+исходным сервером через pinned HAProxy TCP. Loopback only; boot/restart закрыты,
+новые подключения не проходят, существующие сохраняются до штатного game stop.
+Maintenance фиксирует deployment и требует закрытый вход до stop intent.
+Открытие требует текущую готовность source и отсутствие pending M/R/S/I.
+Потерянные open/close ответы проверяются без повторной записи; после proxy
+restart старый open intent отменяется только при проверенном закрытии.
+
+Linux Docker / полная DJ2 2.23.4: 62 native / 185 independent условий,
+два Drasl-аккаунта, два source boot, один candidate boot и один backup.
+Сохранены вещи/XP/UUID/позиции и остальные FTB-данные; исходные 324 world-файлов
+неизменны при trial. Возврат исходника оставляет вход закрытым до нового плана.
+Own scopes удалены после экспорта. Два ранних отказа утилиты/fixture исключены,
+Minecraft не падал; финальная приёмка на замороженной копии controller/helpers.
+
+69 новых synthetic случаев, Windows 1648 unit/UI / 16 skipped, Linux focused
+454; Ruff/Black/source boundary. Compose defaults/overrides совпадают с owner
+policy. Core/Fix/Client и player releases прежние, periodic backup writer не
+добавлен. Источник видит IP proxy, а не отдельного игрока; эта граница явно описана.
+
+Следующий этап #32/#33 — явное cutover/recovery подготовленного мира; затем
+оставшиеся adapters/online evacuation и общий storage budget с одним scheduler.
+Публичного ingress, переключения профиля и deploy нет; `ready_for_players=false`,
+#41 открыт. Покупка PL RX-4 подтверждена, доступы пока не передавались; локальная
+приёмка продолжается. [Команды/настройки](OWNER_INGRESS.md),
+[обезличенный протокол](validation/dj2-owner-ingress-2026-11-12.json).
+
 ## Owner loopback candidate lifecycle — 11 ноября 2026
 
 `resource-resets slot-plan/create/start/stop/status/reconcile/release` создаёт
