@@ -324,7 +324,10 @@ def current(config, record):
 
 
 def plan(config, server, environment=None):
+    from omk.world_cutover import require_clear  # noqa: PLC0415
+
     with backups.locked(config):
+        require_clear(config, server)
         policy = settings(environment)
         target, endpoint = backups.target_for(config, server), binding(config, server)
         backups.local_engine()
@@ -456,7 +459,11 @@ def execute(config, operation, action, *, backup_operation=None, environment=Non
         value = current(config, record)
         if action == "cancel":
             from omk.admin_reset_staging import require_clear  # noqa: PLC0415
+            from omk.world_cutover import (  # noqa: PLC0415
+                require_clear as cutover_clear,
+            )
 
+            cutover_clear(config, record["server"])
             require_clear(config, operation)
             if record["stage"] not in {"planned", "stopped"} or (
                 value != record["initial"]
@@ -507,10 +514,13 @@ def request_stop(config, record, value, environment):
 
 def request_start(config, record, backup_operation):
     from omk.admin_reset_staging import require_clear  # noqa: PLC0415
+    from omk.world_cutover import for_window, start_proof  # noqa: PLC0415
 
-    require_clear(config, record["operation"])
     if record["stage"] != "stopped":
         raise AdminError("Unsupported maintenance stage or action")
+    installation = for_window(config, record["operation"])
+    if installation is None:
+        require_clear(config, record["operation"])
     if backups.checkpoint(record["target"]) != record["checkpoint"]:
         raise AdminError("Stopped source changed after maintenance")
     backup = backups.read_record(config, backup_operation or "")
@@ -525,7 +535,11 @@ def request_start(config, record, backup_operation):
         raise AdminError(
             "Start requires a completed backup of this exact stopped source"
         )
-    proof = worker(record, "proof", backup)
+    proof = (
+        start_proof(config, record, backup)
+        if installation is not None
+        else worker(record, "proof", backup)
+    )
     if backups.checkpoint(record["target"]) != record["checkpoint"]:
         raise AdminError("Source changed while verifying the start backup")
     record.update(

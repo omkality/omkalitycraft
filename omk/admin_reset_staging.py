@@ -26,6 +26,7 @@ STAGES = {
     "runtime-writing",
     "runtime-incomplete",
     "runtime-ready",
+    "installed",
 }
 
 
@@ -72,6 +73,7 @@ def read_record(config, operation):
             "runtime_expected",
             "runtime_created_at",
             "runtime_result",
+            "installation_operation",
         }
         or record.get("stage") not in STAGES
         or not isinstance(record.get("maintenance_operation"), str)
@@ -105,9 +107,12 @@ def list_operations(config, server):
 
 
 def require_clear(config, maintenance_operation):
+    from omk.world_cutover import consumed  # noqa: PLC0415
+
     if any(
         r["maintenance_operation"] == maintenance_operation
         and r["stage"] != "abandoned"
+        and not consumed(config, r)
         for r in records(config)
     ):
         raise AdminError(
@@ -130,6 +135,7 @@ def status(record):
         "operation": record["operation"],
         "server": record["server"],
         "stage": record["stage"],
+        "world_installed": record["stage"] == "installed",
         "maintenance_operation": record["maintenance_operation"],
         "backup_operation": record["backup_operation"],
         "dimension": record["dimension"],
@@ -140,7 +146,7 @@ def status(record):
         "omitted_files": expected["omitted_files"],
         "changed_files": expected["changed_files"],
         "runtime_prepared": "runtime_result" in record,
-        "source_changes": False,
+        "source_changes": record["stage"] == "installed",
         "promoted": False,
         "ready_for_start": False,
         "ready_for_players": False,
@@ -165,6 +171,9 @@ def backup_for(config, record):
 
 
 def stable(config, record, *, allowed_container=None):
+    from omk.world_cutover import require_clear  # noqa: PLC0415
+
+    require_clear(config, record["server"])
     window = maintenance.read_record(config, record["maintenance_operation"])
     if (
         window.get("stage") != "stopped"

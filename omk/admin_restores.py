@@ -153,6 +153,9 @@ def read_record(config, operation):
 
 
 def _stable(config, record):
+    from omk.world_cutover import require_clear  # noqa: PLC0415
+
+    require_clear(config, record["server"])
     source = backups.target_for(config, record["server"])
     target = target_for(config, record["server"], source)
     if (
@@ -168,11 +171,14 @@ def _stable(config, record):
 
 
 def plan(config, server, snapshot, environment=None):
+    from omk.world_cutover import require_clear  # noqa: PLC0415
+
     if not isinstance(snapshot, str) or not re.fullmatch(
         r"snapshot-[a-f0-9]{32}", snapshot
     ):
         raise AdminError("Invalid selected restore snapshot")
     with backups.locked(config):
+        require_clear(config, server)
         source = backups.target_for(config, server)
         target = target_for(config, server, source)
         backups.local_engine()

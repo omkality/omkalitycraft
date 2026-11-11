@@ -204,6 +204,9 @@ def status(r):
 
 
 def operations_clear(config, server, operation=None):
+    from omk.world_cutover import consumed, require_clear  # noqa: PLC0415
+
+    require_clear(config, server)
     for r in records(config):
         if (
             r["server"] == server
@@ -229,7 +232,11 @@ def operations_clear(config, server, operation=None):
     if path.exists():
         for p in path.iterdir():
             r = reset.read_record(config, p.stem)
-            if r["server"] == server and r["stage"] != "abandoned":
+            if (
+                r["server"] == server
+                and r["stage"] != "abandoned"
+                and not consumed(config, r)
+            ):
                 raise AdminError(
                     "Resource candidate is pending; ingress must stay closed"
                 )
