@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import json
 from unittest.mock import Mock
 
@@ -7,7 +8,10 @@ import pytest
 from omk import admin_resource_reset as owner
 from omk.admin import AdminError
 from omk.cli import main
-from omk.resource_reset_preflight import settings as preflight_settings
+from omk.resource_reset_preflight import (
+    PROFILE,
+    settings as preflight_settings,
+)
 from tests.unit.test_operator_commands import config
 
 TARGET = {
@@ -57,6 +61,80 @@ def reply():
     }
 
 
+def test_current_preflight_profile_is_accepted_instead_of_obsolete_hardcoded_v1(
+    monkeypatch,
+):
+    raw = PROFILE.read_bytes()
+    options = preflight_settings({})
+    value = reply()
+    value["preflight"] = {
+        "schema": 1,
+        "adapter": json.loads(raw)["adapter"],
+        "profile_sha256": hashlib.sha256(raw).hexdigest(),
+        "policy": options,
+        "dimension": -18000,
+        "world_inventory_sha256": value["world_inventory_sha256"],
+        "world_changes": False,
+        "ready_for_start": False,
+        "portal_adapters_reviewed": False,
+    }
+    monkeypatch.setattr(
+        owner.backups,
+        "docker",
+        Mock(return_value=json.dumps({"ok": True, "result": value})),
+    )
+    assert (
+        owner.worker(
+            TARGET, -18000, owner.backups.settings({}), preflight_options=options
+        )
+        == value
+    )
+
+
+@pytest.mark.parametrize("change_during_worker", [False, True])
+def test_data_profile_version_is_frozen_with_hash_and_rechecked(
+    tmp_path, monkeypatch, change_during_worker
+):
+    document = json.loads(PROFILE.read_bytes())
+    document["adapter"] = "dj2-2.23.4-forge112-reset-preflight-v4"
+    path = tmp_path / "profile.json"
+    path.write_text(json.dumps(document))
+    raw = path.read_bytes()
+    monkeypatch.setattr(owner, "PREFLIGHT_PROFILE", path)
+    options = preflight_settings({})
+    value = reply()
+    value["preflight"] = {
+        "schema": 1,
+        "adapter": document["adapter"],
+        "profile_sha256": hashlib.sha256(raw).hexdigest(),
+        "policy": options,
+        "dimension": -18000,
+        "world_inventory_sha256": value["world_inventory_sha256"],
+        "world_changes": False,
+        "ready_for_start": False,
+        "portal_adapters_reviewed": False,
+    }
+
+    def docker(*args, **kwargs):
+        if change_during_worker:
+            path.write_bytes(raw + b"\n")
+        return json.dumps({"ok": True, "result": value})
+
+    monkeypatch.setattr(owner.backups, "docker", docker)
+    if change_during_worker:
+        with pytest.raises(AdminError, match="preflight"):
+            owner.worker(
+                TARGET, -18000, owner.backups.settings({}), preflight_options=options
+            )
+    else:
+        assert (
+            owner.worker(
+                TARGET, -18000, owner.backups.settings({}), preflight_options=options
+            )
+            == value
+        )
+
+
 @pytest.fixture
 def controller(tmp_path, monkeypatch):
     settings, path = config(tmp_path)
@@ -102,8 +180,8 @@ def test_cli_is_owner_only_inspection_and_audit_contains_no_world_payload(
     }
 
 
-@pytest.mark.parametrize("action", ["apply", "wipe", "reset", "plan"])
-def test_no_mutating_or_plan_action_is_exposed(controller, action):
+@pytest.mark.parametrize("action", ["apply", "wipe", "reset", "start", "promote"])
+def test_no_live_wipe_or_candidate_start_action_is_exposed(controller, action):
     _settings, path, worker = controller
     with pytest.raises(SystemExit) as error:
         main(["admin", "--config", str(path), "resource-resets", action])
@@ -168,6 +246,7 @@ def test_worker_is_networkless_readonly_and_never_mounts_store_or_docker_socket(
         None,
         "schema",
         "adapter",
+        "profile_sha256",
         "policy",
         "dimension",
         "world_inventory_sha256",
@@ -181,7 +260,8 @@ def test_preflight_worker_response_preserves_readonly_identity(monkeypatch, faul
     value = reply()
     proof = {
         "schema": 1,
-        "adapter": "dj2-2.23.4-forge112-reset-preflight-v1",
+        "adapter": json.loads(PROFILE.read_bytes())["adapter"],
+        "profile_sha256": hashlib.sha256(PROFILE.read_bytes()).hexdigest(),
         "policy": options,
         "dimension": -18000,
         "world_inventory_sha256": value["world_inventory_sha256"],

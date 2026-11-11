@@ -1,7 +1,8 @@
 """Prepare a data-only candidate in a fresh Linux target; never approve its start.
 
 The source and verified backup are read-only. No source deletion, lifecycle,
-runtime deployment or promotion is implemented here. Owner CLI remains inspect-only.
+runtime deployment or promotion is implemented here. The owner controller binds
+this data-only worker to maintenance, a completed backup and a start barrier.
 """
 
 import hashlib
@@ -48,6 +49,8 @@ def _request(request):
     }
     if isinstance(request, dict) and request.get("action") in {"stage", "verify"}:
         keys.add("expected")
+    if isinstance(request, dict) and "preflight_options" in request:
+        keys.add("preflight_options")
     if (
         sys.platform != "linux"
         or not isinstance(request, dict)
@@ -69,6 +72,8 @@ def _request(request):
     if request["position"] != "auto":
         transform.landing(request["position"])
     BackupPolicy(**request["policy"])
+    if "preflight_options" in request:
+        resource_reset_preflight.options_checked(request["preflight_options"])
 
 
 def _inputs(request, source, storage, target):
@@ -110,6 +115,7 @@ def _inputs(request, source, storage, target):
             source,
             request["world"],
             request["dimension"],
+            options=request.get("preflight_options"),
             world_max_bytes=request["world_max_bytes"],
         )
         if not preflight["can_stage_data"]:
