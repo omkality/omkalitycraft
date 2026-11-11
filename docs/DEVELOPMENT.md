@@ -1,5 +1,29 @@
 # Разработка OmkalityCraft
 
+## Stock FTB retention и выбор ночного режима — 12 ноября 2026
+
+Владелец выбрал запланированный ночной рестарт с предупреждением в чате.
+Следующий координатор должен иметь настраиваемые время/timezone/countdown,
+один writer, отключённые stock periodic/shutdown backups и уже проверенную
+цепочку closed ingress → clean stop → verified publish-before-rotate → start/
+readiness → explicit open. Сам scheduler ещё не реализован и не включён.
+
+Неизменённый FTBBackups1.1.0.1 испытан на полной DJ2/Linux Docker: 13 native /
+20 independent условий, два проверенных старых ZIP и искусственный I/O отказ
+нового output после quota-loop. Оба прежних архива удалены до отказа. После
+явного initial save положительный контроль содержит level.dat, CRC и согласованный
+success receipt. Game crash/OOM нет, свои scopes удалены после экспорта.
+Это отказ output через каталог, не ENOSPC. Одних stock-настроек недостаточно,
+чтобы считать ротацию безопасной при ошибке новой копии.
+
+Один ранний log-matcher отказ исключён (нормальный /srv/./ путь). Второй ранний
+прогон сохранён как отдельное наблюдение: первый hot backup свежего мира дал
+success и CRC-valid ZIP без level.dat; после stop файл появился в мире. Это не
+принято как пригодная копия, обобщения на все рабочие миры нет. Оба scopes
+экспортированы/очищены; последующий retention trial имеет saved-world precondition.
+Runtime/FTB config рабочего сервера не менялся. PR #143 принят после 9/9 CI.
+[Решение/границы](NIGHTLY_BACKUPS.md), [протокол](validation/ftb-retention-2026-11-12.json).
+
 ## Проектный census и проверка бюджетов — 12 ноября 2026
 
 `omk admin storage estate` объединяет все серверы из backups.toml и явные

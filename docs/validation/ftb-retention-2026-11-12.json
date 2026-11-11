@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "milestone": "stock-ftb-retention-failure-and-nightly-policy",
+  "environment": {
+    "local_linux_docker": true,
+    "real_forge": true,
+    "pack": "DJ2 2.23.4",
+    "graphical_client": false,
+    "stock_mod": "FTBBackups 1.1.0.1",
+    "sha256": "6b6bcbbf6ac4528657345e1696339528a44643ecb06e6137908eafb8432bd962",
+    "mod_modified": false,
+    "cpu_limit": 4,
+    "memory_mib": 6144
+  },
+  "accepted_trial": {
+    "native_conditions": 13,
+    "independent_conditions": 20,
+    "prior_verified_archives": 2,
+    "explicit_initial_save_and_level_dat_precondition": true,
+    "fault": "directory at new ZIP output; deterministic filesystem I/O failure",
+    "quota_bytes": 1,
+    "count_limit_disabled": true,
+    "real_enospc": false,
+    "both_previous_archives_deleted_before_output_failure": true,
+    "positive_control_crc_level_dat_and_success_receipt": true,
+    "no_game_crash_or_oom": true,
+    "owned_scopes_removed_after_export": true
+  },
+  "other_runs": {
+    "excluded_log_matcher_fixture": {
+      "count": 1,
+      "reason": "/srv/./backups differs from expected /srv/backups",
+      "game_crash": false,
+      "exported_and_cleaned": true
+    },
+    "separate_initial_world_observation": {
+      "stock_success_receipt": true,
+      "zip_crc_valid": true,
+      "level_dat_missing_in_first_hot_zip": true,
+      "level_dat_present_after_clean_game_stop": true,
+      "accepted_as_complete_backup": false,
+      "exported_and_cleaned": true
+    }
+  },
+  "decision": {
+    "owner_preference": "scheduled nightly restart with chat warnings",
+    "target": "one managed coordinator; verified publication before rotation",
+    "time_timezone_countdown_configurable_required": true,
+    "scheduler_implemented": false,
+    "scheduler_enabled": false,
+    "existing_ftb_config_changed": false
+  },
+  "source_commit": "4e77b0390fb1f347eac3e6f341233ec8bedd035e",
+  "live_vps_changed": false,
+  "ready_for_players": false
+}
