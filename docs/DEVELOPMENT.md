@@ -1,5 +1,29 @@
 # Разработка OmkalityCraft
 
+## Read-only учёт диска — 12 ноября 2026
+
+`omk admin storage inspect --server dj2` считает метаданные source/store и явно
+настроенных reset/restore volumes. Source разделяется на active world, всю
+retained/partial историю, logs/crash/pack backups и runtime/other. Logical и
+allocated bytes раздельны; общий filesystem free не складывается по числу mounts.
+Низкий резерв отражается в JSON. Содержимое файлов не читается/не выводится;
+ссылки, special files, превышение env-лимитов и изменение во время обхода дают отказ.
+
+Настоящая CLI/Linux Docker на копиях принятых DJ2 экспортов: 16 условий,
+четыре свежих volumes, 5324 файла / 632 retained. Число/размеры сверены независимо,
+все байты прежние до/после; свои тома удалены. Minecraft здесь не запускался.
+31 synthetic случай, Linux focused 524; Windows 1703 unit/UI / 31 skipped
+(15 новых skip относятся к Linux-only FS, проверены в Linux Docker).
+Минимум free для последующего mount проверен red/green. Ruff/Black/source boundary.
+
+PR #140 принят в dev после 9/9 CI. Следующий этап #33 — общий host/Drasl/Docker
+budget, выбранный один scheduler и off-host копии. Текущий отчёт не включает все
+orphan volumes/images/container logs и не является атомарным snapshot либо
+проверкой целостности backup. Никакая автоматическая очистка не добавлена.
+#32/#38/#41 открыты; VPS deploy/graphical landing после установки отдельно.
+[Руководство](OWNER_STORAGE.md),
+[протокол](validation/owner-storage-2026-11-12.json).
+
 ## Установка нового мира в тот же контейнер — 12 ноября 2026
 
 Owner `world-cutovers plan/apply/verify/recover/revert/cancel/commit/status`
