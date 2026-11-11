@@ -1,5 +1,28 @@
 # Разработка OmkalityCraft
 
+## EnderItems: доступ, reset и restart — 11 ноября 2026
+
+Python-адаптер v2 расширен стандартным 27-слотовым EnderItems в `.dat`/`.dat_old`.
+Preflight v3 требует новый frozen plan вместо v1/v2; неизвестные слоты/схемы,
+вложенные сумки и остальные хранилища не допускаются. Source/backup read-only,
+ручной data-only режим отвязку не включает. Pins/JAR и allowlist прежние.
+
+Полная DJ2 / Linux Docker: 81 native / 107 independent условий, три clean старта,
+восемь серверных переносов через сундук. Два аккаунта видят свои предметы до/после
+reset; 12 ссылок очищены в обеих записях первого игрока. Три изменения при stage,
+301 retained файл побайтно прежний, 19 старых ресурсных файлов исключены.
+Очищенный Porter заново привязан, возвращён в сундук, получен и использован после
+restart. Полное типизированное NBT/количество, опыт и контрольные вещи сохранены.
+
+14 новых synthetic случаев; фокус адаптера 61, Linux focused 143, Windows unit/UI
+1385/12 skipped; Ruff/Black. Три ранних fixture-отказа исключены, четыре своих
+scopes очищены после экспорта. Protocol transfers приняты по server save;
+отрицательные prediction confirmations фикстуры не выданы за графическую приёмку.
+Core 0.3.5 / DJ2Fix 0.1.4 / Client 0.1.1 прежние. Owner wipe закрыт;
+`ready_for_start=false`, `ready_for_players=false`, #32/#41 открыты.
+[Границы и сценарий](RESOURCE_RESET_ENDERCHEST.md),
+[протокол](validation/dj2-enderchest-reset-2026-11-11.json). VPS пока не нужен.
+
 ## Ender Utilities: отвязка и повторная привязка после reset — 10 ноября 2026
 
 Добавлен узкий Python-адаптер остановленной копии: location crystals tier 0
