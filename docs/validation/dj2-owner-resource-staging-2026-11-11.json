@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "date": "2026-11-11",
+  "issues": [
+    32,
+    33,
+    41
+  ],
+  "status": "accepted-owner-data-candidate-only-no-cutover",
+  "pack": "Divine Journey 2 2.23.4",
+  "forge": "1.12.2-14.23.5.2860",
+  "components_unchanged": {
+    "core": {
+      "version": "0.3.5",
+      "file": "OmkalityCore-0.3.5.jar",
+      "sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1"
+    },
+    "dj2fix": {
+      "version": "0.1.4",
+      "file": "OmkalityDJ2Fix-0.1.4.jar",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client": {
+      "version": "0.1.1",
+      "file": "OmkalityClient-0.1.1.jar",
+      "sha256": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+    }
+  },
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+  "preflight_profile": {
+    "adapter": "dj2-2.23.4-forge112-reset-preflight-v3",
+    "sha256": "3dcca8ce729175fb0224b54150cfab0884272610faa4fe1b120f55973e45e4a0"
+  },
+  "native": {
+    "ok": true,
+    "conditions": 30,
+    "independent_conditions": 70,
+    "source_boots": 2,
+    "source_clean_stops": 2,
+    "drasl_accounts": 2,
+    "graphical_client": false,
+    "candidate_boots": 0,
+    "completed_cold_backups": 1,
+    "candidates": 2,
+    "source_world_files": 320,
+    "candidate_world_files": [
+      302,
+      302
+    ],
+    "candidate_changed_files": [
+      4,
+      4
+    ],
+    "candidate_omitted_files": [
+      18,
+      18
+    ],
+    "source_bytes_unchanged_during_both_stages": true,
+    "lost_controller_response_after_completed_write_verified_without_reextraction": true,
+    "resume_and_cancel_refused_until_explicit_abandon": true,
+    "nonempty_abandoned_target_refused_for_new_plan": true,
+    "original_same_container_started_after_abandon": true,
+    "original_resource_world_and_player_dimensions_preserved_after_original_restart": true,
+    "typed_inventory_xp_uuid_and_other_nbt_preserved": true,
+    "resource_claims_removed_in_candidates": 197,
+    "other_claims_preserved_in_candidates": 1444,
+    "resource_home_removed_and_other_player_home_preserved": true,
+    "ftb_authority_and_team_files_preserved": true,
+    "actual_backup_crc_sha_and_every_archived_byte_verified": true,
+    "all_owned_source_auth_store_candidate_resources_removed_after_exports": true,
+    "no_game_crash_in_accepted_run": true,
+    "archive_sha256": {
+      "checkpoints/backups.tar": "24e7504251d5fd88220d00f586415da11d7cdd5ba016c4f69e8cbd9873b5b89e",
+      "checkpoints/candidate-one.tar": "a22a43e0b87157a231dab730d344cabde334b9ccf9bd1e6428daa948815d2461",
+      "checkpoints/candidate-two.tar": "d5f597ddd497be32997395a54bca3a4ab0caff42f1b8ebe9ecb53a52040f8efe",
+      "checkpoints/source-after-one.tar": "8d4867a39001d1e98c0929143c542b6c262e9cb3f5654eb434e5dc62b7779a95",
+      "checkpoints/source-after-two.tar": "8d4867a39001d1e98c0929143c542b6c262e9cb3f5654eb434e5dc62b7779a95",
+      "checkpoints/source-before.tar": "8d4867a39001d1e98c0929143c542b6c262e9cb3f5654eb434e5dc62b7779a95",
+      "checkpoints/source-final.tar": "51a84da81b344fe7b93dfe95e3a99ab833a3679d69659f65a1297f3118792706"
+    }
+  },
+  "synthetic": {
+    "new_cases": 44,
+    "windows_unit_passed": 1425,
+    "windows_ui_passed": 55,
+    "windows_skipped": 12,
+    "linux_focused_passed": 282,
+    "linux_unit_image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "linux_source_readonly": true,
+    "linux_network": "none",
+    "linux_memory_mib": 1024,
+    "linux_cpus": 2,
+    "linux_owned_container_removed": true,
+    "real_minecraft_in_unit_tests": false
+  },
+  "regression": {
+    "obsolete_inspection_preflight_v1_gate_refused_current_v3": true,
+    "unit_failed_before_fix_and_passed_after_fix": true,
+    "adapter_and_profile_sha_loaded_from_reviewed_data_profile": true,
+    "profile_changed_during_worker_refused": true,
+    "frozen_nondefault_preflight_options_forwarded_to_linux_worker": true
+  },
+  "rejected_early_attempts": {
+    "count": 1,
+    "accepted_as_game_validation": false,
+    "reason": "Underground Biomes converted the fixture stone landing floor to an unsupported mod stone; valid spawn coordinates were retained",
+    "fixture_only_change": "use iron block floor; conservative floor allowlist unchanged",
+    "source_unchanged_and_target_empty_before_owned_cleanup": true
+  },
+  "boundaries": {
+    "source_and_backup_readonly": true,
+    "target_only_stage_writable": true,
+    "source_world_reset": false,
+    "candidate_promotion": false,
+    "candidate_runtime_generated": false,
+    "ready_for_start": false,
+    "ready_for_players": false,
+    "periodic_backup_writer_added": false,
+    "any_dimension_wipe": false,
+    "online_evacuation": false,
+    "full_quest_or_hard_pvp_regression": false,
+    "vps_deployment": false,
+    "new_jars_or_player_release": false,
+    "raw_labs_private": true
+  },
+  "implementation_commit": "4b050ce4dc2652076cc53cbb454c2330db9a9348",
+  "source_checks": {
+    "ruff": true,
+    "black": true,
+    "public_mod_source_boundary": true,
+    "public_changed_source_secret_scan": true,
+    "private_fixture_source_secret_scan": true
+  }
+}
