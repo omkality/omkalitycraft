@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "date": "2026-11-11",
+  "issues": [
+    33,
+    32,
+    41
+  ],
+  "status": "accepted-owner-maintenance-same-container-only",
+  "pack": "Divine Journey 2 2.23.4",
+  "forge": "1.12.2-14.23.5.2860",
+  "implementation_commit": "09a27961890a129dbec75e6ba6ee851030bfa995",
+  "components_unchanged": {
+    "core": {
+      "version": "0.3.5",
+      "file": "OmkalityCore-0.3.5.jar",
+      "sha256": "786fa897eecb5028a9bbbe460677fc8f85eab9b1b80544a002eb68b3771c53d1"
+    },
+    "dj2fix": {
+      "version": "0.1.4",
+      "file": "OmkalityDJ2Fix-0.1.4.jar",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client": {
+      "version": "0.1.1",
+      "file": "OmkalityClient-0.1.1.jar",
+      "sha256": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+    }
+  },
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "worker_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+  "native": {
+    "ok": true,
+    "conditions": 34,
+    "independent_conditions": 58,
+    "starts": 3,
+    "clean_stops": 3,
+    "drasl_accounts": 2,
+    "graphical_client": false,
+    "same_container_id_and_volume_identities": true,
+    "backups": 2,
+    "world_file_counts": [
+      317,
+      344,
+      344
+    ],
+    "all_actual_archived_bytes_match_corresponding_stopped_world": true,
+    "typed_inventories_xp_uuid_and_survival_preserved": true,
+    "previous_boot_backup_refused": true,
+    "concurrent_window_refused": true,
+    "missing_backup_refused": true,
+    "interrupted_stop_reconciled": true,
+    "interrupted_start_reconciled_without_second_start": true,
+    "cancel_leaves_stopped_source_offline": true,
+    "ready_stable_seconds": 15,
+    "exit_zero_and_no_oom_all_accepted_stops": true,
+    "source_auth_store_resources_removed_after_export": true,
+    "archive_sha256": {
+      "checkpoints\\backups.tar": "d14daede9bf50380e3f522cddbc7becf1fc8523ca7558aa1359d4bb973997a40",
+      "checkpoints\\final-stop.tar": "582983af329d4e4393515a75ec6125828d762821deb1093607b323092d3d4c00",
+      "checkpoints\\first-stop.tar": "6ebc3d74c2fee857a985caa25c17e095bf86cfa2a31f18903514ce3798cfcc0e",
+      "checkpoints\\second-stop.tar": "f79b2ea01bcf96404c5458b44bde250d98d7615f6a8d685af04af8ff829b1ffd",
+      "export\\world-after.tar": "582983af329d4e4393515a75ec6125828d762821deb1093607b323092d3d4c00"
+    },
+    "no_extra_java_observer": true
+  },
+  "synthetic": {
+    "new_cases": 50,
+    "linux_focused_passed": 143,
+    "windows_unit_ui_passed": 1435,
+    "windows_unit_ui_skipped": 12,
+    "actual_docker_fake_rcon_cycle": true,
+    "real_minecraft_in_synthetic_controls": false,
+    "linux_unit_image_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "linux_unit_source_readonly": true,
+    "linux_unit_network": "none",
+    "linux_unit_memory_mib": 1024,
+    "linux_unit_cpus": 2
+  },
+  "rejected_early_attempts": {
+    "count": 5,
+    "scope": "excluded; not game acceptance",
+    "fixture_errors": [
+      "inherited guarded lab observers",
+      "off-thread fixture world commands through vanilla RCON",
+      "duplicate CLI JSON output",
+      "incorrect NBT fixture root access"
+    ],
+    "unconfirmed_early_start": {
+      "count": 1,
+      "original_error_text_preserved": false,
+      "start_intent_retained": true,
+      "root_cause": "unresolved in rejected run; not claimed fixed",
+      "subsequent_fixture_captures_cli_output_and_current_boot_logs": true,
+      "exception_after_docker_start_has_explicit_unit_control": true
+    }
+  },
+  "boundaries": {
+    "same_source_container_only": true,
+    "world_delete_or_reset": false,
+    "staged_target_promotion": false,
+    "periodic_scheduler_added": false,
+    "account_recovery_allowlist_expanded": false,
+    "arbitrary_rcon_commands_exposed": false,
+    "vps_deployment": false,
+    "hard_pvp_regression": false,
+    "full_modpack_progression": false,
+    "ready_for_start_after_world_reset": false,
+    "ready_for_players": false,
+    "raw_labs_private": true
+  }
+}
