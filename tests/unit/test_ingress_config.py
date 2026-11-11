@@ -1,5 +1,6 @@
 import copy
 import json
+import os
 
 import pytest
 
@@ -220,3 +221,41 @@ def test_prepare_is_repeatable_without_overwriting_changed_config(definitions):
     with pytest.raises(AdminError, match="never overwrite"):
         deployment.preparation(cfg, "dj2", {})
     assert path.read_bytes() == b"do not overwrite"
+
+
+def test_prepared_nonsecret_leaf_is_readable_without_exposing_private_host_parent(
+    definitions,
+):
+    cfg, spec, _ = definitions
+    deployment.preparation(cfg, "dj2", {})
+    folder = cfg.private / spec["config_dir"]
+    path = folder / "haproxy.cfg"
+    original = path.read_bytes()
+    if os.name != "nt":
+        assert path.stat().st_mode & 0o777 == 0o644
+        assert folder.stat().st_mode & 0o777 == 0o755
+        assert cfg.private.stat().st_mode & 0o077 == 0
+    # Explicit prepare repairs a legacy leaf only after exact content validation.
+    path.chmod(0o600)
+    folder.chmod(0o700)
+    deployment.preparation(cfg, "dj2", {})
+    assert path.read_bytes() == original
+    if os.name != "nt":
+        assert path.stat().st_mode & 0o777 == 0o644
+        assert folder.stat().st_mode & 0o777 == 0o755
+
+
+def test_prepare_does_not_relax_permissions_when_leaf_contains_unknown_files(
+    definitions,
+):
+    cfg, spec, _ = definitions
+    deployment.preparation(cfg, "dj2", {})
+    folder = cfg.private / spec["config_dir"]
+    path = folder / "haproxy.cfg"
+    path.chmod(0o600)
+    folder.chmod(0o700)
+    (folder / "private-file").write_text("fixture")
+    previous_mode = path.stat().st_mode
+    with pytest.raises(AdminError, match="unknown"):
+        deployment.preparation(cfg, "dj2", {})
+    assert path.stat().st_mode == previous_mode
