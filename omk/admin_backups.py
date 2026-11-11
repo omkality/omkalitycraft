@@ -405,7 +405,10 @@ def request_for(record, action):
 
 
 def plan(config, server, environment=None):
+    from omk.world_cutover import require_clear  # noqa: PLC0415
+
     with locked(config):
+        require_clear(config, server)
         policy = settings(environment)
         target = target_for(config, server)
         local_engine()
@@ -443,8 +446,11 @@ def plan(config, server, environment=None):
 
 
 def run(config, operation, *, finish=False, environment=None):
+    from omk.world_cutover import require_clear  # noqa: PLC0415
+
     with locked(config):
         record = read_record(config, operation)
+        require_clear(config, record["server"])
         if record.get("schema") != 1 or record.get("operation") != operation:
             raise AdminError("Invalid backup journal")
         target = target_for(config, record["server"])
@@ -536,8 +542,11 @@ def run_backups(config, args):
 
 
 def cancel(config, operation):
+    from omk.world_cutover import require_clear  # noqa: PLC0415
+
     with locked(config):
         record = read_record(config, operation)
+        require_clear(config, record["server"])
         if record.get("stage") not in {
             "planned",
             "preparing",
