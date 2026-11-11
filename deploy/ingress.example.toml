@@ -1,0 +1,15 @@
+# Copy to .omk-admin/ingress.toml with mode 600. Only loopback ingress is accepted.
+schema = 1
+
+[servers.dj2]
+container = "omk-dj2-ingress"
+owner = "REPLACE_WITH_FRESH_INGRESS_OWNER"
+network = "omk-project-private"
+network_label = "omkality.network.owner"
+network_owner = "REPLACE_WITH_PRIVATE_NETWORK_OWNER"
+control_volume = "omk-dj2-ingress-control"
+control_owner = "REPLACE_WITH_FRESH_CONTROL_OWNER"
+config_dir = "ingress-config/dj2"
+host_port = 25580
+container_port = 25565
+backend_port = 25565

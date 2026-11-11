@@ -279,6 +279,7 @@ def add_admin_commands(sub):
     from omk.admin_maintenance import add_maintenance_parser  # noqa: PLC0415
     from omk.admin_resource_reset import add_resource_reset_parser  # noqa: PLC0415
     from omk.admin_restores import add_restore_parser  # noqa: PLC0415
+    from omk.ingress import add_parser as add_ingress_parser  # noqa: PLC0415
 
     admin = sub.add_parser(
         "admin", help="Local operator tools; not part of the player launcher"
@@ -290,6 +291,7 @@ def add_admin_commands(sub):
     add_maintenance_parser(actions)
     add_restore_parser(actions)
     add_resource_reset_parser(actions)
+    add_ingress_parser(actions)
     login = actions.add_parser(
         "login", help="Save a separate Drasl operator API credential"
     )
@@ -328,6 +330,7 @@ def run_admin(args):
         "maintenance": "maintenance_action",
         "restores": "restore_action",
         "resource-resets": "resource_reset_action",
+        "ingress": "ingress_action",
     }.get(args.admin_action)
     if suffix:
         operation += ":" + getattr(args, suffix)
@@ -353,6 +356,10 @@ def run_admin(args):
             from omk.admin_maintenance import run_maintenance  # noqa: PLC0415
 
             result = run_maintenance(config, args)
+        elif args.admin_action == "ingress":
+            from omk.ingress import run as run_ingress  # noqa: PLC0415
+
+            result = run_ingress(config, args)
         elif args.admin_action in {"backups", "restores"}:
             from omk.admin_backups import run_backups  # noqa: PLC0415
             from omk.admin_restores import run_restores  # noqa: PLC0415

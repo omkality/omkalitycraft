@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "adapter": "haproxy-single-source-ingress-v1",
+  "version": "3.2.26",
+  "image": "haproxy:3.2.26-alpine3.24@sha256:1c3568e520453cc8ba98c39501febcf450429c80e6cc27ecad779961d76e597c",
+  "source": "https://hub.docker.com/_/haproxy",
+  "documentation": "https://docs.haproxy.org/3.2/management.html",
+  "command": ["haproxy", "-W", "-db", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+}

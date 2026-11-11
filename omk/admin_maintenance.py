@@ -267,6 +267,7 @@ def read_record(config, operation):
         "proof",
         "start_requested_at",
         "resumed",
+        "ingress",
     }
     if (
         type(record.get("schema")) is not int
@@ -299,7 +300,15 @@ def status(record):
 
 
 def current(config, record):
+    from omk.ingress import guard  # noqa: PLC0415
+
     backups.local_engine()
+    guard(
+        config,
+        record["server"],
+        record.get("ingress"),
+        closed=record["stage"] in {"stop-requested", "stopped", "start-requested"},
+    )
     server = record["server"]
     if (
         backups.target_for(config, server) != record["target"]
@@ -341,10 +350,18 @@ def plan(config, server, environment=None):
             "settings": policy,
             "operator_root": str(config.servers[server]),
             "created_at": datetime.now(UTC).isoformat(),
+            "stage": "planned",
         }
         record["initial"] = snapshot(target, endpoint)
         if not record["initial"]["running"]:
             raise AdminError("New maintenance windows require the running source")
+        from omk import ingress, ingress_config  # noqa: PLC0415
+
+        record["ingress"] = (
+            ingress.capture(config, server)[0]
+            if ingress_config.configured(config)
+            else None
+        )
         console, password = credential(config, server)
         RecoveryConsole(console, password).ready()
         record["runtime"] = worker(record, "runtime")
@@ -463,6 +480,9 @@ def execute(config, operation, action, *, backup_operation=None, environment=Non
 
 
 def request_stop(config, record, value, environment):
+    from omk.ingress import guard  # noqa: PLC0415
+
+    guard(config, record["server"], record.get("ingress"), closed=True)
     age = (
         datetime.now(UTC) - datetime.fromisoformat(record["created_at"])
     ).total_seconds()
