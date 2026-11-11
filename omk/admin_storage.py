@@ -169,7 +169,14 @@ def add_parser(actions):
         "storage", help="Owner read-only volume space accounting"
     ).add_subparsers(dest="storage_action", required=True)
     sub.add_parser("inspect").add_argument("--server", required=True)
+    sub.add_parser(
+        "estate", help="Read-only census and budget for all configured project volumes"
+    )
 
 
 def run(config, args):
+    if args.storage_action == "estate":
+        from omk.storage_estate import inspect as inspect_estate  # noqa: PLC0415
+
+        return inspect_estate(config)
     return inspect(config, args.server)
