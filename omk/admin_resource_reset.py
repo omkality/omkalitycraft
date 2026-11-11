@@ -220,7 +220,15 @@ def add_resource_reset_parser(actions):
     command.add_argument("--dimension", type=int, required=True)
     command.add_argument("--maintenance-operation", required=True)
     command.add_argument("--backup-operation", required=True)
-    for action in ("stage", "verify", "status", "abandon"):
+    for action in (
+        "stage",
+        "verify",
+        "status",
+        "abandon",
+        "runtime-plan",
+        "runtime-stage",
+        "runtime-verify",
+    ):
         sub.add_parser(action).add_argument("--operation", required=True)
     sub.add_parser("list").add_argument("--server", required=True)
 

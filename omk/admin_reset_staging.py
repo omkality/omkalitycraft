@@ -16,7 +16,17 @@ from omk.cold_backup_worker import digest
 from omk.profiles import PROJECT_ROOT
 from omk.resource_reset_preflight import settings as preflight_settings
 
-STAGES = {"planned", "staging", "incomplete", "staged", "abandoned"}
+STAGES = {
+    "planned",
+    "staging",
+    "incomplete",
+    "staged",
+    "abandoned",
+    "runtime-planned",
+    "runtime-writing",
+    "runtime-incomplete",
+    "runtime-ready",
+}
 
 
 def journal(config, operation):
@@ -54,7 +64,15 @@ def read_record(config, operation):
         or record.get("schema") != 1
         or record.get("operation") != operation
         or not required <= set(record)
-        or set(record) - required - {"result", "failure_type"}
+        or set(record)
+        - required
+        - {
+            "result",
+            "failure_type",
+            "runtime_expected",
+            "runtime_created_at",
+            "runtime_result",
+        }
         or record.get("stage") not in STAGES
         or not isinstance(record.get("maintenance_operation"), str)
         or not re.fullmatch(r"[a-f0-9]{32}", record["maintenance_operation"])
@@ -121,6 +139,7 @@ def status(record):
         "retained_files": expected["retained_files"],
         "omitted_files": expected["omitted_files"],
         "changed_files": expected["changed_files"],
+        "runtime_prepared": "runtime_result" in record,
         "source_changes": False,
         "promoted": False,
         "ready_for_start": False,
@@ -196,8 +215,12 @@ def worker(record, action):
             for k in ("max_bytes", "max_count", "staging_bytes", "reserve_bytes")
         },
     }
+    runtime = action.startswith("runtime-")
     if action != "plan":
         request["expected"] = record["expected"]
+    if runtime and action != "runtime-plan":
+        request["runtime_expected"] = record["runtime_expected"]
+    writable = action in {"stage", "runtime-stage"}
     args = [
         "run",
         "--rm",
@@ -229,7 +252,7 @@ def worker(record, action):
         f"type=volume,source={source['store_volume']},target=/backup,readonly",
         "--mount",
         f"type=volume,source={target['data_volume']},target=/target"
-        + ("" if action == "stage" else ",readonly"),
+        + ("" if writable else ",readonly"),
     ]
     for module in ("omk", "launcher", "profiles"):
         args += [
@@ -245,7 +268,7 @@ def worker(record, action):
         backups.IMAGE,
         "python",
         "-m",
-        "omk.resource_reset_stage",
+        "omk.resource_reset_runtime" if runtime else "omk.resource_reset_stage",
         stdin=json.dumps(request),
         timeout=policy["timeout_seconds"],
         allowed_codes=(0, 1),
@@ -269,7 +292,21 @@ def worker(record, action):
             + kind
             + "); inspect the private journal and retained target"
         )
-    if action == "plan":
+    if runtime:
+        if (
+            result.get("operation") != record["operation"]
+            or result.get("ready_for_players") is not False
+            or (
+                result.get("data_plan_sha256") != digest(record["expected"])
+                if action == "runtime-plan"
+                else result.get("runtime_plan_sha256")
+                != digest(record["runtime_expected"])
+                or result.get("runtime_prepared") is not True
+                or result.get("promoted") is not False
+            )
+        ):
+            raise AdminError("Runtime worker returned a different identity or receipt")
+    elif action == "plan":
         if (
             any(
                 result.get(k) != request[k]
@@ -357,6 +394,56 @@ def plan(
         return status(record)
 
 
+def runtime_action(config, record, action, environment):
+    if action == "runtime-plan":
+        if record["stage"] != "staged" or "runtime_expected" in record:
+            raise AdminError("Runtime planning requires an unchanged data-only stage")
+        if record["settings"] != backups.settings(environment) or record[
+            "preflight_options"
+        ] != preflight_settings(environment):
+            raise AdminError("Runtime policy differs from the frozen source backup")
+        record["runtime_expected"] = worker(record, action)
+        record["runtime_created_at"] = datetime.now(UTC).isoformat()
+        stable(config, record)
+        save(config, record, "runtime-planned")
+        return status(record)
+    if action == "runtime-stage":
+        if record["stage"] != "runtime-planned":
+            raise AdminError("Runtime preparation was already attempted or not planned")
+        age = (
+            datetime.now(UTC) - datetime.fromisoformat(record["runtime_created_at"])
+        ).total_seconds()
+        if (
+            not 0 <= age <= record["settings"]["plan_ttl_seconds"]
+            or record["settings"] != backups.settings(environment)
+            or record["preflight_options"] != preflight_settings(environment)
+        ):
+            raise AdminError("Runtime plan is stale or policy changed")
+        save(config, record, "runtime-writing")
+        try:
+            result = worker(record, action)
+        except Exception as error:
+            record["failure_type"] = type(error).__name__
+            save(config, record, "runtime-incomplete")
+            raise AdminError(
+                "Runtime incomplete; verify a complete receipt or abandon; never repeat"
+            ) from None
+    elif action == "runtime-verify":
+        if record["stage"] not in {
+            "runtime-writing",
+            "runtime-incomplete",
+            "runtime-ready",
+        }:
+            raise AdminError("No attempted runtime preparation to verify")
+        result = worker(record, action)
+    else:
+        raise AdminError("Unsupported runtime action")
+    stable(config, record)
+    record["runtime_result"] = result
+    save(config, record, "runtime-ready")
+    return status(record)
+
+
 def execute(config, operation, action, environment=None):
     with backups.locked(config):
         record = read_record(config, operation)
@@ -369,7 +456,13 @@ def execute(config, operation, action, environment=None):
         if action == "abandon":
             save(config, record, "abandoned")
             return status(record)
+        if action.startswith("runtime-"):
+            return runtime_action(config, record, action, environment)
         if action == "verify":
+            if "runtime_expected" in record:
+                raise AdminError(
+                    "Use runtime-verify after runtime planning; data verify cannot downgrade it"
+                )
             if record["stage"] not in {"staging", "incomplete", "staged"}:
                 raise AdminError("No attempted resource candidate to verify")
             result = worker(record, "verify")
