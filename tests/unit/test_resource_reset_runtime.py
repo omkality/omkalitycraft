@@ -2,6 +2,7 @@ import copy
 import json
 import os
 import shutil
+import sys
 
 import pytest
 
@@ -266,7 +267,9 @@ def test_worker_has_no_lifecycle_action(prepared, action):
         execute(prepared, action)
 
 
-@pytest.mark.skipif(os.name == "nt", reason="Linux runtime paths are case-sensitive")
+@pytest.mark.skipif(
+    sys.platform != "linux", reason="Linux runtime paths are case-sensitive"
+)
 def test_runtime_preserves_distinct_case_sensitive_files(prepared):
     _, source, _, _ = prepared
     for name, content in [("CaseProbe.txt", b"upper"), ("caseprobe.txt", b"lower")]:
