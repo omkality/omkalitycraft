@@ -1,5 +1,38 @@
 # Разработка OmkalityCraft
 
+## Durable ownership передачи — 12 ноября 2026
+
+После принятого PR #151 добавлен Linux `TransferStore` для готовых архивов:
+private volume, frozen intent до upload, fsync/atomic replace, общий flock,
+наследуемый дочерним restic. Второй controller не получает ownership, пока жив
+старый restic, даже после SIGKILL управляющего Python. Попытанный upload не
+переиздаётся; явное recovery ищет прежний ID и обязательно делает exact readback.
+Без snapshot попытка остаётся неоднозначной. Новых CLI, host jobs и второго
+writer игры нет. Limits через OMK_OFFSITE_JOB_MAX_RECORDS/BYTES; записи не удаляются.
+
+29 новых cases; Windows 2054 unit/UI /71 skipped (Linux owner tests пропущены),
+Linux Docker focused 627. Отдельно 9 настоящих REST/TLS условий: конкурирующие
+controllers, exits 71/73/75, живой restic после SIGKILL Python, input drift.
+Отрицательный контроль без наследования fd показал потерю fence; исправный
+вариант держит его до завершения того же дочернего процесса. Независимый Linux
+verifier: 5 завершённых records /23 файла, 20 сравнений исходных архивов,
+ZIP CRC 321 entry, auth TAR/SQLite/key/skins. Свои scopes удалены, OOM нет.
+
+Это local flock одного общего Linux store, не distributed lock. Controller
+timeout не переживает смерть controller: живой orphan держит busy до выхода;
+внешний bounded worker lifecycle ещё не подключён. Status verified — историческая
+сверка, не новая проверка доступности remote. Остаток atomic tmp требует осмотра,
+не удаляется автоматически. При 128 попытках следующая prepare отказывает:
+лимит/архивацию надо учесть до включения долгого расписания.
+
+Дальше #33: согласованный project export одного источника world/auth/runtime/
+operator, интеграция transfer/lifecycle с одним nightly, внешнее destination и
+retention, полный quarantine/authority return. Архивы этого опыта из разных
+прежних labs, новая игра/Drasl не запускались. #41/#146 открыты; VPS/launcher/
+Java/player release прежние, ready_for_players=false. Перед VPS аудит владельца.
+[Порядок](OFFSITE_TRANSPORT.md#сохранение-и-продолжение-передачи-на-linux),
+[протокол](validation/offsite-transfer-2026-11-12.json).
+
 ## REST/TLS транспорт готовых архивов — 12 ноября 2026
 
 PR #150 принят в dev после 9/9 CI, завершённая ветка удалена. Следующий шаг #33 —

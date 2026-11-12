@@ -1,5 +1,22 @@
 # Журнал изменений
 
+## Не выпущено — сохранение и продолжение передачи копий
+
+- Внутренний Linux TransferStore фиксирует source/repository/policy до отправки,
+  хранит stages через fsync/atomic replace и не переиздаёт попытанный upload.
+  После потери ответа ищет тот же snapshot и сверяет восстановленные байты.
+- Общую flock наследует restic: после SIGKILL управляющего Python второй
+  controller отказывает, пока жив прежний дочерний процесс. Пройден контроль
+  без наследования fd, который воспроизводит прежнюю потерю блокировки.
+- 29 новых cases, Windows 2054 /71 skipped, Linux focused 627; девять реальных
+  REST/TLS/Docker условий и независимая сверка пяти records /23 файлов,
+  ZIP CRC/SQLite integrity. Новых omk-команд и host jobs нет.
+- Это ownership транспорта готовых компонентов, не полный project backup.
+  Согласованный export/nightly integration, внешний worker lifecycle,
+  destination/retention и application return остаются #33. История ограничена
+  env-политикой, без автоматического удаления. VPS/launcher/Java прежние.
+  [Порядок и ограничения](docs/OFFSITE_TRANSPORT.md#сохранение-и-продолжение-передачи-на-linux).
+
 ## Не выпущено — зашифрованная передача готовых архивов
 
 - Внутренние Python primitives restic 0.19.1 /REST/TLS: закреплённые артефакты,
