@@ -1,5 +1,49 @@
 # Разработка OmkalityCraft
 
+## Календарный runner с восстановлением — 12 ноября 2026
+
+Opt-in `nightly watch --server` использует существующий цикл и один приватный
+cursor на сервер. По умолчанию disabled, host job/VPS не установлены. Дата и
+ID фиксируются до preflight; потерянное подтверждение подхватывает только тот
+же root с проверенным origin. Общий owner lock допускает два процесса без
+двойного цикла. Пропущенное окно не догоняется, DST gap/fold и откат часов
+учитываются. Ошибка оставляет тот же root для существующих run/status/cancel.
+
+До отсчёта проверяются TTL и slots всех journals, включая два ingress.
+Журналы автоматически не удаляются: default 128 ingress хватает примерно на
+64 ночи, а не на полгода. Для 180 циклов ориентир M/B journal_count=512 с запасом
+на ручные операции и проверкой общего диска; безопасная архивация связанных
+journals остаётся #33. Сохранённое armed не доказывает живой процесс watcher.
+
+Полная DJ2 2.23.4/Core 0.3.6: 22 native /41 independent условия. Игра и сам
+owner controller работают в Linux Docker; readonly код и приватный durable
+state разделены. Первый реальный Python-процесс завершён через os._exit(73)
+после fsynced root до cursor ACK. Два новых watcher продолжают тот же root/
+четыре child IDs: каждое предупреждение один раз обоим Drasl-аккаунтам, один
+архив, два старта того же source. Оба аккаунта снова вошли; CRC/SHA/manifest
+и вещи/XP проверены в копии и final NBT. Оба watcher затем SIGKILL (137,
+не OOM); новый процесс сохраняет будущую дату без повторного цикла сегодня.
+Весь frozen код в Linux volume побайтно прежний. Clean game stop/no crash/OOM;
+свои scopes удалены после экспорта. Это protocol actors, не GUI, и не новый
+тест потери питания host посреди stop/start. Docker socket даёт owner authority.
+
+Ранний fixture отказал до расписания из-за системного Python без зависимостей;
+интерпретатор исправлен, непринятые scopes экспортированы/очищены. Другой проход
+прерван при загрузке Forge: WSL/Docker engine перестал отвечать, calendar ещё
+не стартовал. Владелец отдельно разрешил restart WSL; после восстановления
+этот scope экспортирован/очищен и выполнен свежий принятый проход. Исходные
+неуспешные результаты сохранены. Offline verifier сначала захватил лишний
+controller-files.json широким glob; исправлен выбор по точным watcher IDs,
+исходный native report не менялся.
+
+45 новых cases; Windows 1933 unit/UI /48 skipped, Linux Docker focused 483
+под 2 CPU/1 GiB, source readonly, без сети; Ruff/Black/public source boundary.
+Лаунчер, owned JAR и player releases не изменены. Перед VPS — аудит владельца.
+Следующие #33: ограниченная архивация связанных journals, off-host и оставшийся
+full recovery/cutover. Ресурсная история #146 и #41 остаются открыты;
+ready_for_players=false. [Интерфейс](NIGHTLY_BACKUPS.md),
+[протокол и границы](validation/nightly-calendar-2026-11-12.json).
+
 ## Явный цикл backup/restart с продолжением — 12 ноября 2026
 
 HAProxy остаётся admission barrier. Перед развёртыванием на уже купленном PL
