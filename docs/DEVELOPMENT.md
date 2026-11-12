@@ -1,5 +1,37 @@
 # Разработка OmkalityCraft
 
+## Комплект одного остановленного проекта — 13 ноября 2026
+
+PR #152 принят в dev после 9/9 CI, завершённая ветка удалена. Новый внутренний
+Linux capture использует существующий world ZIP и фактические закрытые game/auth/
+runtime/выбранные operator источники. Drasl config входит в комплект и сверяется
+с source hash. Девять файлов, manifest последним, private permissions и env caps;
+новых CLI/расписания/stop-start и второго live world backup writer нет.
+
+Настоящая DJ2 2.23.4/Core 0.3.6/Fix 0.1.4 + Drasl 4.0.0-omk.2: два actors
+вошли, получили вещи/XP; clean stop и один existing cold snapshot. Выявлены
+34 case-пары runtime: добавлен явный Linux-only case-sensitive inventory,
+portable default прежний. Реальный auth restart во время capture запрещает seal.
+Источник свежего lab продолжен после ошибок fixture, исходные reports сохранены.
+
+Согласованный комплект прошёл настоящий REST/TLS: exit 73 после upload до ACK,
+новый worker, тот же snapshot, exact readback/full repository read, без reupload.
+Independent Linux verifier: 9 файлов, 2319 runtime/5 auth/15 operator, 514517369
+байт TAR payload, ZIP CRC 317 entries, все case-пары и actual runtime source,
+SQLite/key и две player→account связи. Вещи/XP в readback ZIP проверены отдельно
+existing NBT reader. Текстур в этом новом источнике не было, skin coverage не
+добавлено. Clean game/auth exit 0, без crash/OOM; свои scopes удалены после экспорта.
+
+28 новых cases; Windows 2060 unit/UI /93 skipped, Linux Docker focused 655,
+Ruff/Black. Это не GUI, full application boot, power-loss или нагрузочный тест.
+Caller держит общий owner lock и проверяет соответствие mounts/checkpoints;
+выбор полного operator/deployment inventory принадлежит профилю. Дальше #33:
+durable export/lifecycle + общий budget/retention в единственном nightly,
+внешнее destination и quarantine/authority return. #41/#146 открыты; VPS,
+launcher/owned JAR/player release прежние, ready_for_players=false.
+Перед VPS — аудит владельца. [Контракт](PROJECT_EXPORT.md),
+[протокол](validation/project-export-2026-11-13.json).
+
 ## Durable ownership передачи — 12 ноября 2026
 
 После принятого PR #151 добавлен Linux `TransferStore` для готовых архивов:

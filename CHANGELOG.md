@@ -1,5 +1,21 @@
 # Журнал изменений
 
+## Не выпущено — комплект одного остановленного проекта
+
+- Внутренний Linux capture связывает существующий cold world ZIP, runtime,
+  весь auth state и выбранный operator state одним manifest. Реальные stopped
+  checkpoints/config hash должны совпасть до/после; unsealed output не принимается.
+- Runtime сохраняет 34 реально обнаруженные case-пары Linux. Явный case-sensitive
+  режим не меняет portable guards. Auth/operator файлы внутри TAR имеют mode 600,
+  runtime сохраняет обычные executable bits. Limits вынесены в env.
+- 28 новых cases, Windows 2060 /93 skipped, focused Linux 655. Настоящая DJ2/auth,
+  отказ при auth restart, зашифрованный upload с потерей ACK и проверенный readback
+  того же комплекта без второго upload. Независимо сверены 2319 runtime/5 auth/
+  15 operator files, ZIP CRC/SQLite/key; вещи/XP двух actors проверены в копии.
+- Новых CLI/host jobs и второго live backup writer нет. Durable capture/nightly,
+  общий storage allocator/retention, внешний destination и application return
+  остаются #33. VPS/launcher/Java прежние. [Порядок](docs/PROJECT_EXPORT.md).
+
 ## Не выпущено — сохранение и продолжение передачи копий
 
 - Внутренний Linux TransferStore фиксирует source/repository/policy до отправки,
