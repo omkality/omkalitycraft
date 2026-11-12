@@ -65,9 +65,17 @@ def _receive(stream, deadline):
 
 
 def command(config, password, text):
-    # Only these fixed read/kick operations are exposed by this adapter.
-    if text not in {"list uuids", "list omk-recovery version"} and not re.fullmatch(
-        r"list omk-recovery (?:inspect|drain) [a-f0-9-]{36} [A-Za-z0-9_]{3,16}", text
+    # Fixed owner operations only; no arbitrary RCON text or player message.
+    if text not in {
+        "list uuids",
+        "list omk-recovery version",
+        "list omk-maintenance probe",
+    } and not any(
+        re.fullmatch(pattern, text)
+        for pattern in (
+            r"list omk-recovery (?:inspect|drain) [a-f0-9-]{36} [A-Za-z0-9_]{3,16}",
+            r"list omk-maintenance warn [a-f0-9]{32} [a-f0-9]{32} (?:[1-9][0-9]{0,2}|[12][0-9]{3}|3[0-5][0-9]{2}|3600)",
+        )
     ):
         raise ConsoleError("Unsupported recovery console command")
     if (

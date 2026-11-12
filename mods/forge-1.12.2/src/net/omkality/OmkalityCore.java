@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 /** Server-side policy over the declared FML mod list; not proof of client integrity. */
-@Mod(modid = "omkalitycore", name = "Omkality Core", version = "0.3.5", dependencies = "after:ftbutilities;after:justenoughdimensions",
+@Mod(modid = "omkalitycore", name = "Omkality Core", version = "0.3.6", dependencies = "after:ftbutilities;after:justenoughdimensions",
      acceptedMinecraftVersions = "[1.12.2]", serverSideOnly = true,
      acceptableRemoteVersions = "*")
 public final class OmkalityCore {
@@ -40,6 +40,7 @@ public final class OmkalityCore {
             CoreServices.prepare(logger);
             OptionalIntegrations.install(configDirectory,logger);
             CoreServices.start(logger);
+            MaintenanceBridge.install(logger);
             CoreServices.requireCapabilities(profile.capabilities);
         } catch(Exception error) { throw new IllegalStateException("Omkality server profile could not initialize",error); }
         if (Boolean.getBoolean("omkality.lab.commandCatalog")) {

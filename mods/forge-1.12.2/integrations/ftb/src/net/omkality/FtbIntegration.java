@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 /** Exact supported FTB implementation; no external types cross the Core API. */
 public final class FtbIntegration {
     public static void install(Path config,Logger log) throws Exception {
+        FtbBackupPolicy.install(log);
         FtbMuteGuard.install(log);
         CoreServices.report("ftb.integration","enabled");
         CoreServices.report("ftb.mute",FtbMuteGuard.state);
