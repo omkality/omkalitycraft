@@ -196,6 +196,11 @@ backup → возврат того же Docker-контейнера и `reconcil
 
 ## Обновление справочника
 
+Внутренний main-thread maintenance bridge Core 0.3.6 не добавляет новых
+пользовательских/CLI-команд. Его probe/warning вызывают существующие Python
+services для будущего ночного coordinator и TUI; не требуется запоминать
+дополнительные transport-команды. [Назначение и границы](../NIGHTLY_BACKUPS.md).
+
 Диагностический режим приватного OmkalityCore 0.2.1 выгружает реестр только при явном
 JVM-флаге `-Domkality.lab.commandCatalog=true`; `omk lab dj2` задаёт его своей копии сервера.
 В каталоге стенда появляется `server/omk-command-catalog.json`, без учётных данных.

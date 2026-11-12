@@ -1,5 +1,47 @@
 # Разработка OmkalityCraft
 
+## Внутренний maintenance bridge без роста CLI — 12 ноября 2026
+
+Владелец просит сохранять небольшой набор owner-действий для будущей Rust TUI.
+Рабочая логика остаётся в типизированных Python services; новые CLI-команды
+добавляются только для конкретной операторской/recovery потребности. Rust TUI
+пока не реализуем. В этом этапе новых CLI-действий нет.
+
+Для VPS согласована приватная долгосрочная история host/container ресурсов с
+TPS/MSPT/онлайном и служебными интервалами. Хранение ограничивается retention и
+byte budget; будущая TUI использует тот же источник данных. Сбор ещё не включён,
+отдельная задача [#146](https://github.com/omkality/omkalitycraft/issues/146) привязана
+к первому запуску; стек выбирается при реализации и проверяется в Linux Docker.
+
+Core 0.3.6 имеет RCON-only bridge с main-thread probe/warning, boot identity и
+bounded retry fences без вытеснения. Общий Core API получает optional backup
+provider; FTB integration читает реальные поля reviewed stock 1.1.0.1 после
+проверки версии/SHA. Неподдержанная policy, активный backup, старый boot и sender
+игрок отказывают. Поздняя отменённая задача не рассылает сообщение; частичный
+сбой оставляет unconfirmed fence. Произвольных сообщений/команд/world writes нет.
+
+Полная DJ2/Linux Docker: два Drasl-игрока, два старта одного контейнера. Изменение
+FTB config на диске не подменяет loaded state до restart; затем disabled proof.
+Русское предупреждение принято обоими, повтор и реальная потеря RCON-ответа не
+дают второй рассылки; OP-игрок тоже не может использовать bridge. 14 игровых
+условий +2 экспортных, 32 independent. Human OP не остался; известный Forge fake
+profile отделён. Clean stop/no crash/OOM, own scopes удалены после экспорта.
+
+Первый candidate отказал в loaded adapter из-за file-only JAR URL handling;
+jar:file regression пройден red/green, непринятый scope экспортирован/очищен.
+В успешном игровом проходе postprocess ожидал versioned filename, тогда как
+fixture ставит стабильный Core.jar; также no-human-OP check уточнён до прежнего
+known Forge fake profile. Два file assertions завершены offline по исходному
+экспорту; исходный report сохранён, игровой код для этого не менялся.
+
+36 новых Python cases; Windows 1833 unit/UI /48 skipped, Linux focused 340;
+12 Java maintenance/14 client controls, source boundary и два повторяемых Docker
+build. Core SHA закреплён; DJ2Fix 0.1.4 и Client 0.1.1 прежние. Выпускной контент
+и VPS не переключались. Scheduler, full nightly transaction, общая owner reserve
+перед записью и off-host остаются #33; #41 открыт, ready_for_players=false.
+[Интерфейс/ограничения](NIGHTLY_BACKUPS.md),
+[протокол](validation/maintenance-bridge-2026-11-12.json).
+
 ## Календарь и read-only допуск ночной политики — 12 ноября 2026
 
 `omk admin nightly preview/inspect` готовит следующий ночной coordinator:
