@@ -10,6 +10,10 @@ from omk.cold_backup_worker import runtime_digest, source_summary, store_for
 
 
 def execute(request, root=Path("/server"), storage=Path("/backup")):
+    if request["action"] == "nightly-policy":
+        from omk.ftb_backup_policy import inspect  # noqa: PLC0415
+
+        return inspect(root)
     if request["action"] == "runtime":
         path = root / "server.properties"
         if regular_file(path) > 65536:
