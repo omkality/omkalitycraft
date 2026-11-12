@@ -42,7 +42,10 @@ def test_changed_tool_material_is_refused(change):
 
 
 @pytest.mark.parametrize("kind", ["regular", "duplicate", "symlink", "too-many"])
-def test_tar_is_read_without_extracting_member_paths(tmp_path, kind):
+def test_tar_is_read_without_extracting_member_paths(tmp_path, monkeypatch, kind):
+    sandbox = tmp_path / "sandbox"
+    sandbox.mkdir()
+    monkeypatch.chdir(sandbox)
     binary = b"fixed server"
     out = io.BytesIO()
     with tarfile.open(fileobj=out, mode="w:gz") as archive:
@@ -62,4 +65,5 @@ def test_tar_is_read_without_extracting_member_paths(tmp_path, kind):
     else:
         with pytest.raises(ValueError):
             tools.decode(pin, raw)
-    assert not list(tmp_path.iterdir())
+    assert list(tmp_path.iterdir()) == [sandbox]
+    assert not list(sandbox.iterdir())
