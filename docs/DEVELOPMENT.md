@@ -36,7 +36,16 @@ boot файлы: server.properties, Astral Sorcery amulet config, Team Reborn NB
 FTB config/Core/Fix прежние. Без game crash/OOM, свои scopes очищены после
 экспорта. Это protocol actors и controller interruption, не GUI/power-loss test.
 
-53 новых Python cases; Windows 1886 unit/UI /48 skipped, Linux focused 393
+CI затем выявил отдельную read-only regression: BackupStore.inspect открывал
+lock в r+b, что отказывало на readonly volume после инициализации store. На
+Linux используется rb + shared flock, publisher сохраняет exclusive lock;
+Windows byte-range locking прежний. Красный Docker control воспроизвёл отказ,
+после исправления пройдены 13 cold-backups условий, включая restart/600 MiB,
+и отдельное readonly чтение принятого DJ2 archive с прежними четырьмя файлами.
+Native nightly/maintenance modules прежние; этот filesystem follow-up испытан
+отдельно, без повторной полной загрузки Minecraft.
+
+55 новых Python cases; Windows 1888 unit/UI /48 skipped, Linux focused 438
 под 2 CPU/1 GiB, Ruff/Black/source boundary. Моды/лаунчер/release payloads
 этим изменением не обновляются. [Команды и границы](NIGHTLY_BACKUPS.md),
 [протокол](validation/nightly-cycle-2026-11-12.json). Далее #33: календарный

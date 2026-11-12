@@ -13,7 +13,10 @@
 - Исправлен ложный отказ после boot из-за generated runtime files: полная
   сверка сохранена до start, после него проверяются exact FTB artifact/config
   и loaded policy. Ожидание отсчёта не пересканирует всю сборку каждую секунду.
-- 53 новых Python cases; Windows 1886 unit/UI /48 skipped, Linux focused 393.
+- Исправлена найденная CI read-only regression в backup inspection: Linux
+  использует shared flock на rb-descriptor, не требует записи и блокирует writer.
+  Пройдены 13 Docker cold-backup условий и readonly чтение сохранённой DJ2-копии.
+- 55 новых Python cases; Windows 1888 unit/UI /48 skipped, Linux focused 438.
   DJ2/Linux Docker: 26 native /32 independent условий, два аккаунта/два старта,
   пять потерянных ACK без повторения эффектов, сохранённые вещи/XP, CRC/SHA копии.
   Без game crash/OOM, свои scopes очищены после экспорта.

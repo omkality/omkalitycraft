@@ -2,6 +2,7 @@
   "schema": 1,
   "date": "2026-11-12",
   "milestone": "explicit-recoverable-nightly-backup-cycle",
+  "native_coordinator_commit": "80aa6b009f847e43203c9613680dc04e19319cd1",
   "runtime": {
     "local_linux_docker": true,
     "real_forge": true,
@@ -50,10 +51,10 @@
     ]
   },
   "tests": {
-    "new_python_cases": 53,
-    "windows_unit_ui_passed": 1886,
+    "new_python_cases": 55,
+    "windows_unit_ui_passed": 1888,
     "windows_skipped": 48,
-    "linux_focused_passed": 393,
+    "linux_focused_passed": 438,
     "linux_cpus": 2,
     "linux_memory_mib": 1024,
     "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
@@ -61,6 +62,18 @@
     "cancel_during_wait_and_stale_countdown_refusal": true,
     "runtime_policy_identity_storage_and_foreign_cutover_refusal": true,
     "failed_prepare_keeps_source_offline_and_gate_closed": true
+  },
+  "readonly_store_followup": {
+    "first_ci_detected_rw_lock_on_readonly_mount": true,
+    "red_control_reproduced_in_local_docker": true,
+    "posix_inspection_uses_read_descriptor_and_shared_lock": true,
+    "publisher_exclusion_preserved": true,
+    "windows_locking_unchanged": true,
+    "cold_backup_docker_conditions_passed": 13,
+    "accepted_dj2_archive_verified_on_readonly_volume": true,
+    "all_four_store_file_bytes_unchanged": true,
+    "own_volume_removed": true,
+    "tested_separately_after_native_trial_without_new_minecraft_boots": true
   },
   "boundaries": {
     "manual_countdown_only": true,
