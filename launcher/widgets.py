@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 from launcher.install import Progress
 from launcher.memory import MemorySnapshot
 from launcher.memory_widget import MemoryControl
+from launcher.requirements_dialog import RequirementsDialog
 from launcher.theme import ASSETS, ICE, MUTED, SUCCESS, WARNING
 from omk.profiles import ServerProfile
 
@@ -125,26 +126,13 @@ class PackCard(QFrame):
         )
         credits.addWidget(translation, 1)
         layout.addLayout(credits)
+        layout.addLayout(self._requirements_row(profile))
+        self._requirements_dialog: RequirementsDialog | None = None
         self.memory = MemoryControl(
             profile, machine or MemorySnapshot.read(), requested_mb
         )
         layout.addWidget(self.memory)
-        self.state_label = QLabel(
-            "Планируется" if profile.status == "planned" else "Не установлена"
-        )
-        self.state_label.setObjectName("state_" + profile.id)
-        self.state_label.setStyleSheet(f"color:{MUTED};background:transparent")
-        state_row = QHBoxLayout()
-        state_row.addWidget(self.state_label)
-        self.online_label = QLabel("Сервер готовится")
-        self.online_label.setObjectName("online_" + profile.id)
-        self.online_label.setProperty("muted", True)
-        self.online_label.setAlignment(
-            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
-        )
-        self.online_label.setVisible(profile.status != "planned")
-        state_row.addWidget(self.online_label, 1)
-        layout.addLayout(state_row)
+        layout.addLayout(self._status_row(profile))
         self.progress = QProgressBar()
         self.progress.setObjectName("progress_" + profile.id)
         self.progress.setTextVisible(False)
@@ -164,6 +152,52 @@ class PackCard(QFrame):
         row.addWidget(self.cancel)
         layout.addLayout(row)
         self.installed = False
+
+    def _status_row(self, profile: ServerProfile) -> QHBoxLayout:
+        self.state_label = QLabel(
+            "Планируется" if profile.status == "planned" else "Не установлена"
+        )
+        self.state_label.setObjectName("state_" + profile.id)
+        self.state_label.setStyleSheet(f"color:{MUTED};background:transparent")
+        state_row = QHBoxLayout()
+        state_row.addWidget(self.state_label)
+        self.online_label = QLabel("Сервер готовится")
+        self.online_label.setObjectName("online_" + profile.id)
+        self.online_label.setProperty("muted", True)
+        self.online_label.setAlignment(
+            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+        )
+        self.online_label.setVisible(profile.status != "planned")
+        state_row.addWidget(self.online_label, 1)
+        return state_row
+
+    def _requirements_row(self, profile: ServerProfile) -> QHBoxLayout:
+        row = QHBoxLayout()
+        requirements = profile.requirements
+        summary = (
+            f"Ориентир: {requirements.recommended.ram_gb} ГБ ОЗУ"
+            if requirements is not None and requirements.recommended is not None
+            else "Требования уточняются"
+        )
+        summary_label = QLabel(summary)
+        summary_label.setProperty("muted", True)
+        summary_label.setStyleSheet("font-size:13px")
+        row.addWidget(summary_label, 1)
+        self.requirements_button = QPushButton("Системные требования")
+        self.requirements_button.setObjectName("requirementsButton_" + profile.id)
+        self.requirements_button.setProperty("quiet", True)
+        self.requirements_button.setStyleSheet("font-size:13px;padding:6px")
+        self.requirements_button.clicked.connect(self._show_requirements)
+        row.addWidget(self.requirements_button)
+        return row
+
+    def _show_requirements(self) -> None:
+        if self._requirements_dialog is None:
+            self._requirements_dialog = RequirementsDialog(self.profile, self)
+        if not self._requirements_dialog.isVisible():
+            self._requirements_dialog.open()
+        self._requirements_dialog.raise_()
+        self._requirements_dialog.activateWindow()
 
     def set_server_status(self, value):
         if value is None:
