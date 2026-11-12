@@ -1,6 +1,7 @@
-"""Owner-only calendar and readonly disk preflight. Never runs a restart."""
+"""Owner calendar, readonly preflight and an explicit recoverable backup cycle."""
 
 import os
+import sys
 import tomllib
 from uuid import uuid4
 
@@ -108,14 +109,45 @@ def inspect(config, server, environment=None, *, now=None):
 
 def add_parser(actions):
     parser = actions.add_parser(
-        "nightly", help="Owner nightly preview and readonly preflight"
+        "nightly", help="Owner nightly preview, preflight and explicit backup/restart"
     )
     sub = parser.add_subparsers(dest="nightly_action", required=True)
     sub.add_parser("preview")
     sub.add_parser("inspect").add_argument("--server", required=True)
+    command = sub.add_parser(
+        "run",
+        help="One explicit warning/backup/restart cycle, or recovery of the same operation",
+    )
+    target = command.add_mutually_exclusive_group(required=True)
+    target.add_argument("--server")
+    target.add_argument("--operation")
+    for action in ("status", "cancel"):
+        sub.add_parser(action).add_argument("--operation", required=True)
 
 
 def run(config, args):
+    if args.nightly_action in {"run", "status", "cancel"}:
+        from omk import nightly_cycle as cycle  # noqa: PLC0415
+
+        if args.nightly_action == "status":
+            return cycle.status(cycle.read(config, args.operation))
+        if args.nightly_action == "cancel":
+            return cycle.cancel(config, args.operation)
+        operation = args.operation or cycle.prepare(config, args.server)["operation"]
+        print("Nightly operation: " + operation, file=sys.stderr, flush=True)
+        try:
+            return cycle.run(config, operation=operation)
+        except Exception as error:
+            return {
+                **cycle.status(cycle.read(config, operation)),
+                "ok": False,
+                "error": (
+                    str(error)
+                    if isinstance(error, AdminError)
+                    else "Nightly interrupted; inspect and resume the recorded operation"
+                ),
+                "error_type": type(error).__name__,
+            }
     if args.nightly_action == "inspect":
         return inspect(config, args.server)
     policy = settings()

@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "milestone": "explicit-recoverable-nightly-backup-cycle",
+  "runtime": {
+    "local_linux_docker": true,
+    "real_forge": true,
+    "pack": "DJ2 2.23.4",
+    "core": "0.3.6",
+    "dj2fix": "0.1.4",
+    "graphical_client": false,
+    "persistent_drasl_volume": true,
+    "real_accounts": 2,
+    "same_container_boots": 2,
+    "game_cpus": 4,
+    "game_memory_mib": 6144,
+    "core_sha256": "b62a0b891aab6c58b07f2b9a4b838de43f20d15385b9c4f9880769d475613efb",
+    "dj2fix_sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+  },
+  "acceptance": {
+    "native_conditions": 26,
+    "independent_conditions": 32,
+    "actual_effects": ["close", "stop", "prepare", "publish", "start", "open"],
+    "dropped_acknowledgements_after_actual_effects": ["close", "stop", "publish", "start", "open"],
+    "fault_injection": "Python controller interrupted after real service action; existing durable child intent reconciled on next invocation",
+    "same_preallocated_parent_and_children": true,
+    "russian_warnings_received_once_by_both_actors": true,
+    "existing_sessions_survive_gate_close_until_stop": true,
+    "new_connections_refused_while_closed": true,
+    "one_archive_preparation_and_publication": true,
+    "sha_crc_and_complete_manifest_verified": true,
+    "same_accounts_rejoin_with_authoritative_inventory_and_xp": true,
+    "new_loaded_core_boot_before_open": true,
+    "project_reserve_not_weakened": true,
+    "frozen_controller_unchanged_through_native_trial": true,
+    "clean_exit_no_game_crash_or_oom": true,
+    "own_scopes_removed_after_exports": true
+  },
+  "startup_runtime_regression": {
+    "first_candidate_accepted": false,
+    "first_candidate_kept_ingress_closed": true,
+    "original_report_preserved_and_scope_exported_then_removed": true,
+    "full_runtime_check_before_stop_and_start_preserved": true,
+    "post_start_exact_ftb_artifact_config_and_loaded_policy_preserved": true,
+    "strict_post_start_negative_control_failed_as_expected": true,
+    "observed_generated_changes": [
+      "server.properties",
+      "config/astralsorcery/amulet_enchantments.cfg",
+      "config/teamreborn/configData.nbt"
+    ]
+  },
+  "tests": {
+    "new_python_cases": 53,
+    "windows_unit_ui_passed": 1886,
+    "windows_skipped": 48,
+    "linux_focused_passed": 393,
+    "linux_cpus": 2,
+    "linux_memory_mib": 1024,
+    "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "other_thread_and_process_owner_lock_exclusion": true,
+    "cancel_during_wait_and_stale_countdown_refusal": true,
+    "runtime_policy_identity_storage_and_foreign_cutover_refusal": true,
+    "failed_prepare_keeps_source_offline_and_gate_closed": true
+  },
+  "boundaries": {
+    "manual_countdown_only": true,
+    "automatic_scheduler_implemented": false,
+    "automatic_scheduler_enabled": false,
+    "external_writers_excluded": false,
+    "filesystem_quota_enforced": false,
+    "local_storage_budget_is_vps_capacity_proof": false,
+    "off_host_copy_implemented": false,
+    "new_native_sigkill_or_host_power_loss_test": false,
+    "graphical_client_test": false,
+    "new_java_mod_artifacts": false,
+    "player_release_changed": false,
+    "live_vps_changed": false,
+    "owner_audit_required_before_vps_deployment": true,
+    "ready_for_players": false
+  }
+}
