@@ -5,6 +5,7 @@ import json
 import os
 import re
 import subprocess
+import threading
 import tomllib
 from datetime import UTC, datetime
 from uuid import uuid4
@@ -17,6 +18,7 @@ from omk.profiles import PROJECT_ROOT
 IMAGE = "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925"
 RESOURCE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}")
 PINS = re.compile(r"[^\s,]+@sha256:[a-f0-9]{64}")
+_HELD = threading.local()
 
 
 def settings(environment=None):
@@ -275,7 +277,8 @@ def worker(target, request):
         "--pids-limit",
         "32",
         "--mount",
-        f"type=volume,source={target['store_volume']},target=/backup",
+        f"type=volume,source={target['store_volume']},target=/backup"
+        + (",readonly" if request["action"] in {"list", "inspect"} else ""),
         "--mount",
         f"type=bind,source={PROJECT_ROOT/'omk'},target=/src/omk,readonly",
         "--workdir",
@@ -317,6 +320,19 @@ def worker(target, request):
 @contextlib.contextmanager
 def locked(config):
     path = config.private / "backups.lock"
+    key = os.path.normcase(str(config.private.resolve()))
+    held = getattr(_HELD, "values", None)
+    if held is None:
+        held = _HELD.values = {}
+    existing = held.get(key)
+    if existing is not None and existing[0] == os.getpid():
+        if (
+            not regular(path, config.private)
+            or (path.stat().st_dev, path.stat().st_ino) != existing[1:]
+        ):
+            raise AdminError("Owner lock identity changed during composition")
+        yield
+        return
     try:
         with path.open("xb") as file:
             file.write(b"0")
@@ -335,13 +351,33 @@ def locked(config):
 
             fcntl.flock(file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         try:
+            info = os.fstat(file.fileno())
+            held[key] = (os.getpid(), info.st_dev, info.st_ino)
             yield
         finally:
+            held.pop(key, None)
             if os.name == "nt":
                 file.seek(0)
                 msvcrt.locking(file.fileno(), msvcrt.LK_UNLCK, 1)
             else:
                 fcntl.flock(file.fileno(), fcntl.LOCK_UN)
+
+
+def planned_id(config, area, supplied=None):
+    """Internal preallocation for composed operations; never overwrite a child."""
+    value = uuid4().hex if supplied is None else supplied
+    if (
+        area not in {"backups", "maintenance", "ingress"}
+        or not isinstance(value, str)
+        or not re.fullmatch(r"[a-f0-9]{32}", value)
+    ):
+        raise AdminError("Invalid preallocated operation identity")
+    path = _private_path(config.private, area + "/" + value + ".json")
+    if path.exists() or path.is_symlink():
+        raise AdminError(
+            "Operation identity already exists; inspect instead of replanning"
+        )
+    return value
 
 
 def journal(config, operation):
@@ -404,10 +440,11 @@ def request_for(record, action):
     return value
 
 
-def plan(config, server, environment=None):
+def plan(config, server, environment=None, *, _operation=None):
     from omk.world_cutover import require_clear  # noqa: PLC0415
 
     with locked(config):
+        operation = planned_id(config, "backups", _operation)
         require_clear(config, server)
         policy = settings(environment)
         target = target_for(config, server)
@@ -430,7 +467,7 @@ def plan(config, server, environment=None):
                 )
         record = {
             "schema": 1,
-            "operation": uuid4().hex,
+            "operation": operation,
             "server": server,
             "target": target,
             "settings": policy,
