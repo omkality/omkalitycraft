@@ -1,5 +1,48 @@
 # Разработка OmkalityCraft
 
+## Явный цикл backup/restart с продолжением — 12 ноября 2026
+
+HAProxy остаётся admission barrier. Перед развёртыванием на уже купленном PL
+RX-4 владелец проведёт аудит всего репозитория; deploy до этого не делаем.
+
+`nightly run/status/cancel` объединяет существующие owner services в одну
+приватную durable операцию: чат → close → clean stop → verified cold backup →
+same-container start/readiness → open. Для восстановления используется тот же
+ID и заранее выбранные дочерние IDs; попытанные действия не отправляются заново.
+Отсчёт запускается явно сейчас, а не в LOCAL_TIME. Автоматический календарный
+scheduler не реализован и не включён; это остаётся отдельным шагом #33.
+
+Stock FTB должен быть disabled/idle и в файле, и в Java. До закрытия/записи
+проверяются общий census, caps, staging и max(project reserve, backup reserve).
+Во время ожидания нет повторного сканирования всего runtime каждую секунду;
+проверки выполняются перед сообщением/действием. Общий owner lock освобождается
+на ожидании; reentrant composition того же потока не снимает OS exclusion для
+другого потока/процесса. Отмена до stop не открывает ingress и не запускает Java.
+
+Первый native candidate сохранил вход закрытым после успешного restart из-за
+слишком строгого полного digest до/после boot. Runtime целиком сверяется перед
+stop/start, затем Forge может записать generated files. После старта остаются
+точные FTB JAR/config, loaded disabled/idle и новый Core boot; существующий
+maintenance start guard не ослаблялся. Старое строгое условие воспроизводит
+отрицательный unit control; FTB artifact/config drift по-прежнему отказывает.
+Непринятый scope с исходным report экспортирован и очищен, не выдан за успех.
+
+Свежая DJ2 2.23.4/Linux Docker с постоянным Drasl volume: 26 native и 32
+independent условия, два старта одного source, два аккаунта. Потеря пяти ACK
+после реальных close/stop/publish/start/open не повторяет эффекты; оба игрока
+получают каждое предупреждение и повторно входят с прежними вещами/XP.
+CRC/SHA/manifest новой копии проверены, один prepare/publish. Изменившиеся при
+boot файлы: server.properties, Astral Sorcery amulet config, Team Reborn NBT;
+FTB config/Core/Fix прежние. Без game crash/OOM, свои scopes очищены после
+экспорта. Это protocol actors и controller interruption, не GUI/power-loss test.
+
+53 новых Python cases; Windows 1886 unit/UI /48 skipped, Linux focused 393
+под 2 CPU/1 GiB, Ruff/Black/source boundary. Моды/лаунчер/release payloads
+этим изменением не обновляются. [Команды и границы](NIGHTLY_BACKUPS.md),
+[протокол](validation/nightly-cycle-2026-11-12.json). Далее #33: календарный
+запуск без догоняющих/двойных jobs, off-host и оставшийся полный recovery/cutover;
+#146 — приватная ресурсная история. #41 остаётся открытой.
+
 ## Внутренний maintenance bridge без роста CLI — 12 ноября 2026
 
 Владелец просит сохранять небольшой набор owner-действий для будущей Rust TUI.

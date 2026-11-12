@@ -97,6 +97,10 @@ backup → возврат того же Docker-контейнера и `reconcil
 | `uv run omk admin --config .omk-admin/operator.toml storage estate` | Общий учёт всех настроенных серверов и явных auth/content/reports/exports volumes, проектные бюджеты и reserve, неизвестный занятый объём и сопоставление заявленных per-server caps. Без записи/очистки. [Реестр и расчёт](../PROJECT_STORAGE.md) |
 | `uv run python -m omk admin --config .omk-admin/operator.toml nightly preview` | Календарь ближайшего ночного окна и предупреждений из env, без Docker/рассылки/restart. Пропускает опоздавшее окно и несуществующее DST-время; повторяющееся время использует один раз. [Настройки](../NIGHTLY_BACKUPS.md) |
 | `uv run python -m omk admin --config .omk-admin/operator.toml nightly inspect --server dj2` | Read-only проверка закреплённого FTB JAR, отключённых enabled/shutdown на диске и неизменности runtime/контейнера/томов. Не подтверждает настройки в памяти или отсутствие чужих jobs, не разрешает включение расписания. [Allowlist и границы](../NIGHTLY_BACKUPS.md) |
+| `uv run python -m omk admin --config .omk-admin/operator.toml nightly run --server dj2` | Один явный отсчёт сейчас: предупреждения → закрытие входа → clean stop → verified cold backup → готовность → открытие. Проверяет loaded FTB и общий диск. Это не включение расписания. [Требования](../NIGHTLY_BACKUPS.md) |
+| `uv run python -m omk admin --config .omk-admin/operator.toml nightly status --operation <id>` | Прочитать приватный журнал цикла и identities дочерних операций, без повторения действий |
+| `uv run python -m omk admin --config .omk-admin/operator.toml nightly run --operation <id>` | Продолжить тот же прерванный цикл; уже попытанные действия только подтверждаются. Неподтверждённый backup не даёт запустить сервер |
+| `uv run python -m omk admin --config .omk-admin/operator.toml nightly cancel --operation <id>` | Отменить до stop intent. Не открывает вход и не запускает source; после попытки stop требуется разбор/продолжение |
 | `uv run omk admin --config .omk-admin/operator.toml ingress prepare --server dj2` | Создать приватный закрытый HAProxy template; контейнер не создаёт. [Подготовка и env](../OWNER_INGRESS.md) |
 | `uv run omk admin --config .omk-admin/operator.toml ingress inspect --server dj2` | Текущие closed/TCP sessions и immutable fingerprint; loopback only |
 | `uv run omk admin --config .omk-admin/operator.toml ingress plan --server dj2 --state closed` | План закрытия входа; для открытия `--state open`, только после готовности source и завершения pending операций |
@@ -198,7 +202,7 @@ backup → возврат того же Docker-контейнера и `reconcil
 
 Внутренний main-thread maintenance bridge Core 0.3.6 не добавляет новых
 пользовательских/CLI-команд. Его probe/warning вызывают существующие Python
-services для будущего ночного coordinator и TUI; не требуется запоминать
+services для ночного цикла и будущей TUI; не требуется запоминать
 дополнительные transport-команды. [Назначение и границы](../NIGHTLY_BACKUPS.md).
 
 Диагностический режим приватного OmkalityCore 0.2.1 выгружает реестр только при явном
