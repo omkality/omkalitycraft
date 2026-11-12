@@ -2,9 +2,9 @@
   "schema": 1,
   "artifacts": {
     "core": {
-      "version": "0.3.6",
-      "file": "OmkalityCore-0.3.6.jar",
-      "sha256": "b62a0b891aab6c58b07f2b9a4b838de43f20d15385b9c4f9880769d475613efb"
+      "version": "0.3.7",
+      "file": "OmkalityCore-0.3.7.jar",
+      "sha256": "49fd9d29eaa4e117bcbdae5a6ffe28aa5bd7cad21af177c7b675a5efaec09d6e"
     },
     "dj2fix": {
       "version": "0.1.4",

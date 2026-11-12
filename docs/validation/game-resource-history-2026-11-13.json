@@ -1,0 +1,148 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "base_commit": "e838d3377fc94bce7731695791b0ecc70527d3b3",
+  "scope": "generic Forge game metrics with private Python history",
+  "core": {
+    "version": "0.3.7",
+    "file": "OmkalityCore-0.3.7.jar",
+    "sha256": "49fd9d29eaa4e117bcbdae5a6ffe28aa5bd7cad21af177c7b675a5efaec09d6e"
+  },
+  "unchanged_artifacts": {
+    "dj2fix": {
+      "version": "0.1.4",
+      "file": "OmkalityDJ2Fix-0.1.4.jar",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client": {
+      "version": "0.1.1",
+      "file": "OmkalityClient-0.1.1.jar",
+      "sha256": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+    }
+  },
+  "unit_tests": {
+    "windows_full": {
+      "passed": 2131,
+      "skipped": 95,
+      "warnings": 3
+    },
+    "focused_linux": {
+      "passed": 73,
+      "skipped": 0,
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "cpus": 2,
+      "memory_mib": 1024,
+      "network": "none"
+    },
+    "java_game_helpers": 27,
+    "java_maintenance_helpers": 12,
+    "reproducible_build_rounds": 2
+  },
+  "source_sha256": {
+    "omk/game_metrics.py": "351c7c987c21e7e005a1485f62f2ccd51d31141ef2d5df5bd3eb240fb59fc75a",
+    "omk/resource_metrics.py": "b70fb416e2cde7afc9142bd4102874f247379dd11a1193ce0cf76919f7d657a8",
+    "omk/resource_store.py": "fba95e0d5b3b9ff0b9e349dd0038de6e735648e15562b1ba11932bb7566008bf",
+    "omk/resource_history.py": "7d300c1bd75c3781c9fee7dff06f66bde46b27279b302d8e52c203db022780da",
+    "tests/unit/test_game_metrics.py": "bcf5b9263d580218d182c52f5cbd7df014dcc6aa4bf92379f0b22d72960dc662"
+  },
+  "full_dj2_native": {
+    "real_game": "DJ2 2.23.4",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "collector_image": "sha256:47606df097ccc954f580ad25ff5a308b081379f260a70c4cb0d1dec728d9bb46",
+    "checks": [
+      "missing_game_before_start_is_not_idle",
+      "full_dj2_ready_without_forge_crash",
+      "native_empty_server_tick_heap_gc_collected",
+      "real_jvm_heap_matches_independent_same_runtime_control",
+      "real_gc_mxbeans_available",
+      "online_two_authenticated_nonop_players",
+      "ordinary_forge_tps_command_still_works",
+      "paused_game_is_stale_not_zero",
+      "observed_tps_records_real_pause_same_boot",
+      "game_recovers_after_pause",
+      "player_disconnect_observed",
+      "first_clean_game_stop",
+      "terminal_sample_is_stopped_not_active",
+      "first_game_no_oom",
+      "new_game_boot_preserves_history",
+      "authenticated_rejoin_after_core_restart",
+      "second_clean_game_stop",
+      "independent_saved_inventory_and_xp_preserved",
+      "sqlite_integrity_after_game_lifecycle"
+    ],
+    "graphical_client": false,
+    "observed_heap_max_bytes": 3817865216,
+    "sample_count": 31,
+    "game_crash_detected": false,
+    "owned_game_clean_exit": true,
+    "owned_volume_removed_after_export": true,
+    "collector_exit": 0,
+    "collector_oom": false,
+    "auth_cleanup": true,
+    "owned_metric_volumes_removed": true
+  },
+  "generic_forge_native": {
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "checks": [
+      "generic_core_without_pack_or_ftb",
+      "real_small_forge_heap_and_dimension",
+      "unwritable_metric_directory_keeps_old_complete_file",
+      "game_console_survives_writer_failure",
+      "writer_error_log_rate_limited",
+      "writer_recovers_without_game_restart",
+      "clean_stop_publishes_new_terminal_sequence",
+      "generic_forge_clean_stop_no_crash"
+    ],
+    "dj2": false,
+    "ftb": false,
+    "players": false,
+    "authentication_test": false,
+    "game_crash_detected": false,
+    "owned_game_clean_exit": true,
+    "owned_volume_removed_after_export": true
+  },
+  "independent_linux_verifier": {
+    "checks": 11,
+    "native_history_rows": 31,
+    "game_boots": 2,
+    "stale_rows": 11,
+    "inventory_emeralds": 7,
+    "xp_levels": 12,
+    "linux_verifier": true,
+    "new_game_run": false,
+    "image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "input_sha256": {
+      "history.json": "7132d3b2673b59faea67bb4e95ecc4b671e70f91229bb41303c9da04d669cc08",
+      "source.json": "472e95b0a59a97591515cfb823cc138fe6c527505bf69a9ae7ab56fb67b2df3d",
+      "world.tar": "bb55bacf1ed8e35fdd7811b638027d7bcb1979db6b60518d4c1d763605592e0c"
+    }
+  },
+  "final_collector_native_data_replay": {
+    "checks": 30,
+    "native_source_files": 4,
+    "replay_only": true,
+    "new_game_run": false,
+    "sqlite_integrity": "ok",
+    "image": "sha256:1ac10b7d4fd526d35def3a5bef4f36dad5d357fa68ebcaa81b4dd5e875ff1eee",
+    "input_sha256": {
+      "0.json": "7dddd2b0df89c2a4363945aa8888747b7e1efc81c30c0aad16f6de0b9dece142",
+      "1.json": "07e67a6ad0cbe0182c81ae50115aa7b2baf9cf935d51d23e2cb031fe96d0e3e8",
+      "2.json": "0a626e075794df850d3ebf3ed90d6e8a64a635037897a1844fd711a50befe7f9",
+      "3.json": "472e95b0a59a97591515cfb823cc138fe6c527505bf69a9ae7ab56fb67b2df3d"
+    }
+  },
+  "compose_readonly_feed_overlay": "passed",
+  "limits": {
+    "replay_is_new_game_run": false,
+    "per_gc_pause_distribution": false,
+    "all_quest_or_graphical_regression": false,
+    "actual_vps_capacity_measurement": false,
+    "job_correlation_and_active_hour_report": "issue 146 remains open",
+    "full_project_ready_for_players": false
+  },
+  "deployment": {
+    "vps_changed": false,
+    "host_jobs_installed": false,
+    "player_release_or_manifests_changed": false
+  }
+}

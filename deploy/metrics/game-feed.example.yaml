@@ -1,0 +1,14 @@
+# Merge with compose.yaml only when the game has its own dedicated metrics volume.
+# This file mounts that volume into the COLLECTOR, readonly. It does not deploy a game.
+services:
+  metrics:
+    volumes:
+      - type: volume
+        source: dj2-game-metrics
+        target: /gamefeeds/dj2
+        read_only: true
+        volume: {nocopy: true}
+volumes:
+  dj2-game-metrics:
+    name: ${OMK_DJ2_METRICS_VOLUME:?Use the dedicated game metrics volume}
+    external: true
