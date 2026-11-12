@@ -277,6 +277,7 @@ def add_admin_commands(sub):
     from omk.account_recovery import add_recovery_parser  # noqa: PLC0415
     from omk.admin_backups import add_backup_parser  # noqa: PLC0415
     from omk.admin_maintenance import add_maintenance_parser  # noqa: PLC0415
+    from omk.admin_nightly import add_parser as add_nightly_parser  # noqa: PLC0415
     from omk.admin_resource_reset import add_resource_reset_parser  # noqa: PLC0415
     from omk.admin_restores import add_restore_parser  # noqa: PLC0415
     from omk.admin_storage import add_parser as add_storage_parser  # noqa: PLC0415
@@ -296,6 +297,7 @@ def add_admin_commands(sub):
     add_ingress_parser(actions)
     add_cutover_parser(actions)
     add_storage_parser(actions)
+    add_nightly_parser(actions)
     login = actions.add_parser(
         "login", help="Save a separate Drasl operator API credential"
     )
@@ -324,6 +326,7 @@ def add_admin_commands(sub):
 
 
 def run_admission(config, args):
+    from omk.admin_nightly import run as run_nightly  # noqa: PLC0415
     from omk.admin_storage import run as run_storage  # noqa: PLC0415
     from omk.ingress import run as run_ingress  # noqa: PLC0415
     from omk.world_cutover import run as run_cutover  # noqa: PLC0415
@@ -332,6 +335,7 @@ def run_admission(config, args):
         "ingress": run_ingress,
         "world-cutovers": run_cutover,
         "storage": run_storage,
+        "nightly": run_nightly,
     }[args.admin_action](config, args)
 
 
@@ -349,6 +353,7 @@ def run_admin(args):
         "ingress": "ingress_action",
         "world-cutovers": "cutover_action",
         "storage": "storage_action",
+        "nightly": "nightly_action",
     }.get(args.admin_action)
     if suffix:
         operation += ":" + getattr(args, suffix)
@@ -374,7 +379,7 @@ def run_admin(args):
             from omk.admin_maintenance import run_maintenance  # noqa: PLC0415
 
             result = run_maintenance(config, args)
-        elif args.admin_action in {"ingress", "world-cutovers", "storage"}:
+        elif args.admin_action in {"ingress", "world-cutovers", "storage", "nightly"}:
             result = run_admission(config, args)
         elif args.admin_action in {"backups", "restores"}:
             from omk.admin_backups import run_backups  # noqa: PLC0415

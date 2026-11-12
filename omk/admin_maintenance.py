@@ -224,6 +224,11 @@ def worker(record, action, backup=None):
         raise AdminError("Maintenance worker response exceeded limit")
     value = json.loads(raw)
     if value.get("ok") is not True:
+        if action == "nightly-policy":
+            raise AdminError(
+                "Nightly disk preflight refused the artifact, changed runtime or FTB config; "
+                "check enabled=false and force_on_shutdown=false for the reviewed adapter"
+            )
         raise AdminError(
             "Maintenance worker refused changed runtime, backup or source; inspect the private journal"
         )

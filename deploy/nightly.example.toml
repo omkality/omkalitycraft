@@ -1,0 +1,5 @@
+# Copy to private .omk-admin/nightly.toml (mode 600).
+# Inspection only; this does not install or enable an automatic job.
+schema = 1
+[servers.dj2]
+adapter = "ftb-backups-1.1.0.1-disabled-v1"
