@@ -20,6 +20,20 @@ memory_default_mb = 6144
 memory_recommended_mb = 6144
 memory_max_mb = 16384
 
+[servers.requirements]
+state = "preliminary"
+scope = "Для игры на нашем сервере, без шейдеров. Точные требования уточняем по тестам."
+minimum_note = "Минимум ещё проверяем. На компьютере с 8 ГБ ОЗУ сборке может не хватить памяти."
+platforms = "Windows / Linux, 64 бита. Точные версии ОС ещё проверяем."
+macos = "Ориентир: Apple M1 и новее, 16 ГБ памяти. Игровой тест ещё впереди. Intel Mac проверяем отдельно."
+note = "Java использует часть общей ОЗУ. Место на SSD — ориентир с запасом для установки и обновлений; карта и личные миры требуют дополнительного места."
+
+[servers.requirements.recommended]
+cpu = "Современный Intel / AMD: от 4 ядер, высокая скорость одного ядра"
+ram_gb = 16
+graphics = "Современная встроенная или дискретная графика, без шейдеров"
+storage_gb = 20
+
 [[servers]]
 id = "gtnh"
 name = "GregTech: New Horizons RU"
@@ -38,3 +52,11 @@ artwork = "gtnh.svg"
 memory_default_mb = 6144
 memory_recommended_mb = 6144
 memory_max_mb = 16384
+
+[servers.requirements]
+state = "pending"
+scope = "Сборка планируется. Требования уточним после выбора версии и игровых тестов."
+minimum_note = "Пока не подтверждены."
+platforms = "Целевые системы: Windows, Linux и macOS. Готовность игрового клиента ещё не подтверждена."
+macos = "Поддержку Intel и Apple Silicon проверим на выбранной версии сборки."
+note = "Память и место на диске зависят от версии GTNH. До её подготовки загрузка и настройка памяти недоступны."
