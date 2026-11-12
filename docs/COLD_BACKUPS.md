@@ -52,6 +52,13 @@ omk admin --config .omk-admin/operator.toml backups status --operation OPERATION
 omk admin --config .omk-admin/operator.toml backups list --server dj2
 ```
 
+`list` и предварительная nightly-инспекция монтируют store только для чтения.
+В Linux `BackupStore.inspect` берёт shared flock через rb-descriptor; publisher
+берёт exclusive lock. Проверка не требует права записи в volume и не пропускает
+параллельного писателя. Windows portable inspection сохраняет прежний byte-range
+lock. Readonly regression для уже созданного store воспроизведена и проверена
+в Docker; [протокол и отдельная DJ2-копия](validation/nightly-cycle-2026-11-12.json).
+
 План показывает источник, точную остановку, inventory/hash/объём мира, fingerprint
 JAR/mods/libraries/config/scripts/groovy/resources/local, текущую историю и политику.
 `release` — заданное владельцем название; фактический fingerprint рассчитывается

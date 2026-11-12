@@ -303,6 +303,37 @@ def test_lock_foreign_files_and_changed_owner_fail_closed(tmp_path):
         store.publish(source, files)
 
 
+@pytest.mark.parametrize("populated", [False, True])
+def test_inspection_needs_no_posix_write_descriptor_but_still_excludes_writer(
+    tmp_path, monkeypatch, populated
+):
+    store = store_at(tmp_path)
+    if populated:
+        publish_next(store, tmp_path, 0)
+    before = history(store)
+    modes = []
+    original_open = Path.open
+    snapshots = store._snapshots
+
+    def open_file(path, mode="r", *a, **kw):
+        if path == store.root / "lock":
+            modes.append(mode)
+        return original_open(path, mode, *a, **kw)
+
+    def inspect_with_writer_control():
+        with pytest.raises(OSError), _lock(store.root):
+            pytest.fail("A writer cannot enter while inspection holds its lock")
+        return snapshots()
+
+    monkeypatch.setattr(Path, "open", open_file)
+    monkeypatch.setattr(store, "_snapshots", inspect_with_writer_control)
+    assert len(store.inspect()) == int(populated)
+    assert modes[0] == ("r+b" if os.name == "nt" else "rb")
+    assert history(store) == before
+    with _lock(store.root), pytest.raises(OSError):
+        store.inspect()
+
+
 def test_tampered_committed_archive_is_never_retired(tmp_path):
     store = store_at(tmp_path)
     first = publish_next(store, tmp_path, 0)

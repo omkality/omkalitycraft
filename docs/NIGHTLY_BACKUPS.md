@@ -85,6 +85,13 @@ Python после реального действия; это не отдель�
 питания или SIGKILL всего host. Игроки — protocol actors, не графический клиент.
 [Протокол](validation/nightly-cycle-2026-11-12.json).
 
+Отдельный follow-up после CI: inspection существующего store на readonly Linux
+mount сначала воспроизвёл отказ r+b-lock. Теперь rb/shared flock сохраняет
+исключение publisher без права записи; Windows locking прежний. 13 Docker
+cold-backup условий и readonly чтение экспортированной DJ2-копии пройдены,
+четыре файла store неизменны. Это отдельная filesystem-проверка после native
+прохода, а не ещё два старта Minecraft.
+
 ## Предварительная проверка владельца
 
 ```console

@@ -66,9 +66,13 @@ def _json_read(path):
 
 
 @contextmanager
-def _lock(root):
+def _lock(root, *, read_only=False):
     regular_file(root / "lock")
-    with (root / "lock").open("r+b") as stream:
+    # POSIX shared flock needs no writable descriptor and remains compatible
+    # with the publisher's exclusive lock on the same inode. Windows keeps its
+    # existing exclusive byte-range lock on a writable portable file.
+    read_only = read_only and os.name != "nt"
+    with (root / "lock").open("rb" if read_only else "r+b") as stream:
         if os.name == "nt":
             import msvcrt  # noqa: PLC0415
 
@@ -76,7 +80,8 @@ def _lock(root):
         else:
             import fcntl  # noqa: PLC0415
 
-            fcntl.flock(stream.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            mode = fcntl.LOCK_SH if read_only else fcntl.LOCK_EX
+            fcntl.flock(stream.fileno(), mode | fcntl.LOCK_NB)
         try:
             yield
         finally:
@@ -214,7 +219,7 @@ class BackupStore:
         return snapshots
 
     def inspect(self):
-        with _lock(self.root):
+        with _lock(self.root, read_only=True):
             return [
                 {"sequence": sequence, "id": entry.name, "bytes": size}
                 for sequence, entry, size in self._snapshots()
