@@ -1,5 +1,17 @@
 # Изменения Forge-модов
 
+## Core 0.3.6 — 12 ноября 2026
+
+- Внутренний RCON-only main-thread bridge для loaded backup policy и фиксированных
+  предупреждений ночного обслуживания. Это общий Core 1.12.2 с optional FTB
+  provider; pack-specific логика в Core не добавлена.
+- Boot fence, повтор без рассылки, отказ при partial/overflow/неподдержанном
+  состоянии. Новых player/CLI действий нет; scheduler не включён.
+- DJ2/Linux Docker с двумя Drasl-игроками, lost-ACK/старый boot/OP sender, clean
+  stop без crash/OOM. Испытания и границы: [протокол](../../docs/validation/maintenance-bridge-2026-11-12.json).
+- 12 Java helper controls и два воспроизводимых Linux build. DJ2Fix 0.1.4 и
+  Client 0.1.1 побайтно прежние; рабочие manifests автоматически не переключаются.
+
 ## DJ2Fix 0.1.4 — 10 ноября 2026
 
 - Условия использования переносимого телепортера Mekanism повторно проверяются

@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "milestone": "internal-maintenance-main-thread-bridge",
+  "artifacts": {
+    "core": "b62a0b891aab6c58b07f2b9a4b838de43f20d15385b9c4f9880769d475613efb",
+    "dj2fix": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b",
+    "client": "817a40a43dfe9b31c127b9346ec6d5fe1e88fff51a542a1b680398e75567387a"
+  },
+  "runtime": {
+    "local_linux_docker": true,
+    "real_forge": true,
+    "pack": "DJ2 2.23.4",
+    "core": "0.3.6",
+    "dj2fix": "0.1.4",
+    "client": "0.1.1",
+    "real_drasl_accounts": 2,
+    "same_container_boots": 2,
+    "graphical_client": false,
+    "game_cpus": 4,
+    "game_memory_mib": 6144
+  },
+  "acceptance": {
+    "accepted_native_conditions": 16,
+    "live_server_conditions": 14,
+    "postprocess_export_conditions": 2,
+    "independent_conditions": 32,
+    "loaded_enabled_state_refuses_ready_and_warning": true,
+    "disk_edit_does_not_forge_loaded_state": true,
+    "restart_loads_disabled_flags_and_changes_boot_nonce": true,
+    "main_thread_probe_and_chat": true,
+    "two_actors_receive_russian_notice": true,
+    "repeat_and_real_lost_rcon_ack_do_not_repeat_broadcast": true,
+    "old_boot_request_refused": true,
+    "operator_player_sender_refused": true,
+    "no_human_operator_retained": true,
+    "known_forge_fake_profile_observed": true,
+    "clean_stop_no_game_crash_or_oom": true,
+    "owned_scopes_removed_after_export": true
+  },
+  "tests": {
+    "new_python_cases": 36,
+    "windows_unit_ui_passed": 1833,
+    "windows_skipped": 48,
+    "linux_focused_passed": 340,
+    "linux_cpus": 2,
+    "linux_memory_mib": 1024,
+    "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "java_maintenance_controls": 12,
+    "java_client_controls": 14,
+    "source_jar_regression_red_green": true,
+    "reproducible_build_rounds": 2,
+    "fix_and_client_artifacts_unchanged": true
+  },
+  "earlier_results": {
+    "initial_candidate_integration_failure": {
+      "accepted": false,
+      "source_jar_file_only_guard_corrected": true,
+      "game_crash": false,
+      "exported_and_cleaned": true
+    },
+    "accepted_trial_postprocess_recovery": {
+      "original_report_preserved": true,
+      "reason": "Fixture expected versioned Core archive name; runtime uses stable name. No-human-OP check permits only the exact known Forge [Minecraft] fake profile. File assertions reconciled offline against original export.",
+      "game_or_production_code_changed_during_reconciliation": false
+    }
+  },
+  "boundaries": {
+    "new_cli_actions": 0,
+    "scheduler_implemented": false,
+    "scheduler_enabled": false,
+    "full_nightly_transaction_accepted": false,
+    "other_writers_excluded": false,
+    "graphical_warning_rendering_verified": false,
+    "player_release_changed": false,
+    "live_vps_changed": false,
+    "ready_for_players": false
+  }
+}
