@@ -30,9 +30,17 @@ def validate_path_policy(value):
 
 
 def validate_inventory(
-    files, *, max_expanded_bytes=MAX_EXPANDED_BYTES, path_policy="portable"
+    files,
+    *,
+    max_expanded_bytes=MAX_EXPANDED_BYTES,
+    path_policy="portable",
+    case_sensitive=False,
 ):
     validate_path_policy(path_policy)
+    if type(case_sensitive) is not bool or (
+        case_sensitive and path_policy != "linux-server"
+    ):
+        raise ValueError("Case-sensitive inventory requires the Linux server policy")
     if type(max_expanded_bytes) is not int or not 1 <= max_expanded_bytes <= 1024**4:
         raise ValueError("Invalid expanded backup limit")
     if not isinstance(files, dict) or not 1 <= len(files) <= MAX_FILES:
@@ -53,13 +61,14 @@ def validate_inventory(
             )
         ):
             raise ValueError("Unsafe backup inventory path")
-        folded = name.casefold()
+        folded = name if case_sensitive else name.casefold()
         if folded in names:
             raise ValueError("Ambiguous backup path")
         names.add(folded)
         for length in range(1, len(parts) + 1):
             prefix = "/".join(parts[:length])
-            if prefixes.setdefault(prefix.casefold(), prefix) != prefix:
+            key = prefix if case_sensitive else prefix.casefold()
+            if prefixes.setdefault(key, prefix) != prefix:
                 raise ValueError("Ambiguous backup path casing")
         if (
             not isinstance(entry, dict)
