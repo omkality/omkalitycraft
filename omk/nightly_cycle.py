@@ -90,7 +90,7 @@ def policy(environment=None):
         or not 1 <= int(raw) <= 60
     ):
         raise AdminError("Invalid OMK_NIGHTLY_WARNING_GRACE_SECONDS")
-    return {
+    result = {
         "calendar": nightly_policy.settings(env),
         "maintenance": maintenance.settings(env),
         "backup": backups.settings(env),
@@ -98,7 +98,14 @@ def policy(environment=None):
         "storage_limits": admin_storage.limits(env),
         "ingress": ingress_template.settings(env),
         "warning_grace_seconds": int(raw),
-    }, env
+    }
+    if result["maintenance"]["plan_ttl_seconds"] <= (
+        result["calendar"]["warnings_seconds"][0] + result["warning_grace_seconds"]
+    ):
+        raise AdminError(
+            "Maintenance plan TTL must exceed the countdown plus warning grace"
+        )
+    return result, env
 
 
 def journal(config, operation):
@@ -118,7 +125,7 @@ def save(config, record, stage):
 def read(config, operation):
     r = _read_json(journal(config, operation), config.private)
     if (
-        set(r) != KEYS
+        set(r) not in (KEYS, KEYS | {"schedule"})
         or type(r.get("schema")) is not int
         or r["schema"] != 1
         or r["operation"] != operation
@@ -136,11 +143,13 @@ def read(config, operation):
         != r["settings"]["calendar"]["warnings_seconds"][: len(r["warned"])]
     ):
         raise AdminError("Invalid nightly journal")
+    if "schedule" in r:
+        scheduled_scope(r["schedule"])
     return r
 
 
 def status(r):
-    return {
+    result = {
         "ok": True,
         "operation": r["operation"],
         "server": r["server"],
@@ -148,10 +157,44 @@ def status(r):
         "children": r["children"],
         "deadline": r["deadline"],
         "warnings_confirmed": r["warned"],
-        "manual_countdown": True,
-        "scheduler_enabled": False,
+        "origin": "calendar" if "schedule" in r else "manual",
+        "manual_countdown": "schedule" not in r,
         "ready_for_players": False,
     }
+    if "schedule" in r:
+        result["scheduled_window_sha256"] = r["schedule"]["window_sha256"]
+        result["scheduler_running_verified"] = False
+    else:
+        result["scheduler_enabled"] = False
+    return result
+
+
+def scheduled_scope(value):
+    try:
+        if (
+            not isinstance(value, dict)
+            or set(value) != {"window_sha256", "reserved_at"}
+            or not isinstance(value["window_sha256"], str)
+            or not re.fullmatch(r"[a-f0-9]{64}", value["window_sha256"])
+            or datetime.fromisoformat(value["reserved_at"]).utcoffset() is None
+        ):
+            raise ValueError
+    except ValueError, TypeError:
+        raise AdminError("Invalid nightly calendar origin") from None
+
+
+def capacity(config, settings):
+    for area, required, limit in (
+        ("nightly", 1, settings["maintenance"]["journal_count"]),
+        ("maintenance", 1, settings["maintenance"]["journal_count"]),
+        ("backups", 1, settings["backup"]["journal_count"]),
+        ("ingress", 2, settings["maintenance"]["journal_count"]),
+    ):
+        folder = _private_path(config.private, area)
+        if folder.exists() and len(list(folder.iterdir())) + required > limit:
+            raise AdminError(
+                "Insufficient " + area + " journal capacity before countdown"
+            )
 
 
 def console(config, r):
@@ -269,9 +312,17 @@ def admission(config, r, env):
     }
 
 
-def prepare(config, server, environment=None):
+def prepare(config, server, environment=None, *, _operation=None, _schedule=None):
     settings, env = policy(environment)
     with backups.locked(config):
+        operation = uuid4().hex if _operation is None else _operation
+        if journal(config, operation).exists():
+            raise AdminError(
+                "Nightly identity already exists; inspect instead of replanning"
+            )
+        if _schedule is not None:
+            scheduled_scope(_schedule)
+        capacity(config, settings)
         folder = _private_path(config.private, "nightly")
         if folder.exists():
             rows = list(folder.iterdir())
@@ -297,7 +348,7 @@ def prepare(config, server, environment=None):
             raise AdminError("Nightly run requires the running source")
         r = {
             "schema": 1,
-            "operation": uuid4().hex,
+            "operation": operation,
             "server": server,
             "stage": "created",
             "created_at": now().isoformat(),
@@ -318,6 +369,8 @@ def prepare(config, server, environment=None):
             "admission": None,
             "resumed": None,
         }
+        if _schedule is not None:
+            r["schedule"] = dict(_schedule)
         r["loaded"] = console(config, r).ready(r["disk"]["adapter"])
         if (
             journal(config, r["operation"]).exists()

@@ -1,6 +1,7 @@
 """Owner-only cold Docker backups. No stop/start/restore or public API endpoint."""
 
 import contextlib
+import errno
 import json
 import os
 import re
@@ -19,6 +20,10 @@ IMAGE = "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6
 RESOURCE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}")
 PINS = re.compile(r"[^\s,]+@sha256:[a-f0-9]{64}")
 _HELD = threading.local()
+
+
+class OwnerBusy(OSError):
+    """Another owner operation holds the OS lock; no action was entered."""
 
 
 def settings(environment=None):
@@ -342,14 +347,19 @@ def locked(config):
     if not regular(path, config.private):
         raise AdminError("Invalid backup lock")
     with path.open("r+b") as file:
-        if os.name == "nt":
-            import msvcrt  # noqa: PLC0415
+        try:
+            if os.name == "nt":
+                import msvcrt  # noqa: PLC0415
 
-            msvcrt.locking(file.fileno(), msvcrt.LK_NBLCK, 1)
-        else:
-            import fcntl  # noqa: PLC0415
+                msvcrt.locking(file.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl  # noqa: PLC0415
 
-            fcntl.flock(file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                fcntl.flock(file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError as error:
+            if error.errno in {errno.EACCES, errno.EAGAIN}:
+                raise OwnerBusy("Another owner operation is active") from None
+            raise
         try:
             info = os.fstat(file.fileno())
             held[key] = (os.getpid(), info.st_dev, info.st_ino)

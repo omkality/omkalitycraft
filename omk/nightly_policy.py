@@ -1,4 +1,4 @@
-"""Daily calendar preview only. No sleeping, lifecycle calls or catch-up job."""
+"""Daily calendar calculation; no lifecycle calls or host job installation."""
 
 import os
 import re
