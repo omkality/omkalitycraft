@@ -19,10 +19,11 @@ from omk import (
     admin_storage,
     ingress,
     ingress_template,
+    journal_history,
     nightly_policy,
     storage_estate,
 )
-from omk.admin import AdminError, _private_path, _read_json, _write_private
+from omk.admin import AdminError, _private_path, _write_private
 from omk.backup_store import _sync_directory
 from omk.maintenance_console import MaintenanceConsole
 from omk.storage_policy import storage_plan
@@ -115,6 +116,7 @@ def journal(config, operation):
 
 
 def save(config, record, stage):
+    journal_history.writable(config, "nightly", record["operation"])
     record.update(stage=stage, updated_at=now().isoformat())
     if len(json.dumps(record).encode()) > 65536:
         raise AdminError("Nightly journal exceeds limit")
@@ -123,7 +125,7 @@ def save(config, record, stage):
 
 
 def read(config, operation):
-    r = _read_json(journal(config, operation), config.private)
+    r = journal_history.read(config, "nightly", operation)
     if (
         set(r) not in (KEYS, KEYS | {"schedule"})
         or type(r.get("schema")) is not int
@@ -183,7 +185,9 @@ def scheduled_scope(value):
         raise AdminError("Invalid nightly calendar origin") from None
 
 
-def capacity(config, settings):
+def capacity(config, settings, *, server=None, environment=None):
+    if server is not None:
+        journal_history.compact(config, server, environment)
     for area, required, limit in (
         ("nightly", 1, settings["maintenance"]["journal_count"]),
         ("maintenance", 1, settings["maintenance"]["journal_count"]),
@@ -316,13 +320,13 @@ def prepare(config, server, environment=None, *, _operation=None, _schedule=None
     settings, env = policy(environment)
     with backups.locked(config):
         operation = uuid4().hex if _operation is None else _operation
-        if journal(config, operation).exists():
+        if journal_history.present(config, "nightly", operation):
             raise AdminError(
                 "Nightly identity already exists; inspect instead of replanning"
             )
         if _schedule is not None:
             scheduled_scope(_schedule)
-        capacity(config, settings)
+        capacity(config, settings, server=server, environment=env)
         folder = _private_path(config.private, "nightly")
         if folder.exists():
             rows = list(folder.iterdir())
@@ -373,7 +377,7 @@ def prepare(config, server, environment=None, *, _operation=None, _schedule=None
             r["schedule"] = dict(_schedule)
         r["loaded"] = console(config, r).ready(r["disk"]["adapter"])
         if (
-            journal(config, r["operation"]).exists()
+            journal_history.present(config, "nightly", r["operation"])
             or len({r["operation"], *r["children"].values()}) != 5
         ):
             raise AdminError("Nightly operation identities collide")

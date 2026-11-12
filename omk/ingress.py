@@ -11,8 +11,9 @@ from omk import (
     admin_backups as backups,
     admin_maintenance as maintenance,
     ingress_config as deployment,
+    journal_history,
 )
-from omk.admin import AdminError, _private_path, _read_json, _write_private
+from omk.admin import AdminError, _private_path, _write_private
 from omk.backup_store import _sync_directory
 from omk.ingress_template import LABEL
 from omk.profiles import PROJECT_ROOT
@@ -144,7 +145,7 @@ def journal(config, operation):
 
 
 def read(config, operation):
-    r = _read_json(journal(config, operation), config.private)
+    r = journal_history.read(config, "ingress", operation)
     keys = {
         "schema",
         "operation",
@@ -183,6 +184,7 @@ def records(config):
 
 
 def save(config, r, stage):
+    journal_history.writable(config, "ingress", r["operation"])
     r.update(stage=stage, updated_at=datetime.now(UTC).isoformat())
     if len(json.dumps(r).encode()) > 65536:
         raise AdminError("Ingress journal exceeds size bound")
@@ -360,6 +362,7 @@ def execute(config, operation, action):
         r = read(config, operation)
         if action == "status":
             return status(r)
+        journal_history.writable(config, "ingress", operation)
         if action == "cancel":
             value = current(config, r, allow_new_boot=True)
             if r["stage"] in TERMINAL or not worker(config, value)["closed"]:
@@ -404,6 +407,7 @@ def abandon_close_plan(config, operation):
     """Internal cancellation before any close intent; never sends a proxy write."""
     with backups.locked(config):
         r = read(config, operation)
+        journal_history.writable(config, "ingress", operation)
         if r["stage"] != "planned" or r["wanted"] != "closed":
             raise AdminError("Only an unattempted close plan can be abandoned")
         value = current(config, r)

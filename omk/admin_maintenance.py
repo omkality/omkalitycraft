@@ -9,7 +9,10 @@ import tomllib
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from omk import admin_backups as backups
+from omk import (
+    admin_backups as backups,
+    journal_history,
+)
 from omk.admin import AdminError, _private_path, _read_json, _write_private
 from omk.diagnostics import regular
 from omk.maintenance_console import stop as console_stop
@@ -242,6 +245,7 @@ def journal(config, operation):
 
 
 def save(config, record, stage):
+    journal_history.writable(config, "maintenance", record["operation"])
     record.update(stage=stage, updated_at=datetime.now(UTC).isoformat())
     _write_private(journal(config, record["operation"]), config.private, record)
     if os.name != "nt":
@@ -253,7 +257,7 @@ def save(config, record, stage):
 
 
 def read_record(config, operation):
-    record = _read_json(journal(config, operation), config.private)
+    record = journal_history.read(config, "maintenance", operation)
     keys = {
         "schema",
         "operation",
@@ -462,6 +466,7 @@ def execute(config, operation, action, *, backup_operation=None, environment=Non
         record = read_record(config, operation)
         if action == "status":
             return status(record)
+        journal_history.writable(config, "maintenance", operation)
         value = current(config, record)
         if action == "cancel":
             from omk.admin_reset_staging import require_clear  # noqa: PLC0415

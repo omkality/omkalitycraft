@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 
 from omk import (
     admin_backups as backups,
+    journal_history,
     nightly_cycle as cycle,
     nightly_policy,
 )
@@ -190,7 +191,7 @@ def arm(config, server, settings, old=None):
         "error": None,
         "skip_reason": None,
     }
-    if cycle.journal(config, r["operation"]).exists():
+    if journal_history.present(config, "nightly", r["operation"]):
         raise AdminError("Calendar cycle identity collision")
     save(config, r, "armed")
     return r
@@ -221,9 +222,9 @@ def status(config, server):
 
 
 def view(config, r):
-    root = cycle.journal(config, r["operation"])
+    exists = journal_history.present(config, "nightly", r["operation"])
     try:
-        value = child(config, r) if root.exists() and r["phase"] != "armed" else None
+        value = child(config, r) if exists and r["phase"] != "armed" else None
     except AdminError:
         if r["phase"] != "failed":
             raise
@@ -243,9 +244,8 @@ def view(config, r):
     }
 
 
-def waiting(config, r, settings):
-    path = cycle.journal(config, r["operation"])
-    if path.exists():
+def waiting(config, r, settings, env):
+    if journal_history.present(config, "nightly", r["operation"]):
         raise AdminError("Unexpected child before calendar preparation")
     if (
         settings != r["settings"]
@@ -260,14 +260,14 @@ def waiting(config, r, settings):
         r["skip_reason"] = "missed_window"
         save(config, r, "skipped")
     else:
-        cycle.capacity(config, settings)
+        cycle.capacity(config, settings, server=r["server"], environment=env)
         save(config, r, "preparing")
     return r, 0
 
 
 def attempted(config, r, settings, env):
-    path = cycle.journal(config, r["operation"])
-    value = child(config, r) if path.exists() else None
+    exists = journal_history.present(config, "nightly", r["operation"])
+    value = child(config, r) if exists else None
     if value and value["stage"] in cycle.TERMINAL:
         r["error"] = None
         save(config, r, value["stage"])
@@ -319,7 +319,7 @@ def advance(config, r, settings, env):
     if r["phase"] in TERMINAL:
         return arm(config, r["server"], settings, r), 0
     if r["phase"] == "armed":
-        return waiting(config, r, settings)
+        return waiting(config, r, settings, env)
     return attempted(config, r, settings, env)
 
 
@@ -351,7 +351,7 @@ def tick(config, server, environment=None):
             r["fence"] = fence(r)
             r["skip_reason"] = (
                 "preflight_refused"
-                if not cycle.journal(config, r["operation"]).exists()
+                if not journal_history.present(config, "nightly", r["operation"])
                 else None
             )
             save(config, r, "skipped" if r["skip_reason"] else "failed")
