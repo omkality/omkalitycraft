@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "scope": "Linux durable ownership for prepared REST/TLS transfers; not a coherent project backup or nightly integration",
+  "parent_pr": 151,
+  "unit": {
+    "new_cases": 29,
+    "windows_passed": 2054,
+    "windows_skipped": 71,
+    "windows_source_unchanged": true,
+    "linux_focused_passed": 627,
+    "linux_memory_mib": 1024,
+    "linux_cpus": 2,
+    "linux_network": "none",
+    "linux_oom": false
+  },
+  "native": {
+    "image_id": "sha256:d4dc736b73dcb3f1713255faaec4b439f46cc442fe43415d06d218a4347a52f7",
+    "conditions": {
+      "client_excludes_repository_and_server_key_volumes": true,
+      "durable_frozen_intent_precedes_upload": true,
+      "two_real_controllers_one_upload_and_verified_idempotency": true,
+      "exit_71_after_intent_never_reissues_missing_upload": true,
+      "exit_73_after_real_upload_recovers_same_snapshot_without_reupload": true,
+      "exit_75_before_verified_commit_rechecks_readback_without_reupload": true,
+      "unfenced-control_real_restic_orphan_after_controller_sigkill": true,
+      "orphan_real_restic_orphan_after_controller_sigkill": true,
+      "source_drift_refuses_before_network_effect": true
+    },
+    "count": 9,
+    "actual_controller_exits": [
+      71,
+      73,
+      75,
+      137
+    ],
+    "orphan_is_actual_restic": true,
+    "negative_control_without_inherited_flock": true,
+    "readback_required": true,
+    "partial_and_uncertain_never_automatically_reuploaded": true,
+    "source_bytes_match_checkout": true,
+    "network_internal": true,
+    "published_ports": false,
+    "client_cpus": 1,
+    "client_memory_mib": 512,
+    "server_cpus": 1,
+    "server_memory_mib": 128,
+    "all_owned_resources_removed": true,
+    "no_oom": true,
+    "new_minecraft_started": false,
+    "new_drasl_started": false
+  },
+  "independent": {
+    "business_readers_imported": false,
+    "verified_records": 5,
+    "exact_restored_files": 23,
+    "independent_original_archive_comparisons": 20,
+    "world_zip_crc_entries": 321,
+    "auth_tar_inventory": true,
+    "sqlite_integrity_readonly": true,
+    "signing_key_skin_hashes": true,
+    "nonterminal_states_preserved": true,
+    "source_matches_checkout": true,
+    "verifier_cpus": 1,
+    "verifier_memory_mib": 256,
+    "verifier_network": "none",
+    "owned_verifier_removed": true
+  },
+  "limits": {
+    "record_max_bytes": 65536,
+    "default_records": 128,
+    "default_logical_bytes": 16777216,
+    "no_auto_deletion": true,
+    "unknown_temporary_files_refuse": true
+  },
+  "limitations": [
+    "All project controllers must share the same durable local Linux store/inode; not a distributed lock or NFS acceptance",
+    "Parent-enforced timeout does not survive parent death; orphan keeps fence until exit; external worker watchdog is not implemented",
+    "No new owner CLI, host jobs or scheduler integration",
+    "Readback evidence is historical; status does not recheck remote or staging availability",
+    "Input archives come from previously accepted different labs; no coherent world/auth/runtime/operator snapshot",
+    "No full application recovery, current authority cutover, external destination or retention acceptance",
+    "No VPS deployment or player release; ready_for_players=false"
+  ]
+}
