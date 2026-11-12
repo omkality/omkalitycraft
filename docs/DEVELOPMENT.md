@@ -1,5 +1,42 @@
 # Разработка OmkalityCraft
 
+## REST/TLS транспорт готовых архивов — 12 ноября 2026
+
+PR #150 принят в dev после 9/9 CI, завершённая ветка удалена. Следующий шаг #33 —
+Python primitives restic 0.19.1: pinned бинарник, TLS/auth/repository ID,
+изолированное окружение и bounded процесс. Секреты читаются из private readonly
+файлов, не argv/Docker Env; raw child output не попадает в ошибки. Новых CLI,
+таймеров/host jobs и второго writer живого Minecraft нет.
+
+Upload подтверждает только передачу с прежними source SHA; отдельный staging
+restore сверяет полный набор файлов/размеры/SHA. Exit 3/timeout/lost ACK не дают
+автоматического повтора или unlock. Lookup по тому же ID ещё не concurrency
+fence: durable owner coordinator/worker ownership остаются следующей работой.
+Read-only операции не создают remote lock; backup/full check сохраняют его.
+Это исправило реальный отказ quota/507 при попытке чтения полного хранилища.
+
+24 Linux Docker transport-условия с готовыми архивами разных принятых labs:
+реальный exit 73 после upload, настоящий partial exit 3, peer kill/restart,
+quota, corruption/control, readonly repository и раздельные client/server secrets.
+Независимый Linux verifier: 7 restore /42 файла, ZIP CRC 321 entry, auth TAR/
+SQLite/signing key/skins, operator archive 18 файлов. OOM нет, свои ресурсы удалены.
+59 новых cases, Windows 2048 unit/UI /48 skipped, Linux focused 598, Ruff/Black.
+
+Ранние непринятые trials сохранены: зависимость от psutil через admin import
+убрана (stdlib-only image), CRLF исправлен red/green; locked metadata/restore
+отказывали на full/readonly repo. Диагностический local CLI без внутреннего
+deadline остановлен по точному собственному readonly mount; runtime bounded
+worker не ослаблялся. Финальная свежая серия принята отдельно, исходные reports
+не исправлялись. Подготовка Linux unit overlay один раз отказала до Docker из-за
+отсутствующей новой папки; fixture исправлен, пройден свежий запуск.
+
+Согласованный project snapshot, durable transfer/nightly integration, внешний
+fault domain/retention и полный application recovery остаются #33; ресурсная
+история — #146. #41 открыт, ready_for_players=false. Игра/Drasl не запускались,
+runtime payload/VPS/launcher/Java/player releases прежние. Перед VPS — аудит
+владельца. [Интерфейс/лимиты](OFFSITE_TRANSPORT.md),
+[протокол](validation/offsite-transport-2026-11-12.json).
+
 ## Ограниченная история ночных journals — 12 ноября 2026
 
 Календарный runner PR #149 принят в dev после 9/9 CI, завершённая ветка удалена.

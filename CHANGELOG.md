@@ -1,5 +1,22 @@
 # Журнал изменений
 
+## Не выпущено — зашифрованная передача готовых архивов
+
+- Внутренние Python primitives restic 0.19.1 /REST/TLS: закреплённые артефакты,
+  repository ID, private credential files, чистое окружение, пределы времени/
+  вывода/скорости/размера. Новых CLI-команд, таймеров и второго live backup writer нет.
+- Проверочный restore идёт в новую папку, сверяет все пути/размеры/SHA и работает
+  с полным/readonly хранилищем без записи lock-файлов. Backup/check блокировки
+  сохранены. Partial exit 3 и потеря ACK не принимаются за полную копию.
+- 59 новых cases; Windows 2048 unit/UI /48 skipped, Linux focused 598.
+  24 Linux Docker transport-условия: настоящий network cut, exit 73/3, quota,
+  corruption/control, readonly и раздельные client/server secrets. Независимо
+  проверены 7 restore /42 файла, ZIP CRC и SQLite/ключ/скины.
+- Это перенос компонентов разных принятых labs. Согласованный project backup,
+  durable owner workflow/nightly integration, отдельное назначение/retention и
+  полный application return остаются #33. Launcher/Java/VPS не менялись.
+  [Порядок и границы](docs/OFFSITE_TRANSPORT.md).
+
 ## Не выпущено — ограниченная история ночного обслуживания
 
 - Завершённый nightly и четыре связанных журнала могут переноситься в приватную
