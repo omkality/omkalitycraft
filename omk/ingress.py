@@ -281,8 +281,9 @@ def backend_address(value):
     return data["NetworkSettings"]["Networks"][value["spec"]["network"]]["IPAddress"]
 
 
-def plan(config, server, wanted, environment=None):
+def plan(config, server, wanted, environment=None, *, _operation=None):
     with backups.locked(config):
+        operation = backups.planned_id(config, "ingress", _operation)
         if wanted not in {"open", "closed"}:
             raise AdminError("Invalid ingress target state")
         policy = maintenance.settings(environment)
@@ -298,7 +299,7 @@ def plan(config, server, wanted, environment=None):
                 raise AdminError("Wait for ingress DNS to resolve the current source")
         r = {
             "schema": 1,
-            "operation": uuid4().hex,
+            "operation": operation,
             "server": server,
             "wanted": wanted,
             "deployment": value,
@@ -397,6 +398,20 @@ def execute(config, operation, action):
             operation=r["operation"],
         )
         return confirm(config, r)
+
+
+def abandon_close_plan(config, operation):
+    """Internal cancellation before any close intent; never sends a proxy write."""
+    with backups.locked(config):
+        r = read(config, operation)
+        if r["stage"] != "planned" or r["wanted"] != "closed":
+            raise AdminError("Only an unattempted close plan can be abandoned")
+        value = current(config, r)
+        state = worker(config, value)
+        if state["config_sha256"] != r["before"]["config_sha256"]:
+            raise AdminError("Ingress config changed before cancellation")
+        save(config, r, "cancelled")
+        return status(r)
 
 
 def add_parser(actions):

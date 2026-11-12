@@ -328,10 +328,11 @@ def current(config, record):
     return value
 
 
-def plan(config, server, environment=None):
+def plan(config, server, environment=None, *, _operation=None):
     from omk.world_cutover import require_clear  # noqa: PLC0415
 
     with backups.locked(config):
+        operation = backups.planned_id(config, "maintenance", _operation)
         require_clear(config, server)
         policy = settings(environment)
         target, endpoint = backups.target_for(config, server), binding(config, server)
@@ -351,7 +352,7 @@ def plan(config, server, environment=None):
                 )
         record = {
             "schema": 1,
-            "operation": uuid4().hex,
+            "operation": operation,
             "server": server,
             "target": target,
             "binding": endpoint,
