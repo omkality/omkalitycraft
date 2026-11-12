@@ -11,6 +11,7 @@ public final class CoreServices {
     private static final Map<String,String> states = new TreeMap<String,String>();
     private static ClaimAccess claims;
     private static PlayerPlacementAccess playerPlacement;
+    private static BackupPolicyAccess backupPolicy;
     private static boolean starting;
     private CoreServices() {}
 
@@ -36,6 +37,11 @@ public final class CoreServices {
         if(playerPlacement==null) throw new IllegalStateException("No supported player placement provider is active");
         return playerPlacement;
     }
+    public static synchronized void provideBackupPolicy(BackupPolicyAccess provider) {
+        if(provider==null || backupPolicy!=null) throw new IllegalStateException("Backup policy provider already registered or invalid");
+        backupPolicy=provider;
+    }
+    public static synchronized BackupPolicyAccess backupPolicy() { return backupPolicy; }
     public static synchronized void report(String key,String state) {
         if(!key.matches("[a-z0-9_.]{1,80}") || state==null || state.length()>160)
             throw new IllegalStateException("Invalid Core capability status");

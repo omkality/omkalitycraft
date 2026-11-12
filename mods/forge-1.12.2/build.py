@@ -102,6 +102,34 @@ if args.target in {"all", "core"}:
         [args.forge, args.ftblib, args.log4j_api],
         core,
     )
+    controls = build / "maintenance-controls"
+    controls.mkdir(exist_ok=True)
+    subprocess.run(
+        [
+            str(args.java.resolve()),
+            "-jar",
+            str(compiler),
+            "-1.8",
+            "-proc:none",
+            "-encoding",
+            "UTF-8",
+            "-classpath",
+            str(core),
+            "-d",
+            str(controls),
+            str(project / "tests/java/net/omkality/MaintenanceControlsTest.java"),
+        ],
+        check=True,
+    )
+    subprocess.run(
+        [
+            str(args.java.resolve()),
+            "-cp",
+            os.pathsep.join([str(core), str(controls)]),
+            "net.omkality.MaintenanceControlsTest",
+        ],
+        check=True,
+    )
 if args.target in {"all", "dj2"}:
     if not core.is_file():
         raise ValueError("Build Core before DJ2Fix")
