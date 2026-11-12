@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "milestone": "nightly-calendar-and-stock-disk-preflight",
+  "runtime": {
+    "real_owner_cli": true,
+    "local_linux_docker": true,
+    "real_forge": true,
+    "pack": "DJ2 2.23.4",
+    "graphical_client": false,
+    "boots": 2,
+    "same_container": true,
+    "game_cpus": 4,
+    "game_memory_mib": 6144,
+    "stock_ftb": "1.1.0.1",
+    "stock_ftb_sha256": "6b6bcbbf6ac4528657345e1696339528a44643ecb06e6137908eafb8432bd962"
+  },
+  "acceptance": {
+    "native_conditions": 12,
+    "independent_conditions": 25,
+    "enabled_stock_creates_crc_and_level_dat_positive_control": true,
+    "enabled_stock_readonly_preflight_refused": true,
+    "disabled_disk_policy_real_cli_running_and_stopped": true,
+    "readonly_files": 1809,
+    "every_exported_runtime_and_backup_byte_unchanged_by_inspection": true,
+    "disabled_180_second_timer_crossed_for_at_least_195_seconds": true,
+    "manual_timer_shutdown_controls_create_no_new_stock_archive_or_receipt": true,
+    "no_game_crash_or_oom": true,
+    "owned_scopes_removed_after_export": true,
+    "controller_and_helper_frozen_during_native_trial": true
+  },
+  "tests": {
+    "new_cases": 67,
+    "windows_unit_passed": 1742,
+    "windows_ui_passed": 55,
+    "windows_skipped": 48,
+    "linux_focused_passed": 280,
+    "linux_cpus": 2,
+    "linux_memory_mib": 1024,
+    "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "readonly_source": true,
+    "network": "none",
+    "dst_gap_and_fold_and_missed_warning_cases": true
+  },
+  "boundaries": {
+    "scheduler_implemented": false,
+    "scheduler_enabled": false,
+    "chat_warnings_sent": false,
+    "activation_approved": false,
+    "live_config_verified_by_inspect": false,
+    "other_writers_verified": false,
+    "live_vps_changed": false,
+    "existing_worlds_or_drasl_accounts_changed": false,
+    "ready_for_players": false
+  }
+}

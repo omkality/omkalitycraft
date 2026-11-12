@@ -1,5 +1,32 @@
 # Разработка OmkalityCraft
 
+## Календарь и read-only допуск ночной политики — 12 ноября 2026
+
+`omk admin nightly preview/inspect` готовит следующий ночной coordinator:
+env-время/timezone/countdown, пропуск опоздавшего окна/DST gap и единственное
+первое вхождение DST fold. Inspect проверяет явный adapter, pinned FTB JAR,
+канонический config с выключенными enabled/shutdown и неизменность runtime/
+container/volume через readonly Linux helper и общий owner lock.
+
+Полная DJ2 2.23.4/Linux Docker: два старта того же контейнера, 12 native /
+25 independent условий. Включённый stock FTB даёт CRC/level.dat-положительную
+копию и отказ preflight; выключенный — running/stopped disk proof. При наблюдении
+не менее 195 секунд через полный 180-секундный timer, manual/shutdown controls
+новые stock archives/receipt не появляются. Все 1809 экспортированных runtime/
+backup файлов прежние до/после inspect; crash/OOM нет, own scopes удалены.
+
+67 новых synthetic cases, Windows 1742 unit +55 UI /48 skipped, Linux focused
+280 (включая четыре Linux-only link cases), Ruff/Black/source boundary. Инспекция
+остаётся disk-only: live_config_verified/other_writers_verified/activation_approved
+false; host cron/чужой Docker CLI/ручные OP-команды не исключены. Scheduler и chat
+warnings не реализованы/не включены, working FTB config и VPS прежние.
+
+Следующий этап #33 — durable coordinator с chat warning adapter, единственным
+writer, reserve перед записью, interrupted-step recovery и связанной цепочкой
+close → stop → backup → ready → open. Не обходить guards существующих операций.
+Off-host и остальные #32/#38/#41 остаются открытыми. [Команды и границы](NIGHTLY_BACKUPS.md),
+[протокол](validation/nightly-preflight-2026-11-12.json).
+
 ## Stock FTB retention и выбор ночного режима — 12 ноября 2026
 
 Владелец выбрал запланированный ночной рестарт с предупреждением в чате.

@@ -1,5 +1,19 @@
 # Журнал изменений
 
+## Не выпущено — подготовка ночного обслуживания
+
+- Owner `nightly preview/inspect`: настраиваемые env-время, timezone и моменты
+  предупреждений; пропущенное окно переносится, DST gap/fold обработаны явно.
+- Read-only Linux helper проверяет pinned FTB artifact и disabled enabled/
+  shutdown на диске; неизвестный/повторный config, другой SHA или изменившийся
+  runtime/source дают отказ. Проверка не меняет игровые файлы и не включает job.
+- DJ2/Linux Docker: два старта, 12 native /25 independent условий. Enabled
+  positive backup и negative preflight; disabled manual/timer/shutdown controls
+  без новой копии, 1809 runtime/backup файлов прежние при инспекции, без crash/OOM.
+- 67 новых cases, Windows 1742 unit +55 UI, Linux focused 280. Scheduler,
+  сообщения в чат и подтверждение loaded Java policy ещё впереди; VPS прежний.
+  [Порядок, env и пределы](docs/NIGHTLY_BACKUPS.md).
+
 ## Не выпущено — приёмка риска stock FTB-ротации
 
 - На полной DJ2/Linux Docker подтверждён pre-write deletion: два проверенных
