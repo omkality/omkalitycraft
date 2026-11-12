@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "milestone": "opt-in-nightly-calendar-runner",
+  "acceptance_status": "local-native-and-synthetic-passed",
+  "native_public_code_commit": "8ee3978",
+  "tests": {
+    "new_python_cases": 45,
+    "windows_unit_ui_passed": 1933,
+    "windows_skipped": 48,
+    "linux_focused_passed": 483,
+    "linux_cpus": 2,
+    "linux_memory_mib": 1024,
+    "linux_network": "none",
+    "linux_source_mount": "readonly",
+    "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "lifecycle_services_are_fakes_in_unit_tests": true,
+    "two_os_processes_share_one_future_reservation": true,
+    "six_synthetic_interruption_points_without_duplicate_effects": true,
+    "missed_windows_dst_and_clock_rollback_controls": true,
+    "capacity_and_ttl_refusal_before_countdown": true,
+    "disabled_mode_creates_no_calendar_or_docker_effect": true
+  },
+  "runtime": {
+    "local_linux_docker": true,
+    "real_forge": true,
+    "pack": "DJ2 2.23.4",
+    "core": "0.3.6",
+    "dj2fix": "0.1.4",
+    "core_sha256": "b62a0b891aab6c58b07f2b9a4b838de43f20d15385b9c4f9880769d475613efb",
+    "dj2fix_sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b",
+    "persistent_drasl_volume": true,
+    "real_accounts": 2,
+    "same_container_boots": 2,
+    "game_cpus": 4,
+    "game_memory_mib": 6144,
+    "owner_controller_runs_inside_linux_container": true,
+    "owner_code_readonly_and_private_state_separate": true,
+    "controller_cpus": 1,
+    "controller_memory_mib": 512,
+    "controller_has_administrative_docker_socket": true,
+    "controller_image_provenance": {
+      "image": "sha256:2abd2b234eb32107f74c7f921d2acc06b4838d6794e5688173891d233bb9894c",
+      "base": "omk-qt-repaint:39d1c00c22-ready",
+      "base_id": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "pins": {
+        "docker": {
+          "source": "installed Docker Desktop WSL cli-tools/docker",
+          "sha256": "226408f543344f0d2bfc84c7df4243c5364baccf509e8984d04e1e62c74efac0"
+        },
+        "docker-compose": {
+          "source": "installed Docker Desktop WSL cli-tools/docker-compose",
+          "sha256": "3e3e701906e4543f24e81eabb262ba6d525625a9b4747a1dde6892e0c369cc68"
+        }
+      },
+      "versions": [
+        "Docker version 29.1.3, build f52814d",
+        "2.40.3-desktop.1",
+        "/qt-deps/.venv/bin/python"
+      ]
+    }
+  },
+  "acceptance": {
+    "native_conditions": 22,
+    "independent_conditions": 41,
+    "actual_process_exit_after_fsynced_root_before_cursor_ack": 73,
+    "parallel_recovery_watchers": 2,
+    "same_parent_and_four_unique_children": true,
+    "each_warning_once_per_account": true,
+    "one_published_archive": true,
+    "sha_crc_full_manifest_verified": true,
+    "both_accounts_rejoin_and_preserve_inventory_xp": true,
+    "new_core_boot_before_open": true,
+    "completed_watchers_sigkill_exit_codes": [
+      137,
+      137
+    ],
+    "watchers_oom_killed": false,
+    "fresh_process_keeps_next_date_without_second_cycle_today": true,
+    "all_frozen_code_bytes_unchanged_in_linux_volume": true,
+    "clean_game_exit": true,
+    "game_crash_detected": false,
+    "game_oom_killed": false,
+    "own_scopes_removed_after_exports": true
+  },
+  "rejected_trials": {
+    "wrong_system_interpreter_before_calendar": true,
+    "dependency_interpreter_corrected_and_probed": true,
+    "separate_trial_interrupted_before_calendar_by_unresponsive_wsl_docker": true,
+    "owner_explicitly_authorized_wsl_restart_after_interruption": true,
+    "interrupted_state_exported_before_own_scopes_removed": true,
+    "original_rejected_results_preserved": true,
+    "fresh_native_trial_used_for_acceptance": true,
+    "independent_verifier_glob_selected_file_manifest_before_exact_id_fix": true,
+    "native_report_unchanged_by_offline_verifier_fix": true
+  },
+  "boundaries": {
+    "schedule_enabled_by_default": false,
+    "host_job_installed": false,
+    "automatic_journal_archival_implemented": false,
+    "external_writers_excluded": false,
+    "filesystem_quota_enforced": false,
+    "off_host_copy_implemented": false,
+    "local_storage_budget_is_vps_capacity_proof": false,
+    "graphical_client_test": false,
+    "new_host_power_loss_during_lifecycle_test": false,
+    "new_java_mod_artifacts": false,
+    "player_release_changed": false,
+    "live_vps_changed": false,
+    "owner_audit_required_before_vps_deployment": true,
+    "ready_for_players": false
+  }
+}
