@@ -11,6 +11,7 @@ import tomllib
 from datetime import UTC, datetime
 from uuid import uuid4
 
+from omk import journal_history
 from omk.admin import AdminError, _private_path, _read_json, _write_private
 from omk.cold_backup_worker import digest
 from omk.diagnostics import regular
@@ -382,8 +383,7 @@ def planned_id(config, area, supplied=None):
         or not re.fullmatch(r"[a-f0-9]{32}", value)
     ):
         raise AdminError("Invalid preallocated operation identity")
-    path = _private_path(config.private, area + "/" + value + ".json")
-    if path.exists() or path.is_symlink():
+    if journal_history.present(config, area, value):
         raise AdminError(
             "Operation identity already exists; inspect instead of replanning"
         )
@@ -397,7 +397,7 @@ def journal(config, operation):
 
 
 def read_record(config, operation):
-    value = _read_json(journal(config, operation), config.private)
+    value = journal_history.read(config, "backups", operation)
     allowed = {
         "schema",
         "operation",
@@ -426,6 +426,7 @@ def read_record(config, operation):
 
 
 def save(config, record, stage):
+    journal_history.writable(config, "backups", record["operation"])
     record.update(stage=stage, updated_at=datetime.now(UTC).isoformat())
     if len(json.dumps(record).encode()) > 65536:
         raise AdminError("Backup journal exceeded limit")
@@ -497,6 +498,7 @@ def run(config, operation, *, finish=False, environment=None):
 
     with locked(config):
         record = read_record(config, operation)
+        journal_history.writable(config, "backups", operation)
         require_clear(config, record["server"])
         if record.get("schema") != 1 or record.get("operation") != operation:
             raise AdminError("Invalid backup journal")
@@ -593,6 +595,7 @@ def cancel(config, operation):
 
     with locked(config):
         record = read_record(config, operation)
+        journal_history.writable(config, "backups", operation)
         require_clear(config, record["server"])
         if record.get("stage") not in {
             "planned",
