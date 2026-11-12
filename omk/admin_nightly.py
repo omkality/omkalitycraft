@@ -1,5 +1,6 @@
 """Owner calendar, readonly preflight and an explicit recoverable backup cycle."""
 
+import json
 import os
 import sys
 import tomllib
@@ -100,7 +101,7 @@ def inspect(config, server, environment=None, *, now=None):
             "disk_policy": proof,
             "policy": policy,
             "next_window": calendar,
-            "scheduler_implemented": False,
+            "scheduler_implemented": True,
             "scheduler_enabled": False,
             "activation_approved": False,
             "ready_for_players": False,
@@ -121,11 +122,28 @@ def add_parser(actions):
     target = command.add_mutually_exclusive_group(required=True)
     target.add_argument("--server")
     target.add_argument("--operation")
-    for action in ("status", "cancel"):
-        sub.add_parser(action).add_argument("--operation", required=True)
+    target = sub.add_parser("status").add_mutually_exclusive_group(required=True)
+    target.add_argument("--operation")
+    target.add_argument("--server")
+    sub.add_parser("cancel").add_argument("--operation", required=True)
+    sub.add_parser(
+        "watch", help="Opt-in calendar service; does not install a host job"
+    ).add_argument("--server", required=True)
 
 
 def run(config, args):
+    if args.nightly_action == "watch" or (
+        args.nightly_action == "status" and args.server
+    ):
+        from omk import nightly_schedule as schedule  # noqa: PLC0415
+
+        if args.nightly_action == "status":
+            return schedule.status(config, args.server)
+        return schedule.watch(
+            config,
+            args.server,
+            notify=lambda v: print(json.dumps(v), file=sys.stderr, flush=True),
+        )
     if args.nightly_action in {"run", "status", "cancel"}:
         from omk import nightly_cycle as cycle  # noqa: PLC0415
 
