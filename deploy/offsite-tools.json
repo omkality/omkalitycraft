@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "platform": "linux/amd64",
+  "restic_version": "0.19.1",
+  "rest_server_lab_version": "0.14.0",
+  "python_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+  "artifacts": [
+    {
+      "name": "restic",
+      "source": "https://github.com/restic/restic/releases/download/v0.19.1/restic_0.19.1_linux_amd64.bz2",
+      "download_sha256": "f415415624dcc452f2a02b8c33641791a8c6d6d3b65bbb3543fcf9a25151585c",
+      "binary_sha256": "20d4142678d0d95ec11a4759def1b73fd9190abc9ca19e4b62d067c0b387e639",
+      "binary_bytes": 30941346
+    },
+    {
+      "name": "rest-server",
+      "source": "https://github.com/restic/rest-server/releases/download/v0.14.0/rest-server_0.14.0_linux_amd64.tar.gz",
+      "download_sha256": "4c9c95bc079a0334e81fad379b19dc5c3353c71c2c88d652cafce2081c2b1c66",
+      "binary_sha256": "ec4fa7c3472bdc1cde6bfa994d1ee3344bb6e9dc3d9c10c8ff5316e3e77af6fd",
+      "binary_bytes": 9486520
+    }
+  ]
+}
