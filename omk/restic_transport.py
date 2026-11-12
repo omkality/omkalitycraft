@@ -181,6 +181,7 @@ class Restic:
     repository_id: str
     settings: dict
     binary: Path = Path("/usr/local/bin/restic")
+    lease_fd: int | None = None
 
     def validate(self):
         if not isinstance(self.repository_id, str) or not IDENTITY.fullmatch(
@@ -258,6 +259,12 @@ class Restic:
             # Concurrent external pruning may cause a refusal, never acceptance
             # of missing bytes: restic verify and our exact file hashes follow.
             args = (*args, "--no-lock")
+        inherited = {}
+        if self.lease_fd is not None:
+            if os.name != "posix" or type(self.lease_fd) is not int:
+                raise OffsiteError("Offsite worker lease requires a Linux descriptor")
+            os.fstat(self.lease_fd)
+            inherited["inherited"] = (self.lease_fd,)
         return bounded(
             [
                 str(self.binary),
@@ -272,6 +279,7 @@ class Restic:
             directory=self.workspace,
             timeout=self.settings["timeout_seconds"],
             maximum=self.settings["output_bytes"],
+            **inherited,
         )
 
     def inspect(self):
@@ -309,8 +317,13 @@ class Restic:
             "data_read_back": False,
         }
 
-    def upload(self, source, operation):
-        expected = signature(source, self.settings)
+    def upload(self, source, operation, *, expected=None):
+        actual = signature(source, self.settings)
+        if expected is None:
+            expected = actual
+        validate_export(expected, self.settings)
+        if actual != expected:
+            raise OffsiteError("Offsite input differs from its prepared transfer")
         if self.find(operation, expected) is not None:
             raise OffsiteError(
                 "Offsite transfer already exists; inspect the same identity instead of uploading again"
