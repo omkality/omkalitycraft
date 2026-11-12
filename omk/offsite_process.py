@@ -19,7 +19,7 @@ def terminate(process):
             process.kill()
 
 
-def bounded(command, *, environment, directory, timeout, maximum):
+def bounded(command, *, environment, directory, timeout, maximum, inherited=()):
     """Return stdout only after exit 0; never echo child output in exceptions."""
     try:
         process = subprocess.Popen(
@@ -30,6 +30,7 @@ def bounded(command, *, environment, directory, timeout, maximum):
             env=environment,
             cwd=directory,
             start_new_session=os.name == "posix",
+            **({"pass_fds": inherited} if inherited else {}),
         )
     except OSError:
         raise OffsiteError("Offsite worker could not start") from None
