@@ -11,6 +11,7 @@ import time
 from pathlib import Path
 from uuid import uuid4
 
+from omk.game_metrics import GameMetrics
 from omk.resource_metrics import LinuxMetrics, read, validate_config
 from omk.resource_store import ResourceStore
 
@@ -51,6 +52,7 @@ def run(config_path, root, *, policy=None, stop=None):
     config_hash = hashlib.sha256(raw.encode("ascii")).hexdigest()
     interval = policy["interval_seconds"]
     collector = LinuxMetrics(config, max_gap=interval * 3)
+    games = GameMetrics(config.get("games", {}))
     identity, sequence = uuid4().hex, 0
     stop = threading.Event() if stop is None else stop
     with ResourceStore(
@@ -59,6 +61,10 @@ def run(config_path, root, *, policy=None, stop=None):
         while not stop.is_set():
             start = time.monotonic()
             sample = collector.sample(start)
+            game = games.sample(int(time.time() * 1000))
+            sample["metrics"].update(game["metrics"])
+            sample["issues"].extend(game["issues"])
+            sample["games"] = game["games"]
             sequence += 1
             store.append(
                 {

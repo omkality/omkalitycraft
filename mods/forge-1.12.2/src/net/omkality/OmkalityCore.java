@@ -11,13 +11,15 @@ import java.util.Properties;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.omkality.api.CoreServices;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 /** Server-side policy over the declared FML mod list; not proof of client integrity. */
-@Mod(modid = "omkalitycore", name = "Omkality Core", version = "0.3.6", dependencies = "after:ftbutilities;after:justenoughdimensions",
+@Mod(modid = "omkalitycore", name = "Omkality Core", version = "0.3.7", dependencies = "after:ftbutilities;after:justenoughdimensions",
      acceptedMinecraftVersions = "[1.12.2]", serverSideOnly = true,
      acceptableRemoteVersions = "*")
 public final class OmkalityCore {
@@ -41,6 +43,7 @@ public final class OmkalityCore {
             OptionalIntegrations.install(configDirectory,logger);
             CoreServices.start(logger);
             MaintenanceBridge.install(logger);
+            GameMetrics.install(logger,profile.id);
             CoreServices.requireCapabilities(profile.capabilities);
         } catch(Exception error) { throw new IllegalStateException("Omkality server profile could not initialize",error); }
         if (Boolean.getBoolean("omkality.lab.commandCatalog")) {
@@ -48,6 +51,12 @@ public final class OmkalityCore {
             catch (Exception error) { throw new IllegalStateException("Lab command catalog export failed", error); }
         }
     }
+
+    @Mod.EventHandler
+    public void stopping(FMLServerStoppingEvent event) { GameMetrics.stop(); }
+
+    @Mod.EventHandler
+    public void stopped(FMLServerStoppedEvent event) { GameMetrics.stop(); }
 
     @Mod.EventHandler
     public void load(FMLPreInitializationEvent event) {

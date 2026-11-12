@@ -1,5 +1,18 @@
 # Изменения Forge-модов
 
+## Core 0.3.7 — 13 ноября 2026
+
+- Общий opt-in producer Forge 1.12.2: фактические TPS по скользящему окну,
+  MSPT mean/p95/max из штатных колец, loaded dimensions, online и heap/GC MXBeans.
+  Нет новых player/CLI команд, зависимости от FTB/DJ2 и удалённого JMX/RCON.
+- Ограниченный async writer, private atomic JSON, один owner, очередь на один
+  ожидающий снимок. I/O failure не прекращает игровые тики; stale различает reader.
+- Настоящая DJ2 2.23.4 с двумя Drasl actors, pause/stale/recovery, два старта/rejoin,
+  сохранность вещей/XP; отдельно минимальный Forge без DJ2/FTB с отказом записи.
+  27 pure Java controls и воспроизводимые builds. [Контракт](../../docs/GAME_RESOURCE_HISTORY.md).
+- DJ2Fix 0.1.4 и Client 0.1.1 побайтно прежние. Рабочие manifests/VPS и player
+  release автоматически не переключаются. Это не полная игровая регрессия сборки.
+
 ## Core 0.3.6 — 12 ноября 2026
 
 - Внутренний RCON-only main-thread bridge для loaded backup policy и фиксированных

@@ -118,6 +118,16 @@ if args.target in {"all", "core"}:
             "-d",
             str(controls),
             str(project / "tests/java/net/omkality/MaintenanceControlsTest.java"),
+            str(project / "tests/java/net/omkality/GameMetricsControlsTest.java"),
+        ],
+        check=True,
+    )
+    subprocess.run(
+        [
+            str(args.java.resolve()),
+            "-cp",
+            os.pathsep.join([str(core), str(controls)]),
+            "net.omkality.GameMetricsControlsTest",
         ],
         check=True,
     )

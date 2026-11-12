@@ -47,8 +47,10 @@ def pairs(raw):
 def validate_config(config):
     if (
         not isinstance(config, dict)
+        or not {"schema", "host", "disks", "interfaces", "filesystems", "services"}
+        <= set(config)
         or set(config)
-        != {"schema", "host", "disks", "interfaces", "filesystems", "services"}
+        - {"schema", "host", "disks", "interfaces", "filesystems", "services", "games"}
         or type(config["schema"]) is not int
         or config["schema"] != 1
         or not isinstance(config["host"], str)
@@ -94,7 +96,32 @@ def validate_config(config):
                 or not re.fullmatch(r"[A-Za-z0-9_.+-]{1,80}", entry["release"])
             ):
                 raise ValueError("Invalid service metrics configuration")
+    validate_games(config.get("games", {}))
     return config
+
+
+def validate_games(games):
+    if not isinstance(games, dict) or len(games) > 4:
+        raise ValueError("Invalid game metrics allowlist")
+    for label, entry in games.items():
+        if (
+            not isinstance(label, str)
+            or not NAME.fullmatch(label)
+            or not isinstance(entry, dict)
+            or set(entry) != {"mount", "profile", "core_version", "max_age_seconds"}
+        ):
+            raise ValueError("Invalid game metric configuration")
+        if (
+            not isinstance(entry["mount"], str)
+            or not NAME.fullmatch(entry["mount"])
+            or not isinstance(entry["profile"], str)
+            or not re.fullmatch(r"[a-z0-9_.-]{1,80}", entry["profile"])
+            or not isinstance(entry["core_version"], str)
+            or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", entry["core_version"])
+            or type(entry["max_age_seconds"]) is not int
+            or not 10 <= entry["max_age_seconds"] <= 3600
+        ):
+            raise ValueError("Invalid game metric configuration")
 
 
 class LinuxMetrics:

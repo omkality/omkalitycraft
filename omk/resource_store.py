@@ -17,8 +17,7 @@ METRIC = re.compile(r"[a-z][A-Za-z0-9_.-]{0,159}")
 def validate_sample(sample):
     if (
         not isinstance(sample, dict)
-        or set(sample)
-        != {
+        or not {
             "schema",
             "at",
             "collector",
@@ -31,6 +30,23 @@ def validate_sample(sample):
             "metrics",
             "issues",
             "sources",
+        }
+        <= set(sample)
+        or set(sample)
+        - {
+            "schema",
+            "at",
+            "collector",
+            "sequence",
+            "host",
+            "config_sha256",
+            "releases",
+            "host_boot",
+            "interval_seconds",
+            "metrics",
+            "issues",
+            "sources",
+            "games",
         }
         or type(sample["schema"]) is not int
         or sample["schema"] != 1
@@ -71,7 +87,7 @@ def validate_sample(sample):
         or len(sample["issues"]) > 128
         or any(
             not isinstance(v, str)
-            or not re.fullmatch(r"[A-Za-z0-9_.-]{1,100}:unavailable", v)
+            or not re.fullmatch(r"[A-Za-z0-9_.-]{1,100}:(unavailable|stale)", v)
             for v in sample["issues"]
         )
     ):
@@ -93,10 +109,49 @@ def validate_sample(sample):
             )
         ):
             raise ValueError("Invalid resource provenance")
+    _game_provenance(sample.get("games", {}))
     raw = json.dumps(sample, sort_keys=True, separators=(",", ":"), allow_nan=False)
     if len(raw.encode()) > 128 * 1024:
         raise ValueError("Resource sample exceeds bound")
     return raw
+
+
+def _game_provenance(games):
+    if not isinstance(games, dict) or len(games) > 4:
+        raise ValueError("Invalid game metric provenance")
+    for label, entry in games.items():
+        if (
+            not isinstance(label, str)
+            or not re.fullmatch(r"[a-z][a-z0-9_-]{0,47}", label)
+            or not isinstance(entry, dict)
+            or set(entry)
+            != {
+                "profile",
+                "core_version",
+                "boot",
+                "sequence",
+                "sampled_at_ms",
+                "running",
+                "dimensions_truncated",
+            }
+        ):
+            raise ValueError("Invalid game metric provenance")
+        for key, pattern in (
+            ("profile", r"[a-z0-9_.-]{1,80}"),
+            ("core_version", r"[0-9]+\.[0-9]+\.[0-9]+"),
+            ("boot", r"[a-f0-9]{32}"),
+        ):
+            if not isinstance(entry[key], str) or not re.fullmatch(pattern, entry[key]):
+                raise ValueError("Invalid game metric identity")
+        if (
+            type(entry["sequence"]) is not int
+            or not 1 <= entry["sequence"] <= 10**18
+            or type(entry["sampled_at_ms"]) is not int
+            or not 0 <= entry["sampled_at_ms"] <= 10**18
+            or type(entry["running"]) is not bool
+            or type(entry["dimensions_truncated"]) is not bool
+        ):
+            raise ValueError("Invalid game metric provenance values")
 
 
 class ResourceStore:
