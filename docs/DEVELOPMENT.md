@@ -1,5 +1,37 @@
 # Разработка OmkalityCraft
 
+## Ограниченная история ночных journals — 12 ноября 2026
+
+Календарный runner PR #149 принят в dev после 9/9 CI, завершённая ветка удалена.
+Новый opt-in Python service переносит только complete nightly и четыре
+подтверждённых child records перед следующим countdown. Новых CLI-действий нет.
+Последние семь завершённых scopes остаются live; active/cancelled и отдельные
+ручные операции не архивируются. Каждый архив содержит исходные байты и SHA;
+все пять публикуются/fsync/проверяются до unlink, root удаляется последним.
+Старые status/cross-reference/calendar ACK читаются через history fallback;
+архивные действия и повторное использование ID отказывают до server effects.
+
+Env limits: default 10000 файлов /256 MiB логических данных, batch 32 и keep 7.
+Запись сохраняет общий project reserve на FS истории. История не вытесняется:
+при заполнении новый перенос/цикл отказывает до чата, прежние recovery-ссылки
+сохраняются. История лежит в `.omk-admin/journal-history`, переносится с полным
+operator state, а не только world ZIP. Не filesystem quota и не off-host copy.
+
+56 новых cases; Windows 1989 unit/UI /48 skipped, Linux focused 539, Ruff/Black.
+11 отдельных Linux Docker filesystem-условий на копии принятых реальных DJ2
+journals: exact bytes, реальные exit 71/72/73 до publication/после publication/
+в cleanup, два owner-процесса, hardlink/conflict/cap и readonly mount. Старый
+native export побайтно прежний, свои scopes удалены после экспорта. Это не
+новый запуск Minecraft и не потеря питания host. Первичный suite отказал только
+из-за изменённого текста ошибки identifier; совместимость восстановлена и
+контроль пройден. Во время этого этапа серверные миры не монтировались.
+
+Default archive/schedule disabled, host jobs/VPS не установлены. До VPS остаётся
+аудит владельца; off-host и оставшийся full recovery/cutover — #33, ресурсная
+история — #146. #41 открыт, ready_for_players=false. Лаунчер/Java/player release
+прежние. [Порядок](NIGHTLY_BACKUPS.md#ограниченная-история-завершённых-циклов),
+[протокол](validation/journal-history-2026-11-12.json).
+
 ## Календарный runner с восстановлением — 12 ноября 2026
 
 Opt-in `nightly watch --server` использует существующий цикл и один приватный
