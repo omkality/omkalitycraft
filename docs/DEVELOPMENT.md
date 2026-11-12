@@ -1,8 +1,37 @@
 # Разработка OmkalityCraft
 
+## Подготовка к аудиту и история ресурсов — 13 ноября 2026
+
+Владелец поручил привести локальную подготовку DJ2 к завершению перед просмотром.
+VPS до его аудита не разворачиваем. [Входная точка](LAUNCH_READINESS.md) связывает
+контракты с актуальными issues; открытые требования не объявляются выполненными
+по одному наличию документации или CI трёх ОС. GTNH и отложенные функции вне
+первого запуска.
+
+Добавлен opt-in Python Docker collector без сети/портов/Docker socket: allowlisted
+Linux host/cgroup counters, метаданные разрешённых ФС, private bounded SQLite,
+подробности до 7 дней и часовые сводки до 180 дней. Env budgets/defaults; 64 MiB
+main DB, budget journal 129 MiB плюс reserve. При capacity более раннее вытеснение,
+при пропуске/смене наблюдаемого источника новый baseline; недоступность не ноль.
+Report API read-only для owner/будущей TUI, новых omk-команд/игровых экранов нет.
+
+47 focused Linux Docker cases; Windows 2105 unit/UI /95 skipped. Отдельный native
+Linux cgroup-v2 lab с настоящим bounded CPU/OOM: 0.50 ядра при quota 0.5, OOM kill
+виден в parent, workload restart и SIGKILL collector, fresh committed health,
+exit 73 между detail/hour INSERT и успешное SQLite recovery. Семь samples,
+45056 байт history, integrity ok; свои containers/volume удалены, collector OOM
+не было. Это не запуск Minecraft, host power loss или измерение RX-4.
+
+Первый Linux unit fixture не включил новый example config: 44 pass/1 missing-file;
+после исправления frozen overlay повторно пройдены все 47 cases. История исходного
+отказа сохранена. Игровые TPS/MSPT, online/heap/GC, корреляция и actual VPS остаются
+#146; сам issue не закрывается. Общий допуск #41 false, Java/launcher/player
+release прежние. [Контракт](RESOURCE_HISTORY.md),
+[протокол](validation/resource-history-2026-11-13.json).
+
 ## Комплект одного остановленного проекта — 13 ноября 2026
 
-PR #152 принят в dev после 9/9 CI, завершённая ветка удалена. Новый внутренний
+PR #153 принят в dev после 9/9 CI, завершённая ветка удалена. Новый внутренний
 Linux capture использует существующий world ZIP и фактические закрытые game/auth/
 runtime/выбранные operator источники. Drasl config входит в комплект и сверяется
 с source hash. Девять файлов, manifest последним, private permissions и env caps;

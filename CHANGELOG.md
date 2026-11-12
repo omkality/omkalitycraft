@@ -1,5 +1,20 @@
 # Журнал изменений
 
+## Не выпущено — приватная история ресурсов Linux
+
+- Python Docker collector без сети/портов/Docker socket сохраняет allowlisted
+  CPU/steal, RAM/swap/OOM, PSI, диск/сеть, доступное место/inode и cgroup сервисов.
+  Игровые TPS/MSPT/online/heap/GC не подменяются косвенными показателями.
+- Подробности до 7 дней, часовые min/max/mean/count до 180 дней в private SQLite.
+  Main DB до 64 MiB, DELETE journal учтён отдельно; env policy и retention по
+  возрасту/ёмкости, один writer, read-only owner API, committed freshness health.
+- 47 focused Linux Docker cases, Windows 2105 unit/UI /95 skipped; настоящий
+  bounded CPU/OOM, restart, SIGKILL и exit 73 внутри транзакции. Данные сохранились
+  согласованно, свои scopes удалены. Это не новый запуск DJ2 или нагрузка RX-4.
+- README ведёт на входную страницу аудита с актуальными блокерами. #146 и #41
+  остаются открыты, VPS и player release прежние.
+  [Порядок и ограничения](docs/RESOURCE_HISTORY.md).
+
 ## Не выпущено — комплект одного остановленного проекта
 
 - Внутренний Linux capture связывает существующий cold world ZIP, runtime,
