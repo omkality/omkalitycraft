@@ -16,8 +16,9 @@ GTNH пока планируется; публичного сервиса и ф�
 [#41](https://github.com/omkality/omkalitycraft/issues/41).
 
 **[История ресурсов Linux-сервера](docs/RESOURCE_HISTORY.md)** — приватный Docker
-collector, bounded SQLite и часовые отчёты для владельца. Host/cgroup часть
-проверена; игровые TPS/MSPT/heap/GC пока остаются в #146.
+collector, bounded SQLite и часовые отчёты для владельца. Есть host/cgroup и
+[игровой producer Core](docs/GAME_RESOURCE_HISTORY.md): TPS/MSPT/online/heap/GC,
+измерения и явные stale/restart. Корреляция с обслуживанием остаётся в #146.
 
 **[Команды, ограничения, таймеры и роли серверов](docs/commands/README.md)** — практический
 справочник DJ2, полный реестр 438 серверных команд/подкоманд и отдельная предварительная справка GTNH.
