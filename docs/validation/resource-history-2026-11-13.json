@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "base_commit": "b1145e831f949e4d5e2e0eddffa53cc56ac83163",
+  "scope": "private host/cgroup resource history, not game acceptance",
+  "source_sha256": {
+    "omk/resource_metrics.py": "db32088b4f2a00d123ca4f14dfad59120193718a4e5bc8784a3ba64e3ebf33cb",
+    "omk/resource_store.py": "d64042defd6c347679382cf4b006dfea147b767459d53faf4360dbef54cd86c9",
+    "omk/resource_history.py": "ca25d568b1ae72234472defb95721d9d3e614520c25edd29d86620062bf086e5",
+    "tests/unit/test_resource_history.py": "629bb68b61c0ce1ce53aea752e1b8ec1e011c9db773d91e7435b542c340f267c"
+  },
+  "unit_tests": {
+    "windows_focused": {
+      "passed": 45,
+      "skipped": 2
+    },
+    "linux_docker_focused": {
+      "passed": 47,
+      "skipped": 0,
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "cpus": 2,
+      "memory_mib": 1024,
+      "network": "none",
+      "readonly_source": true
+    },
+    "windows_full_unit_ui": {
+      "passed": 2105,
+      "skipped": 95,
+      "warnings": 3
+    }
+  },
+  "static": {
+    "ruff": "passed",
+    "black_files": 347,
+    "public_forge_source_files": 93,
+    "compose_defaults_overrides": "passed",
+    "audit_document_paths": "passed"
+  },
+  "native": {
+    "collector_image": "sha256:8e0471bc3e3c95630866a660ee542ab39dcbbc5e35a29f3d78bc6d35d918bfb1",
+    "real_minecraft": false,
+    "native_linux_counters": true,
+    "public_ports": [],
+    "health_reads_recent_commit": true,
+    "bounded_workload_cpu_cores": [
+      null,
+      0.49773395853414454,
+      0.4980125024409523
+    ],
+    "no_socket_or_network": true,
+    "oom_child_exit": 137,
+    "observed_oom": true,
+    "restart_epoch_resets_rates": true,
+    "collector_sigkill_restart_preserves_history": true,
+    "atomic_detail_hour_after_exit73": true,
+    "rows": 7,
+    "integrity": "ok",
+    "history_bytes": 45056,
+    "oom_killed_collector": false,
+    "owned_resources_removed": true
+  },
+  "limits": {
+    "game_tps_mspt_online_heap_gc": "not implemented in this service",
+    "actual_vps_measurement": false,
+    "full_game_or_graphical_acceptance": false,
+    "physical_host_power_loss": false,
+    "long_term_soak": false,
+    "ready_for_players": false,
+    "issue_146": "open",
+    "issue_41": "open"
+  },
+  "deployment": {
+    "installed_host_jobs": false,
+    "vps_changed": false,
+    "player_release_changed": false
+  }
+}
