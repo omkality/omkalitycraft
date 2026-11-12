@@ -1,5 +1,21 @@
 # Журнал изменений
 
+## Не выпущено — настоящие игровые показатели в истории ресурсов
+
+- Generic Core 0.3.7 выдаёт TPS по скользящему окну, штатные MSPT/измерения,
+  online и heap/GC в отдельную private metrics folder. Bounded async writer,
+  atomic JSON, single owner и явный terminal snapshot; default disabled.
+- Python collector проверяет producer/profile/version/boot/sequence/age, различает
+  stale и отсутствие данных, рассчитывает GC rates между новыми snapshots.
+  Старый config совместим; нет новых игровых/omk-команд или сетевых endpoints.
+- Настоящие DJ2/Drasl, pause/restart/rejoin и сохранность вещей/XP; отдельно bare
+  Forge без FTB/DJ2 и ошибка записи без остановки игры. 27 Java controls, 73 Linux
+  focused cases, Windows 2131 unit/UI /95 skipped, два одинаковых mod build.
+- Отдельный Linux verifier проверил историю и сохранение; новый collector image
+  испытан replay четырёх настоящих source snapshots. GUI/VPS/player release прежние.
+  Корреляция с обслуживанием и active-hour report остаются #146.
+  [Порядок и ограничения](docs/GAME_RESOURCE_HISTORY.md).
+
 ## Не выпущено — приватная история ресурсов Linux
 
 - Python Docker collector без сети/портов/Docker socket сохраняет allowlisted

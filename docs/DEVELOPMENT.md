@@ -1,5 +1,36 @@
 # Разработка OmkalityCraft
 
+## Игровая часть истории ресурсов — 13 ноября 2026
+
+После PR #154 добавлен generic opt-in Core 0.3.7: скользящие фактические TPS,
+штатные tick rings mean/p95/max/loaded dimensions, online и JVM heap/GC.
+Main thread снимает числа, отдельный bounded writer публикует private atomic JSON.
+Collector читает только readonly metrics volume; без сети/Docker socket/RCON,
+невалидное/stale/остановленное состояние не превращается в нулевые active gauges.
+Прежний config без games совместим; новые env/overlay и read-only отчёт прежнего API.
+
+27 Java controls; два Docker build одинакового Core SHA, Fix/Client прежние.
+73 focused Linux cases; Windows 2131 unit/UI /95 skipped. Настоящая DJ2 2.23.4,
+двое Drasl actors, два старта/rejoin, pause/stale/TPS recovery; 19 native checks,
+31 row и два game boot. Отдельный minimal Forge без DJ2/FTB: восемь checks,
+отказ/возобновление записи не останавливают игру, ошибка ограниченно логируется.
+Оба game scope завершены без crash/OOM, собственные volumes удалены после экспорта.
+Отдельный Linux verifier: 11 checks истории/сохранения, 7 изумрудов/12 уровней.
+
+Первый fixture неверно приравнивал MXBean max к -Xmx4G. Отдельный тот же Java 8
+показал 3817865216 байт; fixture исправлен, старый отказ сохранён. Следующий проход
+подтвердил loss короткого TPS interval между producer 5s и collector 10s: seq 7
+успел смениться seq 8. Добавлено bounded rolling window, fresh game pass принят.
+Ранние helper mount/import/PYTHONPATH ошибки сохранены отдельно, не входят в pass.
+
+Финальный collector добавляет interval/truncation gauges: после full native pass
+проверен в новом image на четырёх сохранённых настоящих Core snapshots — 30 checks.
+Это replay, не новый запуск игры. Raw fixtures/аккаунты/миры остаются приватными.
+#146 открыт для job correlation/active-hour report; #38 — actual VPS/длительная
+игра. #41 ready_for_players=false. Core hash закреплён только после native pass;
+рабочие manifests, GUI/player release/VPS прежние. Перед VPS аудит владельца.
+[Контракт](GAME_RESOURCE_HISTORY.md), [протокол](validation/game-resource-history-2026-11-13.json).
+
 ## Подготовка к аудиту и история ресурсов — 13 ноября 2026
 
 Владелец поручил привести локальную подготовку DJ2 к завершению перед просмотром.

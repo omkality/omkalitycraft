@@ -7,7 +7,7 @@
 проверку соответствующего действия в Minecraft.
 
 Для первого запуска выбрана DJ2 2.23.4 / Forge 1.12.2. Текущие принятые owned
-artifacts: Core 0.3.6, DJ2Fix 0.1.4, Client 0.1.1 — `mods/forge-1.12.2/versions.json`.
+artifacts: Core 0.3.7, DJ2Fix 0.1.4, Client 0.1.1 — `mods/forge-1.12.2/versions.json`.
 GTNH не объявляем готовой. Стабильность имеет приоритет перед ускорением загрузки.
 Все серверные acceptance выполняются в изолированных Linux Docker labs.
 
@@ -23,7 +23,7 @@ GTNH не объявляем готовой. Стабильность имеет
 | Локальное восстановление базы | `REGION_RECOVERY.md`, `MOD_SYSTEM_RECOVERY.md`, `commands/dj2/RECOVERY.md` | Block/NBT не равны entity rollback; сети/механизмы и соседние участки требуют собственных контролей |
 | Ночной backup/restart | `NIGHTLY_BACKUPS.md`, `PROJECT_EXPORT.md`, `OFFSITE_TRANSPORT.md` | Один world writer, предупреждения, coherent snapshot, бюджет/retention и реальный полный возврат приложения |
 | Диагностика, журналирование | `LOGGING.md`, `CHAT_HISTORY.md`, `ACTION_ATTRIBUTION.md`, issues #43/#44/#52/#58 | Сбор crash report не заменяет структурированный журнал чата, авторство действий и учёт времени |
-| Ресурсы сервера | `RESOURCE_HISTORY.md`, #146 | Частичная реализация host/cgroup; нужны игровые TPS/MSPT/heap/GC и реальные измерения VPS |
+| Ресурсы сервера | `RESOURCE_HISTORY.md`, `GAME_RESOURCE_HISTORY.md`, #146 | Host/cgroup и игровой producer проверены; нужны полная корреляция с обслуживанием/активные отчёты и реальные измерения VPS |
 | Deployment конфигурация | `.env.example`, `deploy/*.example.*`, #30/#38 | Проверяем overrides/defaults, private mounts/permissions, лимиты всех writers и отсутствие public development binds |
 
 Названия документов выше проверяются при обновлении этой входной точки. Порядок
@@ -43,8 +43,9 @@ GTNH не объявляем готовой. Стабильность имеет
   границы/сюжетные структуры и финальный upgrade/release regression до принятых
   протоколов. Большую предгенерацию выполняем после фиксации версии и границ.
 - **#43/#44/#52/#58/#146:** учёт времени, приветствие, структурированный полный чат,
-  авторство действий и игровая часть мониторинга нельзя считать готовыми только
-  потому, что они перечислены в плане.
+  авторство действий и оставшаяся корреляция мониторинга нельзя считать готовыми
+  только потому, что они перечислены в плане. Producer TPS/MSPT/online/heap/GC
+  уже прошёл отдельную локальную приёмку; это не измерение RX-4.
 - **#30/#36:** заключительный configuration audit и выпускной клиент. CI на трёх
   ОС проверяет Python/Qt/portable bundle, но не доказывает реальную игру на
   графических Linux/macOS Minecraft-клиентах.
