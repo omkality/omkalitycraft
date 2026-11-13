@@ -6,18 +6,38 @@
 используют одну цепочку: предупреждения, закрытие входа, штатная остановка,
 проверенная холодная копия, запуск и открытие входа после готовности.
 
-## Календарный процесс владельца
+## Одноразовый запуск из systemd.timer
 
 ```console
-uv run python -m omk admin --config .omk-admin/operator.toml nightly watch --server dj2
-uv run python -m omk admin --config .omk-admin/operator.toml nightly status --server dj2
+python -m omk admin --config /private/operator.toml nightly run --server dj2 --scheduled
+python -m omk admin --config /private/operator.toml nightly status --server dj2
 ```
 
-`watch` — долгоживущий owner-процесс, а не установщик cron/systemd. Без явного
-`OMK_NIGHTLY_SCHEDULE_ENABLED=true` он сразу возвращает `disabled`, не создаёт
-календарный журнал и не обращается к Docker. При включении использует время,
-timezone и интервалы из env ниже. Владелец ещё не выбрал рабочее время; 05:00
-остаётся default. До аудита репозитория не устанавливаем процесс на VPS.
+Команда выполняется внутри заранее подготовленного Docker controller, а не
+запускает игру на host. `systemd.timer` активирует один такой процесс раз в минуту.
+Если первое предупреждение дальше минуты, процесс сразу заканчивается; около окна
+он выполняет один существующий cycle и заканчивается после complete/skip/error.
+Пока service активен, systemd не создаёт второй экземпляр.
+
+Шаблоны — [`omk-nightly@.timer`](../deploy/systemd/omk-nightly@.timer) и
+[`omk-nightly@.service`](../deploy/systemd/omk-nightly@.service). Они **не установлены**:
+до аудита владельца не создаём controller и не включаем host timer. Docker container
+`omk-nightly-<server>` предварительно должен иметь правильные private mounts, bounded
+Docker logs и команду выше. `docker start --attach` передаёт его exit status systemd.
+Это не разрешение запускать произвольный game container через этот unit.
+
+`Persistent=false`: пропущенный при выключенном host запуск не догоняется.
+Минутный UTC trigger не дублирует настройку ежедневного времени/timezone/warnings —
+они остаются в существующей validated policy внутри coordinator. Это поддерживает
+warning offsets не кратные минуте и сохраняет прежние правила DST/даты.
+
+Без явного `OMK_NIGHTLY_SCHEDULE_ENABLED=true` команда возвращает `disabled` без
+создания календарного журнала и без Docker calls. Старый `watch` оставлен как
+deprecated alias **одноразового** запуска, постоянного watcher больше нет.
+Владелец ещё не выбрал рабочее время; 05:00 остаётся default.
+Простой/disabled/busy не печатает полный status в stderr каждую минуту. Unit
+отбрасывает штатный stdout, сохраняет stderr реальных переходов/ошибок в journal;
+ограничения host journal проверяем при развороте VPS.
 
 В приватном `.omk-admin/nightly-schedule/dj2.json` хранится одна ограниченная
 запись: будущее окно, прежний результат и fence уже попытанной даты. Она не
@@ -36,7 +56,7 @@ DST gap пропускается; fold использует только пер�
 второй запуск за тот же защищённый день. Поведение привязано к часам ОС, не к
 независимому источнику времени.
 
-Нормальная ошибка останавливает `watch` с ненулевым результатом. При ошибке
+Нормальная ошибка завершает одноразовый запуск с ненулевым результатом. При ошибке
 preflight без cycle root день считается пропущенным; повторный запуск ждёт
 следующее подходящее окно. При существующем незавершённом root runner оставляет
 `failed` и не повторяет опасный шаг вслепую. Для восстановления используются
@@ -52,7 +72,7 @@ complete/cancel runner сможет назначить следующий ден
 цикла требуют восстановления с прежней frozen policy.
 
 `status --server` только читает календарь. `armed` означает сохранённое будущее
-окно, **не подтверждение работающего watcher** (`scheduler_running_verified=false`).
+окно, **не подтверждение работающего timer/service** (`scheduler_running_verified=false`).
 Смена результата печатается в stderr JSON; polling занятого lock не спамит лог.
 Вывод процесса на host пока не подключён к постоянному хранилищу/мониторингу.
 
@@ -148,8 +168,8 @@ uv run python -m omk admin --config .omk-admin/operator.toml nightly cancel --op
 ```
 
 Первый вызов начинает отсчёт **сейчас**, с первого интервала
-`OMK_NIGHTLY_WARNINGS_SECONDS`; `LOCAL_TIME`/`TIMEZONE` использует `watch`.
-Для календарного запуска применяется `watch`, без cron поверх ручного `run`.
+`OMK_NIGHTLY_WARNINGS_SECONDS`; `LOCAL_TIME`/`TIMEZONE` использует scheduled coordinator.
+Для календарного запуска применяется `run --scheduled`, без cron поверх ручного `run`.
 Номер операции печатается перед отсчётом; `status` ничего не выполняет.
 Отдельных transport-команд для предупреждений учить не нужно: CLI и будущая
 TUI используют общий Python service.
@@ -242,14 +262,14 @@ uv run python -m omk admin --config .omk-admin/operator.toml nightly inspect --s
 | `OMK_NIGHTLY_LOCAL_TIME` | `05:00` | Строго `HH:MM`, 00:00–23:59 |
 | `OMK_NIGHTLY_TIMEZONE` | `Europe/Moscow` | Именованная IANA timezone, например `Europe/Warsaw` или `UTC` |
 | `OMK_NIGHTLY_WARNINGS_SECONDS` | `600,300,60,10` | 1–8 уникальных убывающих значений 1–3600, без пробелов |
-| `OMK_NIGHTLY_SCHEDULE_ENABLED` | `false` | Только `true`/`false`; разрешает `watch`, не устанавливает job |
+| `OMK_NIGHTLY_SCHEDULE_ENABLED` | `false` | Только `true`/`false`; разрешает scheduled activation, не устанавливает job |
 
 05:00 — предлагаемый default, владелец конкретное время ещё не выбирал.
 Часовой пояс задаётся явно и не наследуется от VPS/Windows. При переводе часов
 несуществующее локальное время пропускается, повторяющееся используется только
 в первый раз. Предупреждения считаются в реальных секундах от UTC-момента
 рестарта; JSON содержит UTC и локальное время с offset. Сам `preview` не
-резервирует дату; durable journal создаётся только включённым `watch`.
+резервирует дату; durable journal создаётся только включённым scheduled runner.
 
 `inspect` дополнительно требует приватный `.omk-admin/nightly.toml` (Linux mode
 600), существующие `backups.toml`/`maintenance.toml` и настроенный maintenance
@@ -436,3 +456,13 @@ identity и readonly helper sandbox. [Протокол](validation/nightly-prefl
 
 Это подготовленное решение и критерии следующего шага. Исходные игровые данные,
 FTB config рабочего сервера, VPS и публичный доступ этим этапом не менялись.
+
+## Приёмка одноразового host trigger — 13 ноября 2026
+
+Focused Windows/Linux Docker: 158 условий для monitoring config и существующих
+nightly policy/cycle/schedule/CLI. Future/disabled/busy возвращаются без ожидания
+следующего дня и без повтора уведомлений; early activation, одна дата/один cycle,
+отказ operation+scheduled. Самостоятельный Docker process: disabled завершился 0,
+невалидный enabled — 1; `docker start --attach` вернул те же коды. Это не живая
+systemd-инсталляция и не новый native restart игры: существующая игровая chain
+не переписывалась. Полный production lifecycle/storage budget остаётся #33/#38.

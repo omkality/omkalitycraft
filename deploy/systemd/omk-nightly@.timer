@@ -1,0 +1,16 @@
+# Review and install only on the owner-audited VPS. This file enables nothing.
+[Unit]
+Description=OmkalityCraft nightly activation for %i
+
+[Timer]
+# Business timezone, warning window and date fences remain in the coordinator.
+# A minute trigger also supports non-minute warnings and DST without a second
+# independent daily timezone calculation in this unit.
+OnCalendar=*-*-* *:*:00 UTC
+AccuracySec=1s
+RandomizedDelaySec=0
+Persistent=false
+Unit=omk-nightly@%i.service
+
+[Install]
+WantedBy=timers.target

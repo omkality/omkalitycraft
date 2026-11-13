@@ -122,24 +122,33 @@ def add_parser(actions):
     target = command.add_mutually_exclusive_group(required=True)
     target.add_argument("--server")
     target.add_argument("--operation")
+    command.add_argument(
+        "--scheduled", action="store_true", help="One opt-in host timer activation"
+    )
     target = sub.add_parser("status").add_mutually_exclusive_group(required=True)
     target.add_argument("--operation")
     target.add_argument("--server")
     sub.add_parser("cancel").add_argument("--operation", required=True)
     sub.add_parser(
-        "watch", help="Opt-in calendar service; does not install a host job"
+        "watch",
+        help="Deprecated alias for run --scheduled; finishes after one activation",
     ).add_argument("--server", required=True)
 
 
 def run(config, args):
-    if args.nightly_action == "watch" or (
-        args.nightly_action == "status" and args.server
+    scheduled = args.nightly_action == "run" and getattr(args, "scheduled", False)
+    if scheduled and not args.server:
+        raise AdminError("Scheduled activation requires a server, not an operation")
+    if (
+        scheduled
+        or args.nightly_action == "watch"
+        or (args.nightly_action == "status" and args.server)
     ):
         from omk import nightly_schedule as schedule  # noqa: PLC0415
 
         if args.nightly_action == "status":
             return schedule.status(config, args.server)
-        return schedule.watch(
+        return schedule.run_due(
             config,
             args.server,
             notify=lambda v: print(json.dumps(v), file=sys.stderr, flush=True),

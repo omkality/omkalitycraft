@@ -1,0 +1,19 @@
+# Prerequisite: an owner-created stopped controller container named
+# omk-nightly-<server>, with persistent private operator journals and the command
+# `omk admin --config <private config> nightly run --server <server> --scheduled`.
+# The controller and game execute in Docker. This unit installs no controller.
+[Unit]
+Description=OmkalityCraft one-shot nightly coordinator for %i
+Requires=docker.service
+After=docker.service time-sync.target
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/docker start --attach omk-nightly-%i
+ExecStop=/usr/bin/docker stop --time 30 omk-nightly-%i
+TimeoutStartSec=2h
+TimeoutStopSec=45s
+Restart=no
+StandardOutput=null
+StandardError=journal
+SyslogIdentifier=omk-nightly-%i
