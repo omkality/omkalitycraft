@@ -187,9 +187,14 @@ def export_bundle(
     finally:
         temporary.unlink(missing_ok=True)
     used = 0
-    previous = _files(
-        folder, root, lambda n: bool(re.fullmatch(r"diag-[a-f0-9]{32}\.zip", n))
-    )
+    # A clock correction must not evict the archive we just returned to the owner.
+    previous = [output] + [
+        p
+        for p in _files(
+            folder, root, lambda n: bool(re.fullmatch(r"diag-[a-f0-9]{32}\.zip", n))
+        )
+        if p != output
+    ]
     for index, path in enumerate(previous):
         used += path.stat().st_size
         if index >= limits.keep_files or used > limits.storage_bytes:

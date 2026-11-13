@@ -5,11 +5,13 @@ import json
 import os
 import random
 import zipfile
+from pathlib import Path
 
 import pytest
 
 from omk.diagnostic_export import export_bundle, export_limits
 from omk.diagnostics import MIB
+from omk.profiles import PROJECT_ROOT
 
 
 def contents(result):
@@ -209,3 +211,24 @@ def test_redaction_expansion_stays_inside_file_budget(tmp_path):
 def test_environment_is_read_without_persisting_raw_values(monkeypatch):
     monkeypatch.setenv("OMK_DIAGNOSTIC_KEEP_FILES", "3")
     assert export_limits().keep_files == 3
+
+
+def test_clock_rollback_does_not_evict_just_published_export(tmp_path):
+    first = export_bundle(tmp_path, "dj2", environment={})
+    os.utime(first["archive"], (4102444800, 4102444800))
+    second = export_bundle(
+        tmp_path, "dj2", environment={"OMK_DIAGNOSTIC_KEEP_FILES": "1"}
+    )
+    assert list((tmp_path / "userdata/diagnostics").glob("diag-*.zip")) == [
+        Path(second["archive"])
+    ]
+
+
+def test_environment_example_matches_real_defaults():
+    text = (PROJECT_ROOT / "deploy/diagnostics.example.env").read_text(encoding="utf-8")
+    values = dict(
+        line.split("=", 1)
+        for line in text.splitlines()
+        if line.startswith("OMK_DIAGNOSTIC_")
+    )
+    assert len(values) == 4 and export_limits(values) == export_limits({})
