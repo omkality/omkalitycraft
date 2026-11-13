@@ -19,7 +19,7 @@
 
 ## Что сохраняется
 
-| Данные | Назначение | Ограничение |
+| Данные | Назначение | Ограничение по умолчанию |
 | --- | --- | --- |
 | `userdata/logs/launcher.jsonl` | UTC-время, операция, версия лаунчера/сборки, выбранная RAM, свободная RAM/диск, run ID, exit code; тип и кадры Python-ошибки | 3 файла по 1 МиБ, включая текущий |
 | `userdata/logs/<профиль>-game.log` | Объединённые stdout/stderr Java, разделитель запусков, последние сообщения и стек | 3 файла по 8 МиБ, включая текущий |
@@ -37,6 +37,67 @@
 `latest-N.log.gz`, `debug-N.log.gz` очищаются **только при остановленной игре**:
 до 12 файлов / 32 МиБ. Активные `latest.log`/`debug.log` и файлы других модов эта очистка
 не обрезает. Старый DEBUG по 200 МиБ больше не включён новым профилем.
+
+### Раздельные бюджеты файловых записей
+
+Инвентаризация logging-части #30 на 13 ноября 2026. Эти лимиты принадлежат
+разным файлам/томам и не становятся общей квотой от наличия переменной окружения.
+В общий расчёт входят активные файлы, архивы, служебные SQLite/journal и staging.
+
+| Запись | Где задаётся политика | Default / оставшаяся граница |
+|---|---|---|
+| API Docker stdout | `docker-compose.yml`, `OMK_API_LOG_MIB/FILES` | `10m × 3`, local driver |
+| Drasl Docker stdout | `deploy/auth/service.yaml`, `OMK_AUTH_LOG_SIZE/FILES` | `10m × 3`, local driver |
+| Проверочный game container stdout | `candidate_slot_spec.py`, `OMK_SLOT_DOCKER_LOG_MIB/FILES` | `10m × 3`; frozen в плане, проверяется Inspect |
+| Forge `logs/latest.log` | `launcher/log_policy.py`, `OMK_FORGE_LOG_MIB/FILES` | 8 МиБ + 3 gzip; порог событий, не жёсткий cap одной записи |
+| CT/Groovy отдельные файлы | Собственные Writer модов | Жёсткого online cap пока нет; см. ниже |
+| Portable Python stdout/launcher log | `omk/diagnostics.py`, launcher callers | 3 × 8 МиБ /3 × 1 МиБ, фиксированная клиентская политика |
+| Закрытые diagnostic ZIP | `deploy/diagnostics.example.env` | 5 /64 МиБ; только export, не source logs |
+| Resource-history collector | `deploy/metrics/example.env` | SQLite 64 МиБ + полный rollback journal/reserve; Docker stdout `1m × 2` |
+| Завершённые operator journals | `deploy/nightly.example.env` | Opt-in archive, 256 МиБ /10000 файлов; pending recovery references не удаляются |
+
+`OMK_STORAGE_LOGS_GIB=4` — плановая часть общего бюджета, **не** quota или
+универсальный cleanup. Управляемые копии, CT/Groovy writers и оставшийся общий
+storage/config audit сохраняются в #30/#33. Два независимых планировщика копий
+не включаются ради выполнения этой таблицы.
+
+### Настройки Forge Log4j
+
+Пример: `deploy/forge-logging.example.env`. Генератор XML читает **окружение
+своего процесса**; `.env` автоматически не открывается. Клиент и Linux game labs
+используют один adapter `prepare_logging` для Forge 1.12.2. Другие версии
+сохраняют logging profile своей сборки.
+
+| Переменная | Default | Диапазон |
+|---|---:|---|
+| `OMK_FORGE_LOG_MIB` | 8 | 1–64 МиБ на текущий файл до rollover |
+| `OMK_FORGE_LOG_FILES` | 3 | 1–10 сжатых архивов плюс текущий файл |
+
+Невалидное значение отклоняется до изменения XML, без echo ввода. При defaults
+XML прежний побайтно с LF; INFO/WARN/ERROR, стеки, UTF-8, пути и NETWORK_PACKETS
+filter сохраняются. Настройка применяется при **генерации перед стартом/staging**,
+не вызывает live reload. Уже sealed runtime/candidate имеет свой hash XML:
+переменная не переписывает его задним числом; изменить конфигурацию нужно до
+подготовки нового плана. Эти настройки не меняют integrity pins/JAR.
+
+Размер проверяется по событиям: отдельное большое сообщение может превысить
+порог, следующий event запускает rollover. Это проверено на Log4j 2.25.5/Java 8;
+механизм описан в [документации Apache](https://logging.apache.org/log4j/2.x/manual/appenders/rolling-file.html#SizeBasedTriggeringPolicy).
+
+### Остаток для CraftTweaker и GroovyScript
+
+У CT 4.1.20.711 и GroovyScript 1.4.3 отдельные writers, не appender нашего XML.
+На настоящем `FileLogger` из закреплённого CT JAR в Linux Java 8 проверены два
+негативных контроля: после rename запись остаётся в старом inode; после внешнего
+truncate writer продолжает с прежнего смещения. Простая внешняя ротация/обрезка
+не объявляется решением. Это FileLogger probe, не новый запуск Forge.
+
+Для Groovy здесь проверены исходники **точной v1.4.3**: собственный PrintWriter и
+новый файл при setup/clean; native Groovy/game test этим не подменяется.
+Источники: [CraftTweaker](https://github.com/CraftTweaker/CraftTweaker/blob/69c7b5082c41dab549fabcfd54d152666961889d/CraftTweaker2-MC1120-Main/src/main/java/crafttweaker/mc1120/logger/MCLogger.java),
+[GroovyScript 1.4.3](https://github.com/CleanroomMC/GroovyScript/blob/6a3340814ce9527d23c2b88cdfd340b4f146b4c4/src/main/java/com/cleanroommc/groovyscript/sandbox/GroovyLogImpl.java).
+Отдельный version-pinned writer adapter с проверкой startup/reload/ENOSPC и
+сохранности рецептов остаётся открытым #30; изменений Java-модов в этом шаге нет.
 
 Перед новым запуском текущий stdout-журнал ротируется, чтобы в отчёт не попал стек
 предыдущей сессии. Новые crash-файлы определяются относительно снимка до запуска,

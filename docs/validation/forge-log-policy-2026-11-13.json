@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "scope": "Validated Forge XML and frozen candidate Docker log limits; legacy policy compatibility",
+  "source_sha256": {
+    "launcher/log_policy.py": "8d03609381cad1184885f48cf3333c5ff87b8ed0a6e861ea21ea6008944c446d",
+    "omk/candidate_slot_spec.py": "778500c771c844d1e011cc8c463e3daecf8933f2241bc7d9878c9414535c6413",
+    "omk/candidate_slots.py": "1ccf9081da7228132c845a979b3f9804fe1d4576efe25b98bb4387bf25d84c1b",
+    "tests/unit/test_forge_log_policy.py": "aa0e717d6042d7e53117ba6a0ac736b5205dacac35358962730c7eb280f09f4f",
+    "tests/unit/test_candidate_slot_spec.py": "fc11c13d8459186b0b23be4d2f3f425f27ab6a0a4e7eadb092ff6e91a286e6c3",
+    "tests/unit/test_candidate_slots.py": "4f62022d8526e201534403695440a693e2bbe068729d2f4fc33bf508b0bc1b23",
+    "deploy/forge-logging.example.env": "5cc48a7a930e8f5d52e9a944ddcac750d02c4be72b422aa3a97eb0080ee29bcb",
+    "deploy/candidate-slots.example.env": "7af7578efe143cccbf498b9c750fc7a0da49b475353fb752f45f5de6961e861f"
+  },
+  "redgreen": "Two original hardcoded policy controls fail; both pass after the change",
+  "defaults": "Forge XML byte-compatible with the previous Git source (UTF-8/LF); 8 MiB /3 gzip and Docker 10m /3 unchanged",
+  "linux_units": {
+    "cases": 120,
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "exit_code": 0,
+    "oom": false,
+    "owned_scope_removed": true
+  },
+  "windows_focused": {
+    "passed": 119,
+    "skipped": 1,
+    "skip_reason": "Linux symlink acceptance"
+  },
+  "native_java": {
+    "exit_code": 0,
+    "oom": false,
+    "image": "sha256:ce39e37eeda380145c3d0e2d5fd0d3cbad7e0ee9c215a4116516374e9887e36f",
+    "inputs_unchanged": true,
+    "owned_scope_removed": true,
+    "inputs_sha256": {
+      "crafttweaker.jar": "dc11a0cb527019385a732907a8057ecd673cdf6bf56d4b5358693e3c2e572a82",
+      "ecj.jar": "ac0ba5876eaf7ebb47749a0d1be179c51f194b9dd0b875d1c09e1b530f5a2db5",
+      "log4j-api.jar": "64777f73ea0b3104c04eb82befbdccc30a425a19e83ad06cb2f93aa303511863",
+      "log4j-core.jar": "050c4f85deb48b055e9c041ac39043fbb79ce477841a11a1eb2969c86c6a0072"
+    },
+    "checks": {
+      "checks": [
+        "Java 8 runtime",
+        "actual CT writer follows old inode after rename",
+        "actual CT writer retains offset after truncate",
+        "actual CT writer has no 1 MiB cap",
+        "last game log message retained",
+        "exception and stack retained",
+        "network marker filter retained",
+        "two configured rolling archives",
+        "file threshold with one-event allowance",
+        "Java 8 runtime",
+        "logging resumes after new JVM",
+        "archive count retained across restart",
+        "Java 8 runtime",
+        "size trigger is not a hard single-event cap",
+        "next event rolls oversized file",
+        "all retained gzip archives readable"
+      ],
+      "count": 16,
+      "unique_count": 14
+    }
+  },
+  "native_candidate_creation": {
+    "checks": [
+      "compiler scope without OOM",
+      "override actual container passes full snapshot checks",
+      "override actual Docker LogConfig",
+      "override mismatched recorded log policy is refused",
+      "native Java fixture exits normally",
+      "completed Java fixture passes snapshot checks",
+      "candidate fixture without OOM",
+      "last stdout marker retained after high output",
+      "new plan freezes explicit logging settings",
+      "legacy actual container passes full snapshot checks",
+      "legacy actual Docker LogConfig",
+      "legacy mismatched recorded log policy is refused",
+      "legacy journal remains unmodified",
+      "owned helper before removal",
+      "owned data volume before removal",
+      "owned bridge before removal"
+    ],
+    "count": 16,
+    "runtime": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "compiler_image": "sha256:ce39e37eeda380145c3d0e2d5fd0d3cbad7e0ee9c215a4116516374e9887e36f",
+    "owned_scope_removed": true,
+    "scope": "real creation/snapshot/Docker log config with a Java fixture; command/metadata mocked; no Minecraft world or Drasl"
+  },
+  "limits": [
+    "Native Java fixtures, not a full Forge game/resource reset run",
+    "Candidate command and metadata are controlled fixtures; creation/snapshot/Docker state are real",
+    "GroovyScript 1.4.3 inspected by pinned upstream source; not native Groovy acceptance",
+    "Active CT/Groovy file bounds remain open; external rename/truncate rejected",
+    "No owned JAR/player release/world/VPS/host schedule changes",
+    "Global storage budget and remaining configuration audit remain open in #30/#33"
+  ]
+}
