@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-13",
+  "scope": "Launcher skin reset, password dialog layout and typed Drasl client-error responses",
+  "version": "0.3.0.dev12",
+  "local_tests": {
+    "windows_unit_ui_passed": 2151,
+    "skipped": 95,
+    "warnings": 3,
+    "qt_backend": "offscreen",
+    "new_unit_ui_cases": 7,
+    "ruff": "passed",
+    "black": "passed"
+  },
+  "docker": {
+    "upstream_drasl": "4.0.0",
+    "variant": "4.0.0-omk.3",
+    "runtime_image_id": "sha256:d699ca17d09e91b0b8d3eaade73b3f8d3d917c1cc6afb6e99f90b74ebe80afb2",
+    "source_commit": "0fe488c087bbe792485e9c5dae751c6e5fbdc380",
+    "source_tar_sha256": "cc6196dbd538e6e17d3d22d180697673b607f585603f4ee72cebeb4dff615493",
+    "go_client_error_controls": 9,
+    "existing_auth_smoke_checks": 21,
+    "fresh_persistent_account_workflow_checks": 18,
+    "owned_acceptance_containers_and_volumes_removed": true
+  },
+  "accepted_behaviors": [
+    "cancel_or_escape_without_skin_request",
+    "reset_uses_current_game_token_and_bundled_slim_white_shirt",
+    "preview_changes_only_after_success",
+    "network_and_rate_limit_failure_keep_preview",
+    "concurrent_clicks_do_not_duplicate_request",
+    "other_account_skin_and_session_preserved",
+    "default_skin_and_remembered_login_survive_drasl_restart",
+    "password_change_reauthenticates_and_revokes_old_credentials",
+    "password_labels_center_after_layout_parenting",
+    "password_notice_has_no_line_break",
+    "password_buttons_fill_row_with_equal_width",
+    "password_save_validation_preserved",
+    "explicit_user_error_4xx_retained_without_internal_details",
+    "invalid_png_returns_400_without_texture_change"
+  ],
+  "default_asset_sha256": "481c10cd3617e0134664c115fa728b5aee682b7e2f1c15d66f72c63c005a0312",
+  "packaged_windows": {
+    "startup_smoke": true,
+    "remembered_login_to_real_drasl": true,
+    "game_session_only": true,
+    "review_archive_excludes_userdata": true,
+    "local_build": "0.3.0.dev12+account.controls.20261113"
+  },
+  "visual": {
+    "qt_png_states_reviewed": [
+      "dashboard",
+      "password",
+      "reset-confirm",
+      "minimum"
+    ],
+    "windows_desktop_capture": "FrameArrived timed out; retry after activation also timed out",
+    "external_ui_clicks_performed": false
+  },
+  "initial_failures_preserved": [
+    "layout label measured before stylesheet parenting (26 vs 48 px)",
+    "old Drasl typed client denial mapped to HTTP 500",
+    "Docker context allowlist initially omitted new patch/test"
+  ],
+  "limits": [
+    "No Minecraft or graphical Linux/macOS game acceptance in this scope",
+    "Local portable preview is not a public launcher release",
+    "VPS, game manifests/CDN and owned mod JARs unchanged",
+    "Local preview authentication remains on loopback for owner review"
+  ],
+  "source_sha256": {
+    "launcher/accounts.py": "f75a28ac518aed20a2fd020500d1c885c22500d130861f6cc2366aae58daa060",
+    "launcher/app.py": "e3f83d365a8cf1a0108da3b199ac39d42f2f3d97c2d7500350a040cd1fd38110",
+    "launcher/dashboard.py": "886d31e9638923afc839db13d096979a2b88358c7f4c3219c760121851ddc68e",
+    "launcher/skin_dialog.py": "557e5b83b7e3fa485645a0e6c47b0b6f667b40068600c9eb8995008e303f25de",
+    "omk/lab.py": "f67a69a8ebc45b21c2b6ae32f35ecd894c57347d1075735cbcdd91526d997bc4",
+    "omk/auth_storage_lab.py": "0746a5c8dce755ea735b2b5f9ded7e8cff7bd509d5c45b64cc5d2b4b117238eb",
+    "deploy/auth/service.yaml": "e42016975fe85b55fb53dfb606df46adaa5b2fc20b21c0e2f8c7ff91e60a433b",
+    "deploy/drasl/Dockerfile": "268a8c3fc942a7bf0992098ec34f9e3910b8d5ab7c6d160ee4255e935477a0c5",
+    "deploy/drasl/.dockerignore": "c589d4371552afe986d5bfe28161907dd3c5795dba99453e2f8b0898f6e0f309",
+    "deploy/drasl/texture-errors.patch": "7c49f75dd819166b4ac66794fa807cb81d1da7df3f8b0e8edee7355cf92513bc",
+    "deploy/drasl/texture_errors_test.go": "9bbfc4b8a3c618e0e07afc309e11cbf9ea5c5e0ed0d84e2aecfd11336f1bd5b8"
+  }
+}
