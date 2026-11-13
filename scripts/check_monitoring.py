@@ -50,6 +50,7 @@ def mock_game(network, project, source):
         'HTTPServer(("0.0.0.0",19565), Handler).serve_forever()\n',
         encoding="utf-8",
     )
+    fixture.chmod(0o644)
     name = project + "-fake-game"
     execute(
         [
@@ -227,10 +228,16 @@ def main():
     config = json.loads((ROOT / "deploy/metrics/config.example.json").read_bytes())
     with tempfile.TemporaryDirectory(prefix="omk-monitoring-check-") as directory:
         folder = Path(directory)
+        # This contains only synthetic configuration, shared with unprivileged
+        # container users. POSIX TemporaryDirectory otherwise uses mode 0700.
+        folder.chmod(0o755)
         for name, value in render(config, {}).items():
-            (folder / name).write_text(value, encoding="utf-8", newline="\n")
+            target = folder / name
+            target.write_text(value, encoding="utf-8", newline="\n")
+            target.chmod(0o644)
         source = folder / "source.json"
         source.write_text(json.dumps(config), encoding="utf-8")
+        source.chmod(0o644)
         compose = json.loads(
             execute(
                 [

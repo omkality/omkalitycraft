@@ -35,7 +35,7 @@
     "deploy/metrics/Dockerfile.configure": "64701c0eecb74d8d30217accbc5d206e4f535ec1cfd0ea803e43fe8913cfb126",
     "deploy/metrics/artifacts.json": "606c994ad7244d09fa57b168d9d78dbcb26462cdb25d627fff79329c300a10e1",
     "tests/fixtures/monitoring-rules.json": "8257dcdf9a08f4e248e367c96401a73492f96763c8740b4efd27bad9d7c1960f",
-    "scripts/check_monitoring.py": "1918b2efae08662784e936b506dbc01ba5f5cec7e6f06938b64fa62b4bbf1031"
+    "scripts/check_monitoring.py": "6bd275341f3bbc46548f74f555d3f742615a6b2c69cd2aec7bcdbdc1a310b24d"
   },
   "native": {
     "pack": "DJ2 2.23.4",
@@ -152,5 +152,12 @@
     "skipped": 99,
     "warnings": 3,
     "warning_scope": "Intentional duplicate archive fixtures"
+  },
+  "linux_posix_fixture_permissions": {
+    "linux_posix_volume": true,
+    "mode_0700_rejected": true,
+    "mode_0755_passed": true,
+    "image_uid": 65534,
+    "production_permissions_changed": false
   }
 }
