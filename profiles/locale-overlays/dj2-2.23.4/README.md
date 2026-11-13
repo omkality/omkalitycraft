@@ -48,4 +48,21 @@ placeholders. Помощник правки сам не знает актуал�
 Новых CLI, GUI, live installer или автоматического переключения manifest нет.
 `game_tested=false` и `ready_for_players=false` сохраняются до приёмки клиента.
 
+Отдельный `upstream-reuse.json` закрепляет **265 готовых значений** Integrated
+Dynamics/Tunnels, включая 49 записей книги. Это не собственные новые переводы и не
+изменение schema-2 `owned-ru.json`: прежние 191 записи сохранены. В reuse-плане нет
+полных сторонних текстов; есть approved keys, EN/RU value hashes, artifact hashes,
+источники, attribution и исключённые группы. Современный JSON-источник не заменяет
+mod JAR и не доказывает совместимость модов разных версий.
+
+`reuse_reviewed_lang_values` принимает только нормализованные `.lang` bytes и два
+обязательных одинаковых набора пинов. Заполняет только отсутствующие keys, требует
+одинакового EN в source/target и точного RU, затем проверяет target placeholders.
+Источник JSON и его исходный SHA проверяет вызывающая сторона; неоднозначные keys
+исключаются до нормализации. Helper не делает file/network IO или установку в игру.
+[`notices/Cyclops-MIT.txt`](notices/Cyclops-MIT.txt) должен попасть в assembled payload
+как `licenses/Cyclops-locales-MIT.txt`.
+
+[Источники, отбор, ограничения и Linux-проверка](../../../docs/DJ2_TRANSLATION_REUSE.md).
+
 [Состояние и следующие шаги](../../../docs/DJ2_TRANSLATION_COMPLETION.md).
