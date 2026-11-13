@@ -452,3 +452,94 @@ def hourly_report(database, *, since, until, max_rows=1000, max_bytes=2 * MIB):
                 for row in rows[:max_rows]
             ],
         }
+
+
+def _gauge(row, name, maximum):
+    value = row["metrics"].get(name)
+    if not isinstance(value, dict):
+        return None
+    count = value.get("count")
+    lo, hi = value.get("min"), value.get("max")
+    if (
+        type(count) is not int
+        or not 1 <= count <= row["samples"]
+        or any(
+            type(v) not in (int, float)
+            or not math.isfinite(v)
+            or not 0 <= v <= maximum
+            or int(v) != v
+            for v in (lo, hi)
+        )
+        or lo > hi
+    ):
+        return None
+    return value
+
+
+def _presence(row, game):
+    prefix = "game." + game
+    online = _gauge(row, prefix + ".online", 10000)
+    running = _gauge(row, prefix + ".running", 1)
+    if running is None:
+        return "unknown", None
+    if (
+        online is not None
+        and online["count"] <= running["count"]
+        and running["max"] == 1
+    ):
+        if online["max"] > 0:
+            return "players_observed", online
+        if (
+            online["count"] == running["count"] == row["samples"]
+            and running["min"] == 1
+        ):
+            return "no_players_observed", online
+    if (
+        online is None
+        and prefix + ".online" not in row["metrics"]
+        and running["max"] == 0
+        and running["count"] == row["samples"]
+    ):
+        return "stopped_only", None
+    return "unknown", None
+
+
+def hours_with_players_report(
+    database, *, game, since, until, max_rows=1000, max_bytes=2 * MIB
+):
+    """Select whole-hour host/config groups, never infer active-only CPU or duration.
+
+    Limits apply to scanned groups before filtering, so an empty truncated result
+    says nothing about the unscanned range. No schema, collection or storage changes.
+    """
+    if not isinstance(game, str) or not re.fullmatch(r"[a-z][a-z0-9_-]{0,47}", game):
+        raise ValueError("Invalid resource report game label")
+    report = hourly_report(
+        database, since=since, until=until, max_rows=max_rows, max_bytes=max_bytes
+    )
+    counts = dict.fromkeys(
+        ("players_observed", "no_players_observed", "stopped_only", "unknown"), 0
+    )
+    selected = []
+    for row in report["hours"]:
+        state, online = _presence(row, game)
+        counts[state] += 1
+        if state == "players_observed":
+            selected.append(
+                {
+                    **row,
+                    "player_observation": {
+                        "online_readings": online["count"],
+                        "missing_online_readings": row["samples"] - online["count"],
+                        "peak_online": online["max"],
+                    },
+                }
+            )
+    return {
+        **report,
+        "selection": "whole_hour_groups_with_observed_players",
+        "game": game,
+        "scanned_hour_groups": len(report["hours"]),
+        "selection_counts": counts,
+        "hours": selected,
+    }
