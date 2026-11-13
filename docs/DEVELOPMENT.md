@@ -1,5 +1,29 @@
 # Разработка OmkalityCraft
 
+## Готовые локали Integrated Dynamics / Tunnels — 13 ноября 2026
+
+#49/P1: 265 missing keys (155/110), включая 49 записей Tunnels book. Источники —
+два pinned upstream PR для 1.21.1; перенос только выбранных key с тем же EN, без
+новых JAR/code/features. 198 ID book entries отдельно; два mod names сохранены,
+один спорный energy/exporter абзац не перенесён. Ещё 21 changed-EN/9 markup кандидатов
+не прошли отбор. Дубликаты JSON (_comment/один range key) исключены, parser не ослаблен.
+
+Reuse manifest содержит hash/keys, полные чужие локали приватны. MIT notice и
+атрибуция Cyclops/BazZziliuS сохранены; это не закрывает provenance всех остальных
+локалей. Новый bytes-only helper требует обоих EN/RU пинов, только missing keys,
+затем target EN/placeholder contract; никаких новых owner CLI/GUI/API.
+
+Red 19 failures/43 прежних passes; green 69 Windows unit/CLI, Ruff/Black. Linux
+Docker 11 data checks +62 unit, 8 negative data controls, readonly non-root volume,
+no network/socket, 1 CPU/256 МиБ, exit 0/OOM=false. Replay и две композиции совпали;
+34 output files (31 прежний +2 lang +notice), все прежние bytes/191 owned entries
+сохранены, JAR/seed прежние, свои scopes удалены. Первая композиция отказала на
+duplicate JSON keys; нормализация явно исключает их, без first/last-wins выбора.
+
+Слой не установлен в игру. Полная русификация, оставшиеся книги, runtime I18n/шрифт/
+обычная игра и #163 открыты; player release/manifest/VPS прежние. Computer-use выключен.
+[Контракт](DJ2_TRANSLATION_REUSE.md), [протокол](validation/dj2-reviewed-locale-reuse-2026-11-13.json).
+
 ## Вторая порция RU и проверка смысла — 13 ноября 2026
 
 #49/P1: 97 changed-EN/unchanged-RU кандидатов разобраны; 67 переводов сохранены,

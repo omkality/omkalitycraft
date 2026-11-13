@@ -113,6 +113,14 @@ AgriCraft/Ender IO; **это не доказательство исправле�
 
 ## Что проверено и что осталось
 
+Третья порция — **265 готовых значений** Integrated Dynamics/Tunnels, выбранных по
+точному key/EN и закреплённому RU. Это 155+110 missing keys, включая 49 записей
+книги Tunnels. Прежние 191 собственная запись и все 31 файла сохранены; новый
+приватный слой — 34 файла с двумя locale и MIT notice. Полные сторонние payload
+не добавлены в Git. Источники 1.21.1 используются только для выбранных текстов;
+код/возможности этой версии в нашу Forge 1.12.2 не переносятся.
+[Отбор, attribution, guards и остаток](DJ2_TRANSLATION_REUSE.md).
+
 [Протокол](validation/dj2-russian-completion-2026-11-13.json) закрепляет входы,
 собственный source, хеши 28 выходных файлов и границы приёмки. Fresh Linux Docker
 volume с case-sensitive путями, readonly mounts, без сети/socket: 7 data checks,
