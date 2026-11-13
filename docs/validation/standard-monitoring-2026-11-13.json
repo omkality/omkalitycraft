@@ -1,0 +1,163 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "scope": "Standard monitoring adoption, not player launch approval",
+  "runtime_pins": {
+    "schema": 1,
+    "images": {
+      "prometheus": {
+        "version": "3.16.0",
+        "image": "prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06",
+        "source": "https://github.com/prometheus/prometheus/tree/v3.16.0"
+      },
+      "telegraf": {
+        "version": "1.40.3",
+        "image": "telegraf:1.40.3-alpine@sha256:10fe8c974752c8088858f012cb47b71f5bb67c5695829be56d87dfbf8e0092b8",
+        "source": "https://github.com/influxdata/telegraf/tree/v1.40.3"
+      }
+    },
+    "game_exporter": {
+      "minecraft": "1.12.2",
+      "loader": "Forge",
+      "version": "1.0.0",
+      "server_only": true,
+      "filename": "Prometheus-Exporter-1.12.2-forge-1.0.0.jar",
+      "bytes": 151106,
+      "sha256": "0c9497c18024b47ca68d65ea505f0bf30ac60cad831adcb2cd9695af111b1626",
+      "url": "https://github.com/cpburnz/minecraft-prometheus-exporter/releases/download/1.12.2-forge-1.0.0/Prometheus-Exporter-1.12.2-forge-1.0.0.jar",
+      "source": "https://github.com/cpburnz/minecraft-prometheus-exporter/tree/fbad8df80739be2e4593bf24a3d99cde00bd31ea"
+    }
+  },
+  "source_sha256_utf8_lf": {
+    "omk/monitoring_config.py": "78781f39eec3d8d6f9f48134aba04cc7c543c7d3b7a79092f0b2a09e62998159",
+    "deploy/metrics/compose.yaml": "fc2ec97d71918b28eb8e48d8488465ac9dd606e160d584dd1068c8bf36bfb79e",
+    "deploy/metrics/Dockerfile.agent": "29ea7a9c273f6d52c70905349ca80de3d6fec0292298bad2a22dd952c3483257",
+    "deploy/metrics/Dockerfile.configure": "64701c0eecb74d8d30217accbc5d206e4f535ec1cfd0ea803e43fe8913cfb126",
+    "deploy/metrics/artifacts.json": "606c994ad7244d09fa57b168d9d78dbcb26462cdb25d627fff79329c300a10e1",
+    "tests/fixtures/monitoring-rules.json": "8257dcdf9a08f4e248e367c96401a73492f96763c8740b4efd27bad9d7c1960f",
+    "scripts/check_monitoring.py": "6bd275341f3bbc46548f74f555d3f742615a6b2c69cd2aec7bcdbdc1a310b24d"
+  },
+  "native": {
+    "pack": "DJ2 2.23.4",
+    "core": "0.3.8",
+    "core_sha256": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "checks": [
+      "missing_game_before_start_is_not_idle",
+      "full_dj2_ready_without_forge_crash",
+      "native_empty_server_tick_heap_gc_collected",
+      "real_jvm_heap_matches_independent_same_runtime_control",
+      "real_gc_mxbeans_available",
+      "online_two_authenticated_nonop_players",
+      "ordinary_resource_command_on_standard_monitoring",
+      "exporter_dimensions_match_actual_loaded_world_ids_after_profile_alias",
+      "ready_rule_counts_two_players",
+      "ready_agent_exports_cpu_counters",
+      "ready_agent_exports_project_disk_capacity",
+      "ready_agent_exports_host_memory",
+      "controlled_child_oom_exit137",
+      "ready_agent_observes_parent_oom_without_kernel_log_or_socket",
+      "ordinary_forge_tps_command_still_works",
+      "paused_game_is_stale_not_zero",
+      "observed_tps_records_real_pause_same_boot",
+      "game_recovers_after_pause",
+      "player_disconnect_observed",
+      "first_clean_game_stop",
+      "terminal_sample_is_stopped_not_active",
+      "first_game_no_oom",
+      "new_game_boot_preserves_history",
+      "authenticated_rejoin_after_core_restart",
+      "second_clean_game_stop",
+      "independent_saved_inventory_and_xp_preserved",
+      "sqlite_integrity_after_game_lifecycle"
+    ],
+    "game_starts": 2,
+    "protocol_actors": 2,
+    "graphical_client": false,
+    "actual_loaded_dimensions": [
+      -18000,
+      -9999,
+      0,
+      2
+    ],
+    "type_aliases": {
+      "-11": 2
+    },
+    "configured_agent_memory_limit_mib": 128,
+    "configured_prom_memory_limit_mib": 256,
+    "observed_agent_rss_mib": 83.72,
+    "observed_prom_rss_mib": 35.31,
+    "observed_legacy_collector_rss_mib": 19.57,
+    "rss_is_single_short_sample": true,
+    "prometheus_sigkill_preserved_history": true,
+    "prometheus_short_run_allocated_bytes": 385024,
+    "game_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "private_game_auth_metric_volumes_removed": true,
+    "normal_game_inventory_and_xp_preserved": true,
+    "configuration_scope": "Earlier native comparison; final network/probe/relabel changes checked separately by the final Docker smoke, not another full game boot."
+  },
+  "cgroup_ready_agent": {
+    "telegraf": "1.40.3",
+    "privileged": false,
+    "docker_socket": false,
+    "kernel_log_access": false,
+    "child_memory_limit_mib": 64,
+    "oom_child_exit": 137,
+    "kernel_oom_kill_after": 1,
+    "telegraf_oom_kill_before": 0,
+    "telegraf_oom_kill_after": 1,
+    "stop_restart_parent_metrics_observed": true,
+    "owned_removed": true
+  },
+  "rejected_variant": {
+    "cadvisor_image": "ghcr.io/google/cadvisor:0.60.6@sha256:b8e7d1093144fd088f425ff003d75a4aa405de075db78dae3bc563730b1bd07a",
+    "actual_oom_kill": 1,
+    "reported_oom_events": 0,
+    "readonly_kernel_log_and_syslog_repeat_also_zero": true,
+    "environment": "Linux Docker on WSL2 cgroup v2",
+    "not_a_claim_about_all_hosts": true
+  },
+  "limits": [
+    "Four actual loaded dimensions compared natively; shared dynamic types retain type-level metrics only. Final duplicate-label/drop behavior tested with synthetic HTTP exporter, not every game dimension.",
+    "Main native run used the Core producer/legacy collector as independent comparison, not a permanent second collector.",
+    "Final loopback/internal-network and source-restart handling is covered separately by scripts.check_monitoring.",
+    "No long-term active-player VPS capacity claim, no host deployment or player manifest change.",
+    "Initial native comparison used a lab-root statfs bind. Final deployment replaces it with an empty Docker filesystem probe; final Docker smoke validates that deployment."
+  ],
+  "ready_for_players": false,
+  "final_docker_smoke": {
+    "command": "python -m scripts.check_monitoring",
+    "passed": true,
+    "real_minecraft": false,
+    "synthetic_http_exporter": true,
+    "duplicate_optional_chunk_labels_dropped": true,
+    "unknown_dimension_type_not_mislabeled_as_world": true,
+    "explicit_spatial_type_alias_preserved": true,
+    "loopback_on_internal_game_network": true,
+    "empty_filesystem_probe": true,
+    "history_survives_restart": true,
+    "unreachable_source_is_unknown": true,
+    "source_recovery": true,
+    "owned_test_containers_and_volumes_removed": true
+  },
+  "focused_linux_docker_cases": 158,
+  "windows_unit_ui": {
+    "passed": 2266,
+    "skipped": 99,
+    "warnings": 3,
+    "warning_scope": "Intentional duplicate archive fixtures"
+  },
+  "linux_posix_fixture_permissions": {
+    "linux_posix_volume": true,
+    "mode_0700_rejected": true,
+    "mode_0755_passed": true,
+    "image_uid": 65534,
+    "production_permissions_changed": false
+  }
+}

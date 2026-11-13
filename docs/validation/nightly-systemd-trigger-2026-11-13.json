@@ -1,0 +1,32 @@
+{
+  "host_timer_installed": false,
+  "real_game_run": false,
+  "runs": [
+    {
+      "case": "disabled",
+      "cli_exit": 0,
+      "process_exit": 0,
+      "seconds": 1.8775881999899866,
+      "oom": false
+    },
+    {
+      "case": "invalid",
+      "cli_exit": 1,
+      "process_exit": 1,
+      "seconds": 1.330995399999665,
+      "oom": false
+    }
+  ],
+  "owned_containers_removed": true,
+  "schema": 1,
+  "date": "2026-11-13",
+  "source_sha256_utf8_lf": {
+    "omk/nightly_schedule.py": "5356795c574c37db5c402cd49c013968d5aeefae0e22088a6abd1b9f2e3c3feb",
+    "omk/admin_nightly.py": "28e828d6c1b17b3fd07342f263a074124f9fb3f2dd41933da004b0325c870220",
+    "deploy/systemd/omk-nightly@.service": "b6c01f633c865a38db08f0bea2c106cf1a5e043643b149cb78ef29d69b890114",
+    "deploy/systemd/omk-nightly@.timer": "7fc74e84bdbbae9912b2ec952629a71f1c3cb45067cc5a2180c7b99b3c9f0ee7"
+  },
+  "focused_windows_and_linux_docker_cases": 158,
+  "timer_systemd_integration_on_vps": false,
+  "scope": "One-shot calendar activation and real Docker attach exit propagation; no new native full backup cycle."
+}

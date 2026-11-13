@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "images": {
+    "prometheus": {
+      "version": "3.16.0",
+      "image": "prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06",
+      "source": "https://github.com/prometheus/prometheus/tree/v3.16.0"
+    },
+    "telegraf": {
+      "version": "1.40.3",
+      "image": "telegraf:1.40.3-alpine@sha256:10fe8c974752c8088858f012cb47b71f5bb67c5695829be56d87dfbf8e0092b8",
+      "source": "https://github.com/influxdata/telegraf/tree/v1.40.3"
+    }
+  },
+  "game_exporter": {
+    "minecraft": "1.12.2",
+    "loader": "Forge",
+    "version": "1.0.0",
+    "server_only": true,
+    "filename": "Prometheus-Exporter-1.12.2-forge-1.0.0.jar",
+    "bytes": 151106,
+    "sha256": "0c9497c18024b47ca68d65ea505f0bf30ac60cad831adcb2cd9695af111b1626",
+    "url": "https://github.com/cpburnz/minecraft-prometheus-exporter/releases/download/1.12.2-forge-1.0.0/Prometheus-Exporter-1.12.2-forge-1.0.0.jar",
+    "source": "https://github.com/cpburnz/minecraft-prometheus-exporter/tree/fbad8df80739be2e4593bf24a3d99cde00bd31ea"
+  }
+}

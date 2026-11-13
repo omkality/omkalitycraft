@@ -15,10 +15,10 @@ GTNH пока планируется; публичного сервиса и ф�
 код, контракты, подтверждённые проверки и ещё открытые блокеры. Канонический трекер —
 [#41](https://github.com/omkality/omkalitycraft/issues/41).
 
-**[История ресурсов Linux-сервера](docs/RESOURCE_HISTORY.md)** — приватный Docker
-collector, bounded SQLite и часовые отчёты для владельца. Есть host/cgroup и
-[игровой producer Core](docs/GAME_RESOURCE_HISTORY.md): TPS/MSPT/online/heap/GC,
-измерения и явные stale/restart. Корреляция с обслуживанием остаётся в #146.
+**[История ресурсов Linux-сервера](docs/RESOURCE_HISTORY.md)** — приватные Prometheus
+и Telegraf в Docker, игровой exporter cpburnz для DJ2. Собственный sampler/SQLite
+store удалён после сравнения; текущие запросы учитывают доступность источника.
+Корреляция с обслуживанием и реальная нагрузка VPS остаются в #146.
 
 **[Команды, ограничения, таймеры и роли серверов](docs/commands/README.md)** — практический
 справочник DJ2, полный реестр 438 серверных команд/подкоманд и отдельная предварительная справка GTNH.

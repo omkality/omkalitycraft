@@ -388,7 +388,7 @@ def test_cli_disabled_watch_and_readonly_calendar_status(flow, capsys):
     assert schedule.journal(flow.cfg, "dj2").read_bytes() == before
 
 
-def test_calendar_watch_uses_same_internal_services_and_stops_when_disabled(flow):
+def test_calendar_activation_finishes_after_exactly_one_cycle(flow):
     record = arm(flow)
     due(flow, record)
     notices = []
@@ -399,7 +399,7 @@ def test_calendar_watch_uses_same_internal_services_and_stops_when_disabled(flow
             flow.env["OMK_NIGHTLY_SCHEDULE_ENABLED"] = "false"
 
     result = schedule.watch(flow.cfg, "dj2", flow.env, notify=notify)
-    assert result["phase"] == "disabled" and "complete" in notices
+    assert result["phase"] == "complete" and notices[-1] == "complete"
     assert counts(flow) == dict.fromkeys(counts(flow), 1)
 
 
@@ -508,12 +508,52 @@ def test_policy_change_after_completion_keeps_the_previous_date_fence(flow):
 
 
 def test_watch_does_not_spam_logs_while_another_owner_holds_lock(flow, monkeypatch):
-    states = iter(
-        [{"ok": True, "phase": p} for p in ("armed", "busy", "armed", "disabled")]
-    )
-    monkeypatch.setattr(schedule, "tick", lambda *a: (next(states), 1))
+    monkeypatch.setattr(schedule, "tick", lambda *a: ({"ok": True, "phase": "busy"}, 1))
     notices = []
-    schedule.watch(
+    result = schedule.run_due(
         flow.cfg, "dj2", flow.env, notify=lambda v: notices.append(v["phase"])
     )
-    assert notices == ["armed", "disabled"]
+    assert notices == [] and result["phase"] == "busy"
+
+
+def test_minute_trigger_does_not_wait_for_a_future_daily_window(flow, monkeypatch):
+    monkeypatch.setattr(
+        cycle, "pause", lambda *_: pytest.fail("Future window must return")
+    )
+    notices = []
+    first = schedule.run_due(flow.cfg, "dj2", flow.env, notify=notices.append)
+    second = schedule.run_due(flow.cfg, "dj2", flow.env, notify=notices.append)
+    assert first["phase"] == second["phase"] == "armed"
+    assert first["operation"] == second["operation"]
+    assert counts(flow) == dict.fromkeys(counts(flow), 0)
+    assert notices == []
+
+
+def test_minute_trigger_can_wait_for_warning_then_never_repeat_the_date(flow):
+    record = arm(flow)
+    due(flow, record)
+    flow.clock["value"] -= timedelta(seconds=50)
+    result = schedule.run_due(flow.cfg, "dj2", flow.env)
+    assert result["phase"] == "complete"
+    before = counts(flow)
+    later = schedule.run_due(flow.cfg, "dj2", flow.env)
+    assert later["phase"] == "armed"
+    assert later["window"]["local_date"] > result["window"]["local_date"]
+    assert counts(flow) == before == dict.fromkeys(before, 1)
+
+
+def test_scheduled_cli_is_disabled_by_default_and_rejects_operation(flow, capsys):
+    args = [
+        "admin",
+        "--config",
+        str(flow.cfg.private / "operator.toml"),
+        "nightly",
+        "run",
+    ]
+    assert main([*args, "--server", "dj2", "--scheduled"]) == 0
+    assert json.loads(capsys.readouterr().out)["phase"] == "disabled"
+    assert main([*args, "--operation", "a" * 32, "--scheduled"]) == 1
+    assert (
+        "Scheduled activation requires a server"
+        in json.loads(capsys.readouterr().out)["error"]
+    )

@@ -30,6 +30,8 @@ jobs:
       - run: uv run --no-sync ruff check api omk launcher scripts tests mods app.py
       - run: uv run --no-sync black --check api omk launcher scripts tests mods app.py
       - run: uv run --no-sync pytest tests/unit -q
+      - name: Standard monitoring configuration and real PromQL rules
+        run: uv run --no-sync python -m scripts.check_monitoring
       - name: Disposable Linux backup filesystem faults
         run: |
           docker pull python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925

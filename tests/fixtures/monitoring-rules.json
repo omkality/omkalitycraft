@@ -1,0 +1,34 @@
+{
+  "rule_files": ["/etc/omk-metrics/rules.json"],
+  "evaluation_interval": "5s",
+  "tests": [
+    {
+      "interval": "5s",
+      "input_series": [
+        {"series": "up{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "values": "1 1 1 0"},
+        {"series": "up{job=\"host\",instance=\"agent:9273\"}", "values": "1 1 1 1"},
+        {"series": "mc_player_list{job=\"dj2\",instance=\"game:19565\",service=\"dj2\",id=\"fake-a\",name=\"FakeA\"}", "values": "stale 1 stale 1"},
+        {"series": "mc_player_list{job=\"dj2\",instance=\"game:19565\",service=\"dj2\",id=\"fake-b\",name=\"FakeB\"}", "values": "stale 1 stale 1"}
+      ],
+      "promql_expr_test": [
+        {"expr": "omk_game_online", "eval_time": "0s", "exp_samples": [{"labels": "omk_game_online{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 0}]},
+        {"expr": "omk_game_online", "eval_time": "5s", "exp_samples": [{"labels": "omk_game_online{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 2}]},
+        {"expr": "omk_game_online", "eval_time": "10s", "exp_samples": [{"labels": "omk_game_online{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 0}]},
+        {"expr": "omk_game_online", "eval_time": "15s", "exp_samples": []}
+      ]
+    },
+    {
+      "interval": "5s",
+      "input_series": [
+        {"series": "up{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "values": "1+0x36"},
+        {"series": "mc_server_tick_seconds_count{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "values": "0+100x36"},
+        {"series": "mc_server_tick_seconds_sum{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "values": "0+1x36"}
+      ],
+      "promql_expr_test": [
+        {"expr": "omk_game_tps", "eval_time": "180s", "exp_samples": [{"labels": "omk_game_tps{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 20}]},
+        {"expr": "omk_game_tick_mean_ms", "eval_time": "180s", "exp_samples": [{"labels": "omk_game_tick_mean_ms{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 10}]},
+        {"expr": "omk_game_progress_observed", "eval_time": "180s", "exp_samples": [{"labels": "omk_game_progress_observed{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 1}]}
+      ]
+    }
+  ]
+}

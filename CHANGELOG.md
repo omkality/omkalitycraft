@@ -1,5 +1,40 @@
 # Журнал изменений
 
+## Не выпущено — готовый мониторинг вместо своего хранилища
+
+- Prometheus 3.16.0 + Telegraf 1.40.3 заменяют собственные Python sampler/SQLite/
+  hourly aggregation. Фоновых сервиса два; конфигурация генерируется отдельно.
+  Принимаем дополнительный RSS около 100 MiB ради стандартного query/storage API.
+- cpburnz Forge 1.12.2 server-only exporter принят на двух стартах DJ2; реальный
+  spatial ID 2 сопоставлен с type ID -11 через явный профиль; unknown остаётся
+  типом. Необязательная chunks gauge с возможными duplicate labels исключена,
+  чтобы не ломать общие метрики. В launcher GUI pack-ветки не добавлены.
+- Telegraf подтвердил OOM 0→1 через cgroup v2; cAdvisor с ложным нулём в нашем lab
+  не выбран. Privileged, Docker socket, host PID и доступ к аккаунтам не добавлены.
+- Приватные метрики, loopback-only API, отдельная admin bridge, bounded logs/resources,
+  retention и query limits. CI проверяет реальные инструменты и Docker restart/unknown.
+  27 условий native стенда не объявляют все миры/GUI/VPS принятыми.
+  [Настройка и ограничения](docs/RESOURCE_HISTORY.md).
+
+## Не выпущено — одноразовый scheduled coordinator
+
+- Постоянное ожидание следующего дня заменено `nightly run --scheduled` и шаблонами
+  systemd.timer/service. Timezone/warnings/date fences остаются в одной policy.
+- Один activation выполняет максимум один cycle; future/disabled/busy быстро выходят,
+  idle не печатает полный state каждую минуту. `watch` — deprecated одноразовый alias.
+- Проверены early trigger, повтор даты, прежняя recovery chain и передача exit status
+  из Docker. Timer/controller на host не установлены; deployment после аудита.
+  [Подробности](docs/NIGHTLY_BACKUPS.md).
+
+## Не выпущено — сравнение локальных копий с restic
+
+- В изолированном Docker проверены raw-tree и ZIP snapshots, check/prune/restore и
+  сохранность последней годной копии после ENOSPC отдельного repo.
+- Raw-tree лучше дедуплицировался на frozen lab world с искусственным sidecar.
+  До запуска сохраняем проверенный локальный ZIP recovery format и restic offsite;
+  вторую backup utility/расписание не включаем.
+  [Решение и границы опыта](docs/READY_SOLUTIONS_COMPARISON.md).
+
 ## Не выпущено — готовые переводы Integrated Dynamics / Tunnels
 
 - Подготовлены 265 missing keys из закреплённых upstream переводов, включая 49

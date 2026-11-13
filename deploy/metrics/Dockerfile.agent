@@ -1,0 +1,10 @@
+FROM telegraf:1.40.3-alpine@sha256:10fe8c974752c8088858f012cb47b71f5bb67c5695829be56d87dfbf8e0092b8
+# Give the ready agent a restricted procfs view. Network counters come from
+# host PID 1, while disk discovery must see this container's bind mounts.
+USER root
+RUN mkdir -p /host/proc/self /host/proc/net /host/proc/pressure && \
+    ln -s /proc/self/mounts /host/proc/self/mounts && \
+    ln -s /proc/mounts /host/proc/mounts
+ENV HOST_PROC=/host/proc HOST_SYS=/host/sys
+USER 10001:10001
+ENTRYPOINT ["telegraf", "--config", "/etc/omk-metrics/telegraf.conf"]

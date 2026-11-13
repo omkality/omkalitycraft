@@ -359,15 +359,39 @@ def tick(config, server, environment=None):
         return view(config, r), wait
 
 
-def watch(config, server, environment=None, *, notify=None):
+def run_due(config, server, environment=None, *, notify=None):
+    """One bounded calendar activation for a host timer, never wait for tomorrow.
+
+    A minute timer can activate this before the first warning. Existing durable
+    date/operation fences still own duplicate suppression and crash recovery.
+    """
     last = None
+    operation = None
     while True:
         value, wait = tick(config, server, environment)
-        key = backups.digest(value)
-        if value["phase"] != "busy":
-            if key != last and notify is not None:
-                notify(value)
-            last = key
-        if not value["ok"] or value["phase"] in {"disabled", "failed"}:
+        if value["phase"] in {"busy", "disabled"}:
             return value
+        early = 0
+        if value["phase"] == "armed":
+            early = (
+                instant(value["window"]["warnings"][0]["at_utc"]) - cycle.now()
+            ).total_seconds()
+            if early > 60:
+                return value  # No per-minute full-state logging while idle.
+        key = backups.digest(value)
+        if key != last and notify is not None:
+            notify(value)
+        last = key
+        if not value["ok"] or value["phase"] in TERMINAL | {"disabled", "failed"}:
+            return value
+        if operation is not None and value["operation"] != operation:
+            return value  # Rearming must not start a second date in one process.
+        operation = value["operation"]
+        if value["phase"] == "armed":
+            wait = max(wait, early)
         cycle.pause(min(wait, 1) if wait > 0 else 0.1)
+
+
+def watch(config, server, environment=None, *, notify=None):
+    """Compatibility entry point; now finishes after one timer activation."""
+    return run_due(config, server, environment, notify=notify)
