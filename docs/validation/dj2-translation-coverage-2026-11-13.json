@@ -1,0 +1,550 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "scope": "Expanded static locale comparison; no runtime or semantic completeness claim",
+  "translation_commit": "1f6764559cf2118b929ad880abd03b53b6f9daa0",
+  "upstream": {
+    "2.21.3": {
+      "commit": "9f033d70a985038bab2d0c18bd329ab7d4b0733e",
+      "tips_sha256": "994890263da934c103e408391e01d4ecc671b955207ed88d5eb6dcc911fc7436",
+      "count": 129
+    },
+    "2.23.3": {
+      "commit": "23ce41df7d0b6b566c810f5dfbc3bf5af628dda7",
+      "tips_sha256": "189653f401957008156728b85faa3b4483dd020054acbf7d00adcdbd1cd175d2",
+      "count": 129
+    },
+    "2.23.4": {
+      "commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+      "tips_sha256": "189653f401957008156728b85faa3b4483dd020054acbf7d00adcdbd1cd175d2",
+      "count": 129
+    }
+  },
+  "external_locales": {
+    "legacy_2.21.3": {
+      "resources/betterquesting/lang/ru_ru.lang": {
+        "keys": 3534,
+        "values_with_cyrillic": 3485,
+        "sha256": "7ca564a7fc470a0fbe0f829fd5f9e01b5b60540196ac9325cc8ac70a0a67dadd",
+        "source_keys": 3532,
+        "locale_keys": 3534,
+        "missing": [],
+        "extra": [
+          "dj2.quest.db.9999.desc",
+          "dj2.quest.db.9999.title"
+        ],
+        "format_mismatches": [],
+        "game_tested": false
+      },
+      "resources/contenttweaker/lang/ru_ru.lang": {
+        "keys": 730,
+        "values_with_cyrillic": 724,
+        "sha256": "fbbd8e6ca912bd9b4ed2335ddf1c3e4462c1f7586ed1327fb151db8c49b95985",
+        "source_keys": 730,
+        "locale_keys": 730,
+        "missing": [
+          "tile.contenttweaker.galactic_machine_frame.name"
+        ],
+        "extra": [
+          "item.contenttweaker.galactic_machine_frame.name"
+        ],
+        "format_mismatches": [],
+        "game_tested": false
+      },
+      "resources/crafttweaker/lang/ru_ru.lang": {
+        "keys": 655,
+        "values_with_cyrillic": 651,
+        "sha256": "ad9e63e469cfffd87c5def4efc940fdd11b9b35409953181852f1b44d3d5b418",
+        "source_keys": 656,
+        "locale_keys": 655,
+        "missing": [
+          "dj2.arcanium_base.desc6"
+        ],
+        "extra": [],
+        "format_mismatches": [],
+        "game_tested": false
+      }
+    },
+    "candidate_2.23.4": {
+      "resources/betterquesting/lang/ru_ru.lang": {
+        "keys": 3534,
+        "values_with_cyrillic": 3485,
+        "sha256": "313e4674ccab9155cc28b3d6f626034ba5e2a446f4ff803bc8fc07106e86a788",
+        "source_keys": 3532,
+        "locale_keys": 3534,
+        "missing": [],
+        "extra": [
+          "dj2.quest.db.9999.desc",
+          "dj2.quest.db.9999.title"
+        ],
+        "format_mismatches": [],
+        "game_tested": false
+      },
+      "resources/contenttweaker/lang/ru_ru.lang": {
+        "keys": 730,
+        "values_with_cyrillic": 724,
+        "sha256": "fbbd8e6ca912bd9b4ed2335ddf1c3e4462c1f7586ed1327fb151db8c49b95985",
+        "source_keys": 730,
+        "locale_keys": 730,
+        "missing": [
+          "tile.contenttweaker.galactic_machine_frame.name"
+        ],
+        "extra": [
+          "item.contenttweaker.galactic_machine_frame.name"
+        ],
+        "format_mismatches": [],
+        "game_tested": false
+      },
+      "resources/crafttweaker/lang/ru_ru.lang": {
+        "keys": 659,
+        "values_with_cyrillic": 655,
+        "sha256": "744ec91257afa837f1951688f0ae6dc5635f8e98df273866da54b14f876b4dc0",
+        "source_keys": 657,
+        "locale_keys": 659,
+        "missing": [],
+        "extra": [
+          "ritual.moretweaker.moretweakerrecipe0",
+          "ritual.moretweaker.moretweakerrecipe1"
+        ],
+        "format_mismatches": [],
+        "game_tested": false
+      },
+      "resources/enchantment_descriptions/lang/ru_ru.lang": {
+        "keys": 22,
+        "values_with_cyrillic": 22,
+        "sha256": "be2a8b184dc3934d61366c6d7d405ad5a45395a825202fbc1aeb5cd33b85a76d",
+        "source_keys": 19,
+        "locale_keys": 22,
+        "missing": [],
+        "extra": [
+          "enchantment.openblocks.explosive.desc",
+          "enchantment.openblocks.flim_flam.desc",
+          "enchantment.openblocks.last_stand.desc"
+        ],
+        "format_mismatches": [],
+        "game_tested": false
+      }
+    },
+    "bm_current_2.23.3": {
+      "resources/betterquesting/lang/ru_ru.lang": {
+        "keys": 3534,
+        "values_with_cyrillic": 3485,
+        "sha256": "c12d7997f35267567e3a3720759d48d34c51fdaefeef25b8bef84688ed09520e",
+        "source_keys": 3532,
+        "locale_keys": 3534,
+        "missing": [],
+        "extra": [
+          "dj2.quest.db.9999.desc",
+          "dj2.quest.db.9999.title"
+        ],
+        "format_mismatches": [],
+        "game_tested": false
+      },
+      "resources/contenttweaker/lang/ru_ru.lang": {
+        "keys": 730,
+        "values_with_cyrillic": 724,
+        "sha256": "fbbd8e6ca912bd9b4ed2335ddf1c3e4462c1f7586ed1327fb151db8c49b95985",
+        "source_keys": 730,
+        "locale_keys": 730,
+        "missing": [
+          "tile.contenttweaker.galactic_machine_frame.name"
+        ],
+        "extra": [
+          "item.contenttweaker.galactic_machine_frame.name"
+        ],
+        "format_mismatches": [],
+        "game_tested": false
+      },
+      "resources/crafttweaker/lang/ru_ru.lang": {
+        "keys": 655,
+        "values_with_cyrillic": 651,
+        "sha256": "ad9e63e469cfffd87c5def4efc940fdd11b9b35409953181852f1b44d3d5b418",
+        "source_keys": 665,
+        "locale_keys": 655,
+        "missing": [
+          "dj2.arcanium_base.desc6",
+          "dj2.omniwand.desc0",
+          "tile.metamorphic_sandstone_chiseled.blueschist.name",
+          "tile.metamorphic_sandstone_chiseled.eclogite.name",
+          "tile.metamorphic_sandstone_chiseled.gneiss.name",
+          "tile.metamorphic_sandstone_chiseled.greenschist.name",
+          "tile.metamorphic_sandstone_chiseled.marble.name",
+          "tile.metamorphic_sandstone_chiseled.migmatite.name",
+          "tile.metamorphic_sandstone_chiseled.quartzite.name",
+          "tile.metamorphic_sandstone_chiseled.soapstone.name"
+        ],
+        "extra": [],
+        "format_mismatches": [],
+        "game_tested": false
+      },
+      "resources/enchantment_descriptions/lang/ru_ru.lang": {
+        "keys": 22,
+        "values_with_cyrillic": 22,
+        "sha256": "be2a8b184dc3934d61366c6d7d405ad5a45395a825202fbc1aeb5cd33b85a76d",
+        "source_keys": 22,
+        "locale_keys": 22,
+        "missing": [],
+        "extra": [],
+        "format_mismatches": [],
+        "game_tested": false
+      }
+    }
+  },
+  "custom_tips": {
+    "legacy_2.21.3": {
+      "sha256": "3d86f20e681e35745144ed3688173eec7fd976c7e70333c3ddcd6064d3d7dde7",
+      "custom_tips": 130,
+      "with_cyrillic": 130
+    },
+    "candidate_2.23.4": {
+      "sha256": "189653f401957008156728b85faa3b4483dd020054acbf7d00adcdbd1cd175d2",
+      "custom_tips": 129,
+      "with_cyrillic": 0
+    },
+    "bm_current_2.23.3": {
+      "sha256": "3d86f20e681e35745144ed3688173eec7fd976c7e70333c3ddcd6064d3d7dde7",
+      "custom_tips": 130,
+      "with_cyrillic": 130
+    }
+  },
+  "official_tips_deltas": {
+    "2.21.3": {
+      "identical_lines": 128,
+      "old": 129,
+      "new": 129,
+      "edits": [
+        {
+          "op": "replace",
+          "old_range": [
+            61,
+            62
+          ],
+          "new_range": [
+            61,
+            62
+          ]
+        }
+      ]
+    },
+    "2.23.3": {
+      "identical_lines": 129,
+      "old": 129,
+      "new": 129,
+      "edits": []
+    }
+  },
+  "localized_mod_pairs": [
+    {
+      "namespace": "mob_grinding_utils",
+      "old_jar": "MobGrindingUtils-0.3.13.jar",
+      "new_jar": "MobGrindingUtils-0.3.13.jar",
+      "old_sha256": "3d9f4bc7ec7ad58a5b7261924707a43e7abc6b8adb302666c492d8ff0afa4b78",
+      "new_sha256": "7b10f754481e3813b8c8e11daed9392257e722c2af24042d7a35ccca42672594",
+      "old_classes": 120,
+      "new_classes": 120,
+      "changed_or_missing_class_entries": 0,
+      "english_bytes_identical": true,
+      "recoverable_on_stable_english_keys": 71,
+      "format_mismatches": [],
+      "changed_english_keys": []
+    },
+    {
+      "namespace": "erebus",
+      "old_jar": "Erebus-1.0.32.jar",
+      "new_jar": "Erebus-1.0.32.jar",
+      "old_sha256": "627610f500374433c9a80c7d994f677b439954a789cc379262c526235f4a0652",
+      "new_sha256": "ccc51daa04378d1bd8f5a3a53d77836ac1059133ac844261540b868e9cf3ce0c",
+      "old_classes": 845,
+      "new_classes": 845,
+      "changed_or_missing_class_entries": 0,
+      "english_bytes_identical": true,
+      "recoverable_on_stable_english_keys": 892,
+      "format_mismatches": [],
+      "changed_english_keys": []
+    },
+    {
+      "namespace": "packagedauto",
+      "old_jar": "PackagedAuto-1.12.2-1.0.5.19.jar",
+      "new_jar": "PackagedAuto-1.12.2-1.0.5.19.jar",
+      "old_sha256": "31ca426d3efd32245bbf868338d7b58bc6655cef5f33b0dadcc49625567108e2",
+      "new_sha256": "b7d168fe803d7a87fef0a38574cd030d9f5d89f725b8937553831bbab2a2e04b",
+      "old_classes": 101,
+      "new_classes": 101,
+      "changed_or_missing_class_entries": 0,
+      "english_bytes_identical": true,
+      "recoverable_on_stable_english_keys": 26,
+      "format_mismatches": [],
+      "changed_english_keys": []
+    },
+    {
+      "namespace": "extrautils2",
+      "old_jar": "extrautils2-1.12-1.9.9.jar",
+      "new_jar": "extrautils2-1.12-1.9.9.jar",
+      "old_sha256": "d9fc1ac28e1551bd824edd82230b13365578a878af9c186a49e2bf3eb2858d85",
+      "new_sha256": "6c1809eb2222604ebf3c051e1c7834b84049013b537633c2e5a1b0077ef9a940",
+      "old_classes": 1663,
+      "new_classes": 1663,
+      "changed_or_missing_class_entries": 0,
+      "english_bytes_identical": true,
+      "recoverable_on_stable_english_keys": 840,
+      "format_mismatches": [],
+      "changed_english_keys": []
+    },
+    {
+      "namespace": "enderutilities",
+      "old_jar": "enderutilities-1.12.2-0.7.15.jar",
+      "new_jar": "enderutilities-1.12.2-0.7.15.jar",
+      "old_sha256": "000f680b8c4894532dbc7f0a725ff9cd1b5e3ec9debb8c32d7dc6b456c1a6595",
+      "new_sha256": "c0a604aac57853f76f16e21958b02f4d6adbc543c20dda67eb1088ca91ba618c",
+      "old_classes": 493,
+      "new_classes": 493,
+      "changed_or_missing_class_entries": 0,
+      "english_bytes_identical": true,
+      "recoverable_on_stable_english_keys": 504,
+      "format_mismatches": [],
+      "changed_english_keys": []
+    },
+    {
+      "namespace": "mysticalagradditions",
+      "old_jar": "MysticalAgradditions-1.12.2-1.3.2.jar",
+      "new_jar": "MysticalAgradditions-1.12.2-1.3.2.jar",
+      "old_sha256": "abd880d9e13b488bf00bde169823e89050f993a1929e83929ebd3aa85950e009",
+      "new_sha256": "58094bdace050ce943bc4b14033abc63e91e705233fc24c2d7f8d786c714884f",
+      "old_classes": 45,
+      "new_classes": 45,
+      "changed_or_missing_class_entries": 0,
+      "english_bytes_identical": true,
+      "recoverable_on_stable_english_keys": 64,
+      "format_mismatches": [],
+      "changed_english_keys": []
+    },
+    {
+      "namespace": "lightningcraft",
+      "old_jar": "lightningcraft-2.9.7_1.jar",
+      "new_jar": "lightningcraft-2.9.7_1.jar",
+      "old_sha256": "93b15d1b014a15b44f5eae6b3b0ccc1de69858551a6dd52644992626a01aa4ff",
+      "new_sha256": "8dc46f631283cbbb57837c22bf86ae624fe20f3b5a65dcf70eb93cd18b67e4ac",
+      "old_classes": 351,
+      "new_classes": 351,
+      "changed_or_missing_class_entries": 0,
+      "english_bytes_identical": true,
+      "recoverable_on_stable_english_keys": 306,
+      "format_mismatches": [],
+      "changed_english_keys": []
+    },
+    {
+      "namespace": "plustic",
+      "old_jar": "plustic-8.0.3.jar",
+      "new_jar": "plustic-8.0.3.jar",
+      "old_sha256": "c5efec02335bce56d91907801fe8b991b17fcb7b25a9a509abeb1952b771b118",
+      "new_sha256": "b88d420e52cb388e167aacc6cf4c02a80cd0b1bbd5f7b9e54d80fd5601f5fb0c",
+      "old_classes": 216,
+      "new_classes": 216,
+      "changed_or_missing_class_entries": 0,
+      "english_bytes_identical": true,
+      "recoverable_on_stable_english_keys": 322,
+      "format_mismatches": [],
+      "changed_english_keys": []
+    }
+  ],
+  "groovy_custom_pack": {
+    "source_keys": 30,
+    "locale_keys": 30,
+    "missing": [],
+    "extra": [],
+    "format_mismatches": [],
+    "game_tested": false
+  },
+  "books": {
+    "byte_changed_files": 182,
+    "json_unchanged_files": 181,
+    "parse_error_files": 0,
+    "old_cyrillic_to_new_without_cyrillic": 0,
+    "non_text_structural_differences": 4
+  },
+  "stable_english_subset": {
+    "english_keys_unchanged_between_legacy_and_candidate": 53908,
+    "lost_russian_before_draft": 3025,
+    "lost_russian_after_draft_on_same_subset": 0
+  },
+  "upstream_2.23.3_to_2.23.4": {
+    "betterquesting": {
+      "source_keys_2.23.3": 3532,
+      "source_keys_2.23.4": 3532,
+      "added": [],
+      "removed": [],
+      "changed_values": [
+        "dj2.quest.db.288.desc",
+        "dj2.quest.db.291.desc"
+      ],
+      "candidate_english_matches_upstream_2.23.4": true,
+      "english_sha256_2.23.4": "13b2b2012e2ef4539d9f2035d200e5d6decfe71af78e2b2a449f93a3c72b7cc5"
+    },
+    "crafttweaker": {
+      "source_keys_2.23.3": 663,
+      "source_keys_2.23.4": 657,
+      "added": [],
+      "removed": [
+        "dj2.electricium.desc0",
+        "dj2.electricium.desc1",
+        "dj2.electricium.desc2",
+        "dj2.ichor.desc0",
+        "dj2.ichor.desc1",
+        "dj2.ichor.desc2"
+      ],
+      "changed_values": [],
+      "candidate_english_matches_upstream_2.23.4": true,
+      "english_sha256_2.23.4": "522137ce116f60b51f5bf0a258c31ba2ba894e71cb29f4e572f66414d2ff6208"
+    },
+    "contenttweaker": {
+      "source_keys_2.23.3": 730,
+      "source_keys_2.23.4": 730,
+      "added": [],
+      "removed": [],
+      "changed_values": [],
+      "candidate_english_matches_upstream_2.23.4": true,
+      "english_sha256_2.23.4": "65c232764bf6e47fbc5979deb7edc00ce158d038335e314ab7ae4fc6b35e144f"
+    }
+  },
+  "draft": {
+    "file_hashes": [
+      {
+        "path": "resources/mob_grinding_utils/lang/ru_ru.lang",
+        "sha256": "592fb435f33501d6b7321dd48684293866b694751cdedb12e6ac472f8ce9e1a9"
+      },
+      {
+        "path": "resources/erebus/lang/ru_ru.lang",
+        "sha256": "793043b6fe0cbe68dc3ee0abf37b23072af4fe99481835cf00b8ad4c440fe16e"
+      },
+      {
+        "path": "resources/packagedauto/lang/ru_ru.lang",
+        "sha256": "3f67fdf952166093e5a900606b78cea0883a4544915058e9eee76a66d644a5f3"
+      },
+      {
+        "path": "resources/extrautils2/lang/ru_ru.lang",
+        "sha256": "a0c1e6b0e830beb86edf656a701739152cf22b82648779569f46230c56877d62"
+      },
+      {
+        "path": "resources/enderutilities/lang/ru_ru.lang",
+        "sha256": "1fb88c8ede70112e58547ea72a0d931b08068812ca805eaa97f2f919adc9b9a9"
+      },
+      {
+        "path": "resources/mysticalagradditions/lang/ru_ru.lang",
+        "sha256": "d74c3a74d3e1697ea5b7c1ecf9e72cb796562ed2798eb8a574fcd01a27712c3a"
+      },
+      {
+        "path": "resources/lightningcraft/lang/ru_ru.lang",
+        "sha256": "e067d20ec416ba8c22524cd24f2725443215586a08e7451874d4bbddffe32962"
+      },
+      {
+        "path": "resources/plustic/lang/ru_ru.lang",
+        "sha256": "91fdd1e865b1d8c7ef1ac75e678a1e69cb2acf6c55d6812be0360604aa4a320e"
+      },
+      {
+        "path": "config/tips.cfg",
+        "sha256": "ad955f5164e12c9c19f8ece2e1e53c1d0808075a6db2607501d22fa8dd2a1373"
+      }
+    ],
+    "files": 9,
+    "locale_entries_recovered": 3025,
+    "same_non_tip_fields_after_line_ending_normalization": true,
+    "manual_tip_update": "Morphing Tool -> Omniwand; full per-tip semantic review remains pending",
+    "classes_scripts_recipes_quest_database_world_files": 0,
+    "installed": false,
+    "game_tested": false
+  },
+  "linux_data_only_verifier": {
+    "schema": 1,
+    "ok": true,
+    "domains": [
+      "mob_grinding_utils",
+      "erebus",
+      "packagedauto",
+      "extrautils2",
+      "enderutilities",
+      "mysticalagradditions",
+      "lightningcraft",
+      "plustic"
+    ],
+    "locale_entries": 3025,
+    "russian_tips": 130,
+    "readonly_write_refused": true,
+    "linux_case_sensitive_paths": true,
+    "game_tested": false,
+    "image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "container_exit": 0,
+    "oom": false,
+    "input_hashes_unchanged": true,
+    "memory_bytes": 268435456,
+    "nano_cpus": 1000000000,
+    "english_input": "Minecraft-compatible builtin parse normalized only for strict overlay verifier",
+    "original_english_inputs": [
+      {
+        "namespace": "mob_grinding_utils",
+        "keys": 71,
+        "original_english_sha256": "2935accc865a76ffd02e65c1827d53c9cf379281bfcc79e0aa60e816894529d9",
+        "ignored_non_entry_lines": []
+      },
+      {
+        "namespace": "erebus",
+        "keys": 892,
+        "original_english_sha256": "dddee5c6cc46afbe6bef0f404d2356a32958fed7fe296f62dce32942279780ed",
+        "ignored_non_entry_lines": [
+          1013
+        ]
+      },
+      {
+        "namespace": "packagedauto",
+        "keys": 26,
+        "original_english_sha256": "578d8e5a5369311639318333495887d0c57dbab5aa18c80222e916fdaad89b56",
+        "ignored_non_entry_lines": []
+      },
+      {
+        "namespace": "extrautils2",
+        "keys": 840,
+        "original_english_sha256": "93c36c0860f3b0b1f68a40db88883738be871fb052e6b06ae21e5e8255a95353",
+        "ignored_non_entry_lines": []
+      },
+      {
+        "namespace": "enderutilities",
+        "keys": 504,
+        "original_english_sha256": "0dc54d679f8278137d49886acf7a5b3c461e13ffca5db41e7c3a4098d3b78294",
+        "ignored_non_entry_lines": []
+      },
+      {
+        "namespace": "mysticalagradditions",
+        "keys": 64,
+        "original_english_sha256": "993e7ca649e2a6f73cf94a11d1e6796f3cd07c2438e1998c6c5c81c5cc6243cd",
+        "ignored_non_entry_lines": []
+      },
+      {
+        "namespace": "lightningcraft",
+        "keys": 306,
+        "original_english_sha256": "7a388ba2924cfe4bc934cd5af41c3a52241e09d71b9fbd73f7d5df4ad83be8b4",
+        "ignored_non_entry_lines": []
+      },
+      {
+        "namespace": "plustic",
+        "keys": 322,
+        "original_english_sha256": "06c0f7254f0ebaa10bd5b262e442372fbc163dd245b4a2933079ce772d4d6e1a",
+        "ignored_non_entry_lines": []
+      }
+    ],
+    "owned_container_removed": true
+  },
+  "earlier_verifier_failure": "Strict overlay parser rejected one non-entry line in builtin Erebus English; frozen verifier input normalized with Minecraft-compatible parse, original JAR and strict production parser unchanged. Raw first failure retained privately.",
+  "static_model_limits": [
+    "Sorted JAR resource priority is an approximation; vanilla and dynamic/hardcoded strings are not covered.",
+    "Case-normalized locales include legacy pack_format=2 Forge adaptation, not proof of actual old/new game rendering.",
+    "Cyrillic/key presence does not establish translation quality, semantics, placeholders outside checked files or full pack coverage.",
+    "Two old invalid UTF-8 WCT/WFT locale files are retained as audit errors; not silently counted as valid translations.",
+    "3025 to zero is only the same stable English subset, not the entire pack or all new strings.",
+    "Individual mod-translation authorship/distribution terms remain to be inventoried before publishing payload."
+  ],
+  "old_and_candidate_jar_inventory_unchanged": true,
+  "full_semantic_review": false,
+  "graphical_acceptance": false,
+  "ready_for_players": false,
+  "live_vps_changed": false,
+  "player_manifest_changed": false
+}
