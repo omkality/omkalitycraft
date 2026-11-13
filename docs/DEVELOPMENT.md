@@ -1,5 +1,19 @@
 # Разработка OmkalityCraft
 
+## Ползунок памяти без wheel input — 13 ноября 2026
+
+Обычный QSlider менял и сохранял RAM при прокрутке списка сборок. Узкий subclass
+игнорирует wheel event, оставляя его родительскому scroll area даже при focus.
+Клавиатура/drag, доступность planned GTNH, профили и limits прежние. Без нового
+UI, настроек или network calls. 14 Qt cases: оба focus состояния, вертикальные/
+горизонтальные angle/pixel deltas, Ctrl, сохранность файла preferences, прокрутка
+списка и настоящий drag/key. Доставка через Qt window, а не sendEvent прямо
+виджету: прямой synthetic event не проверяет parent scroll dispatch.
+
+На исходном QSlider 9 failures/5 passes; после правки 14 passes. Общий UI suite
+79 passed. Actual Qt PNG и отдельный portable Windows EXE; mock account на PNG,
+не новая игровая приёмка. VPS/owned JAR/Minecraft не изменены.
+
 ## Часовые группы с наблюдавшимися игроками — 13 ноября 2026
 
 Следующий ограниченный шаг #146: `hours_with_players_report` в прежнем read-only
