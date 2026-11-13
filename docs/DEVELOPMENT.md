@@ -1,5 +1,32 @@
 # Разработка OmkalityCraft
 
+## Дополнение готовых переводов актуальной DJ2 — 13 ноября 2026
+
+Владелец выбрал актуальную DJ2; current upstream latest проверен как 2.23.4.
+Два готовых перевода используем как основу, дополняем player-facing пробелы.
+#49: P1 до финальной клиентской/миграционной регрессии, предгенерации и выпуска.
+Прежнее откладывание перевода текущей DJ2 отменено; email/GTNH позже.
+Безопасность/восстановление и OpenAL #163 остаются самостоятельными scope.
+
+Первая порция: 95 адресных записей (92 missing +3 EN в RU), правильный item/tile
+ключ ContentTweaker. 129 tips явно сопоставлены с 130 готовыми RU: один старый
+дополнительный совет не переносится, 91 перевод сохранён, 38 обновлены; четыре
+project adaptations. Собственные source-данные и EN value hashes в profile,
+полный заимствованный слой и raw лаборатория вне Git. Common JAR Git blob IDs
+BMProjects/candidate: 223 совпадения, два иных имени/версии не импортировались.
+
+В прежний render_lang добавлен необязательный source guard: stale EN при том же
+ID/формате отвергается, предыдущие callers совместимы. Red: 9 новых failures при
+15 прежних passes; green: 24. Data-only Linux named volume: 7 checks +24 unit,
+readonly/no network/socket, реальные case-sensitive paths, 1 CPU/256 МиБ,
+exit 0/OOM=false, inputs прежние, own scopes удалены. Не Minecraft game acceptance.
+
+Assembled output — 28 только языковых/config файлов; JAR/scripts/recipes/quests,
+рабочие manifests/release/VPS прежние. Полнота всей сборки не принята: следующие
+player-facing книги/GUI, происхождение локалей, runtime I18n и графический клиент.
+[Контракт и остаток](DJ2_TRANSLATION_COMPLETION.md),
+[протокол](validation/dj2-russian-completion-2026-11-13.json).
+
 ## Полнота русского перевода DJ2 — 13 ноября 2026
 
 Владелец поставил полноту перевода выше свежести версии. Расширенный статический

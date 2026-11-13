@@ -18,7 +18,7 @@ GTNH не объявляем готовой. Стабильность и пол�
 |---|---|---|
 | Аккаунты и проходки | `AUTH_STORAGE.md`, `ACCOUNT_RECOVERY.md`, `deploy/drasl/README.md` | Одноразовая регистрация без гонки, chosen password, отзыв сессий, постоянные auth volumes и signing key |
 | Лаунчер, manifest, update | `PORTABLE_SESSIONS.md`, `SIGNED_PACK_INSTALL.md`, `RELEASES.md` | Подписи, minimum version, repair/сеть, сохранение настроек, portable paths и реальные клиенты |
-| Перевод DJ2 | `DJ2_TRANSLATION_COVERAGE.md`, `PACK_UPGRADES.md`, #49 | Сохранить обнаруженные старые локали и tips отдельно от mod code; статическая проверка не доказывает runtime I18n/семантику/вёрстку |
+| Перевод DJ2 | `DJ2_TRANSLATION_COVERAGE.md`, `DJ2_TRANSLATION_COMPLETION.md`, `PACK_UPGRADES.md`, #49 | P1: дополняем два готовых перевода для актуальной DJ2; первая порция принята только как data/source scope, runtime I18n/вёрстка/игра открыты |
 | Помощь и игровые часы | `NEW_PLAYER_GUIDE.md`, `PLAYER_TIME.md`, #43/#44 | Opt-in `/guide` проверена protocol packets; обычный графический чат открыт. Saved ticks не являются несбрасываемым account lifetime |
 | Разделение модов | `mods/README.md`, `mods/forge-1.12.2/THIRD_PARTY.md` | Generic Core отдельно от pack fixes, reproducible hashes, архив/lab не в публичном runtime |
 | Команды, роли, FTB | `commands/dj2/README.md`, `DJ2_PLANT_PLACEMENT.md` | Все игроки без OP, PvP/Hard, лимиты, защита spawn, обычные разрешённые действия вместе с негативными контролями |
