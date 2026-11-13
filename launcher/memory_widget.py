@@ -1,10 +1,20 @@
 """Native per-card heap slider; all limits come from profile data."""
 
+from typing import override
+
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QWheelEvent
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QSlider, QVBoxLayout, QWidget
 
 from launcher.memory import MIN_MB, STEP_MB, MemorySnapshot, choose_memory
 from omk.profiles import ServerProfile
+
+
+class _MemorySlider(QSlider):
+    @override
+    def wheelEvent(self, event: QWheelEvent) -> None:
+        # Leave scrolling to the surrounding pack list, including when focused.
+        event.ignore()
 
 
 class MemoryControl(QWidget):
@@ -25,7 +35,7 @@ class MemoryControl(QWidget):
         self.value = QLabel()
         row.addWidget(self.value)
         layout.addLayout(row)
-        self.slider = QSlider(Qt.Orientation.Horizontal)
+        self.slider = _MemorySlider(Qt.Orientation.Horizontal)
         self.slider.setObjectName("memory_" + profile.id)
         self.slider.setRange(
             MIN_MB // STEP_MB, max(MIN_MB, choice.maximum_mb) // STEP_MB
