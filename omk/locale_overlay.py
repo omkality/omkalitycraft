@@ -1,5 +1,6 @@
 """Bounded, data-only Minecraft .lang review; never edits quests or scripts."""
 
+import hashlib
 import re
 from collections import Counter
 
@@ -68,8 +69,29 @@ def audit_lang(
     return result
 
 
+def _check_source_guards(source, changed, guards):
+    if guards is None:
+        return
+    if not isinstance(guards, dict) or guards.keys() != changed.keys():
+        raise ValueError("Invalid translation source guards")
+    for key, expected in guards.items():
+        if (
+            key not in source
+            or not isinstance(expected, str)
+            or re.fullmatch(r"[a-f0-9]{64}", expected) is None
+            or hashlib.sha256(source[key].encode("utf-8")).hexdigest() != expected
+        ):
+            raise ValueError("Translation source changed or guard is invalid")
+
+
 def render_lang(
-    base: bytes, english: bytes, *, updates=None, additions=None, removals=()
+    base: bytes,
+    english: bytes,
+    *,
+    updates=None,
+    additions=None,
+    removals=(),
+    expected_source_sha256=None,
 ) -> bytes:
     """Preserve unrelated lines; each changed key must match the new English contract."""
     old, source = parse_lang(base), parse_lang(english)
@@ -86,7 +108,9 @@ def render_lang(
         or removals & (updates.keys() | additions.keys())
     ):
         raise ValueError("Ambiguous or unknown translation change")
-    for key, value in {**updates, **additions}.items():
+    changed = {**updates, **additions}
+    _check_source_guards(source, changed, expected_source_sha256)
+    for key, value in changed.items():
         if (
             key not in source
             or not isinstance(value, str)

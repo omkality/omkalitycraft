@@ -1,3 +1,5 @@
+import hashlib
+
 import pytest
 
 from omk.locale_overlay import (
@@ -71,3 +73,65 @@ def test_update_add_remove_are_explicit_and_disjoint():
     ]:
         with pytest.raises(ValueError):
             render_lang(b"kept=x", b"kept=z", **changes)
+
+
+def source_pin(value):
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def test_reviewed_translation_is_bound_to_english_meaning_not_only_key_and_format():
+    patch = {"recipe": "Используйте железо: %s"}
+    pins = {"recipe": source_pin("Use iron: %s")}
+    assert render_lang(
+        b"# keep\nother=unchanged\n",
+        b"other=unchanged\nrecipe=Use iron: %s\n",
+        additions=patch,
+        expected_source_sha256=pins,
+    ) == raw("# keep\nother=unchanged\nrecipe=Используйте железо: %s\n")
+    # Same ID and same placeholder, but changed ingredient: do not silently reuse old RU.
+    with pytest.raises(ValueError, match="source"):
+        render_lang(
+            b"other=unchanged\n",
+            b"other=unchanged\nrecipe=Use gold: %s\n",
+            additions=patch,
+            expected_source_sha256=pins,
+        )
+
+
+@pytest.mark.parametrize(
+    "pins",
+    [
+        {},
+        {"x": "bad"},
+        {"x": "a" * 64},
+        {"x": None},
+        {"x": source_pin("new"), "unreviewed": source_pin("other")},
+        {"y": source_pin("new")},
+    ],
+    ids=["missing", "malformed", "wrong_digest", "wrong_type", "extra", "wrong_key"],
+)
+def test_source_guards_cover_exactly_all_changed_or_added_entries(pins):
+    with pytest.raises(ValueError, match="source"):
+        render_lang(
+            b"x=old\n", b"x=new\n", updates={"x": "новое"}, expected_source_sha256=pins
+        )
+
+
+def test_source_guard_is_per_value_and_preserves_existing_russian_bytes():
+    base = raw("\ufeff# keep\r\nother=остальное\r\nx=прежнее")
+    assert render_lang(
+        base,
+        b"# different unrelated comments\nother=Changed unrelated source\nx=new\n",
+        updates={"x": "новое"},
+        expected_source_sha256={"x": source_pin("new")},
+    ) == raw("\ufeff# keep\r\nother=остальное\r\nx=новое")
+
+
+def test_valid_source_pin_does_not_disable_placeholder_validation():
+    with pytest.raises(ValueError, match="contract"):
+        render_lang(
+            b"x=old\n",
+            b"x=%d\n",
+            updates={"x": "%s"},
+            expected_source_sha256={"x": source_pin("%d")},
+        )
