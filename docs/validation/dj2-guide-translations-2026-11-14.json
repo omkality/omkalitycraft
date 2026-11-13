@@ -1,0 +1,275 @@
+{
+  "schema": 1,
+  "date": "2026-11-14",
+  "issue": 49,
+  "scope": "Fourth Russian locale batch, language data only; no Minecraft client acceptance",
+  "target": {
+    "pack": "DJ2",
+    "version": "2.23.4",
+    "minecraft": "1.12.2",
+    "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa"
+  },
+  "source_sha256_utf8_lf": {
+    "omk/locale_overlay.py": "997318ee2f5273e073f96c9c74383cfa137f25c1989d6be2696381881e2f6096",
+    "tests/unit/test_locale_overlay.py": "cc9443d42caf7e6888d992c4a9cb369efe13d31b255f50a2cf45485b36f9fb8d",
+    "tests/unit/test_locale_reuse.py": "73267ccc874019475d81568acc7da36e20e63e93a43cdbea9195cc801ad98fe7",
+    "profiles/locale-overlays/dj2-2.23.4/guide-review.json": "00a2eb0f3eef0885ecec5684386b9417a126f4820bcba16d22216912aaa28950",
+    "profiles/locale-overlays/dj2-2.23.4/upstream-reuse.json": "e48dc7db4328b6dd539e74ab60e2df2a16e8fe6a87c1453c0ece1fff39a9a4ba",
+    "profiles/locale-overlays/dj2-2.23.4/owned-ru.json": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+    "profiles/locale-overlays/dj2-2.23.4/notices/Cyclops-MIT.txt": "972ce53396e875797aa8013d98ce0829a551a7be6f0c4ea99ee71815291c265a"
+  },
+  "source_artifacts_reference": "profiles/locale-overlays/dj2-2.23.4/upstream-reuse.json",
+  "selection": {
+    "exact_key_and_english_book_entries": 198,
+    "bounded_meaning_edits_in_selected_entries": 8,
+    "separately_reviewed_compatibility_additions": 31,
+    "new_entries": 229,
+    "new_by_namespace": {
+      "integrateddynamics": 218,
+      "integratedtunnels": 11
+    },
+    "existing_265_entries_overwritten": 0,
+    "previous_owned_entries_unchanged": 191,
+    "total_entries_in_two_selected_locales": 494,
+    "book_key_coverage": {
+      "integrateddynamics": {
+        "source": 211,
+        "russian": 210,
+        "retained_technical_name": "NBT"
+      },
+      "integratedtunnels": {
+        "source": 58,
+        "russian": 58
+      }
+    },
+    "no_global_translation_percentage_claim": true
+  },
+  "windows_helper_and_cli_passes": 69,
+  "linux_data_and_unit_verification": {
+    "ok": true,
+    "checks": [
+      "same_exact_198_previously_deferred_book_keys_and_pinned_profiles",
+      "six_upstream_artifacts_sha256_and_git_blob_ids_match",
+      "duplicate_json_keys_stay_excluded",
+      "229_values_match_independent_literal_replay",
+      "prior_265_values_and_prefix_bytes_preserved",
+      "ascii_book_styles_paragraphs_and_placeholders_match",
+      "seven_stale_target_source_ru_and_overwrite_controls_rejected",
+      "fallback_group_color_piping_logWood_quantity_and_explicit_concepts_remap_reviewed",
+      "211_ID_book_keys_210_translated_plus_NBT_and_all_58_Tunnels_book_keys_covered",
+      "32_other_files_notice_and_case_sensitive_34_output_inventory_unchanged",
+      "linux_named_input_volume_is_readonly",
+      "existing_62_helper_controls_pass"
+    ],
+    "new_entries": 229,
+    "negative_data_controls": 7,
+    "unit_tail": "62 passed in 0.07s",
+    "files": 34,
+    "game_tested": false,
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "seed_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "exit_code": 0,
+    "oom": false,
+    "cpu_limit": 1,
+    "memory_bytes": 268435456,
+    "seed_hashes_unchanged": true,
+    "owned_scopes_removed": true
+  },
+  "reproducible_composition": {
+    "ok": true,
+    "matching_compositions": 2,
+    "files": 34,
+    "independent_linux_byte_replay": true
+  },
+  "candidate_jar_receipt": {
+    "jar_count": 225,
+    "unchanged_from_frozen_candidate": true,
+    "fresh_target_english_matches_snapshot": true,
+    "inventory_sha256": "53cda19653abc3e97c0a9a2752586684270bbe39427d487c6856cb152272e388"
+  },
+  "assembled_private_file_manifest": [
+    {
+      "path": "config/tips.cfg",
+      "sha256": "21a6959ce965d78144cef528c47dae1b27b03c370dea9da14d0cb46577960b81",
+      "bytes": 24065
+    },
+    {
+      "path": "groovy/assets/divine_journey_2/lang/ru_ru.lang",
+      "sha256": "3d84f9b12939b4605396d687df421b37d74a170532a1a745da240829cb11bb80",
+      "bytes": 4092
+    },
+    {
+      "path": "licenses/Cyclops-locales-MIT.txt",
+      "sha256": "972ce53396e875797aa8013d98ce0829a551a7be6f0c4ea99ee71815291c265a",
+      "bytes": 1074
+    },
+    {
+      "path": "resources/actuallyadditions/lang/ru_ru.lang",
+      "sha256": "eefb965f3e64d3b0c0f18a48711061d75a1f48dc75bd88ba9cfd06e6fc1aac2c",
+      "bytes": 84
+    },
+    {
+      "path": "resources/alchemistry/lang/ru_ru.lang",
+      "sha256": "8c753a25157f4749f123e5e8645fb93ca3f910323f0365aae7e30427d256137a",
+      "bytes": 105
+    },
+    {
+      "path": "resources/appliedenergistics2/lang/ru_ru.lang",
+      "sha256": "2ed21038ecfc64aecf4e0ff0cebfbdbce27c3d5097d08cb6c763285c52f4d86e",
+      "bytes": 589
+    },
+    {
+      "path": "resources/betterquesting/lang/ru_ru.lang",
+      "sha256": "a362ba06e82b3e52b879891d2275f9ad8111e4b89e7e3091e2e052d9fdf868e7",
+      "bytes": 1088971
+    },
+    {
+      "path": "resources/contenttweaker/lang/ru_ru.lang",
+      "sha256": "59b74fdc12680c5de9d517c24c13d224512fd3fa79f4e94f35e89b7ebb2fb4d6",
+      "bytes": 60499
+    },
+    {
+      "path": "resources/craftingtweaks/lang/ru_ru.lang",
+      "sha256": "950cb8827b9050506b818265d533efd9592a5269a30c788514f30581098519fb",
+      "bytes": 1684
+    },
+    {
+      "path": "resources/crafttweaker/lang/ru_ru.lang",
+      "sha256": "61e20ca83f01d827edf0d5988de5975cc2f0b1cf6bfd753d394100dddfeeecbd",
+      "bytes": 80954
+    },
+    {
+      "path": "resources/divinerpg/lang/ru_ru.lang",
+      "sha256": "c5736dff8f2370c57c682c017be628656dbe07c350069891d24dc0c6e270524d",
+      "bytes": 1380
+    },
+    {
+      "path": "resources/enchantment_descriptions/lang/ru_ru.lang",
+      "sha256": "be2a8b184dc3934d61366c6d7d405ad5a45395a825202fbc1aeb5cd33b85a76d",
+      "bytes": 4212
+    },
+    {
+      "path": "resources/enderutilities/lang/ru_ru.lang",
+      "sha256": "1fb88c8ede70112e58547ea72a0d931b08068812ca805eaa97f2f919adc9b9a9",
+      "bytes": 62737
+    },
+    {
+      "path": "resources/erebus/lang/ru_ru.lang",
+      "sha256": "793043b6fe0cbe68dc3ee0abf37b23072af4fe99481835cf00b8ad4c440fe16e",
+      "bytes": 53530
+    },
+    {
+      "path": "resources/extendedcrafting/lang/ru_ru.lang",
+      "sha256": "bf40a582db00234c2a702fd42a0090d688ca3d0a759128a3934e8baea098d8de",
+      "bytes": 9522
+    },
+    {
+      "path": "resources/extrautils2/lang/ru_ru.lang",
+      "sha256": "a0c1e6b0e830beb86edf656a701739152cf22b82648779569f46230c56877d62",
+      "bytes": 70217
+    },
+    {
+      "path": "resources/ftblib/lang/ru_ru.lang",
+      "sha256": "93f0819ec8289b38920abf8cc20c81f70aa516c52f4bb6f641c511ea8ca8bb8a",
+      "bytes": 803
+    },
+    {
+      "path": "resources/guideapi/lang/ru_ru.lang",
+      "sha256": "b7f504f72646ba7e12ef33a4c83b0b28adc19a1eec92fab1b30946d656efe9d8",
+      "bytes": 357
+    },
+    {
+      "path": "resources/integrateddynamics/lang/ru_ru.lang",
+      "sha256": "9cdec52e74312a85201cfd5252a8cec74599d6e24a06de02bf38847d8c9fd8c2",
+      "bytes": 88141
+    },
+    {
+      "path": "resources/integratedtunnels/lang/ru_ru.lang",
+      "sha256": "6af94befa031e845af931ba5c02caba16c87b4b048b7e8ce255bf781e7309310",
+      "bytes": 24741
+    },
+    {
+      "path": "resources/jei/lang/ru_ru.lang",
+      "sha256": "8a5711a6da30853bf3fe97ee1e5e7d96b5652d00f3290a5a842905dc8bdb591c",
+      "bytes": 343
+    },
+    {
+      "path": "resources/lightningcraft/lang/ru_ru.lang",
+      "sha256": "e067d20ec416ba8c22524cd24f2725443215586a08e7451874d4bbddffe32962",
+      "bytes": 21872
+    },
+    {
+      "path": "resources/mob_grinding_utils/lang/ru_ru.lang",
+      "sha256": "592fb435f33501d6b7321dd48684293866b694751cdedb12e6ac472f8ce9e1a9",
+      "bytes": 4227
+    },
+    {
+      "path": "resources/mysticalagradditions/lang/ru_ru.lang",
+      "sha256": "d74c3a74d3e1697ea5b7c1ecf9e72cb796562ed2798eb8a574fcd01a27712c3a",
+      "bytes": 3477
+    },
+    {
+      "path": "resources/natura/lang/ru_ru.lang",
+      "sha256": "213cb916ef50cd53b07b00fe6331d5a85528eb28518153b8df84e438d22caf35",
+      "bytes": 1385
+    },
+    {
+      "path": "resources/omniwand/lang/ru_ru.lang",
+      "sha256": "ec737f88c07b323b93d9c0d769616a3afa58b704887307bee3ebd1c64001b916",
+      "bytes": 94
+    },
+    {
+      "path": "resources/openblocks/lang/ru_ru.lang",
+      "sha256": "738d925f6996cb13ff7c2419a4f579962ceaeff97586cd09d215f1de72cd9d5c",
+      "bytes": 1337
+    },
+    {
+      "path": "resources/packagedauto/lang/ru_ru.lang",
+      "sha256": "3f67fdf952166093e5a900606b78cea0883a4544915058e9eee76a66d644a5f3",
+      "bytes": 1740
+    },
+    {
+      "path": "resources/patchouli/lang/ru_ru.lang",
+      "sha256": "07ee1abaf5a761364217b44a7e74581a241061a04db4f759ca4972c6681495b9",
+      "bytes": 321
+    },
+    {
+      "path": "resources/plustic/lang/ru_ru.lang",
+      "sha256": "91fdd1e865b1d8c7ef1ac75e678a1e69cb2acf6c55d6812be0360604aa4a320e",
+      "bytes": 20605
+    },
+    {
+      "path": "resources/restrictedportals/lang/ru_ru.lang",
+      "sha256": "46f14093f7f6be9309289c574dbf52ccfd0434c1c761a11933006e6dc955aef2",
+      "bytes": 266
+    },
+    {
+      "path": "resources/roots/lang/ru_ru.lang",
+      "sha256": "68db1806552e6282ca5ca6bfa782cb90d45a669ddaee4f1610c7ff31a7ac822e",
+      "bytes": 4752
+    },
+    {
+      "path": "resources/tombmanygraves/lang/ru_ru.lang",
+      "sha256": "de01f6712dcbb1e5912949c687892ceb0854eb9f803d23efabbd09d7545bd700",
+      "bytes": 181
+    },
+    {
+      "path": "resources/toolprogression/lang/ru_ru.lang",
+      "sha256": "17aba2b28419f9ded2ff703659b196778dd8f4f76e9f53240902fe41deeed6c7",
+      "bytes": 315
+    }
+  ],
+  "previous_32_other_files_preserved": true,
+  "notice": "licenses/Cyclops-locales-MIT.txt",
+  "limits": [
+    "Text agreement and registry names do not certify gameplay mechanics or graphical layout.",
+    "The assembled language layer is private, not installed into Minecraft or a player payload.",
+    "Other locale provenance, runtime I18n/resource priority, fonts, pages and ordinary gameplay remain open.",
+    "OpenAL issue #163 is independent and unresolved."
+  ],
+  "installed_into_game": false,
+  "game_tested": false,
+  "ready_for_players": false,
+  "player_manifest_changed": false,
+  "vps_changed": false
+}
