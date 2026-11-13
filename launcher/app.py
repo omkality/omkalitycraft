@@ -13,7 +13,6 @@ from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
     QDialog,
-    QDialogButtonBox,
     QFileDialog,
     QFormLayout,
     QFrame,
@@ -47,7 +46,7 @@ from launcher.nickname import NicknameField
 from launcher.releases import ReleaseError
 from launcher.server_status import ServerStatusController
 from launcher.session import SessionStoreError
-from launcher.skin_dialog import SkinDialog
+from launcher.skin_dialog import SkinDialog, SkinResetDialog
 from launcher.skins import MAX_SKIN_BYTES, SkinError, decode_skin
 from launcher.social import SocialFooter
 from launcher.storage import FileSessionStore
@@ -122,11 +121,20 @@ class PasswordDialog(QDialog):
     def __init__(self, parent: QWidget) -> None:
         super().__init__(parent)
         self.setWindowTitle("Сменить пароль")
+        self.setMinimumWidth(700)
         layout = QVBoxLayout(self)
-        layout.addWidget(
-            label("Смена пароля завершит прежние сессии на всех устройствах.")
-        )
+        layout.setContentsMargins(24, 22, 24, 22)
+        layout.setSpacing(16)
+        notice = label("Смена пароля завершит прежние сессии на всех устройствах.")
+        notice.setObjectName("passwordChangeNotice")
+        notice.setWordWrap(False)
+        layout.addWidget(notice)
         form = QFormLayout()
+        form.setHorizontalSpacing(18)
+        form.setVerticalSpacing(12)
+        form.setLabelAlignment(
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+        )
         self.old = field("oldPassword", password=True)
         self.new = field("newPassword", "Хотя бы 12 символов", password=True)
         self.repeat = field("repeatPassword", password=True)
@@ -134,18 +142,30 @@ class PasswordDialog(QDialog):
         form.addRow("Новый пароль", self.new)
         form.addRow("Ещё раз", self.repeat)
         layout.addLayout(form)
+        # The fields inherit the dialog's stylesheet only after layout parenting.
+        for edit in (self.old, self.new, self.repeat):
+            edit.ensurePolished()
+            caption = form.labelForField(edit)
+            caption.setAlignment(
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+            )
+            caption.setFixedHeight(edit.sizeHint().height())
         self.error = label("")
         self.error.setProperty("error", True)
         layout.addWidget(self.error)
-        controls = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Save
-            | QDialogButtonBox.StandardButton.Cancel
-        )
-        controls.button(QDialogButtonBox.StandardButton.Save).setText("Сохранить")
-        controls.button(QDialogButtonBox.StandardButton.Cancel).setText("Отмена")
-        controls.accepted.connect(self._validate)
-        controls.rejected.connect(self.reject)
-        layout.addWidget(controls)
+        controls = QHBoxLayout()
+        save = QPushButton("Сохранить")
+        save.setObjectName("savePassword")
+        save.setProperty("primary", True)
+        save.setDefault(True)
+        save.clicked.connect(self._validate)
+        cancel = QPushButton("Отмена")
+        cancel.setObjectName("cancelPassword")
+        cancel.setAutoDefault(False)
+        cancel.clicked.connect(self.reject)
+        controls.addWidget(save, 1)
+        controls.addWidget(cancel, 1)
+        layout.addLayout(controls)
 
     def _validate(self) -> None:
         if self.new.text() != self.repeat.text():
@@ -339,6 +359,7 @@ class LauncherWindow(QMainWindow):
         self.greeting = page.greeting
         self.skin_preview = page.skin_preview
         page.upload_button.clicked.connect(self._choose_skin)
+        page.reset_skin_button.clicked.connect(self._reset_skin)
         page.change_password.clicked.connect(self._change_password)
         return page
 
@@ -365,6 +386,7 @@ class LauncherWindow(QMainWindow):
             self.status.setText("Недостаточно памяти для запуска этой сборки.")
             return
         self.home_page.upload_button.setEnabled(False)
+        self.home_page.reset_skin_button.setEnabled(False)
         self.home_page.change_password.setEnabled(False)
         for card in self.home_page.cards.values():
             card.action.setEnabled(False)
@@ -378,6 +400,7 @@ class LauncherWindow(QMainWindow):
 
     def _installation_idle(self) -> None:
         self.home_page.upload_button.setEnabled(True)
+        self.home_page.reset_skin_button.setEnabled(True)
         self.home_page.change_password.setEnabled(True)
         for card in self.home_page.cards.values():
             card.action.setEnabled(card.profile.status != "planned")
@@ -548,6 +571,23 @@ class LauncherWindow(QMainWindow):
 
         self._start(lambda: self.service.upload_skin(png, model), done, "skin")
 
+    def _reset_skin(self) -> None:
+        if self.busy or (self.installation is not None and self.installation.busy):
+            return
+        dialog = SkinResetDialog(self)
+        accepted = dialog.exec() == QDialog.DialogCode.Accepted
+        dialog.deleteLater()
+        if not accepted:
+            return
+
+        def done(_: Any) -> None:
+            self.skin_preview.reset_skin()
+            self.status.setText(
+                "Скин сброшен. В игре он появится после обновления профиля."
+            )
+
+        self._start(self.service.reset_skin, done, "skin_reset")
+
     def _change_password(self) -> None:
         dialog = PasswordDialog(self)
         accepted = dialog.exec() == QDialog.DialogCode.Accepted
@@ -588,6 +628,7 @@ class LauncherWindow(QMainWindow):
             "login": "loginButton",
             "register": "registerButton",
             "skin": "uploadSkin",
+            "skin_reset": "resetSkin",
             "password": "changePassword",
         }
         self._busy_button = self.findChild(BusyButton, names.get(context, ""))
