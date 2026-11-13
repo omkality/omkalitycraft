@@ -1,5 +1,25 @@
 # Разработка OmkalityCraft
 
+## Сохранённое игровое время DJ2 — 13 ноября 2026
+
+Ограниченный шаг #43: существующий vanilla stat.playOneMinute из FTB time_played,
+без нового counter/database/collector. Один owner CLI читает saved ticks по UUID:
+allowlisted pinned Linux source readonly, helper без сети/socket, общий lock,
+bounded input/timeout, lifecycle binding и cleanup только собственного helper.
+Unknown/corrupt не равны нулю. AFK включён, low TPS замедляет номинальные часы;
+unsaved хвост не включается. Это snapshot server time, не account lifetime.
+
+Две native DJ2 2.23.4 lab, четыре boot: console/non-OP FTB, stationary actor,
+world time skip, death/respawn, Nether, offline/rejoin, clean restart и SIGKILL.
+После kill остаётся сохранённый floor, offline/boot не удваиваются; unclean source
+отклоняется до восстановления. Независимый stats JSON совпадает. Protocol actors,
+не graphical game. Свои scopes удалены; JAR/player release/VPS прежние.
+Linux data-only replay сохраняет точные native stats через verified backup и
+allowlisted reset stage в синтетический мир; не game acceptance после wipe.
+Старый полный restore откатывает и часы. 82 focused Linux Docker cases и восемь
+проверок replay; Windows/full CI — в [протоколе](validation/player-time-2026-11-13.json).
+#43 открыт для rollback/lifetime, #44 — для chat welcome. [Контракт](PLAYER_TIME.md).
+
 ## Настройки Forge/Docker-журналов — 13 ноября 2026
 
 Следующий ограниченный этап #30/#33: два validated env для генерации Forge 1.12.2

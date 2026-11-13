@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "scope": "Saved vanilla/FTB play ticks: private read-only owner view; not a new session database or lifetime counter",
+  "source_sha256_utf8_lf": {
+    "omk/admin.py": "dc794020a1f7aa8451a7591d0619d311af109bddf7b438cf37c12bb9ef2d26da",
+    "omk/player_time.py": "58d615203a8f3d68718c95872b3782dcea075f1c649b28047db5f1ffd91d744b",
+    "omk/player_time_reader.py": "6995a9e6dcd5c26ab28bc0ecf505721f8134f8727244dc49c61a48c0a3297ba4",
+    "tests/unit/test_player_time.py": "f5b9c163f6d2506d74e3c6bdbc7d6be49d92dcafc144930e04e84469bd5b3709",
+    "tests/unit/test_operator_commands.py": "b9047b9c0dced1cdb1569bdc3811fc498a2e2536ac3f95451938c79c4bf79071",
+    "tests/unit/test_resource_reset_stage.py": "bd0834eba98eb5eddd1324a87e1a3b6321726bcce26aa36249b5c4ac02b7b42a",
+    "deploy/player-time.example.env": "75f99af15006de2669fcc0a335dab00349cd968882b19b4daec9968cc6072bca"
+  },
+  "linux_units": {
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "exit_code": 0,
+    "oom": false,
+    "owned_scope_removed": true,
+    "tail": [
+      "........................................................................ [ 87%]",
+      "..........                                                               [100%]",
+      "82 passed in 3.63s"
+    ]
+  },
+  "windows_unit_ui": {
+    "passed": 2279,
+    "skipped": 101,
+    "scope": "all tests/unit and tests/ui; mocks and real Qt, not native server acceptance"
+  },
+  "native_normal": {
+    "ok": true,
+    "real_game": "DJ2 2.23.4",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "core_sha256": "49fd9d29eaa4e117bcbdae5a6ffe28aa5bd7cad21af177c7b675a5efaec09d6e",
+    "graphical_client": false,
+    "ready_for_players": false,
+    "checks": [
+      "fresh_game_boot_ready",
+      "never_joined_player_is_unknown_not_zero",
+      "stock_ftb_time_leaderboard_available_to_nonop_player",
+      "stock_ftb_time_leaderboard_also_works_in_console",
+      "saved_ticks_include_stationary_nonop_player",
+      "owner_report_labels_tick_semantics_and_saved_coverage",
+      "world_time_skip_does_not_award_game_ticks",
+      "death_and_respawn_keep_same_uuid_counter",
+      "dimension_change_keeps_overworld_statistics_identity",
+      "offline_uuid_does_not_accumulate_server_uptime",
+      "reconnect_reuses_same_saved_counter",
+      "first_clean_stop",
+      "first_clean_stop_no_oom",
+      "owner_reads_same_saved_ticks_after_clean_stop",
+      "fresh_game_boot_ready",
+      "clean_restart_keeps_uuid_history",
+      "actual_owner_cli_returns_saved_ticks_without_console_secret",
+      "second_clean_stop",
+      "second_clean_stop_no_oom",
+      "independent_native_json_matches_owner_report"
+    ],
+    "first_ticks": 114,
+    "after_dimension_ticks": 224,
+    "last_ticks": 432,
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "game_crash_detected": false,
+    "owned_game_clean_exit": true,
+    "stopped_world_tar_sha256": "d1a8073c7b835bf64ecb760750d7e9f6e7768fff6da411dfc0c9f641b09ef81f",
+    "owned_volume_removed_after_export": true,
+    "auth_cleanup": true,
+    "owned_scopes_removed": true
+  },
+  "native_controlled_kill": {
+    "ok": true,
+    "real_game": "DJ2 2.23.4",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "core_sha256": "49fd9d29eaa4e117bcbdae5a6ffe28aa5bd7cad21af177c7b675a5efaec09d6e",
+    "graphical_client": false,
+    "ready_for_players": false,
+    "checks": [
+      "fresh_game_boot_ready",
+      "never_joined_player_is_unknown_not_zero",
+      "stock_ftb_time_leaderboard_available_to_nonop_player",
+      "stock_ftb_time_leaderboard_also_works_in_console",
+      "saved_ticks_include_stationary_nonop_player",
+      "owner_report_labels_tick_semantics_and_saved_coverage",
+      "world_time_skip_does_not_award_game_ticks",
+      "death_and_respawn_keep_same_uuid_counter",
+      "dimension_change_keeps_overworld_statistics_identity",
+      "offline_uuid_does_not_accumulate_server_uptime",
+      "reconnect_reuses_same_saved_counter",
+      "stock_console_lists_authoritative_player_uuid",
+      "controlled_sigkill_is_not_oom_or_clean_stop",
+      "unclean_source_is_refused_instead_of_returning_zero",
+      "fresh_game_boot_ready",
+      "sigkill_restart_preserves_last_confirmed_saved_ticks",
+      "offline_boot_time_is_not_awarded_or_counted_twice",
+      "clean_stop_after_controlled_kill",
+      "clean_stop_after_controlled_kill_no_oom",
+      "independent_json_after_kill_restart_matches_owner_report"
+    ],
+    "first_ticks": 101,
+    "after_dimension_ticks": 217,
+    "controlled_sigkill": true,
+    "last_ticks": 403,
+    "last_confirmed_before_kill": 349,
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "game_crash_detected": false,
+    "owned_game_clean_exit": true,
+    "stopped_world_tar_sha256": "65c8a756f5057cdc82e9a7466e2908faf4eaf73b44e3f8ac00e9d68880a0499e",
+    "owned_volume_removed_after_export": true,
+    "auth_cleanup": true,
+    "owned_scopes_removed": true
+  },
+  "data_only_reset_replay": {
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "exit_code": 0,
+    "oom": false,
+    "owned_scope_removed": true,
+    "tail": [
+      "{\"ok\": true, \"checks\": [\"native_saved_tick_document_replayed_without_reserialization\", \"verified_backup_contains_exact_native_statistics\", \"allowlisted_stopped_data_only_plan_precedes_write\", \"fresh_candidate_matches_recorded_plan_and_verified_backup\", \"selected_resource_dimension_omitted\", \"resource_reset_preserves_native_saved_tick_bytes\", \"source_inventory_unchanged\", \"no_game_start_promotion_or_live_wipe_claimed\"], \"stats_sha256\": \"c92c7ca73b260baea55238169900a48c6f07cbb4f7a338ab653f06c61d1c8e72\", \"synthetic_stopped_world\": true, \"native_statistics\": true, \"graphical_client\": false}"
+    ],
+    "stats_sha256": "c92c7ca73b260baea55238169900a48c6f07cbb4f7a338ab653f06c61d1c8e72",
+    "synthetic_stopped_world": true,
+    "native_statistics": true
+  },
+  "upstream_source": {
+    "ftb_utilities": "1e1f208fd8cd7136a0e9005eaa77c806e84643d9",
+    "ftb_library_legacy": "47586e9a1bb60e6229ce05d75b3d88ae82ef963a",
+    "purpose": "inspected source for existing stat mapping, command and display; game checks use installed pinned DJ2 artifacts"
+  },
+  "limits": [
+    "Protocol actors, not graphical client/gameplay acceptance",
+    "AFK included; tick-derived nominal hours are not wall-clock hours, especially under low TPS",
+    "Owner reports only saved ticks; unknown/corrupt is not zero; SIGKILL can lose unsaved tail",
+    "Native crash scenario is controlled SIGKILL (137, not OOM), followed by clean recovery, not an unexplained Minecraft crash",
+    "Reset replay is synthetic stopped-world data transformation with real saved native stats; no game started or promoted after this data-only reset",
+    "Full old backup restore rolls back stat history; no cross-server/account-lifetime ledger or rewards implemented",
+    "Existing source/preview/VPS/owned JAR/player release unchanged; no host schedule installed",
+    "Issue #43 remains open for rollback/lifetime semantics; #44 chat welcome remains separate"
+  ]
+}
