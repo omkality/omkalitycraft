@@ -128,6 +128,45 @@ def edit_reviewed_value(value: str, *, expected_previous_sha256: str, edits) -> 
     return value
 
 
+def reuse_reviewed_lang_values(
+    *,
+    english: bytes,
+    russian: bytes,
+    source_english: bytes,
+    source_russian: bytes,
+    expected_source_sha256,
+    expected_translation_sha256,
+) -> bytes:
+    """Fill approved missing keys from pinned values; no JSON, IO or version inference."""
+    if (
+        not isinstance(expected_source_sha256, dict)
+        or not expected_source_sha256
+        or not isinstance(expected_translation_sha256, dict)
+        or expected_source_sha256.keys() != expected_translation_sha256.keys()
+    ):
+        raise ValueError("Invalid reuse source guards")
+    locale, source, translation = (
+        parse_lang(russian),
+        parse_lang(source_english),
+        parse_lang(source_russian),
+    )
+    if any(key in locale for key in expected_source_sha256):
+        raise ValueError("Reuse would overwrite an existing locale key")
+    if not expected_source_sha256.keys() <= translation.keys():
+        raise ValueError("Missing approved translation")
+    additions = {key: translation[key] for key in expected_source_sha256}
+    _check_source_guards(source, additions, expected_source_sha256)
+    _check_source_guards(translation, additions, expected_translation_sha256)
+    if any(not value or value == source[key] for key, value in additions.items()):
+        raise ValueError("Reuse requires a translated value")
+    return render_lang(
+        russian,
+        english,
+        additions=additions,
+        expected_source_sha256=expected_source_sha256,
+    )
+
+
 def render_lang(
     base: bytes,
     english: bytes,
