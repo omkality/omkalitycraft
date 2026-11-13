@@ -7,8 +7,9 @@
 проверку соответствующего действия в Minecraft.
 
 Для первого запуска выбрана DJ2 2.23.4 / Forge 1.12.2. Текущие принятые owned
-artifacts: Core 0.3.7, DJ2Fix 0.1.4, Client 0.1.1 — `mods/forge-1.12.2/versions.json`.
-GTNH не объявляем готовой. Стабильность имеет приоритет перед ускорением загрузки.
+artifacts: Core 0.3.8, DJ2Fix 0.1.4, Client 0.1.1 — `mods/forge-1.12.2/versions.json`.
+Это версии исходников/отдельных scope, не переключённый player manifest.
+GTNH не объявляем готовой. Стабильность и полнота перевода важнее свежести версии.
 Все серверные acceptance выполняются в изолированных Linux Docker labs.
 
 ## Где смотреть
@@ -17,6 +18,8 @@ GTNH не объявляем готовой. Стабильность имеет
 |---|---|---|
 | Аккаунты и проходки | `AUTH_STORAGE.md`, `ACCOUNT_RECOVERY.md`, `deploy/drasl/README.md` | Одноразовая регистрация без гонки, chosen password, отзыв сессий, постоянные auth volumes и signing key |
 | Лаунчер, manifest, update | `PORTABLE_SESSIONS.md`, `SIGNED_PACK_INSTALL.md`, `RELEASES.md` | Подписи, minimum version, repair/сеть, сохранение настроек, portable paths и реальные клиенты |
+| Перевод DJ2 | `DJ2_TRANSLATION_COVERAGE.md`, `PACK_UPGRADES.md`, #49 | Сохранить обнаруженные старые локали и tips отдельно от mod code; статическая проверка не доказывает runtime I18n/семантику/вёрстку |
+| Помощь и игровые часы | `NEW_PLAYER_GUIDE.md`, `PLAYER_TIME.md`, #43/#44 | Opt-in `/guide` проверена protocol packets; обычный графический чат открыт. Saved ticks не являются несбрасываемым account lifetime |
 | Разделение модов | `mods/README.md`, `mods/forge-1.12.2/THIRD_PARTY.md` | Generic Core отдельно от pack fixes, reproducible hashes, архив/lab не в публичном runtime |
 | Команды, роли, FTB | `commands/dj2/README.md`, `DJ2_PLANT_PLACEMENT.md` | Все игроки без OP, PvP/Hard, лимиты, защита spawn, обычные разрешённые действия вместе с негативными контролями |
 | Измерения и ресурсный мир | `OWNER_WORLD_CUTOVERS.md`, `RESOURCE_WORLD.md` и связанные с #32/#37 документы | Безопасная высадка, mod portal/teleporter state, очистка приватов/домов/варпов только выбранного мира |
@@ -49,6 +52,8 @@ GTNH не объявляем готовой. Стабильность имеет
 - **#30/#36:** заключительный configuration audit и выпускной клиент. CI на трёх
   ОС проверяет Python/Qt/portable bundle, но не доказывает реальную игру на
   графических Linux/macOS Minecraft-клиентах.
+- **#163:** два native Windows exit с OpenAL64.dll; причина не установлена.
+  Обычный вход/игра/выход со звуком требуют отдельного повторения после изоляции причины.
 
 Это не новые требования: перечислены уже согласованные открытые scope. Не закрываем
 их общим коммитом «подготовка завершена» и не публикуем незавершённые security

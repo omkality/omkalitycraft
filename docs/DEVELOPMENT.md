@@ -1,5 +1,29 @@
 # Разработка OmkalityCraft
 
+## Полнота русского перевода DJ2 — 13 ноября 2026
+
+Владелец поставил полноту перевода выше свежести версии. Расширенный статический
+аудит #49: старые mod JAR locales, ResourceLoader/Groovy, активный FM_NewFont,
+tips и Patchouli. Кандидат 2.23.4 содержит все 3532 актуальных BQ-ключа; два
+изменённых LightningCraft-описания уже адаптированы. Но 129 custom tips остались
+английскими, а восемь JAR потеряли 3025 RU-записей. Их class entries и EN bytes
+идентичны старым. Приватный language-only draft восстанавливает эти записи;
+на 53908 одинаковых EN-ключах потери наличия RU уменьшаются с 3025 до нуля.
+
+717/718 Patchouli JSON совпали как JSON; одна metadata/macros правка TF, не
+обнаруженная потеря RU. Предыдущий аудит пяти внешних файлов был недостаточен
+для полноты сборки. Нет global процента/обещания 100% RU. UTF-8/формат/пути и
+130 RU tips отдельно проверены data-only Linux Docker: no network/socket,
+readonly/1 CPU/256 МиБ, exit 0/OOM=false, inputs прежние, owned container удалён.
+Первый strict-input отказ на builtin Erebus EN сохранён; нормализован только
+frozen verifier input, не production parser/JAR. Draft не установлен в игру.
+
+Следующее: проверить происхождение/распространение локалей, semantic tips,
+runtime resource priority/I18n/шрифт/BQ/JEI/книги и обычную игру. Native OpenAL
+crash #163 независим и не исправлен языковым слоем. Версия/manifest/player
+release/VPS прежние. [Сравнение](DJ2_TRANSLATION_COVERAGE.md),
+[пины и протокол](validation/dj2-translation-coverage-2026-11-13.json).
+
 ## Короткая памятка новичкам — 13 ноября 2026
 
 Следующий ограниченный шаг #44: общий opt-in Core 0.3.8, текст DJ2 в data profile,
