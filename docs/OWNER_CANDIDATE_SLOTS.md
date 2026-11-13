@@ -35,6 +35,32 @@ metadata, шаблон, logging profile, image, bridge и команда фик�
 Перед первым стартом helper повторно сверяет все байты world/runtime и ports.
 Helper работает read-only, без сети и Docker socket.
 
+## Ресурсы и Docker-журнал
+
+Пример окружения owner process: [`deploy/candidate-slots.example.env`](../deploy/candidate-slots.example.env).
+Значения читаются при plan; автоматически `.env` не загружается.
+
+| Переменная | Default | Диапазон |
+|---|---:|---|
+| `OMK_SLOT_MEMORY_MIB` | 8192 | 1024–65536 |
+| `OMK_SLOT_HEAP_MIB` | 6144 | 512–49152 |
+| `OMK_SLOT_INITIAL_HEAP_MIB` | 1024 | 256–49152 |
+| `OMK_SLOT_CPUS` | 4 | 1–32, целые |
+| `OMK_SLOT_PIDS` | 512 | 128–4096 |
+| `OMK_SLOT_LOG_BYTES` | 4194304 | 65536–8388608, предел owner readback/export |
+| `OMK_SLOT_DOCKER_LOG_MIB` | 10 | 1–64, `local` driver max-size |
+| `OMK_SLOT_DOCKER_LOG_FILES` | 3 | 1–10, `local` driver max-file |
+
+Initial heap ≤ max heap ≤ container memory −512 МиБ. Порог Docker stdout,
+предел owner readback и [Log4j-файлы](LOGGING.md#настройки-forge-log4j) — разные
+политики. Увеличение одного не меняет остальные и общий storage budget.
+
+Новый план сохраняет явные Docker log limits. При create и последующих snapshot
+проверяется точный driver/config; новая env до create требует нового плана.
+Старые schema-1 планы без обоих полей читаются с прежним смыслом `10m × 3`,
+без переписывания журналов. Частичный набор полей отклоняется; legacy план не
+может принять новый override молча. Уже созданные контейнеры не перенастраиваются.
+
 ## Команды
 
 `R` — ID подготовленного ресурсного сброса; `S` — новый ID из `slot-plan`.

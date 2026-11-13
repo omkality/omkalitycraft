@@ -1,5 +1,31 @@
 # Разработка OmkalityCraft
 
+## Настройки Forge/Docker-журналов — 13 ноября 2026
+
+Следующий ограниченный этап #30/#33: два validated env для генерации Forge 1.12.2
+Log4j XML, прежние 8 МиБ/3 gzip и XML с LF при defaults. Остальные версии сохраняют
+declared logging. Отдельно два env для local driver проверочных candidate slots:
+точные config/driver фиксируются в плане и проверяются в snapshot. Старые schema-1
+планы без обоих полей читаются как прежние 10m/3, без миграции/перезаписи policy;
+добавить новый override в legacy план нельзя. LOG_BYTES остаётся пределом readback.
+Новых CLI/collectors/host schedules нет. Frozen XML существующего runtime не
+переписывается переменной задним числом. Добавлены examples и logging inventory.
+
+120 focused Linux Docker cases; Windows 119/1 skipped. Red/green двух hardcode
+контролей. Native Java 8/Log4j 2.25.5: 16 checks (14 unique), ротация/exception/
+filter/restart/читаемые gzip и большой event выше порога. Настоящий CT FileLogger
+4.1.20.711 подтвердил старый inode после rename и старый offset после truncate.
+Groovy проверен по exact v1.4.3 source, не native game. Поэтому онлайн-ограничение
+CT/Groovy требует отдельного writer adapter/startup/reload/ENOSPC/recipe regression;
+оно остаётся #30, не заменяется внешним logrotate или лимитами diagnostic ZIP.
+
+Второй native Docker: production creation/snapshot, 16 checks; реальные local
+1m/2 и legacy 10m/3, отказ mismatch, loopback/owned volume/sandbox, Java fixture
+после большого stdout завершился 0, OOM=false. Только command/metadata заменены
+контролируемой fixture; это не полный resource reset или игра Forge. Свои scopes
+удалены. Owned JAR, game data и VPS прежние; общий config/storage audit открыт.
+[Протокол](validation/forge-log-policy-2026-11-13.json).
+
 ## Хвосты script logs в диагностике владельца — 13 ноября 2026
 
 Ограниченный шаг #30: прежний export_bundle не включал отдельные ошибки рецептов/
