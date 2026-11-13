@@ -7,6 +7,8 @@ import pytest
 
 from launcher.accounts import AccountError, AccountService
 from launcher.session import SessionStoreError
+from launcher.skin_defaults import DEFAULT_SKIN_MODEL, default_skin_bytes
+from launcher.skins import decode_skin
 from launcher.storage import FileSessionStore
 from omk.drasl import DraslError
 from omk.lab import skin_fixture
@@ -174,6 +176,30 @@ def test_management_token_is_not_persisted_after_password_change(
         "update_user",
         {"password", "resetApiToken", "resetMinecraftToken"},
     ) in account.client.calls
+
+
+def test_skin_reset_uses_only_current_game_token_and_bundled_white_shirt(
+    account, monkeypatch
+):
+    captured = []
+    monkeypatch.setattr(
+        account.client, "upload_game_skin", lambda *args: captured.append(args)
+    )
+    with pytest.raises(AccountError, match="Сначала войдите"):
+        account.reset_skin()
+    assert captured == []
+    session = account.login("test_player", "test-password").session
+    account.reset_skin()
+    player, token, png, model = captured.pop()
+    assert (
+        player == session.player_uuid.replace("-", "") and token == session.access_token
+    )
+    assert png == decode_skin(default_skin_bytes(), DEFAULT_SKIN_MODEL).png
+    assert model == DEFAULT_SKIN_MODEL == "slim"
+    assert account.client.management_token not in account.store.path.read_text()
+    assert not any(
+        call[0] in {"update_user", "signout"} for call in account.client.calls
+    )
 
 
 def test_forget_device_does_not_claim_remote_revocation(

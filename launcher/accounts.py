@@ -6,6 +6,7 @@ from typing import Any
 from uuid import UUID, uuid4
 
 from launcher.session import Session, SessionStore, SessionStoreError
+from launcher.skin_defaults import DEFAULT_SKIN_MODEL, default_skin_bytes
 from launcher.skins import SkinError, decode_skin
 from omk.drasl import DraslClient, DraslError
 
@@ -182,6 +183,9 @@ class AccountService:
         self.client.upload_game_skin(
             UUID(session.player_uuid).hex, session.access_token, png, model
         )
+
+    def reset_skin(self) -> None:
+        self.upload_skin(default_skin_bytes(), DEFAULT_SKIN_MODEL)
 
     def _confirm_password(self, password: str) -> tuple[Session, str]:
         session = self._require_session()

@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QDialog,
     QDialogButtonBox,
+    QHBoxLayout,
     QLabel,
     QPushButton,
     QVBoxLayout,
@@ -12,6 +13,34 @@ from PySide6.QtWidgets import (
 
 from launcher.skin_view import SkinView
 from launcher.skins import Skin
+
+
+class SkinResetDialog(QDialog):
+    def __init__(self, parent: QWidget) -> None:
+        super().__init__(parent)
+        self.setObjectName("resetSkinDialog")
+        self.setWindowTitle("Сбросить скин")
+        self.setMinimumWidth(470)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(24, 22, 24, 22)
+        layout.setSpacing(20)
+        question = QLabel("Вы уверены? Вернётся Стив в белой футболке.")
+        question.setObjectName("resetSkinQuestion")
+        question.setWordWrap(True)
+        layout.addWidget(question)
+        row = QHBoxLayout()
+        cancel = QPushButton("Отмена")
+        cancel.setObjectName("cancelSkinReset")
+        cancel.setDefault(True)
+        cancel.clicked.connect(self.reject)
+        confirm = QPushButton("Сбросить")
+        confirm.setObjectName("confirmSkinReset")
+        confirm.setProperty("primary", True)
+        confirm.setAutoDefault(False)
+        confirm.clicked.connect(self.accept)
+        row.addWidget(confirm, 1)
+        row.addWidget(cancel, 1)
+        layout.addLayout(row)
 
 
 class SkinDialog(QDialog):
