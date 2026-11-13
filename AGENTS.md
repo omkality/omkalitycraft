@@ -38,3 +38,4 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
 - Use a new screenshot filename for every shared UI revision; never overwrite a PNG after linking it in chat, because the app may cache it.
 - Prefer validated environment overrides with documented defaults for deployment policy; do not require source edits for operational limits. Keep security/trust keys and release integrity outside arbitrary player overrides.
 - Run crash/bug/duplication labs locally in isolated Linux Docker volumes matching the intended server runtime; do not load the public server for development tests. Budget backups, logs, worlds, staging and free disk reserve together before deployment.
+- After stopping a local game lab, preserve its diagnostics and close its owned Crash Assistant child processes/windows. Do not disable player crash reporting or terminate unrelated Java processes.
