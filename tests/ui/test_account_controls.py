@@ -9,6 +9,7 @@ from launcher.app import LauncherWindow, PasswordDialog
 from launcher.skin_view import default_skin
 from launcher.storage import FileSessionStore
 from omk.drasl import DraslError
+from omk.gui_lab import _modal_action
 from omk.lab import skin_fixture
 from tests.fakes import FakeDrasl
 
@@ -71,6 +72,16 @@ def test_password_save_still_validates_before_accepting(qtbot, window):
     dialog.repeat.setText(dialog.new.text())
     qtbot.mouseClick(save, Qt.MouseButton.LeftButton)
     assert dialog.result() == dialog.DialogCode.Accepted and not dialog.isVisible()
+
+
+def test_lab_callback_failure_closes_modal_instead_of_hanging(qapp, window):
+    def broken_callback(dialog):
+        raise RuntimeError("Owned fixture simulates a missing control")
+
+    with pytest.raises(RuntimeError, match="Disposable modal action failed"):
+        _modal_action(qapp, window, "resetSkin", broken_callback)
+    assert qapp.activeModalWidget() is None
+    assert not any(call[0] == "upload_skin" for call in window.service.client.calls)
 
 
 def test_confirmed_reset_waits_for_backend_and_coalesces_repeated_clicks(

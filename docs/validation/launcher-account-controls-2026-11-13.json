@@ -3,11 +3,11 @@
   "scope": "Launcher skin reset, password dialog layout and typed Drasl client-error responses",
   "version": "0.3.0.dev12",
   "local_tests": {
-    "windows_unit_ui_passed": 2151,
+    "windows_unit_ui_passed": 2152,
     "skipped": 95,
     "warnings": 3,
     "qt_backend": "offscreen",
-    "new_unit_ui_cases": 7,
+    "new_unit_ui_cases": 8,
     "ruff": "passed",
     "black": "passed"
   },
@@ -20,7 +20,8 @@
     "go_client_error_controls": 9,
     "existing_auth_smoke_checks": 21,
     "fresh_persistent_account_workflow_checks": 18,
-    "owned_acceptance_containers_and_volumes_removed": true
+    "owned_acceptance_containers_and_volumes_removed": true,
+    "qt_with_real_drasl_smoke_checks": 33
   },
   "accepted_behaviors": [
     "cancel_or_escape_without_skin_request",
@@ -36,7 +37,9 @@
     "password_buttons_fill_row_with_equal_width",
     "password_save_validation_preserved",
     "explicit_user_error_4xx_retained_without_internal_details",
-    "invalid_png_returns_400_without_texture_change"
+    "invalid_png_returns_400_without_texture_change",
+    "real_qt_cancel_confirm_reset_and_password_change_against_drasl",
+    "modal_fixture_callback_failure_closes_dialog_instead_of_hanging"
   ],
   "default_asset_sha256": "481c10cd3617e0134664c115fa728b5aee682b7e2f1c15d66f72c63c005a0312",
   "packaged_windows": {
@@ -59,7 +62,8 @@
   "initial_failures_preserved": [
     "layout label measured before stylesheet parenting (26 vs 48 px)",
     "old Drasl typed client denial mapped to HTTP 500",
-    "Docker context allowlist initially omitted new patch/test"
+    "Docker context allowlist initially omitted new patch/test",
+    "old GUI smoke looked for removed QDialogButtonBox and left modal open; updated stable button IDs and bounded callback/watchdog"
   ],
   "limits": [
     "No Minecraft or graphical Linux/macOS game acceptance in this scope",
@@ -78,6 +82,7 @@
     "deploy/drasl/Dockerfile": "268a8c3fc942a7bf0992098ec34f9e3910b8d5ab7c6d160ee4255e935477a0c5",
     "deploy/drasl/.dockerignore": "c589d4371552afe986d5bfe28161907dd3c5795dba99453e2f8b0898f6e0f309",
     "deploy/drasl/texture-errors.patch": "7c49f75dd819166b4ac66794fa807cb81d1da7df3f8b0e8edee7355cf92513bc",
-    "deploy/drasl/texture_errors_test.go": "9bbfc4b8a3c618e0e07afc309e11cbf9ea5c5e0ed0d84e2aecfd11336f1bd5b8"
+    "deploy/drasl/texture_errors_test.go": "9bbfc4b8a3c618e0e07afc309e11cbf9ea5c5e0ed0d84e2aecfd11336f1bd5b8",
+    "omk/gui_lab.py": "cbe0e7d9dcffea3016b339abde8209273b299dc389da09e6b5464219bc7c395b"
   }
 }

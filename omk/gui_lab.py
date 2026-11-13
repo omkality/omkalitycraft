@@ -13,7 +13,6 @@ from PySide6.QtGui import QImage
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import (
     QApplication,
-    QDialogButtonBox,
     QFileDialog,
     QPushButton,
     QTabWidget,
@@ -22,7 +21,7 @@ from PySide6.QtWidgets import (
 from launcher.accounts import AccountService, Registration
 from launcher.app import LauncherWindow, PasswordDialog
 from launcher.skin_defaults import SKIN_ASSETS, default_skin_bytes
-from launcher.skin_dialog import SkinDialog
+from launcher.skin_dialog import SkinDialog, SkinResetDialog
 from launcher.storage import FileSessionStore
 from omk.drasl import DraslClient
 from omk.profiles import PROJECT_ROOT
@@ -50,23 +49,55 @@ def _assert_home(window: LauncherWindow) -> None:
         raise RuntimeError("Launcher did not complete the disposable account workflow")
 
 
+def _modal_action(app, window, button, action):
+    failures = []
+
+    def fail(error):
+        failures.append(error)
+        dialog = app.activeModalWidget()
+        if dialog is not None:
+            dialog.reject()
+
+    def invoke():
+        try:
+            action(app.activeModalWidget())
+        except Exception as error:
+            fail(error)
+
+    watchdog = QTimer(window)
+    watchdog.setSingleShot(True)
+    watchdog.timeout.connect(lambda: fail(RuntimeError("Disposable modal timed out")))
+    watchdog.start(12000)
+    trigger = QTimer(window)
+    trigger.setSingleShot(True)
+    trigger.timeout.connect(invoke)
+    trigger.start(0)
+    try:
+        _click(window, button)
+    finally:
+        watchdog.stop()
+        watchdog.deleteLater()
+        trigger.stop()
+        trigger.deleteLater()
+    if failures:
+        raise RuntimeError("Disposable modal action failed") from failures[0]
+
+
 def _password_controls(app: QApplication, window: LauncherWindow, password: str) -> str:
     new_password = password + "-changed"
 
-    def fill_password() -> None:
-        dialog = app.activeModalWidget()
+    def fill_password(dialog) -> None:
         if not isinstance(dialog, PasswordDialog):
             raise RuntimeError("Password test dialog is unavailable")
         dialog.old.setText(password)
         dialog.new.setText(new_password)
         dialog.repeat.setText(new_password)
-        save = dialog.findChild(QDialogButtonBox).button(
-            QDialogButtonBox.StandardButton.Save
-        )
+        save = dialog.findChild(QPushButton, "savePassword")
+        if save is None:
+            raise RuntimeError("Password save button is unavailable")
         QTest.mouseClick(save, Qt.MouseButton.LeftButton)
 
-    QTimer.singleShot(0, fill_password)
-    _click(window, "changePassword")
+    _modal_action(app, window, "changePassword", fill_password)
     _wait(app, lambda: not window.busy)
     _assert_home(window)
     return new_password
@@ -114,8 +145,7 @@ def _skin_controls(app, window, client, folder, passed):
         png = Path(folder) / "skin.png"
         png.write_bytes((SKIN_ASSETS / filename).read_bytes())
 
-        def confirm(model=model):
-            dialog = app.activeModalWidget()
+        def confirm(dialog, model=model):
             if not isinstance(dialog, SkinDialog) or dialog.model != model:
                 raise RuntimeError("Automatic skin preview selected wrong model")
             QTest.mouseClick(dialog.upload, Qt.MouseButton.LeftButton)
@@ -123,8 +153,7 @@ def _skin_controls(app, window, client, folder, passed):
         with patch.object(
             QFileDialog, "getOpenFileName", return_value=(str(png), "PNG")
         ):
-            QTimer.singleShot(0, confirm)
-            _click(window, "uploadSkin")
+            _modal_action(app, window, "uploadSkin", confirm)
             _wait(app, lambda: not window.busy)
         result = client.skin_profile(session.player_uuid)
         if (
@@ -136,6 +165,38 @@ def _skin_controls(app, window, client, folder, passed):
         ):
             raise RuntimeError("Uploaded skin pixels/model did not round trip")
         passed("real_gui_one_upload_" + filename.removesuffix(".png"))
+
+
+def _skin_reset_controls(app, window, client, passed):
+    player = window.service.current.player_uuid
+    before = client.skin_profile(player)
+
+    def choose(dialog, button):
+        if not isinstance(dialog, SkinResetDialog):
+            raise RuntimeError("Skin reset confirmation is unavailable")
+        _click(dialog, button)
+
+    _modal_action(
+        app, window, "resetSkin", lambda dialog: choose(dialog, "cancelSkinReset")
+    )
+    if client.skin_profile(player) != before:
+        raise RuntimeError("Cancelled reset changed the profile")
+    passed("real_gui_skin_reset_cancel_preserves_profile")
+    _modal_action(
+        app, window, "resetSkin", lambda dialog: choose(dialog, "confirmSkinReset")
+    )
+    _wait(app, lambda: not window.busy)
+    result = client.skin_profile(player)
+    expected = QImage.fromData(default_skin_bytes(), "PNG")
+    if (
+        result is None
+        or result[1] != "slim"
+        or QImage.fromData(result[0], "PNG") != expected
+        or window.skin_preview.image != expected
+        or "Скин сброшен" not in window.status.text()
+    ):
+        raise RuntimeError("Confirmed reset did not round trip through Drasl")
+    passed("real_gui_skin_reset_default_round_trip")
 
 
 def _lost_registration_response(app, client, admin, folder, windows, passed):
@@ -222,6 +283,7 @@ def launcher_checks(
             passed("real_gui_restart_auto_login")
 
             _skin_controls(app, window, client, folder, passed)
+            _skin_reset_controls(app, window, client, passed)
 
             password = _password_controls(app, window, registration.password)
             passed("real_gui_password_change")
