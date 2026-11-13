@@ -13,7 +13,7 @@
 дополнительный совет не переносится, 91 перевод сохранён, 38 обновлены; четыре
 project adaptations. Собственные source-данные и EN value hashes в profile,
 полный заимствованный слой и raw лаборатория вне Git. Common JAR Git blob IDs
-BMProjects/candidate: 223 совпадения, два иных имени/версии не импортировались.
+BMProjects/candidate: 223 совпадения; дополнительные OptiFine/clientfixer не импортировались.
 
 В прежний render_lang добавлен необязательный source guard: stale EN при том же
 ID/формате отвергается, предыдущие callers совместимы. Red: 9 новых failures при
