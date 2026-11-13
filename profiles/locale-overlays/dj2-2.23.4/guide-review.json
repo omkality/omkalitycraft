@@ -1,0 +1,1382 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "requires_upstream_reuse_sha256_utf8_lf": "e48dc7db4328b6dd539e74ab60e2df2a16e8fe6a87c1453c0ece1fff39a9a4ba",
+  "requires_owned_profile_sha256_utf8_lf": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+  "scope": "198 exact-key/English book entries, 8 bounded meaning edits, 31 explicitly reviewed compatibility additions; data only",
+  "exact_reuse": {
+    "integrateddynamics": {
+      "info_book.integrateddynamics.section.main": {
+        "source_sha256": "6d0f36a1ae536a26ef2e075147db4a24a34c3c9b7b93798f34afecb9060e0296",
+        "translation_sha256": "2e686fac0706ccd45f8df66f9284dfc6b065b028ff9cdf6fef34ab0efb99496c"
+      },
+      "info_book.integrateddynamics.tag_index": {
+        "source_sha256": "e122f2f5b327ffec4982ffcbdc3b4d4ac26a4d8275dbed7ad658aef0665cae3c",
+        "translation_sha256": "b84f8e10a485510f212522ff2947801de6d422a1d07077c9f70518a680fdeab7"
+      },
+      "info_book.integrateddynamics.introduction": {
+        "source_sha256": "b605350bc00209520b7cd8f546322663356ba630708f71bbf30aead6b3dd608e",
+        "translation_sha256": "34a79ab87f0f954807ee28ee97434f4d46211104ec298657f2a4a2976703edce"
+      },
+      "info_book.integrateddynamics.introduction.text1": {
+        "source_sha256": "8e62142a349b5b2149654b8fff5d9463abda861e4bfb23e9a9a9fd350d70f1f2",
+        "translation_sha256": "94605a0eaf4e57dacb5ed6dc756f285a79cef1b93381b8d0e0fe68a5612af124"
+      },
+      "info_book.integrateddynamics.introduction.text2": {
+        "source_sha256": "018314c5cd7ec2cfae44ece13acb730c402886873101556f4b732fe813d70c46",
+        "translation_sha256": "d89d7b638fdfba3f13a3ca45c4c2e95937a874271468f31c78505ddbd7b8f960"
+      },
+      "info_book.integrateddynamics.introduction.text3": {
+        "source_sha256": "8747a693e8210cda6d6b27470c4be67b4f6ea71ebf2d4c91ed8677016db48e7b",
+        "translation_sha256": "1bfbaa74649be569a778720ed28a689fbd605a409dcd564c2109631211da73d0"
+      },
+      "info_book.integrateddynamics.introduction.text4": {
+        "source_sha256": "bae6dd9d4fd6010a6fc89623129642a965ca508dcabd16a386b15bf60060d1d5",
+        "translation_sha256": "9d8ce9aa25b6e636b09ef8c819de241d2605be5843464e0628c699b4c3e660e4"
+      },
+      "info_book.integrateddynamics.tutorials": {
+        "source_sha256": "8d9f66992dd4373c8f30f09a93b87aa0d9d341b8ec91e0bcbd4a4c744e41b3f9",
+        "translation_sha256": "36a8b6c29e805011e50f978294dacb5188fa1127a310edbeeceded33f710c6c3"
+      },
+      "info_book.integrateddynamics.tutorials.introduction": {
+        "source_sha256": "b605350bc00209520b7cd8f546322663356ba630708f71bbf30aead6b3dd608e",
+        "translation_sha256": "34a79ab87f0f954807ee28ee97434f4d46211104ec298657f2a4a2976703edce"
+      },
+      "info_book.integrateddynamics.tutorials.introduction.text1": {
+        "source_sha256": "aed6825c61ba7960e4f9039143f6e920d7f8cf67238c006066e7c38755e85b48",
+        "translation_sha256": "6fcd4cc47ea5d5d32d6dbd68b4e997c1b15c8c7445bb6f3ed14a923eb8d4e355"
+      },
+      "info_book.integrateddynamics.tutorials.menrilBasics": {
+        "source_sha256": "5d08d5347154de8ddb87de9a4d0d1d9122a7e057ebc18f4e6ecece84376b5a3a",
+        "translation_sha256": "5fbcb424dd4744b05125562dedd34209e41df4e2c17f4e85ee572e3b898ad5db"
+      },
+      "info_book.integrateddynamics.tutorials.menrilBasics.text1": {
+        "source_sha256": "b57450131df1e3b0571f3e9fc9c88c1ddfe66ae2997fa97a9e8313712dbcd148",
+        "translation_sha256": "760485ca4c2b5c4f801dab09ce17172082e7847207cdd9971ae65ecaff17ce52"
+      },
+      "info_book.integrateddynamics.tutorials.menrilBasics.text3": {
+        "source_sha256": "7b9439ae604d2c7e477def914cb24100c6e2abb8bdcb0627c375a67cbcc79d13",
+        "translation_sha256": "88a3feddd0c5eca2417e1c2fffa5f1ba71485bb8c1df6f497ebc9a2273ac1093"
+      },
+      "info_book.integrateddynamics.tutorials.menrilBasics.text4": {
+        "source_sha256": "df9b0082c8a957d613cd0a35ad7430716a65d365b08c5b67672013661e7e1d13",
+        "translation_sha256": "a1fa8eb2394b64363ebabe76b183ccddd000131cb20f22ddb5f38d227efcdd44"
+      },
+      "info_book.integrateddynamics.tutorials.networkFoundations": {
+        "source_sha256": "62d3c6e74b19c8fdee9622b5a53611678494fddeebd51c202ac8547ddcd72ca7",
+        "translation_sha256": "d4bdc15ee2f160fdb2b0fd67859fae246ccb825b6988a01a1e2e99e10f2227fc"
+      },
+      "info_book.integrateddynamics.tutorials.networkFoundations.text1": {
+        "source_sha256": "f22ca11fa2cd5b26d6ba022c3834299a41be1f6f701ae6b5ee6f46e231043a77",
+        "translation_sha256": "a51279576f53fb39ceb53a655e16ed4dfe0ba5e72fbb2d99463332ee9826a02e"
+      },
+      "info_book.integrateddynamics.tutorials.networkFoundations.text2": {
+        "source_sha256": "25e068bd85adf852d40b90707ac6349380f7d15a9a157d7ccdec57ba0e957a61",
+        "translation_sha256": "59dfb69bb435dcd04dbc5fc70476100fdc623c3a93039b3a6f7327f06f0fd650"
+      },
+      "info_book.integrateddynamics.tutorials.basicNetworkComponents": {
+        "source_sha256": "283a72cc8ac4d3d9b8e64eeef95733af318fa937965eee682bedba7e41e5ce7d",
+        "translation_sha256": "a311e42e0672c4c718f1731840587d2634c0013ab83e927104ce26e47abdf97e"
+      },
+      "info_book.integrateddynamics.tutorials.basicNetworkComponents.text1": {
+        "source_sha256": "bfb0c2101bc5781330e45d32f871c89e78d49af27a69427ab885af4b84fcd69e",
+        "translation_sha256": "cc2ddc980222f13b55e53a59c13b4ec8edbaab6d675e54bf9bce86737f93744a"
+      },
+      "info_book.integrateddynamics.tutorials.aspects": {
+        "source_sha256": "77f225b6cebe0ec28dd3d214c0644465710e6650afcc83ecb976672b33a9ab9d",
+        "translation_sha256": "2b8685937416819c4711e75224e640a4e20323ec8af781824cb14a5fd5c51a22"
+      },
+      "info_book.integrateddynamics.tutorials.aspects.text1": {
+        "source_sha256": "aa1696d8d27249bbce90babb9d5f87f4ef55f6605381a5f1c04f5c9e63af1d2a",
+        "translation_sha256": "94b5a9e55463ac7a8b9b0b21f05be65abd809102b9e3301472043f877bb5da92"
+      },
+      "info_book.integrateddynamics.tutorials.aspects.text2": {
+        "source_sha256": "ab7f8d61a6e6b5d64e18cfe7694d91e36c66e3a4865dfb40438adf3bc1b75ea8",
+        "translation_sha256": "db7859b88efad0179f39d0e410daadf9017383e3b14e2c3adf4e98248802b9ab"
+      },
+      "info_book.integrateddynamics.tutorials.aspects.text3": {
+        "source_sha256": "952ee91f0c82d9964d173ac532d25369d3bc75464be44d62731b383a10fdc391",
+        "translation_sha256": "b9aa19ef8c8aa78fa291f64f8650a6873fcd0592e2903191121f57bcdf8b490a"
+      },
+      "info_book.integrateddynamics.tutorials.aspects.text4": {
+        "source_sha256": "649aad4ac33eefd251771239a897314fb2efc2107209d1c34cb038ef32c7c7c5",
+        "translation_sha256": "d2233d39007fa711faeb88f46471defdfd9efc8810e007a6239c4e2caefbb099"
+      },
+      "info_book.integrateddynamics.tutorials.logicOperations": {
+        "source_sha256": "30254a585838694b1ba9620f4c4fae371f8590544aa11ea9e3577401748c5310",
+        "translation_sha256": "040a8bbc071f9d96e5b1c58f71301f2ecc4338384e0e480b4cd726e541a49bc6"
+      },
+      "info_book.integrateddynamics.tutorials.logicOperations.text1": {
+        "source_sha256": "6a1c36acbdeefbd19874b3f2f9a4d3e24f3318bb2d5261279aec67062b74f0b9",
+        "translation_sha256": "b5a2eb074c91761b1b468e93cc509a52c7b9cc5d8c9ed2c668a847217e8c1325"
+      },
+      "info_book.integrateddynamics.tutorials.logicOperations.text2": {
+        "source_sha256": "62e3c59ec9a0380d3b7eb90c28c9a139a078822f5da254b6235ebd61bff6f847",
+        "translation_sha256": "ac79e8d6e17df8f830124117ea13aec0fe77c7e60e8c1d898ce59f1a329ab61c"
+      },
+      "info_book.integrateddynamics.tutorials.logicOperations.text3": {
+        "source_sha256": "9971dd3629a5a64941a0f8935de4a746b3310281629a6d1218720a16f67a30d1",
+        "translation_sha256": "d641c83c4c959f2bf7ce9bee55d5cfdf92240ca1457a16217eb81ec082d553da"
+      },
+      "info_book.integrateddynamics.tutorials.logicOperations.text4": {
+        "source_sha256": "1867886ca17332a02742651bf2dd87c7e1551362e911464a4bcf9795908aa1f7",
+        "translation_sha256": "e0af995925695f76316c19a08061bb2964b586faa8c0ed9c63e93b84a50d3e52"
+      },
+      "info_book.integrateddynamics.tutorials.logicOperations.text7": {
+        "source_sha256": "5bc55dbb69c74e55d0fffdcdc52ffd0c801705cb31e773812763eee58663897b",
+        "translation_sha256": "b5df30f4c35ed6f8261ad93ae0c2d889ae2e58f1d791f662895d02b02013acfd"
+      },
+      "info_book.integrateddynamics.tutorials.recipe_handling": {
+        "source_sha256": "7f747d5fd4ab2c9609db6b48677f1143134122399b79b9c4eb84121a92b35977",
+        "translation_sha256": "f1e1c423f5d804b9ca9bb59a90a9840366120ee3a0147cdfd1acca945d0ef60a"
+      },
+      "info_book.integrateddynamics.tutorials.recipe_handling.text1": {
+        "source_sha256": "df9fc8bd9984796ba9290773277c0d32516bc4c33d278811f57bf1435acfe4b1",
+        "translation_sha256": "925eeef467fea9e0450b741bc2bf4d48b5ea35e75b6d0e2a82bb78faadb4426b"
+      },
+      "info_book.integrateddynamics.tutorials.recipe_handling.text2": {
+        "source_sha256": "d039001694956d2eb38c8cc865a04642f69ed8a1f371ecb2c48994cb88986d86",
+        "translation_sha256": "23d4dadecc990e5a6792b1f7d77e3efed1e37d85b64c1b12c4af205406dd522f"
+      },
+      "info_book.integrateddynamics.tutorials.recipe_handling.text4": {
+        "source_sha256": "3e6bd3a404a3e5a464fc828b9de5302e79ee572f3fa687b48eca2cbb26efc73f",
+        "translation_sha256": "729e0535327dca5fa782361a8a10bd3a4c95b108919f42851efd149946d83106"
+      },
+      "info_book.integrateddynamics.tutorials.recipe_handling.text5": {
+        "source_sha256": "1de4573422337b049f4e6a2baf90a12bb63018a2466cd045cf68d11a1ca81538",
+        "translation_sha256": "c368dd99b906a55e5db748ea1deda997053c5692d85ac6e0bbe3e227ee288529"
+      },
+      "info_book.integrateddynamics.tutorials.recipe_handling.text6": {
+        "source_sha256": "9d53347d6196577e102abd5feda551d93588452213759576b5a5eee0bf8ad6d1",
+        "translation_sha256": "1d298f8f2a8813a2f5440c2d18c1571badbeb0c6a0f9a509ef7d960a05358e09"
+      },
+      "info_book.integrateddynamics.tutorials.advancedNetworkComponents": {
+        "source_sha256": "e51a754d4e6b7c07eca671f3b3ebab361b6722449d93cd9bc398d350defc8e59",
+        "translation_sha256": "2acad9a61c0960a8cb3439f992fa1d4e61d476de096381a2c845a8f68068b976"
+      },
+      "info_book.integrateddynamics.tutorials.advancedNetworkComponents.text1": {
+        "source_sha256": "3513d285b09d5955b48d7d71ce184317cff132bebf321ac6f6bf7928b778322a",
+        "translation_sha256": "cc061bc9b58649acf5b7df405732dfdf380f21f6fced65c7fa82d510e326f0d5"
+      },
+      "info_book.integrateddynamics.tutorials.advancedNetworkComponents.text5": {
+        "source_sha256": "463322754ef9700eb88b1b19e6dbed39bc1e1173a95f4bacf49b48e293a92502",
+        "translation_sha256": "36528d1e44dcc2327067bffb235aa8502abc377a1caa885e18225bc588b23562"
+      },
+      "info_book.integrateddynamics.tutorials.advancedOperations": {
+        "source_sha256": "5c710194b70c9dcdcda76b1718880c98a01ed8a007e8032ae3c719d3df512f98",
+        "translation_sha256": "dbb167967242608ca797fd6002f590d53f517ece5974d40a73b3a2c61448de7a"
+      },
+      "info_book.integrateddynamics.tutorials.advancedOperations.text1": {
+        "source_sha256": "f49d6f029424096206f612587d6f3682efe4d65a83ef6ee8296b384f54aaef0d",
+        "translation_sha256": "162b3708fe81643ce8b53738153d90fc8e8f2acefafc283c80a0dd5f30e81c76"
+      },
+      "info_book.integrateddynamics.tutorials.advancedOperations.text2": {
+        "source_sha256": "156a6fae411eb9accf26756d6f26f8b62f655c4d45f4a7486ea4974d8e7d718c",
+        "translation_sha256": "bbd0c42a290c88282ecfb77b7581ce2f5c411a25d92e124f4056f1c6b23fcbe3"
+      },
+      "info_book.integrateddynamics.tutorials.advancedOperations.text3": {
+        "source_sha256": "13117f88468ab8e91636dd1ac87e7ad27e0d635a9d7cdd82562ec2a16c2fb871",
+        "translation_sha256": "a59bd35d06f12f8ab63531a2cd52361fd3a7fc477d8a680e80f5e0083b1afb24"
+      },
+      "info_book.integrateddynamics.tutorials.advancedOperations.text4": {
+        "source_sha256": "edacb6c89a270bd62544335440302eab93594e4baae2f79545b424da02b3fc97",
+        "translation_sha256": "a0ebc362b2a2fa587b19fca2d7484e0248277e9e8e8e546b5b21985318f6471b"
+      },
+      "info_book.integrateddynamics.tutorials.advancedOperations.text5": {
+        "source_sha256": "e68b08179994b6e1732535b0cf12933ae658ecf695f0fb6ab84da0f64dd4807c",
+        "translation_sha256": "d27d095b5aa75ae04160f5839bcb66b39bc7114046a4d935c93b17c17861f4ed"
+      },
+      "info_book.integrateddynamics.tutorials.theValueOfOperators": {
+        "source_sha256": "f7a78eb6edb45fcdc321142bd34b6abc6cd10fa8669e9c544a0c2a836b273fc8",
+        "translation_sha256": "364f383595d818e59307c5d556f1286b19add50edcce7f1bad6b273db6ac399b"
+      },
+      "info_book.integrateddynamics.tutorials.theValueOfOperators.text1": {
+        "source_sha256": "a6a5454f58637dead42a9c4d4c2ffca164baf8c1aee86455c852e26cd4a81179",
+        "translation_sha256": "4302f0355a6766f961b287ad829643289ee8604ac1dc6dbbffa46fda7e107664"
+      },
+      "info_book.integrateddynamics.tutorials.theValueOfOperators.text4": {
+        "source_sha256": "0543931d31adbbe5a2da48b593348fc9d2f4a5cbef46be5728d359d92179193d",
+        "translation_sha256": "93584e9dfeefa0a039f3a325f1c7efae017c9658ccfe16569424b502e5411c55"
+      },
+      "info_book.integrateddynamics.tutorials.challenges": {
+        "source_sha256": "40b9c8f444870eff94e260ea77c034c0078841842fedb9ba3cfe9e83b4ffb313",
+        "translation_sha256": "1cb91e2b107058045257ceabda8647ad66c23fa15969a616103c98db2bb5d1fe"
+      },
+      "info_book.integrateddynamics.tutorials.challenges.text1": {
+        "source_sha256": "b9c3161da02314ad82f7da326c97beb4c7dc551270833497c816dc5ea8da2ca3",
+        "translation_sha256": "c5c2a65c821476375288c7f52ebe1b4a0806d12eefa39cbc8848d4294cfbd10b"
+      },
+      "info_book.integrateddynamics.manual": {
+        "source_sha256": "b0b9fe24ffa9629125bdc59b122f80d605ab604eb1b74485c2f2ecfde26576ae",
+        "translation_sha256": "53965ae5bf64f5cf43e64048ba8217d82f4652176d974616f8a77f0d63b71ea2"
+      },
+      "info_book.integrateddynamics.manual.introduction": {
+        "source_sha256": "b605350bc00209520b7cd8f546322663356ba630708f71bbf30aead6b3dd608e",
+        "translation_sha256": "34a79ab87f0f954807ee28ee97434f4d46211104ec298657f2a4a2976703edce"
+      },
+      "info_book.integrateddynamics.manual.introduction.text1": {
+        "source_sha256": "07c698915aa0b649ea161da6fe78f16d27a5102d624ad0d5af7a24beb4585545",
+        "translation_sha256": "4d2b35a851e12cea59331598b6069645650be4099494631d541350d596b77558"
+      },
+      "info_book.integrateddynamics.manual.prerequisites": {
+        "source_sha256": "865514682d0132abd96594e2eff0ac8d379e16c60c7def0ee5c5f220ed3474ef",
+        "translation_sha256": "6f591309a92b95d80748a691f42241fecd9186ca5a14818f9d2de0fe74b10204"
+      },
+      "info_book.integrateddynamics.manual.prerequisites.menril_trees": {
+        "source_sha256": "21428a52e9aa13c59daa9a2fd8d4436e53ac66fe621f792a7caf355302e20e9b",
+        "translation_sha256": "bcf72195a3c7bb8b67e1d973cac5ea4bd14ca9a7a21bba16415a133147896971"
+      },
+      "info_book.integrateddynamics.manual.prerequisites.menril_trees.text1": {
+        "source_sha256": "f2457cb2e7b43266f9475754866cd74160998075f891f0d643326c1080dc22dc",
+        "translation_sha256": "937f3f1305671cf5af755b783835ec7d718c918d37d210ef49714de7c688f3a8"
+      },
+      "info_book.integrateddynamics.manual.prerequisites.meneglin_biome": {
+        "source_sha256": "47d40b3e4a0be709cead041152030ae32e608f621393a0d92725c78b784d9c0b",
+        "translation_sha256": "150450447f242a024d80a7cabec3aeb311eff23cc1e2b388ddf128ee80f52592"
+      },
+      "info_book.integrateddynamics.manual.prerequisites.meneglin_biome.text1": {
+        "source_sha256": "a1f9e36439a877a5580c05d972ffa0589df59e6b09c910f5a8abf69ee41f517d",
+        "translation_sha256": "3590ea91e3e28172e3745352ea581efcf40626d06066836b1e6e4432643b7fda"
+      },
+      "info_book.integrateddynamics.manual.prerequisites.squeezer": {
+        "source_sha256": "659935e759b67a1adfe56683abde845c9ec2860b7862d909bfbc62d8bf06caf2",
+        "translation_sha256": "39f01621fb524b829fb439840b8d4c38de2a9ea7b1f480a4356d26f9dd819dc0"
+      },
+      "info_book.integrateddynamics.manual.prerequisites.drying_basin": {
+        "source_sha256": "2dec3f1a818df7804912722bd1137ce6c99d2271763bd11b6e6a7cfedc8de6fc",
+        "translation_sha256": "2147cbbdacb82c7c647f5570561ae35086bc83271dfae9b845302300513d02b5"
+      },
+      "info_book.integrateddynamics.manual.prerequisites.drying_basin.text2": {
+        "source_sha256": "171d6a280f2105b9f2ecc0a7343c38a6cd21bc8916a2d005ffb0366cdc716f98",
+        "translation_sha256": "72fc41e98097c4dd991d99024676fd500c153d0e8e69fc4c78ba96b97e7e01b9"
+      },
+      "info_book.integrateddynamics.manual.networks": {
+        "source_sha256": "ab2c47c3c77fa34185f902af6d30cd8dd6376a392a95152b4cb53d57fc04e62d",
+        "translation_sha256": "ad4dd3a02d94cf798c253aeed9031e02009b3bdf447362429ca077bedc95eb18"
+      },
+      "info_book.integrateddynamics.manual.networks.text1": {
+        "source_sha256": "ba9e8e14770ecf5f2a646f42185b7535aabedf5d9512bb488e5f7351f704e353",
+        "translation_sha256": "395f7b07860b4e44178b8d0a13b33d14b15498a4bde5a169d721474fbbc56bcb"
+      },
+      "info_book.integrateddynamics.manual.networks.text2": {
+        "source_sha256": "c0fe0d30baf27e7c629c4dbd8a08a426a1ecb1d8dbb8640f119be68006c476e3",
+        "translation_sha256": "d32ced1be8a6b02bdb82f2191d154409d57b8bad1a0c3bc8eaf0ffe1205045bb"
+      },
+      "info_book.integrateddynamics.manual.logic": {
+        "source_sha256": "7c400199bada661a567075f4213fdd7fabee58231c16afe28b199c641bb3bb71",
+        "translation_sha256": "20e8c8cd2435a0ee89965a1fbd4eed3ed2c2cf57e2123518c9c0ab0690d27ad6"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types": {
+        "source_sha256": "f051def7dcb5ceadcdb29a9076762a0b4af9cc9a053b12e342dfdf1b6241b0aa",
+        "translation_sha256": "603eaba73f1a4524cd03364db0a2cd0a9d45eed3dc9d1c9d8e8992e7a9386eeb"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.boolean": {
+        "source_sha256": "a066ff921096d0f99b5f985b7e37a9c703bcc0db4d3409cdabf31cf6a22b5556",
+        "translation_sha256": "741ae8ea7cc78d4802b3f115f9343da5f99dd8b69dcc72f66839d63a0e81b3de"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.boolean.text1": {
+        "source_sha256": "33a36d8f07ef5b96e996df267949ef091eb40a5e1ea4a750fbe60c647cb17034",
+        "translation_sha256": "73a04e75e6a97062011895e9fed8271a1a05e1e44c0a510fb0d160b28b0ef29b"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.integer": {
+        "source_sha256": "2876814bd73accf51719d41f10f51e597dd474da7099427ed609ca5ee726fbb5",
+        "translation_sha256": "4108fdb1e3bb23406186e7d857a7f6483adc4293f66c55246144a8d5865ed9e7"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.integer.text1": {
+        "source_sha256": "77793abf27fdb16dc15fc676af3792c6cba64abcba6561d7df2df8a0ce50b2eb",
+        "translation_sha256": "744b5576397e4e8f84e7dfe747119d87fcd02ee8ee767ab9fb8be99520a521eb"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.integer.text2": {
+        "source_sha256": "eb367ad2166789a196e3551d200ce8e128f2e1c3d169e3a4d28d94bef56d8f16",
+        "translation_sha256": "91dbe58482a38d77db85ee77c48671bb1fc1296b9e0a65d58a0d6b0c60e69ee0"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.integer.text3": {
+        "source_sha256": "5524fa3e6a815b9b80d0530e26fbb0a7c838f807e88ae5342824a81305433102",
+        "translation_sha256": "6f57075adae6381529cf70b03160b6547aee4dec2152c8f4d4b3f8cf5419e40e"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.double": {
+        "source_sha256": "529441523bec75ececf4b98d5c326b733439d0312de1a334fa01e3f6720d1425",
+        "translation_sha256": "8d798a0a7900898f91248c1cdfa9bf7cd6b1d20b28bb872c863adbf9e65b3093"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.double.text1": {
+        "source_sha256": "6939dd0fc2101263a1223f21e32a27907baa9f62e74f66e86a183bd3770b0806",
+        "translation_sha256": "936aa0ee73d0723d29517c131a8d59d60ecc19acff3ddaa9ad4ae2e5a43775be"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.double.text2": {
+        "source_sha256": "5524fa3e6a815b9b80d0530e26fbb0a7c838f807e88ae5342824a81305433102",
+        "translation_sha256": "6f57075adae6381529cf70b03160b6547aee4dec2152c8f4d4b3f8cf5419e40e"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.long": {
+        "source_sha256": "d1d87c4717d527df59122a54b04e0ee2768770815d1482e0839e861d6b0575f1",
+        "translation_sha256": "b814c1701c64f97cb6e26884c42051453fd71311dbc692885dcbaff4ac7d75b5"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.long.text1": {
+        "source_sha256": "a795e5b38f60312f4fca51b57f45f3dc6de759873635b16305341c0a0be481c9",
+        "translation_sha256": "8081e75a5907e6dcbbff78ad9f07a4f2b1cf4e2d3f64179758fcfd78ad52a835"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.long.text2": {
+        "source_sha256": "5524fa3e6a815b9b80d0530e26fbb0a7c838f807e88ae5342824a81305433102",
+        "translation_sha256": "6f57075adae6381529cf70b03160b6547aee4dec2152c8f4d4b3f8cf5419e40e"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.string": {
+        "source_sha256": "b2ef230e7f4f315a28cdcc863028da31f7110f3209feb76e76fed0f37b3d8580",
+        "translation_sha256": "d06d15a8bb3233ac6af340ca34d0ff940a294fc8de8677c30a4f8efe6ffa47b7"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.string.text1": {
+        "source_sha256": "5d08944b75c253569be058ee21990a9e7665eb8ce3c7961b65d5c9ae7ba8f0c5",
+        "translation_sha256": "995e61387b468b1fe1894594dc5df38ccef0605011b111c1204bda632cf9f82a"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.list": {
+        "source_sha256": "6f202f54a7b2d8fe42aa804eabe48ef900cdf73a74c570a47fd1b1a4920a051d",
+        "translation_sha256": "93fd1e0f9feb3098ef7124bb557228202962051c7b7a84e639445f1c1410b1c2"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.list.text1": {
+        "source_sha256": "205ac676c777464d85b01596e0faa4efa8ae96ea2f84717b04e0244e3dc02b81",
+        "translation_sha256": "f7d82140003bf8e472811bf91fccc749da010dafa9e259096d1d4af775793be3"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.operator": {
+        "source_sha256": "291101a07fe980e93b900ae85c9eb824f9e7e93d0d754be7440b9386b615cad7",
+        "translation_sha256": "f4670c2296153330003c0a2693f109d24c244d97ca378159165071df24ccca3a"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.operator.text1": {
+        "source_sha256": "ad91b05e77d4872cf4ea58116be1875231bd55ca17919e1cc644327554a07f02",
+        "translation_sha256": "b93eb6dc6cb7ee0bef0bd972258504e5407af014c158a82cce96a93585c478cb"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.operator.text2": {
+        "source_sha256": "af3f7abc8c02c18f34c6beb81ec064937fc113d4273f5741cde1fd1f177a223a",
+        "translation_sha256": "2a365359688eb7bcd895a353e2a694599881eed445b3dfef74f532c135bda4fc"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.operator.text3": {
+        "source_sha256": "2573c390dcaf5f1dfd4c337817b79ed6e4279d7fae6ee41c539352c5f00038f6",
+        "translation_sha256": "330a3e90ddd342749a55b0bef013e5ded5164feba8fab6bcd1d408ffdda27258"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.nbt.text1": {
+        "source_sha256": "ef02e30ee9e5efb61a9c6328964975800f93fd80a8bf07524dd51baf3a44139b",
+        "translation_sha256": "e25ee325dcdae8553e3a10367ff2ec7400faf5daf6da12c9ac0ee87898964b37"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.nbt.text2": {
+        "source_sha256": "0e05d9e9ccbc2a1e18c69ae774fdd9493da3cfee635a9aa9015927ef5424a5d7",
+        "translation_sha256": "229795635aac141b10a92eac5416f7a9a8747e969a5f44a954d5e7d4b74a8c53"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.nbt.text3": {
+        "source_sha256": "63bfd7343b7d47a78606f54425f476c1df5fc973debac8ad2a825588a24bfdb5",
+        "translation_sha256": "bd47cec3150f2ba78bce01a072269c818205d874990ce109f5748fd775f594d8"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.block": {
+        "source_sha256": "211d0bb8cf4f5b5202c2a9b7996e483898644aa24714b1e10edd80a54ba4b560",
+        "translation_sha256": "fc52cf98ef551b2e1c3351a7be3ec75b9c483b2dd95eccd741da4a76d9e6983f"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.block.text1": {
+        "source_sha256": "157b4690a5dd509b70f69018a08fb330393aa8780372ca9954b8a2f58c71cbc6",
+        "translation_sha256": "1a461b62c09718ee23f38e6ce4a593ba7775c90e024dcd500ff277dfba23fe94"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.item": {
+        "source_sha256": "652bcc3a478428893cc505ae19f847b49be52f861bedc64bb192ceed409fa733",
+        "translation_sha256": "47703f98d33f8facd32eb3a6a758ecf7f18df6211f298cdd7feb929b93107e78"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.item.text1": {
+        "source_sha256": "08285e42fff404d2d49136b255253693884d2593eebc7e06fcf48c51d5bfe61e",
+        "translation_sha256": "feed26d5eb7c6096864b2ec8be71631f9093b1e96ecb3c768b62a8277b9b3b5e"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.entity": {
+        "source_sha256": "2ed3bb60c9af04774f0ea421f81bd64e65083c969a43360c5887b6e17d050794",
+        "translation_sha256": "0b0a036075e5309c3a512c257ab32d6767c416da2c09acde0c9e02c7984cd6b1"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.entity.text1": {
+        "source_sha256": "cdc0250e0770cb1c8de58b2b5297d890baca584a793542b0b996ea02b0aaee76",
+        "translation_sha256": "6cf07edd32e7272aac57c6227a03d5a947b27ba3a3a2e7b7950d55231f44fd78"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.fluid": {
+        "source_sha256": "c7ac4687585ab5d3d5030db5a5cfc959fdf4e608cc396f1f615db345e35adb9e",
+        "translation_sha256": "ce5bcfe5e17e16bfa6e0dae1050eea01dc7f5413fdd3a8abe92803fa76027fb6"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.fluid.text1": {
+        "source_sha256": "d53f756c87ab40aefd0c6e718d994952ea105c5bd9770241e8259f173da3a4b9",
+        "translation_sha256": "476118b8e7995d33be7cc4e6970db772f83fd2ea82ddaf11432d7471cbbc681b"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.ingredients": {
+        "source_sha256": "87675db83a32caa1966ce6c94b089aea788ac3635683d9e5827390d4526ef41d",
+        "translation_sha256": "e85c84c9b9d44d4b850e89d39b523a1619ddf9806086a91c489ab82e092356ec"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.ingredients.text1": {
+        "source_sha256": "e5367566759e23dd95aacb22b462a2804d13123a7147ccef810dc249c508eade",
+        "translation_sha256": "5efb0f33d1bb2f1aafbe56073db505c2491217351bab768c69a9e702257639c0"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.recipe": {
+        "source_sha256": "aec69352b5b97ce21b850a7bc1f33d93054b531e13b116f1f4ca193a33c13cbd",
+        "translation_sha256": "c1f26bf92841bff4d9aab6e6af33721add11bf180ea6b5f83cb4ae09cdf401d1"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.recipe.text1": {
+        "source_sha256": "ff36cb5451fab5206aa562aa036b5bee3a7d6755097228b65cb7637513e69ab8",
+        "translation_sha256": "fa878f33e760001f7279d30bd8101eb516ff76675804771a8b39f09d0af8312d"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.recipe.text2": {
+        "source_sha256": "357d7b51fb140f95b1bdd31538e9955cd7822f749844127c9f39541a504185d5",
+        "translation_sha256": "bdc2e27929b953f02f43252e31bd7b1d7998c1e91535e96210395ab75bc810c4"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.recipe.text3": {
+        "source_sha256": "fe225ea418f9c4109438c02b0fec1490cae69bcbe8802027fcf79a76b555f9eb",
+        "translation_sha256": "001a73167e07e6354ca90fc67351c551c814251bb3909278fbcbc7e2ad3350cf"
+      },
+      "info_book.integrateddynamics.manual.logic.variables": {
+        "source_sha256": "02db55bac5e3f7ceb98fdea15d7dfcfd40efcc41b777d10c2a8483b571f332bd",
+        "translation_sha256": "340e3b8804237a9a82e60ea8f7d08db6e4a0fdb302850a667f1a24c9dc39ba20"
+      },
+      "info_book.integrateddynamics.manual.logic.variables.variable_card": {
+        "source_sha256": "39967335d2a18af4d5241e47c7043cc314f08c52c5f7a04c7746599338c1806e",
+        "translation_sha256": "26dcadbebf85f49f607b8b474f36025e5df6a68a3ff3b53c4f2797b5ee231a97"
+      },
+      "info_book.integrateddynamics.manual.logic.variables.variable_card.text1": {
+        "source_sha256": "122003d3a03ebeca55bb94d6fc5d2beb4846201e59f720f7dd5c95bec9271b86",
+        "translation_sha256": "4892f492ceabcdc1d9e77f90d814f592b751c2b83671b685867a18d6d4851b3a"
+      },
+      "info_book.integrateddynamics.manual.logic.variables.variable_card.text2": {
+        "source_sha256": "8553e352d03354a075585596ad9aee9bbf78c7442f8ccc2bec844d5750f85593",
+        "translation_sha256": "e4257ea28fe8920da5469301535c44cae0380a09fb550ac5ba7c8f8ff66a6e69"
+      },
+      "info_book.integrateddynamics.manual.logic.variables.variable_card.text3": {
+        "source_sha256": "c506cd6da29fc023b7f478ea6c8a2246515dc01337db75436dec375fff12f8af",
+        "translation_sha256": "f4b5304b3f4a030e537b481146aa1239cf20cb06dcecb6160175fde045f07f26"
+      },
+      "info_book.integrateddynamics.manual.logic.variables.variable_card.text4": {
+        "source_sha256": "8d1e058421d2b6d6bc8a4eaf74ea75b6ff6ae36f4edab0b730ebe0e14aeff77b",
+        "translation_sha256": "b8f94fbfcfcd7dee148255a151bde9c58649c32516f82dbda185ccd272fc1b06"
+      },
+      "info_book.integrateddynamics.manual.logic.variables.variable_store": {
+        "source_sha256": "b0f5cbfed046ab9610cfe4a67f8bf5710581a223ae13f24350e645679cb90027",
+        "translation_sha256": "e46465cbbba8a1b111e589ccfe3f8dec2729fab193470c2dfccb79ba8994f44e"
+      },
+      "info_book.integrateddynamics.manual.logic.variables.variable_store.text1": {
+        "source_sha256": "0eb4553be423163e8aca547e354b46e9ab365a96b1b8a463be155cb82bdd45c0",
+        "translation_sha256": "38c8666f86c805c2220d533a4db9d69e0b1c42b42be71972ecf2c4d43de9a9be"
+      },
+      "info_book.integrateddynamics.manual.parts": {
+        "source_sha256": "efbcd674b4f43dccabacb225785788da668a0a975e51eae40b05687ddea370f9",
+        "translation_sha256": "1320097f702c76c6743626f4da13612d01b33fffdddb88a39102513e1c8804ac"
+      },
+      "info_book.integrateddynamics.manual.parts.introduction": {
+        "source_sha256": "b605350bc00209520b7cd8f546322663356ba630708f71bbf30aead6b3dd608e",
+        "translation_sha256": "34a79ab87f0f954807ee28ee97434f4d46211104ec298657f2a4a2976703edce"
+      },
+      "info_book.integrateddynamics.manual.parts.introduction.text1": {
+        "source_sha256": "a7c87b9f0c6a49ef85c46b19aa176fff36b77381a43b9963f38130ed16b83c69",
+        "translation_sha256": "9699e195e781271bd244daaec7745928f443fc73c91c5b1b42aa871c94a41995"
+      },
+      "info_book.integrateddynamics.manual.parts.introduction.text2": {
+        "source_sha256": "cf3c96d6df018e60bf82385e894fa1e3c9fcd9b00dd8462067397ea1b8394f62",
+        "translation_sha256": "42b5ad7da4061305254a8d86d9cde58dbe0988c8a28b12deb3350a878497ef73"
+      },
+      "info_book.integrateddynamics.manual.parts.introduction.text3": {
+        "source_sha256": "60063097cfbfd5fc37a917905aafe2c852a951159587701537a9aa0590d717e2",
+        "translation_sha256": "4b0b2186174a7af019c626990ad9397f7d5d4b5c5f43d6b740f510aec7f9e4e9"
+      },
+      "info_book.integrateddynamics.manual.parts.introduction.text4": {
+        "source_sha256": "ccc517907f125adbcfd9d3dd725a23b13700bd4955edf0ce59f5fb0cea5cbe0b",
+        "translation_sha256": "db188970ff992e9b4f221a6d0c007be2a618b4b3168ed4fa0e8478137d0f3b7d"
+      },
+      "info_book.integrateddynamics.manual.parts.reader": {
+        "source_sha256": "adad7d44ee060a97b2b9e19b6ca6a0f0d3df60887dc2103d2a06e77b28c2ea1e",
+        "translation_sha256": "2bf4d7af9daae11610523b27e216f43674d1d88bd2b67e55816d2422ea879575"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.introduction": {
+        "source_sha256": "b605350bc00209520b7cd8f546322663356ba630708f71bbf30aead6b3dd608e",
+        "translation_sha256": "34a79ab87f0f954807ee28ee97434f4d46211104ec298657f2a4a2976703edce"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.introduction.text1": {
+        "source_sha256": "756bd9c054b01aa9acc6ba33168246ca52d61bab1c2ce802e32f8ba12a7d4f50",
+        "translation_sha256": "fc2c1563cd0831b93e5c6b194be95d1905dc362d3f824c4addb596d3734ecf67"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.audio": {
+        "source_sha256": "bc1b88907d3b748af99cb9d4ffc07a0118dad5dab21a9dbdcc5a17a09641364a",
+        "translation_sha256": "1718e90d59c504366560b1c94d8a4a37b5dde95befdf2df3e7f6df18b1401a40"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.audio.text1": {
+        "source_sha256": "9d5ff30b8ec0226918b33ab58136291b5fc6aff5d2da192dec3a4356df989c40",
+        "translation_sha256": "d3c035da5693fc57f9b6fa425d6676e412e91b5b7d8574280e5d02f00b5574de"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.block": {
+        "source_sha256": "211d0bb8cf4f5b5202c2a9b7996e483898644aa24714b1e10edd80a54ba4b560",
+        "translation_sha256": "fc52cf98ef551b2e1c3351a7be3ec75b9c483b2dd95eccd741da4a76d9e6983f"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.block.text1": {
+        "source_sha256": "3cbfb20b4a88a080ef0fbee9f70fd4e1a955c88af84d85caea5a1dca165d4488",
+        "translation_sha256": "d12a88ade2df5ca8dfe2eef5e3fd385e06f78cbb08f03f447af84cac79b47a99"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.entity": {
+        "source_sha256": "2ed3bb60c9af04774f0ea421f81bd64e65083c969a43360c5887b6e17d050794",
+        "translation_sha256": "0b0a036075e5309c3a512c257ab32d6767c416da2c09acde0c9e02c7984cd6b1"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.entity.text1": {
+        "source_sha256": "e74775e0a31a123b694632400f91d7af73b39a5e56add7f50a0179561969ec40",
+        "translation_sha256": "378cf59c862b2898585d4caf1b72f8ede65cc4a4834d0490cbe78d7315d10288"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.extra_dimensional": {
+        "source_sha256": "c47208cc45f8798db6f810ab4a9dc8cb7426eff390863f3cdfaf50ee8921bd55",
+        "translation_sha256": "7568344809fdbb8209fb4929873d4c649f97f1ac485e18a6a8698c580cbe48be"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.extra_dimensional.text1": {
+        "source_sha256": "c4fbfb9fa8954c97a4d259a064ac96e9366b122b4b918deae00458b90ba649b8",
+        "translation_sha256": "2e679bde481a7a03c20ddfcad723da71372aff5076c14d1f86cc4a061a83cbfc"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.fluid": {
+        "source_sha256": "c7ac4687585ab5d3d5030db5a5cfc959fdf4e608cc396f1f615db345e35adb9e",
+        "translation_sha256": "ce5bcfe5e17e16bfa6e0dae1050eea01dc7f5413fdd3a8abe92803fa76027fb6"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.fluid.text1": {
+        "source_sha256": "39ec8fb65eae52f356bea98f4e97aa163ada85363593a72a76b676c82ef4ed5e",
+        "translation_sha256": "01c23596f4a19528551545961b9eb57da34739040c0df295c60755b6a392bab5"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.inventory": {
+        "source_sha256": "758f487fe8e9fcc59cec4694d95a9032224f967b29f39543a1fb04e2901b079e",
+        "translation_sha256": "3c7fd48a2f8d798a7fdbbafc57d75f5425b6a3732cc5521dfbb7aa1e35e77a0a"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.inventory.text1": {
+        "source_sha256": "891978db4103f36629d67d8132cd885ab98547bfbae44413121068c5d3be3c99",
+        "translation_sha256": "b90baf4fc440feed1b02d16ae80b7db7db233932107ea496d5de91f2fe654c8b"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.machine": {
+        "source_sha256": "8f1cc42d7c1ceb0c41a2ae900de606db6f694d94a409ad362d5fbfa5e84e3d71",
+        "translation_sha256": "53de9f24a54da43f9ab70bccf7c9fc9fede70ab3ac4580600f6fd3a749cd121b"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.machine.text1": {
+        "source_sha256": "88db06265b55f708fa1d0aba3a10f332a55108d4f70bad3bedfbe9d6273175b0",
+        "translation_sha256": "127999ee8cc931b245f59f832ec51620f38915130d0cd4772613a8deebeda99b"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.network": {
+        "source_sha256": "1744b96470b51bf30935e2748b237a708d226a0430063f92accf90961cd28d86",
+        "translation_sha256": "8006cb7a49689c4829e9babf7076e4b6c2219742de41c33d93f3f9ef98c8c403"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.network.text1": {
+        "source_sha256": "27d0fe81f1669ce1512a223f007e21e9c9573f249c5693194dd329b4546e174d",
+        "translation_sha256": "631a7a5aaf969524bf9bd8e311f679994679c85ffb0de7267332653cb545decc"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.redstone": {
+        "source_sha256": "2175a59f2ac5074fe639011d2b0e912fbefbf1567e763d926021f71821d533c8",
+        "translation_sha256": "dc4b369d30f534be5fb616b894104622006916cdaa42fe499a2c3ee7c486b1fb"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.redstone.text1": {
+        "source_sha256": "2d7e62e2d84bb3b3414c834acc3bc8df6755262a0aee78c586a6699c6fb53475",
+        "translation_sha256": "551c062f2846a88b30fe557310454a51cc584db05e45db9cfa06cd628aacda36"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.world": {
+        "source_sha256": "78ae647dc5544d227130a0682a51e30bc7777fbb6d8a8f17007463a3ecd1d524",
+        "translation_sha256": "6b94b79a43c71cc878c8da9db73ae7747e86742e3eedac9ddcf3de373b6ee219"
+      },
+      "info_book.integrateddynamics.manual.parts.reader.world.text1": {
+        "source_sha256": "afd183344a01d934e3a1790bd3fa272dc8e4fcb1110edb2380f83f7b8d513b45",
+        "translation_sha256": "e3c9230fdda6fa6a0ffa5e23c1d6190182e5308b12287035c09eca3ab23e2645"
+      },
+      "info_book.integrateddynamics.manual.parts.writer": {
+        "source_sha256": "fe3d89783b11f8f648961fe66e36ac20f4130310d530f0634e3505d1d8517151",
+        "translation_sha256": "071a4d7dfa8bb9ceee6a9737b8afc12b0b4c00fb2ca1ad02c5a19e0107871b3d"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.audio": {
+        "source_sha256": "bc1b88907d3b748af99cb9d4ffc07a0118dad5dab21a9dbdcc5a17a09641364a",
+        "translation_sha256": "1718e90d59c504366560b1c94d8a4a37b5dde95befdf2df3e7f6df18b1401a40"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.audio.text1": {
+        "source_sha256": "0bcee7fdbf872e0c67b19eeb60449870d9f4d7ac927162956111910dfc4c2cba",
+        "translation_sha256": "2b10db3f67d99c14de839bc7938d7ac9a9dd8252d29ed9959415943a199e260c"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.effect": {
+        "source_sha256": "2252d5cf93767a43ecc53f07c8e49d76be0126e021c0397af8d51927e9c5e2e4",
+        "translation_sha256": "4a767f2aa26a9a0de5f05fe767ea8ba9582c7915b8243c7922c2fa72aa30c020"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.effect.text1": {
+        "source_sha256": "9305181a3284380e1d08942fd5ed4072f2e7ca5a92e54e80af7b4772b2c20bf2",
+        "translation_sha256": "12e8bb9d902c9f663bc3f4b05516642faeffff2d5bb09756d7bfaa7513d91750"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.entity": {
+        "source_sha256": "2ed3bb60c9af04774f0ea421f81bd64e65083c969a43360c5887b6e17d050794",
+        "translation_sha256": "d22dd9e7aba9090d597916ede1d1def52568f214aed42d83eb96ff9dea7083cf"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.entity.text1": {
+        "source_sha256": "350e114e3c22cb219150d76a18d647df17d3b12c5d0b18123ce128b81ca39ad1",
+        "translation_sha256": "2547cc74572670ef2306d87b188030539c780d8fd665245c1c5555692130d78b"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.machine": {
+        "source_sha256": "8f1cc42d7c1ceb0c41a2ae900de606db6f694d94a409ad362d5fbfa5e84e3d71",
+        "translation_sha256": "7bf65e1dd4c57881f4cd16fb9b57630917992bb97a566fc1914356ccc089eee7"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.machine.text1": {
+        "source_sha256": "e1d909c133e7a1d35e225708596521284b141305a15e411579041d32bc7ef6c1",
+        "translation_sha256": "8fbe420f2ad7b355562aad5a1dd21e3a1b10755c173a1af17e09ff8b42e96467"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.inventory": {
+        "source_sha256": "758f487fe8e9fcc59cec4694d95a9032224f967b29f39543a1fb04e2901b079e",
+        "translation_sha256": "3c7fd48a2f8d798a7fdbbafc57d75f5425b6a3732cc5521dfbb7aa1e35e77a0a"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.inventory.text1": {
+        "source_sha256": "edc7c1c919bd8cf462845974e10ba41191cd8d514fc487f96b92a6d4bdb18a46",
+        "translation_sha256": "0bdb58f2ebdd58aed6284575b345c5b495ea92f0329220bd0391492f10e54118"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.redstone": {
+        "source_sha256": "2175a59f2ac5074fe639011d2b0e912fbefbf1567e763d926021f71821d533c8",
+        "translation_sha256": "dc4b369d30f534be5fb616b894104622006916cdaa42fe499a2c3ee7c486b1fb"
+      },
+      "info_book.integrateddynamics.manual.parts.writer.redstone.text1": {
+        "source_sha256": "c8d60a3acfdfba217193b241fb382e5af24d3943c399e5023a87256d32367c45",
+        "translation_sha256": "92328bae0f7d274f93ed1a26fcc3f1bfb14e1911dc5f8ba9c11bc11fed1d67c7"
+      },
+      "info_book.integrateddynamics.manual.parts.other": {
+        "source_sha256": "ebdad9ba4c5e3ce0078ad8e8fb31e4c76176834cd2370f05bd043e4baf8d6c5a",
+        "translation_sha256": "168e9f920fdb88eb2335fd92065ebd7649bc461926320fdb70c3988d1e61a78b"
+      },
+      "info_book.integrateddynamics.manual.parts.other.light": {
+        "source_sha256": "dbcd5e7bb7a0f538810de44c3efbd813037ee3fa358747bb71fa58e157af45f7",
+        "translation_sha256": "12eb32fadb8368fdd71578f0fabe7f7ab28bc8a3f31ac4dec28f84ee5934aa3a"
+      },
+      "info_book.integrateddynamics.manual.parts.other.light.text1": {
+        "source_sha256": "7f52d65ccf2df30792a82c2e205f992eb49ffd44c8fd54adeee029adb3bb0710",
+        "translation_sha256": "ed450ea7f99b84e49cd1896c64a47d9040271e9878139536be41d0b10ae490b4"
+      },
+      "info_book.integrateddynamics.manual.parts.other.display": {
+        "source_sha256": "34e108c0896d0158ca4f2797d4f12a143943803be2151aa5d2136ea1bcd9a468",
+        "translation_sha256": "097fa09bf46c54d3044c00c48f93d5243300cee14144d7cb7c2d46f5e7368e0e"
+      },
+      "info_book.integrateddynamics.manual.parts.other.display.text1": {
+        "source_sha256": "4fbc5159ac51db3385ca2a47d08ae048449c39086c90689f5b479ef0e9d2ef8c",
+        "translation_sha256": "594f29230e7df0a3298beb09f3f1b5757fe1190bcdd2c231641a425cf6350fde"
+      },
+      "info_book.integrateddynamics.manual.parts.other.display.text2": {
+        "source_sha256": "40baec1fb2ef518ff3627ce84b3ce51e6257399968943abdd17a9ee032167e69",
+        "translation_sha256": "f85baadcfbc0aa4a5896936aaf63c41cb8fd05feda4b29e47fe48d3416eb3cdb"
+      },
+      "info_book.integrateddynamics.manual.parts.other.connector_mono_directional": {
+        "source_sha256": "6503a287f7e0686ae163677917dc4299fe6f6cc75b37d7bf690c7e9773283dab",
+        "translation_sha256": "1e483e4120107011da029c60c673f6ca8e31b63b28598bd22fd042a4f61eecac"
+      },
+      "info_book.integrateddynamics.manual.parts.other.connector_mono_directional.text1": {
+        "source_sha256": "ffcb2f8158004620706eb8f40ca9cc93f6a5d46603a4a6153ec4ced36ed3ffc2",
+        "translation_sha256": "abcb43ca43f049d43920fb024e3552d3d73d3d65974b0245a4126ef3c9120ae1"
+      },
+      "info_book.integrateddynamics.manual.parts.other.connector_mono_directional.text2": {
+        "source_sha256": "5c4c2cc70aebbbbb8ab166a1128ebe6bd1033db6239bc284edd6db448e426d51",
+        "translation_sha256": "7a0451ff56e5f6420f527df3ddf643377b3aeade924d9db66bd7a0c0b0ef9515"
+      },
+      "info_book.integrateddynamics.manual.parts.other.connector_omni_directional": {
+        "source_sha256": "1cfefe976a783ea04de99b8cbaae8fe8c385a1c71dca26d41e6ed39af6c86152",
+        "translation_sha256": "b88c57227583282e5b20699575d2fc20cf8688b11b4ad8c96b01c51cd31c494c"
+      },
+      "info_book.integrateddynamics.manual.parts.other.connector_omni_directional.text1": {
+        "source_sha256": "a5c695ccf310cbe1bc20e31fdba542b6cece974e815cad62dde69eb8735c82a4",
+        "translation_sha256": "75d9cdd9109b13ae5bb9e3c8875b53bf925009241ac7645e9ec4ec2a1457e961"
+      },
+      "info_book.integrateddynamics.manual.parts.other.connector_omni_directional.text2": {
+        "source_sha256": "5049d8fa6b6ab71d09b19d71da80796fff570d924c0a8d86843bc7dcfefddef8",
+        "translation_sha256": "5bfd10a040b35831bf446d17dbbbbbbee2588353229de5fe84e7e1555d954dd5"
+      },
+      "info_book.integrateddynamics.manual.parts.other.connector_omni_directional.text3": {
+        "source_sha256": "9b18fb86c46ef89363747e935cd8432aa2a2116cf74c4bbe7bf513a717b4be8c",
+        "translation_sha256": "4f81f06486c6fb0ec63ebd90e987a8068c2463e2ed6c9041ec8cb2a425741f2b"
+      },
+      "info_book.integrateddynamics.manual.parts.other.connector_omni_directional.text4": {
+        "source_sha256": "9936ca20f7fa3ed83d92a4e4fd9a829fe72c59f52d6ebe71ae61582f74426421",
+        "translation_sha256": "ccdccd66d77e32677213758e1559361b0a6ad5b081b59df320e33ff8d8d4c170"
+      },
+      "info_book.integrateddynamics.manual.machines": {
+        "source_sha256": "c061da196eae7622216c27031299aaa0ecaac47cd7037160ea18b04bffc5eb1a",
+        "translation_sha256": "7bf65e1dd4c57881f4cd16fb9b57630917992bb97a566fc1914356ccc089eee7"
+      },
+      "info_book.integrateddynamics.manual.machines.materializer": {
+        "source_sha256": "1151207a77c545340e88db6aad41b9083bb77193899a880db9f8b88b396da465",
+        "translation_sha256": "b9aaa2921ac872009e24ad84eca165e4d37530da021ad697b3b932048bb0433d"
+      },
+      "info_book.integrateddynamics.manual.machines.materializer.text1": {
+        "source_sha256": "f888f4d21ef4c6145ad9ff6336082d85ab81dbf71a386d0612f5737fd0f23ec1",
+        "translation_sha256": "b02be086d6ed12277d7455d8fac26b715dff7748df0689639170d1759aa4f7a5"
+      },
+      "info_book.integrateddynamics.manual.machines.materializer.text2": {
+        "source_sha256": "d3edd1f9e9125bb77e388af279a6e71fe66a083fadd7182efde99298fac57cea",
+        "translation_sha256": "098d839225912f4c21b7163ba4f5f3dd90a10d95bddf177c5642375ba4d3257d"
+      },
+      "info_book.integrateddynamics.manual.machines.materializer.text3": {
+        "source_sha256": "5d2dbe8605fd0d31bae0c1ca12d72cd24a7460dedc341f2dfcd249a2987dfeef",
+        "translation_sha256": "4ecb4773701b51ceadb5fee71c6e94835581bb4265dca3d2fd6852b1ea598b49"
+      },
+      "info_book.integrateddynamics.manual.machines.proxy": {
+        "source_sha256": "a68ee4167406a050681e0ea3b78907f56b7dd167eff9c9f77dc38026802f0b52",
+        "translation_sha256": "a567776c79747dbcb95aadb075589d2daa4c661af0e9098a0fc585657379860f"
+      },
+      "info_book.integrateddynamics.manual.machines.proxy.text1": {
+        "source_sha256": "501f4952b063d285274c0795d8398b517f793d958f2d958935de02740b0afc6c",
+        "translation_sha256": "f06f50aa2a4c8e7abd266a4288cf47fd7f92261e29c28f5a269456bae7fdada6"
+      },
+      "info_book.integrateddynamics.manual.machines.proxy.text2": {
+        "source_sha256": "5aa6313e5a0c985d1ac16e115727f406a5bfcacd48e7d9dbfd3d20229a6e6bf0",
+        "translation_sha256": "92895088aa8b55b778757cb45bc2372ac8e5782a9e6521759391a6317ef51119"
+      },
+      "info_book.integrateddynamics.manual.machines.proxy.text3": {
+        "source_sha256": "62b883a35ebfa820fea9834c4c16aa1c60173cbf964f1b5eb5dd828745ab7f6d",
+        "translation_sha256": "bc172e282026a3799d9818eea38be9ff6a979862046a36e36907c2a558448587"
+      },
+      "info_book.integrateddynamics.manual.machines.delay": {
+        "source_sha256": "fd9b6df3cdbc3d35b9a3e634d9ecba3765eaadb9abe4bf13c20cf8df089b8a48",
+        "translation_sha256": "b051f39468122abdf5a558e18baa96e042bc54511df55ee2670c6c7f6adbb856"
+      },
+      "info_book.integrateddynamics.manual.machines.delay.text1": {
+        "source_sha256": "27776544429902793ced047a9ae730de382653b4fd0bf7e17a6cbfeffb120689",
+        "translation_sha256": "41c5e91024bf81932eb6d7cffe62a8f6dc23688b8d114ac5e801784fa300d450"
+      },
+      "info_book.integrateddynamics.manual.machines.delay.text2": {
+        "source_sha256": "84a5c6c4736a1e8764f6c5fa06289a8cb450e2afc46b872be9059156ce2b89ab",
+        "translation_sha256": "d56edfe5d546838e8bd30e5ab5520b6cf0bb21cfa81ff0cf9c46e587404aacda"
+      },
+      "info_book.integrateddynamics.manual.machines.delay.text3": {
+        "source_sha256": "88823bf988255df3958210e8f80df204996df62043d17757fe497b467c1d2c83",
+        "translation_sha256": "6f054be9519d8d4471fe15c0b42523bb85604eb33009810f0db6f82a2bc634a8"
+      },
+      "info_book.integrateddynamics.manual.machines.energy_battery": {
+        "source_sha256": "3e44e8e8baeaf044620b13a3496ca473c5f4daa5b8d4bdf1820a064667220945",
+        "translation_sha256": "9babd1457f7752df0dd6b5df23a2ee7bd26a0e77c8507d7520463cc72ac3ef08"
+      },
+      "info_book.integrateddynamics.manual.machines.energy_battery.text1": {
+        "source_sha256": "68d0b7e686e7e66ebce694232fb8b156518cfacbfdbcfc97949e3c4a327788a7",
+        "translation_sha256": "5a7fa8dac18ef6e4ad73d7c1b52408b0c09816040c693791a71809b2698ff90a"
+      },
+      "info_book.integrateddynamics.manual.machines.energy_battery.text2": {
+        "source_sha256": "10207a4057989c5d16a331caf849c2f868489384c1d2ab4101b4256c042654da",
+        "translation_sha256": "cdd14776a3dc45804e94b5820b373a5c6f07cb72737ea5460270b2846e011abb"
+      },
+      "info_book.integrateddynamics.manual.machines.energy_battery.text3": {
+        "source_sha256": "15d2af2b38f7b07a67ea625deb706e5dde1b89ac795fb27257f72488a2410474",
+        "translation_sha256": "8963f45f854e43cf060e21d58fa22a1f2030bf8320aa1bb367ed6adb6a017632"
+      },
+      "info_book.integrateddynamics.manual.machines.energy_battery.text4": {
+        "source_sha256": "3a84e0e28f4548220f39a49a9b7e0799dab280fe54a2621d566bb0cfeab66a0b",
+        "translation_sha256": "2598b4340dd8aa96dbf1d18b5b3911b0b8e9e4547ea42d9c31e41d73c837e0a8"
+      },
+      "info_book.integrateddynamics.manual.machines.generator": {
+        "source_sha256": "1ade60abe93f5cfce908a10bb2d1b474f024779843faba4bb1f2ef06f277d3c7",
+        "translation_sha256": "030c54ec0ea0152e9b4ed9de6f1479b259cd4be41a15f101b804eca3fc7af85e"
+      },
+      "info_book.integrateddynamics.manual.machines.generator.text1": {
+        "source_sha256": "dbb92c175970aec96f1c9c00e66e7248a37bdb9d7980c59aa009c3ef6264b7e1",
+        "translation_sha256": "f419d70eb0daa40c19ad88c3b0c59a0bc5faf3163a509f9c8e55a96d002c8015"
+      },
+      "info_book.integrateddynamics.manual.machines.mechanical_squeezer": {
+        "source_sha256": "3913374d4f097ab41ce9f810f9df4df380d34aea901fc278ec673d2e261dd52e",
+        "translation_sha256": "d46ac3ac3f3468eeb53293ddcbba17c0ea9140bb5b6c680780c52712820b2ed5"
+      },
+      "info_book.integrateddynamics.manual.machines.mechanical_squeezer.text1": {
+        "source_sha256": "c1fb323c2a8b3152a0a13625a4580c6bd86549ca06ee7e58b6658347f2a43479",
+        "translation_sha256": "ea8cc8b3336babfb20fdb63a868f8da394880fc3d4e58fb613821eb800114c6f"
+      },
+      "info_book.integrateddynamics.manual.machines.mechanical_drying_basin": {
+        "source_sha256": "b2952b37f47e3604ac969236585fae8effea0f5ed4a175909231fb78985669e4",
+        "translation_sha256": "0e80c6beb0abbd2efd8a0f63c3942b046908743d574e5f2bec383f89812ac198"
+      },
+      "info_book.integrateddynamics.manual.machines.mechanical_drying_basin.text1": {
+        "source_sha256": "e7d386c747e7fe640c233e2c871cd4c7fd24f1e8503cbdb50bec5027fd8655e0",
+        "translation_sha256": "23765ef98269f86325beed16ffceea804bc51aff11198dc8d1825af42a9174a7"
+      },
+      "info_book.integrateddynamics.manual.logic_programming": {
+        "source_sha256": "977d7c3d816ccc057f7049b27c114ff0078160a2e34a8e56a606f2f52bbe258f",
+        "translation_sha256": "a4781a8b25794f74e1c8eb8167450be131e1e37eb1f6d3540f8f179fa16b41d6"
+      },
+      "info_book.integrateddynamics.manual.logic_programming.text1": {
+        "source_sha256": "06a9842f88c354839e7aaa13f8d3b589bb2e64459e00b03b205b104c12253ebb",
+        "translation_sha256": "3a224e027ee33cd191bf62c0da98c5144668670155acc6b6f3fbf4d45e2f78b0"
+      },
+      "info_book.integrateddynamics.manual.logic_programming.text2": {
+        "source_sha256": "49f5857bbe8e322e13c3d5aef9a2aa70d903462a9af743a3ac3cbc69e38a2b50",
+        "translation_sha256": "e43d55fa80df99128093b31394c06c0804b6a00c0d90ffaed9de93b48b230823"
+      },
+      "info_book.integrateddynamics.manual.logic_programming.text3": {
+        "source_sha256": "543dba3e535a5eb23a1e9f0c79dd1fbafb4134ad83f6b9ac7d40752889fe8a48",
+        "translation_sha256": "9d384bcf69d091779ea7f5cac2bcafa30229ef25fd9afb84ba1586dc1e481732"
+      },
+      "info_book.integrateddynamics.manual.logic_programming.text4": {
+        "source_sha256": "f702b92135d845162ae5f8ed60fef460150230bacd99d1ea3633b762a314f557",
+        "translation_sha256": "b4270eefe8205b0c828ef4c6377893735f626d9f63b69dd2c6dad02a6d40143c"
+      },
+      "info_book.integrateddynamics.manual.logic_programming.text5": {
+        "source_sha256": "ecbdac288472c93b9795d183841451f098f9590cfcf7ad4ebc4210f35609daef",
+        "translation_sha256": "122d696a97035cc35bdad0553934add7881763fc6c8f4b00c665f35fae89f0b8"
+      },
+      "info_book.integrateddynamics.manual.logic_programming.text6": {
+        "source_sha256": "ae4eb049e3f444d36a00ac94d194b4a503d42ea26393a242f9805c860b3257e2",
+        "translation_sha256": "c9242408ecda0a1fe845d1e04d10882af30918ec140dbaa102024fec5508a7fc"
+      }
+    }
+  },
+  "book_adaptations": {
+    "integrateddynamics": {
+      "info_book.integrateddynamics.introduction.text2": {
+        "base_sha256": "d89d7b638fdfba3f13a3ca45c4c2e95937a874271468f31c78505ddbd7b8f960",
+        "target_english_sha256": "018314c5cd7ec2cfae44ece13acb730c402886873101556f4b732fe813d70c46",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "Красные цепи",
+            "new": "Схемы из красного камня"
+          },
+          {
+            "kind": "replace",
+            "old": "красные цепи",
+            "new": "схемы из красного камня"
+          }
+        ],
+        "result_sha256": "9116374bccbeb2afedd5b11fb4db64ffe6754792e19ac69a3222b92377498d3c"
+      },
+      "info_book.integrateddynamics.tutorials.recipe_handling.text1": {
+        "base_sha256": "925eeef467fea9e0450b741bc2bf4d48b5ea35e75b6d0e2a82bb78faadb4426b",
+        "target_english_sha256": "df9fc8bd9984796ba9290773277c0d32516bc4c33d278811f57bf1435acfe4b1",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "поддержку первого уровня для них",
+            "new": "полноценную поддержку рецептов"
+          }
+        ],
+        "result_sha256": "a4ed68ad3df4ea49c7aa6e79e8394d07c951c78cbdb1089b140e6c2ad41418db"
+      },
+      "info_book.integrateddynamics.manual.networks.text1": {
+        "base_sha256": "395f7b07860b4e44178b8d0a13b33d14b15498a4bde5a169d721474fbbc56bcb",
+        "target_english_sha256": "ba9e8e14770ecf5f2a646f42185b7535aabedf5d9512bb488e5f7351f704e353",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "Эти кабели следует управлять",
+            "new": "Этими кабелями следует управлять"
+          }
+        ],
+        "result_sha256": "f8796db8bbd8e7904b3a8a467f4b5406654b4ca0b3e636ce08f4ac3c9bb79280"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.operator.text2": {
+        "base_sha256": "2a365359688eb7bcd895a353e2a694599881eed445b3dfef74f532c135bda4fc",
+        "target_english_sha256": "af3f7abc8c02c18f34c6beb81ec064937fc113d4273f5741cde1fd1f177a223a",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "оператор сложения &2Оператора&0",
+            "new": "&2Оператор&0 сложения"
+          }
+        ],
+        "result_sha256": "127c91372f3f9887e96ff8779bee54e576c178dd48e440423337a19d7d746f2c"
+      },
+      "info_book.integrateddynamics.manual.logic.value_types.nbt.text3": {
+        "base_sha256": "bd47cec3150f2ba78bce01a072269c818205d874990ce109f5748fd775f594d8",
+        "target_english_sha256": "63bfd7343b7d47a78606f54425f476c1df5fc973debac8ad2a825588a24bfdb5",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "механизм низкоуровневого резервного копирования",
+            "new": "запасной низкоуровневый способ доступа к данным"
+          }
+        ],
+        "result_sha256": "6536291c8be30957498cbb4555b7470656bfb0ed25290c3bd59434f2c63fb61d"
+      },
+      "info_book.integrateddynamics.manual.parts.other.connector_omni_directional.text3": {
+        "base_sha256": "4f81f06486c6fb0ec63ebd90e987a8068c2463e2ed6c9041ec8cb2a425741f2b",
+        "target_english_sha256": "9b18fb86c46ef89363747e935cd8432aa2a2116cf74c4bbe7bf513a717b4be8c",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "У каждого коннектора в группе есть уникальный цвет частиц",
+            "new": "У каждой группы коннекторов свой цвет частиц"
+          }
+        ],
+        "result_sha256": "0c4acebdf9313f11156f1f18107d340b4f08af577b59f0b9dcbee48fbb8e07a6"
+      },
+      "info_book.integrateddynamics.manual.machines.materializer.text3": {
+        "base_sha256": "4ecb4773701b51ceadb5fee71c6e94835581bb4265dca3d2fd6852b1ea598b49",
+        "target_english_sha256": "5d2dbe8605fd0d31bae0c1ca12d72cd24a7460dedc341f2dfcd249a2987dfeef",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "&lКарты Переменных&r могут быть подключены для входа и выхода из &lМатериализатора&r.",
+            "new": "&lКарты Переменных&r можно подавать в &lМатериализатор&r и извлекать из него с помощью труб."
+          }
+        ],
+        "result_sha256": "a5b6f7ae1763b414ab55fa3dc39934560d02c62e31cf3eab102da25e166bdc8a"
+      },
+      "info_book.integrateddynamics.manual.machines.proxy.text3": {
+        "base_sha256": "bc172e282026a3799d9818eea38be9ff6a979862046a36e36907c2a558448587",
+        "target_english_sha256": "62b883a35ebfa820fea9834c4c16aa1c60173cbf964f1b5eb5dd828745ab7f6d",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "&lКарты Переменных&r могут быть подключены для входа и выхода из него.",
+            "new": "&lКарты Переменных&r можно подавать в него и извлекать из него с помощью труб."
+          }
+        ],
+        "result_sha256": "59943d02e41415c79c034d3098bb1f16bdf0b8b3ac9d991d1b0d0bba6ca410ab"
+      }
+    }
+  },
+  "compatibility_additions": {
+    "integrateddynamics": {
+      "gui.integrateddynamics.diagnostics.title": {
+        "source_key": "gui.integrateddynamics.diagnostics.title",
+        "source_english_sha256": "6e4f9c00ba4812b3e6cc3b1d6ee109d7ac52cf78af89118da31925a1df897afd",
+        "source_russian_sha256": "9eb403e81d8013698808d58130dc03cbd222f63960a88f9b5e5dc1db46ef86e0",
+        "target_english_sha256": "6630b6f374ad5e102df2fa4b326a582f0873ad25046b023aec322344aa6bbbd3",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "Integrated Dynamics - ",
+            "new": ""
+          }
+        ],
+        "result_sha256": "3ba15343297e5b47213151af6b14351d3535717f43bfb8366f46fe101a0a0b25",
+        "review": "target_version_semantics_and_markup"
+      },
+      "gui.integrateddynamics.diagnostics.table.dimension": {
+        "source_key": "gui.integrateddynamics.diagnostics.table.dimension",
+        "source_english_sha256": "0bc70684cf306b3ed9ab68fd40654349b8fdf96b2e6cdce61edc53442d7f738f",
+        "source_russian_sha256": "0c162f69ff04c97b1253b68deff05d2de690c8927762316986ef125f3950bc88",
+        "target_english_sha256": "ea53b1cb304d7da0226fc28849e38beec99a47e96fee2e19acc1ae17ceeae0f4",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "Измерение",
+            "new": "Изм."
+          }
+        ],
+        "result_sha256": "9b2da2247422096f18d8746166302fd51a620123d7f905ff9a35d699822c325e",
+        "review": "target_version_semantics_and_markup"
+      },
+      "gui.integrateddynamics.diagnostics.table.side": {
+        "source_key": "gui.integrateddynamics.diagnostics.table.side",
+        "source_english_sha256": "630ef00b7c4f54d25b8712cb4ebb5b04264b037a8fcdac9754f21df0036881d1",
+        "source_russian_sha256": "c00bf7a95ae7d196e32a16a4dce3da09adbf2cc3db6af9423992435a3a482fc5",
+        "target_english_sha256": "ea7bf4bb723041e7d63fe6c74dc46c048c617eb49a454a1cd6edbf34d05a418e",
+        "edits": [],
+        "result_sha256": "c00bf7a95ae7d196e32a16a4dce3da09adbf2cc3db6af9423992435a3a482fc5",
+        "review": "target_version_semantics_and_markup"
+      },
+      "advancement.integrateddynamics.menril_production.desc": {
+        "source_key": "advancement.integrateddynamics.menril_production.desc",
+        "source_english_sha256": "87b53fc448c8abaab6bcae3752976b952a4c341c9a2d5777ffb0808206ee1c38",
+        "source_russian_sha256": "596e9201fb9037747c366412588333f9099f9e0b72baa7bc309aa7b1c80f1ebc",
+        "target_english_sha256": "f1edc9a954b8da39d783e01a634e438e7505d48dfd325f8bf89c8b75f6c5eca5",
+        "edits": [],
+        "result_sha256": "596e9201fb9037747c366412588333f9099f9e0b72baa7bc309aa7b1c80f1ebc",
+        "review": "target_version_semantics_and_markup"
+      },
+      "advancement.integrateddynamics.sponge_step_sound.desc": {
+        "source_key": "advancement.integrateddynamics.sponge_step_sound.desc",
+        "source_english_sha256": "fd692ab2f759efc314d8cc849ba93341ad104250f1951e93ee27d35e8e46add2",
+        "source_russian_sha256": "2c57e09385cdfe73809de2a92c3a9c2865fefee77c7af06dff47355c9b01feda",
+        "target_english_sha256": "1daf5046b043cc43106518f5aff8913576340be6906e1d1880581c4992f714b0",
+        "edits": [],
+        "result_sha256": "2c57e09385cdfe73809de2a92c3a9c2865fefee77c7af06dff47355c9b01feda",
+        "review": "target_version_semantics_and_markup"
+      },
+      "valuetype.integrateddynamics.operator.tooltip.signature": {
+        "source_key": "valuetype.integrateddynamics.operator.tooltip.signature",
+        "source_english_sha256": "9b2a78e6519bcb1e243891ced7f5e5a8bfe5565a33cf8816519997a133136cd7",
+        "source_russian_sha256": "f96757b23b3ba8c3513c50a4449dfb60efd0ef5ea3b3cd6dc42b382ecdcdedda",
+        "target_english_sha256": "511a5f50d4fd052da1ce865d099f0f3d5463a9ab44e45cf01ce537d9ecc142c2",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§r",
+            "new": "§r%s"
+          }
+        ],
+        "result_sha256": "31b35276257524d572e699838088cb8be046046a23b5a771479d37148aa1b840",
+        "review": "target_version_semantics_and_markup"
+      },
+      "operator.integrateddynamics.tooltip.input_type_name": {
+        "source_key": "operator.integrateddynamics.tooltip.input_type_name",
+        "source_english_sha256": "e7d4b95fe98e7357c38d52b9aa609971a3ea6f94788c1e85e0ad11e1fb3b5af3",
+        "source_russian_sha256": "fc1921a5b291db058142ff9e76e79c34a71ecf74382591093adf4d2ac4c1db80",
+        "target_english_sha256": "f0f6366bb407725da0f44e9811d0faca7c91fc1b32c68cfac47b03d074b73753",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§r",
+            "new": "§r%s"
+          }
+        ],
+        "result_sha256": "8a5f9cbebce56c52a4867329274399ff53b1aa4a63d2f7201d20cca618ecec90",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.tutorials.menrilBasics.text2": {
+        "source_key": "info_book.integrateddynamics.tutorials.menrilBasics.text2",
+        "source_english_sha256": "2e5cd5d3365ae7f0202175a4c23b3cd1333592be9a9c5ace15ca3536d1c0b3c8",
+        "source_russian_sha256": "8ffa7b420f58b9cfacdb31f5b0efe1f3983f9ee18b3aa3ab249a38096782b0f4",
+        "target_english_sha256": "5590befb3de7495a9a14277ed90c4ed2ea85f81cb203081bb9e8fca499ea5fc7",
+        "edits": [],
+        "result_sha256": "8ffa7b420f58b9cfacdb31f5b0efe1f3983f9ee18b3aa3ab249a38096782b0f4",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.tutorials.recipe_handling.text3": {
+        "source_key": "info_book.integrateddynamics.tutorials.recipe_handling.text3",
+        "source_english_sha256": "3928ec86f1875cc8494f36353aa8fdbd1a1847177fa0d50a4327a2888efc9dd1",
+        "source_russian_sha256": "1268ad459b0416bf981c01db1937624f5314ac5d3a8d438484bb63fe315c8165",
+        "target_english_sha256": "bf7bdbbaa57d62578b28438b2252733e44521031af68631f99d819913a2c10fc",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "&8Рецепт&r",
+            "new": "&8Рецепт&0"
+          }
+        ],
+        "result_sha256": "0127f9e246336dea0437c286d54ea4bebfae0edd35e9c3a233e6bebe1c26d1d2",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.manual.prerequisites.squeezer.text1": {
+        "source_key": "info_book.integrateddynamics.manual.prerequisites.squeezer.text1",
+        "source_english_sha256": "336203defbffe0c662a86c914aece5ad711ce03ba884877a691ed553ebf55229",
+        "source_russian_sha256": "83523dfda88668f00604b247921463dda33932a9d52197a11f3d817358cd0499",
+        "target_english_sha256": "cc5980db26c1e9281461e920c431f7359b40fbb9f7bb7802d18cc7e68a217645",
+        "edits": [],
+        "result_sha256": "83523dfda88668f00604b247921463dda33932a9d52197a11f3d817358cd0499",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.manual.prerequisites.drying_basin.text1": {
+        "source_key": "info_book.integrateddynamics.manual.prerequisites.drying_basin.text1",
+        "source_english_sha256": "4bae7407ab9e6419f38821dbfae6babb6fa11c6a8312bc369361f648b9b5a179",
+        "source_russian_sha256": "e46f39d7b027a378debe93a85c62aa779e4d0518cb12364d1094ff11539a6747",
+        "target_english_sha256": "8ac6ad538e34adc922ea395cdcded64f34c42034a0ee1f5f72a187989993dda2",
+        "edits": [],
+        "result_sha256": "e46f39d7b027a378debe93a85c62aa779e4d0518cb12364d1094ff11539a6747",
+        "review": "target_version_semantics_and_markup"
+      },
+      "operator.integrateddynamics.applied.type": {
+        "source_key": "operator.integrateddynamics.applied.type",
+        "source_english_sha256": "f2a3efeda3dd485f276ba2799a8069c8a6fcee049817daa0825bef3fa1d01dcc",
+        "source_russian_sha256": "038f176ef67937d93f295323c85832393b899383c411e88bd6baa619cd2d3d41",
+        "target_english_sha256": "f2a3efeda3dd485f276ba2799a8069c8a6fcee049817daa0825bef3fa1d01dcc",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§Применён к:",
+            "new": "§aПрименён к:"
+          }
+        ],
+        "result_sha256": "dfe3dab240bc8f303727a99974db2e8a35c1f2fe310ee1f413ade4bdfc67bad2",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.tutorials.aspects.text5": {
+        "source_key": "info_book.integrateddynamics.tutorials.aspects.text5",
+        "source_english_sha256": "97d1e6595290fc810786f3e66b5d6da7bf6199870d8c3cb06f58931bf15ffc9d",
+        "source_russian_sha256": "f4e0810aaabecdd8219d9969924e92992d37dd68f6d24a5bb8dd523a8aa30d0a",
+        "target_english_sha256": "97d1e6595290fc810786f3e66b5d6da7bf6199870d8c3cb06f58931bf15ffc9d",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "&lСчитывателем Красного Камня&r",
+            "new": "Считывателем Красного Камня"
+          }
+        ],
+        "result_sha256": "f2fac87249f425c3f60a5f226a9742cc563bf3bf19648027abfdc984334e30cf",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.tutorials.logicOperations.text5": {
+        "source_key": "info_book.integrateddynamics.tutorials.logicOperations.text5",
+        "source_english_sha256": "b3f46a9d6d748e093962695cc9ae633ae870ba24e0fdb703f7e97690f41caa26",
+        "source_russian_sha256": "c74eaef1694f52c6beda02e77fd0ffa1c1430dba42f4c8e968c877bdf3f0141b",
+        "target_english_sha256": "b3f46a9d6d748e093962695cc9ae633ae870ba24e0fdb703f7e97690f41caa26",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "&lКарта Переменной Сложения&r",
+            "new": "&lКарта Переменной&r &lСложения&r"
+          }
+        ],
+        "result_sha256": "11bcdd0d45b26c8f3d92d757d46fbd20535de50d28caea5491ca33b19ccfe9ad",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.tutorials.logicOperations.text6": {
+        "source_key": "info_book.integrateddynamics.tutorials.logicOperations.text6",
+        "source_english_sha256": "8f846fceae5724752aa3bfb01798678e77b679957d5b04f9f3a4b83e3478f24c",
+        "source_russian_sha256": "4efae4200288be619e629ecf40d4f7b1e71415a92db64130c08179d185373023",
+        "target_english_sha256": "8f846fceae5724752aa3bfb01798678e77b679957d5b04f9f3a4b83e3478f24c",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "&lКарту Переменной Сложения&r",
+            "new": "&lКарту Переменной&r &lСложения&r"
+          }
+        ],
+        "result_sha256": "f68aeaa4ce0a594bb4867c019d4a07a04352b578329d6315773e5684823c72e1",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.tutorials.advancedNetworkComponents.text2": {
+        "source_key": "info_book.integrateddynamics.tutorials.advancedNetworkComponents.text2",
+        "source_english_sha256": "a1e8abf0021028aefd023be1181236de39931049109aa4f1bd667f49d4752a32",
+        "source_russian_sha256": "cd4b963d0d16ee7e06a8718616495e7c1657efd96ff646030040206e12f1e890",
+        "target_english_sha256": "a1e8abf0021028aefd023be1181236de39931049109aa4f1bd667f49d4752a32",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "&остатическими",
+            "new": "&oстатическими"
+          },
+          {
+            "kind": "replace",
+            "old": "&одинамической",
+            "new": "&oдинамической"
+          }
+        ],
+        "result_sha256": "9f56cdb46a91f6ea31ec8d67279279362fb12de4581444a6716653351e96f3c3",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.tutorials.advancedNetworkComponents.text3": {
+        "source_key": "info_book.integrateddynamics.tutorials.advancedNetworkComponents.text3",
+        "source_english_sha256": "1f2d7eb5e374b2d0408e77d78c839f054756bc2add46bf2d95b66c5f6a549c46",
+        "source_russian_sha256": "dc422805fb164359a6929fcc8927bdcbaeb6bf2ed1a3d1236fc12127922bfe67",
+        "target_english_sha256": "1f2d7eb5e374b2d0408e77d78c839f054756bc2add46bf2d95b66c5f6a549c46",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "&одинамического",
+            "new": "&oдинамического"
+          },
+          {
+            "kind": "replace",
+            "old": "&остатическое",
+            "new": "&oстатическое"
+          },
+          {
+            "kind": "replace",
+            "old": "&одинамическую",
+            "new": "&oдинамическую"
+          }
+        ],
+        "result_sha256": "e41d41135b6e057a390c0818b61066f887505ba907761b721c2b4e4bed035b50",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.tutorials.advancedNetworkComponents.text4": {
+        "source_key": "info_book.integrateddynamics.tutorials.advancedNetworkComponents.text4",
+        "source_english_sha256": "8b1bcd76f46f918da0b0bac57908d24112f8b7e8b69b5e5bf023ebad1da973f2",
+        "source_russian_sha256": "5e262ce728b15c9e03b43f455108e78931358c2867592836a815a6fc6ec3b82e",
+        "target_english_sha256": "8b1bcd76f46f918da0b0bac57908d24112f8b7e8b69b5e5bf023ebad1da973f2",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "&остатическое",
+            "new": "&oстатическое"
+          },
+          {
+            "kind": "replace",
+            "old": "&опроксировано",
+            "new": "&oпроксировано"
+          }
+        ],
+        "result_sha256": "47351e8cf7f9893838ee3e6df3c0fe87584f628d71308079745de136fc496283",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.tutorials.theValueOfOperators.text2": {
+        "source_key": "info_book.integrateddynamics.tutorials.theValueOfOperators.text2",
+        "source_english_sha256": "1f024afe764959eb80149bd479dd7825f6478812a44a59f39f26328d0f2608af",
+        "source_russian_sha256": "1b9608c1f2727d5cee4a39f24e61a90aaf0b38af2b2bcd21e93fc7714a6e93ff",
+        "target_english_sha256": "1f024afe764959eb80149bd479dd7825f6478812a44a59f39f26328d0f2608af",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "первый входной аргумент оператора сложения",
+            "new": "первый входной аргумент &2Оператора&0 сложения"
+          }
+        ],
+        "result_sha256": "d35d7add6dc0c742f559ccf097cc1aaabe9d93af6e4942fbbdb34b9de14da449",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integrateddynamics.tutorials.theValueOfOperators.text3": {
+        "source_key": "info_book.integrateddynamics.tutorials.theValueOfOperators.text3",
+        "source_english_sha256": "3887ce0a90b7cf43d3f276803440e37328ea7db44add2439ac2867262455cf97",
+        "source_russian_sha256": "e44ebd4467513842693b502d3a142bacdaefec3f61aa92a031a960b645a2e3ce",
+        "target_english_sha256": "3887ce0a90b7cf43d3f276803440e37328ea7db44add2439ac2867262455cf97",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "а именно оператор &oФильтр&r",
+            "new": "а именно &oФильтр&r &2Оператор&0"
+          },
+          {
+            "kind": "replace",
+            "old": "(оператор с одним",
+            "new": "(&2Оператор&0 с одним"
+          },
+          {
+            "kind": "replace",
+            "old": "Затем сохраните оператор &oРеляционное Равенство&r",
+            "new": "Затем сохраните &oРеляционное Равенство&r &2Оператор&0"
+          },
+          {
+            "kind": "replace",
+            "old": "используйте оператор &oФильтр&r",
+            "new": "используйте &oФильтр&r &2Оператор&0"
+          }
+        ],
+        "result_sha256": "930195facd6937cc86af1759733f7b0aa1e2634366b94fdb210fdca2064d85a9",
+        "review": "target_version_semantics_and_markup"
+      }
+    },
+    "integratedtunnels": {
+      "advancement.integratedtunnels.place_logwood.desc": {
+        "source_key": "advancement.integratedtunnels.place_logwood.desc",
+        "source_english_sha256": "594ae1c819d8b7c9aca96e9ba89af871ca98116a37e4ac4fff55c4e42612a57f",
+        "source_russian_sha256": "1a737388e227a7be45d84239b6dfddcc618a6145c483ebc9ca9ff19580e894e8",
+        "target_english_sha256": "88bc9a036a7792815a3978bfda196aa747ada871e629e61e5bbee786206d06f5",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "список тегов",
+            "new": "список рудного словаря"
+          },
+          {
+            "kind": "replace",
+            "old": "'logs'",
+            "new": "'logWood'"
+          }
+        ],
+        "result_sha256": "eb272dc560ac788f2f16381d3c1ee610c58f32a5c9a0c680c3cc3ec419d52308",
+        "review": "target_version_semantics_and_markup"
+      },
+      "aspect.aspecttypes.integratedtunnels.boolean.exactamount.info": {
+        "source_key": "aspect.aspecttypes.integratedtunnels.boolean.exactamount.info",
+        "source_english_sha256": "e2fc05b19f4574d13e6c9e63bb8e41924651a208b3dae1ca29bfc404a35192b7",
+        "source_russian_sha256": "5acfdf2084e05f062dc8b4bdfb055b9b1e68bc6c7af3b48465888028f79b1709",
+        "target_english_sha256": "1ae07365b0efbaffef8641339efaad591fd9aedee390666b9fb7ffe7c0646111",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "Если ингредиенты могут перемещаться только при условии, что их слот содержит ровно указанное количество.",
+            "new": "Разрешает перенос только точно указанного количества, без частичного переноса."
+          }
+        ],
+        "result_sha256": "b0b3f34272fa06b1f4bea6ae2c33cb33f058be5a259baa63251d6881ceeb3aa9",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integratedtunnels.concepts.text5": {
+        "source_key": "info_book.integratedtunnels.concepts.text6",
+        "source_english_sha256": "f5668ac1746b81207c9f7b2a3b2ac53e3039d7a683591a0b85126b3aa23c8f4e",
+        "source_russian_sha256": "77e0c021fa4d04eaaec2a12e83d7cb1a246862d4f886d1838c468cf96c010d26",
+        "target_english_sha256": "f5668ac1746b81207c9f7b2a3b2ac53e3039d7a683591a0b85126b3aa23c8f4e",
+        "edits": [],
+        "result_sha256": "77e0c021fa4d04eaaec2a12e83d7cb1a246862d4f886d1838c468cf96c010d26",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integratedtunnels.concepts.text6": {
+        "source_key": "info_book.integratedtunnels.concepts.text7",
+        "source_english_sha256": "2d96da338913d9e8f550792aded599c046814402be96b03fbb6ef9b580aec1db",
+        "source_russian_sha256": "32ebae7599ea9db1b98a738f359314bbb06d39bbf3af29125debd697c5307ace",
+        "target_english_sha256": "2d96da338913d9e8f550792aded599c046814402be96b03fbb6ef9b580aec1db",
+        "edits": [],
+        "result_sha256": "32ebae7599ea9db1b98a738f359314bbb06d39bbf3af29125debd697c5307ace",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integratedtunnels.concepts.text7": {
+        "source_key": "info_book.integratedtunnels.concepts.text8",
+        "source_english_sha256": "e7870361aac1ece362d405295fb20dc4a3268fac2a32be8d76b17c654d711cf3",
+        "source_russian_sha256": "60c6b3b02f2cbc760c1f08fdd61fec557703719b513533bd7e121fb62474ad2d",
+        "target_english_sha256": "e7870361aac1ece362d405295fb20dc4a3268fac2a32be8d76b17c654d711cf3",
+        "edits": [],
+        "result_sha256": "60c6b3b02f2cbc760c1f08fdd61fec557703719b513533bd7e121fb62474ad2d",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integratedtunnels.item.text1": {
+        "source_key": "info_book.integratedtunnels.item.text1",
+        "source_english_sha256": "3add1834303bcc43383bc48915253e7f8698092fe165d489feadc12c957e0db6",
+        "source_russian_sha256": "ec2bfaa70446f5fcbd64e3343c935637fef737eecaa630899e86506571a06087",
+        "target_english_sha256": "5abb9106dce1e4af8bdb13579c4f0bbbe775af5eae826861cfd3ede101751efa",
+        "edits": [
+          {
+            "kind": "truncate_before",
+            "marker": " Динамически фильтруйте"
+          }
+        ],
+        "result_sha256": "e6cacb70edaa37157bde800e3ee242f23c8cb75ced07065195535bf3a43512f0",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integratedtunnels.fluid.text1": {
+        "source_key": "info_book.integratedtunnels.fluid.text1",
+        "source_english_sha256": "252ee97aa39bb716b920020e9df60242e24b6f3717cb56ba491728501d0d6115",
+        "source_russian_sha256": "9c1ff2ddaedd9edf80a31353e3eaf01be6ae530550160ff97c894518048a5a3a",
+        "target_english_sha256": "63cd8d8bdc1e3058ee41b084a96bb9cfbdf58da7f2d097ccba95bbefa82bc4c9",
+        "edits": [
+          {
+            "kind": "truncate_before",
+            "marker": " Динамически фильтруйте"
+          }
+        ],
+        "result_sha256": "8dee13e8c7a5a3c4ff4a73efa2e1c896ad51aaf0076bd81bf67347885bc23de7",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integratedtunnels.energy.text1": {
+        "source_key": "info_book.integratedtunnels.energy.text1",
+        "source_english_sha256": "8ce8208f26492a146afee4f64a019aff7387df61018d381dde1b7318f728ec1f",
+        "source_russian_sha256": "f43985c2e7fbdeb302702c02a746f70d63d8f348626a6295c29af9ebd76f94ed",
+        "target_english_sha256": "6b00db330f9e23297c83f6f86b02756fdcc7e66686e6659150074dc1b94d6f72",
+        "edits": [
+          {
+            "kind": "truncate_before",
+            "marker": " Динамически фильтруйте"
+          }
+        ],
+        "result_sha256": "6b2c2fbb3cd7d7fc1ba6707ef1fa02d9aedf67da291412b4cce611b1ac0598e0",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integratedtunnels.tutorials.place_logwood": {
+        "source_key": "info_book.integratedtunnels.tutorials.place_logwood",
+        "source_english_sha256": "04d8a5aef0ff4597772cfea4c752059bdfabcc77a38184f160545031cf56eb36",
+        "source_russian_sha256": "a6ac3f056b16f7449695fdc0a40c852af3c8a9d0c2a576c44ba752ea7919ca65",
+        "target_english_sha256": "b32cd6e73a8bbd473ebbce067122df5ebf67455c69a6de9265feb8a3e934b69a",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "Размещение предметов по тегу",
+            "new": "Размещение брёвен"
+          }
+        ],
+        "result_sha256": "7ab0ca1dd178ce0f123c7e1b5a067221665e400f68d69ecb4196f009c8b82741",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integratedtunnels.tutorials.place_logwood.text1": {
+        "source_key": "info_book.integratedtunnels.tutorials.place_logwood.text1",
+        "source_english_sha256": "eba5573b14b71f168c065f48fe7fd30f6655e9a0d8e0cd90ef83a8bc062a1842",
+        "source_russian_sha256": "68e0e8ea0a9a3415c53a9e2362b24afda17e2cb37d134320220715b9fe84567c",
+        "target_english_sha256": "9bb4fc40a82a922cbfe77814bb3c2035168159fc9318743a571ffa024ec6441a",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "&lЗначения Тегов&r",
+            "new": "&lЗначения Рудного Словаря&r"
+          },
+          {
+            "kind": "replace",
+            "old": "в теге &ologs&r",
+            "new": "из рудного словаря &ologWood&r"
+          }
+        ],
+        "result_sha256": "3a06302cfec33b0ddc654b3dd7b458a7201cf18430f9ed267092954579c6c3f2",
+        "review": "target_version_semantics_and_markup"
+      },
+      "info_book.integratedtunnels.world.energy.text1": {
+        "source_key": "info_book.integratedtunnels.world.energy.text1",
+        "source_english_sha256": "91494d8f802c9492c3bf23f6906ea2e54c911dea6ee2270b9e88ef2da18f0de6",
+        "source_russian_sha256": "fa1656fe4f1167612f031faebecc9be23593dcdea9df183ed46c813e2264fc3c",
+        "target_english_sha256": "91494d8f802c9492c3bf23f6906ea2e54c911dea6ee2270b9e88ef2da18f0de6",
+        "edits": [],
+        "result_sha256": "fa1656fe4f1167612f031faebecc9be23593dcdea9df183ed46c813e2264fc3c",
+        "review": "energy_section_and_target_EXPORTER_WORLD_ENERGY_registry_name; English mentions fluid exporter; no mechanics claim"
+      }
+    }
+  },
+  "review_notes": [
+    "Integer/long bounds, -1/0 channel meanings, priority order, 512-block connector limit and typed examples preserved.",
+    "Fallback is an alternative read mechanism, not backup; connector particle color belongs to a group; piping means automated insertion/extraction.",
+    "Keep target logWood ore dictionary and exact transfer quantity, not modern tags/slot equality/filtering interfaces.",
+    "Three concepts paragraphs use explicit source-key remapping; no position-based list copying.",
+    "Restore target %s and ASCII style codes; keep Labeller wording consistent with the reused item locale."
+  ],
+  "retained_technical_book_names": {
+    "integrateddynamics": {
+      "info_book.integrateddynamics.manual.logic.value_types.nbt": {
+        "source_sha256": "0d4f613aaefb5f1bc90893f6210d23eaf94e71096b0f8ad67d43a6236c06f4e8",
+        "decision": "retain_NBT_technical_name_without_invented_translation"
+      }
+    }
+  },
+  "deferred_original_mod_names": 2,
+  "installed_into_game": false,
+  "game_tested": false,
+  "ready_for_players": false
+}
