@@ -14,6 +14,65 @@ from omk.admin import AdminError
 from omk.cold_backup_worker import digest
 from tests.unit.test_owner_reset_runtime import flow as runtime_flow
 
+REAL_CREATION = slots.creation
+
+
+def test_creation_uses_the_frozen_docker_log_policy(lab, monkeypatch):
+    cfg, resource, state, _ = lab
+    environment = {"OMK_SLOT_DOCKER_LOG_MIB": "1", "OMK_SLOT_DOCKER_LOG_FILES": "2"}
+    operation = slots.plan(cfg, resource, environment)["operation"]
+    record = slots.read(cfg, operation)
+    calls = []
+    monkeypatch.setattr(
+        slots.backups, "docker", lambda *args, **kwargs: calls.append(args)
+    )
+    REAL_CREATION(cfg, record, state["parent"])
+    assert "max-size=1m" in calls[0] and "max-file=2" in calls[0]
+    assert "max-size=10m" not in calls[0]
+
+
+def test_legacy_plan_with_implicit_default_logs_can_still_be_created(lab):
+    cfg, resource, state, _ = lab
+    operation = slots.plan(cfg, resource, {})["operation"]
+    record = slots.read(cfg, operation)
+    record["policy"].pop("docker_log_mib")
+    record["policy"].pop("docker_log_files")
+    slots.save(cfg, record, "planned")
+    result = slots.execute(cfg, operation, "create", {})
+    assert result["stage"] == "created" and state["commands"] == ["create"]
+    assert "docker_log_mib" not in slots.read(cfg, operation)["policy"]
+
+
+def test_legacy_plan_cannot_adopt_a_new_docker_log_override(lab):
+    cfg, resource, state, _ = lab
+    operation = slots.plan(cfg, resource, {})["operation"]
+    record = slots.read(cfg, operation)
+    record["policy"].pop("docker_log_mib")
+    record["policy"].pop("docker_log_files")
+    slots.save(cfg, record, "planned")
+    with pytest.raises(AdminError, match="changed"):
+        slots.execute(cfg, operation, "create", {"OMK_SLOT_DOCKER_LOG_MIB": "1"})
+    assert state["commands"] == [] and slots.read(cfg, operation)["stage"] == "planned"
+
+
+def test_snapshot_requires_the_recorded_log_driver_configuration(lab):
+    cfg, resource, state, _ = lab
+    environment = {"OMK_SLOT_DOCKER_LOG_MIB": "1", "OMK_SLOT_DOCKER_LOG_FILES": "2"}
+    operation = slots.plan(cfg, resource, environment)["operation"]
+    record = slots.read(cfg, operation)
+    slots.creation(cfg, record, state["parent"])
+    # The fixture creates the old 10m/3 container; a new 1m/2 plan must reject it.
+    with pytest.raises(AdminError):
+        slots.snapshot(record, state["parent"])
+    state["candidate"]["HostConfig"]["LogConfig"] = {
+        "Type": "local",
+        "Config": {"max-size": "1m", "max-file": "2"},
+    }
+    assert slots.snapshot(record, state["parent"])["status"] == "created"
+    state["candidate"]["HostConfig"]["LogConfig"]["Type"] = "json-file"
+    with pytest.raises(AdminError):
+        slots.snapshot(record, state["parent"])
+
 
 @pytest.fixture
 def lab(tmp_path, monkeypatch):

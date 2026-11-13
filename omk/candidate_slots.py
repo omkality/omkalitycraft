@@ -221,8 +221,7 @@ def snapshot(r, p, *, lookup=None):
                 "UTSMode",
             ]
         )
-        or h.get("LogConfig")
-        != {"Type": "local", "Config": {"max-size": "10m", "max-file": "3"}}
+        or h.get("LogConfig") != template.docker_log_config(policy)
         or len(mount) != 1
         or mount[0].get("Type") != "volume"
         or mount[0].get("Name") != p["target"]["data_volume"]
@@ -416,6 +415,7 @@ def plan(config, resource_operation, environment=None):
 
 def creation(config, r, p):
     spec, policy = r["spec"], r["policy"]
+    logs = template.docker_log_config(policy)["Config"]
     args = [
         "create",
         "--pull",
@@ -446,9 +446,9 @@ def creation(config, r, p):
         "--log-driver",
         "local",
         "--log-opt",
-        "max-size=10m",
+        "max-size=" + logs["max-size"],
         "--log-opt",
-        "max-file=3",
+        "max-file=" + logs["max-file"],
         "--mount",
         f"type=volume,source={p['target']['data_volume']},target=/srv",
     ]
@@ -617,7 +617,7 @@ def request_reconcile(config, r, p, environment):
 def request_create(config, r, p, environment):
     if (
         r["stage"] != "planned"
-        or template.settings(environment) != r["policy"]
+        or template.settings(environment) != template.complete_policy(r["policy"])
         or maintenance.settings(environment) != r["lifecycle"]
         or not 0
         <= (datetime.now(UTC) - datetime.fromisoformat(r["created_at"])).total_seconds()

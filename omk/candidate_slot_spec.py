@@ -17,6 +17,9 @@ from omk.cold_backup_worker import digest
 from omk.fs import regular
 from omk.profiles import PROJECT_ROOT
 
+# Schema-1 records before configurable Docker logging always meant 10m / 3.
+_LEGACY_DOCKER_LOG_POLICY = {"docker_log_mib": 10, "docker_log_files": 3}
+
 
 def settings(environment=None):
     env = os.environ if environment is None else environment
@@ -28,6 +31,8 @@ def settings(environment=None):
         ("CPUS", 4, 1, 32),
         ("PIDS", 512, 128, 4096),
         ("LOG_BYTES", 4 * 1024**2, 65536, 8 * 1024**2),
+        ("DOCKER_LOG_MIB", 10, 1, 64),
+        ("DOCKER_LOG_FILES", 3, 1, 10),
     ):
         raw = env.get("OMK_SLOT_" + key, str(default))
         if (
@@ -48,6 +53,31 @@ def settings(environment=None):
             "Candidate heap must leave at least 512 MiB outside the Java heap"
         )
     return result
+
+
+def complete_policy(policy):
+    """Read legacy plans without rewriting their frozen journal or adopting overrides."""
+    if not isinstance(policy, dict):
+        raise AdminError("Invalid candidate policy")
+    present = set(policy) & set(_LEGACY_DOCKER_LOG_POLICY)
+    if present and present != set(_LEGACY_DOCKER_LOG_POLICY):
+        raise AdminError("Incomplete candidate Docker logging policy")
+    result = {**_LEGACY_DOCKER_LOG_POLICY, **policy}
+    for key, maximum in (("docker_log_mib", 64), ("docker_log_files", 10)):
+        if type(result[key]) is not int or not 1 <= result[key] <= maximum:
+            raise AdminError("Invalid candidate Docker logging policy")
+    return result
+
+
+def docker_log_config(policy):
+    policy = complete_policy(policy)
+    return {
+        "Type": "local",
+        "Config": {
+            "max-size": str(policy["docker_log_mib"]) + "m",
+            "max-file": str(policy["docker_log_files"]),
+        },
+    }
 
 
 def definition(config, server):
