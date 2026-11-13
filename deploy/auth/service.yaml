@@ -1,7 +1,7 @@
 # One Drasl process owns this SQLite volume. Both lab and deployment extend it.
 services:
   drasl:
-    image: omkalitycraft-drasl:4.0.0-omk.2
+    image: omkalitycraft-drasl:4.0.0-omk.3
     pull_policy: never
     build:
       context: ../drasl

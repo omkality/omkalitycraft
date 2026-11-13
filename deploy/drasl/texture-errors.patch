@@ -1,0 +1,18 @@
+--- a/common.go
++++ b/common.go
+@@ -373,6 +373,15 @@
+ 			ErrorMessage: yggdrasilError.ErrorMessage.ToPointer(),
+ 		})
+ 	}
++	// Player/texture validation uses UserError. Keep explicit client statuses
++	// without serializing their messages or misreporting a handled denial as 500.
++	var userError *UserError
++	if errors.As(err, &userError) {
++		code := userError.Code.OrElse(http.StatusInternalServerError)
++		if code >= 400 && code < 500 {
++			return (*c).JSON(code, YggdrasilErrorResponse{Path: &path_})
++		}
++	}
+ 	var sc echo.HTTPStatusCoder
+ 	if errors.As(err, &sc) {
+ 		code := sc.StatusCode()

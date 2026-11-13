@@ -8,9 +8,12 @@ COPY one-use-invites.patch /tmp/one-use-invites.patch
 RUN git apply --check /tmp/one-use-invites.patch && git apply /tmp/one-use-invites.patch
 COPY session-revocation.patch /tmp/session-revocation.patch
 RUN git apply --check /tmp/session-revocation.patch && git apply /tmp/session-revocation.patch
+COPY texture-errors.patch /tmp/texture-errors.patch
+RUN git apply --check /tmp/texture-errors.patch && git apply /tmp/texture-errors.patch
 COPY revocation_test.go /src/omk_security_test.go
+COPY texture_errors_test.go /src/omk_texture_errors_test.go
 RUN --mount=type=cache,target=/go/pkg/mod go mod download
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build gofmt -w omk_security.go omk_security_test.go main.go model.go player.go user.go session.go && go test -mod=readonly -run '^TestOmk' -count=1 .
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build gofmt -w omk_security.go omk_security_test.go omk_texture_errors_test.go common.go main.go model.go player.go user.go session.go && go test -mod=readonly -run '^TestOmk' -count=1 .
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build CGO_ENABLED=1 go build -mod=readonly -tags netgo,osusergo -trimpath -ldflags="-linkmode external -extldflags=-static" -o /out/drasl .
 
 # Reuse the pinned upstream assets, certificates and default skin configuration.
@@ -20,9 +23,11 @@ COPY --from=builder /src/LICENSE /usr/local/share/licenses/drasl/LICENSE
 COPY one-use-invites.patch /usr/local/share/drasl/patches/one-use-invites.patch
 COPY session-revocation.patch /usr/local/share/drasl/patches/session-revocation.patch
 COPY revocation_test.go /usr/local/share/drasl/patches/revocation_test.go
+COPY texture-errors.patch /usr/local/share/drasl/patches/texture-errors.patch
+COPY texture_errors_test.go /usr/local/share/drasl/patches/texture_errors_test.go
 ENV DRASL_DEFAULT_DATA_DIRECTORY=/nix/store/5b56b5cnw98xaa8bahz1ghsvk3k8lvhz-drasl-4.0.0/share/drasl
 LABEL org.opencontainers.image.title="Drasl 4.0.0 with OmkalityCraft invitation and revocation fixes" \
       org.opencontainers.image.source="https://github.com/omkality/omkalitycraft" \
-      org.opencontainers.image.version="4.0.0-omk.2" \
+      org.opencontainers.image.version="4.0.0-omk.3" \
       org.opencontainers.image.licenses="GPL-3.0-only"
 CMD ["/usr/local/bin/omk-drasl"]

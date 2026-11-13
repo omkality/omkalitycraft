@@ -19,7 +19,7 @@ from omk.lab import _expect_denied, skin_fixture
 from omk.profiles import PROJECT_ROOT
 
 HELPER = "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925"
-IMAGE = "omkalitycraft-drasl:4.0.0-omk.2"
+IMAGE = "omkalitycraft-drasl:4.0.0-omk.3"
 LABEL = "omkality.auth.storage-lab"
 
 

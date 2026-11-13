@@ -17,6 +17,8 @@ from urllib.parse import urlencode
 from uuid import uuid4
 
 from launcher.accounts import AccountService, Registration
+from launcher.skin_defaults import DEFAULT_SKIN_MODEL, default_skin_bytes
+from launcher.skins import decode_skin
 from launcher.storage import FileSessionStore
 from omk.drasl import DraslClient, DraslError
 from omk.profiles import PROJECT_ROOT
@@ -259,7 +261,34 @@ def _launcher_checks(
         if not player.get("skinUrl") or player.get("skinModel") != "slim":
             raise RuntimeError("Game-token skin upload did not update the profile")
         passed("launcher_skin_upload_with_game_token_classic_and_slim")
+        _launcher_skin_reset_checks(client, service, passed)
         _launcher_revocation_checks(client, service, registration, passed)
+
+
+def _launcher_skin_reset_checks(
+    client: DraslClient, service: AccountService, passed: Callable[[str], None]
+) -> None:
+    service.reset_skin()
+    session = service.current
+    expected = (
+        decode_skin(default_skin_bytes(), DEFAULT_SKIN_MODEL).png,
+        DEFAULT_SKIN_MODEL,
+    )
+    if client.skin_profile(session.player_uuid) != expected:
+        raise RuntimeError("Project default skin reset failed")
+    passed("launcher_skin_reset_with_game_token")
+    _expect_denied(
+        lambda: client.upload_game_skin(
+            session.player_uuid.replace("-", ""),
+            session.access_token,
+            b"not-a-png",
+            "classic",
+        ),
+        {400},
+    )
+    if client.skin_profile(session.player_uuid) != expected:
+        raise RuntimeError("Invalid skin request changed the profile")
+    passed("invalid_game_skin_returns_400_without_changing_texture")
 
 
 def _launcher_expiry_checks(
