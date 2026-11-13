@@ -1,0 +1,760 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "scope": "Owned translation deltas and one legacy key correction; assembled third-party locales stay outside Git",
+  "lang": {
+    "betterquesting": {
+      "betterquesting.btn.claim_all": {
+        "source_sha256": "d3cf1e35b559d29acfdb95816f900fed1962ab0ae8bb4c761d4087e0dcb89db5",
+        "ru": "Забрать все награды",
+        "base_state": "missing"
+      },
+      "betterquesting.btn.lock_tray": {
+        "source_sha256": "fe1f3d9e42e63b4cff48af38d5c00af629c6b580b958726767578ab73bb530c1",
+        "ru": "Закрепить панель",
+        "base_state": "missing"
+      },
+      "betterquesting.btn.zoom_fit": {
+        "source_sha256": "dc81206350e3da642fed43285f8b5a1dc00e0d91b4b81b6bffe3181d0e261d2e",
+        "ru": "Вместить в окно",
+        "base_state": "missing"
+      },
+      "betterquesting.cmd.purge_hidden": {
+        "source_sha256": "b3e0aae78cfd7ee47c33cd03968549146b05c775e6a39566bfee156539c577e8",
+        "ru": "Удалено скрытых заданий: %s",
+        "base_state": "missing"
+      },
+      "betterquesting.toolbox.tool.frame.desc": {
+        "source_sha256": "f0f78a06a81f421e7c22d88c03a9c38a9065f9ae0936d105c0a16e089b6bc048",
+        "ru": "Изменяет оформление рамок значков заданий",
+        "base_state": "missing"
+      },
+      "betterquesting.toolbox.tool.frame.name": {
+        "source_sha256": "43970c0f1835ea10cb8d92a18c61ef581ed48b5e2acb58ee3d0772bd7c06b168",
+        "ru": "Изменить рамку значка",
+        "base_state": "missing"
+      },
+      "betterquesting.tooltip.quest_logic": {
+        "source_sha256": "8b7e8399c113204a5c97414f4279804905806cc72074e1d591ee7f4f362eda7d",
+        "ru": "Логика задания: %s",
+        "base_state": "missing"
+      }
+    },
+    "ftblib": {
+      "commands.team.get.usage": {
+        "source_sha256": "3f5a1a0af9918e6a8908e9e69c3882d8e43b760e3e3fb5d8dc6ee7f4e1acc8fd",
+        "ru": "/team get <игрок>",
+        "base_state": "missing"
+      },
+      "commands.team.info.members": {
+        "source_sha256": "2eafe33b5ae62dc13300ec0e54bec137bb88bb188296501a24cc3f22df906695",
+        "ru": "Участники: %s",
+        "base_state": "missing"
+      },
+      "commands.team.info.owner": {
+        "source_sha256": "932433f33b8dd136bfafbcba8d25f07a651aa3363cd4a72328fdff640547d4b4",
+        "ru": "Владелец: %s",
+        "base_state": "missing"
+      },
+      "commands.team.info.usage": {
+        "source_sha256": "dbfa7b6e2fe99e6530b7b51bdf24ea4b742dd53b82eca7b5b0b41981b9eecd43",
+        "ru": "/team info <команда>",
+        "base_state": "missing"
+      },
+      "commands.team.list.teams": {
+        "source_sha256": "12275a8821956d35603be0015719e1761968cc895e7ce1471a07b3eeedacdff5",
+        "ru": "Список всех команд (%d):",
+        "base_state": "missing"
+      },
+      "ftblib.lang.team.no_team": {
+        "source_sha256": "c60b7a0568facaf8ec94ee4fcd48dd2d17d3f5ed845a2b7db667a12f7fccf651",
+        "ru": "Нет команды",
+        "base_state": "missing"
+      },
+      "gui.copy": {
+        "source_sha256": "e21f935f11d7e966dbbae78da9daa378fe8142a14e7c0cd7434183005faa6c5c",
+        "ru": "Копировать",
+        "base_state": "missing"
+      },
+      "gui.cut": {
+        "source_sha256": "1f45f02561f41db9483cfc00675900237967b8e382b9750d33f677812fe70842",
+        "ru": "Вырезать",
+        "base_state": "missing"
+      },
+      "gui.move": {
+        "source_sha256": "6ecc3df6bffdd06c58cd4f6e276929e119c8f653c53f5a6a5a5e66dfa1c3fc93",
+        "ru": "Переместить",
+        "base_state": "missing"
+      },
+      "gui.paste": {
+        "source_sha256": "f3380f7b44bd70af2a369de6026bf2ca2a7b36fde9086935efcd62a0e379cc7a",
+        "ru": "Вставить",
+        "base_state": "missing"
+      },
+      "lat_support": {
+        "source_sha256": "509f4a078cd88afe6cb2a10b20dc55ba9404b5a2febdf30d530c0adc89283fa8",
+        "ru": "Нравится мод? Нажмите, чтобы поддержать мои проекты!",
+        "base_state": "missing"
+      },
+      "team_action.ftblib.change_team": {
+        "source_sha256": "d38e0ab2d95874ccc50b8bf218be7ae81f14d41c559c2d3efe8a7e3e899568f0",
+        "ru": "Вступить в другую команду",
+        "base_state": "missing"
+      },
+      "team_action.ftblib.leave.confirmation": {
+        "source_sha256": "12c113f336d4e0401d530049cbaf8dce95021a034b6877fedd7df042103778ec",
+        "ru": "Внимание! При выходе из команды вы можете потерять прогресс заданий и другие данные!",
+        "base_state": "missing"
+      }
+    },
+    "jei": {
+      "config.jei.advanced.optimizeMemoryUsage": {
+        "source_sha256": "5e2a6d575680135f7677c7e915787e99dd5efc17c5b120ca8c8298ced32b645a",
+        "ru": "Оптимизировать использование памяти",
+        "base_state": "missing"
+      },
+      "config.jei.advanced.optimizeMemoryUsage.comment": {
+        "source_sha256": "7462eb0612578988a457a4a146bd201d639cf4b0b6210bf5afc782028fb674e4",
+        "ru": "Включает оптимизацию использования памяти JEI.",
+        "base_state": "missing"
+      },
+      "key.jei.toggleEditMode": {
+        "source_sha256": "334b25edf5370446bfe0762380efd9baa46c088b866297cb528206bb32732238",
+        "ru": "Переключить режим скрытия/редактирования",
+        "base_state": "missing"
+      }
+    },
+    "craftingtweaks": {
+      "key.craftingtweaks.balance": {
+        "source_sha256": "d32b89d35b3b223e05522869ba72934ee9b53573979a0be930835a764190751a",
+        "ru": "Уравнять стопки в сетке",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.clear": {
+        "source_sha256": "595183059fee9c71017c34cc7486bc0e59a4f3ea4aaaacfd965934b16cc4ad30",
+        "ru": "Очистить сетку крафта",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.compressAll": {
+        "source_sha256": "aa89d2bf9641b4f8c3e06edc23d18cec97f2a52925632a2629974c03a5181dc8",
+        "ru": "Сжать все предметы",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.compressOne": {
+        "source_sha256": "ef312016d88fb90465f26cafd0550de87819d2c7977400f054e0030ce9f569ed",
+        "ru": "Сжать один предмет",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.compressStack": {
+        "source_sha256": "646878d43c903ae3337b8598bd6792fa851c6e8c1cbe6899c2c511b409667cb0",
+        "ru": "Сжать стопку",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.decompressAll": {
+        "source_sha256": "16ae4c24e63fcf32b9d5721a74b8e0a2d03cec32227408141ad01f3cfeed31a1",
+        "ru": "Разобрать все предметы",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.decompressOne": {
+        "source_sha256": "4e6e77dad69aec96d20986687199dc2e2da1588a8f32eafb70c64c2368b952c4",
+        "ru": "Разобрать один предмет",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.decompressStack": {
+        "source_sha256": "c5df4befd08f9e89b27cf41b4049834a8398550b69bf6bd9b6cd83fcaacfd5b8",
+        "ru": "Разобрать стопку",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.force_clear": {
+        "source_sha256": "2fcea5d23b18813f68646c442b5d85a97910fb2960c0dd419ad3309622e5a022",
+        "ru": "Принудительно очистить сетку",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.refill_last": {
+        "source_sha256": "45bf27e66f916ec8435b811a59610a74bf34b04a9ba008a9982630d1e4715856",
+        "ru": "Повторить последнее заполнение",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.refill_last_stack": {
+        "source_sha256": "07af5ffc9aabc1dfd82d5943deb34cbba979c283ee233927d1b042401fa923ad",
+        "ru": "Повторить последнее заполнение стопкой",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.rotat_counter_clockwise": {
+        "source_sha256": "5cdcfb00e6e822b7d3b06031390c8ba817f543d96fc6c964ba7d9e924541fb17",
+        "ru": "Повернуть сетку против часовой стрелки",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.rotate": {
+        "source_sha256": "3b10beeed5096163f833b17c01bf51bd860da333ede13f6b9d6715d82dc60a97",
+        "ru": "Повернуть сетку крафта",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.spread": {
+        "source_sha256": "21c0ae67d7689e427f6fbf22714e8426020495e413320631aebfea6593ea54d0",
+        "ru": "Распределить предметы по сетке",
+        "base_state": "missing"
+      },
+      "key.craftingtweaks.toggleButtons": {
+        "source_sha256": "9177d840e3782ba3a4c74993a7dca1e5b31c4ddecddbc0626b297a7efd1fd99a",
+        "ru": "Показать/скрыть кнопки",
+        "base_state": "missing"
+      },
+      "tooltip.craftingtweaks.balance": {
+        "source_sha256": "d32b89d35b3b223e05522869ba72934ee9b53573979a0be930835a764190751a",
+        "ru": "Уравнять стопки в сетке",
+        "base_state": "missing"
+      },
+      "tooltip.craftingtweaks.clear": {
+        "source_sha256": "595183059fee9c71017c34cc7486bc0e59a4f3ea4aaaacfd965934b16cc4ad30",
+        "ru": "Очистить сетку крафта",
+        "base_state": "missing"
+      },
+      "tooltip.craftingtweaks.forceClear": {
+        "source_sha256": "2fcea5d23b18813f68646c442b5d85a97910fb2960c0dd419ad3309622e5a022",
+        "ru": "Принудительно очистить сетку",
+        "base_state": "missing"
+      },
+      "tooltip.craftingtweaks.forceClearInfo": {
+        "source_sha256": "d12daac87b306a9f1d98bbe861e96e869ee80b6871216d2aa19530539eede8f7",
+        "ru": "При необходимости выбрасывает предметы",
+        "base_state": "missing"
+      },
+      "tooltip.craftingtweaks.rotate": {
+        "source_sha256": "3b10beeed5096163f833b17c01bf51bd860da333ede13f6b9d6715d82dc60a97",
+        "ru": "Повернуть сетку крафта",
+        "base_state": "missing"
+      },
+      "tooltip.craftingtweaks.spread": {
+        "source_sha256": "21c0ae67d7689e427f6fbf22714e8426020495e413320631aebfea6593ea54d0",
+        "ru": "Распределить предметы по сетке",
+        "base_state": "missing"
+      }
+    },
+    "omniwand": {
+      "tooltip.omniwand:shiftinfo": {
+        "source_sha256": "55fae0ac612b69f34ce3e9e66216db0eb2d57bb95e786719d896f124d3cf81be",
+        "ru": "Удерживайте §bSHIFT§7 для подробностей",
+        "base_state": "missing"
+      }
+    },
+    "restrictedportals": {
+      "achievement.rpunlock.End": {
+        "source_sha256": "43bf74c925e4536263bee16db0a7b3f44ac1cf320f3697827ee3596661384558",
+        "ru": "Край открыт!",
+        "base_state": "missing"
+      },
+      "achievement.rpunlock.Nether": {
+        "source_sha256": "01ad1f2d36cb0a2faad9e625370ace6aa5126938a4eeeb00375132841ee275ec",
+        "ru": "Нижний мир открыт!",
+        "base_state": "missing"
+      },
+      "achievement.rpunlock.desc": {
+        "source_sha256": "404cb3ad9661db1cc5920244216d20e2134db182154e0cef29a085d6f9252725",
+        "ru": "Создайте предмет:",
+        "base_state": "missing"
+      },
+      "achievement.rpunlock.desc2": {
+        "source_sha256": "57d6e04141b4401fcc0c67cf3721ab75f47dd61603207ebf9d246afdaae52ffb",
+        "ru": "Нажмите ПКМ по порталу, держа предмет:",
+        "base_state": "missing"
+      }
+    },
+    "tombmanygraves": {
+      "item.death_list.name": {
+        "source_sha256": "aa418d99a27e06c5590df8f135e64b2a0821b7d0e7ea3a6419683e224e5a3dd5",
+        "ru": "Список вещей на момент смерти",
+        "base_state": "missing"
+      },
+      "tile.grave_block.name": {
+        "source_sha256": "6c64ea12877df1a78b00b196688042e9d2838572523ec0d4956dfdf519405ae5",
+        "ru": "Могила игрока (встаньте на неё, удерживая Shift)",
+        "base_state": "missing"
+      }
+    },
+    "toolprogression": {
+      "item.toolprogression.magic_mushroom.name": {
+        "source_sha256": "66014b771e424e32cf50c4d06d05bffa91271b854977be5deac8f3ad7047e370",
+        "ru": "Волшебный™ гриб",
+        "base_state": "missing"
+      },
+      "modifier.magicmushroom.desc": {
+        "source_sha256": "c6af8eca809bc077fcce5a1941b431373448a688f24bd3436565c38f40572321",
+        "ru": "Этот удивительный гриб волшебным образом расширяет возможности ваших инструментов.",
+        "base_state": "missing"
+      },
+      "modifier.magicmushroom.name": {
+        "source_sha256": "66014b771e424e32cf50c4d06d05bffa91271b854977be5deac8f3ad7047e370",
+        "ru": "Волшебный™ гриб",
+        "base_state": "missing"
+      }
+    },
+    "contenttweaker": {
+      "tile.contenttweaker.galactic_machine_frame.name": {
+        "source_sha256": "9d685d9e3311901e73c7eb8b805959d00c91507d54ecc5f7a100d6ba36081b00",
+        "ru": "Галактическая рамка механизма",
+        "base_state": "missing"
+      }
+    },
+    "guideapi": {
+      "button.search.name": {
+        "source_sha256": "49c266baaaa70981ea188fa714d5c40cf13830d786a861c9943ae0d26a7f3fe9",
+        "ru": "Поиск",
+        "base_state": "missing"
+      },
+      "item.guideapi.book.name": {
+        "source_sha256": "e5d21d75e858a7e397e2a9331555b78fea2547eadf430a615ac18a24e0a3fbf0",
+        "ru": "Книга-руководство",
+        "base_state": "missing"
+      },
+      "text.brewing.brew": {
+        "source_sha256": "c7cd1379000a0a19c5bfc182762f0be7a4b9c50adab5b26dd2093be204418dba",
+        "ru": "Зельеварение",
+        "base_state": "missing"
+      },
+      "text.brewing.error": {
+        "source_sha256": "a5edd9e16a1848039eac05dee61dafa31ae3bfb983bbc7f781864fb3f0fe9ec4",
+        "ru": "&cОшибка в рецепте",
+        "base_state": "missing"
+      },
+      "text.linked.open": {
+        "source_sha256": "d5fdade2c11df1e7930a4e6c291ff4e171f6bc3237aebcb397ae3d3240ae0203",
+        "ru": "Присядьте и используйте предмет, чтобы открыть",
+        "base_state": "missing"
+      },
+      "text.open.failed": {
+        "source_sha256": "f18583695bfb28f0b11525f3dd05f26593a611c496a7c0a1e25b3e7212bd794d",
+        "ru": "Не удалось открыть эту книгу",
+        "base_state": "missing"
+      }
+    },
+    "patchouli": {
+      "patchouli.gui.lexicon.complete": {
+        "source_sha256": "d09574256ea7ace25545cd1fc577ddfe8c7de0eff4f7a338a649598e837a0bd7",
+        "ru": "Выполнено!",
+        "base_state": "missing"
+      },
+      "patchouli.gui.lexicon.incomplete": {
+        "source_sha256": "75f33cdfc8e52098ea07f853e36473fe35bbe128d6c320019185bc888f9b3ca3",
+        "ru": "Не выполнено",
+        "base_state": "missing"
+      },
+      "patchouli.gui.lexicon.mark_complete": {
+        "source_sha256": "7b63c1db87da06bc9deabc00d0451780c85525c862be764e382d5a7bc5a0f007",
+        "ru": "Отметить как выполненное",
+        "base_state": "missing"
+      },
+      "patchouli.gui.lexicon.mark_incomplete": {
+        "source_sha256": "33142658cf449f167ef6090db0ecc2da97f07f91236e45d9684e5948aeb48c1b",
+        "ru": "Отметить как невыполненное",
+        "base_state": "missing"
+      },
+      "patchouli.gui.lexicon.objective": {
+        "source_sha256": "3b20adc3b2ce1c15ea6880c3151baabea06f5ba9132c18a9b969fc5299a7d655",
+        "ru": "Цель",
+        "base_state": "missing"
+      }
+    },
+    "divinerpg": {
+      "jeicompat.tile.raw_arcanium.information": {
+        "source_sha256": "8d4c61eb15dd53baffb2af680ae4aa46ac3b34ce47ecf08ecff6dacf8b30779c",
+        "ru": "Необработанный арканиум встречается в Подземелье Арканы, обычно за запертыми дверями.",
+        "base_state": "missing"
+      },
+      "tile.ancient_brick_double_slab_breakable.name": {
+        "source_sha256": "6a6881dde826d151ac77e7df74cc4ca7022f0f5c1b7cf60761fb8f759ecbc214",
+        "ru": "Двойная плита из древнего кирпича (разрушаемая)",
+        "base_state": "missing"
+      },
+      "tile.ancient_brick_slab_breakable.name": {
+        "source_sha256": "9754cef3e0e07181cd7054c6ec2ff93384f6ba5917ad922b90b432b0e9364479",
+        "ru": "Плита из древнего кирпича (разрушаемая)",
+        "base_state": "missing"
+      },
+      "tile.ancient_brick_stairs_breakable.name": {
+        "source_sha256": "26d24ce0ebab5d737c0f8a58d253a27d5c1086faa615f881e918556b2556e871",
+        "ru": "Ступеньки из древнего кирпича (разрушаемые)",
+        "base_state": "missing"
+      },
+      "tile.ancient_brick_wall_breakable.name": {
+        "source_sha256": "b89a7d1f107403283b352f5f992d046c48bdc9365e649b476fe823208c360c6f",
+        "ru": "Стена из древнего кирпича (разрушаемая)",
+        "base_state": "missing"
+      },
+      "tile.arcanite_ladder.name": {
+        "source_sha256": "d2a4c08120e81fb7755d0a2c06e3e6929e8b5f9f28418d5051d5e3ed698704ad",
+        "ru": "Аркановая лестница",
+        "base_state": "missing"
+      },
+      "tile.arcanium_block.name": {
+        "source_sha256": "987a81340b7ca9426ef6d3366515219096bb6c9f955fe2d9750ff82f94f8312c",
+        "ru": "Аркановый блок",
+        "base_state": "missing"
+      },
+      "tile.degraded_brick_double_slab_breakable.name": {
+        "source_sha256": "60c1abe831549c713a02613149405c38bad8ed5c4575df7d36717db00dee7ff1",
+        "ru": "Двойная плита из испорченного кирпича (разрушаемая)",
+        "base_state": "missing"
+      },
+      "tile.degraded_brick_slab_breakable.name": {
+        "source_sha256": "bb055930182cec867d6bd543b7477dd208af9d778ffb3ac231aa940259d82389",
+        "ru": "Плита из испорченного кирпича (разрушаемая)",
+        "base_state": "missing"
+      },
+      "tile.degraded_brick_stairs_breakable.name": {
+        "source_sha256": "de141848025a911b04794886588ba5c821ce11123ac683eff95a88fefaae8556",
+        "ru": "Ступеньки из испорченного кирпича (разрушаемые)",
+        "base_state": "missing"
+      },
+      "tile.degraded_brick_wall_breakable.name": {
+        "source_sha256": "3b2b8818bd028a9398cfbe6d0d0d2e463edb21425ffa4ad362f84cc95d114253",
+        "ru": "Стена из испорченного кирпича (разрушаемая)",
+        "base_state": "missing"
+      },
+      "tile.raw_arcanium.name": {
+        "source_sha256": "e1b1b14b7ce3b6360f5ade3b183c7e5ea693f10839a6f4fdcef28732b77662ae",
+        "ru": "Необработанный арканиум",
+        "base_state": "missing"
+      }
+    },
+    "extendedcrafting": {
+      "guide.entry.quantum_compression": {
+        "source_sha256": "7c97a66c57dd4d4bda153a932b7793f6438ce15c5e44718c9ca4bf2e815507e2",
+        "ru": "Квантовое сжатие",
+        "base_state": "existing_english_in_ru"
+      },
+      "guide.entry.quantum_compression.page.1": {
+        "source_sha256": "cbb8de24d9f87246d453400ef6be618e277db7fb6c2868c4d12a6e6cbaed9085",
+        "ru": "<b>Квантовое сжатие<r> — это сжатие предметов до невероятной плотности. Для этого нужен <red>квантовый компрессор<r>. <n><n><red>Квантовый компрессор<r> — машина, <red>потребляющая энергию<r> и способная хранить и сжимать огромное количество материалов. Помещённые в <red>квантовый компрессор<r> предметы попадают во внутренний буфер, откуда расходуются при сжатии. Заполнение буфера показано <red>красной<r> полосой.<n><n>Для каждого рецепта <i>обычно<r> нужен <red>катализатор<r>. <red>Катализатор<r> помещается в крайний левый слот и не расходуется.",
+        "base_state": "existing_english_in_ru"
+      },
+      "guide.entry.quantum_compression.page.2": {
+        "source_sha256": "56abce6e3fa43b8f4cc191ebad48ca5c158fe6ba7345d0661957cc694edec868",
+        "ru": "Когда в буфере накопится достаточно предметов, машина начнёт крафт. <red>Квантовый компрессор<r> потребляет <red>энергию<r> только во время крафта. <n><n>Если вы случайно положили в компрессор предметы, которые не хотите потерять навсегда, нажмите кнопку <red>выгрузки<r> над входным слотом. Вернуть предметы из буфера можно только этой кнопкой. При разрушении блока они будут потеряны навсегда — будьте осторожны!",
+        "base_state": "existing_english_in_ru"
+      },
+      "guide.entry.quantum_compression.page.3": {
+        "source_sha256": "119b8a73da3f44c2e3a379e922ed511a882ede6965416b5188eaf87b553e4491",
+        "ru": "Входной буфер <red>квантового компрессора<r> вмещает <red>миллиарды<r> предметов, но по умолчанию принимает только необходимое для рецепта количество. Чтобы снять это ограничение, нажмите <red>кнопку с замком<r> рядом с полосой заполнения буфера.",
+        "base_state": "missing"
+      },
+      "message.ec.nbt_requires_crafttweaker": {
+        "source_sha256": "a26ffb51109007eb383eb92fba64ee08c75b6e1ae24a52a6433d0f4a862dcffd",
+        "ru": "ВНИМАНИЕ: для копирования NBT должен быть установлен CraftTweaker.",
+        "base_state": "missing"
+      },
+      "tooltip.ec.limited_input": {
+        "source_sha256": "c54e08af342a17e3c8a4e22bf5665fd52e42c8e47682d15a704694a8fd5840c8",
+        "ru": "Ограниченный ввод",
+        "base_state": "missing"
+      },
+      "tooltip.ec.unlimited_input": {
+        "source_sha256": "b9e46938f9ab46eae0bf238bfc51c1125d5f2ae450af086e40ddf1d243e51b06",
+        "ru": "Неограниченный ввод",
+        "base_state": "missing"
+      }
+    },
+    "appliedenergistics2": {
+      "gui.appliedenergistics2.CraftingToastCancelled": {
+        "source_sha256": "d10fa430a9cfa72c3ae948e24cd1a6834e5f8594343669ffe75dcde3aee038ac",
+        "ru": "Автокрафт отменён!",
+        "base_state": "missing"
+      },
+      "gui.appliedenergistics2.CraftingToastDone": {
+        "source_sha256": "4c55d50702fd1acbc6c580877e5285b4f05800f5763fd878c8cdeb4ae76b7338",
+        "ru": "Автокрафт завершён!",
+        "base_state": "missing"
+      },
+      "gui.appliedenergistics2.Sticky": {
+        "source_sha256": "8747176853dbc234a9425ebc9dc231c5bf734107b8a475785b9d15ab1190ce15",
+        "ru": "Липкость",
+        "base_state": "missing"
+      },
+      "gui.tooltips.appliedenergistics2.CraftableItem": {
+        "source_sha256": "639c2762c12f0c7b65e33d168a849e31ed32283f88e81bd5bbd81dc2fde66d24",
+        "ru": "§9Доступен автокрафт",
+        "base_state": "missing"
+      },
+      "gui.tooltips.appliedenergistics2.MissingItem": {
+        "source_sha256": "720202da4304988f99748132034e6c70c4eeaa3cbd0b35e06dd9e5838aff2720",
+        "ru": "§cПредмет отсутствует",
+        "base_state": "missing"
+      },
+      "gui.tooltips.appliedenergistics2.PartialTransfer": {
+        "source_sha256": "8c610ad90865bfb9cb3b33a44e4dbda35331fa8ecbe995073bb704016cca27ba",
+        "ru": "Перенести хранящиеся предметы в сетку крафта",
+        "base_state": "missing"
+      },
+      "item.appliedenergistics2.material.card_sticky.name": {
+        "source_sha256": "9f4d4c12ee526dead16bcd77b3e2cb95b846b0d0a74a6e928dc9c7c3e404ed89",
+        "ru": "Липкая карта",
+        "base_state": "missing"
+      }
+    },
+    "actuallyadditions": {
+      "booklet.actuallyadditions.chapter.lensDetonation.name": {
+        "source_sha256": "f975d137265a3f932cb470589b5927786c2b39808e6d5fa78240adcba0eb3004",
+        "ru": "Линза детонации",
+        "base_state": "missing"
+      }
+    },
+    "alchemistry": {
+      "tile.fusion.regular_mode": {
+        "source_sha256": "2153b589c0dd89509f4ec041b9c95760aaa1cd6ddf97a33815b249fda0cf675d",
+        "ru": "Обычный режим",
+        "base_state": "missing"
+      },
+      "tile.fusion.single_mode": {
+        "source_sha256": "4e5ec5b081bed0888263549bca3630536b30b975ef5f83cc72cece9b5c71d289",
+        "ru": "Одиночный режим",
+        "base_state": "missing"
+      }
+    }
+  },
+  "obsolete_aliases": {
+    "contenttweaker": {
+      "item.contenttweaker.galactic_machine_frame.name": "tile.contenttweaker.galactic_machine_frame.name"
+    }
+  },
+  "tips": [
+    {
+      "index": 0,
+      "source_sha256": "97e988e2dfe7fb849ba1ea42f50fedf6b1dfec0ce4af9e2024e7f2c219b43bc3",
+      "ru": "В сборке четыре основных этапа: ранние исследования, большой технологический раздел, магические моды и финальные сверхмощные предметы.",
+      "kind": "translation"
+    },
+    {
+      "index": 1,
+      "source_sha256": "90fe45c562db7741ecf75fed76108c85e0e58da359a877256fa663d36fc50163",
+      "ru": "Используйте линейку или рулетку, чтобы измерить расстояние между двумя блоками!",
+      "kind": "translation"
+    },
+    {
+      "index": 2,
+      "source_sha256": "99cb5483fc553e0b390ca8ee28f74ec558bcd3218ae627ccd62fdf4d1089c855",
+      "ru": "Пончики из DivineRPG — хороший источник еды в начале игры, особенно если у вас уже есть пшеничная ферма!",
+      "kind": "translation"
+    },
+    {
+      "index": 5,
+      "source_sha256": "3ff2bac3da303f2e01749d03d2e77c61416671390ee36ee1ae7604ef1554c68a",
+      "ru": "Варианты камня Underground Biomes можно превращать друг в друга с помощью стамески.",
+      "kind": "translation"
+    },
+    {
+      "index": 16,
+      "source_sha256": "59e518a85c133ed845af27b3ae9fbbaae311ace9d52c0c91e5880f7fe4745fc0",
+      "ru": "Выделяйте клиенту сборки от 6 ГБ ОЗУ. Обязательно оставляйте запас памяти для операционной системы и других программ.",
+      "kind": "project_adaptation"
+    },
+    {
+      "index": 17,
+      "source_sha256": "0f5458e90e48cc4c1ba8f7b8e9d1f189fbc6483838d5c8d27f7ba50c29e8298d",
+      "ru": "По умолчанию книга заданий открывается клавишей K. Назначение клавиши можно изменить в настройках управления.",
+      "kind": "translation"
+    },
+    {
+      "index": 21,
+      "source_sha256": "b72a4e7f668a05901264ffbbf22bd17816a3aa234556164dd36243843c787cd9",
+      "ru": "Не знаете, как что-то автоматизировать? Обратитесь за помощью в Discord Divine Journey 2!",
+      "kind": "translation"
+    },
+    {
+      "index": 24,
+      "source_sha256": "f2b11f1ce197048086e13fb6d8caff247916189aac495c0be45bc49c93ee7311",
+      "ru": "В финальной части сборки значительно меньше гринда, чем в Divine Journey 1!",
+      "kind": "translation"
+    },
+    {
+      "index": 25,
+      "source_sha256": "3ca5cdff622f8f4da3deb6500f368058815de5a7b73f53891f1d70831cc73d7e",
+      "ru": "Застряли в Эребусе? Внутри измерения можно найти материалы для ещё одного ключа портала (Gateway Key).",
+      "kind": "translation"
+    },
+    {
+      "index": 33,
+      "source_sha256": "b6e8633c5f0a6aa1884a6d0bd07f1791b929151cde9f74c47076d2437ec2139d",
+      "ru": "Водяные мельницы ослаблены, а другие генераторы GP усилены.",
+      "kind": "translation"
+    },
+    {
+      "index": 34,
+      "source_sha256": "d7314a24e3c2e89a158c08d302e00151e7e81d084d22d87e978b36be249feb33",
+      "ru": "Начиная с Blood Magic рецепты становятся заметно дороже. Самое время автоматизировать производство!",
+      "kind": "translation"
+    },
+    {
+      "index": 36,
+      "source_sha256": "8674db4f4a19278f835c6ad66e11df937387ac9d3a11959a88f0a85df67919b3",
+      "ru": "В пустотных измерениях падение вниз возвращает вас наверх того же измерения.",
+      "kind": "translation"
+    },
+    {
+      "index": 38,
+      "source_sha256": "f8762c0a3e089f7e34bfff33de51ddcd8590cbe0e640406621ab04f8c0baf82e",
+      "ru": "База лагает? Попробуйте расширять её по горизонтали, а не строить всё в высоту.",
+      "kind": "translation"
+    },
+    {
+      "index": 41,
+      "source_sha256": "aef41929dcff5ba84abf379e8bbaca7b94be42081f932da85cb1f14af02ca06e",
+      "ru": "Официальный Discord Divine Journey 2: https://discord.gg/rH9pyS7.",
+      "kind": "project_adaptation"
+    },
+    {
+      "index": 43,
+      "source_sha256": "3e31f1ccf662717eeb7bf171d7e9a5a42760a42a539f4903224127744644f2d5",
+      "ru": "Херобрин удалён в последнем обновлении.",
+      "kind": "translation"
+    },
+    {
+      "index": 44,
+      "source_sha256": "8d7995c505987756b866b82c7b3876ff71192a33b4d5866688b7828241a92b4d",
+      "ru": "Эксперты говорят: автоматизация — лучший способ пройти эту сборку!",
+      "kind": "translation"
+    },
+    {
+      "index": 45,
+      "source_sha256": "dc82bdc5125fc17d4f344cdc1eb261ef00b4e721e61c5ec1aabca390e08d53b7",
+      "ru": "EMC есть только у базовых материалов. Для всех остальных предметов по-прежнему нужен автокрафт!",
+      "kind": "translation"
+    },
+    {
+      "index": 57,
+      "source_sha256": "1281888fbfc04497d6f4e2bf5a73afca0927240ac389a4c22190e734ab10a1e5",
+      "ru": "Для игры на сервере OmkalityCraft используйте набор модов, который устанавливает лаунчер.",
+      "kind": "project_adaptation"
+    },
+    {
+      "index": 61,
+      "source_sha256": "0c7a3b3f3f5d814a316fad6eba57b554321a35693f68f6bed46d013f68769727",
+      "ru": "Omniwand позволяет хранить гаечные ключи из нескольких модов в одном предмете.",
+      "kind": "translation"
+    },
+    {
+      "index": 63,
+      "source_sha256": "d2f39a6857d94f638f8ad109e6351878829aa04afe99aa51599edeb659127cd8",
+      "ru": "Для автоматизации демонической воли Blood Magic сочетайте ритуалы «Сбор покинутых душ», «Трещина разрушенного кристалла» и «Ритуал Зефира» (Ritual of Zephyr).",
+      "kind": "translation"
+    },
+    {
+      "index": 67,
+      "source_sha256": "e828738d9909a6c6a87dbc5cfca427e1b883b8b49ada15f8685612db363a9642",
+      "ru": "Для детальных построек в сборке есть Chisels & Bits!",
+      "kind": "project_adaptation"
+    },
+    {
+      "index": 68,
+      "source_sha256": "316d0deb0420bff2c647ebda846d6bfc869b51e02b01e59c2df9d739042ea697",
+      "ru": "Костёр Roots можно зажечь без постоянного использования огнива: подожгите адский камень рядом с ним. Контейнер под костром позволяет автоматически подавать предметы.",
+      "kind": "translation"
+    },
+    {
+      "index": 69,
+      "source_sha256": "04aefeb22079d3f6bded18ef7b2cf69415696c6a700a4af7aa1ab12fb22bcf29",
+      "ru": "В главе 18 алтарь фей Roots можно автоматизировать с помощью рунического создателя (Runic Crafter).",
+      "kind": "translation"
+    },
+    {
+      "index": 82,
+      "source_sha256": "b92482726736a4af4a41d19c829c2e6c0621cd59b2f5095b40742f4a3c7734ed",
+      "ru": "Обожжённые кирпичи можно получать, переплавляя камень или булыжник в плавильне.",
+      "kind": "translation"
+    },
+    {
+      "index": 84,
+      "source_sha256": "4b068d78e9a7ea2bf35ec94b15d10454560c766a7292d671b42a496422c0af88",
+      "ru": "Золотое подземелье Рая непросто найти. Его босс не получает обычный урон: отражайте выпущенные им ледяные шары обратно!",
+      "kind": "translation"
+    },
+    {
+      "index": 87,
+      "source_sha256": "d0f35c0ae56e8c12df1348c8639e998695e3e61597f7eec4e6e878b10d6562a6",
+      "ru": "Трудно упорядочить разнообразные руды Верхнего мира? Попробуйте вместо этого установить карьер в Глубокой тьме (Deep Dark).",
+      "kind": "translation"
+    },
+    {
+      "index": 89,
+      "source_sha256": "dae0f550ae2930afee5f25ac9ec30d02c36ebcb383807e62eda3650cb4b1c02a",
+      "ru": "В первой четверти сборки вас ждут Атум, Рай и Заснежье, а также необязательные Сумеречный лес и Эребус.",
+      "kind": "translation"
+    },
+    {
+      "index": 90,
+      "source_sha256": "02a5123307e3a9188dd7637c0758a8a2c95a9d53016cd2eb31605dd2cf7f5a9d",
+      "ru": "Для огнива нужны кремень и СТАЛЬ! Да, очень оригинально...",
+      "kind": "translation"
+    },
+    {
+      "index": 94,
+      "source_sha256": "b85f615de87060025dac0c1e26f2fe71fefb26950988f72830cd661ae6462cb5",
+      "ru": "До Сумеречного леса полёт недоступен, но для перемещения уже есть заклинание Roots «Небесный путешественник», слизневые ботинки и праща Tinkers' Construct.",
+      "kind": "translation"
+    },
+    {
+      "index": 100,
+      "source_sha256": "a5ea25078d696a00416727a0e59c6be22a8dd3bc632efe4bda960e8dd59325f1",
+      "ru": "Нашли ошибку? Сообщите авторам сборки: https://github.com/Divine-Journey-2/Divine-Journey-2/issues",
+      "kind": "translation"
+    },
+    {
+      "index": 103,
+      "source_sha256": "b5824d3c6740d0c7b2c74e08e9edc50a7c5384d11788e30912fe370435b1d042",
+      "ru": "Обогащённое масло можно автоматизировать считывателем мира и импортёром/экспортёром жидкостей мира из Integrated Dynamics либо точным выбрасывателем Actually Additions и сканером Extra Utilities 2.",
+      "kind": "translation"
+    },
+    {
+      "index": 107,
+      "source_sha256": "983947ac0ac18f7da6e2d4ef825ea2abeab61d985eb5807f156cfa9bd3f6a487",
+      "ru": "Большинство боссов не придётся убивать больше двух раз. Но никто не мешает делать это чаще!",
+      "kind": "translation"
+    },
+    {
+      "index": 110,
+      "source_sha256": "02947eb58c87d748772612d8c62aa62145bd2a171b136aca54cfbe39ffc23204",
+      "ru": "Вторая половина магического раздела объединяет Thaumcraft, Bewitchment и DivineRPG и приводит к Astral Sorcery.",
+      "kind": "translation"
+    },
+    {
+      "index": 112,
+      "source_sha256": "fb9d7702eb8be1fd08c990d7958558e6c59186ada9fe2f1cc1c492bcfd366055",
+      "ru": "Не открывается исследование Thaumcraft? Проверьте все вкладки таумономикона и подсказки в книге заданий. Если исследования совсем не нравятся, создайте творческий таумономикон и пропустите их!",
+      "kind": "translation"
+    },
+    {
+      "index": 118,
+      "source_sha256": "e4ae67438413ba1f0a014d38360369efc84d197551ec537c4e101a20bf078224",
+      "ru": "Mystical Agriculture открывается в шесть этапов. Заглядывайте в главу 16, чтобы проверить доступность новых семян.",
+      "kind": "translation"
+    },
+    {
+      "index": 120,
+      "source_sha256": "06e375a0b9d02b2e3a5d29afad5a91a2cace7e02d0388fb5104f9647575e031d",
+      "ru": "Структуры Astral Sorcery отключены. Вместо поиска структур свитки созвездий и сборные кристаллы теперь можно создавать.",
+      "kind": "translation"
+    },
+    {
+      "index": 125,
+      "source_sha256": "34e53e64ae18ac2d95e5523dbe14da039e081ea8f52d71684feb81b63fe4cf1b",
+      "ru": "Большинство цветных предметов можно превращать в другие цветовые варианты с помощью стамески.",
+      "kind": "translation"
+    },
+    {
+      "index": 126,
+      "source_sha256": "f7d373a460615b5f3794751fb28cdc1a891ad6a755b5cfd0723f76a15c8ce1ec",
+      "ru": "Некоторых мобов можно призывать ритуалом Roots «Призыв существа».",
+      "kind": "translation"
+    }
+  ],
+  "not_carried_legacy_tip_indices": [
+    104
+  ],
+  "reuse_sources": {
+    "BMProjects": "1f6764559cf2118b929ad880abd03b53b6f9daa0",
+    "legacy_pack": "2.21.3"
+  },
+  "game_tested": false,
+  "ready_for_players": false
+}
