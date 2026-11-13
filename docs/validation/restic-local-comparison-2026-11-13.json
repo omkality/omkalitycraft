@@ -1,0 +1,71 @@
+{
+  "exit_code": 0,
+  "ephemeral_tmpfs": true,
+  "network": "none",
+  "real_game_run": false,
+  "source": "Frozen isolated DJ2 world; synthetic sidecar changes only",
+  "world_files": 318,
+  "world_bytes": 14322181,
+  "raw_repository_bytes": 8811987,
+  "raw_retention_check_restore": true,
+  "zip_repository_bytes": 13101475,
+  "zip_retention_check_restore": true,
+  "full_repository_new_backup_exit": 1,
+  "last_good_survives_failed_backup": true,
+  "schema": 1,
+  "date": "2026-11-13",
+  "restic_version": "0.19.1",
+  "tool_pins_file": "deploy/offsite-tools.json",
+  "image_id": "sha256:d4dc736b73dcb3f1713255faaec4b439f46cc442fe43415d06d218a4347a52f7",
+  "runs": [
+    {
+      "format": "raw",
+      "version": 1,
+      "seconds": 0.7437979509995785,
+      "added_packed_bytes": 8535482,
+      "files_new": 319,
+      "files_changed": 0
+    },
+    {
+      "format": "zip",
+      "version": 1,
+      "seconds": 0.7255005499901017,
+      "added_packed_bytes": 8507697,
+      "files_new": 1,
+      "files_changed": 0
+    },
+    {
+      "format": "raw",
+      "version": 2,
+      "seconds": 0.6920652279950446,
+      "added_packed_bytes": 132140,
+      "files_new": 0,
+      "files_changed": 1
+    },
+    {
+      "format": "zip",
+      "version": 2,
+      "seconds": 0.6967961670015939,
+      "added_packed_bytes": 2295146,
+      "files_new": 0,
+      "files_changed": 1
+    },
+    {
+      "format": "raw",
+      "version": 3,
+      "seconds": 0.6955271149927285,
+      "added_packed_bytes": 132141,
+      "files_new": 0,
+      "files_changed": 1
+    },
+    {
+      "format": "zip",
+      "version": 3,
+      "seconds": 0.6961791909998283,
+      "added_packed_bytes": 2295148,
+      "files_new": 0,
+      "files_changed": 1
+    }
+  ],
+  "decision": "Keep accepted local ZIP restore contract and existing restic offsite engine before first launch; raw-tree export is a future compatible optimization."
+}

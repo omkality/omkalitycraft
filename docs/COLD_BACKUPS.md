@@ -169,3 +169,7 @@ restart источника между prepare/publish и sparse 600 MiB при �
 --access-policy --rank-policy`: четыре холодных owner plan/run на настоящем Forge,
 затем существующий full-return/retention сценарий. [Основной стенд](LINUX_WORLD_RETURN.md).
 Рабочие аккаунты/миры не используются ни одним из этих labs.
+
+
+Сравнение локального snapshot storage с готовым restic и принятое ограничение
+первого запуска: [READY_SOLUTIONS_COMPARISON.md](READY_SOLUTIONS_COMPARISON.md).
