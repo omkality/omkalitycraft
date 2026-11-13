@@ -1,5 +1,25 @@
 # Разработка OmkalityCraft
 
+## Хвосты script logs в диагностике владельца — 13 ноября 2026
+
+Ограниченный шаг #30: прежний export_bundle не включал отдельные ошибки рецептов/
+скриптов. Добавлена точная allowlist корневого crafttweaker.log и logs/groovy*.log
+(только два известных имени). Нет glob всех логов, новых endpoints, CLI или
+collectors; player distribution не получает экспортёр. Четыре env управляют
+размером фрагмента/всего текста и count/byte retention ZIP; defaults прежние,
+проверка до записи и без echo значения. Переполнение после redaction также
+ограничено, budget omissions отмечены. Новый ZIP сохраняется при rollback часов.
+
+53 focused Linux Docker cases; Windows 51/2 skipped (symlink controls в Linux).
+Отдельный Docker verifier: 10 проверок с readonly source и named output volume,
+EROFS на контрольной записи, ZIP/allowlist/tail/redaction/limits/retention.
+Исходные bytes/mtime прежние, собственные scopes удалены; crash/OOM нет.
+Red/green: исходный exporter пропускает mod logs, исправленный включает их.
+Это синтетические логи, не новый запуск DJ2. Активные mod writers, общий storage
+budget и оставшийся config audit остаются #30/#33; VPS/game/launcher не менялись.
+[Контракт](LOGGING.md#лимиты-экспорта-владельца),
+[протокол](validation/diagnostic-script-logs-2026-11-13.json).
+
 ## Ползунок памяти без wheel input — 13 ноября 2026
 
 Обычный QSlider менял и сохранял RAM при прокрутке списка сборок. Узкий subclass

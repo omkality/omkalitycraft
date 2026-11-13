@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "scope": "Owner-only allowlisted script log tails and export env limits",
+  "sources": {
+    "omk/diagnostic_export.py": "fdedf1f02b2e89570ae6a65aac084df17d8d793137d9ad3cea6107c122c0acc9",
+    "tests/unit/test_diagnostic_mod_logs.py": "ebb67b54efd7d7d156f049d4448ae6a3a48b2832964b2bf587d6b2aec318caf8",
+    "deploy/diagnostics.example.env": "f7dfc1ee4c062e55dd07e9cfc010606e456eac8c72465f98f65f4deabd95b066"
+  },
+  "redgreen": "original fails missing mod logs; fixed passes",
+  "linux": {
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "focused_cases": 53,
+    "exit_code": 0,
+    "oom": false,
+    "owned_container_removed": true
+  },
+  "windows": {
+    "focused_cases": 51,
+    "skipped": 2,
+    "skip_reason": "Linux symlink acceptance"
+  },
+  "readonly_docker": {
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "exit_code": 0,
+    "oom": false,
+    "input_unchanged": true,
+    "owned_scope_removed": true,
+    "checks": {
+      "checks": [
+        "source mount refuses writes",
+        "zip integrity",
+        "exact allowlist",
+        "bounded newest CT tail",
+        "Groovy error with token redaction",
+        "truncation is explicit",
+        "owner server export without upload",
+        "override recorded in metadata",
+        "server credentials absent",
+        "custom retention keeps latest"
+      ],
+      "count": 10
+    }
+  },
+  "limits": [
+    "Synthetic logs, not a new Minecraft run",
+    "Export limits do not limit active third-party log writers",
+    "Global storage budget and configuration audit remain open in #30/#33",
+    "No launcher/player endpoints or additional collectors; no VPS changes"
+  ]
+}
