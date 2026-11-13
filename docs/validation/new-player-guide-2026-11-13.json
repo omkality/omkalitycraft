@@ -1,0 +1,143 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "scope": "Opt-in generic server chat guide, not a player profile release",
+  "source_sha256_utf8_lf": {
+    "mods/forge-1.12.2/src/net/omkality/WelcomeChat.java": "af15693dac30f5224857c1c769e17ef7e71115bd66c6e8a38e5046213f526591",
+    "mods/forge-1.12.2/src/net/omkality/WelcomePolicy.java": "f6cae764607f33f5f89aaef0469cac13d49b798e95f1251f703f85d3ea8ba4f3",
+    "mods/forge-1.12.2/src/net/omkality/WelcomeQueue.java": "e3b7a88551740ac196f3c11380cb14f4fefe99aac5120c9afc583954c88bd51a",
+    "mods/forge-1.12.2/src/net/omkality/OmkalityCore.java": "871b32bdbe9ddc8f64087be71bfaaef83074fa779b4d91b5a29dc706f5a41272",
+    "mods/forge-1.12.2/src/net/omkality/GameMetrics.java": "6ed1a7e3884f7ed6e71d65f2c822794963aad49b5441840a667b9d53fdd72042",
+    "mods/forge-1.12.2/tests/java/net/omkality/WelcomeControlsTest.java": "a8767f8ba4fbdba9249b9fcf27949173007923c7b75ba9d2bf847cff80bf9547",
+    "profiles/server-defaults/dj2/omkalitycore-welcome.properties": "51dbd2ba107a036d89a30c00ba46cc099fb3a8039f3cace8dbe82cbcaa322c2a",
+    "deploy/welcome.example.env": "1aaa3251ef8c4b63b6679fb07edf88c5db51caedaba7728b7a7fdebdaeacb7b3",
+    "tests/unit/test_resource_reset_stage.py": "2d23aec2f412e7b7fea8337fcdb7d082fca410a49408bdfa859f9f4d74cd50a3"
+  },
+  "native_dj2_protocol": {
+    "ok": true,
+    "real_game": "DJ2 2.23.4",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "core_sha256": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+    "graphical_client": false,
+    "ready_for_players": false,
+    "checks": [
+      "fresh_game_boot_ready",
+      "nonop_new_player_receives_exact_profile_guide_chat_packets",
+      "each_online_uuid_receives_one_independent_guide",
+      "old_omkguide_name_is_not_an_alias",
+      "nonop_manual_guide_command_replays_same_profile",
+      "rapid_manual_help_is_silently_rate_limited",
+      "extra_command_arguments_do_not_bypass_help_throttle",
+      "console_can_read_guide_without_player_state",
+      "death_and_respawn_do_not_enqueue_a_new_welcome",
+      "dimension_round_trip_does_not_repeat_welcome",
+      "rapid_reconnect_is_fenced_by_persisted_player_state",
+      "welcome_is_delayed_after_login",
+      "logout_cancels_pending_welcome_and_new_login_has_one_delivery",
+      "first_clean_stop",
+      "first_clean_stop_no_oom",
+      "independent_saved_player_nbt_contains_uuid_cooldown",
+      "fresh_game_boot_ready",
+      "clean_restart_keeps_saved_auto_cooldown",
+      "threshold_player_without_cooldown_gets_no_automatic_guide",
+      "negative_unknown_counter_is_not_treated_as_permanent_zero",
+      "manual_help_still_available_after_threshold_or_unknown_counter",
+      "second_clean_stop",
+      "second_clean_stop_no_oom",
+      "guide_preserves_saved_inventory_and_xp"
+    ],
+    "controlled_test_edits": "Second/third actors only: saved ticks threshold/negative and zero cooldown, after clean stop and TAR backup; not hours of real play",
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "game_crash_detected": false,
+    "owned_game_clean_exit": true,
+    "stopped_world_tar_sha256": "563c25eefde80c0bbd60d75afe9cfd2ec929bc0b980791d87808642ca39185ff",
+    "owned_volume_removed_after_export": true,
+    "auth_cleanup": true,
+    "owned_scopes_removed": true
+  },
+  "native_generic_forge": {
+    "ok": true,
+    "real_forge": true,
+    "dj2": false,
+    "ftb": false,
+    "players": false,
+    "authentication_test": false,
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "core_sha256": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+    "checks": [
+      "guide_installs_and_console_works_without_ftb_or_pack",
+      "generic_core_without_pack_or_ftb",
+      "real_small_forge_heap_and_dimension",
+      "unwritable_metric_directory_keeps_old_complete_file",
+      "game_console_survives_writer_failure",
+      "writer_error_log_rate_limited",
+      "writer_recovers_without_game_restart",
+      "clean_stop_publishes_new_terminal_sequence",
+      "generic_forge_clean_stop_no_crash"
+    ],
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 1073741824,
+      "nano_cpus": 2000000000
+    },
+    "game_crash_detected": false,
+    "owned_game_clean_exit": true,
+    "stopped_world_tar_sha256": "9bd93c8e446cf9a39cd46598f469e6670211cb58ecc7088089775eaf2e68784e",
+    "owned_volume_removed_after_export": true
+  },
+  "linux_reset_units": {
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "exit_code": 0,
+    "oom": false,
+    "owned_scope_removed": true,
+    "fixture_sha256": "2d23aec2f412e7b7fea8337fcdb7d082fca410a49408bdfa859f9f4d74cd50a3",
+    "tail": [
+      "..............................                                           [100%]",
+      "30 passed in 2.37s"
+    ]
+  },
+  "java_policy_queue_controls": 49,
+  "windows_unit_ui": {
+    "passed": 2279,
+    "skipped": 101,
+    "gameplay_test": false
+  },
+  "reproducible_build": {
+    "rounds": 2,
+    "core_sha256": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+    "dj2fix_and_client_unchanged": true
+  },
+  "graphical_acceptance": {
+    "passed": false,
+    "strict_policy_not_weakened": true,
+    "fixture_errors": [
+      "generated FML policy overwritten by old config copy",
+      "displayVersion is not canonical FML getVersion wire list"
+    ],
+    "native_windows_failures": {
+      "count": 2,
+      "exit": "0xC0000005",
+      "fault_module": "OpenAL64.dll",
+      "root_cause_established": false
+    },
+    "owned_crash_assistant_helpers_closed_after_diagnostics": true
+  },
+  "limits": [
+    "Protocol actors verify packets, not ordinary client rendering.",
+    "Threshold and negative tick controls use cold-backed-up test actors, not hours of actual play.",
+    "SIGKILL can lose an unsaved cooldown marker; full restore rolls it back.",
+    "Reset fixture preserves NBT data but is not graphical post-wipe acceptance.",
+    "Raw diagnostics/accounts/worlds remain private."
+  ],
+  "ready_for_players": false,
+  "live_vps_changed": false,
+  "player_manifest_changed": false
+}

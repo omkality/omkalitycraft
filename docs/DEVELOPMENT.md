@@ -1,5 +1,28 @@
 # Разработка OmkalityCraft
 
+## Короткая памятка новичкам — 13 ноября 2026
+
+Следующий ограниченный шаг #44: общий opt-in Core 0.3.8, текст DJ2 в data profile,
+ручной `/guide` без прежнего имени/алиаса. После login задержка, порог vanilla
+PLAY_ONE_MINUTE и persisted cooldown; нет нового учёта времени/БД/owner CLI.
+Default: 3 игровых часа, 8 секунд, 30 минут между автопоказами; validated env.
+Смерть/dimension change не ставят показ в очередь, logout отменяет ожидание.
+
+49 Java policy/queue controls; native DJ2 2.23.4 в Linux Docker: 24 записи /23
+уникальных проверки, два чистых старта, Drasl/non-OP protocol actors, chat packets,
+threshold/unknown, NBT fence после restart, сохранность вещей/XP. Отдельный generic
+Forge без FTB/DJ2: 9 checks. 30 Linux reset cases сохраняют новые NBT markers.
+2279 Windows unit/UI /101 skipped; два чистых Docker build воспроизводят Core,
+Fix/Client прежние. Свои server/auth scopes удалены после экспорта.
+
+Обычный графический клиент не принят: private fixture ранее перезаписывала FML
+policy, затем использовала displayVersion вместо wire version. Равенство Core
+не ослаблялось. Два Windows native exit 0xC0000005 с fault module OpenAL64.dll
+сохраняются отдельной проблемой, не доказательством причины в Core/переводе/CPU.
+Owned Crash Assistant helpers закрыты после сохранения диагностики. #44 остаётся
+открытой до настоящего отображения в чате. Player manifests/release/VPS прежние.
+[Контракт](NEW_PLAYER_GUIDE.md), [протокол](validation/new-player-guide-2026-11-13.json).
+
 ## Сохранённое игровое время DJ2 — 13 ноября 2026
 
 Ограниченный шаг #43: существующий vanilla stat.playOneMinute из FTB time_played,

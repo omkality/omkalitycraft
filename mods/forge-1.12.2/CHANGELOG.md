@@ -1,5 +1,16 @@
 # Изменения Forge-модов
 
+## Core 0.3.8 — 13 ноября 2026
+
+- Generic opt-in `/guide` и отложенная памятка в чате для первых игровых часов.
+  Текст вне Java; существующие vanilla stats, cooldown в Forge PlayerPersisted,
+  bounded login queue, validated env. Без FTB-зависимости и нового счётчика/БД.
+- Проверены policy/queue, non-OP chat packets DJ2/Linux Docker, отмена ожидания,
+  restart и сохранность player state; отдельный minimal Forge без FTB/DJ2.
+  Графическое отображение пока не принято. [Контракт](../../docs/NEW_PLAYER_GUIDE.md).
+- Metrics сообщает общую VERSION-константу. Два чистых build воспроизводимы;
+  DJ2Fix 0.1.4 и Client 0.1.1 прежние. Player manifest/VPS не переключаются.
+
 ## Core 0.3.7 — 13 ноября 2026
 
 - Общий opt-in producer Forge 1.12.2: фактические TPS по скользящему окну,
