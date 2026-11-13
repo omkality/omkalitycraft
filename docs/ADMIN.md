@@ -42,6 +42,14 @@ Minecraft OP, игровые ранги и административная ро
 Она читает явно настроенный Linux Docker source, не требует Drasl login и не
 выполняет план/apply/wipe. Сводка и ограничения описаны в отдельной памятке.
 
+## Игровое время
+
+Сохранённое время конкретного UUID в DJ2 доступно через
+`omk admin --config .omk-admin/operator.toml playtime dj2 <UUID>`.
+Это закрытое чтение allowlisted Linux Docker source, без Drasl login/management
+token и записи в игру. AFK включён; live unsaved ticks и account lifetime
+не подменяются snapshot. [Семантика, настройка и проверки](PLAYER_TIME.md).
+
 ## Доступ по приглашениям
 
 Ручная выдача зрителям за участие в сообществе и расчёт баллов:
