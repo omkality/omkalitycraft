@@ -1,3 +1,22 @@
+## Русские руководства Dynamics/Tunnels — 14 ноября 2026
+
+#49/P1: ещё 229 записей (218/11): 198 с точным EN и 31 после отдельного ревью
+версии/разметки. Восемь book-значений адресно уточнены: fallback, piping, цвет группы
+и понятность инструкций. Сохранены logWood/рудный словарь и старая семантика точного
+переноса; новые Filtering Interfaces/slot equality не перенесены. Concepts имеет
+три явных source-key remap; %s и ASCII коды стиля восстановлены без ослабления parser.
+
+В двух локалях 494 записи. Dynamics book: 210 RU/211 keys + намеренный NBT;
+Tunnels book: 58/58 keys. Это не общий процент перевода и не графическая приёмка.
+Прежние 265/191 owned entries, 32 других файла и notice сохранены; слой 34 файла.
+
+69 Windows unit/CLI; Linux Docker 12 data checks +62 helper tests/7 отрицательных
+контролей, readonly/non-root/no network/socket/1 CPU/256 МиБ, exit 0/OOM=false.
+Независимый byte replay и две композиции совпали; свежие 225 JAR/EN прежние,
+свои scopes удалены. Новых runtime/CLI/GUI нет. Слой не установлен, manifest/release/
+VPS прежние; provenance других локалей, runtime I18n/шрифт/книги/игра и #163 открыты.
+[Контракт](DJ2_GUIDE_TRANSLATIONS.md), [протокол](validation/dj2-guide-translations-2026-11-14.json).
+
 ## Готовые средства эксплуатации — 13 ноября 2026
 
 По запросу владельца пересмотрены #146/#33: готовые средства принимаем после
