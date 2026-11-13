@@ -6,6 +6,7 @@ from uuid import uuid4
 
 import pytest
 
+from launcher.nbt import Tag
 from omk import resource_reset_stage as stage
 from omk.backup_store import BackupPolicy, BackupStore
 from omk.stopped_world_backup import inventory
@@ -114,6 +115,24 @@ def data(sample, tmp_path, monkeypatch):
     (world / "stats" / (player.stem + ".json")).write_bytes(
         b'{"stat.playOneMinute":72007,"stat.jump":9}'
     )
+    entity["ForgeData"] = Tag(
+        10,
+        {
+            "PlayerPersisted": Tag(
+                10,
+                {
+                    "omkality_guide": Tag(
+                        10,
+                        {
+                            "last_auto": Tag(4, 1794560000),
+                            "last_help": Tag(4, 1794560001),
+                        },
+                    )
+                },
+            )
+        },
+    )
+    encoded(player, entity)
     encoded(player.with_suffix(".dat_old"), entity)
     storage, target = tmp_path / "backup", tmp_path / "candidate"
     storage.mkdir()
@@ -177,10 +196,13 @@ def test_fresh_backup_plan_stage_verify_preserve_source_and_all_other_world_file
         assert after[name] == before[name]
     for name in before:
         if name.endswith((".dat", ".dat_old")) and "/playerdata/" in name:
-            assert (
-                stage.audit.ftb.nbt((target / name).read_bytes())["Dimension"].value
-                == 0
+            nbt = stage.audit.ftb.nbt((target / name).read_bytes())
+            assert nbt["Dimension"].value == 0
+            guide = (
+                nbt["ForgeData"].value["PlayerPersisted"].value["omkality_guide"].value
             )
+            assert guide["last_auto"] == Tag(4, 1794560000)
+            assert guide["last_help"] == Tag(4, 1794560001)
     with pytest.raises(ValueError, match="empty target"):
         stage.execute({**request, "action": "stage"}, source, storage, target)
 

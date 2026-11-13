@@ -63,6 +63,12 @@ def main():
         ]
         if version != versions[name]["version"]:
             raise ValueError("Version metadata differs from Java annotation: " + name)
+        if name == "core":
+            shared = re.search(
+                r'\bVERSION\s*=\s*"([^"]+)"', (ROOT / source).read_text()
+            )[1]
+            if shared != version:
+                raise ValueError("Core metrics version differs from annotation")
     subprocess.run(
         [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"],
         cwd=ROOT,

@@ -90,6 +90,9 @@
     "src/net/omkality/ServerProfile.java",
     "src/net/omkality/TickRateWindow.java",
     "src/net/omkality/TickWindow.java",
+    "src/net/omkality/WelcomeChat.java",
+    "src/net/omkality/WelcomePolicy.java",
+    "src/net/omkality/WelcomeQueue.java",
     "src/net/omkality/api/BackupPolicyAccess.java",
     "src/net/omkality/api/ClaimAccess.java",
     "src/net/omkality/api/CoreServices.java",
@@ -97,6 +100,7 @@
     "src/net/omkality/api/ServerExtension.java",
     "tests/java/net/omkality/GameMetricsControlsTest.java",
     "tests/java/net/omkality/MaintenanceControlsTest.java",
+    "tests/java/net/omkality/WelcomeControlsTest.java",
     "tests/test_build_safety.py",
     "verify_build.py",
     "versions.json"
