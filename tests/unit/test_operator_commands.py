@@ -26,6 +26,23 @@ def config(tmp_path):
     return load_operator_config(path), path
 
 
+def test_playtime_cli_uses_owner_binding_without_drasl_login(
+    tmp_path, monkeypatch, capsys
+):
+    settings, path = config(tmp_path)
+    player = "7d714b9e-996b-4d72-ab5a-f3e38b3ffb26"
+    query = Mock(return_value={"ok": True, "ticks": 72007})
+    monkeypatch.setattr("omk.player_time.saved_playtime", query)
+    login = Mock(side_effect=AssertionError("must not read management credentials"))
+    monkeypatch.setattr("omk.admin._credential", login)
+    assert main(["admin", "--config", str(path), "playtime", "dj2", player]) == 0
+    query.assert_called_once_with(settings, "dj2", player)
+    login.assert_not_called()
+    assert json.loads(capsys.readouterr().out) == {"ok": True, "ticks": 72007}
+    events = (settings.private / "audit.jsonl").read_text()
+    assert '"operation": "playtime"' in events and player not in events
+
+
 def test_server_export_requires_explicit_operator_allowlist_and_is_read_only(tmp_path):
     settings, _ = config(tmp_path)
     logs = tmp_path / "server/logs"
