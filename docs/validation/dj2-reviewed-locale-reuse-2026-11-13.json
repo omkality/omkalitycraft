@@ -1,0 +1,366 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "scope": "Third Russian locale batch: selected pinned upstream values; data/source acceptance only",
+  "target": {
+    "pack": "DJ2",
+    "version": "2.23.4",
+    "minecraft": "1.12.2",
+    "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa"
+  },
+  "issue": 49,
+  "source_sha256_utf8_lf": {
+    "omk/locale_overlay.py": "997318ee2f5273e073f96c9c74383cfa137f25c1989d6be2696381881e2f6096",
+    "tests/unit/test_locale_overlay.py": "cc9443d42caf7e6888d992c4a9cb369efe13d31b255f50a2cf45485b36f9fb8d",
+    "tests/unit/test_locale_reuse.py": "73267ccc874019475d81568acc7da36e20e63e93a43cdbea9195cc801ad98fe7",
+    "profiles/locale-overlays/dj2-2.23.4/owned-ru.json": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+    "profiles/locale-overlays/dj2-2.23.4/upstream-reuse.json": "e48dc7db4328b6dd539e74ab60e2df2a16e8fe6a87c1453c0ece1fff39a9a4ba",
+    "profiles/locale-overlays/dj2-2.23.4/notices/Cyclops-MIT.txt": "972ce53396e875797aa8013d98ce0829a551a7be6f0c4ea99ee71815291c265a"
+  },
+  "sources": {
+    "integrateddynamics": {
+      "repo": "CyclopsMC/IntegratedDynamics",
+      "commit": "fe2f10bb460252e06807f94d6a8a44813e5dc629",
+      "upstream_pull_request": "https://github.com/CyclopsMC/IntegratedDynamics/pull/1483",
+      "merged_at": "2025-03-05T07:38:45Z",
+      "source_format": "Minecraft 1.21.1 JSON; only exact key plus English-value matches considered for 1.12.2",
+      "files": [
+        {
+          "path": "LICENSE.txt",
+          "source": "https://raw.githubusercontent.com/CyclopsMC/IntegratedDynamics/fe2f10bb460252e06807f94d6a8a44813e5dc629/LICENSE.txt",
+          "sha256": "972ce53396e875797aa8013d98ce0829a551a7be6f0c4ea99ee71815291c265a",
+          "git_blob": "2d6b99efe8d7c9d6b1bd16eed624db84560b505f",
+          "bytes": 1074
+        },
+        {
+          "path": "src/main/resources/assets/integrateddynamics/lang/en_us.json",
+          "source": "https://raw.githubusercontent.com/CyclopsMC/IntegratedDynamics/fe2f10bb460252e06807f94d6a8a44813e5dc629/src/main/resources/assets/integrateddynamics/lang/en_us.json",
+          "sha256": "e227f99b29316961df7232c5e903058736ca5d8293f333808384dea8fafe44a7",
+          "git_blob": "80a35297cf9652d5f7eb563cd3f7f3f4bd25740a",
+          "bytes": 192831
+        },
+        {
+          "path": "src/main/resources/assets/integrateddynamics/lang/ru_ru.json",
+          "source": "https://raw.githubusercontent.com/CyclopsMC/IntegratedDynamics/fe2f10bb460252e06807f94d6a8a44813e5dc629/src/main/resources/assets/integrateddynamics/lang/ru_ru.json",
+          "sha256": "eff56097c97aa0f48d515d31af121759fdd024513d70104d53951d106bd4c9db",
+          "git_blob": "272bad58544433c9e8b1d24d6990384bb22c0f2c",
+          "bytes": 270380
+        }
+      ],
+      "source_minecraft": "1.21.1",
+      "target_minecraft": "1.12.2",
+      "translation_change_contributor": "BazZziliuS",
+      "notice": "notices/Cyclops-MIT.txt",
+      "excluded_duplicate_json_keys": {
+        "english": {
+          "_comment": 30,
+          "aspect.aspecttypes.integrateddynamics.integer.range": 2
+        },
+        "russian": {
+          "_comment": 30,
+          "aspect.aspecttypes.integrateddynamics.integer.range": 2
+        }
+      }
+    },
+    "integratedtunnels": {
+      "repo": "CyclopsMC/IntegratedTunnels",
+      "commit": "c8b09bd95f585076c30a9e4a613eca735ce9fe1e",
+      "upstream_pull_request": "https://github.com/CyclopsMC/IntegratedTunnels/pull/327",
+      "merged_at": "2025-03-05T07:38:22Z",
+      "source_format": "Minecraft 1.21.1 JSON; only exact key plus English-value matches considered for 1.12.2",
+      "files": [
+        {
+          "path": "LICENSE.txt",
+          "source": "https://raw.githubusercontent.com/CyclopsMC/IntegratedTunnels/c8b09bd95f585076c30a9e4a613eca735ce9fe1e/LICENSE.txt",
+          "sha256": "972ce53396e875797aa8013d98ce0829a551a7be6f0c4ea99ee71815291c265a",
+          "git_blob": "2d6b99efe8d7c9d6b1bd16eed624db84560b505f",
+          "bytes": 1074
+        },
+        {
+          "path": "src/main/resources/assets/integratedtunnels/lang/en_us.json",
+          "source": "https://raw.githubusercontent.com/CyclopsMC/IntegratedTunnels/c8b09bd95f585076c30a9e4a613eca735ce9fe1e/src/main/resources/assets/integratedtunnels/lang/en_us.json",
+          "sha256": "9048df9689dd399cbeff07cea35a79e7872d86d64067f2e5cf3991ffc3b0158d",
+          "git_blob": "91b3c908aa75d896759fe636589050ec466f03c7",
+          "bytes": 54419
+        },
+        {
+          "path": "src/main/resources/assets/integratedtunnels/lang/ru_ru.json",
+          "source": "https://raw.githubusercontent.com/CyclopsMC/IntegratedTunnels/c8b09bd95f585076c30a9e4a613eca735ce9fe1e/src/main/resources/assets/integratedtunnels/lang/ru_ru.json",
+          "sha256": "0c543962e60fd2c7233fbafefce3a13ef36ceead9005a5a36b23749d8f3f5364",
+          "git_blob": "90e42674a29c943348846cfcb7c29343703623fe",
+          "bytes": 79478
+        }
+      ],
+      "source_minecraft": "1.21.1",
+      "target_minecraft": "1.12.2",
+      "translation_change_contributor": "BazZziliuS",
+      "notice": "notices/Cyclops-MIT.txt",
+      "excluded_duplicate_json_keys": {
+        "english": {
+          "_comment": 16
+        },
+        "russian": {
+          "_comment": 16
+        }
+      }
+    }
+  },
+  "selection": {
+    "approved": 265,
+    "by_namespace": {
+      "integrateddynamics": 155,
+      "integratedtunnels": 110
+    },
+    "book_entries": 49,
+    "previous_owned_entries": 191,
+    "previous_layer_files_preserved": 31,
+    "matching_key_en_format_candidates": 466,
+    "deferred": 201,
+    "deferred_breakdown": {
+      "integrateddynamics_book_review": 198,
+      "original_mod_names": 2,
+      "tunnels_energy_exporter_disagreement": 1
+    },
+    "changed_english_excluded": 21,
+    "markup_candidates_excluded": 9,
+    "existing_russian_values_overwritten": 0
+  },
+  "notice": {
+    "source": "notices/Cyclops-MIT.txt",
+    "output": "licenses/Cyclops-locales-MIT.txt",
+    "sha256_utf8_lf": "972ce53396e875797aa8013d98ce0829a551a7be6f0c4ea99ee71815291c265a"
+  },
+  "source_guard_red_green": {
+    "new_failures_before": 19,
+    "previous_passes_before": 43,
+    "helper_passes_after": 62,
+    "windows_helper_and_cli_passes": 69
+  },
+  "linux_data_and_unit_verification": {
+    "ok": true,
+    "checks": [
+      "previous_31_layer_files_and_191_entry_owned_profile_unchanged",
+      "explicit_265_selection_excludes_201_deferred_21_changed_english_and_9_markup_candidates",
+      "all_six_external_artifacts_match_pinned_sha256_and_git_blob_ids",
+      "duplicate_json_keys_excluded_before_normalization_and_never_selected",
+      "265_values_replayed_through_public_reuse_helper_to_identical_output",
+      "eight_stale_source_and_existing_russian_negative_controls_rejected",
+      "book_colors_tokens_paragraphs_placeholders_and_original_mod_names_preserved",
+      "upstream_mit_notice_preserved_and_included_in_composed_layer",
+      "34_outputs_match_hashes_on_case_sensitive_linux",
+      "real_linux_named_input_volume_is_readonly",
+      "existing_and_new_locale_helper_controls_pass_in_linux"
+    ],
+    "reused": 265,
+    "book_entries": 49,
+    "files": 34,
+    "negative_data_controls": 8,
+    "unit_tail": "62 passed in 0.07s",
+    "graphical_game_test": false,
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "seed_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "exit_code": 0,
+    "oom": false,
+    "cpu_limit": 1,
+    "memory_bytes": 268435456,
+    "seed_hashes_unchanged": true,
+    "owned_scopes_removed": true
+  },
+  "reproducible_composition": {
+    "ok": true,
+    "rounds": 2,
+    "matching_output_files": 34,
+    "independent_linux_replay_matches": true
+  },
+  "assembled_private_file_manifest": [
+    {
+      "path": "config/tips.cfg",
+      "sha256": "21a6959ce965d78144cef528c47dae1b27b03c370dea9da14d0cb46577960b81",
+      "bytes": 24065
+    },
+    {
+      "path": "groovy/assets/divine_journey_2/lang/ru_ru.lang",
+      "sha256": "3d84f9b12939b4605396d687df421b37d74a170532a1a745da240829cb11bb80",
+      "bytes": 4092
+    },
+    {
+      "path": "licenses/Cyclops-locales-MIT.txt",
+      "sha256": "972ce53396e875797aa8013d98ce0829a551a7be6f0c4ea99ee71815291c265a",
+      "bytes": 1074
+    },
+    {
+      "path": "resources/actuallyadditions/lang/ru_ru.lang",
+      "sha256": "eefb965f3e64d3b0c0f18a48711061d75a1f48dc75bd88ba9cfd06e6fc1aac2c",
+      "bytes": 84
+    },
+    {
+      "path": "resources/alchemistry/lang/ru_ru.lang",
+      "sha256": "8c753a25157f4749f123e5e8645fb93ca3f910323f0365aae7e30427d256137a",
+      "bytes": 105
+    },
+    {
+      "path": "resources/appliedenergistics2/lang/ru_ru.lang",
+      "sha256": "2ed21038ecfc64aecf4e0ff0cebfbdbce27c3d5097d08cb6c763285c52f4d86e",
+      "bytes": 589
+    },
+    {
+      "path": "resources/betterquesting/lang/ru_ru.lang",
+      "sha256": "a362ba06e82b3e52b879891d2275f9ad8111e4b89e7e3091e2e052d9fdf868e7",
+      "bytes": 1088971
+    },
+    {
+      "path": "resources/contenttweaker/lang/ru_ru.lang",
+      "sha256": "59b74fdc12680c5de9d517c24c13d224512fd3fa79f4e94f35e89b7ebb2fb4d6",
+      "bytes": 60499
+    },
+    {
+      "path": "resources/craftingtweaks/lang/ru_ru.lang",
+      "sha256": "950cb8827b9050506b818265d533efd9592a5269a30c788514f30581098519fb",
+      "bytes": 1684
+    },
+    {
+      "path": "resources/crafttweaker/lang/ru_ru.lang",
+      "sha256": "61e20ca83f01d827edf0d5988de5975cc2f0b1cf6bfd753d394100dddfeeecbd",
+      "bytes": 80954
+    },
+    {
+      "path": "resources/divinerpg/lang/ru_ru.lang",
+      "sha256": "c5736dff8f2370c57c682c017be628656dbe07c350069891d24dc0c6e270524d",
+      "bytes": 1380
+    },
+    {
+      "path": "resources/enchantment_descriptions/lang/ru_ru.lang",
+      "sha256": "be2a8b184dc3934d61366c6d7d405ad5a45395a825202fbc1aeb5cd33b85a76d",
+      "bytes": 4212
+    },
+    {
+      "path": "resources/enderutilities/lang/ru_ru.lang",
+      "sha256": "1fb88c8ede70112e58547ea72a0d931b08068812ca805eaa97f2f919adc9b9a9",
+      "bytes": 62737
+    },
+    {
+      "path": "resources/erebus/lang/ru_ru.lang",
+      "sha256": "793043b6fe0cbe68dc3ee0abf37b23072af4fe99481835cf00b8ad4c440fe16e",
+      "bytes": 53530
+    },
+    {
+      "path": "resources/extendedcrafting/lang/ru_ru.lang",
+      "sha256": "bf40a582db00234c2a702fd42a0090d688ca3d0a759128a3934e8baea098d8de",
+      "bytes": 9522
+    },
+    {
+      "path": "resources/extrautils2/lang/ru_ru.lang",
+      "sha256": "a0c1e6b0e830beb86edf656a701739152cf22b82648779569f46230c56877d62",
+      "bytes": 70217
+    },
+    {
+      "path": "resources/ftblib/lang/ru_ru.lang",
+      "sha256": "93f0819ec8289b38920abf8cc20c81f70aa516c52f4bb6f641c511ea8ca8bb8a",
+      "bytes": 803
+    },
+    {
+      "path": "resources/guideapi/lang/ru_ru.lang",
+      "sha256": "b7f504f72646ba7e12ef33a4c83b0b28adc19a1eec92fab1b30946d656efe9d8",
+      "bytes": 357
+    },
+    {
+      "path": "resources/integrateddynamics/lang/ru_ru.lang",
+      "sha256": "e29e235ffbbe546669af29ae6cb99a8dd9143737c4e4d22c6603272e99e3387d",
+      "bytes": 18079
+    },
+    {
+      "path": "resources/integratedtunnels/lang/ru_ru.lang",
+      "sha256": "6e6c98c74582ebddca4c52f3be3d0d45b5033e3aa8432cef3a31ec6fb94eb7af",
+      "bytes": 20968
+    },
+    {
+      "path": "resources/jei/lang/ru_ru.lang",
+      "sha256": "8a5711a6da30853bf3fe97ee1e5e7d96b5652d00f3290a5a842905dc8bdb591c",
+      "bytes": 343
+    },
+    {
+      "path": "resources/lightningcraft/lang/ru_ru.lang",
+      "sha256": "e067d20ec416ba8c22524cd24f2725443215586a08e7451874d4bbddffe32962",
+      "bytes": 21872
+    },
+    {
+      "path": "resources/mob_grinding_utils/lang/ru_ru.lang",
+      "sha256": "592fb435f33501d6b7321dd48684293866b694751cdedb12e6ac472f8ce9e1a9",
+      "bytes": 4227
+    },
+    {
+      "path": "resources/mysticalagradditions/lang/ru_ru.lang",
+      "sha256": "d74c3a74d3e1697ea5b7c1ecf9e72cb796562ed2798eb8a574fcd01a27712c3a",
+      "bytes": 3477
+    },
+    {
+      "path": "resources/natura/lang/ru_ru.lang",
+      "sha256": "213cb916ef50cd53b07b00fe6331d5a85528eb28518153b8df84e438d22caf35",
+      "bytes": 1385
+    },
+    {
+      "path": "resources/omniwand/lang/ru_ru.lang",
+      "sha256": "ec737f88c07b323b93d9c0d769616a3afa58b704887307bee3ebd1c64001b916",
+      "bytes": 94
+    },
+    {
+      "path": "resources/openblocks/lang/ru_ru.lang",
+      "sha256": "738d925f6996cb13ff7c2419a4f579962ceaeff97586cd09d215f1de72cd9d5c",
+      "bytes": 1337
+    },
+    {
+      "path": "resources/packagedauto/lang/ru_ru.lang",
+      "sha256": "3f67fdf952166093e5a900606b78cea0883a4544915058e9eee76a66d644a5f3",
+      "bytes": 1740
+    },
+    {
+      "path": "resources/patchouli/lang/ru_ru.lang",
+      "sha256": "07ee1abaf5a761364217b44a7e74581a241061a04db4f759ca4972c6681495b9",
+      "bytes": 321
+    },
+    {
+      "path": "resources/plustic/lang/ru_ru.lang",
+      "sha256": "91fdd1e865b1d8c7ef1ac75e678a1e69cb2acf6c55d6812be0360604aa4a320e",
+      "bytes": 20605
+    },
+    {
+      "path": "resources/restrictedportals/lang/ru_ru.lang",
+      "sha256": "46f14093f7f6be9309289c574dbf52ccfd0434c1c761a11933006e6dc955aef2",
+      "bytes": 266
+    },
+    {
+      "path": "resources/roots/lang/ru_ru.lang",
+      "sha256": "68db1806552e6282ca5ca6bfa782cb90d45a669ddaee4f1610c7ff31a7ac822e",
+      "bytes": 4752
+    },
+    {
+      "path": "resources/tombmanygraves/lang/ru_ru.lang",
+      "sha256": "de01f6712dcbb1e5912949c687892ceb0854eb9f803d23efabbd09d7545bd700",
+      "bytes": 181
+    },
+    {
+      "path": "resources/toolprogression/lang/ru_ru.lang",
+      "sha256": "17aba2b28419f9ded2ff703659b196778dd8f4f76e9f53240902fe41deeed6c7",
+      "bytes": 315
+    }
+  ],
+  "input_jar_inventory_unchanged": true,
+  "classes_scripts_recipes_defaultquests_worlds_changed": 0,
+  "preflight_failure": {
+    "reason": "Upstream JSON includes repeated comment keys and one repeated non-comment key.",
+    "resolution": "All repeated keys are excluded before selected-value normalization and recorded; no first/last-wins interpretation. Public .lang parser remains strict."
+  },
+  "limits": [
+    "Newer source Minecraft 1.21.1 mod code is never imported or certified compatible with 1.12.2.",
+    "Exact key/English/hash/format matching is a text transfer guard, not a proof of mechanics, rendering or full semantic quality.",
+    "The whole Integrated Dynamics book, changed English and markup candidates remain separate work.",
+    "MIT notice for these two sources does not settle provenance/distribution of every other borrowed locale.",
+    "Runtime resource priority, vanilla collisions, fonts, layout and ordinary sound-enabled client lifecycle remain untested.",
+    "Native OpenAL issue #163 remains independent and open."
+  ],
+  "installed_into_game": false,
+  "graphical_acceptance": false,
+  "ready_for_players": false,
+  "player_manifest_changed": false,
+  "live_vps_changed": false
+}
