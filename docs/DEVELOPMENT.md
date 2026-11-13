@@ -22,6 +22,10 @@ PNG. Первая Docker-сборка не получила новые файл�
 Qt PNG просмотрены, portable Windows EXE проходит startup smoke. Computer Use
 дважды отказал в захвате кадра; внешние клики не выполнялись. Это не новая
 графическая/Minecraft-проверка. Нужные UI-состояния проверены Qt-тестами отдельно.
+Полный Windows unit/UI: 2152 passed /95 skipped; 33 Qt + Drasl smoke checks.
+CI выявил старый поиск QDialogButtonBox в GUI lab: обновлены stable button IDs,
+callback errors закрывают modal, ожидание ограничено watchdog. Новая проверка
+подтверждает fail-fast; настоящий Qt выполняет cancel/reset/password round trip.
 VPS/game runtime/owned JAR/player release прежние.
 [Протокол](validation/launcher-account-controls-2026-11-13.json).
 
