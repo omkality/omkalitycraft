@@ -1,97 +1,104 @@
-# Opt-in, private Linux collector. No ports, Docker socket, host PID mode or network.
+# Standard private backend. The legacy SQLite collector has been retired.
+x-limits: &limits
+  read_only: true
+  user: "10001:10001"
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: ${OMK_METRICS_PIDS:-64}
+  logging:
+    driver: local
+    options:
+      max-size: "${OMK_METRICS_LOG_MIB:-1}m"
+      max-file: "${OMK_METRICS_LOG_FILES:-2}"
+
 services:
-  metrics:
-    build:
-      context: ../..
-      dockerfile: deploy/metrics/Dockerfile
+  configure:
+    <<: *limits
+    build: {context: ../.., dockerfile: deploy/metrics/Dockerfile.configure}
     network_mode: none
-    read_only: true
-    user: "10001:10001"
-    cap_drop: [ALL]
-    security_opt: [no-new-privileges:true]
-    restart: ${OMK_METRICS_RESTART:-unless-stopped}
-    cpus: "${OMK_METRICS_CPUS:-0.25}"
-    mem_limit: "${OMK_METRICS_MEMORY_MIB:-96}m"
-    pids_limit: ${OMK_METRICS_PIDS:-32}
-    stop_grace_period: ${OMK_METRICS_STOP_SECONDS:-10}s
-    healthcheck:
-      test: [CMD, python, -m, omk.resource_history, health]
-      interval: ${OMK_METRICS_HEALTH_SECONDS:-30}s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
+    cpus: "${OMK_METRICS_CONFIG_CPUS:-0.25}"
+    mem_limit: "${OMK_METRICS_CONFIG_MEMORY_MIB:-64}m"
     environment:
       OMK_METRICS_INTERVAL_SECONDS: "${OMK_METRICS_INTERVAL_SECONDS:-30}"
-      OMK_METRICS_DATABASE_MIB: "${OMK_METRICS_DATABASE_MIB:-64}"
-      OMK_METRICS_DETAIL_DAYS: "${OMK_METRICS_DETAIL_DAYS:-7}"
-      OMK_METRICS_HOURLY_DAYS: "${OMK_METRICS_HOURLY_DAYS:-180}"
-      OMK_METRICS_RESERVE_MIB: "${OMK_METRICS_RESERVE_MIB:-24576}"
-    logging:
-      driver: local
-      options:
-        max-size: "${OMK_METRICS_LOG_MIB:-1}m"
-        max-file: "${OMK_METRICS_LOG_FILES:-2}"
+      OMK_METRICS_RETENTION_DAYS: "${OMK_METRICS_RETENTION_DAYS:-180}"
+      OMK_METRICS_RETENTION_MIB: "${OMK_METRICS_RETENTION_MIB:-1024}"
     volumes:
-      - history:/history
+      - config:/etc/omk-metrics
       - type: bind
-        source: ${OMK_METRICS_CONFIG:?Use a private metrics configuration}
+        source: ${OMK_METRICS_CONFIG:?Use a private standard monitoring configuration}
         target: /run/metrics/config.json
         read_only: true
         bind: {create_host_path: false}
-      - type: bind
-        source: ${OMK_METRICS_PROJECT:?Use the project filesystem on the Linux host}
-        target: /storage/project
-        read_only: true
-        bind: {create_host_path: false}
+
+  prometheus:
+    <<: *limits
+    user: "65534:65534"
+    image: prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06
+    depends_on: {configure: {condition: service_completed_successfully}}
+    restart: ${OMK_METRICS_RESTART:-unless-stopped}
+    cpus: "${OMK_METRICS_PROM_CPUS:-0.25}"
+    mem_limit: "${OMK_METRICS_PROM_MEMORY_MIB:-256}m"
+    command:
+      - --config.file=/etc/omk-metrics/prometheus.json
+      - --storage.tsdb.path=/prometheus
+      - --query.max-concurrency=${OMK_METRICS_QUERY_CONCURRENCY:-4}
+      - --query.max-samples=${OMK_METRICS_QUERY_SAMPLES:-1000000}
+      - --query.timeout=${OMK_METRICS_QUERY_TIMEOUT_SECONDS:-15}s
+    ports: ["127.0.0.1:${OMK_METRICS_PORT:-9090}:9090"]
+    healthcheck:
+      test: [CMD, wget, -q, --spider, "http://127.0.0.1:9090/-/ready"]
+      interval: ${OMK_METRICS_HEALTH_SECONDS:-30}s
+      timeout: 5s
+      retries: 3
+    volumes: [config:/etc/omk-metrics:ro, tsdb:/prometheus]
+    networks: [metrics, game, admin]
+
+  agent:
+    <<: *limits
+    build: {context: ../.., dockerfile: deploy/metrics/Dockerfile.agent}
+    depends_on: {configure: {condition: service_completed_successfully}}
+    restart: ${OMK_METRICS_RESTART:-unless-stopped}
+    cpus: "${OMK_METRICS_AGENT_CPUS:-0.25}"
+    mem_limit: "${OMK_METRICS_AGENT_MEMORY_MIB:-128}m"
+    networks: [metrics]
+    healthcheck:
+      test: [CMD, wget, -q, --spider, "http://127.0.0.1:9273/metrics"]
+      interval: ${OMK_METRICS_HEALTH_SECONDS:-30}s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - config:/etc/omk-metrics:ro
+      # Empty volume on Docker's data filesystem: statfs without reading project,
+      # player, account or operator files. Override with another empty probe only
+      # if game/backups actually reside on a different filesystem.
+      - filesystem_probe:/storage/project:ro
       - type: bind
         source: ${OMK_METRICS_HOST_CGROUP:-/sys/fs/cgroup}
         target: /cgroups
         read_only: true
         bind: {create_host_path: false}
       - type: bind
-        source: ${OMK_METRICS_HOST_PROC:-/proc}/stat
-        target: /host/stat
+        source: ${OMK_METRICS_HOST_SYS:-/sys}
+        target: /host/sys
         read_only: true
         bind: {create_host_path: false}
-      - type: bind
-        source: ${OMK_METRICS_HOST_PROC:-/proc}/meminfo
-        target: /host/meminfo
-        read_only: true
-        bind: {create_host_path: false}
-      - type: bind
-        source: ${OMK_METRICS_HOST_PROC:-/proc}/vmstat
-        target: /host/vmstat
-        read_only: true
-        bind: {create_host_path: false}
-      - type: bind
-        source: ${OMK_METRICS_HOST_PROC:-/proc}/diskstats
-        target: /host/diskstats
-        read_only: true
-        bind: {create_host_path: false}
-      - type: bind
-        source: ${OMK_METRICS_HOST_PROC:-/proc}/1/net/dev
-        target: /host/netdev
-        read_only: true
-        bind: {create_host_path: false}
-      - type: bind
-        source: ${OMK_METRICS_HOST_PROC:-/proc}/sys/kernel/random/boot_id
-        target: /host/boot_id
-        read_only: true
-        bind: {create_host_path: false}
-      - type: bind
-        source: ${OMK_METRICS_HOST_PROC:-/proc}/pressure/cpu
-        target: /host/pressure-cpu
-        read_only: true
-        bind: {create_host_path: false}
-      - type: bind
-        source: ${OMK_METRICS_HOST_PROC:-/proc}/pressure/memory
-        target: /host/pressure-memory
-        read_only: true
-        bind: {create_host_path: false}
-      - type: bind
-        source: ${OMK_METRICS_HOST_PROC:-/proc}/pressure/io
-        target: /host/pressure-io
-        read_only: true
-        bind: {create_host_path: false}
+      - {type: bind, source: "${OMK_METRICS_HOST_PROC:-/proc}/stat", target: /host/proc/stat, read_only: true, bind: {create_host_path: false}}
+      - {type: bind, source: "${OMK_METRICS_HOST_PROC:-/proc}/cpuinfo", target: /host/proc/cpuinfo, read_only: true, bind: {create_host_path: false}}
+      - {type: bind, source: "${OMK_METRICS_HOST_PROC:-/proc}/meminfo", target: /host/proc/meminfo, read_only: true, bind: {create_host_path: false}}
+      - {type: bind, source: "${OMK_METRICS_HOST_PROC:-/proc}/vmstat", target: /host/proc/vmstat, read_only: true, bind: {create_host_path: false}}
+      - {type: bind, source: "${OMK_METRICS_HOST_PROC:-/proc}/diskstats", target: /host/proc/diskstats, read_only: true, bind: {create_host_path: false}}
+      - {type: bind, source: "${OMK_METRICS_HOST_PROC:-/proc}/1/net/dev", target: /host/proc/net/dev, read_only: true, bind: {create_host_path: false}}
+      - {type: bind, source: "${OMK_METRICS_HOST_PROC:-/proc}/pressure", target: /host/proc/pressure, read_only: true, bind: {create_host_path: false}}
+
+networks:
+  metrics: {internal: true}
+  # A separate bridge is required to publish loopback when game is internal too.
+  # The host bind stays 127.0.0.1; the data-only agent never joins this bridge.
+  admin: {}
+  game:
+    external: true
+    name: ${OMK_METRICS_GAME_NETWORK:?Use the private game Docker network}
 volumes:
-  history:
+  config:
+  tsdb:
+  filesystem_probe:

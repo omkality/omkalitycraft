@@ -1,5 +1,9 @@
 # Игровые показатели Forge 1.12.2
 
+> Историческая приёмка Core JSON producer. Текущий backend описан в
+> [RESOURCE_HISTORY.md](RESOURCE_HISTORY.md); Python reader/SQLite удалены.
+> Opt-in producer Core 0.3.8 остаётся для совместимости, новый deployment его не включает.
+
 Общий серверный Core **0.3.7** умеет выпускать приватный снимок состояния для
 Python collector. Интеграция не зависит от DJ2, FTB, имени измерения или GUI.
 DJ2Fix/Client для этого не меняются. Нет игровых команд, RCON, JMX-порта или
