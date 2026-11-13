@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-13",
+  "scope": "Read-only selection of whole-hour host/config groups containing observed players",
+  "schema_migration": false,
+  "new_writer_collector_cli": false,
+  "tests": {
+    "new_cases": 13,
+    "linux_docker_focused_passed": 86,
+    "windows_focused_passed": 84,
+    "windows_focused_skipped": 2,
+    "controlled_clock_retention_days": 179,
+    "invalid_online_in_stopped_group": "red/green; remains unknown"
+  },
+  "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+  "real_history_replay": {
+    "checks": 7,
+    "source": "31 samples captured from accepted DJ2 Core 0.3.7 lab",
+    "samples": 31,
+    "selected_hour_groups": 1,
+    "peak_online": 2,
+    "readonly_filesystem": true,
+    "database_unchanged": true,
+    "original_capture_unchanged": true,
+    "input_sha256": "7132d3b2673b59faea67bb4e95ecc4b671e70f91229bb41303c9da04d669cc08",
+    "image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "new_game_run": false
+  },
+  "owned_containers_removed": true,
+  "source_sha256": "664e924395fb4df249139f8b836620b6f63fc6c12963ce9af92886b27236406c",
+  "test_sha256": "81d4476d8ff74c30538a7d19a6d2670d38f7d9914493370bc70805de787899db",
+  "limits": [
+    "Hour groups include idle and maintenance; mean/max are not active-only",
+    "Selection counts readings, never playtime or unique players",
+    "Limits apply before filtering; empty truncated result does not classify unread hours",
+    "Legacy or incomplete zero-online data stays unknown",
+    "No actual VPS measurement, capacity recommendation or lifecycle/job correlation in this scope"
+  ]
+}

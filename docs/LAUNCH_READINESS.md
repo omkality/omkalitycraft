@@ -23,7 +23,7 @@ GTNH не объявляем готовой. Стабильность имеет
 | Локальное восстановление базы | `REGION_RECOVERY.md`, `MOD_SYSTEM_RECOVERY.md`, `commands/dj2/RECOVERY.md` | Block/NBT не равны entity rollback; сети/механизмы и соседние участки требуют собственных контролей |
 | Ночной backup/restart | `NIGHTLY_BACKUPS.md`, `PROJECT_EXPORT.md`, `OFFSITE_TRANSPORT.md` | Один world writer, предупреждения, coherent snapshot, бюджет/retention и реальный полный возврат приложения |
 | Диагностика, журналирование | `LOGGING.md`, `CHAT_HISTORY.md`, `ACTION_ATTRIBUTION.md`, issues #43/#44/#52/#58 | Сбор crash report не заменяет структурированный журнал чата, авторство действий и учёт времени |
-| Ресурсы сервера | `RESOURCE_HISTORY.md`, `GAME_RESOURCE_HISTORY.md`, #146 | Host/cgroup и игровой producer проверены; нужны полная корреляция с обслуживанием/активные отчёты и реальные измерения VPS |
+| Ресурсы сервера | `RESOURCE_HISTORY.md`, `GAME_RESOURCE_HISTORY.md`, #146 | Host/cgroup, игровой producer и отбор часов с игроками; нужны точная корреляция обслуживания/активных интервалов и реальные измерения VPS |
 | Deployment конфигурация | `.env.example`, `deploy/*.example.*`, #30/#38 | Проверяем overrides/defaults, private mounts/permissions, лимиты всех writers и отсутствие public development binds |
 
 Названия документов выше проверяются при обновлении этой входной точки. Порядок

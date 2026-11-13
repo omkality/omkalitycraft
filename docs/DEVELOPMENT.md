@@ -1,5 +1,25 @@
 # Разработка OmkalityCraft
 
+## Часовые группы с наблюдавшимися игроками — 13 ноября 2026
+
+Следующий ограниченный шаг #146: `hours_with_players_report` в прежнем read-only
+owner API. Выбор по ненулевому online, раздельные host/config, счётчики доступных
+и отсутствующих readings; нет новых writers, schema migration, таблиц или CLI.
+Это whole-hour совпадение: CPU mean/max включают простой/обслуживание того же часа,
+показания online не превращаются в playtime. Ограничения rows/bytes до фильтрации;
+empty+truncated не доказывает отсутствие игроков за оставшийся период.
+
+86 focused Linux Docker cases, 84 Windows /2 skipped. 13 новых контролей:
+partial/unknown/stopped, host/config/game, sub-hour window, scan cap, readonly,
+сохранение hour после удаления details с контролируемым временем 179 дней.
+Второй Linux Docker replay: 31 сохранённый настоящий sample DJ2 из #155,
+семь независимых проверок одного выбранного часа/пика online=2 и min/max/mean.
+DB на readonly mount и исходный capture побайтно прежние; свои containers удалены.
+Это replay, не новый запуск Minecraft, не 179 дней настоящей игры и не RX-4 test.
+Точные maintenance/активные интервалы и actual VPS остаются #146/#38.
+Лаунчер/owned JAR/game content/VPS прежние.
+[Контракт](RESOURCE_HISTORY.md#часы-в-которых-зафиксированы-игроки).
+
 ## Сброс скина и настройки аккаунта — 13 ноября 2026
 
 Добавлен подтверждаемый сброс на bundled Стива в белой футболке. Повторно
