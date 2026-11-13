@@ -1,9 +1,9 @@
 {
-  "schema": 1,
+  "schema": 2,
   "pack_id": "dj2",
   "pack_version": "2.23.4",
   "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
-  "scope": "Owned translation deltas and one legacy key correction; assembled third-party locales stay outside Git",
+  "scope": "Owned language deltas, including explicitly hash-reviewed corrections; not a complete third-party translation payload",
   "lang": {
     "betterquesting": {
       "betterquesting.btn.claim_all": {
@@ -40,6 +40,86 @@
         "source_sha256": "8b7e8399c113204a5c97414f4279804905806cc72074e1d591ee7f4f362eda7d",
         "ru": "Логика задания: %s",
         "base_state": "missing"
+      },
+      "dj2.quest.db.64.desc": {
+        "source_sha256": "626440a82297c405c801a3993b53401d12bc31aa7cb04abc8fb538f280218cbc",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Для автоматизации производства менрила создайте механическую соковыжималку (Mechanical Squeezer) и механический котёл для сушки (Mechanical Drying Basin).%nУ обеих машин доступ к входному слоту предметов есть только сверху, с севера и с запада, а к выходному — снизу, с юга и с востока. У механической соковыжималки вход для жидкости доступен со всех сторон, кроме нижней, а выход для жидкости — только снизу.",
+        "expected_previous_sha256": "74e25a22437ae1b799cd71aef99bf90d14f42b130c18583003024ad4bc8b08b2"
+      },
+      "dj2.quest.db.1156.desc": {
+        "source_sha256": "f7b384eec975eecf3d7ed279ff054b425eb2cc3314307934717d2e0841479f2d",
+        "base_state": "reviewed_existing_russian",
+        "edits": [
+          {
+            "kind": "truncate_before",
+            "marker": "%n%n§c§l§l"
+          }
+        ],
+        "expected_previous_sha256": "da71d291dabc3d9633881b7fe4369e073716bae99c664d3e829e4f99da1cb5b5"
+      },
+      "dj2.quest.db.563.desc": {
+        "source_sha256": "4879fa8a9ec497eafea0945816255fc3506d68b71cd5ec4794d95024816a2191",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Создайте воображаемый блок времени! Он ускоряет тики блоков в области 7x7x5 с центром на самой машине, поэтому пригодится на большой ферме растений. Для работы ему нужна только энергия!",
+        "expected_previous_sha256": "a06b8aeef634dd90c152f2f61c68ad95e0d92e22f35b989a8633e526b119b00b"
+      },
+      "dj2.quest.db.148.desc": {
+        "source_sha256": "f792783005be89faf21648a7d32f1ce4849480f7cc66f8f4d5acf72a82b67ff1",
+        "base_state": "reviewed_existing_russian",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "энергия из алтаря",
+            "new": "магическая сила"
+          },
+          {
+            "kind": "replace",
+            "old": "Энергия из артаря.",
+            "new": "Магическая сирла."
+          }
+        ],
+        "expected_previous_sha256": "0ea6129508cf4e073745a7a9bbd3643a9a0599cf53805eea46138d8631a6f479"
+      },
+      "dj2.quest.db.1167.desc": {
+        "source_sha256": "90c7eaa21f868add8f1674b3e25186987193996e0d9df0d15ea6feeddd9a109a",
+        "base_state": "reviewed_existing_russian",
+        "edits": [
+          {
+            "kind": "truncate_before",
+            "marker": "%n%n§c§l§l"
+          }
+        ],
+        "expected_previous_sha256": "1ca8c290a78022262e4f22b49ca91f7d99b481079d2ba64abea5ad118b9da2fe"
+      },
+      "dj2.quest.db.1313.desc": {
+        "source_sha256": "eadee24a0cebf03c7d98a7d98e1b8d63b0f3666867c087eb727db6b970b7f466",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Создайте улучшения скорости I и II из Tesla Core Lib! По одному улучшению каждого уровня можно установить в машины Industrial Foregoing. Перед установкой II уровня нужно установить I.%n%nНазвания улучшений могут вводить в заблуждение: Speed увеличивает число операций за рабочий цикл, а Energy уменьшает расход энергии за цикл.",
+        "expected_previous_sha256": "35f20c810559153f03c6cbc2c25e925c1b42280a73c4a13a49f3feb6b4d982cb"
+      },
+      "dj2.quest.db.1183.desc": {
+        "source_sha256": "837cf3283e64c65bb4f2a4ee60fad2584059b076fd5fccd16a63d8070f0fc684",
+        "base_state": "reviewed_existing_russian",
+        "edits": [
+          {
+            "kind": "truncate_before",
+            "marker": "%n%n§c§l§l"
+          }
+        ],
+        "expected_previous_sha256": "033ae0728cd4081f810a898c6cb98d4c4f990f2923b702f995b30aac2103ca00"
+      },
+      "dj2.quest.db.1611.desc": {
+        "source_sha256": "70c8ca84c2b9f8da7fd32195739e0020de21e09b728f3002df86e9c364365cb3",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Создайте камень рощи и установите его. Затем §cпроведите ритуал «Молитва рощи» на костре поблизости§r, чтобы активировать камень. Он позволит работать находящимся рядом алтарям фей и руническим создателям.%n%nПримечание: по умолчанию камни рощи постоянно выращивают вокруг траву и цветы. Из-за заметного влияния на производительность эта возможность в сборке отключена.",
+        "expected_previous_sha256": "7285e6e6d136c4b45abaf96f4c4239c93ba2b0eeffe6bf33d3c4c5f4d1ac4395"
+      },
+      "dj2.quest.db.1173.desc": {
+        "source_sha256": "920edab6f2e33ad3e0128684ab3139a123222f5727c11912db4beadb64adb8b9",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Капли зла больше не выпадают из визер-скелетов — их нужно создавать. Скрафтите одну и примените её к дёрну, чтобы превратить землю вокруг в проклятую. На ней постоянно появляются мобы, поэтому она хорошо подходит для фермы. Берегите её от огня!%n%n§6Примечание:§r «Шёлковым касанием» можно добыть только тот блок, к которому непосредственно применили каплю зла.",
+        "expected_previous_sha256": "703c5430bbca95934dac5bbca772262a9876554b9ba4eced698e9ab7f6d13413"
       }
     },
     "ftblib": {
@@ -454,6 +534,96 @@
         "source_sha256": "b9e46938f9ab46eae0bf238bfc51c1125d5f2ae450af086e40ddf1d243e51b06",
         "ru": "Неограниченный ввод",
         "base_state": "missing"
+      },
+      "guide.entry.introduction.page.1": {
+        "source_sha256": "f3f5a8472aa397c267faa2845fac990f4c2a4590d62a45895714893a224985b3",
+        "base_state": "existing_english_in_ru",
+        "ru": "<b>Extended Crafting<r> добавляет новые способы создания предметов, дополнительные материалы и полезные устройства. Эта книга объясняет только основные возможности мода: конкретное применение способов крафта определяет автор сборки. <n><n><i>Цель мода — дать игрокам почувствовать гордость и удовлетворение от созданных предметов.<r>",
+        "expected_previous_sha256": "f3f5a8472aa397c267faa2845fac990f4c2a4590d62a45895714893a224985b3"
+      },
+      "guide.entry.combination_crafting": {
+        "source_sha256": "6b616e8cd65ef3798e82b3ed6661d92b21a9451f4786b0e7a32eb98a634f9095",
+        "base_state": "existing_english_in_ru",
+        "ru": "Комбинированный крафт",
+        "expected_previous_sha256": "6b616e8cd65ef3798e82b3ed6661d92b21a9451f4786b0e7a32eb98a634f9095"
+      },
+      "guide.entry.combination_crafting.page.1": {
+        "source_sha256": "0aa2dcd93abe8f6d6a9fd01472768abe42216a3a0cf6a3fb753c99f1129759ba",
+        "base_state": "existing_english_in_ru",
+        "ru": "<b>Комбинированный крафт<r> объединяет предметы в многоблочной установке, построенной прямо в мире. <n><n>В центре находится <red>ядро создания<r>, а вокруг — <red>пьедесталы<r>. <red>Пьедесталы<r> можно ставить в любых местах в <red>радиусе трёх блоков<r> от ядра, но на той же высоте. Для работы установки нужно подать <red>энергию<r> в <red>ядро создания<r>. <n><n>Центральный предмет рецепта кладётся на <red>ядро создания<r>, остальные предметы — на <red>пьедесталы<r> вокруг него.",
+        "expected_previous_sha256": "0aa2dcd93abe8f6d6a9fd01472768abe42216a3a0cf6a3fb753c99f1129759ba"
+      },
+      "guide.entry.combination_crafting.page.2": {
+        "source_sha256": "39d91f818109186620b8e51b7e462516df6b3ea9641231276151ffb4fb5afd91",
+        "base_state": "existing_english_in_ru",
+        "ru": "Нажмите ПКМ по боковой стороне <red>ядра создания<r>, чтобы увидеть сведения о текущем рецепте: прогресс, расход <red>энергии<r> и запас <red>энергии<r> внутри ядра.",
+        "expected_previous_sha256": "39d91f818109186620b8e51b7e462516df6b3ea9641231276151ffb4fb5afd91"
+      },
+      "guide.entry.table_crafting": {
+        "source_sha256": "f201bf41a8941090b3100d41f2178ea6183a73d9116d301b35a81e4ad3c52618",
+        "base_state": "existing_english_in_ru",
+        "ru": "Крафт на верстаках",
+        "expected_previous_sha256": "f201bf41a8941090b3100d41f2178ea6183a73d9116d301b35a81e4ad3c52618"
+      },
+      "guide.entry.table_crafting.page.1": {
+        "source_sha256": "c42a70b12925ef5ec380123144cf5438bc48cb8e4fbf3195476cf5302a562cc1",
+        "base_state": "existing_english_in_ru",
+        "ru": "<b>Крафт на верстаках<r> использует несколько уровней верстаков с привычным принципом работы. Их сетки имеют размеры <red>3x3<r>, <red>5x5<r>, <red>7x7<r> и <red>9x9<r>. Предметы остаются внутри после закрытия интерфейса. <n><n>Для автоматизации подходит <red>автоматический интерфейс<r>, позволяющий загружать и извлекать предметы. <n><n>На <red>базовом верстаке<r> также доступны <red>обычные рецепты Minecraft<r>.",
+        "expected_previous_sha256": "c42a70b12925ef5ec380123144cf5438bc48cb8e4fbf3195476cf5302a562cc1"
+      },
+      "guide.entry.ender_crafting": {
+        "source_sha256": "2ee260190cff10f19171d5aaf0acc575b8da39d7de9b02675cf1eb3b3a92c9fc",
+        "base_state": "existing_english_in_ru",
+        "ru": "Эндер-крафт",
+        "expected_previous_sha256": "2ee260190cff10f19171d5aaf0acc575b8da39d7de9b02675cf1eb3b3a92c9fc"
+      },
+      "guide.entry.ender_crafting.page.1": {
+        "source_sha256": "d2ba0fa57d4ca74830ea34cd2ba8eecf328713ea455f073fffb9153261cf173e",
+        "base_state": "existing_english_in_ru",
+        "ru": "<b>Эндер-крафт<r> использует силу ожидания. Установка состоит из <red>эндер-верстака<r> и <red>эндер-альтернаторов<r>. Через альтернаторы верстак получает энергию пустоты. Чем их больше, тем быстрее идёт крафт. <n><n><red>Эндер-альтернаторы<r> можно размещать вокруг <red>эндер-верстака<r> в <red>радиусе трёх блоков<r>, в том числе сверху и снизу. <n><n><red>Эндер-верстак<r> можно автоматизировать с помощью <red>автоматического интерфейса<r>, который загружает и извлекает предметы.",
+        "expected_previous_sha256": "d2ba0fa57d4ca74830ea34cd2ba8eecf328713ea455f073fffb9153261cf173e"
+      },
+      "guide.entry.interface": {
+        "source_sha256": "ee4e1636056d631fb613d382916efb4682590694f7262208ded1faf85ea87cbf",
+        "base_state": "existing_english_in_ru",
+        "ru": "Автоматический интерфейс",
+        "expected_previous_sha256": "ee4e1636056d631fb613d382916efb4682590694f7262208ded1faf85ea87cbf"
+      },
+      "guide.entry.interface.page.1": {
+        "source_sha256": "76a917334b046dbd398eb93e4c5a32abacf7638c48914d504fca130e9ea72b73",
+        "base_state": "existing_english_in_ru",
+        "ru": "<b>Автоматический интерфейс<r> — устройство из одного блока для автоматизации верстаков <b>Extended Crafting<r> и <red>эндер-верстака<r>. Он устанавливается <red>сверху<r> на нужный блок и требует <red>энергию<r>. <n><n>У интерфейса есть <red>входной<r> и <red>выходной<r> слоты. Предмет из <red>входного<r> слота помещается в наиболее подходящую ячейку сетки крафта. Если это невозможно, он остаётся во <red>входном<r> слоте, пока не включён режим <red>автовозврата<r>. В <red>выходной<r> слот поступает результат крафта.",
+        "expected_previous_sha256": "76a917334b046dbd398eb93e4c5a32abacf7638c48914d504fca130e9ea72b73"
+      },
+      "guide.entry.interface.page.2": {
+        "source_sha256": "7e3d47a0cebc9af2800dc8dddfb559dede50888c89475b0d3064ac52ba4f528e",
+        "base_state": "existing_english_in_ru",
+        "ru": "Главная возможность <red>автоматического интерфейса<r> — <red>автокрафт<r>. Когда это возможно, интерфейс сам выполняет рецепт и помещает результат в <red>выходной<r> слот. <n><n>Помните: <red>автоматический интерфейс<r> расходует <red>энергию<r> при каждом переносе предмета. <n><n>Кнопка <red>«Сохранить рецепт»<r> сохраняет текущую схему. <red>«Посмотреть рецепт»<r> показывает её, а <red>«Очистить рецепт»<r> удаляет.",
+        "expected_previous_sha256": "7e3d47a0cebc9af2800dc8dddfb559dede50888c89475b0d3064ac52ba4f528e"
+      },
+      "guide.entry.interface.page.3": {
+        "source_sha256": "a5af36babdeb13a06760b16403a5787b4f07a8288cbff76040c6d82ad7a96561",
+        "base_state": "existing_english_in_ru",
+        "ru": "<red>Автоматический интерфейс<r> умеет автоматически перемещать предметы. Эти возможности настраиваются кнопкой <red>«Настройки»<r>. <n><n><b>Автозагрузка:<r> интерфейс забирает предметы из инвентаря в выбранном направлении. <n><b>Автовыгрузка:<r> интерфейс отправляет предметы в инвентарь в выбранном направлении. <n><b>Автовозврат:<r> если предмет из <red>входного<r> слота нельзя поместить в верстак, интерфейс перемещает его в <red>выходной<r> слот.",
+        "expected_previous_sha256": "a5af36babdeb13a06760b16403a5787b4f07a8288cbff76040c6d82ad7a96561"
+      },
+      "guide.entry.interface.page.4": {
+        "source_sha256": "4035c3f3d56fa4413fee790b4296cfb906c2a3ea1dae1ed7ebd0b71ad81bc490",
+        "base_state": "existing_english_in_ru",
+        "ru": "<b>Умная загрузка:<r> интерфейс не позволяет функции <red>автозагрузки<r> помещать во <red>входной<r> слот предметы, которые нельзя вставить в верстак.",
+        "expected_previous_sha256": "4035c3f3d56fa4413fee790b4296cfb906c2a3ea1dae1ed7ebd0b71ad81bc490"
+      },
+      "guide.entry.singularity": {
+        "source_sha256": "d3857409f2ec82b209b390fddd36b0f4d6227bb0cf97c48dd94417708656e1fa",
+        "base_state": "existing_english_in_ru",
+        "ru": "Сингулярности",
+        "expected_previous_sha256": "d3857409f2ec82b209b390fddd36b0f4d6227bb0cf97c48dd94417708656e1fa"
+      },
+      "guide.entry.singularity.page.1": {
+        "source_sha256": "73434b419221da38b012cd910052e6409aa740cfc8a38d503f05706942ea8fc3",
+        "base_state": "existing_english_in_ru",
+        "ru": "<b>Сингулярности<r> — материалы, сжатые до невероятной плотности. Их <i>обычно<r> создают в <red>квантовом компрессоре<r>. <n><n>Объедините все доступные сингулярности на <red>максимальном верстаке<r>, чтобы получить <red>максимальную сингулярность<r>.",
+        "expected_previous_sha256": "73434b419221da38b012cd910052e6409aa740cfc8a38d503f05706942ea8fc3"
       }
     },
     "appliedenergistics2": {
@@ -510,6 +680,417 @@
         "source_sha256": "4e5ec5b081bed0888263549bca3630536b30b975ef5f83cc72cece9b5c71d289",
         "ru": "Одиночный режим",
         "base_state": "missing"
+      }
+    },
+    "crafttweaker": {
+      "dj2.crop_sticks.desc0": {
+        "source_sha256": "77a7b8124c768cea6ddb39d4fa7ece5c7ffa3b945bb88e1979b4149b316e494e",
+        "base_state": "reviewed_existing_russian",
+        "ru": "§c§lВНИМАНИЕ: §r§fУрожай с этих жёрдочек не собирается",
+        "expected_previous_sha256": "3e7a4e47f49199a44d5e0df4a9cd4b7566b42c62e9d08cbb81f6906e928416c2"
+      },
+      "dj2.crop_sticks.desc1": {
+        "source_sha256": "31f3171c9b7f0cbd531bbedfb0d1877e2f12354bfc476cd565ab84b9fbd614ee",
+        "base_state": "reviewed_existing_russian",
+        "ru": "§fфермой Ender IO.",
+        "expected_previous_sha256": "f5ddd9d5409dc7121e3d0252cc7574597e145b828365b4b3b10a91332976bed2"
+      },
+      "dj2.farming_station.desc0": {
+        "source_sha256": "f346d5fb86bd0c00e9a5ff3e2247552d995e2b7757cb912ddc1f01b8d7c732cc",
+        "base_state": "reviewed_existing_russian",
+        "ru": "§c§lВНИМАНИЕ: §r§fЭта машина не собирает урожай",
+        "expected_previous_sha256": "e6c3b34459c30801e8f0bd4b39bfb18a45bb7ab4a97d3a3a4255885d12d9bc82"
+      },
+      "dj2.farming_station.desc1": {
+        "source_sha256": "974f4db2e3f0ce2b08124d8099caaa812b0dcc8e2a0f0b851450176688a72f84",
+        "base_state": "reviewed_existing_russian",
+        "ru": "§fс жёрдочек AgriCraft.",
+        "expected_previous_sha256": "3d0029ff623232c7c66a86446dd9a7c5b729ba5cc945aeba26a3f60f15da6eb0"
+      }
+    },
+    "natura": {
+      "item.natura.netherquartz_axe.name": {
+        "source_sha256": "45b74454c040e2a6f604b66cd94968102dfd1b3caea582e8be93a694a318e8e4",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Топор из кварца Нижнего мира",
+        "expected_previous_sha256": "1c036c68b7e9e875f8e6a3b342ee9e8c85d0508566eb5c98f50739be1f435522"
+      },
+      "item.natura.netherquartz_bow.name": {
+        "source_sha256": "f91dab48025304fd83144667ec9ab3ece1b7bf2702996505df486dc38a115708",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Лук из кварца Нижнего мира",
+        "expected_previous_sha256": "d7ed22f5555a71151aa4644621c74181ed22ce46e581a4e6513a72d886cb58e7"
+      },
+      "item.natura.netherquartz_pickaxe.name": {
+        "source_sha256": "255d2d5cac4b6580c6faf31f70e91453ffc79ee5397740e96f701977d0e8bd13",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Кирка из кварца Нижнего мира",
+        "expected_previous_sha256": "daeeabfa00eeaa99b3f3c640643fda8e30229bfeb7ead80c9a7390eeb6cdaae6"
+      },
+      "item.natura.netherquartz_shovel.name": {
+        "source_sha256": "3791549706546fa9e7e98ecf8a0a8c60f45108fab17b0401d3bdf7e909849d58",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Лопата из кварца Нижнего мира",
+        "expected_previous_sha256": "576d0cefc6c95a7f2e91f1694ede0b0c7cc30dba48db25f0d97519b16dd4904f"
+      },
+      "item.natura.netherquartz_sword.name": {
+        "source_sha256": "f64a9cc99a4156d07c69024a9caf237d7c1625a5b84e5446111e37b64cffbc30",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Меч из кварца Нижнего мира",
+        "expected_previous_sha256": "37bbaf9196819c0602ede7a432b4dd338e4e7200e8cfbddab9253f255ad06934"
+      },
+      "item.natura.materials.ghostwood_fletching.tooltip": {
+        "source_sha256": "cf0fc13adddc1a82d0b40befd6cb834b04862c5f852e50b5067579d7028d91df",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Альтернативный компонент для создания стрел",
+        "expected_previous_sha256": "c6915ece09ffbddee941f3012b1a148439979e6f1d6e42da6c7a165f03d4d869"
+      },
+      "tile.natura.netherrack_furnace.name": {
+        "source_sha256": "3d2293855b987f728d1bfdaf36311d166bfc6303f33c0ca6e1d401a443417a0d",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Печь из адского камня",
+        "expected_previous_sha256": "c1905c115cfe80b53b6b85af02cbf8dfe6511fb8b825c411f775435be59428da"
+      },
+      "tile.natura.lit_netherrack_furnace.name": {
+        "source_sha256": "5dc120c4a46756ad58fefa31924060c13f51b4ad1fc1e9e3ac7ba7950cd7551d",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Горящая печь из адского камня",
+        "expected_previous_sha256": "c1905c115cfe80b53b6b85af02cbf8dfe6511fb8b825c411f775435be59428da"
+      },
+      "tile.natura.nether_button.name": {
+        "source_sha256": "253a811405bd7ec299580ea7f9024949fcf012948f40bfe9270d87780628c023",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Кнопка из адского камня",
+        "expected_previous_sha256": "4091b76310b8a29bd427dd0accb8dab988475a0744dc3ba2403eb1db77d0563b"
+      },
+      "tile.natura.nether_lever.name": {
+        "source_sha256": "d4caef83a498b0dfd531acbca150c6c75690195d6ac2bda735a0769d81cd54dd",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Рычаг из адского камня",
+        "expected_previous_sha256": "662405c28dbd5400e9b3c51b7a0dcddaf504ccf50d6053796eb1ec455788ef07"
+      },
+      "tile.natura.nether_pressure_plate.name": {
+        "source_sha256": "31147e3dbf8060564369c62d5083e3d5d58d22ea93a1678e34ba7fc57f83f464",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Нажимная плита из адского камня",
+        "expected_previous_sha256": "71f45887f2be664da921629ae2a25a6eaf49d1abc4d728362d26a8a03f0a228b"
+      },
+      "tile.natura.nether_tainted_soil.tainted_farmland_dry.name": {
+        "source_sha256": "e4a417188c91e16b9666c4ff5e38877a5b91cf7b1008654769236b9e2a57bd9a",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Испорченная грядка",
+        "expected_previous_sha256": "c12681914319de938faca1ce40e598893351ade6b99a50ec78a72f2a5c6b2644"
+      },
+      "tile.natura.nether_tainted_soil.tainted_farmland_heated.name": {
+        "source_sha256": "e673c0150ce62d18cae34793ae4044c2ddb2dd1e9f457dab8553c43abea365e0",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Нагретая испорченная грядка",
+        "expected_previous_sha256": "c12681914319de938faca1ce40e598893351ade6b99a50ec78a72f2a5c6b2644"
+      },
+      "tile.natura.nether_leaves2.darkwood.tooltip": {
+        "source_sha256": "6496627da61b850123bc8e7d96cf6ed3fd8640910729bfb110306e3d42bd1e2c",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Дерево Нижнего мира",
+        "expected_previous_sha256": "b770a35f8082b11790fdf676905794e1324a4bb9e50fe810d15a7c8211d906b3"
+      },
+      "tile.natura.nether_leaves2.darkwood_flowering.tooltip": {
+        "source_sha256": "bdd1d0b3e89b47e9b36e4e15f57f81277d02756d4f72366b154f42e9c39c28fb",
+        "base_state": "reviewed_existing_russian",
+        "ru": "Дерево Нижнего мира\\nЦветущее",
+        "expected_previous_sha256": "b40f697bf280e6031b8d353f1a506087b95fb6e5da0eb48976dafb685f28d2c4"
+      }
+    },
+    "openblocks": {
+      "openblocks.gui.welcome.content": {
+        "source_sha256": "3f1d2aafae88143be77911defb45add93ca405ff67eba9d0a4a44df0c460983e",
+        "base_state": "reviewed_existing_russian",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "это новая модификация",
+            "new": "это модификация"
+          },
+          {
+            "kind": "replace",
+            "old": "и многое другое!",
+            "new": "и многое другое! Помимо кнопок, для навигации по руководству можно использовать Page Up, Page Down, Home и End."
+          }
+        ],
+        "expected_previous_sha256": "ebad0dd4e95f77c72908603ab289f32b7c43fe6cc118cf2b267afa01d361c0e9"
+      },
+      "openblocks.gui.credits.content": {
+        "source_sha256": "3a2d2cb38674c3a8c819a6b3f0073c8649ed3d55f7da556f2c46cf24ced92851",
+        "base_state": "reviewed_existing_russian",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "Ведущие разработчики OpenBlocks (Можем ли Мы написать про себя?)",
+            "new": "Бывшие ведущие разработчики оригинального OpenBlocks"
+          },
+          {
+            "kind": "replace",
+            "old": "за последний год.",
+            "new": "за последние два года."
+          }
+        ],
+        "expected_previous_sha256": "ee4657290f7598f9239265e57302ee4cba2214f38a28c63be8ae7899db8db7c3"
+      }
+    },
+    "roots": {
+      "info.roots.roots_guide.landing": {
+        "source_sha256": "45548ac3601bbc2fbf5d0ec7013d0e74f01ddb3e9ab740ddd676dfd093bd022d",
+        "base_state": "missing",
+        "ru": "Эта книга собирает знания о магии природы — со времён друидов до наших дней.$(br2)Современные маги природы ищут новые и заново открывают забытые способы черпать в окружающем мире силу для волшебства и перемен."
+      },
+      "item.fire_starter.name": {
+        "source_sha256": "12872fee0423b212911948ec3658f0e5e1710bb1052e046ef7b4eb9df4c44502",
+        "base_state": "missing",
+        "ru": "Огниво"
+      },
+      "item.glass_eye.name": {
+        "source_sha256": "33aa316fafffbb6d889d5ef3dd9b049e1094d1a6f7eb56220af10fa95da967f7",
+        "base_state": "missing",
+        "ru": "Стеклянный глаз"
+      },
+      "item.runed_dagger.name": {
+        "source_sha256": "e4fea6d367294b1be33e0a47e4869b636dbf58143604f7a0e260c3b1d56880f2",
+        "base_state": "missing",
+        "ru": "Рунический кинжал"
+      },
+      "item.herb_pouch.name": {
+        "source_sha256": "3b1d633b892e56b0115e104ccc5adfea468d20000b46203514cbc02fbd354a8d",
+        "base_state": "missing",
+        "ru": "Мешочек для трав"
+      },
+      "item.reliquary.name": {
+        "source_sha256": "e27e241e331b41c1940eecb1a6833b259ad0f0d1a4a869289dcfc1fec8a6a0cd",
+        "base_state": "missing",
+        "ru": "Реликварий"
+      },
+      "roots.tooltip.runed_dagger": {
+        "source_sha256": "3eb40f59f1a88ca9a873e45838035361e6b2ee760780fd9fb02a7eab6d7523da",
+        "base_state": "missing",
+        "ru": "Вызывает кровотечение у поражённых врагов; эффект складывается до трёх раз."
+      },
+      "roots.tooltip.color": {
+        "source_sha256": "c30e0f952427a428d4f8355c2eff720d0228d26773a00a3c5a5e89571a2b49b9",
+        "base_state": "missing",
+        "ru": "Окрашено: %s."
+      },
+      "roots.tooltip.salmon.invalid": {
+        "source_sha256": "e587dc41f8a78cc4abd778cb328c4ae3989f29dd77a267bbced3a71b70cdbfa4",
+        "base_state": "missing",
+        "ru": "Содержит некорректные данные NBT."
+      },
+      "roots.tooltip.salmon.advancements": {
+        "source_sha256": "09260051209fcef54fc20ca515758548c6e50bb6fc1264c95d351788d053c2d8",
+        "base_state": "missing",
+        "ru": "Даёт следующие достижения: %s"
+      },
+      "roots.tooltip.salmon.crafter": {
+        "source_sha256": "79ef9bff4ee5f9d2519367b845b73a790451579829225fa00a4c65cfdb105f62",
+        "base_state": "missing",
+        "ru": "Создатель: %s"
+      },
+      "roots.tooltip.increased_by": {
+        "source_sha256": "dd1f74ceb9b1bed6c4f8f1a9d79fc91c38efd8a19a09b6c60bbec3021a469ae8",
+        "base_state": "missing",
+        "ru": "Увеличение расхода: %s"
+      },
+      "roots.tooltip.reduced_by": {
+        "source_sha256": "d24e3fe5aae4863f43ace25c112a9c8f6d28643c90915aba36806e5523aa8961",
+        "base_state": "missing",
+        "ru": "Снижение расхода: %s"
+      },
+      "roots.tooltip.life_essence": {
+        "source_sha256": "a908e0a5f405aae4c0db1946c41f36ef081bb4b75619ef483ba2932fa9fd8d75",
+        "base_state": "missing",
+        "ru": "Добывается руническими ножницами."
+      },
+      "roots.tooltip.life_essence.uses": {
+        "source_sha256": "4dc47f7d40ea4ccf08df15509193f716e7fdff739cb99a4b6f0cc382239c5040",
+        "base_state": "missing",
+        "ru": "Использований: %s/%s"
+      },
+      "roots.tooltip.shift": {
+        "source_sha256": "551ae0df10f6e66e9cf0ca09b32586ba5c383991e76f3f6daab9127191c6856f",
+        "base_state": "missing",
+        "ru": "[Присядьте, чтобы узнать больше]"
+      },
+      "roots.tooltip.logs": {
+        "source_sha256": "98f38f12db221a8cf8ca7aadfdcd759b01d52eb4ebb3eedbb2d97e92805c6960",
+        "base_state": "missing",
+        "ru": "брёвна"
+      },
+      "roots.tooltip.bark": {
+        "source_sha256": "14ea6507645c2ba7e973ea87444bf0470fc2e1f4b64f4f692f736acf9a4dec8a",
+        "base_state": "missing",
+        "ru": "кора"
+      },
+      "roots.tooltip.eligible": {
+        "source_sha256": "bcb96680ac423c149a05f21ad5bb8262fe13c28fe3714dd4348ad030118aa078",
+        "base_state": "missing",
+        "ru": "подходящий замшелый камень"
+      },
+      "roots.tooltip.terra_moss": {
+        "source_sha256": "efe1d99b84e7bf5e5f21012b867a73d7edaaeff8bc2de6d791317caecfb19cb5",
+        "base_state": "missing",
+        "ru": "мох"
+      },
+      "roots.tooltip.knife1": {
+        "source_sha256": "cf4a8721ec0f5d5541e8f095be35137dd6add63bb6e654d4ca66153ffe01e299",
+        "base_state": "missing",
+        "ru": "Разрушайте %s, чтобы получать %s в разном количестве."
+      },
+      "roots.tooltip.knife2": {
+        "source_sha256": "ce99264b9f820a491872fb92ede00c6a4ec9e96349ee1af2290729af17f261f3",
+        "base_state": "missing",
+        "ru": "Нажмите ПКМ по %s, чтобы получить %s."
+      },
+      "roots.tooltip.knife_dispenser": {
+        "source_sha256": "3c16d745cdb7b968f17095ba0b5f79e0aa7a2c6715598c66df922305cec79dd2",
+        "base_state": "missing",
+        "ru": "Раздатчик позволяет автоматически соскребать мох с подходящих блоков."
+      },
+      "roots.tooltip.runic_shears": {
+        "source_sha256": "ab7b7c55e2a485ed2db8d99feb9dc9ea033c993b905d8c2e3e6cda7dd799e292",
+        "base_state": "missing",
+        "ru": "Раздатчик позволяет автоматизировать все действия рунических ножниц, кроме добычи жизненной эссенции."
+      },
+      "roots.tooltip.spell.delete": {
+        "source_sha256": "25c6bbe80547a354feeba21c9d304c1afc878b7c437a5bbf5651a3799a3f537d",
+        "base_state": "missing",
+        "ru": "[%s: удалить заклинание из ячейки.]"
+      },
+      "roots.tooltip.modifier.activate": {
+        "source_sha256": "9c8e058318e8976aa7a057734af2cf1dae484175a13b7e0473a968a2183b36a5",
+        "base_state": "missing",
+        "ru": "[Alt+щелчок по ячейке: изменить модификаторы заклинания.]"
+      },
+      "roots.tooltip.modifier.not_applied": {
+        "source_sha256": "1d60a1ce16c056daa5dc2938e7194bc19dc3bb306d8428040fc3d71a6292d60a",
+        "base_state": "missing",
+        "ru": "[Модификатор ещё не открыт.]"
+      },
+      "roots.tooltip.modifier.not_applicable": {
+        "source_sha256": "55f46a18f5c5b6f4af2508a7943832a45d923194c4e33f62a9fa29ef56ce6da3",
+        "base_state": "missing",
+        "ru": "[Для этой ячейки нет подходящего модификатора.]"
+      },
+      "roots.tooltip.modifier.not_enabled": {
+        "source_sha256": "05913714d8a06f19aa4965115a5aa2836eb352e9b95447ff5deb27e43f072db8",
+        "base_state": "missing",
+        "ru": "[Модификатор выключен.]"
+      },
+      "roots.tooltip.modifier.conflicting1": {
+        "source_sha256": "0ac664f90592fd8ecced0befe15743c67410b5ca91b7c3edb437373a3df2d8f6",
+        "base_state": "missing",
+        "ru": "[Модификатор конфликтует с %s.]"
+      },
+      "roots.tooltip.modifier.conflicting2": {
+        "source_sha256": "d3334c3689de5546434a2215ae0b4c7335916f5f034159bc0fe16279bd8eb58a",
+        "base_state": "missing",
+        "ru": "[Alt+щелчок: отключить конфликтующие модификаторы и включить этот.]"
+      },
+      "roots.tooltip.modifier.additional_cost": {
+        "source_sha256": "ecf15f8e01660e7f7e8b2528b265b3c81e8e96c684d9c66f1c96681ab12a657c",
+        "base_state": "missing",
+        "ru": "Дополнительный расход %s: x%s"
+      },
+      "roots.tooltip.modifier.no_cost": {
+        "source_sha256": "0d5c2333d3e0e346ead70c4c1246ad4a2b92c8688fc119fb603d18fae73646d9",
+        "base_state": "missing",
+        "ru": "Без затрат."
+      },
+      "roots.tooltip.modifier.increased_cost": {
+        "source_sha256": "fd83048e40220671653c2359169a0ac9334c19b9298578509507714ea055197c",
+        "base_state": "missing",
+        "ru": "Увеличение расхода всех трав: %s"
+      },
+      "roots.tooltip.modifier.decreased_cost": {
+        "source_sha256": "792b8821e2e4e6c5c7698b24f499d1d62e27853953c40897f618c46672d5b173",
+        "base_state": "missing",
+        "ru": "Снижение расхода всех трав: %s"
+      },
+      "roots.tooltip.modifier.specific_increased_cost": {
+        "source_sha256": "447a14618fddd7e9ce36a29e659ad08003a01105bddd5611e4870f8c3ae0d2fd",
+        "base_state": "missing",
+        "ru": "Увеличение расхода %s: %s."
+      },
+      "roots.tooltip.modifier.specific_decreased_cost": {
+        "source_sha256": "2407b43f8bdf3286162959315ded0e815d6e6e41ddd1b836a8c554a00ceefd37",
+        "base_state": "missing",
+        "ru": "Снижение расхода %s: %s."
+      },
+      "roots.tooltip.modifier.enabled": {
+        "source_sha256": "b389d56c1fcedb915d4ca6155569d4b3b06e2b8f1e4af2b726c9e7a13271f33e",
+        "base_state": "missing",
+        "ru": "Включён."
+      },
+      "roots.tooltip.modifier.disabled": {
+        "source_sha256": "fe05fa461122068559946644f0f3e95fdd4d358242b9c01662fd967b6ac97533",
+        "base_state": "missing",
+        "ru": "Выключен."
+      },
+      "roots.tooltip.modifier.spell_name": {
+        "source_sha256": "a0e3b1804093295846157b1fe059a748d121322b53704cb98c04c697af2591bb",
+        "base_state": "missing",
+        "ru": "Заклинание: %s"
+      },
+      "roots.tooltip.modifier.herb_name": {
+        "source_sha256": "a31a3ce148e93b53d7907f65dc0ca80ef50a5793cf3954881b3917ba7877ace9",
+        "base_state": "missing",
+        "ru": "Трава: %s"
+      },
+      "roots.tooltip.modifier.conflicts": {
+        "source_sha256": "b8b070fbe6a6e9a5a6160b370d71250d4f5c85e61e1a5df87f5a7d80d669f731",
+        "base_state": "missing",
+        "ru": "Конфликтует с: %s"
+      },
+      "roots.tooltip.modifier.costs": {
+        "source_sha256": "b88fc5fc4765148eb545962cddf4f19e4ca0380a533c047005f567a77695dcfd",
+        "base_state": "missing",
+        "ru": "Затраты"
+      },
+      "roots.info.pouch.no_pouch": {
+        "source_sha256": "0baa7958053c4e6d5ad5300dffe55786fb09bb40342c3650cab669758c16bebd",
+        "base_state": "missing",
+        "ru": "Для заклинаний нужен мешочек с запасом трав!"
+      },
+      "roots.runic_shears.tooltip1": {
+        "source_sha256": "adfe81890fd661f0d600e9cea346490836d10a57fcdab26c755e859f3fdb8e90",
+        "base_state": "missing",
+        "ru": "%s: попытайтесь получить дар фей из блока или существа."
+      },
+      "roots.runic_shears.tooltip2": {
+        "source_sha256": "c4c85806ea2da745497b22734a8f53d080be9840d5b24926d0f68ac7664ab55a",
+        "base_state": "missing",
+        "ru": "%s: попытайтесь извлечь жизненную эссенцию из существа."
+      },
+      "roots.glass_eye.tooltip": {
+        "source_sha256": "2f201118eaaf3462d8c460c572159329c2529c097209f17cf1ef48775c847c36",
+        "base_state": "missing",
+        "ru": "Нажмите ПКМ, чтобы разбить глаз и получить возможность видеть в темноте."
+      },
+      "roots.fire_starter.tooltip": {
+        "source_sha256": "a0e6b729bffcdfe1fd78258ee47e7999f964d35b6981aed1dc989b9a84497d7a",
+        "base_state": "missing",
+        "ru": "Удерживайте ПКМ, чтобы постепенно разжечь огонь. Одноразовое."
+      },
+      "roots.spirit_pouch.tooltip": {
+        "source_sha256": "36ff4e9d5346638e3eac2f5c82ca6fa6273032f7ad0d11483c87575931e24c81",
+        "base_state": "missing",
+        "ru": "Нажмите ПКМ, чтобы открыть и узнать, что внутри!"
+      },
+      "roots.reliquary.tooltip": {
+        "source_sha256": "36ff4e9d5346638e3eac2f5c82ca6fa6273032f7ad0d11483c87575931e24c81",
+        "base_state": "missing",
+        "ru": "Нажмите ПКМ, чтобы открыть и узнать, что внутри!"
+      },
+      "roots.living_hoe.tooltip": {
+        "source_sha256": "a47e98ac949618bac152292a90631c0aac8ea3eeb381919e0b41c3bf4a6343e6",
+        "base_state": "missing",
+        "ru": "Разрушает растения в большом радиусе."
       }
     }
   },
@@ -756,5 +1337,7 @@
     "legacy_pack": "2.21.3"
   },
   "game_tested": false,
-  "ready_for_players": false
+  "ready_for_players": false,
+  "revision": 2,
+  "previous_profile_sha256_utf8_lf": "3fc9d9372c2aac109b9d7b991a19295fe575ba25b1c9baf6caf774ec3d647163"
 }

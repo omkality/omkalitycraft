@@ -1,0 +1,886 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "scope": "97 changed-English / unchanged-Russian candidates, not 97 proven errors or a complete pack audit",
+  "reviewed": 97,
+  "updated": 30,
+  "retained": 67,
+  "entries": [
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.1156.desc",
+      "previous_english_sha256": "a35d000d48657681a609d6e2834d6d66be93d2559c48b10fecab6dd8f134fd54",
+      "current_english_sha256": "f7b384eec975eecf3d7ed279ff054b425eb2cc3314307934717d2e0841479f2d",
+      "previous_russian_sha256": "da71d291dabc3d9633881b7fe4369e073716bae99c664d3e829e4f99da1cb5b5",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.1167.desc",
+      "previous_english_sha256": "6cf9ec8a3a6bc9ae4e39cf410bfc57849bebc5cb977abec02097fe20633dbf50",
+      "current_english_sha256": "90c7eaa21f868add8f1674b3e25186987193996e0d9df0d15ea6feeddd9a109a",
+      "previous_russian_sha256": "1ca8c290a78022262e4f22b49ca91f7d99b481079d2ba64abea5ad118b9da2fe",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.1173.desc",
+      "previous_english_sha256": "c33763a6b4c7547603e4bc9192c88bf65fa4fd71e2d113cec5f20f1277000df7",
+      "current_english_sha256": "920edab6f2e33ad3e0128684ab3139a123222f5727c11912db4beadb64adb8b9",
+      "previous_russian_sha256": "703c5430bbca95934dac5bbca772262a9876554b9ba4eced698e9ab7f6d13413",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.1183.desc",
+      "previous_english_sha256": "2c97147bee8e56f45722128a3ae3dae0774e498da6300c3a494b7e285e404c1d",
+      "current_english_sha256": "837cf3283e64c65bb4f2a4ee60fad2584059b076fd5fccd16a63d8070f0fc684",
+      "previous_russian_sha256": "033ae0728cd4081f810a898c6cb98d4c4f990f2923b702f995b30aac2103ca00",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.1313.desc",
+      "previous_english_sha256": "6c645dbd6164ee9da2394f06834bb868011567afbf7ae9775495691ed94dd211",
+      "current_english_sha256": "eadee24a0cebf03c7d98a7d98e1b8d63b0f3666867c087eb727db6b970b7f466",
+      "previous_russian_sha256": "35f20c810559153f03c6cbc2c25e925c1b42280a73c4a13a49f3feb6b4d982cb",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.148.desc",
+      "previous_english_sha256": "b8cc241680a468ac31360e62a52c0c062fceb442c18edc83dba8634bb4e7eafd",
+      "current_english_sha256": "f792783005be89faf21648a7d32f1ce4849480f7cc66f8f4d5acf72a82b67ff1",
+      "previous_russian_sha256": "0ea6129508cf4e073745a7a9bbd3643a9a0599cf53805eea46138d8631a6f479",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.1611.desc",
+      "previous_english_sha256": "011771c91e432c582365a1710865aaff0d7a7e82c4d2feeb2b030d930ce85e68",
+      "current_english_sha256": "70c8ca84c2b9f8da7fd32195739e0020de21e09b728f3002df86e9c364365cb3",
+      "previous_russian_sha256": "7285e6e6d136c4b45abaf96f4c4239c93ba2b0eeffe6bf33d3c4c5f4d1ac4395",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.563.desc",
+      "previous_english_sha256": "a83f468b756cc3b49b447bd5261499560489def66f49f84d81438e68df27621b",
+      "current_english_sha256": "4879fa8a9ec497eafea0945816255fc3506d68b71cd5ec4794d95024816a2191",
+      "previous_russian_sha256": "a06b8aeef634dd90c152f2f61c68ad95e0d92e22f35b989a8633e526b119b00b",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.64.desc",
+      "previous_english_sha256": "8d1de0ad45e26889bdbc5746828e8fcae6de9a3e805985a17db770621a771ffb",
+      "current_english_sha256": "626440a82297c405c801a3993b53401d12bc31aa7cb04abc8fb538f280218cbc",
+      "previous_russian_sha256": "74e25a22437ae1b799cd71aef99bf90d14f42b130c18583003024ad4bc8b08b2",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.816.title",
+      "previous_english_sha256": "e7d115893a10b336954e75f3ffb73733f66f8b2679122a36e3f3b0494d973e43",
+      "current_english_sha256": "9aefcad6291683ea1994425c5ec2b0300bc8c43f79ec2f221ebfaaffbf56c2fb",
+      "previous_russian_sha256": "ca3b3bb1b52b0f930d1fa7e9292af34ddac7bd630a48441b34c766bb75174837",
+      "decision": "retain",
+      "reason": "english_typo_grammar_russian_meaning_retained"
+    },
+    {
+      "namespace": "crafttweaker",
+      "key": "dj2.crop_sticks.desc0",
+      "previous_english_sha256": "8fab864a7d1958afb6424a637ed15faca9924b9e9bf52501879a91099931e154",
+      "current_english_sha256": "77a7b8124c768cea6ddb39d4fa7ece5c7ffa3b945bb88e1979b4149b316e494e",
+      "previous_russian_sha256": "3e7a4e47f49199a44d5e0df4a9cd4b7566b42c62e9d08cbb81f6906e928416c2",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "crafttweaker",
+      "key": "dj2.crop_sticks.desc1",
+      "previous_english_sha256": "72cd771f7e4bef0fea0d8ede36fbd05f192ebc95708e0c733002590bc9886ad1",
+      "current_english_sha256": "31f3171c9b7f0cbd531bbedfb0d1877e2f12354bfc476cd565ab84b9fbd614ee",
+      "previous_russian_sha256": "f5ddd9d5409dc7121e3d0252cc7574597e145b828365b4b3b10a91332976bed2",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "crafttweaker",
+      "key": "dj2.farming_station.desc0",
+      "previous_english_sha256": "b91f7d78ae4d67e9a433f860d6dad4295f9c7b0e319077a7e314f21f994b8d9a",
+      "current_english_sha256": "f346d5fb86bd0c00e9a5ff3e2247552d995e2b7757cb912ddc1f01b8d7c732cc",
+      "previous_russian_sha256": "e6c3b34459c30801e8f0bd4b39bfb18a45bb7ab4a97d3a3a4255885d12d9bc82",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "crafttweaker",
+      "key": "dj2.farming_station.desc1",
+      "previous_english_sha256": "e37465c90cde8334aad1a147b310709f3079dd26de112e275aee482dc1570dc0",
+      "current_english_sha256": "974f4db2e3f0ce2b08124d8099caaa812b0dcc8e2a0f0b851450176688a72f84",
+      "previous_russian_sha256": "3d0029ff623232c7c66a86446dd9a7c5b729ba5cc945aeba26a3f60f15da6eb0",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "galacticraftcore",
+      "key": "jei.arc_lamp.info",
+      "previous_english_sha256": "a267f32cf10c6f0d05c75bc6aeafa77a772d3d49126d7cf2bf49cc985788cdc8",
+      "current_english_sha256": "06b5c066b153f77eb10fbf553272fbc966e0778a68d14a96ad3d4906b09ea7ae",
+      "previous_russian_sha256": "2d6322ff5d6fcb49ed71a790d52fd989622b0b4958879290cf875bba839cceed",
+      "decision": "retain",
+      "reason": "whitespace_only"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.bloodwood_axe.name",
+      "previous_english_sha256": "fc7cad49c71a8a36f8e0568d1154598dc51a76ffb209470f834d1010c85d078e",
+      "current_english_sha256": "6ac733de84a455b81198143f0da2b13bec160e9c777b7bb78fc0a2aee74d52db",
+      "previous_russian_sha256": "9050a1ce54eda20792a858038c70aa1fb307e09a640973c2950ec43c1b0e880d",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.darkwood_axe.name",
+      "previous_english_sha256": "ac44142c0e8e1bc7e3a63745e902b4808d73a4ace21a7c17eb6877327e756d73",
+      "current_english_sha256": "e889d7d9376bd8d209b98f91f27d0e81ce43edfae29c0146957ba6c89e406b49",
+      "previous_russian_sha256": "2b4ff4f5ba44cdf31874fb0c2b4d5668815790c8a0f149206ce843e31ab2d0e4",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.edibles.impmeat_cooked.name",
+      "previous_english_sha256": "eac5b05637ab08b250a48be7ae309e885b419848e12b0225d3d69881e12f55aa",
+      "current_english_sha256": "8bb3601a1e8987a8991c858a738364a9e86242e14a379dd55d8350c2084b571f",
+      "previous_russian_sha256": "c0ed2d9de9ccc43520d185e3fd7740bae28b2c4857eb4f9dcd551b72ea3aa15c",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.edibles.impmeat_raw.name",
+      "previous_english_sha256": "2d2dc5bb9744937fddcc28a1026f5372a2bf1c255a8421b2fba4e720c5f6d0a3",
+      "current_english_sha256": "9c510ebd1477adbeb7611764bd1600350744e554433b95d878a83a1b5c367e5f",
+      "previous_russian_sha256": "0871603f9166dc1210ef7afe906add3809fedb9ffda7b5d5396361ab1d695939",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.fusewood_axe.name",
+      "previous_english_sha256": "fb64a0d45e87d1be01715d17451407916f539ec7a4f11919f9f87cd88c0573e7",
+      "current_english_sha256": "d3527068fc8e0fe44d56d2f8faad1ae7f9df6fb17ad5ba07cc58dd09493be161",
+      "previous_russian_sha256": "adae7c6ea76316c87e2e7f2b82c359aae0ffacc006f1676ea29a4a218f0e6df1",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.ghostwood_axe.name",
+      "previous_english_sha256": "841de553c77b998b70601c627ba14976fcd83ff052a64891106d0dbd4f336e3d",
+      "current_english_sha256": "fbdf5ecdbe4c6a7ecbfd3c81e79325137e0c13ba666d89aa693012fe15983794",
+      "previous_russian_sha256": "c1dd39e79cf444fa8d2fbf6adf885c4c2ef74189651a4f0de1b9ac0e83fc3123",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.imp_armor_boots.name",
+      "previous_english_sha256": "2e482675c50e19b84b2d32c9c6c41ade7b493193d63620e72d0fc4f0db843300",
+      "current_english_sha256": "a8f768d94c03856d11f1f49e876e4b94ed0e8a97d316e808d118dbbd9b0f4746",
+      "previous_russian_sha256": "f0d1946c33e00b804b690b76a909ddd705284880de2fb60a27040b9184869c5c",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.imp_armor_chestplate.name",
+      "previous_english_sha256": "4505ec6a1b955b61611cf351738759e96aaf927e4c65c5df5800bd6c7e6109e8",
+      "current_english_sha256": "f86ff8f9153a35bc2f918f14fd0ea1cf5377cc72dfffff154f30872981d74846",
+      "previous_russian_sha256": "b93753117ab05a70b3c0967dbe029aba3e88d9ecb117e8954f1e0d998ad737ec",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.imp_armor_helmet.name",
+      "previous_english_sha256": "4ec6498cf8cd418d27eee0bc55a2e0d894c9b23d912402919ac6581328d88550",
+      "current_english_sha256": "56f02514107354e7fd4236cf79fa253eab161086d23461e1ec0bbf67e32db75b",
+      "previous_russian_sha256": "7dc951a99cffbdf772c68f8c28d420b204c010d310a037f44aea2fb39675f4fd",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.imp_armor_leggings.name",
+      "previous_english_sha256": "658ea7f98c8f7e306a1548cdc09123fa331f03734b1da193fc5cc519f77b45fb",
+      "current_english_sha256": "762d5b30c3f8d8e2b75380f53c6c8c3c4bf7ce0597ddda0eadb8166fa22b1c6e",
+      "previous_russian_sha256": "5368a411bcbe906abed263ae63c291682afa5099e2bdcd572e17175132c71a5e",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.materials.ghostwood_fletching.name",
+      "previous_english_sha256": "90919316c4c4dba836eca93d1481f71a794a107224f7dbb60b50dcd5105e0c91",
+      "current_english_sha256": "56510f493b6a489074f6d6507666952c66f7e5531973384e9bc4443ec064f11b",
+      "previous_russian_sha256": "9e9530900ed7e2dd0f6e12571d18ab9e1e012972e56938424370d011b14d56d2",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.materials.ghostwood_fletching.tooltip",
+      "previous_english_sha256": "8ff8d582e093324624f4226fa9a17c810d86b56ddf9d8632989fd9f2efffdf84",
+      "current_english_sha256": "cf0fc13adddc1a82d0b40befd6cb834b04862c5f852e50b5067579d7028d91df",
+      "previous_russian_sha256": "c6915ece09ffbddee941f3012b1a148439979e6f1d6e42da6c7a165f03d4d869",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.materials.imp_leather.name",
+      "previous_english_sha256": "9926b27fec27a4dabbfcaa520abda856359a9c8ec60079bbe87b5e867259778a",
+      "current_english_sha256": "d86751ce46f2cf384f76c199c4ea4253cf0d914d5ce6db25168b51805b581806",
+      "previous_russian_sha256": "d23e1cf09f3039bf1191d5d66ac4dce55cc47501551aee8fea50a64161b9f0b6",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.materials.imp_leather.tooltip",
+      "previous_english_sha256": "18fc9228ea9431f505828b6a8d1d31b47f9793cf0cb594a8bc1788fdf055b3ed",
+      "current_english_sha256": "afb1db8c5f47f608c267e1077aeeeaf66dd23763ce360df9e744418ea05a8fd3",
+      "previous_russian_sha256": "086cebd4b2d30a1b1b5c9a3d6c44de5e1e7f1fcfc3b8f0f20f0bf49521fe166d",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.netherquartz_axe.name",
+      "previous_english_sha256": "c74a1aeefd342c3dbd88edc89d84ac3072b4bfe57c76f3b1caaf9d10125e1b7c",
+      "current_english_sha256": "45b74454c040e2a6f604b66cd94968102dfd1b3caea582e8be93a694a318e8e4",
+      "previous_russian_sha256": "1c036c68b7e9e875f8e6a3b342ee9e8c85d0508566eb5c98f50739be1f435522",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.netherquartz_bow.name",
+      "previous_english_sha256": "8a5c801557bb6ee81b1f5b2e2b17d60c9457213b4b2ba9d8156616689213112d",
+      "current_english_sha256": "f91dab48025304fd83144667ec9ab3ece1b7bf2702996505df486dc38a115708",
+      "previous_russian_sha256": "d7ed22f5555a71151aa4644621c74181ed22ce46e581a4e6513a72d886cb58e7",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.netherquartz_pickaxe.name",
+      "previous_english_sha256": "78f549503f31430892efd5137ed3c52c6d0c228bdb9fba7a449c4c9a448c311b",
+      "current_english_sha256": "255d2d5cac4b6580c6faf31f70e91453ffc79ee5397740e96f701977d0e8bd13",
+      "previous_russian_sha256": "daeeabfa00eeaa99b3f3c640643fda8e30229bfeb7ead80c9a7390eeb6cdaae6",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.netherquartz_shovel.name",
+      "previous_english_sha256": "8ababcd28b7db203905a5d53900c9772272d609cbdae222d620a4689ed926ca7",
+      "current_english_sha256": "3791549706546fa9e7e98ecf8a0a8c60f45108fab17b0401d3bdf7e909849d58",
+      "previous_russian_sha256": "576d0cefc6c95a7f2e91f1694ede0b0c7cc30dba48db25f0d97519b16dd4904f",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.netherquartz_sword.name",
+      "previous_english_sha256": "4d23afa31a7cec03f53925dd38b628414db81696fa233412925509bfafcf095f",
+      "current_english_sha256": "f64a9cc99a4156d07c69024a9caf237d7c1625a5b84e5446111e37b64cffbc30",
+      "previous_russian_sha256": "37bbaf9196819c0602ede7a432b4dd338e4e7200e8cfbddab9253f255ad06934",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.amaranth_trap_door.name",
+      "previous_english_sha256": "a6011f2bee5e87e370576864bc81214adb49bcabab08cd14371da15cafdb2695",
+      "current_english_sha256": "07e25ca89d8041efeeedc130938b16da4ad5d86b6c90023e569680efdbbabca3",
+      "previous_russian_sha256": "cab6bda08e00deaa29390719a9861bede7ae369f8c63a06ef35d18d7ebdefdf9",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.bloodwood_trap_door.name",
+      "previous_english_sha256": "bb9660c044447458eb51590a6334a169de11552a5f5f13c4d8d8059ecea345c2",
+      "current_english_sha256": "b32c4e1584c739125967ac93c317927ca0ee744e4f94edb1b93b77ef8c523943",
+      "previous_russian_sha256": "2bdf8de305cbe74428f6cd1ad0c378b9d1b388a47b0abd034e6c210d891a405d",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.bluebells_flower.name",
+      "previous_english_sha256": "33ef9a1aac6accb73c8be14de15e32639f3c43d0387460d3dcf1f6cb63590fa9",
+      "current_english_sha256": "8e64d602bbbec37ac65e112062f2acf491982f2dc31c350fda02d5de7bae4a86",
+      "previous_russian_sha256": "228834962e989b8f9cade35213000352bb0724ae71f1c3acbe42697d867918f7",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.darkwood_trap_door.name",
+      "previous_english_sha256": "49923ec98bac5279ab80a47f7335db45eaed28f1a9b7aa37799ac683d6038068",
+      "current_english_sha256": "d2da010532e97a0b5dd2461a1bd26176ec0e638452cd6442f425eb6f9c9b91ae",
+      "previous_russian_sha256": "cc4991d2f21a3a47b3a83a0773d36dd5faa2fd6c7bc70c4c6418e8f39fe70c86",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.eucalyptus_trap_door.name",
+      "previous_english_sha256": "521780df4deaeb4783e2b9d2c0d55739afa5d0427114493b109b59335f57e458",
+      "current_english_sha256": "1ede7d59d2bab69c6f4d87b8a872fb949eaa7c01781a48ea27f8483a55a0354d",
+      "previous_russian_sha256": "81291590553de37532a432c7f8887d838dccdb86c34909d3793d8996a7d27661",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.fusewood_trap_door.name",
+      "previous_english_sha256": "0bb1471ea519221a72b33fbea00698971da737c74f2ee43077223bf4656773ac",
+      "current_english_sha256": "d41cd9010d49cd3d7fbb20f73e2deff4b75fb58d4d7ab3931173cc012730ad07",
+      "previous_russian_sha256": "2abf0a74532585ddea5d0832ff3bb299e887ad7eb177ea3bf44cd7e53a3a2ec9",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.ghostwood_trap_door.name",
+      "previous_english_sha256": "9d88cc5b560d8550ed073c0dac0032e33969818be857d1f56972129c58fed465",
+      "current_english_sha256": "0357823f5ce884962a46c4aec9401beb0630ce7d4859d7933411f01b3545a805",
+      "previous_russian_sha256": "5f10cf59f083f9fc13ed4b9a87b217f912c50cab33835a0474a77aad1f5d5b69",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.hopseed_trap_door.name",
+      "previous_english_sha256": "1dc1b88722531b177a835f0756fd1a954ccbf67537d447a3ce08e53629f8d585",
+      "current_english_sha256": "64dc4b3a63acff9aea6c70501421bd007534d57522f5a06d13de2f70800fce7d",
+      "previous_russian_sha256": "cbef8d9769cc8bd4b5d2f2d844b88511e2219075b9a4921aba4e507c74895c92",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.lit_netherrack_furnace.name",
+      "previous_english_sha256": "2d1c15902565ec058e81bec863962bcca82e018bd8de93b84e79aad142108fe5",
+      "current_english_sha256": "5dc120c4a46756ad58fefa31924060c13f51b4ad1fc1e9e3ac7ba7950cd7551d",
+      "previous_russian_sha256": "c1905c115cfe80b53b6b85af02cbf8dfe6511fb8b825c411f775435be59428da",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.maple_trap_door.name",
+      "previous_english_sha256": "00ed7b7904bc104ffa9fb5c9083a4968e4d437b8c11d79f6f6ed85d1c685ae13",
+      "current_english_sha256": "48ba1e0b78626f7c4c1b080d14a11f88abfc4f62bf780b4921de257f31f28f6e",
+      "previous_russian_sha256": "417a867ca17ad177b15c4fc55e1b53d0fbac9cda96a1d4c6991bbf40cab112de",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_button.name",
+      "previous_english_sha256": "707eab0c23ecbf6e5382ba61a346bc76aefee81303280fc0e08e59df18afbf8a",
+      "current_english_sha256": "253a811405bd7ec299580ea7f9024949fcf012948f40bfe9270d87780628c023",
+      "previous_russian_sha256": "4091b76310b8a29bd427dd0accb8dab988475a0744dc3ba2403eb1db77d0563b",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_leaves.bloodwood.name",
+      "previous_english_sha256": "1448b5519afb661f8a60db79a7a27c27f4ef12766a195275c365a2961fcbb4b7",
+      "current_english_sha256": "0c4dd2f2a6ea562bbbacb1bea7a6739908f6c1a6c8c6a16ffe2913bf1a6b72d9",
+      "previous_russian_sha256": "c26844c40877d489bc0d5ccaf4fc41c0500ca0f87688e5e2f37fa8553943e180",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_leaves2.darkwood.tooltip",
+      "previous_english_sha256": "3838f37734c56e88e0e44c13a6290ddccfedac7b27f9d3f56300573b295ddc99",
+      "current_english_sha256": "6496627da61b850123bc8e7d96cf6ed3fd8640910729bfb110306e3d42bd1e2c",
+      "previous_russian_sha256": "b770a35f8082b11790fdf676905794e1324a4bb9e50fe810d15a7c8211d906b3",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_leaves2.darkwood_flowering.tooltip",
+      "previous_english_sha256": "ebcba08115f49a75c8bc30317d5fdc60f1a3ec5b3816532e0a62c50e6231a3cf",
+      "current_english_sha256": "bdd1d0b3e89b47e9b36e4e15f57f81277d02756d4f72366b154f42e9c39c28fb",
+      "previous_russian_sha256": "b40f697bf280e6031b8d353f1a506087b95fb6e5da0eb48976dafb685f28d2c4",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_lever.name",
+      "previous_english_sha256": "2ea541c5d4da446c901785f3344491b04610e7a7f3e399f446b578f5f57f2c7e",
+      "current_english_sha256": "d4caef83a498b0dfd531acbca150c6c75690195d6ac2bda735a0769d81cd54dd",
+      "previous_russian_sha256": "662405c28dbd5400e9b3c51b7a0dcddaf504ccf50d6053796eb1ec455788ef07",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_logs.darkwood.name",
+      "previous_english_sha256": "c832ebeb5032a8fb7ee317a302efe64fc6dd8fe9c476b9548f8e1131ba4eee69",
+      "current_english_sha256": "c52e08596c40675824bac3c97bedb0d2295d5fe8755ac9e8b320953f73af3190",
+      "previous_russian_sha256": "69c0a4e4ce6fc1c5e2f19b90990de0511831f90ceb7a3c795443f0e3585ac23a",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_logs.fusewood.name",
+      "previous_english_sha256": "124148ece75068fbeb2dd7c91267fda3f5d971a807ab13b6726bf1ec80ca1fc2",
+      "current_english_sha256": "f813c57771cdbb72e3c6b3a0f6d477d77a35870ee8b9f07d5da779fb6ca20aef",
+      "previous_russian_sha256": "641a31c2c987880c06f774cc5999694e10ce3bda3c5bf742becc91c9a7623833",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_logs.ghostwood.name",
+      "previous_english_sha256": "d9c397896eb5b388bbd166551c222449ecfbee1148fa0f4b4019d598d0d6a4f4",
+      "current_english_sha256": "d5d3c82669d76e92a9a563da7dc86baf5ffc455ee1b8b8dfebbdf2cb01a310a0",
+      "previous_russian_sha256": "cd462a756b8fd08708df94cdf56892cd74b19ca905d33b311e3af3919a197590",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_logs2.name",
+      "previous_english_sha256": "d5d3829db5e57669a4b18ebc29f3379c413c8fbc7004a6fad57450055bf667af",
+      "current_english_sha256": "6595b7563046439a07c81331ad8166c2b99722ef2737b3a155d18fd4b9ca0a95",
+      "previous_russian_sha256": "f60f44b3c7b0df8450c4fa3e7f753b6e3584d207cbe49634d7823d4d2f3e2a0d",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_pressure_plate.name",
+      "previous_english_sha256": "d5d137ba57f13525c154c498b0921a63e3ec6cad5348c755168225b51445c600",
+      "current_english_sha256": "31147e3dbf8060564369c62d5083e3d5d58d22ea93a1678e34ba7fc57f83f464",
+      "previous_russian_sha256": "71f45887f2be664da921629ae2a25a6eaf49d1abc4d728362d26a8a03f0a228b",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_slab.bloodwood.name",
+      "previous_english_sha256": "af34e6504d2b1e12d505a432cde17297e67fb50b666e1cea9a15109b85acafdb",
+      "current_english_sha256": "55964487929ca9b1c2acaa4b5c776d3ce8c905ed7b8cff01911d962919628fb9",
+      "previous_russian_sha256": "ebbe2513b941d6fb57c4246a3d447a607c7f8870412536225f6c2a39673f0f51",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_stairs_bloodwood.name",
+      "previous_english_sha256": "15b367f98c45c86257211444997eba5b79666184f46394fbd4ce7ed003e5cb42",
+      "current_english_sha256": "2cc1ad7f28f625d9b5179e0c2e46f231cec3b1a4c61943bca22987e925c2e806",
+      "previous_russian_sha256": "b939eeef07cfb015268af9a92f7c36cf7fd720cb4ad1a3d73061b2a81328e9eb",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_tainted_soil.tainted_farmland_dry.name",
+      "previous_english_sha256": "dec15e3ca2604271027d0aaa112db03b083e6f43a66929b00e26b107aca36114",
+      "current_english_sha256": "e4a417188c91e16b9666c4ff5e38877a5b91cf7b1008654769236b9e2a57bd9a",
+      "previous_russian_sha256": "c12681914319de938faca1ce40e598893351ade6b99a50ec78a72f2a5c6b2644",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_tainted_soil.tainted_farmland_heated.name",
+      "previous_english_sha256": "dec15e3ca2604271027d0aaa112db03b083e6f43a66929b00e26b107aca36114",
+      "current_english_sha256": "e673c0150ce62d18cae34793ae4044c2ddb2dd1e9f457dab8553c43abea365e0",
+      "previous_russian_sha256": "c12681914319de938faca1ce40e598893351ade6b99a50ec78a72f2a5c6b2644",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_workbenches.bloodwood.name",
+      "previous_english_sha256": "81aa35d3923a4570fce47a87c7e2c711176e53caf9d2472e0c4f2241f7bb500f",
+      "current_english_sha256": "3b4424b87ee772d32507588dd7804202563b759a6ec42968aa2de54229c382c8",
+      "previous_russian_sha256": "0859bcc97d01a1a41967128d5ec6ffbb2c5b3d99143a1f6beaa47d991dc65ecc",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_workbenches.darkwood.name",
+      "previous_english_sha256": "788ceb07968c0a509351e18ede9e74c00024a7893dd348c94c765208a8dff077",
+      "current_english_sha256": "bd1b8cfbc279464f677f65dc9c2cbd54791b780d319c98f85c8899b587bda0b2",
+      "previous_russian_sha256": "1a53611a281c6c86e8504bcf7306feada4f15f21d2981bc44add53ea6900cb2d",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_workbenches.fusewood.name",
+      "previous_english_sha256": "1bc30616b27d718bbd1ba1f08b719f26af46447f2a403dc830ce3d4855ba3075",
+      "current_english_sha256": "a73ba0200906b7f38bd71213d0a83f8a597bd4ef8c55e0c9c54eff56621e3d18",
+      "previous_russian_sha256": "0e5924329e6c9984ea7fbcc86021e776545304eb8671d3fd2a29e626e5a74f89",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.nether_workbenches.ghostwood.name",
+      "previous_english_sha256": "33370bdef1b20935da8164922f3cf4465018f5ecb46b154aa5e01e8f63b16c7e",
+      "current_english_sha256": "e31086f993bd0c3b01c04e891d0d79a1782cad9cdede6dbebbc5ef645fa50b68",
+      "previous_russian_sha256": "1652eff6c5993bc1b7f3afbf0a4617637541ffc5e37fa497224cbad3288001a2",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.netherrack_furnace.name",
+      "previous_english_sha256": "2d1c15902565ec058e81bec863962bcca82e018bd8de93b84e79aad142108fe5",
+      "current_english_sha256": "3d2293855b987f728d1bfdaf36311d166bfc6303f33c0ca6e1d401a443417a0d",
+      "previous_russian_sha256": "c1905c115cfe80b53b6b85af02cbf8dfe6511fb8b825c411f775435be59428da",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_bookshelves.tiger.name",
+      "previous_english_sha256": "7271982580605c53a07eb3e7611b8a08bdbf7f6134242ea28fd469d8403459b2",
+      "current_english_sha256": "7cfe2b45d36c2fa28c532ce9d987c0e9c24baa510bc0a07a8e9a8dec3536934d",
+      "previous_russian_sha256": "9d3ad06b520237bcfb2a9a66135790ebf425f7debeef404b6da08a6b06ce95cb",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_leaves.tiger.name",
+      "previous_english_sha256": "bd11008c3d9204bf03430199b4fcaaf34d22fd8a359c8a049d30a0e875bfc320",
+      "current_english_sha256": "8db920d31f99c4bcf166bba85445bfe45204fb0cd7bf9f9c5a33d5a61a671d1e",
+      "previous_russian_sha256": "88600afdefacda4e18b01f0bf584167e95a68e96c58e7df6ac5524a5cbc6a0ce",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_logs.amaranth.name",
+      "previous_english_sha256": "11584f76dbc4845107a8b1e807fa92cdfb229b0a64c2a6d805d4c83271836b30",
+      "current_english_sha256": "f5e4ee4f42d01ef04ff275e19690d49809754e988c9d69296038402fc59efa1b",
+      "previous_russian_sha256": "c36fa1527e1c679a490f30653c69cfc7599dd848f0329f66c2ab879557180137",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_logs.maple.name",
+      "previous_english_sha256": "05c1f66546ac7182661dd45368f2c27c0e9a99be35b4753a087fb4a96014b81d",
+      "current_english_sha256": "9af4d4dbfadd9f01af939980cfe65f933a9f6ccffe1687ae07e5191a1cad2ac8",
+      "previous_russian_sha256": "dbfc40175f3fe593dce6c0de1e0bf453f13f4d33ad3357b73918088634004459",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_logs.silverbell.name",
+      "previous_english_sha256": "336d924704d1aafdf26c6634e9d7d01dcb83a5cbda84b181d2927285eb468840",
+      "current_english_sha256": "362c8567ccfc31adbed30575c3c549a14a883b434a48780a66d7437214681a22",
+      "previous_russian_sha256": "8f2c83d108d3e0db45b0290ffcdc1a950b0970a8802cddcc8335a3dd27c82289",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_logs.tiger.name",
+      "previous_english_sha256": "ff471dcecca35f6e1503cf95fc7880fcaabbb3e134733762d18b9774672dc39f",
+      "current_english_sha256": "29b9dc7aad3f370ddbbb4da7eed3102178fc1397cc6c82febd5d0aff27f8b80d",
+      "previous_russian_sha256": "9a98e5dc1d5e5044ad5c5fe7c74d3e0537d83cc0d2bf9832f3056019d321b556",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_logs2.eucalyptus.name",
+      "previous_english_sha256": "bde49d66dcf44bb17fcc0ee85f584c796fdcbd86acfa0d8fd1c4b48cb14e198c",
+      "current_english_sha256": "ba2754c995cbf70d55d9c638f2ee498bdbe6c7b3eb9d6cb03411b450944b4901",
+      "previous_russian_sha256": "75b67404ce961f3a808445ad04a515bf38ec2226601106b2b60eb00ab945dafd",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_logs2.hopseed.name",
+      "previous_english_sha256": "887693567cb39a7fadce427d1b9cf38eb775a2c99a8bebcea423488e0d61c59f",
+      "current_english_sha256": "23f258012b12a4f05c549df54b0ba8e9d459dc10f2080b60e57dda1509b5c44d",
+      "previous_russian_sha256": "0c5c1a957853c2073506dfd1eccfc5486f57ed833a24c3cd6c46b4e8ee5b3fa1",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_logs2.sakura.name",
+      "previous_english_sha256": "cd9f25cd7af35e9b49348ae0ec388046eb61a5d4f44233ff3909b749388e5ee7",
+      "current_english_sha256": "7629ee9a096bca6d6b4879c490cb19cb18a88f5d6f8e90dbb79115be1e761eb5",
+      "previous_russian_sha256": "61fa828929ad93faa854d4adc2349d527729a8467858707c71ecb88b52482c89",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_logs2.willow.name",
+      "previous_english_sha256": "f360693d365f599053313370932a494921ed162c9df246fa45cd12e564fb4f8d",
+      "current_english_sha256": "cc07385c0a9486dc41d6e10e6e1d318ad8f743119305ed983d72153c0b52de75",
+      "previous_russian_sha256": "1b7c400de367c46f691ab42f8b97abe4bd56c3280b968c6256dcf04cfc773252",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_stairs_tiger.name",
+      "previous_english_sha256": "ce535e0f6573dfa877858b166116f1c8199a98ad86b63e9d75f4002b1bfae707",
+      "current_english_sha256": "a27af909ee7b11d36ff6e9d08fe042abac5ee852d08780f0781333b5035c1126",
+      "previous_russian_sha256": "4870328812e7b547cf532d4ae5187d1ebc62f4810efd5d93e4a78d701be959f4",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_workbenches.amaranth.name",
+      "previous_english_sha256": "54fe0630a7aff2f40903f6b0cbb1af0d25f40aebe5c78dc35d1f8b3417b1b9b5",
+      "current_english_sha256": "aef462c8525224281d1b6cf848c7870ae8e84edc38a75d1a12630d900e762e75",
+      "previous_russian_sha256": "a615c4d473183816eadd9cb341e6b5bac2df29bb733497a749fe719b2c2f4842",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_workbenches.eucalyptus.name",
+      "previous_english_sha256": "31a574f360327d97b739a8d3a1a07f8a82d5dfb45d244ac95b16ce450820e309",
+      "current_english_sha256": "2a81b6bf223a1b7b242c7bc65743f36826122c7842a0c0e7bc768ef1d5fa23a9",
+      "previous_russian_sha256": "bc0f031dd1fd9e3e9f98a3c26354cc9e7b8ef50816586a52d777beb19456e09e",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_workbenches.hopseed.name",
+      "previous_english_sha256": "e28541b0effead8390a6c8b0bfa722dfa651a2065994bc2abdddf91454e42095",
+      "current_english_sha256": "ea098a4a9676e534791d965df1f12543250b7a00ea0b78dd3b535418367a1e5f",
+      "previous_russian_sha256": "8e9f3fd9e9dc33e9c5396a1f2614917792e6b4ecabc36cd8409e2c0289f6efbd",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_workbenches.maple.name",
+      "previous_english_sha256": "a46e8eb444616ca8d10a670025b90971edab5d7537f57efa87d07f826bdc5f45",
+      "current_english_sha256": "5780d8bf88b86841970ec5be2bce8419607f4b32f16b74f8520782a041e511ca",
+      "previous_russian_sha256": "d9c83ff4aaf66f146047325cdeff5812018bbeb1cc667475f495d09122e67d21",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_workbenches.redwood.name",
+      "previous_english_sha256": "239bbaff7643c0597ea9e2eb31eb693e8941b8866893ae8b60b34a38fa2d2fcd",
+      "current_english_sha256": "8c253088a096a0c8c297a9a58b318bbeeb54ab51b7536e7705967699cf082142",
+      "previous_russian_sha256": "1878a3ff07c165bde347d88609ff0c143ca7dc3dab140c8517bac953696b8d7c",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_workbenches.sakura.name",
+      "previous_english_sha256": "9568594f93fbccf26366e8634d2fa6e42b96a656430bbfb36545b7cd24d9dab6",
+      "current_english_sha256": "0db8fd4a04e1f1fe0cf2777f849d2274162ca21caf6e484b05831021372cffef",
+      "previous_russian_sha256": "0df3aeea6c7086e0a42522b3e2fa127d28f63011a8f54ef09a13749722a807d0",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_workbenches.silverbell.name",
+      "previous_english_sha256": "180a5d4f62c32da5268ed7e9a0eeaf1eef6856f3d312c99cb3aa5d813827f322",
+      "current_english_sha256": "7910e48d1dc8583ce2ecaba752f5bed1ba6a59dba5488878f6df0d14ea933b38",
+      "previous_russian_sha256": "6ee78fb15fddd05df125a415867ae60e529cdeffa14020f5e701a0a701e8a44d",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_workbenches.tiger.name",
+      "previous_english_sha256": "4d7f8a95ae49cd26103b4daf0fb49410dd7ee1be053f023c76120ac7aa44fda1",
+      "current_english_sha256": "6d75bb7b2cc49ac09727e1cbd6f5ea989e1595b2bbc57f67296a80d0c9ff4967",
+      "previous_russian_sha256": "a7c19f10c14579d69728934257af21a38a6fd054307a4fc30b869b23ded3a569",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_workbenches.willow.name",
+      "previous_english_sha256": "5f5bd1c6d94ce433f8224bee0f9454f6c2afe4ae5ea30b1eae7cf18622936ec6",
+      "current_english_sha256": "cbcecd061591ad90f03dce5c49819039e1775f6c9a0015efe488aa90139a4158",
+      "previous_russian_sha256": "93b41db0338b92735dfd03d859fdaa9ae8e329130c65942761bd531dda20c165",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.redwood_trap_door.name",
+      "previous_english_sha256": "183f14ac9e1ad570cea9a05b62421497bc92fe55ec55f0ac032acce5b30f0e0a",
+      "current_english_sha256": "66977fef470b4428c740abaf898e4bb2a693f17d1fc85cbca7633e2985bda0b3",
+      "previous_russian_sha256": "06c17987eb93bc88991d6160145bc0e28743f04eb1e27c37869f787da3e23c15",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.sakura_trap_door.name",
+      "previous_english_sha256": "837f2c839e1eded1ea3ab9ac3adc615053ad161bbf4f322c4b762465fe469a03",
+      "current_english_sha256": "ee7ac2abbf1ecda4b126e2ca3485258ff05215555353ac433b05706c588716a9",
+      "previous_russian_sha256": "ad8b7f58a9e2879934839a22ecfcf70abc43d13e9bcb3d12193d224a567d7c0e",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.silverbell_trap_door.name",
+      "previous_english_sha256": "b349c44772f7d83c3f17701d41502fcc8c5f20a938f8a87703f7c857eb6718bc",
+      "current_english_sha256": "a7f15877feed5515ee2ed7f92dc251b3ce654b05a10c99316fbc07ba37fedfed",
+      "previous_russian_sha256": "b72f3fa42486f46ce4b886085b3158f34f2f3f3958b09cb269a995b65c037452",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.tiger_button.name",
+      "previous_english_sha256": "a018b9bf98550a3c45afc454c1a48a54eb2d2433106cc77cbeb8ccedcd29f71e",
+      "current_english_sha256": "7f4063d0ea1a567315f9b56a6f434017b31261ce47f140202e63101d254ff535",
+      "previous_russian_sha256": "9c178b6b6288180ae056fddffca1958bfb09d61612835f52922b5259e49575c9",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.tiger_fence.name",
+      "previous_english_sha256": "6a5c4d08d3f3439457d595be504caeb37fe00df5067d2ec01d38983446e0f0ca",
+      "current_english_sha256": "93366948919870b707e712d086ce0005543b5be5d15e6008f833e2d327655373",
+      "previous_russian_sha256": "f7d4b9b6c9a4147de635035e8e57d3f488247d1fa5d9393df36e0f542d015753",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.tiger_fence_gate.name",
+      "previous_english_sha256": "1991e557a135ad5ed83b5b5e8a95f0f1f6cff67f4481bd82b51919826d64c49e",
+      "current_english_sha256": "e98ebbda652f35fe4c55f3885021ee281df8c1fa9b24daba7d95458e4b431fb7",
+      "previous_russian_sha256": "07170307bee1cd505901ff206346b1264386a5334f9542291fbc75ef21f08d05",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.tiger_pressure_plate.name",
+      "previous_english_sha256": "0d69b763bc7769975463b8adf2ac11d1eb4ba2e54e71e969d0714bb5fdc5d504",
+      "current_english_sha256": "11a73698aa8172de0ddfd7920057ce3196e19f99a163edeb61f22363e058f34b",
+      "previous_russian_sha256": "cc6ad0fae6dbd1b4007581e145111f7dd992a5dc7ff5d69a9f17570beda23450",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.tiger_trap_door.name",
+      "previous_english_sha256": "cb12db1ce615b4c7c88dbefbef6d56eb82d8e25928741853365bd452d71431eb",
+      "current_english_sha256": "5eb6c05d3534d77b1da2a804a72ced6fdaa2840c26c394fc4ed5c2872546dfc0",
+      "previous_russian_sha256": "7fbf61ee651d373ecaf3e902b87b42ed55d73ab02e3705bc4e8ea8346ffd9874",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.willow_trap_door.name",
+      "previous_english_sha256": "63cdfe1f1231c545f45138176943b6b3e5758e208c8d2efa0d57121c536fa41f",
+      "current_english_sha256": "aa887faa19383f2e23ab9dd459f48518124f901374094844ad207e307a73b3e2",
+      "previous_russian_sha256": "6a4cd232c9ceff09951b7424f76bd6c9166313c7c32dd7ddf0cfd7f3ed450b69",
+      "decision": "retain",
+      "reason": "renamed_english_existing_russian_still_describes_item"
+    },
+    {
+      "namespace": "openblocks",
+      "key": "openblocks.gui.credits.content",
+      "previous_english_sha256": "9e2d7dcb42fdc97b5868950d5095244837052fd3b70c5d1f19107f1935da5384",
+      "current_english_sha256": "3a2d2cb38674c3a8c819a6b3f0073c8649ed3d55f7da556f2c46cf24ced92851",
+      "previous_russian_sha256": "ee4657290f7598f9239265e57302ee4cba2214f38a28c63be8ae7899db8db7c3",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "openblocks",
+      "key": "openblocks.gui.welcome.content",
+      "previous_english_sha256": "9136f573c53beecb0c2f30cecf0b491d458589fe370ab31fcdc972cedb257c78",
+      "current_english_sha256": "3f1d2aafae88143be77911defb45add93ca405ff67eba9d0a4a44df0c460983e",
+      "previous_russian_sha256": "ebad0dd4e95f77c72908603ab289f32b7c43fe6cc118cf2b267afa01d361c0e9",
+      "decision": "update",
+      "reason": "source_detail_or_translation_alignment"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "research.FLUXCLEANUP.stage.2",
+      "previous_english_sha256": "9a58481f6c8e877b47d2ca4346b2f6f4b0ceebb8dade8fee1d3122a6a96fa8ad",
+      "current_english_sha256": "288773e2b428a62041b301d695ef7bdbcfabb6918848413050d7198c79d9d2e3",
+      "previous_russian_sha256": "a65215bde1388a0a12454e96b8c23869a9a886b79ec6b4f402a8b0c626e6ce49",
+      "decision": "retain",
+      "reason": "english_typo_grammar_russian_meaning_retained"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "research.FOCUSHEAL.stage.1",
+      "previous_english_sha256": "e58ea7bdd9993d426aff9409ece76a5aaf71020c6cc1ad2460e7cab55705c7db",
+      "current_english_sha256": "fa520aacecc9a1099ad5c106764f1773d7ca04e72942a3a1a6b370a0f85fd70e",
+      "previous_russian_sha256": "8f8091c29f132512b29aa34ee09979bf66a8a175af5e0cdf231d367edab8d3a4",
+      "decision": "retain",
+      "reason": "english_typo_grammar_russian_meaning_retained"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "research.FOCUSSPLIT.stage.1",
+      "previous_english_sha256": "a49bfa512045a909a95d7391c733d7833a6f32b78b9e8ddc6107cfb34dd29377",
+      "current_english_sha256": "411544b088cd4e72e7b89c852b55dee763ca4b148f5163db6e7ac95ea54695f1",
+      "previous_russian_sha256": "b44a1ed07567a2c6e4f64659416659c02891d6ecd1173c0134ad3affc07df3da",
+      "decision": "retain",
+      "reason": "english_typo_grammar_russian_meaning_retained"
+    }
+  ],
+  "game_tested": false
+}
