@@ -109,6 +109,64 @@ def test_memory_cpu_log_limits_are_validated(env):
         spec.settings(env)
 
 
+def test_docker_log_policy_has_independent_validated_overrides():
+    default = spec.settings({})
+    assert spec.docker_log_config(default) == {
+        "Type": "local",
+        "Config": {"max-size": "10m", "max-file": "3"},
+    }
+    override = spec.settings(
+        {"OMK_SLOT_DOCKER_LOG_MIB": "1", "OMK_SLOT_DOCKER_LOG_FILES": "2"}
+    )
+    assert spec.docker_log_config(override) == {
+        "Type": "local",
+        "Config": {"max-size": "1m", "max-file": "2"},
+    }
+    assert override["log_bytes"] == default["log_bytes"] == 4 * 1024**2
+
+
+@pytest.mark.parametrize(
+    "name,value",
+    [
+        ("OMK_SLOT_DOCKER_LOG_MIB", "0"),
+        ("OMK_SLOT_DOCKER_LOG_MIB", "65"),
+        ("OMK_SLOT_DOCKER_LOG_MIB", "1.5"),
+        ("OMK_SLOT_DOCKER_LOG_MIB", "２"),
+        ("OMK_SLOT_DOCKER_LOG_FILES", "0"),
+        ("OMK_SLOT_DOCKER_LOG_FILES", "11"),
+        ("OMK_SLOT_DOCKER_LOG_FILES", "secret-value"),
+    ],
+)
+def test_invalid_docker_log_limits_do_not_echo_values(name, value):
+    with pytest.raises(AdminError, match="Invalid " + name) as error:
+        spec.settings({name: value})
+    assert "secret-value" not in str(error.value)
+
+
+@pytest.mark.parametrize(
+    "policy",
+    [
+        {"docker_log_mib": 1},
+        {"docker_log_files": 2},
+        {"docker_log_mib": True, "docker_log_files": 2},
+        {"docker_log_mib": 1, "docker_log_files": 11},
+    ],
+)
+def test_partial_or_malformed_stored_log_policy_is_refused(policy):
+    with pytest.raises(AdminError):
+        spec.complete_policy(policy)
+
+
+def test_candidate_env_example_matches_consumed_defaults():
+    text = (spec.PROJECT_ROOT / "deploy/candidate-slots.example.env").read_text(
+        encoding="utf-8"
+    )
+    values = dict(
+        line.split("=", 1) for line in text.splitlines() if line.startswith("OMK_SLOT_")
+    )
+    assert len(values) == 8 and spec.settings(values) == spec.settings({})
+
+
 def test_public_metadata_has_real_rsa_key_and_rejects_session_files(configured):
     cfg, entry = configured
     pem = (
