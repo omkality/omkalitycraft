@@ -110,6 +110,10 @@ def data(sample, tmp_path, monkeypatch):
     (world / "betterquesting/QuestProgress.json").write_bytes(
         b'{"keep":"quest-progress"}'
     )
+    (world / "stats").mkdir()
+    (world / "stats" / (player.stem + ".json")).write_bytes(
+        b'{"stat.playOneMinute":72007,"stat.jump":9}'
+    )
     encoded(player.with_suffix(".dat_old"), entity)
     storage, target = tmp_path / "backup", tmp_path / "candidate"
     storage.mkdir()
@@ -161,6 +165,9 @@ def test_fresh_backup_plan_stage_verify_preserve_source_and_all_other_world_file
     )
     after = inventory(target / "world", world_name="world", path_policy="linux-server")
     assert not any(n.startswith("world/DIM-18000/") for n in after)
+    stats = [name for name in before if name.startswith("world/stats/")]
+    assert len(stats) == 1
+    assert (target / stats[0]).read_bytes() == (source / stats[0]).read_bytes()
     assert "world/omk-resource-world.properties" not in after
     for name in (
         "world/level.dat",
