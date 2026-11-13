@@ -96,7 +96,7 @@ public final class GameMetrics {
             if(included++>0) dimensions.append(',');
             dimensions.append('"').append(id).append("\":").append(TickWindow.json((long[])ring));
         }
-        return "{\"schema\":1,\"profile\":\""+profile+"\",\"core_version\":\"0.3.7\",\"boot\":\""+boot+"\",\"sequence\":"+(++sequence)
+        return "{\"schema\":1,\"profile\":\""+profile+"\",\"core_version\":\""+OmkalityCore.VERSION+"\",\"boot\":\""+boot+"\",\"sequence\":"+(++sequence)
             +",\"sampled_at_ms\":"+System.currentTimeMillis()+",\"uptime_ms\":"+ManagementFactory.getRuntimeMXBean().getUptime()
             +",\"running\":true,\"online\":"+((List<?>)online).size()+",\"ticks_total\":"+observedTicks
             +","+throughput

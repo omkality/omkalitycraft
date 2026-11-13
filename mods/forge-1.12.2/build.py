@@ -119,6 +119,16 @@ if args.target in {"all", "core"}:
             str(controls),
             str(project / "tests/java/net/omkality/MaintenanceControlsTest.java"),
             str(project / "tests/java/net/omkality/GameMetricsControlsTest.java"),
+            str(project / "tests/java/net/omkality/WelcomeControlsTest.java"),
+        ],
+        check=True,
+    )
+    subprocess.run(
+        [
+            str(args.java.resolve()),
+            "-cp",
+            os.pathsep.join([str(core), str(controls)]),
+            "net.omkality.WelcomeControlsTest",
         ],
         check=True,
     )
