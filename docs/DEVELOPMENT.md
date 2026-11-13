@@ -1,5 +1,29 @@
 # Разработка OmkalityCraft
 
+## Вторая порция RU и проверка смысла — 13 ноября 2026
+
+#49/P1: 97 changed-EN/unchanged-RU кандидатов разобраны; 67 переводов сохранены,
+30 обновлены (BQ/CT/Natura/OpenBlocks). Уточнены стороны машин, область 7×7×5,
+Tesla Core, Grove Stone и Silk Touch. Удалённые upstream warnings синхронизированы
+как текст, не объявлены подтверждённым исправлением механики.
+
+Ещё 15 EN-записей Extended Crafting guide и 51 missing Roots переведены.
+Всего 191 owned entry, 31 приватный language/config файл; tips первой порции прежние.
+Schema 2 с RU-пинами и 97 hashed review decisions. Узкий bytes-only helper правит
+шесть фрагментов без переноса полного стороннего текста; unknown/ambiguous/stale
+отклоняются. EN guard/placeholders отдельно обязательны. Новых CLI/GUI/API нет.
+
+Red: 19 новых failures /24 прежних passes; green: 43 helper, 50 с CLI. Linux Docker:
+9 data checks +43 unit, readonly non-root named volume, 1 CPU/256 МиБ, no network/socket,
+exit 0/OOM=false. Независимый replay и две композиции совпали; исходные JAR/seed прежние,
+свои scopes удалены. Первый verifier отказал из-за CRLF/LF hash mismatch самого JSON;
+явный LF в композиции устранил причину, проверки хешей не ослаблялись.
+
+Слой не установлен в игру; full RU/runtime I18n/шрифт/книги/обычная игра ещё не приняты.
+OpenAL #163 независим; player manifest/release/VPS прежние, computer-use выключен.
+[Контракт и остаток](DJ2_TRANSLATION_COMPLETION.md),
+[протокол](validation/dj2-russian-meaning-2026-11-13.json).
+
 ## Дополнение готовых переводов актуальной DJ2 — 13 ноября 2026
 
 Владелец выбрал актуальную DJ2; current upstream latest проверен как 2.23.4.
