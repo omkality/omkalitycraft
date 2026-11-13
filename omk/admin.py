@@ -306,6 +306,11 @@ def add_admin_commands(sub):
         "diagnostics", help="Read-only server diagnostic export"
     )
     diagnostics.add_argument("server")
+    playtime = actions.add_parser(
+        "playtime", help="Read saved server play ticks by account UUID"
+    )
+    playtime.add_argument("server")
+    playtime.add_argument("player", help="Minecraft account UUID, not a nickname")
     reports = actions.add_parser(
         "reports", help="Read the private local client incident inbox"
     )
@@ -363,8 +368,13 @@ def run_admin(args):
             result = operator_login(
                 config, args.username, getpass.getpass("Drasl administrator password: ")
             )
-        elif args.admin_action == "diagnostics":
-            result = server_diagnostics(config, args.server)
+        elif args.admin_action in {"diagnostics", "playtime"}:
+            from omk.player_time import saved_playtime  # noqa: PLC0415
+
+            result = {
+                "diagnostics": lambda: server_diagnostics(config, args.server),
+                "playtime": lambda: saved_playtime(config, args.server, args.player),
+            }[args.admin_action]()
         elif args.admin_action == "reports":
             result = client_reports(config, args)
         elif args.admin_action == "recover-account":
