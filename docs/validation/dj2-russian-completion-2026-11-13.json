@@ -21,7 +21,7 @@
     "top_level_jars": 225,
     "same_name_as_candidate": 223,
     "matching_git_blob_ids": 223,
-    "different_version_names_not_imported": [
+    "additional_jars_not_imported": [
       "OptiFineHDUG5.jar",
       "clientfixer-1.12.2-1.9.jar"
     ],
