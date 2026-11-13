@@ -84,6 +84,50 @@ def _check_source_guards(source, changed, guards):
             raise ValueError("Translation source changed or guard is invalid")
 
 
+def _reviewed_text(value):
+    if (
+        not isinstance(value, str)
+        or any(c in value for c in "\r\n\0")
+        or len(value.encode("utf-8")) > MAX_LANG_BYTES
+    ):
+        raise ValueError("Invalid reviewed locale text")
+    return value
+
+
+def _reviewed_edit(value, edit):
+    if not isinstance(edit, dict):
+        raise ValueError("Invalid reviewed locale edit")
+    if edit.get("kind") == "replace" and edit.keys() == {"kind", "old", "new"}:
+        old, new = _reviewed_text(edit["old"]), _reviewed_text(edit["new"])
+        if not old or value.count(old) != 1:
+            raise ValueError("Ambiguous reviewed locale replacement")
+        return value.replace(old, new, 1)
+    if edit.get("kind") == "truncate_before" and edit.keys() == {"kind", "marker"}:
+        marker = _reviewed_text(edit["marker"])
+        if not marker or value.count(marker) != 1:
+            raise ValueError("Ambiguous reviewed locale boundary")
+        return value.partition(marker)[0]
+    raise ValueError("Invalid reviewed locale edit")
+
+
+def edit_reviewed_value(value: str, *, expected_previous_sha256: str, edits) -> str:
+    """Apply bounded literal edits to one pinned RU value; no regex or file writes."""
+    _reviewed_text(value)
+    if (
+        not isinstance(expected_previous_sha256, str)
+        or re.fullmatch(r"[a-f0-9]{64}", expected_previous_sha256) is None
+        or hashlib.sha256(value.encode("utf-8")).hexdigest() != expected_previous_sha256
+    ):
+        raise ValueError("The previous locale value changed or its guard is invalid")
+    if not value or not isinstance(edits, (list, tuple)) or not 1 <= len(edits) <= 8:
+        raise ValueError("Invalid reviewed locale edit count")
+    for edit in edits:
+        value = _reviewed_text(_reviewed_edit(value, edit))
+        if not value:
+            raise ValueError("Reviewed locale edits removed the entire value")
+    return value
+
+
 def render_lang(
     base: bytes,
     english: bytes,

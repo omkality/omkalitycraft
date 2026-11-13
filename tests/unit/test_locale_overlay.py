@@ -2,6 +2,7 @@ import hashlib
 
 import pytest
 
+from omk import locale_overlay
 from omk.locale_overlay import (
     MAX_LANG_BYTES,
     audit_lang,
@@ -134,4 +135,105 @@ def test_valid_source_pin_does_not_disable_placeholder_validation():
             b"x=%d\n",
             updates={"x": "%s"},
             expected_source_sha256={"x": source_pin("%d")},
+        )
+
+
+def test_reviewed_edit_preserves_the_existing_translation_around_a_small_change():
+    previous = "Знакомый текст. Энергия алтаря.%n%nХвост §cкрасный§r."
+    edits = [{"kind": "replace", "old": "Энергия алтаря", "new": "Магическая сила"}]
+    original_edits = [dict(e) for e in edits]
+    result = locale_overlay.edit_reviewed_value(
+        previous, expected_previous_sha256=source_pin(previous), edits=edits
+    )
+    assert result == "Знакомый текст. Магическая сила.%n%nХвост §cкрасный§r."
+    assert edits == original_edits
+
+
+def test_reviewed_edit_requires_the_exact_previous_russian_value():
+    with pytest.raises(ValueError, match="previous"):
+        locale_overlay.edit_reviewed_value(
+            "Более новый перевод",
+            expected_previous_sha256=source_pin("Старый перевод"),
+            edits=[{"kind": "replace", "old": "перевод", "new": "текст"}],
+        )
+
+
+def test_reviewed_suffix_removal_is_exact_and_keeps_other_paragraphs():
+    previous = "Основной текст.%n%nПримечание.%n%n§cСтарое предупреждение."
+    result = locale_overlay.edit_reviewed_value(
+        previous,
+        expected_previous_sha256=source_pin(previous),
+        edits=[{"kind": "truncate_before", "marker": "%n%n§c"}],
+    )
+    assert result == "Основной текст.%n%nПримечание."
+
+
+@pytest.mark.parametrize(
+    "edits",
+    [
+        [],
+        [{"kind": "regex", "old": "x", "new": "y"}],
+        [{"kind": "replace", "old": "x", "new": "y", "extra": 1}],
+        [{"kind": "replace", "old": "", "new": "y"}],
+        [{"kind": "replace", "old": "missing", "new": "y"}],
+        [{"kind": "replace", "old": "x", "new": "y\ninjected=entry"}],
+        [{"kind": "replace", "old": "x", "new": "y\0"}],
+        [{"kind": "truncate_before", "marker": "missing"}],
+        [{"kind": "truncate_before", "marker": ""}],
+        [{"kind": "truncate_before", "marker": "x"}],
+        [{"kind": "replace", "old": "x", "new": "x"}] * 9,
+        [None],
+    ],
+    ids=[
+        "empty",
+        "unknown_operation",
+        "unknown_field",
+        "empty_old",
+        "missing_old",
+        "line_injection",
+        "nul",
+        "missing_marker",
+        "empty_marker",
+        "empty_result",
+        "too_many_edits",
+        "non_object",
+    ],
+)
+def test_reviewed_edit_rejects_ambiguous_or_unbounded_operations(edits):
+    with pytest.raises(ValueError):
+        locale_overlay.edit_reviewed_value(
+            "x", expected_previous_sha256=source_pin("x"), edits=edits
+        )
+
+
+@pytest.mark.parametrize("kind", ["replace", "truncate_before"])
+def test_reviewed_edit_does_not_guess_between_duplicate_fragments(kind):
+    edit = {
+        "kind": kind,
+        **({"old": "x", "new": "y"} if kind == "replace" else {"marker": "x"}),
+    }
+    with pytest.raises(ValueError):
+        locale_overlay.edit_reviewed_value(
+            "x and x", expected_previous_sha256=source_pin("x and x"), edits=[edit]
+        )
+
+
+def test_reviewed_edits_keep_literal_escape_sequences_and_still_need_source_validation():
+    previous = "Начало\\nКлавиша: %s"
+    updated = locale_overlay.edit_reviewed_value(
+        previous,
+        expected_previous_sha256=source_pin(previous),
+        edits=[{"kind": "replace", "old": "Начало", "new": "Вступление"}],
+    )
+    assert updated == "Вступление\\nКлавиша: %s"
+    with pytest.raises(ValueError, match="contract"):
+        render_lang(b"", b"x=Key: %d", additions={"x": updated})
+
+
+def test_reviewed_edit_checks_utf8_byte_budget_after_expansion():
+    with pytest.raises(ValueError):
+        locale_overlay.edit_reviewed_value(
+            "x",
+            expected_previous_sha256=source_pin("x"),
+            edits=[{"kind": "replace", "old": "x", "new": "я" * MAX_LANG_BYTES}],
         )
