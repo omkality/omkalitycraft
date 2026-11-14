@@ -67,7 +67,7 @@ def build_release(
                 "size": path.stat().st_size,
                 "sha256": sha256_file(path),
                 "executable": relative == launch["java"]
-                or (platform != "windows-x64" and os.access(path, os.X_OK)),
+                or (platform != "windows-x64" and bool(path.stat().st_mode & 0o111)),
             }
         )
     return sign_release(
