@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "date": "2026-11-14",
+  "issue": 172,
+  "launcher_version": "0.3.0.dev14",
+  "scope": "Signed release-asset transport and headless file preparation",
+  "windows": {"focused_tests": 92, "failures": 0},
+  "linux": {
+    "focused_tests": 92,
+    "failures": 0,
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "network": "none",
+    "user": "65534:65534",
+    "read_only_inputs": true,
+    "docker_socket_mounted": false,
+    "memory_mib": 256,
+    "cpus": 1,
+    "exit_code": 0,
+    "oom_killed": false,
+    "owned_container_removed": true
+  },
+  "dependencies_checked_against_uv_lock": {
+    "tuf": "7.0.1",
+    "cryptography": "50.0.2",
+    "packaging": "26.1",
+    "pydantic": "2.12.5",
+    "litestar": "2.21.1"
+  },
+  "coverage": [
+    "Existing real TUF root/targets/snapshot/timestamp verification, expiry and rollback guards",
+    "Signed version/platform-specific GitHub URL; no account, PAT or latest API",
+    "Direct 200 and bounded manual HTTPS CDN redirect policy",
+    "404/429/503, timeout and interrupted-stream retry from byte zero on the original CDN",
+    "Hash/length and redirect failures rejected before extraction",
+    "Unsigned URL tampering and signed invalid source policy rejected before asset requests",
+    "Verified cache, separate version folders and previous mocked health-handoff checks",
+    "Metadata outage and corrupt fallback preserve the active version and personal files",
+    "Existing CLI extended without live publishing; other platform targets preserved",
+    "Existing signed pack minimum-launcher checks still block preparation/install/Java startup"
+  ],
+  "http_fixture": "Real loopback HTTP with test-only mapping of GitHub/CDN HTTPS URLs",
+  "live_github_tls_asset_tested": false,
+  "player_network_access_tested": false,
+  "new_packaged_gui_handoff_tested": false,
+  "minecraft_started": false,
+  "computer_use_used": false,
+  "mcp_used": false,
+  "player_release_published": false,
+  "vps_deployed": false,
+  "ready_for_players": false,
+  "warnings": ["Existing Litestar import warns about Pydantic V1 compatibility with Python 3.14; selected tests passed"]
+}

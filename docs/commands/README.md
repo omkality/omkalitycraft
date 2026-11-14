@@ -200,7 +200,7 @@ backup → возврат того же Docker-контейнера и `reconcil
 | `uv run omk lab dj2-rtp --help` | Linux DJ2: RTP текущего мира, Nether/TF, ограничения и два одновременных запроса; [конфигурация и проверки](../DIMENSION_RTP.md) |
 | `uv run omk lab dj2-wrcbe --help` | Изолированный Linux DJ2: callback WR-CBE при остановке и связь после restart; default 2.21.3, проверенный `--pack-version 2.23.4` выбирает точные target pins. [Артефакты/параметры/границы](../WRCBE_SHUTDOWN.md) |
 | `uv run omk release pack --help` | Подписать подготовленный релиз сборки локально |
-| `uv run omk release launcher --help` | Подготовить подписанное обновление лаунчера |
+| `uv run omk release launcher --help` | Подготовить подписанное обновление; `--github-asset-url` задаёт versioned GitHub ZIP с проверенным VPS fallback |
 
 Команд CLI для вайпа рабочего мира/сервера пока нет. Игровые административные команды
 в справочнике не запускались на исходном сервере ради составления списка.
