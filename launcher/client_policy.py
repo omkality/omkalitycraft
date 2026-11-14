@@ -19,6 +19,27 @@ class InitialConfig:
     content: dict
 
 
+def _initial_options(raw: dict) -> tuple[tuple[str, str], ...]:
+    if not isinstance(raw, dict) or set(raw) - {
+        "bobView",
+        "gamma",
+        "autoJump",
+        "guiScale",
+        "fov",
+    }:
+        raise ValueError("Unsupported initial game options")
+    for key, value in raw.items():
+        valid = (
+            (key in {"bobView", "autoJump"} and type(value) is bool)
+            or (key == "gamma" and type(value) in {int, float} and 0 <= value <= 1)
+            or (key == "guiScale" and type(value) is int and 0 <= value <= 3)
+            or (key == "fov" and type(value) in {int, float} and -1 <= value <= 1)
+        )
+        if not valid:
+            raise ValueError("Invalid initial game option value")
+    return tuple((key, str(value).lower()) for key, value in raw.items())
+
+
 def _initial_configs(raw: list) -> tuple[InitialConfig, ...]:
     # Explicit adapter allowlist: these are personal JSON settings, never maps,
     # waypoints, executable files or globally managed pack configuration.
@@ -56,6 +77,7 @@ class ClientDefaults:
     servers: tuple[DefaultServer, ...] = ()
     initial_configs: tuple[InitialConfig, ...] = ()
     initial_keybindings: tuple[tuple[str, int], ...] = ()
+    initial_options: tuple[tuple[str, str], ...] = ()
 
     @classmethod
     def parse(cls, value: dict):
@@ -66,6 +88,7 @@ class ClientDefaults:
             "servers",
             "initial_configs",
             "initial_keybindings",
+            "initial_options",
         }:
             raise ValueError("Invalid client defaults")
         packs = value.get("required_resourcepacks", [])
@@ -114,7 +137,13 @@ class ClientDefaults:
         ):
             raise ValueError("Invalid initial keybindings")
         return cls(
-            tuple(packs), language, unicode_font, servers, configs, tuple(keys.items())
+            tuple(packs),
+            language,
+            unicode_font,
+            servers,
+            configs,
+            tuple(keys.items()),
+            _initial_options(value.get("initial_options", {})),
         )
 
 

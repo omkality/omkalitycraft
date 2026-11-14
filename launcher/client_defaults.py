@@ -48,6 +48,9 @@ def _options(folder: Path, defaults: ClientDefaults) -> None:
         changed["lang"] = defaults.language
     if defaults.unicode_font is not None:
         changed["forceUnicodeFont"] = str(defaults.unicode_font).lower()
+    changed.update(
+        (key, value) for key, value in defaults.initial_options if key not in options
+    )
     key_record = local_file(folder, ".omk-initial-keybindings.json")
     previous_keys = set()
     if defaults.initial_keybindings and path.exists() and key_record.exists():
@@ -172,6 +175,7 @@ def prepare_client_defaults(release: Release, folder: Path) -> None:
             or defaults.language
             or defaults.unicode_font is not None
             or defaults.initial_keybindings
+            or defaults.initial_options
         ):
             _options(folder, defaults)
         _servers(folder, defaults)

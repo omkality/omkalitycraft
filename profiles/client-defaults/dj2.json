@@ -5,6 +5,13 @@
   "language": "ru_ru",
   "force_unicode_font": false,
   "servers": [],
+  "initial_options": {
+    "bobView": false,
+    "gamma": 1.0,
+    "autoJump": false,
+    "guiScale": 2,
+    "fov": 0.25
+  },
   "initial_keybindings": {
     "key.betterquesting.quests": 37,
     "Переключить режим Очков с сенсорами": 88,
