@@ -20,6 +20,10 @@ def add_release_commands(subparsers) -> None:
     launcher.add_argument("--keys-dir", type=Path, required=True)
     launcher.add_argument("--archive", type=Path, required=True)
     launcher.add_argument("--entrypoint", required=True)
+    launcher.add_argument(
+        "--github-asset-url",
+        help="Versioned public launcher ZIP URL; signed in TUF with CDN fallback",
+    )
     pack = actions.add_parser("pack", help="Sign a prepared modpack files directory")
     pack.add_argument("--files", type=Path, required=True)
     pack.add_argument("--launch-profile", type=Path, required=True)
@@ -47,6 +51,7 @@ def prepare_release(args: argparse.Namespace) -> dict:
             args.version,
             args.entrypoint,
             platform=args.platform,
+            github_asset_url=getattr(args, "github_asset_url", None),
         )
         return {"ok": True, "trusted_root": str(root), "deployed": False}
     if args.private_key.resolve().is_relative_to(args.files.resolve()):

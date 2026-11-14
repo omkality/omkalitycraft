@@ -1,6 +1,7 @@
 """TUF-verified updates, isolated version folders and a health-checked handoff."""
 
 import contextlib
+import http.client
 import json
 import os
 import re
@@ -15,15 +16,19 @@ from dataclasses import dataclass
 from pathlib import Path
 from secrets import token_hex
 from urllib.error import HTTPError
+from urllib.parse import urljoin
+from urllib.request import Request
 
 from packaging.version import InvalidVersion, Version
 from tuf.api import exceptions
+from tuf.api.metadata import TargetFile
 from tuf.ngclient import Updater
 from tuf.ngclient.config import UpdaterConfig
 from tuf.ngclient.fetcher import FetcherInterface
 
 from launcher.install import current_platform
 from launcher.releases import ReleaseError, inside, safe_path
+from launcher.update_sources import github_asset_redirect, github_asset_url
 from omk.drasl import DraslClient
 from omk.fs import resolved
 
@@ -35,6 +40,10 @@ class UpdateError(ReleaseError):
     pass
 
 
+class GitHubAssetUnavailable(exceptions.DownloadError):
+    """Availability failure; retry the same signed target from the original CDN."""
+
+
 class PortableFetcher(FetcherInterface):
     """Use the launcher's transport and its own temporary folder, including TUF."""
 
@@ -42,12 +51,18 @@ class PortableFetcher(FetcherInterface):
         self, origin: str, temporary: Path, progress: Callable[[str], None]
     ) -> None:
         self.transport = DraslClient(origin, timeout=15)
+        self.github = DraslClient("https://github.com", timeout=15)
+        self.github_asset: tuple[str, int] | None = None
+        self.github_target_urls: set[str] = set()
         self.temporary, self.progress = temporary, progress
         temporary.mkdir(parents=True, exist_ok=True)
 
     def _fetch(self, url: str) -> Iterator[bytes]:
         if not url.startswith(self.transport.base_url + "/"):
             raise UpdateError("Обновление запросило другой сервер.")
+        if self.github_asset is not None and url in self.github_target_urls:
+            yield from self._github_asset(*self.github_asset)
+            return
         try:
             with self.transport._opener.open(url, timeout=15) as response:
                 count = 0
@@ -62,6 +77,62 @@ class PortableFetcher(FetcherInterface):
             raise exceptions.DownloadHTTPError(
                 "Update download failed", status
             ) from None
+
+    def use_github_asset(self, target: TargetFile, url: str) -> None:
+        """Called only for the target returned by the verified TUF metadata chain."""
+        base = self.transport.base_url + "/updates/targets/"
+        dirname, _, filename = target.path.rpartition("/")
+        self.github_target_urls = {base + target.path} | {
+            f"{base}{dirname}/{digest}.{filename}" for digest in target.hashes.values()
+        }
+        self.github_asset = (url, target.length)
+
+    def _github_asset(self, url: str, expected_length: int) -> Iterator[bytes]:
+        visited = set()
+        try:
+            for _ in range(4):
+                if url in visited:
+                    raise UpdateError("Зацикленное перенаправление обновления.")
+                visited.add(url)
+                request = Request(
+                    url,
+                    headers={
+                        "Accept": "application/octet-stream",
+                        "User-Agent": "OmkalityCraft-Updater",
+                    },
+                )
+                try:
+                    response = self.github._opener.open(request, timeout=15)
+                except HTTPError as error:
+                    status, location = error.code, error.headers.get("Location")
+                    error.close()
+                    if status in {301, 302, 303, 307, 308} and location:
+                        try:
+                            if any(
+                                ord(char) <= 32 or char == "\\" for char in location
+                            ):
+                                raise ValueError("Invalid redirect characters")
+                            url = github_asset_redirect(urljoin(url, location))
+                        except ValueError:
+                            raise UpdateError(
+                                "Недопустимое перенаправление обновления."
+                            ) from None
+                        continue
+                    raise GitHubAssetUnavailable("GitHub asset unavailable") from None
+                with response:
+                    if response.status != 200:
+                        raise GitHubAssetUnavailable("GitHub asset unavailable")
+                    count = 0
+                    while chunk := response.read(256 * 1024):
+                        count += len(chunk)
+                        self.progress(f"Обновляем лаунчер · {count / 1024**2:.1f} МБ")
+                        yield chunk
+                    if count < expected_length:
+                        raise GitHubAssetUnavailable("GitHub asset interrupted")
+                    return
+            raise UpdateError("Слишком много перенаправлений обновления.")
+        except OSError, http.client.HTTPException:
+            raise GitHubAssetUnavailable("GitHub asset unavailable") from None
 
     @contextlib.contextmanager
     def download_file(self, url: str, max_length: int):
@@ -95,7 +166,11 @@ def atomic_json(path: Path, document: dict) -> None:
 
 class LauncherUpdater:
     def __init__(self, root: Path, origin: str, bootstrap: bytes, version: str) -> None:
-        self.root, self.origin, self.bootstrap = resolved(root), origin, bootstrap
+        self.root, self.origin, self.bootstrap = (
+            resolved(root),
+            origin.rstrip("/"),
+            bootstrap,
+        )
         self.version = Version(version)
         self.cache = self.root / "userdata" / "updates"
         self.state_file = self.cache / "state.json"
@@ -130,12 +205,13 @@ class LauncherUpdater:
         targets = self.cache / "downloads"
         for folder in [metadata, targets]:
             folder.mkdir(parents=True, exist_ok=True)
+        fetcher = PortableFetcher(self.origin, self.cache / "tmp", progress)
         updater = Updater(
             str(metadata),
             f"{self.origin}/updates/metadata/",
             str(targets),
             f"{self.origin}/updates/targets/",
-            PortableFetcher(self.origin, self.cache / "tmp", progress),
+            fetcher,
             UpdaterConfig(max_root_rotations=32),
             bootstrap=self.bootstrap,
         )
@@ -163,6 +239,9 @@ class LauncherUpdater:
                 )
             if target.length > MAX_ARCHIVE:
                 raise ValueError
+            asset = target.custom.get("github_asset_url")
+            if asset is not None:
+                github_asset_url(asset, version, current_platform())
         except KeyError, TypeError, ValueError, InvalidVersion:
             raise UpdateError("Описание обновления повреждено.") from None
         active = self.active()
@@ -173,9 +252,7 @@ class LauncherUpdater:
             and active.entrypoint.relative_to(active.folder).as_posix() == entrypoint
         ):
             return active
-        archive = targets / f"{digest}.zip"
-        if updater.find_cached_target(target, str(archive)) is None:
-            updater.download_target(target, str(archive))
+        archive = self._download_archive(updater, fetcher, target, asset)
         progress("Подготавливаем новую версию…")
         folder = inside(self.root, f"app_versions/{version}-{digest[:12]}")
         # Never trust a leftover extracted directory: recreate from the verified archive.
@@ -186,6 +263,29 @@ class LauncherUpdater:
         if os.name != "nt":
             executable.chmod(executable.stat().st_mode | stat.S_IXUSR)
         return PreparedUpdate(version, folder, executable, digest)
+
+    def _download_archive(
+        self,
+        updater: Updater,
+        fetcher: PortableFetcher,
+        target: TargetFile,
+        asset: str | None,
+    ) -> Path:
+        archive = self.cache / "downloads" / f"{target.hashes['sha256']}.zip"
+        if updater.find_cached_target(target, str(archive)) is not None:
+            return archive
+        if asset is None:
+            updater.download_target(target, str(archive))
+            return archive
+        fetcher.use_github_asset(target, asset)
+        try:
+            updater.download_target(target, str(archive))
+        except GitHubAssetUnavailable:
+            # A new TUF temporary file restarts from byte zero. Never append
+            # mirror bytes to an interrupted primary-source stream.
+            fetcher.github_asset = None
+            updater.download_target(target, str(archive))
+        return archive
 
     def _extract(self, archive: Path, destination: Path) -> None:
         stage = destination.with_name(destination.name + ".staging")
