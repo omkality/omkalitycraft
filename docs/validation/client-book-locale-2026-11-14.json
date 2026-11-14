@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "date": "2026-11-14",
+  "scope": "Optional client book labels; not full player release acceptance",
+  "issues": [
+    49,
+    174
+  ],
+  "artifact": {
+    "component": "OmkalityClient",
+    "version": "0.1.2",
+    "sha256": "1fb46d6dfbcf394acd12ddc79c475720dc7d2470191f51d611d1750dbc2a45bb",
+    "runtime_classes": 15,
+    "unchanged_previous_classes": 10,
+    "core_version": "0.3.8",
+    "dj2fix_version": "0.1.4",
+    "core_and_dj2fix_unchanged": true
+  },
+  "root_cause": {
+    "failed_private_prototype": "Ordinary mod classes requested in early Mixin phase",
+    "fix": "ILateMixinLoader and separate mixin package",
+    "second_finding": "Missing pack.mcmeta invoked legacy language adapter",
+    "resource_format": 3,
+    "failed_prototype_published": false
+  },
+  "fixtures": {
+    "jvm_conditions_per_build": 95,
+    "resource_tests_windows": 9,
+    "resource_tests_linux_docker": 9,
+    "negative_resource_controls": 8,
+    "canonical_identical_builds": 2,
+    "source_boundary_files": 118,
+    "fixtures_are_not_native_transformations": true
+  },
+  "native": {
+    "client": "Windows DJ2 2.23.4 Forge14.23.5.2860",
+    "server": "isolated Linux Docker",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "server_memory_mib": 6144,
+    "server_cpus": 4,
+    "strict_mod_count": 258,
+    "private_book_probe_present": false,
+    "external_locale_control_present": false,
+    "canonical_cold_launch": true,
+    "xu2_cover_and_toc_russian": true,
+    "roots_edition_russian": true,
+    "xu2_pages": 82,
+    "xu2_first_middle_last_destinations_verified": true,
+    "ru_en_ru_on_content_identical_prototype": true,
+    "zero_and_developer_subtitles_preserved": true,
+    "initial_pages": 18,
+    "author_preserved": true,
+    "starting_items": 3,
+    "repeat_join_millis": 2843,
+    "repeat_join_gui_open": false,
+    "client_exit": 0,
+    "server_exit": 0,
+    "server_oom": false,
+    "crash_reports": 0,
+    "owned_scopes_removed": true,
+    "baseline_warning": "PlusTiC optional Construct Armory capability missing superclass also present in accepted0.1.1 lab; not a new book Mixin failure",
+    "unrelated_lab_incident": "Unattended actor drowned at initial terrain position; respawned onto owned safe platform; final lifecycle repeated alive"
+  },
+  "layout_metrics": {
+    "entries": 447,
+    "build_errors": 0,
+    "wide_titles": 0,
+    "text_boxes": 4566,
+    "conservative_margin": 146,
+    "soft_margin_crossings": 109,
+    "actual_page_height": 156,
+    "maximum_nonempty_glyph_bottom": 154,
+    "glyph_runs_beyond_height": 0,
+    "trailing_blank_cursor_bottom": 167,
+    "every_page_visually_reviewed": false
+  },
+  "rollback": {
+    "managed_resources": 228,
+    "real_resource_reload_after_rollback_and_reapply": true,
+    "options_preserved": true,
+    "map_configs_preserved_in_separate_file_cycle": 7,
+    "shared_script_changed_during_resource_rollback": false,
+    "full_jar_flag_script_world_rollback_accepted": false
+  },
+  "limits": [
+    "No player manifest, Release or VPS change",
+    "Full integrated rollback remains issue171",
+    "All-page visual review and full gameplay regression are not claimed",
+    "No Linux or macOS graphical game acceptance in this batch"
+  ],
+  "ready_for_players": false
+}
