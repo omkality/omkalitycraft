@@ -1,0 +1,506 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "ready_for_players": false,
+  "scope": "Reviewed Russian Roots modifier-page layout; no release activation",
+  "roots_jar_sha256": "ee43b8a6ee89100874b363b538bea3d7016f8ad5268fbb7e113493e8f7e8bb94",
+  "patchouli_jar_sha256": "8fcceac75c71e0d041db734111200205d03431b7e8646f8209cf2c4de9afef7b",
+  "stage": "after reviewed player translation, Quick Start pagination and book-reference-repairs",
+  "template": {
+    "path": "resources/roots/patchouli_books/roots_guide/ru_ru/templates/spell_modifier_template.json",
+    "before_sha256": "9ab7511418dd8fafaef05f1e10f68ae890366b6b2d11a2671edb1db0c799525f",
+    "after_sha256": "23689c57a4f258b6bf0471cbb4f6dbf33234c896173d89c8e3278e63d6cc6d72",
+    "replacement": {
+      "processor": "epicsquid.roots.integration.patchouli.SpellModifierProcessor",
+      "components": [
+        {
+          "type": "text",
+          "text": "#name",
+          "x": 0,
+          "y": -2,
+          "max_width": 116,
+          "line_height": 9,
+          "guard": "#omk_layout_stats"
+        },
+        {
+          "type": "image",
+          "image": "roots:textures/gui/patchouli/elements.png",
+          "x": 45,
+          "y": 39,
+          "u": 0,
+          "v": 0,
+          "width": 24,
+          "height": 24,
+          "guard": "#omk_layout_stats"
+        },
+        {
+          "type": "item",
+          "item": "#core",
+          "framed": false,
+          "x": 49,
+          "y": 43,
+          "guard": "#omk_layout_stats"
+        },
+        {
+          "type": "text",
+          "text": "#cost",
+          "x": 71,
+          "y": 47,
+          "max_width": 45,
+          "line_height": 9,
+          "guard": "#omk_layout_stats"
+        },
+        {
+          "type": "header",
+          "text": "Затраты",
+          "x": -1,
+          "y": 70,
+          "guard": "#omk_layout_stats"
+        },
+        {
+          "type": "text",
+          "text": "#additions",
+          "x": 0,
+          "y": 84,
+          "max_width": 116,
+          "line_height": 9,
+          "guard": "#omk_layout_stats"
+        },
+        {
+          "type": "text",
+          "text": "Описание — далее.",
+          "x": 0,
+          "y": 136,
+          "max_width": 116,
+          "line_height": 9,
+          "guard": "#omk_layout_stats"
+        },
+        {
+          "type": "text",
+          "text": "#description",
+          "x": 0,
+          "y": 0,
+          "max_width": 116,
+          "line_height": 9,
+          "guard": "#omk_layout_details"
+        },
+        {
+          "type": "text",
+          "text": "#conflicts",
+          "x": 0,
+          "y": 66,
+          "max_width": 116,
+          "line_height": 8,
+          "guard": "#omk_layout_details"
+        }
+      ]
+    }
+  },
+  "expected_type": "spell_modifier_template",
+  "guards": [
+    "omk_layout_stats",
+    "omk_layout_details"
+  ],
+  "entries": [
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_acid_cloud.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "c812d93db1b9fd410ac55163cffd90b0fbd0a3bd08febed3219cead97a881f6c",
+      "after_sha256": "f8cc57a39c298482abf5f277fca0f5be258446402c7e7c5f62ce5cdc9b641553"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_aqua_bubble.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "before_sha256": "80d3c04fb965f4518412d7d3344b7b0976630a1edb9b0666753238f685df9582",
+      "after_sha256": "f05ddff27658608bb65d8c70571740fb7a675a32b3e090071fcf44fa23ec89fd"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_augment.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "067e29ee03b06281ccec1d5ad2167d7e9f3102c6e89fb647bcbaee91ca7b69b3",
+      "after_sha256": "311996e2296871822e05ce759026cdbdbe96d8b91638edbd6e037a19dfaa06d7"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_dandelion_winds.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "cce86f85459ab85a49bdffae0c30f11979512ba2450557542f72dd0ed3eec5e3",
+      "after_sha256": "e21c27cc55cf91e70d6f5ea051f02e02614dd4349784b2b1d780e87b68724d58"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_desaturate.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "before_sha256": "3276ee316fd0418383553e2afe7c564ab36264f08e66c3f192f11aee75d2f3a7",
+      "after_sha256": "40dec83efa6c62da5d3c260ec2084f2c9af1f42a48b405b208da2975ade28689"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_disarm.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "before_sha256": "469c25801f87d876e492d57676c38ed52cabb3da44a3673ee4680372b3c82690",
+      "after_sha256": "38746bfea7709da65f95a4c04c8fe87c4f5791ada404882bf356086df9d717b4"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_extension.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "f5a2aec9cc62d1eac68f4fe4c11d0ab59feea2da6bf7958b249e62c2b4c9d4ac",
+      "after_sha256": "cf7cab97c44d298b125c360be1509bb03ed17fd83bc28f1c807ab7f666eb3bd3"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_fey_light.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "fa35c2bbc0d2600c8a2dbc2746ba391d176c512492f4960b904da9721e826530",
+      "after_sha256": "3eebf730b42ac0dfe5a8f257987df72f876735118d5c735086f87b151133b4dd"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_geas.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "before_sha256": "99564f8477916f64d34825300ff1d8efc071e2e154923ca2aaec219047e13bab",
+      "after_sha256": "480cab6d37e83bcbb293bf18ed8687f9049c8d15aa738e5db287a142c9abba97"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_growth_infusion.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "b78f2f38614419c1320ccc50514c6e44b18f0dff832edcb23849ff782687866b",
+      "after_sha256": "22e913423b0616dd68ecdda5836ff4a1ee3424e7a73dd4ad060a8e9b26d9c2fd"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_harvest.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "before_sha256": "2dc4e5e4a4e2d01acf1d2ac9cfd14fa987bdac70bf123274fc059e50e94abfdd",
+      "after_sha256": "8e0e443102ff351fed634ae7483949d140225ac4550cea13f69bdc50369e0f67"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_life_drain.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "before_sha256": "a5c323963271751157a504d0fc11e6460efc5904ba9bd1843ed4a004173d6fd1",
+      "after_sha256": "2b2910f872011d0f4ab8a6e3a83df501efa09897758b57391642f889fd16d999"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_natures_scythe.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "c620251399a599163b2c48a9ff43f75234cf5e225b0f43ba2fd7769157038b62",
+      "after_sha256": "5420a23537c36b5c80ad8a7d4357eac1e8692648c34c276ad1740e5e9f49fb8b"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_petal_shell.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "d4ea556aa53c0193ca7b370a9945a9fff186aba16b314bddce43593f73eea494",
+      "after_sha256": "1ced0918565dc54e8218030d530f83d8001637e47f28e104ef2b712f30c7a82e"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_radiance.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "before_sha256": "92f6ed5cf9ee8444e1b46f934e9e416c6ab2cb37390bc831bcab3e4327b43e38",
+      "after_sha256": "84260737f83dcc47a7c97a158662f63b0661576fd90d5ab1af2dc915492f3ef7"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_rose_thorns.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "6cfc71b32a1f37cae02918b7e8c20e851b01022a352de097ce0b1e05cf60beb8",
+      "after_sha256": "4fa17428ea350453bcb8cba7e337af091c67601b01abfac855211f322d8dfd1c"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_sanctuary.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "before_sha256": "74255bb1cb912c705f0f524d543580f54fc98f71d3ce4203813ab363ef238c88",
+      "after_sha256": "423e2817f89e7001430ab5423dfbc654d37365debb5f9dd30b7b7a5490819f15"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_saturate.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "before_sha256": "6558103b5f0391c75401a1066a3cf132324fad5d31f9888933fa6494857380d4",
+      "after_sha256": "ae323f43c2d7eac505db4d912fb6ccae2fcf29715aa5b21f30d03a9d0e6e7a3b"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_shatter.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "2f3dc55e433f9897093d2d364332595f84455ca326edeb0b1e3120828691a1eb",
+      "after_sha256": "e5e3895073f661a7129728acb356df52cca3f3a86d102ccfc6d022a266f7fd42"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_sky_soarer.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "81fd7e80bb4c8616332b2151f882ebee19fd6687e75b5894b9a0628f7fd8b6d6",
+      "after_sha256": "099422c954cd36a44f94ac9601e0f13b54dd1a9f13a31eeb1391262aba71bfa0"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_storm_cloud.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "20554330f5c460d062cad1a08cb6cda5852fcaf57c820e3977b338e41c175387",
+      "after_sha256": "1959e4d6638afd48ea2724e757164e9eab142956c81dee0c3948d9eb5d8fed64"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_time_stop.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "before_sha256": "6c353b8f52240c77070bf2ccc5acbb85cf5c4e0b5c64b54e2b2e12ebf551c100",
+      "after_sha256": "e73a10e4ddbffd27b51f305bfb66a8063a9c7ebf521e3f1f2acb649094792b4f"
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_wild_fire.json",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "before_sha256": "56ebaa93761dcbc15683293fc9a4991c51ddcd3ca0cfe4c89bd4c69786295725",
+      "after_sha256": "72c20630f966e117de6b73f3bb3aced20775ae097ba3122ee73f07a07848fa91"
+    }
+  ],
+  "native_acceptance": {
+    "active_modifier_cards": 193,
+    "inactive_cards_existing_flags": 27,
+    "entry_build_errors": 0,
+    "exact_live_field_comparisons": 1544,
+    "viewport_sizes": [
+      [
+        1280,
+        800
+      ],
+      [
+        854,
+        480
+      ]
+    ],
+    "ordinary_client_without_probe": true,
+    "ordinary_client_scope": "Cold Linux Docker server and Windows graphical client, strict258 mods; representative book pages; normal quit and server stop, exit0/noOOM"
+  }
+}
