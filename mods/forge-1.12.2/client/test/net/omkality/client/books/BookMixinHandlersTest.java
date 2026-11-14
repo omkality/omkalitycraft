@@ -2,6 +2,7 @@ package net.omkality.client.books;
 import java.lang.reflect.Method;
 import net.omkality.client.mixin.books.ExtraUtilitiesBookLabelsMixin;
 import net.omkality.client.mixin.books.PatchouliEditionMixin;
+import net.omkality.client.mixin.books.RootsModifierCostLabelMixin;
 import net.minecraft.client.resources.I18n;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /** Calls the compiled handler methods; this is not a Mixin transformation test. */
@@ -30,6 +31,14 @@ public final class BookMixinHandlersTest {
             CallbackInfoReturnable<String> result=new CallbackInfoReturnable<String>("test",true,"3rd");edition.invoke(null,3,result);check(!result.isCancelled());check(result.getReturnValue().equals("3rd"));
         }
         I18n.locale="ru_ru";I18n.values.clear();check(cover.invoke(null,original).equals(original));check(toc.invoke(null,originalToc).equals(originalToc));
+        Method missing=RootsModifierCostLabelMixin.class.getDeclaredMethod("omkality$missingCost",String.class);missing.setAccessible(true);
+        String missingKey="omkalityclient.books.modifier.missing_cost",missingOriginal="Invalid cost.";
+        I18n.values.put(missingKey,"Не задано");check(missing.invoke(null,missingOriginal).equals("Не задано"));
+        for(String locale:new String[]{"en_us","de_de","uk_ua"}){I18n.locale=locale;check(missing.invoke(null,missingOriginal).equals(missingOriginal));}
+        I18n.locale="ru_ru";I18n.values.clear();check(missing.invoke(null,missingOriginal).equals(missingOriginal));
+        I18n.values.put(missingKey,"");check(missing.invoke(null,missingOriginal).equals(missingOriginal));
+        I18n.values.put(missingKey,null);check(missing.invoke(null,missingOriginal).equals(missingOriginal));
+        I18n.values.put(missingKey,"Данные отсутствуют");check(missing.invoke(null,missingOriginal).equals("Данные отсутствуют"));
         System.out.println("compiled book handler checks="+checks);
     }
 }

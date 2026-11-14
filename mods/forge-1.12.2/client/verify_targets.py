@@ -32,7 +32,12 @@ def verify_book_resources(resources: Path) -> int:
             "minVersion": "0.8.5",
             "package": "net.omkality.client.mixin.books",
             "compatibilityLevel": "JAVA_8",
-            "client": ["ExtraUtilitiesBookLabelsMixin", "PatchouliEditionMixin"],
+            "client": [
+                "ExtraUtilitiesBookLabelsMixin",
+                "PatchouliEditionMixin",
+                "BewitchmentRitualLabelsMixin",
+                "RootsModifierCostLabelMixin",
+            ],
             "injectors": {"defaultRequire": 1},
         }:
             raise ValueError("Book mixins must have their own package")
@@ -40,10 +45,25 @@ def verify_book_resources(resources: Path) -> int:
             "en_us": (
                 "Extra Utilities 2\\nManual\\n(temp GUI stand in)",
                 "Table of Contents\\n\\n",
+                "Starting Cost:",
+                "Running Cost:",
+                "Invalid cost.",
             ),
-            "ru_ru": ("Extra Utilities 2\\nРуководство", "Оглавление\\n\\n"),
+            "ru_ru": (
+                "Extra Utilities 2\\nРуководство",
+                "Оглавление\\n\\n",
+                "Запуск:",
+                "Расход:",
+                "Не задано",
+            ),
         }
-        for locale, (cover, contents) in expected.items():
+        for locale, (
+            cover,
+            contents,
+            starting,
+            running,
+            missing_cost,
+        ) in expected.items():
             path = resources / "assets/omkalityclient/lang" / (locale + ".lang")
             entries = [
                 line.split("=", 1)
@@ -55,6 +75,9 @@ def verify_book_resources(resources: Path) -> int:
                 "omkalityclient.books.locale": locale,
                 "omkalityclient.books.xu2.cover": cover,
                 "omkalityclient.books.xu2.contents": contents,
+                "omkalityclient.books.ritual.starting": starting,
+                "omkalityclient.books.ritual.running": running,
+                "omkalityclient.books.modifier.missing_cost": missing_cost,
             }
             if len(entries) != len(values) or values != wanted:
                 raise ValueError("Unexpected client book language labels")
