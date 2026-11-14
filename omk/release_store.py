@@ -252,6 +252,8 @@ class ReleaseStore:
                     raise ValueError("Release payload changed during copying")
                 writer.write(chunk)
             writer.flush()
+            if os.name != "nt":
+                os.fchmod(writer.fileno(), 0o755 if artifact.executable else 0o644)
             os.fsync(writer.fileno())
         if count != artifact.size or sha256_file(target) != artifact.sha256:
             raise ValueError("Release payload changed during copying")

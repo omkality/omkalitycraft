@@ -4,9 +4,9 @@
   "issue": 171,
   "scope": "Opt-in local retention of signed client payloads before manifest output replacement",
   "launcher_version_unchanged": "0.3.0.dev14",
-  "windows": {"passed": 122, "skipped_symlink_privilege": 1, "failures": 0},
+  "windows": {"passed": 122, "skipped_symlink_privilege": 1, "skipped_posix_mode": 1, "failures": 0},
   "linux": {
-    "passed": 123,
+    "passed": 124,
     "failures": 0,
     "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
     "readonly_source_unchanged": true,
@@ -33,6 +33,7 @@
     "Cooperative writer exclusion and injected disk/manifest replace failures",
     "Real child-process termination mid-copy; previous generation verifies and interrupted stage blocks new publication",
     "CLI snapshot-root argument and environment, output/key boundary checks",
+    "POSIX executable modes from signed metadata and republishing old bytes as a new signed generation on a noexec preparation mount; minimum launcher retained",
     "Existing signed minimum-launcher, TUF/HTTP source/fallback and update API tests"
   ],
   "fixture_payload": "Small synthetic bytes; no Java or modpack payload execution",

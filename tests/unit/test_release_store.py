@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -11,6 +12,7 @@ from unittest.mock import patch
 import pytest
 
 from launcher.releases import ReleaseError, read_release
+from launcher.version import VERSION
 from omk.backup_store import _lock
 from omk.publish import build_release, signing_key
 from omk.release_cli import _write_manifest, add_release_commands, prepare_release
@@ -324,6 +326,50 @@ def test_changed_content_cannot_reuse_a_retained_version(tmp_path, release):
     with pytest.raises(ValueError, match="new version"):
         saved.publish(source, build())
     assert saved.verify(one.release.digest)
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX executable file mode")
+def test_retained_posix_files_can_be_resigned_without_losing_executables(
+    tmp_path, release
+):
+    source, keys, build = release
+    script = source / "helper.sh"
+    script.write_bytes(b"nonexecuted fixture script")
+    script.chmod(0o755)
+    key = signing_key(tmp_path / "offline.pem", tmp_path / "public.json")
+    launch = build()["manifest"]["launch"]
+
+    def sign(files, version):
+        return build_release(
+            files,
+            pack_id="fixture",
+            version=version,
+            minecraft="1.12.2",
+            platform="linux-x64",
+            key=key,
+            launch=launch,
+            minimum_launcher_version=VERSION,
+        )
+
+    original = sign(source, "one")
+    assert next(
+        f["executable"]
+        for f in original["manifest"]["files"]
+        if f["path"] == "helper.sh"
+    )
+    saved = store(tmp_path, keys)
+    previous = saved.publish(source, original)
+    assert (previous.files / "helper.sh").stat().st_mode & 0o111
+    (source / "locale.lang").write_bytes(b"candidate changed bytes")
+    saved.publish(source, sign(source, "two"))
+    returned = sign(previous.files, "three")
+    assert returned["manifest"]["files"] == original["manifest"]["files"]
+    assert returned["manifest"]["minimum_launcher_version"] == VERSION
+    prepared = tmp_path / "restore-preparation"
+    shutil.copytree(previous.files, prepared)
+    restored = saved.publish(prepared, returned)
+    assert restored.release.digest != previous.release.digest
+    assert saved.verify(previous.release.digest)
 
 
 def test_count_budget_keeps_existing_generations_and_allows_idempotent_read(
