@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "ExtraUtilitiesBookLabelsMixin",
-    "PatchouliEditionMixin"
+    "PatchouliEditionMixin",
+    "BewitchmentRitualLabelsMixin",
+    "RootsModifierCostLabelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

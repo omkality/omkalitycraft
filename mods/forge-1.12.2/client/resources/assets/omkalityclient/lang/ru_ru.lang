@@ -1,3 +1,6 @@
 omkalityclient.books.locale=ru_ru
 omkalityclient.books.xu2.cover=Extra Utilities 2\nРуководство
 omkalityclient.books.xu2.contents=Оглавление\n\n
+omkalityclient.books.ritual.starting=Запуск:
+omkalityclient.books.ritual.running=Расход:
+omkalityclient.books.modifier.missing_cost=Не задано

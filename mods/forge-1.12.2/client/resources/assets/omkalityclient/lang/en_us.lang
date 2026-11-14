@@ -1,3 +1,6 @@
 omkalityclient.books.locale=en_us
 omkalityclient.books.xu2.cover=Extra Utilities 2\nManual\n(temp GUI stand in)
 omkalityclient.books.xu2.contents=Table of Contents\n\n
+omkalityclient.books.ritual.starting=Starting Cost:
+omkalityclient.books.ritual.running=Running Cost:
+omkalityclient.books.modifier.missing_cost=Invalid cost.

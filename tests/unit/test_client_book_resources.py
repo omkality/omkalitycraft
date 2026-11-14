@@ -26,6 +26,9 @@ def test_book_pack_declares_modern_language_format():
         "pagination",
         "duplicate",
         "crlf",
+        "space",
+        "frozen_number",
+        "false_free_cost",
     ],
 )
 def test_book_pack_rejects_missing_or_incompatible_locale_resources(tmp_path, fault):
@@ -51,12 +54,17 @@ def test_book_pack_rejects_missing_or_incompatible_locale_resources(tmp_path, fa
     else:
         path = resource / "assets/omkalityclient/lang/ru_ru.lang"
         data = path.read_text(encoding="utf-8")
-        if fault == "locale":
-            data = data.replace("locale=ru_ru", "locale=en_us")
-        elif fault == "pagination":
-            data = data.replace("Оглавление\\n\\n", "Оглавление")
-        else:
+        if fault == "duplicate":
             data += "omkalityclient.books.locale=ru_ru\n"
+        else:
+            before, after = {
+                "locale": ("locale=ru_ru", "locale=en_us"),
+                "pagination": ("Оглавление\\n\\n", "Оглавление"),
+                "space": ("starting=Запуск:", "starting=Запуск: "),
+                "frozen_number": ("running=Расход:", "running=Расход: 50"),
+                "false_free_cost": ("missing_cost=Не задано", "missing_cost=Бесплатно"),
+            }[fault]
+            data = data.replace(before, after)
         path.write_text(data, encoding="utf-8", newline="\n")
     with pytest.raises(ValueError):
         verify(resource)
