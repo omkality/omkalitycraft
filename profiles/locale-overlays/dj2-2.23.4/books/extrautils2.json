@@ -1,0 +1,520 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "base_owned_profile_sha256": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+  "game_tested": false,
+  "ready_for_players": false,
+  "namespace": "extrautils2",
+  "scope": "Reviewed ordinary-game book fields and intentional literals; no full borrowed locale or game payload",
+  "reviewed_entries": 62,
+  "translated_entries": 62,
+  "source_files": [
+    {
+      "path": "assets/extrautils2/lang/book/en_us.json",
+      "sha256": "6a4083bce01327884481349727356f86e32879703ca4ce8cbdc0ea33c6187a30",
+      "jar": "extrautils2-1.12-1.9.9.jar",
+      "jar_sha256": "6c1809eb2222604ebf3c051e1c7834b84049013b537633c2e5a1b0077ef9a940"
+    }
+  ],
+  "entries": [
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/title",
+      "source_sha256": "913e242b1485a9fa8a572bdbf3744a00dbbeae8c3f2af656ed8ce2199fb701fa",
+      "ru": "Руководство Extra Utilities 2",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "b605350bc00209520b7cd8f546322663356ba630708f71bbf30aead6b3dd608e",
+      "ru": "Введение",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "5d1fef145ee52f75af284e81ecd6738eb8866ee057097822857e05fe02498648",
+      "ru": "Мод ещё в разработке; будущие версии продолжат его менять. Некоторые предметы и блоки не завершены или будут переделаны. Используйте на свой страх и риск.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "4197f804498844a55f16b51fc57041c954cd2fae17172216d4ff78a4ee929e35",
+      "ru": "Сетевая мощность",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "3b71cdc10a88bb0ac32c0f810ccc47d942925587ec74cd055a8e60eb94da0933",
+      "ru": "В Extra Utilities 2 есть пассивная энергосистема со следующими правилами.\n\n1. Топливо не нужно: генераторы получают энергию из окружающей среды.\n2. Провода не нужны. Генераторы и потребители в любом измерении автоматически подключаются к личной сети игрока.\n3. У каждого игрока одна сеть. Разделить её нельзя, но два игрока могут объединить свои сети.\n4. Запасать энергию нельзя: она используется сразу либо пропадает.\n5. При нехватке мощности вся сеть перестаёт работать.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "9a5e6ac9d5f21470f33432eb2f39f9810b36953a47410d23317e1abd930ce7a2",
+      "ru": "Распределение мощности сети",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "454a908e429c68268fcd0ee6c8855d6708f833bfe8cd79c7fb364629b602dcae",
+      "ru": "Игроки могут делиться сетевой энергией. Команда /xu_powersharing позволяет выбрать, с кем вы хотите делиться. Если согласие взаимно, ваши сети объединятся.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "8affb435f04edbc7bd60c3abc02f1eacc97578c3b6688f27a4819d37430bd0ac",
+      "ru": "Простейшая выработка энергии: пока игрок вручную вращает редстоуновую шестерню, производится GP. Для постоянной работы это неудобно, но поможет запустить резонатор и получить материалы для более сложных устройств.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "dd0a1edcd62d06ce1102f73ff9b8ead5eaf6f14bed72bddf6481974b9daaab54",
+      "ru": "Солнечные панели — простейшие генераторы GP. Из особых материалов нужен только лазурит, но работают они лишь днём.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/5/text",
+      "source_sha256": "f770e92bc9b3247519a8e5ef53a3e481069443f0a4ad36e175d36dca3aaabe5d",
+      "ru": "Лунные панели работают только ночью и могут использоваться в качестве дополнения к солнечным панелям.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/6/text",
+      "source_sha256": "a7835477817d141043155a0e51bbcf8c74107ec246cc499b9b03b005107e4daa",
+      "ru": "Генерирует GP при размещении рядом с лавой. При этом лава не расходуется.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/7/text",
+      "source_sha256": "a27ea7a1ff040fcac11b2609fff9f901402e350510342bd0e917e4b71c4470e3",
+      "ru": "Генерирует GP для каждой стороны, которая находится рядом с текущей водой. Важно отметить, что это должна быть проточная вода, а НЕ стоячая вода. При этом не расходуется вода.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/8/text",
+      "source_sha256": "5bf03d8f39f4d952d08cdb64940beaa2b779aa3b6cc0b0a5eff2ff9d23417700",
+      "ru": "Генерирует GP в зависимости от скорости ветра. Однако скорость ветра будет меняться со временем.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/9/text",
+      "source_sha256": "ff3c4a0b7c1af973f7159feef7580a244a33afb8a4b62c5aefe82946b12c63fa",
+      "ru": "Генерирует GP при размещении над огнем.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/10/text",
+      "source_sha256": "dd0879bf02281b200a73d4191a17bff73ca0565c812f19c6fd13bd4856a38a90",
+      "ru": "Резонатор берёт энергию из вашей личной сети и постепенно воздействует ею на предмет. Так создаются компоненты более сложных машин.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/11/text",
+      "source_sha256": "89201c0de3f128b01213df37d4f34b75eb328f543c967014643f7c91d4ac8e94",
+      "ru": "Покройте алмаз светокамнем и оставьте под прямыми солнечными лучами: начнётся странная реакция. Самоцвет испускает «призрачный свет», проникающий сквозь стены и гораздо дальше обычного. Возможно, эту силу удастся использовать.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/12/text",
+      "source_sha256": "0975c199567d8a716cd6c319e6be16f953a8dc0486c948d78fa0cd6c41975f7f",
+      "ru": "Растениям нужны почва, вода, свет и любовь. Эта лейка даёт немного воды и любовь в промышленных количествах. \nСоздайте пустую лейку и удерживайте ПКМ на источнике воды, чтобы наполнить её. Затем удерживайте ПКМ для полива области 3x3.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/13/text",
+      "source_sha256": "82acef34720907cd5273f1ca0cda05ca9071755648c713a8d16a8c3befeb1fe4",
+      "ru": "По ПКМ инструмент проверяет соседние блоки того же типа и наличие материала в вашем инвентаре. Затем достраивает ещё один слой, используя до 9 блоков за раз. Направление зависит от грани, по которой вы нажали.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/14/text",
+      "source_sha256": "86e5dc7f11e4d7b55d78f195bd5a1752e33bb81d9335a1e077847e6041924065",
+      "ru": "[В разработке]",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/15/text",
+      "source_sha256": "25bc9baaf1907cc7cf6a6a1f40ed878fd7fb885adb568ef3d750a1fb39a8c128",
+      "ru": "Овцеферма оглушает нескончаемым шумом? Этот блок приглушает любые звуки в радиусе 8 блоков на 90%, возвращая долгожданные тишину и покой.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text",
+      "format_review": "literal_percent_in_XU2_NBT_book_plain_text_not_a_Java_format_argument"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/16/text",
+      "source_sha256": "0493a4f5b38ef581ad5882f1558b58d9cfa5862d226b7220b3bc3f10453d9dca",
+      "ru": "Эндер-лилии — древние растения, чьи семена сохранились лишь в старых подземельях. Растут очень медленно, около недели. Созревшая лилия даёт жемчуг Эндера. По мере роста появляются шипы — осторожнее.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/17/text",
+      "source_sha256": "392980ba6c444f8caae6a60e91c2b9bb4ae5655b0479affc0f8503e9e345b8cb",
+      "ru": "Если ваш инвентарь забит мусором, от которого вы хотите избавиться, этот простой блок обеспечит быстрый и эффективный метод утилизации.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/18/text",
+      "source_sha256": "a9f7bffea570876687efb5c721ee648806a562a75d50c5affb5e1a3bbdf6dbb7",
+      "ru": "Этот блок станет вашим лучшим другом при работе в небе в творческом режиме или в воде вдали от суши, поскольку для его размещения не требуется твердая поверхность. Просто щелкните правой кнопкой мыши по воздуху, и перед вами появится блок.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/19/text",
+      "source_sha256": "5826e11843358029717108e94b82daf2f6fe4266e92ec0f35334fbb242a58ab6",
+      "ru": "Простой дешёвый блок выдаёт импульс редстоуна раз в секунду. Внешний сигнал редстоуна отключает его.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/20/text",
+      "source_sha256": "17b48c731bd5f355e0bfe042ef77ed310b9346e46173dba0e37aa79ff724b753",
+      "ru": "Надоело вести коров и овец пшеницей? Нажмите золотым лассо ПКМ по мирному мобу, чтобы поместить его внутрь. ПКМ по земле выпускает животное.\nПроклятое лассо — опасная версия для врагов, кроме боссов. Перед захватом их здоровье нужно снизить до малой доли максимума.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/21/text",
+      "source_sha256": "83ef5232843a282ec96248fa3c924781d952b604f8e6ed2fbbb63b62621d7139",
+      "ru": "Сундуки ломятся от булыжника? Положите 9 блоков в сетку крафта — получится сжатый булыжник. Из 9 сжатых блоков сделайте дважды сжатый. Повторять можно до восьмикратного сжатия.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/22/text",
+      "source_sha256": "14f42f152a0443ee3feb10c701335add25ca49e4b0c4404daec71bb1bdb62df7",
+      "ru": "Как ни удивительно, стеклорез режет стекло. Для любых материалов типа «стекло» действует как инструмент с «Шёлковым касанием».",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/23/text",
+      "source_sha256": "1440247fdc440a1fdfec5c8d119836d8513b8100fafe485f38eadc58f97a924b",
+      "ru": "Гладкий, но хрупкий жемчуг Эндера обычно рассыпается при повреждении. Однако острый стеклорез разделяет его на мелкие осколки, сохраняющие эндер-свойства.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/24/text",
+      "source_sha256": "e05c57dbcf6797ce582538b53f26856b3d9daeb931d0734b5e7a64c904353ee7",
+      "ru": "Эта портативная сумка позволяет удобно хранить большое количество предметов. Щелкните правой кнопкой мыши, чтобы получить доступ к инвентарю.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/25/text",
+      "source_sha256": "1b164e844fa6a657102718d16f205e2bb2b7a3ed32c1f73417364670003aa592",
+      "ru": "Редстоун могуществен, но не слишком питателен. И всё же редстоуновая орхидея приспособилась расти на его руде.\nСозрев, она превращает немного каменной пыли в редстоуновую, которую можно собрать. Зрелая орхидея также выдаёт сигнал редстоуна.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/26/text",
+      "source_sha256": "f39da4eff7a046394a637a268a167f565fb8092d1cf8b523cf54d0e574b3871d",
+      "ru": "Позволяет летать. [В разработке]",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/27/text",
+      "source_sha256": "946b9a38f2bf98c8b3caf81455e93767cf30ea121133369a76d5a044161f1a5b",
+      "ru": "Показывает картинки. [В разработке]",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/28/text",
+      "source_sha256": "118040a8893db69a205df509519cbfcc064d8b8c0ad115ffbfc6f9886e9cdfb2",
+      "ru": "При подаче энергии загружает ближайшую область 3x3 чанка.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/29/text",
+      "source_sha256": "6aee86e194372fcbcc258a1af873fbec28b10b688b9512c4aaff0f7d2d577901",
+      "ru": "Этот.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/30/text",
+      "source_sha256": "f4e5457d65c9d9fdd47836f922e55c5d8d7a1344905772acaad58b651e1de6c3",
+      "ru": "Магический бумеранг всегда возвращается. Бросьте его ПКМ: он летит до стены или врага, затем возвращается, при необходимости сквозь стены. По пути собирает предметы и опыт. Объедините его с туманным зельем, чтобы накладывать эффект на поражённых мобов. Это расходует прочность: исчерпав её, нанесите зелье заново. Свойства также улучшаются чарами.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/31/text",
+      "source_sha256": "fd6dcfdfcaa6aebba8f4c8ab7dca8f745ddb3ae9221a8b3e94e41754e16f1f4a",
+      "ru": "Ключ позволяет изменять настройки блоков и машин.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/32/text",
+      "source_sha256": "ad211ef81ae0ef0c83bfc5e275bdff3d482e91b449855ecb4697072a2661ebe8",
+      "ru": "Примените «Каплю зла», редкую добычу скелетов-иссушителей, ПКМ к земле или дёрну — появится проклятая земля. В темноте она порождает мобов даже без игроков рядом. Эти мобы сильнее обычных и окружены «тёмной аурой», но исчезают через минуту. Большие участки проклятой земли проще всего уничтожить огнём.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/33/text",
+      "source_sha256": "4f58235971a83d5d1a6ad59887475aeefc43bd910aa47e65ee1e3de40c93b428",
+      "ru": "Сканер постоянно проверяет блок перед собой. Если тот соответствует настройкам, выдаёт сигнал редстоуна.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/34/text",
+      "source_sha256": "f7c94453bbc608e1b0ad049b9f70d48204beafea1fffece7e006014eb5e4d529",
+      "ru": "По заданному рецепту создаёт предмет из содержимого собственного инвентаря и сохраняет результат там же. Недостающие ингредиенты пытается взять из соседних хранилищ. Для сложных рецептов соедините несколько автокрафтеров в цепочку.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/35/text",
+      "source_sha256": "f174149ca2bb22905fd3c753aadfb362c2095b2934a383c0bcdcaba956236534",
+      "ru": "Использует предметы из своего инвентаря во внешнем мире. Если предметов нет — действует пустой рукой. Интерфейс позволяет точнее настроить поведение устройства.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/36/text",
+      "source_sha256": "c3c87d8737db2dbfae3b104b0f7032911f1b3caac43db2738f8b8aae401dec4f",
+      "ru": "Мгновенно добывает блок перед собой и складывает выпавшие предметы во внутренний буфер. Зачарованная книга изменяет способ работы.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/37/text",
+      "source_sha256": "e8d84f74c1dba99747f061d94fefffd330c7821e5a3a5d7e7893c3ae826a3c31",
+      "ru": "Передаточные трубы — основа транспортной системы: по ним узлы ищут пути для предметов и жидкостей. ПКМ по соединению делает его односторонним: узел может войти через него, но не выйти. Два односторонних соединения не соединятся друг с другом.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/38/text",
+      "source_sha256": "942985f4a609f018dd498843e784ed6121c1209851fd5837fbdef546c24e58ef",
+      "ru": "Узел передачи извлекает предметы или жидкости из подключённого блока и ищет по трубам подходящий получатель. Улучшения повышают производительность, но требуют GP. Фильтры ограничивают взаимодействие.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/39/title",
+      "source_sha256": "774466ab5c0d50445a1e799bec925ce2c8be41f73f7327e884b26daf93f6abfb",
+      "ru": "Узлы извлечения",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/39/text",
+      "source_sha256": "cfb85a98b5d5031864397ceffefc32f37652a909ad4c3b5341c9f9d166840f3a",
+      "ru": "Узлы извлечения действуют наоборот: забирают содержимое хранилищ, найденных по трубам, и помещают в подключённый блок.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/40/text",
+      "source_sha256": "fc9e43d841b2147eb7bb5a627f49e4fe22ecea8e9381778ed2c10afa8bab4701",
+      "ru": "Фильтры задают, какие предметы и жидкости передаются узлами в хранилище. Установите фильтр на блок: взаимодействие через передаточную трубу будет учитывать его.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/41/text",
+      "source_sha256": "028dbaf12ec46edd819a55d48cdbfdcf500a6c1750d776f925fd46b1992cbc7f",
+      "ru": "Фильтр задаёт подходящие предметы. Достаточно совпадения с образцом в любой ячейке. В ячейки образцов можно помещать другие фильтры, объединяя их результаты.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/42/text",
+      "source_sha256": "b55ec78330f4a9a033b78175ee7deedff8b84cadb213d7599c73fb93e85725b1",
+      "ru": "Вариант фильтра для жидкостей. Поместите в ячейку образца ведро или другую ёмкость с нужной жидкостью.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/43/text",
+      "source_sha256": "7a42103fce9aaabf17406f3dbaf2767fc989c088f84208d3c554a90d333799a7",
+      "ru": "Сундук игрока магически связан с вашим инвентарём и позволяет удалённо добавлять и забирать предметы. Сначала разрешите ввод и вывод для нужных слотов — по умолчанию оба запрещены. Другие игроки открывают доступ к вашему инвентарю ПКМ по сундуку.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/44/text",
+      "source_sha256": "ed6822dc212fdb9b33f286dd02cb79ba556032b2ca2c66c7316fded52dd0d845",
+      "ru": "Подключите индексатор к трубам: он найдёт хранилища и составит список предметов, доступных для извлечения. ЛКМ по предмету запрашивает одну штуку во внутренний инвентарь индексатора. Shift + ЛКМ запрашивает стак, но извлечение всё равно идёт по одному. Предметы в «слотах возврата» можно забрать и отправить обратно в систему труб.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/45/text",
+      "source_sha256": "b8ff303d78a181e7bb4fd00d719071a6a0550c0902e4243e380a7c2f069d5205",
+      "ru": "Пульт открывает индексатор из любой точки мира. Привяжите его к индексатору с помощью ПКМ.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/46/title",
+      "source_sha256": "c93eb9e61657b0da5394921426e37b1a560bb408ac8c30c0e69001e65ba21124",
+      "ru": "Индексатор: интеграция JEI",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/46/text",
+      "source_sha256": "de725eb91527ddd7533d11afc63ae549b95e83318cc7c57dc6e76984d12d3391",
+      "ru": "При наличии JEI поле поиска отбирает нужные предметы. Открыв рецепт, нажмите ПКМ на кнопку «+», чтобы запросить все необходимые ингредиенты.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/47/text",
+      "source_sha256": "d5def18d9543806f01c7cfb735a911b9ce98bc53c2af1490af8392c82a1b720f",
+      "ru": "При смертельном уроне «Второй шанс» мгновенно восстанавливает всё здоровье, исчезает и накладывает слабость. Работает лишь раз за жизнь, даже если снова наложить эффект.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/48/text",
+      "source_sha256": "2bdac4ad05b11883e2eae6cafa3b898eb7926ae997d2cd524fc047fcbb194d7a",
+      "ru": "Бросьте взрывное зелье любви в животных: если они способны размножаться, начнётся размножение. На игроков не действует.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/49/text",
+      "source_sha256": "c2be84f2fae3a712170966224bada15c54dbc7d39fdf77764329b6d0a8fd8d8f",
+      "ru": "Зелье гравитации притянет к земле любое летающее существо или игрока. Эффект притяжения пропорционален высоте над землей.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/50/text",
+      "source_sha256": "f224465dbdd6497101738cf8e82e5546b052e0c556fb5de23f469f1b77a0e5f8",
+      "ru": "Шипучее зелье подъема заставит вас левитировать вверх.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/51/text",
+      "source_sha256": "74d31377a93981fc4e46f25a91dae629ab87ab9666769db43417d5bd024fdee0",
+      "ru": "Греческий огонь поджигает игроков и мобов. До конца действия зелья пламя будет вспыхивать снова.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/52/text",
+      "source_sha256": "a2513cdb51ffce6e772ce3e9a822b0b1d9781c829fa1761cc2ea203caa8851ba",
+      "ru": "«Рецидив» мешает избавляться от отрицательных эффектов. Снятый эффект возвращается на следующем тике, но с меньшей оставшейся длительностью.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/53/text",
+      "source_sha256": "d45a20e655471bb1905ffd6710586888f624e093f435abbafcb54721d1b9c8b3",
+      "ru": "Жители в красных мантиях поклоняются редстоуну и полю энергии GP, надеясь обрести сверхсилы. Кто знает, правы ли они? Зато артефактами своей веры они охотно делятся — за плату.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/54/text",
+      "source_sha256": "aa82d68981fb9fa203770ccf7443d075e33099aaa2caa4aed430d523d8bcda63",
+      "ru": "Гордые поклонники искусства зельеварения. Эти ученые используют свои знания и мудрость для создания мощных отваров, которые они с радостью продадут с целью получения прибыли или, если у них не хватает ингредиентов, они также могут купить готовые зелья за изумруды. Забавный факт: их бороды искусственные и держатся на проволоке.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    },
+    {
+      "source_file": "assets/extrautils2/lang/book/en_us.json",
+      "pointer": "/pages/55/text",
+      "source_sha256": "e196f48e2bdfbd6dd4efb9040118126656b5b1241ac86767167488bfea75dc13",
+      "ru": "У этих подозрительных жителей деревни всегда есть хорошие вещи, и они категорически не хотят объяснять, откуда они взялись. Если ты полицейский, ты должен им об этом сказать, таковы правила.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "ExtraUtils2_plain_NBT_text"
+    }
+  ]
+}

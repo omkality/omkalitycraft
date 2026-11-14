@@ -1,0 +1,245 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "base_owned_profile_sha256": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+  "game_tested": false,
+  "ready_for_players": false,
+  "namespace": "tconstruct",
+  "scope": "Reviewed ordinary-game book fields and intentional literals; no full borrowed locale or game payload",
+  "reviewed_entries": 19,
+  "translated_entries": 19,
+  "source_files": [
+    {
+      "path": "assets/tconstruct/book/en_us/intro/blankpattern.json",
+      "sha256": "ee6e8d7cde02f21d3618025e2c44517fde078c3c40ed3bd802cf919862e465af",
+      "jar": "TConstruct-1.12.2-2.13.0.183.jar",
+      "jar_sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f"
+    },
+    {
+      "path": "assets/tconstruct/book/en_us/intro/craftingstation.json",
+      "sha256": "5c835af33561f9562dd544e74749b9ef015fbcf060ffa1a9c67432fb2687550f",
+      "jar": "TConstruct-1.12.2-2.13.0.183.jar",
+      "jar_sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f"
+    },
+    {
+      "path": "assets/tconstruct/book/en_us/intro/partbuilder.json",
+      "sha256": "8d0cd8f7040f01be22889c73946bad3a88d9cf892f658f2a50d5bbe9bb77c984",
+      "jar": "TConstruct-1.12.2-2.13.0.183.jar",
+      "jar_sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f"
+    },
+    {
+      "path": "assets/tconstruct/book/en_us/intro/partchest.json",
+      "sha256": "1f0f67d5b6ae028fa81fa71e67d74773a45869279004c884568cf7119da00b84",
+      "jar": "TConstruct-1.12.2-2.13.0.183.jar",
+      "jar_sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f"
+    },
+    {
+      "path": "assets/tconstruct/book/en_us/intro/patternchest.json",
+      "sha256": "d500ec5e7a063f9b252c2e06081d8d5a29054ca2134249a55bb9f6e0ef7a2697",
+      "jar": "TConstruct-1.12.2-2.13.0.183.jar",
+      "jar_sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f"
+    },
+    {
+      "path": "assets/tconstruct/book/en_us/intro/stenciltable.json",
+      "sha256": "41fd77f8c1f341e7588097aed37ad3cae870cbc439ec37b8ed72c6baea5c01da",
+      "jar": "TConstruct-1.12.2-2.13.0.183.jar",
+      "jar_sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f"
+    },
+    {
+      "path": "assets/tconstruct/book/en_us/intro/toolforge.json",
+      "sha256": "8d44548424fb3a39bc8c5f31a90b3bef8e7ee6049f6474642164283caac4b1a9",
+      "jar": "TConstruct-1.12.2-2.13.0.183.jar",
+      "jar_sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f"
+    },
+    {
+      "path": "assets/tconstruct/book/en_us/intro/toolstation.json",
+      "sha256": "c64bbb16128213d15a63821dafdc3732af4b6e877bc2816d3d3b7acd346f5516",
+      "jar": "TConstruct-1.12.2-2.13.0.183.jar",
+      "jar_sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f"
+    },
+    {
+      "path": "assets/tconstruct/book/en_us/modifiers/extratrait.json",
+      "sha256": "32d29656f536f1900747eb1a143cbec237c7042c5180ec9ad4fcf7d423847a7a",
+      "jar": "TConstruct-1.12.2-2.13.0.183.jar",
+      "jar_sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f"
+    },
+    {
+      "path": "assets/tconstruct/book/en_us/tools/kama.json",
+      "sha256": "70f26d417f83c2f898b1c8b752d7d2ef6ed8c88da9bbe8e2d90ec11ab9cd9d9e",
+      "jar": "TConstruct-1.12.2-2.13.0.183.jar",
+      "jar_sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f"
+    },
+    {
+      "path": "assets/tconstruct/book/en_us/tools/rapier.json",
+      "sha256": "074cea59ce2b0d2711821e52af0082f301cdb922d706f4732cf35a29b07fe241",
+      "jar": "TConstruct-1.12.2-2.13.0.183.jar",
+      "jar_sha256": "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f"
+    }
+  ],
+  "entries": [
+    {
+      "source_file": "assets/tconstruct/book/en_us/tools/rapier.json",
+      "pointer": "/properties/1",
+      "source_sha256": "81cc58b5dd9ccafc634f6e8bb82fec37a325156779097e03b9307bac469aa752",
+      "expected_previous_sha256": "81cc58b5dd9ccafc634f6e8bb82fec37a325156779097e03b9307bac469aa752",
+      "ru": "Пробивание брони: 50%",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text",
+      "format_review": "literal_percent_in_TConstruct_JSON_not_a_Java_format_argument"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/tools/kama.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "4c7b39507a66b5f9fa12f6bf879e01b36cf1ec3316c93058ae7f31aac71c6e62",
+      "ru": "Кама — точный инструмент для срезания растений и стрижки животных.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/tools/kama.json",
+      "pointer": "/text/2/text",
+      "source_sha256": "ad1d6437bb29fb7fa0e5481fb3ebbbd73680ce9bd7086a16ea01fdfe1bd3a302",
+      "ru": "ПКМ по посевам или сахарному тростнику собирает и заново высаживает все зрелые растения в области.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/tools/kama.json",
+      "pointer": "/properties/0",
+      "source_sha256": "95a83ba6a34b7a4516a75f1949630266a9a9bc30c5d407d7e69a1645ddf1d7d5",
+      "ru": "Собирает урожай по ПКМ",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/tools/kama.json",
+      "pointer": "/properties/1",
+      "source_sha256": "e5c753015b130f96e24bd50822cb30f6fdc5f1511b2356b9ab951250424b7b60",
+      "ru": "Работает как ножницы на блоках и животных.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/tools/kama.json",
+      "pointer": "/properties/2",
+      "source_sha256": "cdc3aa1ecf55351ccf6d857a106cbfa66296ff70e2d36fe29ca3f45497c7c893",
+      "ru": "Эффективен на растениях",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/intro/toolstation.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "expected_previous_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "ru": "Здесь будет текст",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/intro/toolforge.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "expected_previous_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "ru": "Здесь будет текст",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/intro/stenciltable.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "expected_previous_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "ru": "Здесь будет текст",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/intro/blankpattern.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "expected_previous_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "ru": "Здесь будет текст",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/intro/partbuilder.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "expected_previous_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "ru": "Здесь будет текст",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/intro/patternchest.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "expected_previous_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "ru": "Здесь будет текст",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/intro/partchest.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "expected_previous_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "ru": "Здесь будет текст",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/intro/craftingstation.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "expected_previous_sha256": "f275c151bded0649e42c8f7ab8dea03e441bd06cd866b29e6ddd62b1122336f3",
+      "ru": "Здесь будет текст",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/modifiers/extratrait.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "f0739d2246fdeda3697cd86ead0197b0da169963ca7b86823abafe6a015348c8",
+      "ru": "Возьмите деталь и выполните тиснение инструмента! Это похоже на замену детали, но лучше: к уже имеющимся свойствам добавляются свойства новой детали, а характеристики не меняются.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/modifiers/extratrait.json",
+      "pointer": "/effects/0",
+      "source_sha256": "0484b251bf498d70fb425ae28a7f877b0fd4a359cdac16ad455780d6286ce2f3",
+      "ru": "Добавляет свойства другой детали",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/modifiers/extratrait.json",
+      "pointer": "/effects/1",
+      "source_sha256": "c383291d7c634c467bc21602ccd376f810b60fa9945c85b7ededb84e0cfccf59",
+      "ru": "Свойства те же, что при замене детали",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/modifiers/extratrait.json",
+      "pointer": "/effects/2",
+      "source_sha256": "50cfc6277d1812c0d66af38c2881473d6402e62c8e895c3794302c5d10376c8f",
+      "ru": "Тиснение окончательно; изменить его нельзя",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/tconstruct/book/en_us/modifiers/extratrait.json",
+      "pointer": "/effects/3",
+      "source_sha256": "c869a5245adeac4a1a3730d4ac61d83b06632175c6ea6054af9d2ec4c4461381",
+      "ru": "Не требует свободного модификатора",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    }
+  ]
+}
