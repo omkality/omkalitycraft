@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "date": "2026-11-14",
+  "issue": 171,
+  "scope": "Opt-in local retention of signed client payloads before manifest output replacement",
+  "launcher_version_unchanged": "0.3.0.dev14",
+  "windows": {"passed": 122, "skipped_symlink_privilege": 1, "failures": 0},
+  "linux": {
+    "passed": 123,
+    "failures": 0,
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "readonly_source_unchanged": true,
+    "readonly_snapshot_verified": true,
+    "readonly_write_probe_rejected_with_EROFS": true,
+    "user": "65534:65534",
+    "network": "none",
+    "cpus": 1,
+    "memory_mib": 256,
+    "docker_socket_mounted": false,
+    "exit_code": 0,
+    "oom_killed": false,
+    "owned_container_removed": true
+  },
+  "dependencies_checked_against_uv_lock": {
+    "tuf": "7.0.1", "cryptography": "50.0.2", "packaging": "26.1",
+    "pydantic": "2.12.5", "litestar": "2.21.1"
+  },
+  "coverage": [
+    "Signed-file-only copies, independent SHA256/size/signature verification, no hardlinks",
+    "Idempotent same-content capture and refusal to reuse a retained version with changed content",
+    "Stored corruption, foreign files/directories, source/store path overlap and symlink rejection",
+    "Byte/count/free-space budgets without pruning previous copies",
+    "Cooperative writer exclusion and injected disk/manifest replace failures",
+    "Real child-process termination mid-copy; previous generation verifies and interrupted stage blocks new publication",
+    "CLI snapshot-root argument and environment, output/key boundary checks",
+    "Existing signed minimum-launcher, TUF/HTTP source/fallback and update API tests"
+  ],
+  "fixture_payload": "Small synthetic bytes; no Java or modpack payload execution",
+  "automatic_cdn_promotion": false,
+  "coherent_server_world_database_rollback": false,
+  "power_failure_tested": false,
+  "minecraft_started": false,
+  "local_launcher_gui_started": false,
+  "mcp_used": false,
+  "computer_use_used": false,
+  "player_release_published": false,
+  "vps_deployed": false,
+  "ready_for_players": false,
+  "warnings": ["Existing Litestar import warns about Pydantic V1 compatibility with Python 3.14; selected tests passed"]
+}
