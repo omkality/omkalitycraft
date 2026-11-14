@@ -1,0 +1,3428 @@
+{
+  "schema": 1,
+  "pack": "dj2",
+  "version": "2.23.4",
+  "locale_archive_sha256": "e46293f9d232635ee3f6aca3bd32c1e8d6fb4bce93fccb816b8813faf524eb13",
+  "client": {
+    "version": "0.1.3",
+    "path": "mods/OmkalityClient-0.1.3.jar",
+    "sha256": "0a5d000c64be041023e752de0e74141b57d3e86427b80b55181a95601de79077",
+    "size": 39478
+  },
+  "initial_inventory": {
+    "path": "scripts/ModSpecific/InitialInventory.zs",
+    "source_sha256": "aad9e23ad1246230b819514fc3bb89f84cab8d5448f2c1dd5b5049b725905d9e",
+    "result_sha256": "be860dd10dc56e068aacb4811d055a2757803e9d257074616386960d2d9c638f"
+  },
+  "resources": [
+    {
+      "path": "config/tips.cfg",
+      "sha256": "21a6959ce965d78144cef528c47dae1b27b03c370dea9da14d0cb46577960b81",
+      "size": 24065
+    },
+    {
+      "path": "groovy/assets/divine_journey_2/lang/ru_ru.lang",
+      "sha256": "3d84f9b12939b4605396d687df421b37d74a170532a1a745da240829cb11bb80",
+      "size": 4092
+    },
+    {
+      "path": "licenses/Cyclops-locales-MIT.txt",
+      "sha256": "972ce53396e875797aa8013d98ce0829a551a7be6f0c4ea99ee71815291c265a",
+      "size": 1074
+    },
+    {
+      "path": "licenses/EvilCraft-locales-NOTICE.txt",
+      "sha256": "91c85be79197f8609b7ec2bb399ce51b4da128cefe4741b22d280f30076cec66",
+      "size": 355
+    },
+    {
+      "path": "licenses/McRussifier-NOTICE.txt",
+      "sha256": "a0ff88dcd327ef81edc796ae4d53bd009f50522ea3bab77fbf027ae6e868765b",
+      "size": 383
+    },
+    {
+      "path": "licenses/McRussifier-copyright.txt",
+      "sha256": "d4b51e0be86be3790b5b1c750c8fb8f7f2afb88ffe440083bddd91e225b9863b",
+      "size": 26
+    },
+    {
+      "path": "resources/abyssalcraft/lang/ru_ru.lang",
+      "sha256": "c478c933ee5c58beff11005295e7525f2c39c85f1a1ebfb6cfb8ac5e4658f528",
+      "size": 8497
+    },
+    {
+      "path": "resources/acintegration/lang/ru_ru.lang",
+      "sha256": "e947b137a56d96f7a348ccd9e35b155622879529cef855a9001518690caa7efa",
+      "size": 225
+    },
+    {
+      "path": "resources/actuallyadditions/lang/ru_ru.lang",
+      "sha256": "764b29941be293f40ca93d9e41fb543a98a72921dac247bc43f20f9839387141",
+      "size": 737
+    },
+    {
+      "path": "resources/aenetvistool/lang/ru_ru.lang",
+      "sha256": "f6c046fa2a252a16aa0c85771b3b34af1dc843fef00e820fa18bd77fd6ea715f",
+      "size": 5941
+    },
+    {
+      "path": "resources/aether_legacy/lang/ru_ru.lang",
+      "sha256": "584e012ccb0ba9ddf519f9309567c424503a01a1bb501af0d99e719441262cdd",
+      "size": 61073
+    },
+    {
+      "path": "resources/alchemistry/lang/ru_ru.lang",
+      "sha256": "8c753a25157f4749f123e5e8645fb93ca3f910323f0365aae7e30427d256137a",
+      "size": 105
+    },
+    {
+      "path": "resources/alchemistry/patchouli_books/alchemistry_book/ru_ru/categories/compounds_category.json",
+      "sha256": "87fa117df9edba4616d970ad12be8b6ff96132d0b4518be96f38151ce94acf90",
+      "size": 160
+    },
+    {
+      "path": "resources/alchemistry/patchouli_books/alchemistry_book/ru_ru/entries/chemical_combiner/combiner_overview.json",
+      "sha256": "517ad390a3bf94e0de2b10f73f5500f236cabbde1cf25b0592b2cc599bd1664a",
+      "size": 3051
+    },
+    {
+      "path": "resources/alchemistry/patchouli_books/alchemistry_book/ru_ru/entries/chemical_dissolver/dissolver_overview.json",
+      "sha256": "f057bafedeaa5cd05008842482d332fe67818c3b2b6056c973ca1817498ba98c",
+      "size": 1993
+    },
+    {
+      "path": "resources/alchemistry/patchouli_books/alchemistry_book/ru_ru/entries/compounds/active_compounds.json",
+      "sha256": "5a59712a25aa66104f88ca9a64b7507d933e57cd913ff73ab4d0fb5fba64b245",
+      "size": 1750
+    },
+    {
+      "path": "resources/alchemistry/patchouli_books/alchemistry_book/ru_ru/entries/compounds/spiking_food.json",
+      "sha256": "4ba3e2241ffdfa0f050065a0e624e04b941af42a43b8cf05f74c58c018e6e671",
+      "size": 1040
+    },
+    {
+      "path": "resources/alchemistry/patchouli_books/alchemistry_book/ru_ru/entries/electrolyzer/electrolyzer_overview.json",
+      "sha256": "de63f3d4d5d434ca59d2b7226365cb6785e555adf01eb4001b822cf6b60513a2",
+      "size": 906
+    },
+    {
+      "path": "resources/alchemistry/patchouli_books/alchemistry_book/ru_ru/entries/fission/fission_template.json",
+      "sha256": "2b38978226932a8fc4bc37006f5bb98674bf637013d7669e99ef8ffe6fb40b6e",
+      "size": 1413
+    },
+    {
+      "path": "resources/alchemistry/patchouli_books/alchemistry_book/ru_ru/entries/fusion/fusion_template.json",
+      "sha256": "1cdca00252e37e1d82b609c6a2eedec4ac2d5c40ee2e702a4206144702074858",
+      "size": 1405
+    },
+    {
+      "path": "resources/alchemistry/patchouli_books/alchemistry_book/ru_ru/entries/utility/obsidian_breaker_entry.json",
+      "sha256": "588f5f221653d5559e771e66b393689ca6279692856f4897052925e00028916a",
+      "size": 610
+    },
+    {
+      "path": "resources/alchemistry/patchouli_books/alchemistry_book/ru_ru/entries/utility/slot_filler.json",
+      "sha256": "986b1dfa188fb4d061b245ffe2d7e5021ce6eabc73ecc5198e5f8fa39d8c795b",
+      "size": 729
+    },
+    {
+      "path": "resources/appliedenergistics2/lang/ru_ru.lang",
+      "sha256": "2ed21038ecfc64aecf4e0ff0cebfbdbce27c3d5097d08cb6c763285c52f4d86e",
+      "size": 589
+    },
+    {
+      "path": "resources/astralsorcery/lang/ru_ru.lang",
+      "sha256": "8385d2078d2e3524df4aec226062c4234572bbf007ce82337c93611a4c6c5fa6",
+      "size": 13065
+    },
+    {
+      "path": "resources/atum/lang/ru_ru.lang",
+      "sha256": "7f0c0e55b2ead70f13e0b59c9aef1ffbc2e14d9f3f7c7763d0ed039fbeb36826",
+      "size": 4329
+    },
+    {
+      "path": "resources/autoreglib/lang/ru_ru.lang",
+      "sha256": "acf91e744cbba657efd146f6decf193b6d1266d0cd0c8a135c4c2e74e2bcdc0d",
+      "size": 106
+    },
+    {
+      "path": "resources/avaritiaddons/lang/ru_ru.lang",
+      "sha256": "147b84bce7601c5ebb4e87ecb6dd3f2d52f59ef77006d4e1c01f709f2b52a7d3",
+      "size": 199
+    },
+    {
+      "path": "resources/badmobs/lang/ru_ru.lang",
+      "sha256": "f3cbe119a70894a5c46dd76071919d9cd74e7301c425a4713b13aa7a5ed6cce1",
+      "size": 131
+    },
+    {
+      "path": "resources/base/lang/ru_ru.lang",
+      "sha256": "7f61474093c6a05231750dc0e9b6dc54514a044d4826bae449caa7c5fb75aa35",
+      "size": 1265
+    },
+    {
+      "path": "resources/baubles/lang/ru_ru.lang",
+      "sha256": "c20173483d159092a2d401b4230c07d15f79a93450e53bbad560cc92e6c20f28",
+      "size": 2730
+    },
+    {
+      "path": "resources/betterquesting/lang/ru_ru.lang",
+      "sha256": "8deee98c7e7d9fc7e99252c9489a47d9b2eb73c75497ae499e2d3942e445ee12",
+      "size": 1089909
+    },
+    {
+      "path": "resources/bewitchment/lang/ru_ru.lang",
+      "sha256": "996b3eb8755e8ae20e23b6a4ff3b43343ccbc433d0d7c7369a6545b713b0c3aa",
+      "size": 40768
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/categories/brazier.json",
+      "sha256": "4f9472955b0ab121c4fe0f5543eaa57288c78662c282593b063088d108d84768",
+      "size": 418
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/categories/cauldron_and_brewing.json",
+      "sha256": "ce43135d450d4de3c054e5fe32077c5e9c16f1185137120eb8a7a593bd84975d",
+      "size": 686
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/categories/distilling_and_smelting.json",
+      "sha256": "dbc4d67fc72d20e3df03794f0097e1c16047c1ff4da51361ade126338ac22cd8",
+      "size": 687
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/categories/magic_overview.json",
+      "sha256": "f13877813a99533b4e1e40fa9f6bf133da1d3ab1486bbee3a2ce161e03f09295",
+      "size": 287
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/categories/poppets.json",
+      "sha256": "e6577c7865b377b486ab66cafe7756516b9ebc6b4e4e641ce388edc6ab4e21f0",
+      "size": 409
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/categories/rituals.json",
+      "sha256": "e70750167d1ae301ee764ce37a5bb032e34545ed4875acc405b3a4a3c5ea8ec5",
+      "size": 526
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/categories/sigils.json",
+      "sha256": "6da0edf043997deef592945d1695ca39a33e677ae2a87e69cf8d424481a7d826",
+      "size": 644
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/categories/spinning_wheel.json",
+      "sha256": "e8821ae6f1d7280ab9a1e625a36c62cef17db7d2934c52d283985002a6b25574",
+      "size": 338
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/categories/world.json",
+      "sha256": "96243b34b5fc0cabceee6e24f36cdd65b5f40614586061335913136c48ea5e2b",
+      "size": 568
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/brazier/incense.json",
+      "sha256": "9e35de9dbea8fcfb89c5fb95efaa379ef62e9046b9a0a6855bd304a3365aa52c",
+      "size": 2394
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/cauldron_and_brewing/alchemical_plants.json",
+      "sha256": "0c369a44a0c85b0f3bebde3889a0a2db0c1094bcdb0dbd1050a03a910e8128d6",
+      "size": 2606
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/cauldron_and_brewing/black_and_brown_dye.json",
+      "sha256": "403002a7365852092b4ad29eade511c1b970355d0160e5af8dc33f082bf8099f",
+      "size": 830
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/cauldron_and_brewing/brewing.json",
+      "sha256": "dbe1ceb555c350bdc8511af6ceed869baa9a11af2544960db90ac657878350b7",
+      "size": 14839
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/cauldron_and_brewing/cauldron_washing.json",
+      "sha256": "213e1f3aa1f4a8179807df2a52da09a2efb54263ad1d54cfe4f8be78db5aaac9",
+      "size": 744
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/cauldron_and_brewing/chalks.json",
+      "sha256": "52fa377530af9dc03c714ca4a2eae884b5b96a4504774198cc0a3ff876645d34",
+      "size": 1335
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/cauldron_and_brewing/disposal.json",
+      "sha256": "746053f5f514be10a02ce6cc747a442ebf22810ba3fde7820d51cd74993c52da",
+      "size": 452
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/cauldron_and_brewing/filled_goblet.json",
+      "sha256": "b2bebbaa5654c622b284459c513c84db625af9761a9fb7b055de6b65c61b39c9",
+      "size": 401
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/cauldron_and_brewing/slime.json",
+      "sha256": "c14532ff6b6b276ca6e8307f9cf7476b0fd907aeba0966bda0d5a6bcceb98ef4",
+      "size": 412
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/cauldron_and_brewing/tallow_and_candles.json",
+      "sha256": "6984f50e1a314c7219fe7502dfcba7743011777c2611e12d64538a834738dcab",
+      "size": 1142
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/cauldron_and_brewing/teleporting.json",
+      "sha256": "b4ca6f69fd1756b9a42837947f8e76da38c7ee1027fc3f05ba57f64accc4c51c",
+      "size": 476
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/devices/brazier.json",
+      "sha256": "001b6c2e47fa1648594e92395704a750b62e1a1cd24f6f0665b7a5b22d6be4ae",
+      "size": 3619
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/devices/distillery.json",
+      "sha256": "59f2e3b0af0c9baee41a637ca532e1017c04bc21da15bfed0eb8bf11cf047769",
+      "size": 2358
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/devices/sigil.json",
+      "sha256": "1758d58913da41ccec491d534ff27cb6b0d451cf03f98e08c64b5dd55f6e0741",
+      "size": 4548
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/devices/spinning_wheel.json",
+      "sha256": "7d8dc3422e7d83a39a5353d3ec5c827542a34b5a969f3f0173dc4acae7b620af",
+      "size": 1286
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/devices/witches_altar.json",
+      "sha256": "a0e30fc107706bace655e09a42a2e06b22a7172fd9cc466445684e4033225180",
+      "size": 3436
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/devices/witches_cauldron.json",
+      "sha256": "2d61d48e6f94955a88beab85387150b9a8b6c462e60e2beda205b4fd930af181",
+      "size": 17904
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/devices/witches_oven.json",
+      "sha256": "70306e3a4a06fe02262debfc23670f3b949b9b93ad413f4248a0f1f95641c73a",
+      "size": 3714
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/distilling_and_smelting/advanced_fumes.json",
+      "sha256": "b3f1b00a5762c1949553caeb2e019044d8f46b541189abd4afb1ee7ec199f550",
+      "size": 1939
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/distilling_and_smelting/basic_fumes.json",
+      "sha256": "8bb3ab813e7675095639d5ac1ae00881bcf39b55e2a1d416940cd4d0b696720b",
+      "size": 2835
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/distilling_and_smelting/bottled_frostfire.json",
+      "sha256": "189babf03b5b02bd7a99828f16fbbf2d43b636b4bfa0ac802abab23e1b8221a5",
+      "size": 1587
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/distilling_and_smelting/bottled_hellfire.json",
+      "sha256": "632a2a26e9b6b83af9fae603ae36153d18539579423618fa01d32a895ec10a4d",
+      "size": 689
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/distilling_and_smelting/dimensional_sand.json",
+      "sha256": "0921781529a473d83f179e3a1199030f3fcb80963715c2a75ff3ec15fdec1d7d",
+      "size": 1034
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/distilling_and_smelting/ectoplasm.json",
+      "sha256": "43b67bdf46d960e75813195763d4202faed91b05b3ebf9e60d889901a0b7f8cd",
+      "size": 720
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/distilling_and_smelting/jar.json",
+      "sha256": "2a68f628326d12c184a342bf148dae2d139eff4ecbf4dcd22c012cc1bc72c0db",
+      "size": 530
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/distilling_and_smelting/witches_oven_and_distillery.json",
+      "sha256": "b3283b62c76212d5b61b5dca2abe37abca3c94b1f67969a0082290b59d3bac62",
+      "size": 785
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/gear/boline.json",
+      "sha256": "e36c3914121a95d34bf3aa75c21ae9a8a0f557b334b1e853cbc6a4554ebce2af",
+      "size": 556
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/gear/cold_iron.json",
+      "sha256": "6075b3685b01c82df72ac91ea06cbebf96118c3572e22fca91a05ab89c75d953",
+      "size": 1195
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/gear/flying_ointment.json",
+      "sha256": "f1c333365cd339c2b15151412ef4a96e16bcb5d0646a767a5e3015ccabff2c5b",
+      "size": 734
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/gear/poppets.json",
+      "sha256": "26919a7080fff628205fba36739747869ea2dd6cfd1da046f11c32c2b9c517b1",
+      "size": 3743
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/gear/silver.json",
+      "sha256": "5a8a00ded32d8c06046c6780120442c425b7e09f783188657795f3ff3a6e3c0b",
+      "size": 1277
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/gear/taglock.json",
+      "sha256": "a1b7af4c56421b26e95952fbcdac9b6f452e1cd32892e8e4570df1d0402a5527",
+      "size": 526
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/gear/waystone.json",
+      "sha256": "a82298f72cd1e4b2f48d78505e9b5467fd276bc24c8920dc51aeaee944fc7b4c",
+      "size": 467
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/gear/witches_robes.json",
+      "sha256": "b268d3ef2419eb6937fe10159c77d4ee43bb36b7777beb5e2eb02364de299a0c",
+      "size": 801
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/altars_and_modifiers.json",
+      "sha256": "ca6d79c0f14c8751e4a293e741f28b5653afec8a231e44b93c36097db0a78d82",
+      "size": 2255
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/athame.json",
+      "sha256": "2cfc7f939f62d03f3807badc6b4d215fe2759851597633a8f53057ccf86bc016",
+      "size": 986
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/codex_infernalis.json",
+      "sha256": "f993b6c3234b8058abc56786cc1a3e9be45d50d20430bf44638a46ae7163f703",
+      "size": 1073
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/fortunes_and_scrying.json",
+      "sha256": "384085b4ea3ae90f75a04434ac8c3518f0e0c4a87551f5d6636b0066ca079f6d",
+      "size": 1204
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/fortunes_favor.json",
+      "sha256": "46d170019cf25236dbc8dd3f826d1f53199a1f2455674c7e103a978e2df90a0b",
+      "size": 696
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/girdle_of_the_dryads.json",
+      "sha256": "ba397017cae69d8fc56218cb398668dcae28e93fadbc0d80458418f950a9c937",
+      "size": 621
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/grimoire_magia.json",
+      "sha256": "c1d4cab08a507ad43c6389b184fa7d52eca203aff815535a41d6c489f342d64c",
+      "size": 698
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/hecates_visage.json",
+      "sha256": "3f86f99e426e1b294714c4f7b63707bfe0e91a12f6acf6f184ef898e7f0c67c1",
+      "size": 943
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/horseshoe.json",
+      "sha256": "29b431794c12be91b09df5b948bee48aeb7a83ec9154c1d08e72a6a0455661d4",
+      "size": 452
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/magical_energy.json",
+      "sha256": "e5a24b9cf30148076945a281f3843ba190d8f42a0e0dec226e044c11cb52b03d",
+      "size": 1131
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/nazar.json",
+      "sha256": "494320a8d677fad43d2a72ba8311ac935848e768375b1f6ca1c042823c2f9e36",
+      "size": 378
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/thyrsus.json",
+      "sha256": "edcade4cfda906ab43e03dee6a32d352dbaa4e0565810adfe16cc8b8facbadb4",
+      "size": 851
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/token_of_remedies.json",
+      "sha256": "bebe6505321c9f5e5673bc37768e449f36b5fbaf360c23598760baa108bfd1e6",
+      "size": 510
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/triskelion.json",
+      "sha256": "fa657b5fc39ca60069613e7abec42681ed05be47f9c2065640970bba24ccb598",
+      "size": 985
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/waystone.json",
+      "sha256": "20fadbb3ddc6b24c9dee71bc3cbad3a04f856bd8afc4dc3055b05be87428a495",
+      "size": 859
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/magic_overview/witches_devices.json",
+      "sha256": "33ccc832be911eb4c77c87f73e3a27a628331405d1a84f675ba8debe4040a237",
+      "size": 1111
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/basic.json",
+      "sha256": "790a43b8bdac28507e44728c352bd97e3fedb969b87f4816e794ea05e2f49189",
+      "size": 371
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/binding.json",
+      "sha256": "ac4d3023068fe24ffa09a5d8599156ad6ba8db6068a82098c4dc317f63b72f79",
+      "size": 295
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/clumsiness.json",
+      "sha256": "bcdd1a94e59510ce9ef43875797c7cd857690d9831c2b8b999f15e20ea756e7a",
+      "size": 315
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/death.json",
+      "sha256": "204ac6abb1322ca38334c5456363c2064b021b15b44e651fcb46bcbc77bda929",
+      "size": 322
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/earth.json",
+      "sha256": "ea941f4b27644b033ed0be1e60d608bdbbd9c69096c3d5f762f0494bbb9c7006",
+      "size": 293
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/flame.json",
+      "sha256": "0ce65c3370a2fa03a9a91674ba080acff8e377706fca0e0eeb328a27d59e4cff",
+      "size": 295
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/hunger.json",
+      "sha256": "4917c73aacd63e71cc35537436b5a1047f3b6221f3bf86beedc8d264f0bd55ff",
+      "size": 349
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/spirit.json",
+      "sha256": "fc92959d0ed0835a93bdc3dc74ae9a201e594bc43b9b76a20cba0ce7c9976c74",
+      "size": 282
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/tool.json",
+      "sha256": "710b1aedcf8a0a31f43b377efa684f6789eee6ebdb591ac3ec8f33dd9232d15d",
+      "size": 415
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/vampiric.json",
+      "sha256": "a886df8fcfc0b13280636733ab01d27aa732d6310abda9e80b000ec5b02f849c",
+      "size": 405
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/voodoo.json",
+      "sha256": "da2dff273263dfac9723754380fe9fcf2e43fba4ec671d4fc7771c7329fe328b",
+      "size": 465
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/voodoo_prot.json",
+      "sha256": "bd10cb1fccc4f5ac22f0820d6444a178ed8f283ee55ccf648d27c106b87b70f8",
+      "size": 365
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/wasting.json",
+      "sha256": "e382687e8ee4c7719584a0458035d0cfc0d0bb743c33117958416b3a6edac523",
+      "size": 329
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/poppets/water.json",
+      "sha256": "99a68753bc50fb36f53c02acd5a5cce12cf5a3bfaf63c7e41a249d17ea982e1d",
+      "size": 346
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/biome_shift.json",
+      "sha256": "e2fc58ae3ce6173787ea9b7a86aa57365af76dcfea110fe96ccbea42563d6379",
+      "size": 514
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/call_of_the_wild.json",
+      "sha256": "26294986f4660cfbfab9718c82f72115e02549690493ba7747706563579c79f8",
+      "size": 362
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/chalk.json",
+      "sha256": "13c94bece5fcebbf3850fa272971ead1046d79e882f17c319c6f6c8ff15823b4",
+      "size": 2236
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/circle_drawing.json",
+      "sha256": "0218ab136abc631caf45e00375f3d92b8c0c5433fe5b0dca9604bc82be05df89",
+      "size": 671
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/conjure_witch.json",
+      "sha256": "571d26f68cdd9a97d7fb68bf238f2ddec6841762a366b60d647fd5ab2ac8b73f",
+      "size": 423
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/curse_cleansing.json",
+      "sha256": "09c1e6d3393b4b21887474d9bcaceecb8e8f7c08ebf9ae35728767c133d34619",
+      "size": 792
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/frenzied_growth.json",
+      "sha256": "a3fbd726f44a70127f9d101f8fdbf997cdd465ac73a1c4ec08947bdccc420b05",
+      "size": 411
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/hungry_flames.json",
+      "sha256": "fbc7bb66f3d1df55a77b377e30ebc948deef31cdc7b3319686d2e1c867ba4f0f",
+      "size": 484
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/natures_blessing.json",
+      "sha256": "a23fb2d0ede7d3d2e7914de6137186081cb91f6d0671561851ee87966d38cc61",
+      "size": 562
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/perception.json",
+      "sha256": "b64e1c6bdf32965199a4cfd3b78fe6d07c3d3899193fc31c7a3e88e90ae418ee",
+      "size": 313
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/purification.json",
+      "sha256": "5dbc681de2115c0f0b18ea7167b1074f2e4a496d1d2716374d42c402b1e5705a",
+      "size": 399
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/rising_twigs.json",
+      "sha256": "c1b23914d45fe7fa3020dc51375258c0890a9f9b3d07b4d1e489de4780de4033",
+      "size": 2243
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/sowing_salt.json",
+      "sha256": "b9923f50b1dd551f11ab7817096292d115d3093ce67a630aaa17822a68c5297d",
+      "size": 594
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/spritual_rift.json",
+      "sha256": "ab10aa04ebe044259863b2f41e013c7f4ebb64da8b2a40262031a3bb47110c92",
+      "size": 477
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/teleportation.json",
+      "sha256": "b9827f9f8dba30953ff87f535d729f5e9484ae5aa2d48779c4cc609089f1c64b",
+      "size": 590
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/rituals/world_manipulation.json",
+      "sha256": "52d5576c6715a9296a5841281dab03f25a4e5e167f56669e5e296103d4c060c7",
+      "size": 1521
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/sigils/battle.json",
+      "sha256": "13bd99665fb3431ee526a8f6acf4b8ccd2bd758d14a96655b65de0c5a75f7a0f",
+      "size": 418
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/sigils/binding.json",
+      "sha256": "da960afaca2041b96d97ae2ea72810cc6b49918c907c2ab1e8d95c962b448d31",
+      "size": 372
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/sigils/cleansing.json",
+      "sha256": "0db84e4fc391c8c9386da74f038600b34c5c6f4a2dc69fdddd5e505960e72fa0",
+      "size": 392
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/sigils/disorientation.json",
+      "sha256": "8c43dca661b9a6c6a8e41b7b6116c6036c49d4de90b85164a1a12a0edc042a31",
+      "size": 406
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/sigils/failure.json",
+      "sha256": "cfdf90be86759d1557c05d97653fd2b4b3f37eb33fa49b1fc61903a18caab6d2",
+      "size": 422
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/sigils/luck.json",
+      "sha256": "ebb7d4e810b312bf42ec95c7fba862da82e13ac0adc7c0223b34a13777f3a0a2",
+      "size": 449
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/sigils/mending.json",
+      "sha256": "4c1b842a79e45c77307cf0ae3d5ea005aea8e87f1275ef1af8c3b68b20393e23",
+      "size": 393
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/sigils/purity.json",
+      "sha256": "61cdf29429b96ba3e062b69db07d1e2bff268a00ee7cee88ae4652071e1de73a",
+      "size": 396
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/sigils/ruin.json",
+      "sha256": "7cbcadd05e37e528abbbaecd1195227dc39619f80f35e799ec3305f3132148d0",
+      "size": 396
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/sigils/sentinel.json",
+      "sha256": "b5dee6aa9d52fad56c699c1c6724231f765275b7937ae235d56f009435900369",
+      "size": 405
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/sigils/shrieking.json",
+      "sha256": "9850a3f076f65d6aa0ceca8b0a1e43bae3634a63ecf7ec444230605b3d5bdb59",
+      "size": 373
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/spinning_wheel/alchemist_attire.json",
+      "sha256": "d6e644b475ffc8688b4ef157d9fd67204d286371e34da5124021e967c5ff8374",
+      "size": 1206
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/spinning_wheel/greenwitch_robes.json",
+      "sha256": "0f8ff404d84fe06427f54052edcae075f9d8d9911d4739de27991989ac11e5d4",
+      "size": 1069
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/spinning_wheel/magic_string.json",
+      "sha256": "21735c811830b222a901be7ef0e0f5962c72ce268943ce9e954dfcf77892f0bd",
+      "size": 1368
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/spinning_wheel/witches_robes.json",
+      "sha256": "c7f9827e921619a127d519f70a35e063918e574610f8e797002f95dd00989bcd",
+      "size": 811
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/trees/cypress.json",
+      "sha256": "8e5ab95adcd3f94e5df39c21c8e834182c30ea71e9d5e37e844d6452a8f576c7",
+      "size": 762
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/trees/dragons_blood.json",
+      "sha256": "8f928c7972a29b97edcb195e25a2967b0bec529dbf2f936e0d4eebfd013b8669",
+      "size": 1152
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/trees/elder.json",
+      "sha256": "1ff23ab72ad721c79a6e02ed8802d5fe305d8810eadeb262e3067e6a240db11f",
+      "size": 786
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/trees/juniper.json",
+      "sha256": "fce593e206b720fc4580b76f651410976c2c9e423f599816b8c63c86fa672b89",
+      "size": 1032
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/world/animals.json",
+      "sha256": "d4cadf2ae43f1c1b790cf3254f0c4a7aca37dc18626f7db5027a64cb87475878",
+      "size": 2686
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/world/minerals.json",
+      "sha256": "1cb7afed6af1cda99ce5ba38cadefa13b7132129851581d96d36acfcf7e35126",
+      "size": 3341
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/world/plants.json",
+      "sha256": "eae39364731c951998d8bcc1953bd4ab970dd9cedba4035eacd418487b4ee1b9",
+      "size": 3086
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/world/spirits.json",
+      "sha256": "80a0ecf442f7976da8e3c963cca9fb2ae0f294ba3d2f50602a7855effedadfbf",
+      "size": 3353
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/book_of_shadows/ru_ru/entries/world/trees.json",
+      "sha256": "2e1027ce1720c91de9d03ceb3d01a192b3d6a6fb946cf96e000fcc9cb0c8bed3",
+      "size": 3891
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/categories/curses.json",
+      "sha256": "1cd33e08d356e7de5902812374d74ebb3ce2c19c78c7356ae5619645babc0cd8",
+      "size": 450
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/categories/demonic_gear.json",
+      "sha256": "1947815002a9d44386cc3f239ba79a102780164c0d31a604f85808f3699393cf",
+      "size": 434
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/categories/devilish_oddities.json",
+      "sha256": "228e288fe2859552306585b9f5a17daff0bdf456373919999f4d488e83ef1192",
+      "size": 380
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/categories/greater_demons.json",
+      "sha256": "47958545a55c65399f5c6b297292f647cd067b2d4b6d7cc81b953f3b8ebf5d24",
+      "size": 546
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/categories/lesser_demons.json",
+      "sha256": "6f6024e25c11dcad192e51cea0b4d2c14ca7507107ea9e644461ba330684b3e0",
+      "size": 562
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/categories/nethers_firstborn.json",
+      "sha256": "3c275a968c302d9a86106338f690ba0892f73df25f203df1efa749ee49d0ae1f",
+      "size": 400
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/categories/transformations.json",
+      "sha256": "a3be3f697f56d997ed95bb9aded2baa742ac6f9b9bb98d8ab95f2775f5d570c8",
+      "size": 246
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/curses/conflagration.json",
+      "sha256": "924365c3b01bdf5b6718f1bba6b1eb0477c38046f59d9c6744a146a80380e996",
+      "size": 428
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/curses/darkness.json",
+      "sha256": "ead1dfd3711a8c284a5926f7e2b2090862712feeef016dd8ed3a893edc8b4d2a",
+      "size": 351
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/curses/hydrophobia.json",
+      "sha256": "15ec66533d24f786b2f5ba4fdb86b278b83e60db642bbb960eba597a3b05f62e",
+      "size": 424
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/curses/lightning_rod.json",
+      "sha256": "ce7ed73e91fb8cf397b550bc65ee4f3e7d293140eb763702e989727a189ee173",
+      "size": 499
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/curses/misfortune.json",
+      "sha256": "43f840c4e333ab55e4f195b291d6a6355b02fe6d6589e065bf386157a05249bf",
+      "size": 503
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/curses/overheating.json",
+      "sha256": "9d0fe068863eea8fc0a35bd862c1a750afc52e07cb3aa76f0e79eec0ecdd4430",
+      "size": 444
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/curses/palor_pestilence.json",
+      "sha256": "4cba73ee0e83ffb8bd6f10e6748f4bb575b95ede3e9febe880b66ad9059b1364",
+      "size": 531
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/curses/paranoia.json",
+      "sha256": "f331a89f6aba5beca6258363bf453b8fd7ebff76c56116470c5b2606baf7dd3d",
+      "size": 404
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/curses/return_to_sender.json",
+      "sha256": "e8bb6a8e4ed12afb06aee40f99a1a6ed8aebaf3ae55de833600e61bdba231095",
+      "size": 431
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/curses/solar_hatred.json",
+      "sha256": "976b65f6cc135ec132e2975dfd14e4babf824b5a4c7c8eaf893dc0eb239533b5",
+      "size": 413
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/demonic_gear/besmirched_robes.json",
+      "sha256": "8390dd80ed98cfbc32319001f03fd84541062c91e8f9c4e413e1630c53235d51",
+      "size": 984
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/demonic_gear/bottle_of_blood.json",
+      "sha256": "c766ef5de04cb3ffee54b60d74de6137a422692f8543031b7fdbb34fb01ef9a3",
+      "size": 826
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/demonic_gear/cleaver_blade.json",
+      "sha256": "881dffff713a4e4912dfe1970227748d40010ffbbe98b182665220e4fd89bd74",
+      "size": 568
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/demonic_gear/hellish_bauble.json",
+      "sha256": "777425cac27f704772182d352a8f7a1002c133d1aefe6440eafdc1ac908782f7",
+      "size": 628
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/demonic_gear/stew_of_the_grotesque.json",
+      "sha256": "b05979b2674f9f6ea1678df8727c49e8ba94e037f6752ca4f40be90c11769a46",
+      "size": 982
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/demonic_gear/vampiric_amulet.json",
+      "sha256": "9ac0be41587bd79ce3fcf17e5b9678bc987d5b59cb889dc8fc2ae3f6abc27912",
+      "size": 658
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/demonic_gear/vein_and_cloth.json",
+      "sha256": "113f72847f8828a35aa846a2b11c9cebd8050d0c21160e1690dc3c218fb198fa",
+      "size": 919
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/devilish_oddities/box_of_sealed_evil.json",
+      "sha256": "a7eabd3a49783b338008b9b761144b8807ad5c9b3e6ede67363bebd47c4212bc",
+      "size": 542
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/devilish_oddities/caduceus.json",
+      "sha256": "1404a19809b26cd5eee13721174093bd46dfed170619c2f59cceb6496a539bf0",
+      "size": 892
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/devilish_oddities/demonic_contracts.json",
+      "sha256": "960dd3bd9ef6eb5969a86fd57b700a31de3ffbe03c7dc2dc2c78a52932caabb6",
+      "size": 2384
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/devilish_oddities/infernal_tiles.json",
+      "sha256": "333f249072701e998f703ff7eeccb65b9a26a42f3d6bf04de05c6532ad349138",
+      "size": 8046
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/devilish_oddities/leonards_wand.json",
+      "sha256": "4805a7eb7d47effdbeec3e6ca2460840e204641a43089578dd533372e78e28e9",
+      "size": 760
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/greater_demons/baphomet.json",
+      "sha256": "1e6c9047add69eb503cf23091670203f9e266bde36dd18174d3a3ca7dbcf6719",
+      "size": 1862
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/greater_demons/beelzebub.json",
+      "sha256": "277f6355bc2994d36018f914f5af0f884a3a5694ee66b3091dd255698c78e799",
+      "size": 1154
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/greater_demons/herne.json",
+      "sha256": "86f2679e2b6f8bfc9eec97896a4aab7af0fa709dae47bd522f0681be5cfe2ee0",
+      "size": 743
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/greater_demons/leonard.json",
+      "sha256": "3fca143c375f4d8c442bacbb88f2ec8cda5592a896fda22d8e1d2e7c8e2be849",
+      "size": 1579
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/greater_demons/lilith.json",
+      "sha256": "b04ffa9c83b97737d7082de7c5733133d461e6653bb60fb54bce0aaac58fded4",
+      "size": 601
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/greater_demons/mercy.json",
+      "sha256": "a4cbe1be565bba954a65365d481311928830ce8b803679c4f1065c9e0f78a6bb",
+      "size": 971
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/greater_demons/moloch.json",
+      "sha256": "1024341d15ab20d3d5675a7d5ab2ba7bdb1a3ee48646ea0ff1c053d8157ca1d2",
+      "size": 850
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/greater_demons/pledging.json",
+      "sha256": "df9c2c9fb7b4ed4b5a588884311c87370759e1a366f58926c951ee7c8437864d",
+      "size": 1014
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/lesser_demons/bafometyr.json",
+      "sha256": "2b34b546033719d09479344b3ed14441e48b060dfb9b09ff131c2cd0506c5e12",
+      "size": 1235
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/lesser_demons/cambion.json",
+      "sha256": "0faa12f907c0d9576977ead968907db0a45cfacc97b3b0eca560b46c723ce0fd",
+      "size": 1344
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/lesser_demons/cleavers.json",
+      "sha256": "79756cef2e8a26476087cf8b10a0d0f9c181dc3ceff77e900ebfb485a0e6be9b",
+      "size": 1553
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/lesser_demons/demon_and_demoness.json",
+      "sha256": "87710d9feb26af9dc43247c545d8aaf39be3e1f46708a71783a6eed46043714b",
+      "size": 2046
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/lesser_demons/druden.json",
+      "sha256": "44c4d26b006839a14d388c32a72f1edda8724aeaccb170f7e5ae98f9a8080f87",
+      "size": 1039
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/lesser_demons/imp.json",
+      "sha256": "af17dc158a8309b7ac5f64e99cb31c046375fe33a3223c70707abb9c70462b06",
+      "size": 1162
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/lesser_demons/prey.json",
+      "sha256": "4a695da57b37f9d1397759cd944c232b8a7903507a076f565225652e7e830179",
+      "size": 359
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/lesser_demons/shadow_people.json",
+      "sha256": "5325f297af979090c8f4f151e0983a7c82fe9d297560664a3b54dd37c530efd3",
+      "size": 1117
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/nethers_firstborn/conjuration.json",
+      "sha256": "0b23dc5c3256f0180ed8f6c506d4c41cdea4fc3b81e68e156e0288f0b10b0bab",
+      "size": 1810
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/nethers_firstborn/hellhound.json",
+      "sha256": "049060c30e1390fb1217c2ed7b529aef58d062e5d40212bbaa1f75eeac030496",
+      "size": 660
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/nethers_firstborn/serpent.json",
+      "sha256": "1407f88e3674b7e9cdfea197b66e2e90f469ea8efe04f8770a9e426885d28d03",
+      "size": 595
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/transformations/preface.json",
+      "sha256": "a47e4c9de75611c4925c24dbb559ff4dfa411e937fa2e708ace518da1a031471",
+      "size": 1168
+    },
+    {
+      "path": "resources/bewitchment/patchouli_books/codex_infernalis/ru_ru/entries/transformations/werewolf.json",
+      "sha256": "be993cd22d5c7443000f51711621e3ccdb3d4751daffd20264b3635a8767edc9",
+      "size": 1326
+    },
+    {
+      "path": "resources/bhc/lang/ru_ru.lang",
+      "sha256": "fcf1318be47621f95102e1e31ecdd5fa73c84a15352ada3a9214b1842eb5470e",
+      "size": 2610
+    },
+    {
+      "path": "resources/bibliocraft/lang/ru_ru.lang",
+      "sha256": "91bcac8d44d0f645b63614af10aba1d5487a3f56a067abc2e8bf12e8077e1986",
+      "size": 120
+    },
+    {
+      "path": "resources/biggercraftingtables/lang/ru_ru.lang",
+      "sha256": "2a6546e167acaaee064f9b91d60602ebf2c12a1b8973e92bd09fbead65b2172c",
+      "size": 2429
+    },
+    {
+      "path": "resources/bigreactors/lang/ru_ru.lang",
+      "sha256": "afa1d5104fc4b5ddf87936a48952d65ed6786ad6fbc54799a6dfc919c245ee7b",
+      "size": 838
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/categories/intro.json",
+      "sha256": "d88867f5856194d8f17cc6a548f431da8d363d07005a4160dfcba15cab2ac563",
+      "size": 318
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/categories/misc.json",
+      "sha256": "20caa166dbbf5373e189c1b1d9808755f6bfec4be71844122b9320ddd84844ad",
+      "size": 237
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/categories/reactor-operational_mode.json",
+      "sha256": "1a0200a1456dbab5a6f9657798a9ead4a912a21b47cee951a4717dc0913b6902",
+      "size": 409
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/categories/reactor-parts.json",
+      "sha256": "475e05f69f7786ec90504c7f8627ad57d33ccafc38e5c76e598de62bb9960927",
+      "size": 473
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/categories/reactor.json",
+      "sha256": "b79659c5d0d9222e1eba79dcc3980c92740879cdbdeb9ae01bcb99316245d99a",
+      "size": 375
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/categories/turbine-parts.json",
+      "sha256": "d3960db3bdc482a987d63e601aae7ce2af7d2e147cf1f8c89c443c0edcff83f8",
+      "size": 400
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/categories/turbine.json",
+      "sha256": "c470abff3da11f95ca699d1198965ac12497925dc3473d5b5144408268a0882f",
+      "size": 316
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/intro/first.json",
+      "sha256": "968f082e9613d1e3d6e74036273259edf8700cd0cbf2eeda6f6f45825f018edd",
+      "size": 4919
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/intro/ores.json",
+      "sha256": "cdc43ab3b2a03db34a47ecb0b66cb196dcd4261ec0189260ed0294a2afad9985",
+      "size": 1784
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/misc/coolantsystem.json",
+      "sha256": "71e574d15ecd2a84f985f08444a5c26521c7a2a534c1c0b73d10737a5860d29e",
+      "size": 1981
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/misc/powersystem.json",
+      "sha256": "8314f0155c2d1fc7dd61cf45d8d016c31e4c43bc69a5f44e1558a27a48135b9b",
+      "size": 1004
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/misc/wrench.json",
+      "sha256": "d1f0e272b0277aad53778da234be1528687bd52cbec0faa429850400e96156e6",
+      "size": 578
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/active.json",
+      "sha256": "f9df68a987bba005028fd2426d780602520009f73148c9e287c7dcc1043b1117",
+      "size": 980
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/innerworking.json",
+      "sha256": "fdd7e30dbf4eb68b5a258e2124cbbee8c3fde215668b676c6e388bea4adfc3d3",
+      "size": 1927
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/moderators.json",
+      "sha256": "8826292777221a271343d2f781a9c8221de5cd9aeb65ec9829b0afd4d5c20eb0",
+      "size": 1704
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-casing.json",
+      "sha256": "7e741f63afc872960ade4a4c6d7b91b81d48f3b5e2efcf58408a8780bd09304d",
+      "size": 1046
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-computerport.json",
+      "sha256": "ef3ef09d9074647736a03419347931005d8f60ba41c9c8b10aed3d1041e0d831",
+      "size": 1357
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-controller.json",
+      "sha256": "c7c522f3b25e30186b291fc5a0471e9e86a4a517239b0660dd700529a457fccc",
+      "size": 1409
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-controlrod.json",
+      "sha256": "247c0d405259ab74763d1c52d2f7ffddc3ea0cfdcc4abe0891a24ae3f631ccaa",
+      "size": 2123
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-creativewatergen.json",
+      "sha256": "af60a92056d48a78bba33085c2d1967dc6fd3fdad191acfef6d5da1aae01df9e",
+      "size": 992
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-forgefluidport.json",
+      "sha256": "7f4e615301274eb7932a9d24443c992f465a2b78da5f197760c3f134d2fa45a1",
+      "size": 1534
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-forgepowertap-tesla.json",
+      "sha256": "427c025df6f74ff30926bc156c5f1a9e509b9f0ea2f7f40e60ac17d08f32d48b",
+      "size": 1309
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-forgepowertap.json",
+      "sha256": "4bb612233afccec7f53c50797bcf0b66fd499df127832739d3fb9a23a171439f",
+      "size": 1401
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-fuelrod.json",
+      "sha256": "24ebdd89f0db11753700e0e0361a06909e202d8d83727e64f3fa01aa968beec9",
+      "size": 2007
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-glass.json",
+      "sha256": "c5c1e0ccf4822ee5e9f086af306756cdc799814af864cba0f2df0296c958c04f",
+      "size": 914
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-redstoneport.json",
+      "sha256": "af45e85f94eb39be0e633f8e7bb466ae889ff5ba553d2543b415aa4f348fbe57",
+      "size": 3102
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/part-solidaccessport.json",
+      "sha256": "edb2f8808d40a1d68a686b9f1f85757d8f1d0323261d802b8aef62c111426d16",
+      "size": 1553
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/passive.json",
+      "sha256": "c81857af7a94e8220649305954ebfab732e4be1694523eb07ef7b129b1227106",
+      "size": 818
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/reactor/reactants.json",
+      "sha256": "0216d524b74e164317abbc196a9e6d272bd91b7ec9228218cdff93d5d6cd5522",
+      "size": 1617
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/coils.json",
+      "sha256": "487dbe1a6657fe189392c47e6c69b856c1afe0356857e742c7d75f9ca355a92b",
+      "size": 1440
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/innerworking.json",
+      "sha256": "2ce33b6a8801fdf30384e5345a2f9d9fd6d698c83db7be4a6f2c4202f5f9c5f7",
+      "size": 1715
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/part-casing.json",
+      "sha256": "902d0c3157813aceffcf9ce2c0d3f1fa9ce9fa7e21b1302441c0a5b8a3be6119",
+      "size": 1257
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/part-computerport.json",
+      "sha256": "3a3b8a58a1f9e6d442efdf9eb5069e72291707d190031b476bdf152ff8ff584f",
+      "size": 1305
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/part-controller.json",
+      "sha256": "2bf9f0778ab8b101b222acd4476acea2540ba35a63f7787a9eaa857a810f39ee",
+      "size": 1481
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/part-creativesteamgen.json",
+      "sha256": "8392d879ee66d31c4a1a10f12106b38e279fd78ade9cd487f66839b113321f67",
+      "size": 893
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/part-forgefluidport.json",
+      "sha256": "c056bdf5f625b62ef3fbdec0b326d4aa16cc09764a605ddf9ad91676726c4b0f",
+      "size": 1323
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/part-forgepowertap-tesla.json",
+      "sha256": "6e1e92c322f0dac2f0a9ec36d3d176c697abc93e3e94f8b67c23abf07d5c495a",
+      "size": 1235
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/part-forgepowertap.json",
+      "sha256": "f13aa04718fac53af0d82902529b7c5d6f20a882b9caea44ffaeeee3ff4dfdc3",
+      "size": 1275
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/part-glass.json",
+      "sha256": "8e9da92451ea1ebf6d6e60fcf80023945ebfbbecb28694de2e40b10a55e09889",
+      "size": 885
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/part-rotorbearing.json",
+      "sha256": "ba66d5955110eb7024b33250c4d8046f6bb0cab1d2cec63e5cf22a130925fe20",
+      "size": 1021
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/part-rotorblade.json",
+      "sha256": "2d0520202a6b08d314b261ebcff37b16d9cdc2b78843875aa682a940b8332e70",
+      "size": 1233
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/part-rotorshaft.json",
+      "sha256": "add74c928bb990ddabc2d0d1ab89e085dd105c27f38deb18f31c01384e6cf51f",
+      "size": 1065
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/entries/turbine/rotor.json",
+      "sha256": "381b852566365480e6e9ae5cb19761fe6ac0e6ea1032f9ecef68a8a657f6be1d",
+      "size": 8980
+    },
+    {
+      "path": "resources/bigreactors/patchouli_books/erguide/ru_ru/templates/part_usage.json",
+      "sha256": "6ea5f5b8bcee28a9c899fab467d3eaeb625b7d8497d7a4f5acf6e648cbc9914a",
+      "size": 279
+    },
+    {
+      "path": "resources/biometweaker/lang/ru_ru.lang",
+      "sha256": "7d2d59dc7c34714f5253ac4da77c1ec844adb9edbf5eeb1a9cae22b7d85b5aa3",
+      "size": 2460
+    },
+    {
+      "path": "resources/bloodmagic/lang/ru_ru.lang",
+      "sha256": "33865b6b46929596ff7f375204d3afcd15ed584ad56051009fcd058e87377497",
+      "size": 53667
+    },
+    {
+      "path": "resources/bloodmagicguide/lang/ru_ru.lang",
+      "sha256": "9811647b61d667bf9c621093459cc81cbe32a88af4393e0f8f6362e9022bad87",
+      "size": 6324
+    },
+    {
+      "path": "resources/bnbgaminglib/lang/ru_ru.lang",
+      "sha256": "6fba3b39363136168471864f8278c089939a0641747770a5edd043281a49ff20",
+      "size": 79
+    },
+    {
+      "path": "resources/bno/lang/ru_ru.lang",
+      "sha256": "b1b109f07700f302678ffdb7df79916486802f80c7e8305b4c37b1c686d68695",
+      "size": 965
+    },
+    {
+      "path": "resources/botania/lang/ru_ru.lang",
+      "sha256": "59590ea8a5f90a2354ac7e3ccf83541dbaa0f363689a37cd559263e75c4562ca",
+      "size": 83696
+    },
+    {
+      "path": "resources/bq_standard/lang/ru_ru.lang",
+      "sha256": "c04db3954dbfd51b1e68021766d584e5af0dc00ced803a84d1159619fcacc940",
+      "size": 5122
+    },
+    {
+      "path": "resources/bqtweaker/lang/ru_ru.lang",
+      "sha256": "1f571f8f89493cb50523a8270f2908968e0be09fba1d18bcc8a430663b59cf6a",
+      "size": 392
+    },
+    {
+      "path": "resources/brandonscore/lang/ru_ru.lang",
+      "sha256": "0ed2df9b5017097d2e7165ef4ca89f58cc24a4d76f65b87c37c25c67c1893353",
+      "size": 617
+    },
+    {
+      "path": "resources/buildinggadgets/lang/ru_ru.lang",
+      "sha256": "4390aea67ad1237b2ae110ed6f1a7d31fa204979157ee0d9c637c6239b7ff10a",
+      "size": 15115
+    },
+    {
+      "path": "resources/chisel/lang/ru_ru.lang",
+      "sha256": "53ed5cc55ca4818ecf6ccda6a78466381bd39e94020679a5efc3a1d5abe888cc",
+      "size": 106057
+    },
+    {
+      "path": "resources/chisel_guide/lang/ru_ru.lang",
+      "sha256": "41144fbb540de123f0b0c997562a4cc960ce7793d84dc927862805d2e5bc5e2a",
+      "size": 245
+    },
+    {
+      "path": "resources/chiselsandbits/lang/ru_ru.lang",
+      "sha256": "ec160ee4ef57ccb58e0909d9870c9aa5594bd653e9820c8ec75fd20263cae234",
+      "size": 10618
+    },
+    {
+      "path": "resources/cofh/lang/ru_ru.lang",
+      "sha256": "7aecde16e070636385768ebf4586d08a27c9e5bc0818ab9300e3280566815fee",
+      "size": 1058
+    },
+    {
+      "path": "resources/cofhworld/lang/ru_ru.lang",
+      "sha256": "a21520a579e6244784b109b44fb06d2ca95047e178a0715b06bc3adb8b92def4",
+      "size": 459
+    },
+    {
+      "path": "resources/commoncapabilities/lang/ru_ru.lang",
+      "sha256": "a7557dc4d3e3a3da352330ab3cd08633eb843d6e1ccf8aad9eb062463421bac8",
+      "size": 1802
+    },
+    {
+      "path": "resources/contenttweaker/lang/ru_ru.lang",
+      "sha256": "59b74fdc12680c5de9d517c24c13d224512fd3fa79f4e94f35e89b7ebb2fb4d6",
+      "size": 60499
+    },
+    {
+      "path": "resources/craftingtweaks/lang/ru_ru.lang",
+      "sha256": "e016f7d7147834867d493ad99402f4194e9d953ac3a7b9d09b30b3058e123460",
+      "size": 1746
+    },
+    {
+      "path": "resources/crafttweaker/lang/ru_ru.lang",
+      "sha256": "d1ec9c2117f0a998aa9b31dfa11e0a29c72cbf74fb94ce1df08e7fb389fb8a35",
+      "size": 80714
+    },
+    {
+      "path": "resources/cucumber/lang/ru_ru.lang",
+      "sha256": "5d9288f5a07c463ba992db11ae5f5c646a17f66c021b91bd022fcc3b3637539f",
+      "size": 329
+    },
+    {
+      "path": "resources/cyclopscore/lang/ru_ru.lang",
+      "sha256": "eb6de16fec562a84c95d009a7e263e1ab9debd3c984f275987647de0bb00db6f",
+      "size": 375
+    },
+    {
+      "path": "resources/danknull/lang/ru_ru.lang",
+      "sha256": "78a5ddc0f87f13355b59d95005a1287205110c8a02b2d621ee0da791a65f2310",
+      "size": 229
+    },
+    {
+      "path": "resources/demagnetize/lang/ru_ru.lang",
+      "sha256": "3392398bd6cb622a878ff2626376ef6844ea44b08145cedf5e651637ccf4b72d",
+      "size": 1310
+    },
+    {
+      "path": "resources/divinerpg/lang/ru_ru.lang",
+      "sha256": "00db3f578eebdb4a993b7e88e904926b016a75f094c421103864b66f99c3906a",
+      "size": 1441
+    },
+    {
+      "path": "resources/dj2addons/lang/ru_ru.lang",
+      "sha256": "99b745d115e7566789937641160b4db3525f00b455adf21851818026c0ab26d1",
+      "size": 346
+    },
+    {
+      "path": "resources/draconicadditions/lang/ru_ru.lang",
+      "sha256": "a9c5d7a5ae034c8d0e0fabd0618fc22fa7401d3bcc8cea8e8966a299567d9e29",
+      "size": 6082
+    },
+    {
+      "path": "resources/draconicevolution/lang/ru_ru.lang",
+      "sha256": "63602d05343a21282dcb7143d2aafee5b2a207bc924c1e925936de79950753ac",
+      "size": 9041
+    },
+    {
+      "path": "resources/enchantment_descriptions/lang/ru_ru.lang",
+      "sha256": "be2a8b184dc3934d61366c6d7d405ad5a45395a825202fbc1aeb5cd33b85a76d",
+      "size": 4212
+    },
+    {
+      "path": "resources/endercore/lang/ru_ru.lang",
+      "sha256": "f21a0c81639f9384cda71ee9c6404cd885aaf149b9ccca75271789a864610d38",
+      "size": 43
+    },
+    {
+      "path": "resources/enderio/book/ru_ru/modifiers/pickup.json",
+      "sha256": "b66a2a678ddbbf08a22f80d10cfa4c7e1c5c6cb7b3a3903bb03e9ee763e1d3de",
+      "size": 429
+    },
+    {
+      "path": "resources/enderio/eiobook/ru_ru/intro/welcome.json",
+      "sha256": "74b582acc2cd84abd6ee38e380d0c8e3f615a6ad6373ec5d4098e313c2bc5556",
+      "size": 172
+    },
+    {
+      "path": "resources/enderio/eiobook/ru_ru/starting/p11a_randalf.json",
+      "sha256": "dba67f874e8d28c1acc78cb4a094be3adf33da4480164cf5e4d5b6bcbcbeec84",
+      "size": 751
+    },
+    {
+      "path": "resources/enderio/eiobook/ru_ru/starting/p11b_randalf.json",
+      "sha256": "e019a0db9a860ef9b6d3db14b6220488dc40f04da0d0beeccbb3717e3132c770",
+      "size": 628
+    },
+    {
+      "path": "resources/enderio/eiobook/ru_ru/starting/p1_intro.json",
+      "sha256": "8dfc6fe5a649dfd4988b6665fe24a642f568199588f9713f27aac355349b8764",
+      "size": 698
+    },
+    {
+      "path": "resources/enderio/eiobook/ru_ru/starting/p3_chassis.json",
+      "sha256": "470c4fbc5eafdf66d38dc85d9388386a068027874aa4336ece00694aed484800",
+      "size": 897
+    },
+    {
+      "path": "resources/enderio/lang/ru_ru.lang",
+      "sha256": "35d17565ef7b3be5e52dae0c9b36255266b9e9c28b56102a650d7e060ff1232f",
+      "size": 58369
+    },
+    {
+      "path": "resources/endermodpacktweaks/lang/ru_ru.lang",
+      "sha256": "bb06c959b023b7d9f5e2e0b62b06e20b3d844ca278dabcee000e1feb3440d064",
+      "size": 17325
+    },
+    {
+      "path": "resources/enderutilities/lang/ru_ru.lang",
+      "sha256": "ded089bc27accd5ed4687eb34a7f3cd041359befebcc7d8f79c02f862ba47391",
+      "size": 93360
+    },
+    {
+      "path": "resources/erebus/lang/ru_ru.lang",
+      "sha256": "9b0142c0f91807545d7c1dc1713278469c8c1557a51f85e6dda62c00f0ef61f8",
+      "size": 73836
+    },
+    {
+      "path": "resources/evilcraft/lang/ru_ru.lang",
+      "sha256": "f78e0f3df720278a7fa178f2ab1ab25d89e4c7eb75cd4b9c0eeb304fab332906",
+      "size": 98936
+    },
+    {
+      "path": "resources/evilcraftcompat/lang/ru_ru.lang",
+      "sha256": "5e0cab1752835194f4751f8feaad1e1a70d70ccee7e52ec8759f3fd6eb62a2d2",
+      "size": 5762
+    },
+    {
+      "path": "resources/extendedcrafting/lang/ru_ru.lang",
+      "sha256": "fc81327af3c54d918a1d0dda83f225f99535326c9f6f701e6890ee61d92f686c",
+      "size": 9813
+    },
+    {
+      "path": "resources/extrautils2/lang/book/ru_ru.json",
+      "sha256": "6e4a25b319ac3914e229f0befabb832cf489d0dfd982db4dc6d50d5d0568a7f9",
+      "size": 20248
+    },
+    {
+      "path": "resources/extrautils2/lang/ru_ru.lang",
+      "sha256": "378b57b9f6e3f6d781d9db38df0cd1d0f5df000dd15c5d5b0b812ad1c95c051e",
+      "size": 70714
+    },
+    {
+      "path": "resources/framedcompactdrawers/lang/ru_ru.lang",
+      "sha256": "a4cdaebf43dad6583df2cb4c2a6fcbc7c8e5222f7feb557eb839750be70e41f1",
+      "size": 224
+    },
+    {
+      "path": "resources/ftbbackups/lang/ru_ru.lang",
+      "sha256": "c5cf7486c3706d5f930123fc0e537572712c24e38bb3567853e31377903578df",
+      "size": 110
+    },
+    {
+      "path": "resources/ftblib/lang/ru_ru.lang",
+      "sha256": "e578a1e457d2adc038398f0c4af3af96c8178c96c69820c22642a2f4a62c3e42",
+      "size": 1823
+    },
+    {
+      "path": "resources/ftbutilities/lang/ru_ru.lang",
+      "sha256": "dda044f6ba464abc6739e922e97006c73beddf759e18562e3b7c5c39f3179ce3",
+      "size": 5385
+    },
+    {
+      "path": "resources/gasconduits/lang/ru_ru.lang",
+      "sha256": "ed4bdd2e5fe3abda7fe399ce716dc921cf9ce36f78409b3fbd14cd640bf59abb",
+      "size": 1087
+    },
+    {
+      "path": "resources/gbook/lang/ru_ru.lang",
+      "sha256": "e1d8c68e42cab53f02d958f78ced37e7fe0d89ae05c4181419e9a812cb26fd5e",
+      "size": 344
+    },
+    {
+      "path": "resources/groovyscript/lang/ru_ru.lang",
+      "sha256": "d80bec8148fe42275bc5cc03ca2c95c2725c75136b898c1999b81fab8a4b2abd",
+      "size": 5416
+    },
+    {
+      "path": "resources/guideapi/lang/ru_ru.lang",
+      "sha256": "00b5bcba633066e00059490b070ab15d5282b17fdbf176e65f214867332cb740",
+      "size": 545
+    },
+    {
+      "path": "resources/hammercore/lang/ru_ru.lang",
+      "sha256": "3323db33901eedf6ed58b0ea5bd1f74febb85ccf9081e49908ce0a8b732204aa",
+      "size": 2862
+    },
+    {
+      "path": "resources/immersiveengineering/lang/ru_ru.lang",
+      "sha256": "460a450626dfecb81da5f444bd9530671f9860565b55e9b35ad90f978b9b2c2e",
+      "size": 11627
+    },
+    {
+      "path": "resources/industrialforegoing/lang/ru_ru.lang",
+      "sha256": "2c64a79843ae4500a82501752577257b1923bfac2cede0d9a45c0df16f7c19e3",
+      "size": 4462
+    },
+    {
+      "path": "resources/integratedderivative/lang/ru_ru.lang",
+      "sha256": "d9f75c52118dfceee8d2fdb84a83915c3d2a8f91930d90e298f143da1df7d0b5",
+      "size": 383
+    },
+    {
+      "path": "resources/integrateddynamics/lang/ru_ru.lang",
+      "sha256": "215e3716fd7c1e984aea3a96a3918eec697c35c7085bb7da188e65dc8139b358",
+      "size": 212571
+    },
+    {
+      "path": "resources/integrateddynamicscompat/lang/ru_ru.lang",
+      "sha256": "1a2109c3b8683f6b7464014443cca7f6660b599a79f36ae9b8e89a3fd44f17f5",
+      "size": 25413
+    },
+    {
+      "path": "resources/integratednbt/lang/ru_ru.lang",
+      "sha256": "df8535de3a5cb9c68634aa5afe9e147cf75c4dec989466d13c762abca3e4f0e2",
+      "size": 6263
+    },
+    {
+      "path": "resources/integratedtunnels/lang/ru_ru.lang",
+      "sha256": "84893b9439e92ec71bd8ee6618043156a0fd18d91bf24a6343418b6bbd9b8d8a",
+      "size": 71071
+    },
+    {
+      "path": "resources/jecalculation/lang/ru_ru.lang",
+      "sha256": "7ccf4c60f31126eb6f21106962a0d80822cff0eadbd247ee69aee132df3d0891",
+      "size": 995
+    },
+    {
+      "path": "resources/jei/lang/ru_ru.lang",
+      "sha256": "7070b0e569064dc1667a46a92db3c6bc3561323cc940dbda09c261cf7344c65c",
+      "size": 843
+    },
+    {
+      "path": "resources/jeresources/lang/ru_ru.lang",
+      "sha256": "b8723faf58a16b427bb508e750e05f30467c8b4b2e5cedd0b702b03271b381e9",
+      "size": 675
+    },
+    {
+      "path": "resources/journeymap/lang/ru_ru.lang",
+      "sha256": "86c47ff65f26e432bdf9477d4be4be4d795c739c5f18d2f2ea9cec0430cf12e9",
+      "size": 11255
+    },
+    {
+      "path": "resources/justenoughdimensions/lang/ru_ru.lang",
+      "sha256": "6b9e2c57d58eaf9aecd6d9153fae54415e4770576500606d3864e09234c4ea5d",
+      "size": 11320
+    },
+    {
+      "path": "resources/knowledgeshare/lang/ru_ru.lang",
+      "sha256": "6e7ff0632a2aba4c44fbc02953043a6be5e65d8dc4493c90601bfea2f1bb6d16",
+      "size": 184
+    },
+    {
+      "path": "resources/lightningcraft/lang/ru_ru.lang",
+      "sha256": "b7d220744baf04b97a856d55a8d1b237950504ce6f104c56c447a3ada8119749",
+      "size": 26084
+    },
+    {
+      "path": "resources/loottweaker/lang/ru_ru.lang",
+      "sha256": "a59f7175a911ca48e35e39ba1141f8cdcbb176bb23346d60204aacc4864f1e76",
+      "size": 4300
+    },
+    {
+      "path": "resources/mcopts/lang/ru_ru.lang",
+      "sha256": "a406b9a7b79011a33fe3ae966ce16366248829c52c732237d7fbd296b2e5b3f6",
+      "size": 1138
+    },
+    {
+      "path": "resources/mekanism/lang/ru_ru.lang",
+      "sha256": "b3894af3fdbdda27df2731b6012912b109994806cc9a986cdc5f4fe3a56d3dd6",
+      "size": 3270
+    },
+    {
+      "path": "resources/moartinkers/lang/ru_ru.lang",
+      "sha256": "4501a2dda252456b7c8fc73e78ecdfc5dcfd5164f329655985af995174d47b73",
+      "size": 9985
+    },
+    {
+      "path": "resources/mob_grinding_utils/lang/ru_ru.lang",
+      "sha256": "3d6a3e62a9d3b6d06bc5c37a69ab5f619fdc848b086a8bfb415a53ff9dbf7260",
+      "size": 6147
+    },
+    {
+      "path": "resources/modulardiversity/lang/ru_ru.lang",
+      "sha256": "03ce28bbbd88c93728444ccaf09d2c9527f374e4c3366776c6d746243b350710",
+      "size": 10283
+    },
+    {
+      "path": "resources/modularmachinery/lang/ru_ru.lang",
+      "sha256": "b929bfbff0e084778cdfac6ec2cadfbba1cc6205570e5d4591fa331bd3ab5868",
+      "size": 11918
+    },
+    {
+      "path": "resources/modularmagic/lang/ru_ru.lang",
+      "sha256": "576c22637b43eb8f3be6483e7bd8e36c7cc164802faadbcbcf0075df8d7687eb",
+      "size": 2775
+    },
+    {
+      "path": "resources/moretweaker/lang/ru_ru.lang",
+      "sha256": "809b6a60f1d1b77b4c20f07047862a6d2d0e494631ea49a324438a5b18446a65",
+      "size": 76
+    },
+    {
+      "path": "resources/morphoverlay/lang/ru_ru.lang",
+      "sha256": "628ee18af4039fde6b167e91a87be4b2f0c847e126e94ee588c05dbfdaf96c70",
+      "size": 49
+    },
+    {
+      "path": "resources/mysticalagradditions/lang/ru_ru.lang",
+      "sha256": "6d7b297f6d0ec0f62854c325b13b030e2f536f21a299cb7657114d3591e4b23c",
+      "size": 4615
+    },
+    {
+      "path": "resources/mysticalagriculture/lang/ru_ru.lang",
+      "sha256": "dcc2837de507566482bbd2e076bab165ad373590e682c10832b3814866f31c5c",
+      "size": 4061
+    },
+    {
+      "path": "resources/mysticallib/lang/ru_ru.lang",
+      "sha256": "fd15f9e7e480e0019e3288f24dab763de9bcf77c20fc63041f44c54f5d5fb457",
+      "size": 105
+    },
+    {
+      "path": "resources/mysticalworld/lang/ru_ru.lang",
+      "sha256": "253bb8069cf5e5ddaf702df7b1b1b128f3b6c67172c4ebc504cc5ab04d061b26",
+      "size": 1321
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/blocks/charred_wood.json",
+      "sha256": "75047fb96553839e55c88834420cbde3262126ac683b0f32d493fcd0d63de934",
+      "size": 2095
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/blocks/mud_block_decoration.json",
+      "sha256": "46a840c6bdad86f7cfdb5a2fba47d04e55a1eba9fb7bf0c3f5bc0c88f47854ea",
+      "size": 2631
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/blocks/mud_block_utility.json",
+      "sha256": "abd6e2518af8d14efbb28fecf3d9c44047917d22d9066011d677e05ffb3fcdef",
+      "size": 1272
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/blocks/mud_blocks.json",
+      "sha256": "30ae05b3af35d2b73b5863c777b33e2022c3fd2576dcea7867cd4d9c696488f5",
+      "size": 1043
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/blocks/pearl_block_decoration.json",
+      "sha256": "94e695c9adc346087f55f631b0de9be811fbed8f7c67a177a97485e323715eda",
+      "size": 1045
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/blocks/pearl_block_utility.json",
+      "sha256": "98b209f3e9158fac42dc9abd324c32bfc9e297fef00d656adadcf3affe2037cc",
+      "size": 346
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/creatures/clam.json",
+      "sha256": "89f0e2452a88d7e456807e77adddc48aff0333dd1729c67cc26cdb5123b7b489",
+      "size": 873
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/creatures/endermini.json",
+      "sha256": "39b1e3f9cbc5810ca1a2b822be7c1c907c1c6c487e20ee52b5818aff5cad3598",
+      "size": 886
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/creatures/fox.json",
+      "sha256": "c07246b51f71ccdb067ed5571150720a0b55aa22397ab264acb30335392425ac",
+      "size": 726
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/creatures/sprout.json",
+      "sha256": "b9b99fa4d582ba553b43adca72081a12cf10dbbd212866c1c89f2675e7679756",
+      "size": 816
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/cuisine/aubergine.json",
+      "sha256": "f07b8a6f050b44fd62a949ced634775249181b5bcae6717eae32eab9920f4d02",
+      "size": 1195
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/cuisine/beetroot.json",
+      "sha256": "7360dc9340e4a8d6f3db8be06809fb59c5aee4768121c985434f905e581bf31c",
+      "size": 602
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/cuisine/carrot.json",
+      "sha256": "3b00d6c360118f762f5eca1298d580710c47678cd3362874e7de9b6127610066",
+      "size": 1016
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/cuisine/salads.json",
+      "sha256": "f7ee8196fff323c180c5147825689bb481d6807a7010a94a83dd63c7826c44a5",
+      "size": 525
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/cuisine/suqid.json",
+      "sha256": "4797d41041573a1a0419033f97a0ceb806ef15f74a26e9db90fb32fbc3ebba5b",
+      "size": 1799
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/cuisine/toasted_seeds.json",
+      "sha256": "35d87557c4ebd648ec1ca68739163d75bc2a42fb1038e44c306aecca24cce3ba",
+      "size": 676
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/cuisine/venison.json",
+      "sha256": "8b3fd8ef1c2e14500d123283edc214a978d488e7b63112c72db4dce22dba8b83",
+      "size": 745
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/features/burnt_trees.json",
+      "sha256": "88d999f60bfd3fce316994784ea39ec2d5b52fc3f4e265fce88b930c4b5cf36c",
+      "size": 1256
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/antler_hat.json",
+      "sha256": "48b72d8b787e3636dbbb2307e3db21753980ce86fa45091a97168f46b885c2d8",
+      "size": 588
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/beetle_mask.json",
+      "sha256": "b86277caee5023db02927ea5b2a5942242d702e2904f4cf1dc4dc2072e60166c",
+      "size": 519
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/copper_armor.json",
+      "sha256": "d8446ec2deb2cfa1b2d43bfd6630392235ec2cf2af65f485534632387eabb462",
+      "size": 724
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/gall_apple.json",
+      "sha256": "de4e695b468fe8a92986ddda0b431c2a8e0c30f625b21547dc488ec9fcb4b846",
+      "size": 691
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/pearleporter.json",
+      "sha256": "addbcc8fe4172580f072f29b9e4596ee8c6e3f8e7a9b7d0d4a723ae9a07dea50",
+      "size": 585
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/silk_cocoon.json",
+      "sha256": "965f3b2237e4e07799ad7916dcd70339786c0459fe880d84dd57d7a0f667e625",
+      "size": 541
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/silk_thread.json",
+      "sha256": "afb66e058060e0d54c603a97e64e06340c0da2c77ceacbf3544f67cf07b7c6c2",
+      "size": 927
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/silver_armor.json",
+      "sha256": "c105ac45f13b4eeef1370d8bfae7b271917618a3ebf53ebf0e0c56744764b747",
+      "size": 745
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/tannins.json",
+      "sha256": "1df24d3e5d35cddfb26d458abbc1f005a1050a51985ac622fcc8c8d044ecf9cb",
+      "size": 612
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/wasp_attractant.json",
+      "sha256": "bdc3586becf0f229582a116ff0402cc61b07aeba6a6201e6eb61bde1f61375b7",
+      "size": 697
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/locations/huts.json",
+      "sha256": "df4f90af1af0f492fcaea0ee5dd59ff1a1765e2e6ebb6360a2aebdb30cc51641",
+      "size": 746
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/ores/amethyst.json",
+      "sha256": "0fa61d5f9e95bc780ee0a6ed2d371d21dd718902b27c55610d5cd18132f43e43",
+      "size": 1363
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/ores/silver.json",
+      "sha256": "9567930b2bbea21e1fe5d2be1c932d2ba301e501c2bc5273116ab45050f32ce0",
+      "size": 1562
+    },
+    {
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/templates/animal_spawn_info.json",
+      "sha256": "dcff3ec43343020c2feba3522aac672bbaca36df0e7b54a162887f18bac058f3",
+      "size": 1182
+    },
+    {
+      "path": "resources/natura/lang/ru_ru.lang",
+      "sha256": "75a1db2e49e49bd984dd254ab67aeeddd37c16269ac75710f36acd7fc015fcd1",
+      "size": 6662
+    },
+    {
+      "path": "resources/normalasm/lang/ru_ru.lang",
+      "sha256": "6437b3258d217cbc4c151a2d66392431a63a0c5678166000f361d7a96fafe08e",
+      "size": 2652
+    },
+    {
+      "path": "resources/omniwand/lang/ru_ru.lang",
+      "sha256": "a359adce4f9d52bb5573b4c4b368483a38b7ed1e5c319303afde878a292ef359",
+      "size": 185
+    },
+    {
+      "path": "resources/openblocks/lang/ru_ru.lang",
+      "sha256": "acda61aae1ba3b20893d410cd6319fc181e606a85e83499e5e412e71ecca20cb",
+      "size": 2348
+    },
+    {
+      "path": "resources/openmods/lang/ru_ru.lang",
+      "sha256": "5549f0dadd6f075d155f1627d9eebabf1653cf0e98747a5c8aa6d98836428b5c",
+      "size": 4268
+    },
+    {
+      "path": "resources/p455w0rdslib/lang/ru_ru.lang",
+      "sha256": "026a4179969ea5c2a55044d74b2511deac51582307f6a5b1548ab55554e5fad9",
+      "size": 93
+    },
+    {
+      "path": "resources/packagedauto/lang/ru_ru.lang",
+      "sha256": "3f67fdf952166093e5a900606b78cea0883a4544915058e9eee76a66d644a5f3",
+      "size": 1740
+    },
+    {
+      "path": "resources/patchouli/lang/ru_ru.lang",
+      "sha256": "6a9175c1a07a0a5f34d5d8d095d14343d7df89f6b29bd7d272327c6b175cd7a3",
+      "size": 439
+    },
+    {
+      "path": "resources/plustic/lang/ru_ru.lang",
+      "sha256": "552c0f6d4528a52a5e5766589ab1c05ba5d5a7a10d703d36b7f7aea941330cba",
+      "size": 31366
+    },
+    {
+      "path": "resources/projecte/lang/ru_ru.lang",
+      "sha256": "f6ba4b4c7dfb8e6abb78f87f3fd93c6031a34e7625536bfaede2662d9ee67339",
+      "size": 10032
+    },
+    {
+      "path": "resources/projectintelligence/lang/ru_ru.lang",
+      "sha256": "e0dbe61abc2020bd86a77115ee9a892e0bafef9514a05a608092c619d5f74914",
+      "size": 21753
+    },
+    {
+      "path": "resources/projectred/lang/ru_ru.lang",
+      "sha256": "c92c41b305f3227fd0baf15ebceff92585bbaf8b46ad088a38741ef2ff0f5a37",
+      "size": 5210
+    },
+    {
+      "path": "resources/quantumflux/lang/ru_ru.lang",
+      "sha256": "d262649bdb1a1763943bb99c03333b442ddc6ed4674ba39bed2e154325db9bbc",
+      "size": 86
+    },
+    {
+      "path": "resources/quark/lang/ru_ru.lang",
+      "sha256": "61b64ddc169199762aeaf0eee0faf02f399b7fb9ffef19d42c138e90ab8668ab",
+      "size": 11684
+    },
+    {
+      "path": "resources/reborncore/lang/ru_ru.lang",
+      "sha256": "ef56497a4f726cd2a01708de854bb49ab4ed9f725db903611ef9a7b107aacfa5",
+      "size": 2667
+    },
+    {
+      "path": "resources/reccomplex/lang/ru_ru.lang",
+      "sha256": "547799cd60c72203acc266f57b4a80c32a455027aa41ff0075dab3d3b6fa37e9",
+      "size": 48592
+    },
+    {
+      "path": "resources/requious/lang/ru_ru.lang",
+      "sha256": "6fdeb31e8c920d79774497484ce9268775c57045174ddcb4a5e840b41d82c3b8",
+      "size": 328
+    },
+    {
+      "path": "resources/requious_frakto/lang/ru_ru.lang",
+      "sha256": "a0e787ca3517eeac6b703ea8a74ff9beae0265af67b12f921b525a1387780422",
+      "size": 782
+    },
+    {
+      "path": "resources/restrictedportals/lang/ru_ru.lang",
+      "sha256": "46f14093f7f6be9309289c574dbf52ccfd0434c1c761a11933006e6dc955aef2",
+      "size": 266
+    },
+    {
+      "path": "resources/rftools/lang/ru_ru.lang",
+      "sha256": "10527df9d56dcd3842b1730eb2b8070cbb568a167b17ca0efe0f94568985d4bd",
+      "size": 2491
+    },
+    {
+      "path": "resources/rftoolsdim/lang/ru_ru.lang",
+      "sha256": "987bd60e27c05644a9db30259e4df45af149ef2cf6ca78d92381a77795aa6f86",
+      "size": 8001
+    },
+    {
+      "path": "resources/roots/lang/ru_ru.lang",
+      "sha256": "974610243ebdbdd174fc2a794e56bb44c87478ea3030f4d7d1843833bb6788db",
+      "size": 65929
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/automation.json",
+      "sha256": "610330584c8913dbf7db33aca7b0f221d5d140230b0af94fd4b0f7814b14f961",
+      "size": 245
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/concepts.json",
+      "sha256": "d48d1cc39cbb6c3a5926075acf458ebeb7d60d00de29880cd27ae31690910a5d",
+      "size": 455
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/crafting.json",
+      "sha256": "53b97859f631e70a80e77c9685e7da85c387b2d2c52ec6b522a5ec539ee0e918",
+      "size": 284
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/crafting_armor_tools.json",
+      "sha256": "38100db43803c957c514dbc284c8c7a108305e9876f011fa8e5d5d1cd09724c1",
+      "size": 290
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/crafting_armor_tools_living.json",
+      "sha256": "d54c443bba679d79cf13e9cfb54324c768d7f2408d316d2cd81fc27749765561",
+      "size": 577
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/crafting_armor_tools_runed.json",
+      "sha256": "2af47fdce123ab4b094dc59be1f27ce9ae529ef1396670e7b144c6abd8086da3",
+      "size": 515
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/crafting_armor_tools_terrastone.json",
+      "sha256": "8a8b1af969c30d09a442ce8b2951c0d9e98824e681cf07426f7c723c747c64e8",
+      "size": 547
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/crafting_armor_tools_wildwood.json",
+      "sha256": "672251890ecb0ee7f8ea7ef05ee910d36d8c27a8317546b35b44494d59472544",
+      "size": 516
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/crafting_decoration.json",
+      "sha256": "a7edb0e501bcb9fd96dde83d325ef5da8bce79dc0c93680e88fce7c4f6e2cd0e",
+      "size": 291
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/crafting_devices.json",
+      "sha256": "1c22b95c09671a5f1c5146b6a521df2575b1de9e4173afc2fcb120dba2a7cb46",
+      "size": 286
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/herbs.json",
+      "sha256": "7a0b71239b10915f0bff0c2126040333c8e992b24dfa089b1ca612c0bfe879a9",
+      "size": 221
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/resources.json",
+      "sha256": "c9bffc1ac288616ac46e22cdabeff549fe1e5c9bb618f308f6013f9e0a125b45",
+      "size": 242
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/rituals.json",
+      "sha256": "afeb4307eeed5fdc29a923c9538ebee6164831048b279fd4275c1b3d432db898",
+      "size": 324
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/rituals_ritual.json",
+      "sha256": "7b64175b2ee2aa8d43c0ee9b329b7213c5d051639fc3d512aa0067e0c3b4c104",
+      "size": 265
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/categories/spells.json",
+      "sha256": "a8675cc6f4119af8cac12f0de651821a2dd935c480838e01dda731770f30f504",
+      "size": 195
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/automation/aqueous_soil.json",
+      "sha256": "9a469067cab09ac00f54abf04deeda11f45fd7bb4f3bc53381e13040261135b0",
+      "size": 3630
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/automation/crafting.json",
+      "sha256": "e111ae05d660b01cfc234d344251fb5db1c3a0ffc737f7bdf8288a14c408c9b2",
+      "size": 2103
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/automation/introduction.json",
+      "sha256": "27b19be263abedd784d6bc9ac0fa74c7d65122041c247e2180bfc441b6d7e1e1",
+      "size": 1741
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/automation/mortar_pestle.json",
+      "sha256": "f92ad8f849962a968a2748ac2ff3f3299337b613536fff183e679fad2de1cc17",
+      "size": 2377
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/automation/ritual_overgrowth.json",
+      "sha256": "9c42e7d8194d17d61ee508f01942a3e95c4dd240b5b1ce91c24da49192be2fa1",
+      "size": 2905
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/automation/runic_shears.json",
+      "sha256": "7ede34207ca5d128ad706c036fd56c30f956f3aed896f87695b5ac760202ba1b",
+      "size": 916
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/concepts/groves.json",
+      "sha256": "54b72714190c4f3e4140b8f5f9df1ef4fc7a40266f03f032edc5d0e96cbad69f",
+      "size": 2708
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/concepts/introduction.json",
+      "sha256": "da69e8067dfdc84cadc36cb6e4fd60d4245ffb571f338d4368d3ebc5f491d0b3",
+      "size": 1871
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/concepts/pacifism.json",
+      "sha256": "56208fec5cdaf846b2cacf1e3950b06ae3bb091a6341b461813684165714fa70",
+      "size": 1436
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/concepts/quick_start.json",
+      "sha256": "2011053abe0025ffda077e117c978e417fbda4e991965bcfe3d555db438e4d69",
+      "size": 3577
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/concepts/the_fey.json",
+      "sha256": "050fd3381de41b4b1582bfc428c0e7b7826e4d50ac9e5b5e023670ef999fab70",
+      "size": 2363
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/concepts/wild_magic.json",
+      "sha256": "b6aa8f622433a86a215b457199b7c19f1f5b8e22a3c6e9bab967740246971285",
+      "size": 3848
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/apothecary_pouch.json",
+      "sha256": "5f59b1b2f6a79d29c655e73520cc501dc5258d39ca2f84ce19caca50709de17a",
+      "size": 1341
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/catalyst_plates.json",
+      "sha256": "43deff4e475bce4c73cce20fd965054eb32fefa567fc76544a244cf8bce293f3",
+      "size": 1347
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/component_pouch.json",
+      "sha256": "6e9792d5189d6436df4f0051e73e56d99779302988087fd6a231f4b95193f714",
+      "size": 1191
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/decorative_pyre.json",
+      "sha256": "deb3e0d1e3d887961d403c0eb534e614e937d9fda418b92da0cd022a7280dcfa",
+      "size": 1154
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/fey_crafter.json",
+      "sha256": "2fbbae7a6148ffb2b48a2881434518c7a6ff13618468a803b30fa434fde27573",
+      "size": 3858
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/fey_leather_pouch.json",
+      "sha256": "5bfe8398d4917cc36480e694c4e0faf31d5aa63f89f5124d6080abafac7c4ad7",
+      "size": 1070
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/firestarter.json",
+      "sha256": "b1228c2e0044fb6ef016421ccb9a953498eab9842caaa84c97e8798890c0e94b",
+      "size": 1076
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/gramary.json",
+      "sha256": "c4090c8058e129486106a818c6e8ff88064e7cf11745a9cb967ef7079669cde1",
+      "size": 905
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/grove_stone.json",
+      "sha256": "a84cb5d7abf4a235d306117b81237e8c2df25108609057fad3b2e3a22e33240a",
+      "size": 2275
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/herb_pouch.json",
+      "sha256": "5316b86a086ee85cb3f71dd3ea6f4008fd36d6bc6ed2e7adbeb34bd1d02730f1",
+      "size": 1000
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/imbuer.json",
+      "sha256": "e8bf459c2452eb0476c74830b45225f14577384b7cb7bcca98f59e578f1e6611",
+      "size": 2984
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/imposer.json",
+      "sha256": "11f00ec343f64a6151b26555f1c96ac543dac63f20a639e9abdd9f1d5bb045e6",
+      "size": 812
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/introduction.json",
+      "sha256": "e069488637a7fd82eb6603aa9ac2fbbfd373a51aba51e7d544626d6ed48ee513",
+      "size": 5925
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/knives.json",
+      "sha256": "bfac45f69d4a949d52f4bad96eb9e742dd325f4b5e1a6eba0f510f0fed19eb4f",
+      "size": 2706
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/living_arrow.json",
+      "sha256": "c9d4b4b7c18bb89cabc1b391c110837103f9ce27d7da03f4ff920a49b35b6816",
+      "size": 957
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/living_axe.json",
+      "sha256": "d16497a0d9ffbcb06d847d00d23977261b6c47d83ded8c8a79f01c66d4ba5146",
+      "size": 922
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/living_hoe.json",
+      "sha256": "c5fbe3a0ca423f62b14f1f998a3d3f1e663c4988adba70fe95c8b143aa8edf5b",
+      "size": 929
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/living_pickaxe.json",
+      "sha256": "158b93bcb6d3a28833833b717e1dbd2175571297de50dfbafb0e37b364c09686",
+      "size": 932
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/living_shovel.json",
+      "sha256": "02304276dc4632039787f8bea5cc34ffef34bde20fec33e3282a1e919643fa92",
+      "size": 933
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/living_sword.json",
+      "sha256": "0ecee8022591da1d3658d22e2f10c1dbe776f344d020f8e536e1730803480ed2",
+      "size": 914
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/mortar_and_pestle.json",
+      "sha256": "d76b90a063bd930e02815b66ed359f1804d0559df74792717a8bf871f803d270",
+      "size": 2423
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/pyres.json",
+      "sha256": "48d1d471b03b2ba3a778d8583bc8c5b8cc5a49dcb64046a77917b788c626ffd0",
+      "size": 2781
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/runed_dagger.json",
+      "sha256": "a880f36ca4dbc5d367935cacb9fafc3dd1505c088aa3f75250be44a10509d4ae",
+      "size": 1003
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/runed_excavator.json",
+      "sha256": "c97e0eb382e4744e0f830300e4dd9ed19d8381cf1cdbb9ab31be39190ea17ef0",
+      "size": 993
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/runed_great-axe.json",
+      "sha256": "738e3daba3c55c068604cef415d033ebac584084851ba493f33af023b48b0abc",
+      "size": 986
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/runed_longsword.json",
+      "sha256": "a0752d464d2ee31ff107533c48b7d09edb297da036dee6cdf2707c2500bd1dc2",
+      "size": 912
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/runed_obsidian.json",
+      "sha256": "509e41270e83169f99689051c0197e6dd328e86db3fa99fe8359c9735f7f258f",
+      "size": 4088
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/runed_plough.json",
+      "sha256": "ad6ab300c0b0c942b1942ecc8e73309ff8c75de25d3228074537042e8d4a6484",
+      "size": 969
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/runed_smasher.json",
+      "sha256": "de0a6220f61893d7046169efef8c6c2fcc30f6d3830ab2e328da1503c33a4a07",
+      "size": 1008
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/runestone.json",
+      "sha256": "3118eb0548ec651223a005ba199b162f4f09f77c7d8996a83c9656aaca3158db",
+      "size": 3529
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/runic_crafter.json",
+      "sha256": "85b8cf09773fc2b97a8474176e2b951b70b3fbc8bb1f754e00d369ec789f2c56",
+      "size": 3231
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/runic_shears.json",
+      "sha256": "0e529a056e8d226276600d4159f56fa54c507d3f9801c8f558269f6b444f1887",
+      "size": 1351
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/salmon_of_knowledge.json",
+      "sha256": "df4b38caaf052dd8eb626f3ff4bf62759a084f4b86c7d3f88839b145e63a73c3",
+      "size": 1040
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/staff.json",
+      "sha256": "b3f8fceac4827c64b218c811cdfe426484b6824fb2f2b68a549250eef377b253",
+      "size": 1668
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/sure-footed_stone.json",
+      "sha256": "dcd83ebc6d38df893d82957c63bc8e53592782474cb0db92b56192c3e0e2c17c",
+      "size": 825
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/sylvan_armor.json",
+      "sha256": "a7eb3ba76e06f743143c3e4095e79bf2f3a068bacd0f985fa8b081b0684d7d07",
+      "size": 1469
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/terrastone_axe.json",
+      "sha256": "6158a5bdd367d7af0b2e13e28beec30354bc1be9d667310d0bc7e6dee78fe91b",
+      "size": 990
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/terrastone_hoe.json",
+      "sha256": "f71ac1579b3f69ee224bea311d6c58c9e429fab57555209f48687cdb66b3d42d",
+      "size": 1175
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/terrastone_pickaxe.json",
+      "sha256": "2aeb263e3f50e504eed4703402b7feb9eaea75503a838a966f0181b1e5e7fc90",
+      "size": 1180
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/terrastone_shovel.json",
+      "sha256": "9d5fc80409437415f5b963541066f01bf6e78160d517ce2d1cac051a2a8320de",
+      "size": 1197
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/terrastone_sword.json",
+      "sha256": "2c9d633178fb6a346586e6a53eaaf5618b5331293be59b7df9a3f0123242a790",
+      "size": 1028
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/unending_bowl.json",
+      "sha256": "616200250ae3f5774546083d39e7879ba2cff16094db4c9e4ba54eb21f38115e",
+      "size": 1078
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/wildroot_rune.json",
+      "sha256": "9b7e20293c403cd75341d4cabb19e1565878f04bb8cce3f7605e7426798c6c7d",
+      "size": 720
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/wildwood.json",
+      "sha256": "374338208207ecb69c66ba6c9a7ffb3ae94f502e3b1d855335e41199306cc52d",
+      "size": 1539
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/wildwood_armor.json",
+      "sha256": "6b27a71fa0fafcedeb5ae48e2be6be11bb21814aa7b464b94e78b34e62220bce",
+      "size": 1177
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/wildwood_bow.json",
+      "sha256": "d08365276d8b64d0a275e9edb203114576adce6393bb7c82b226ca3b0c77271b",
+      "size": 862
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/wildwood_quiver.json",
+      "sha256": "22a2a1757c862a155ff6b06234fb99d1d07ced62228c32f6f6db2660034194f4",
+      "size": 1152
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/wooden_shears.json",
+      "sha256": "aca580a04132f917e17e3de52614d49d0f77bec5fbf86a3936624a5edbfeceb9",
+      "size": 580
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/baffle_cap.json",
+      "sha256": "68a910a2726a808d292da288a85fa0842db1eb2a971af35d75faef2e578f97e5",
+      "size": 2549
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/cloud_berry.json",
+      "sha256": "d0c32467591b77ebf1e591c76bbe88ecbdc212d56cc7d34a567d0c59c6e384cf",
+      "size": 1678
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/dewgonia.json",
+      "sha256": "ac6ea5daf3ed9ea8600d3d6d2c308ad7cb9938bb5ff8415712d75ff56d2f09b7",
+      "size": 1690
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/infernal_bulb.json",
+      "sha256": "c6bd18dfd19b09121e22eb3c9088872dda653c995f261401d1ad3290c5137b20",
+      "size": 1671
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/introduction.json",
+      "sha256": "598dc404f23f591e1e2dbf3edbc82a8cc4c4d16e108b2edff173f8c551855b2c",
+      "size": 3951
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/moonglow.json",
+      "sha256": "841b759ebfdd5b0d4f74bbc740536ff1046ae2db18908d01d5bbfcc25e29ed78",
+      "size": 1487
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/pereskia.json",
+      "sha256": "020abd5bb1d8acbba9a875a3ee0f9bfa364869b4fe2a0cf2eee0aa0d180a1755",
+      "size": 1408
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/renewable_resources.json",
+      "sha256": "3a2090a3f5a1c676b32316d0567f9fa13ed8f53505c2544877d86c23a2739f0b",
+      "size": 3871
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/spirit_herb.json",
+      "sha256": "9742a62022304bb053de6f05ed1eedfc85dc3f5a48f2d160282fdc52127e1d83",
+      "size": 1866
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/stalicripe.json",
+      "sha256": "a061c029e2442f80088b8a98fc7f2addcaade988caa2966e21c00b2049c2cf2d",
+      "size": 1586
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/terra_moss.json",
+      "sha256": "a8284d1ac3f7d3767aae8e3f6a80dca92f494fcd8105897909c022ca55215a01",
+      "size": 3923
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/wildewheet.json",
+      "sha256": "0e1a5300c850bc4e57054b75c09f095a65816fd9eaaf66c86d6af079228c4f3b",
+      "size": 2087
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/wildroot.json",
+      "sha256": "fb5f7819204d648149ab85d9187c1d94e6ff5f5f6b4d123097c89e4a0aa219d5",
+      "size": 1695
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/bark.json",
+      "sha256": "208f035a7ec3cfa7320d37cb35524fb7291dc80dcec26791b0d2805e5faa1e00",
+      "size": 1603
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/elemental_soil.json",
+      "sha256": "d58a0eb20943546f25c61d1de5e2984b90cc1ffdf3302a4a17e32b7d5fd1f3ea",
+      "size": 3527
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/fey_fire.json",
+      "sha256": "bb74ec08e2d2eafe0ce0aaa35604b7af3ae17ac8c536192b4c2e1e23fa0bba11",
+      "size": 773
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/fey_leather.json",
+      "sha256": "6e542d74cd04655a843407d3fbef0d0bb3f387be10ae84033e91c378fca6435a",
+      "size": 741
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/flour.json",
+      "sha256": "3ff71fbda6b5f434b217898cc21c4ce809b95758a23725ffa0995c7b2dd39bea",
+      "size": 797
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/glass_eye.json",
+      "sha256": "171fc85ef67edea79769da17e20b6170388362717cf79861fe883d9f2f4e97b7",
+      "size": 641
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/introduction.json",
+      "sha256": "d7df2157bfbb105a68cfa84b19d016fc1919cbf0d0e95e037c5f66ebd807e90f",
+      "size": 2093
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/life_essence.json",
+      "sha256": "b3673d5ba76c0efe40f3ce9ebda2cc93319048831089914e0a0c426c6999d1de",
+      "size": 1030
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/loot_bags.json",
+      "sha256": "0cffa45adc678f386015d6b2920f3d95ce99289a6d7fe1fb2c4d174b6cdfa9db",
+      "size": 1448
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/mystic_feather.json",
+      "sha256": "9a13b9d0abd1e5116623055b139bfb4e4c20c6658cacb75a3911168d7748ebfd",
+      "size": 709
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/petals.json",
+      "sha256": "0c70c4a2d7cf7cc0a77d9faa38ecf34e62ae9be5b94a04e15f433e1fe2280780",
+      "size": 676
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/rare_flowers.json",
+      "sha256": "f282174c044b8175160799e961a7c4bf0f2dd8dce3351c2c5de9007d77b7aa73",
+      "size": 777
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/roasted_pereskia.json",
+      "sha256": "bcf739b6211f6671c8072f92d96cdffe51ec1eb35ae54394f20fbe34b266e5ad",
+      "size": 779
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/runed_obsidian.json",
+      "sha256": "72135ade5378c812224fb972e50ba0efc34b4d0f0680ff7c1bad9b3adb9b98c7",
+      "size": 1206
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/runed_wood.json",
+      "sha256": "c017cab05121bc1c8d2edf588d9b7c0438c73033d9d4b476e9758acf844cccb3",
+      "size": 1567
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/runestone.json",
+      "sha256": "0941a1852bc0009fbd0e77cb225128099b0446bf06cf6e914667fa292163bdde",
+      "size": 984
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/runic_dust.json",
+      "sha256": "2ff3256b6d9576121bd18daf597a3b73e5340909db47ac1bcc03b632e074c94e",
+      "size": 1116
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/strange_ooze.json",
+      "sha256": "1c14be78ad444d0989d523fdd660b92fa759b7e10c00760be3a5d99142670a72",
+      "size": 749
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/wildroot_stew.json",
+      "sha256": "2eb347b16fe22b1469cd6576ac26fea35c90b107b0184f42ecd99c66627d5b60",
+      "size": 603
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/wildwood.json",
+      "sha256": "f7e48d3883c35380bdd0a676008fa0f0ed26c2a22387199d0018a8a92fdb7381",
+      "size": 1645
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/automation.json",
+      "sha256": "bc16e5a2ae044b6160016ec3714c6c73ee4a5f12204892596aa57dd810ca35f9",
+      "size": 3312
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/catalyst_plates.json",
+      "sha256": "2b0c812df9aec21059ef59118af0b76d2307f9a54b233efdeb1d0a153cc0ef9e",
+      "size": 4555
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/fire_starter.json",
+      "sha256": "63926a3d67b9e9e6f73c63c9592e4cff26d412fb93f743297387ab4eb4b0eb75",
+      "size": 1542
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/introduction.json",
+      "sha256": "bfe09c0deb1b334d25b8619952c325ab00cafd118e2363d950ea3216f3645804",
+      "size": 4457
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_animal_harvest.json",
+      "sha256": "3b49af61172b3a2d1e490d1678192b5b0e3683c8efbfc2a1cfd395521bf8817d",
+      "size": 4319
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_divine_protection.json",
+      "sha256": "e8811e43616aaa5e76b585df26e06eb61db1e19d5dd32d0120693cf5d3b654a3",
+      "size": 3983
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_fire_storm.json",
+      "sha256": "a8f165fe927b4254ebedebdaf8b97aa4b12b1a0e9740f8000668866432678c6b",
+      "size": 3591
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_flower_growth.json",
+      "sha256": "4f72b8c3405e4b627a88b6f9aa75ea9bfbb2c712fb387858e038c55577b987b8",
+      "size": 2199
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_frost_lands.json",
+      "sha256": "e2a7a532a47aa8de19b56a2479beab81b0826bdc51623afc456835eef1f694f0",
+      "size": 1678
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_gathering.json",
+      "sha256": "6498b650dc75e5a55225dbbc029ba6a9e78fc49d27fdf76fce63704405546447",
+      "size": 2058
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_germination.json",
+      "sha256": "c7819f82d31743087f04e9b40e36f56c05ec0e82cccd7544fc30021d09cc5097",
+      "size": 3502
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_grove_supplication.json",
+      "sha256": "b2a969cd552c0769276533217a2e1d42606c76e5450b31f33c51d677ca67331c",
+      "size": 2948
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_healing_aura.json",
+      "sha256": "87eb0eb900ef736be28aadcbca2aa0894b46b17752f4d881c3743c18d984950b",
+      "size": 3086
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_heavy_storms.json",
+      "sha256": "ed4e6492213dfd6e1a6c67080a2dce8fc2cea15372990ed4b008ede6ef94602d",
+      "size": 3456
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_overgrowth.json",
+      "sha256": "c15912b78e1e98bcdc59b2ccf65d261684a44c1223bccc4756a944e6dc03e66c",
+      "size": 2691
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_purity.json",
+      "sha256": "f83f4664be6732e5788b4ffccfb5a6023a0ceefe9fc563b69cee03f48ed7b0c6",
+      "size": 3075
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_spreading_forest.json",
+      "sha256": "32ddff1be3786cc3e21054d33e0e2fc4a0993c9d2d7066dbb2f3c0bcf5ba3c9a",
+      "size": 3878
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_summon_creatures.json",
+      "sha256": "e32f1f0d7fb433e69f01bc646efeef674926ed09466d92492df08d70311f4607",
+      "size": 3315
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_transmutation.json",
+      "sha256": "2a1dda89fa461cd4082a68b7ee2d303232b852249e50ab494169a9b5439d60bd",
+      "size": 2993
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_warding_protection.json",
+      "sha256": "e1a50fe14568f888056b4b5589c61ba1220a7dd819c8a28bf36406437fb9eb3a",
+      "size": 3128
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_wildroot_growth.json",
+      "sha256": "ea27812ef403726a04c022375029db7f279638c8e70b7b4be9b65a590f0aab5b",
+      "size": 2988
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_windwall.json",
+      "sha256": "3cba3bad4ecfda35847b651874dc2c6dee318f3cbeb24f1f90ce8c79b5968c23",
+      "size": 3330
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/standing_stones.json",
+      "sha256": "fc7e7bb5b61fd5e7ddd95e17938fd2ffc9e7873d03b85a3143aba6ded1a298d9",
+      "size": 7323
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/tiers.json",
+      "sha256": "ec0be2fa4ecbd898003dc3c648e62318900462b31269697ad75cd8c01b9ac07c",
+      "size": 3242
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/visualisation.json",
+      "sha256": "0b9d3c70ae9ce9f1db1ea0d6e7ecbaff49293efb9387fd9f95312ebe9c1ee341",
+      "size": 1181
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/component_pouches.json",
+      "sha256": "fd42ec420d49126814be50c1a9e3cfd1d39fd618ada35f22883c2d9b53afac59",
+      "size": 4136
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/introduction.json",
+      "sha256": "f2f2bbe9260de7a5b2cc9a890bc71713e6794bc58a5005b0f6f13be6c57a06c8",
+      "size": 9021
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/introduction2.json",
+      "sha256": "f65ac648a40d4fbe71bccf2bf995ef05abea2dfbbc4b8b27a746884bfa3a9ae1",
+      "size": 6439
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/library.json",
+      "sha256": "6e55fb585cce35694fcc497ad6d5d8b08dbab0be2075788d9a3029560a89a25e",
+      "size": 4611
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/modifiers.json",
+      "sha256": "faf5dab7720a0aed01ccd282e67bc04f18c16d4017968037383db02968341301",
+      "size": 3216
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_acid_cloud.json",
+      "sha256": "70d8c9b16ab835ed547414e516ebd98e53ea3905e7935d82de6947fadf646e37",
+      "size": 8899
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_aqua_bubble.json",
+      "sha256": "55cdd64bc4cbe8d67e77ca7a5154c230ad252f2d4eb0f4634406997b0df6c5f8",
+      "size": 8080
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_augment.json",
+      "sha256": "adb37b72bba986e05148e298873a132bb480379a591bb5d17b4eb316e6217697",
+      "size": 7362
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_chrysopoeia.json",
+      "sha256": "3419e3c431ad2cf603d0030918148dd5aede5d5901bdacc88e8a960f0ddab820",
+      "size": 1179
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_dandelion_winds.json",
+      "sha256": "fa0d3002f0b4977399cbc5f2d0f201894d6d03b6e0775bff8229167283ef7b27",
+      "size": 8510
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_desaturate.json",
+      "sha256": "8fea6106f2d262ef86e2570be6190ab53bf812b6d3a8b93214038e920026589c",
+      "size": 8652
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_disarm.json",
+      "sha256": "38746bfea7709da65f95a4c04c8fe87c4f5791ada404882bf356086df9d717b4",
+      "size": 7144
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_extension.json",
+      "sha256": "d2bdbab2716262c43949bbf0ef6f3c0ccd1a3c44e66b15ac24867d906c327533",
+      "size": 9409
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_fey_light.json",
+      "sha256": "bf2e148cbb9e52a562bacf6dbff747c7260337e2f11f2e2943a799f2a42f9a9b",
+      "size": 5833
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_geas.json",
+      "sha256": "480cab6d37e83bcbb293bf18ed8687f9049c8d15aa738e5db287a142c9abba97",
+      "size": 7163
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_growth_infusion.json",
+      "sha256": "9071f54eed14e4ba2199ca7305095d3a839931c8a8db83cb095e1a5b736a3b23",
+      "size": 9845
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_harvest.json",
+      "sha256": "fd092ccb489b85218fbeacdca2ccff4ad894b12c70e5dfa36d510c8e69370b2f",
+      "size": 7847
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_life_drain.json",
+      "sha256": "6a28690a1cd26f645656706673b5d668443479a09984f38cffd6ffd758002c41",
+      "size": 7854
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_natures_scythe.json",
+      "sha256": "1b27c5da2fd624ec193524b2973695480d03241d6da9df46b85158f5be783586",
+      "size": 8468
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_petal_shell.json",
+      "sha256": "1660aacd31d51c2488d4d100482d46d4ef5129ed32c42b489fe472819830a6b8",
+      "size": 8368
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_radiance.json",
+      "sha256": "c62aeb6949343663236665cb170a2b28479701dbe45da425cfea4db5a646515b",
+      "size": 7285
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_rose_thorns.json",
+      "sha256": "df500eb888f70d96a1d7494c8d0f77136150bb24bbac77d53283f091abc78cad",
+      "size": 8476
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_sanctuary.json",
+      "sha256": "7fb4877f9d8689d17ca00412e09252980b924d371fb9ee4ef1e6a962f41af056",
+      "size": 7478
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_saturate.json",
+      "sha256": "4c836cd69821e0a2dca226c38c2818d5c7ed027a2d5d3335d8a0f2120221ffa5",
+      "size": 8830
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_shatter.json",
+      "sha256": "7fc07a182184c2d98231fec5c9e3ce0dbf056da7817fb59ce251427f13d5033e",
+      "size": 8356
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_sky_soarer.json",
+      "sha256": "b43f19fb61143d6f4080a85b02ee17c655eee15520a8152f50db85e9c5f8c825",
+      "size": 8158
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_storm_cloud.json",
+      "sha256": "c7ad27538761a34123fcdc997632360e3b15db1b477b3996d5ca8bfae117fa03",
+      "size": 8544
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_time_stop.json",
+      "sha256": "e73a10e4ddbffd27b51f305bfb66a8063a9c7ebf521e3f1f2acb649094792b4f",
+      "size": 7955
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/spells/spell_wild_fire.json",
+      "sha256": "bff0a70fca9aeb7796e0ae66a8ad7343fe1d289fd50b203e37f63da369d884e1",
+      "size": 8248
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/templates/mortar_template.json",
+      "sha256": "3071ae2f238ff922f1fbb820c07dfc767833f48c36ceaad2395b0a76c49bc101",
+      "size": 1184
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/templates/ritual_crafting_template.json",
+      "sha256": "a6ca46ec1d9792a12be923ce533ba4a7f12e048d2bf17fe7533fb3138e64f3ed",
+      "size": 1113
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/templates/spell_modifier_template.json",
+      "sha256": "23689c57a4f258b6bf0471cbb4f6dbf33234c896173d89c8e3278e63d6cc6d72",
+      "size": 1680
+    },
+    {
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/templates/spell_template.json",
+      "sha256": "207b053583ba6d244da9c02c7f53d10cc798a9fa8bc5ad1fef3156405a45f5c6",
+      "size": 1691
+    },
+    {
+      "path": "resources/simple_trophies/lang/ru_ru.lang",
+      "sha256": "29837b500791b2968a2a0403a6c1c8074a41d1428c547cfcfdc3d4115cc83b3a",
+      "size": 360
+    },
+    {
+      "path": "resources/simplevoidworld/lang/ru_ru.lang",
+      "sha256": "36676b3e1b9051d471830b675bec045e5974a8667f7dfca1aa2c93c323652816",
+      "size": 140
+    },
+    {
+      "path": "resources/simplybackpacks/lang/ru_ru.lang",
+      "sha256": "8b1c593d38c410b0de7834a94fe6a2126777cc7d5b6404fae961fe438b4227af",
+      "size": 290
+    },
+    {
+      "path": "resources/simplyjetpacks/lang/ru_ru.lang",
+      "sha256": "d8b257ecf48b7b0da6d3239a8d9f763b79c24150b66224610dd02ae98453f9b7",
+      "size": 11079
+    },
+    {
+      "path": "resources/solarflux/lang/ru_ru.lang",
+      "sha256": "2931bfcd3acc6fd833a3643e9417be96e2ea832cd196249561414f09794bf219",
+      "size": 328
+    },
+    {
+      "path": "resources/spartanshields/lang/ru_ru.lang",
+      "sha256": "229b5a16fe34f608d3976b78361a1ef3d7410ab8e23eb176011be591a7feb19b",
+      "size": 6805
+    },
+    {
+      "path": "resources/storagedrawers/lang/ru_ru.lang",
+      "sha256": "5cc351d850ed8bc470959f1aa8b1c9d632830ce76777bab8919d676646d8fe0c",
+      "size": 4372
+    },
+    {
+      "path": "resources/supersoundmuffler/lang/ru_ru.lang",
+      "sha256": "3f42ecaadcd563e675faf9e117d905eeb6f8da7c5de2097200e04ad38f895c1c",
+      "size": 1581
+    },
+    {
+      "path": "resources/tconstruct/book/ru_ru/intro/blankpattern.json",
+      "sha256": "5ff0ff3fce9f1a53089f320f82260167e97c2b727249dcf14c7e1b988c21990e",
+      "size": 119
+    },
+    {
+      "path": "resources/tconstruct/book/ru_ru/intro/craftingstation.json",
+      "sha256": "d351f851245b8adbd921ca662112f9cdf92a784b37c244eca56d039356b4dc7b",
+      "size": 131
+    },
+    {
+      "path": "resources/tconstruct/book/ru_ru/intro/partbuilder.json",
+      "sha256": "c3def8d69c636c0d837afdc7d8e44e39c8ee89b462439cde8282a602d586e026",
+      "size": 139
+    },
+    {
+      "path": "resources/tconstruct/book/ru_ru/intro/partchest.json",
+      "sha256": "39c40571ae3bb2548023f3fca0d494cdfba59c30190bad8d4d301013b0ff8217",
+      "size": 124
+    },
+    {
+      "path": "resources/tconstruct/book/ru_ru/intro/patternchest.json",
+      "sha256": "2ffc43b096b9bb8dcf26b77d2a21d4718a1ea19f0de4cfbda239fcf85082d2f9",
+      "size": 120
+    },
+    {
+      "path": "resources/tconstruct/book/ru_ru/intro/stenciltable.json",
+      "sha256": "2fba3ab73e0eca6074d162bc96452f2f7a49bc5605d23ce87be4c327aa1663e8",
+      "size": 135
+    },
+    {
+      "path": "resources/tconstruct/book/ru_ru/intro/toolforge.json",
+      "sha256": "35912131298f4affe59d72afc565c82869e4aa791d44671d2a356b82b79ae7f2",
+      "size": 106
+    },
+    {
+      "path": "resources/tconstruct/book/ru_ru/intro/toolstation.json",
+      "sha256": "1bfbf66a17d7e7aae93ad58f4e4a6ce7317bbb5bf882f58ff14261505d5cb959",
+      "size": 131
+    },
+    {
+      "path": "resources/tconstruct/book/ru_ru/modifiers/extratrait.json",
+      "sha256": "c2fa93a5cfa30820dd711ff865244e1d1c1846193d2c007b1871b3a9128629c7",
+      "size": 775
+    },
+    {
+      "path": "resources/tconstruct/book/ru_ru/tools/kama.json",
+      "sha256": "c408368b1d609b7823405f89ef9f86e0c47b1e10fd2833aa60b5a441e0c7df2e",
+      "size": 641
+    },
+    {
+      "path": "resources/tconstruct/book/ru_ru/tools/rapier.json",
+      "sha256": "0fac55d9c96dfbb4eb07f4ccc18c217ceb9df8ab6622bd676a0716664c182ed9",
+      "size": 721
+    },
+    {
+      "path": "resources/tconstruct/lang/ru_ru.lang",
+      "sha256": "f687031227e2d5443e9ef16fda6c01d30a99b4d4c5b733343c70fff485f579e6",
+      "size": 3771
+    },
+    {
+      "path": "resources/teslacorelib/lang/ru_ru.lang",
+      "sha256": "de22fadf6bad5a558274fd5e09a1ff5d3e85a085476b2f7d2ca6bb74b407c9e9",
+      "size": 7287
+    },
+    {
+      "path": "resources/testdummy/lang/ru_ru.lang",
+      "sha256": "0d15b9399f24bca784de66745231617e7b1fb3f741a63958319e604001716a74",
+      "size": 62
+    },
+    {
+      "path": "resources/thaumcraft/lang/ru_ru.lang",
+      "sha256": "9fd477651a6cac9a6c029352f1662053990ef8a7aa90c25a36f2a0be77fbd80d",
+      "size": 6031
+    },
+    {
+      "path": "resources/thaumcraftfix/lang/ru_ru.lang",
+      "sha256": "c22e27a76fd6a33f2c3f1efe3e548cc9edfa8749aa47e3a9ae506f77afd8c50a",
+      "size": 1825
+    },
+    {
+      "path": "resources/thaumicaugmentation/lang/ru_ru.lang",
+      "sha256": "b93e22b3d99e1e27f968659cb8e1889bcd86e9a1c33538efc0893fabfe4b0547",
+      "size": 22167
+    },
+    {
+      "path": "resources/thaumicenergistics/lang/ru_ru.lang",
+      "sha256": "8ec6da9f51cc51c40c3fce11057c6489266d56d6184a6dc779e51b6a50e2e110",
+      "size": 6224
+    },
+    {
+      "path": "resources/thermaldynamics/lang/ru_ru.lang",
+      "sha256": "6ae20d0358a1df15a415afea7b55cb2996177dfc2c685a7e6f01552e16d4da98",
+      "size": 80
+    },
+    {
+      "path": "resources/thermalexpansion/lang/ru_ru.lang",
+      "sha256": "33c273e5d293b28de58699b01cd35f11f2ae5ac3b17e5307d278d79cf707f292",
+      "size": 80
+    },
+    {
+      "path": "resources/tinkersaddons/lang/ru_ru.lang",
+      "sha256": "708eaf8db21d2d0699eda03e4f9f0e1b965fc264e6db29483e0f5b6f6542882a",
+      "size": 1569
+    },
+    {
+      "path": "resources/tinkersaether/lang/ru_ru.lang",
+      "sha256": "0f47d1f51ce701a88c4087977592ee565341ce0107dd5c8386453e7753242451",
+      "size": 4350
+    },
+    {
+      "path": "resources/tinkersjei/lang/ru_ru.lang",
+      "sha256": "e2b1fee95f70c4ddbf792fbca13afb06c50050d841fe836e3ba494b7b7349ab1",
+      "size": 71
+    },
+    {
+      "path": "resources/tombmanygraves/lang/ru_ru.lang",
+      "sha256": "de01f6712dcbb1e5912949c687892ceb0854eb9f803d23efabbd09d7545bd700",
+      "size": 181
+    },
+    {
+      "path": "resources/toolprogression/book/ru_ru/modifiers/magic_mushroom.json",
+      "sha256": "94afb833f3f9fe5a6e91ae7089565e0f16c8a31b9775d401cad29dabe6650794",
+      "size": 473
+    },
+    {
+      "path": "resources/toolprogression/lang/ru_ru.lang",
+      "sha256": "17aba2b28419f9ded2ff703659b196778dd8f4f76e9f53240902fe41deeed6c7",
+      "size": 315
+    },
+    {
+      "path": "resources/torchmaster/lang/ru_ru.lang",
+      "sha256": "27bddeb9375a64db0513e3aa9ef5cdec627a70bc4da40a6ef12407475122985e",
+      "size": 227
+    },
+    {
+      "path": "resources/totemic/lang/ru_ru.lang",
+      "sha256": "a07b307b8835d808613a89caed770bc6496d93d8aa0440873668207c1cd9a465",
+      "size": 3849
+    },
+    {
+      "path": "resources/twilightforest/lang/ru_ru.lang",
+      "sha256": "c3c4dc1519a37c9acac3d5100452091b4e9aeb2317342cc02f52c54933e8eac3",
+      "size": 19068
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/categories/biomes.json",
+      "sha256": "70c9209d289f6948b17608b6ffefefc5620b7cbc930c3d24817897ba7161410e",
+      "size": 179
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/categories/bosses.json",
+      "sha256": "0979bcf21314d067dc7cd5707afb67dd821358e2eeeb3381fe8a8edb5783b729",
+      "size": 183
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/categories/devices.json",
+      "sha256": "38e51ad59fd57f3659a86d3107f8c7261f261032a2d7cafba246b1092a418668",
+      "size": 194
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/categories/entities.json",
+      "sha256": "d56974a3efccc9a00c8708b59efa749590a3471eef64910876a5f6624780ef60",
+      "size": 187
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/categories/major_landmarks.json",
+      "sha256": "cab59f000c859bcbe4750bb510d6de32c54dfb2daf6b963f31fede1a31200d3d",
+      "size": 212
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/categories/minor_landmarks.json",
+      "sha256": "0198302155aa96b5cc18e61dbd3e1b4003988d4faeb913a26a50f771b4583479",
+      "size": 203
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/categories/treasures.json",
+      "sha256": "c1f692764440d58d4c72fb1f2adb824a480033aa8dddcc23f12d80cd3700a749",
+      "size": 159
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/categories/world.json",
+      "sha256": "416da14b55a2cf9b2d0e4aa8b73a3daf6bc450edb0d7c44f35f6bdadfadec979",
+      "size": 150
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/bosses/alpha_yeti.json",
+      "sha256": "9cd545062922bcfd6197b738860420a13a47b351c7a84f83932e1ac5e8de6e70",
+      "size": 381
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/bosses/hydra.json",
+      "sha256": "1265c5c7b9bd7ec1fb4e273977e943da725e9d5f83196fdfeca4a1921f6d3abc",
+      "size": 766
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/bosses/lich.json",
+      "sha256": "d77e2a239213b4cdb11855fcbce400444b7355d99dfba32bfe86753a9cbce2a6",
+      "size": 467
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/bosses/minoshroom.json",
+      "sha256": "e89121a8178b98fc8e517712c8ae9cba9b6a333e66d3eaf4c0d2fb0a5fb16b8e",
+      "size": 897
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/bosses/naga.json",
+      "sha256": "23d2ddc5b5a94c5cef01d6588e579ee7810ca347664c8e021ebd52d29bf3a5c1",
+      "size": 526
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/bosses/phantom_knights.json",
+      "sha256": "0420eab9fbac19553d51c535c5c5f20456c67ccb66abe4f9b838db46f025c43a",
+      "size": 588
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/bosses/snow_queen.json",
+      "sha256": "62ba318990054a820295d990fda00f7e504220ecd7f1e89f4d4b7565162f177c",
+      "size": 326
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/bosses/ur_ghast.json",
+      "sha256": "37451b38cb7e1d08420ee40ea2ca8113b226732391a4ac020abb7d575e052947",
+      "size": 346
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/devices/anti-builder.json",
+      "sha256": "f65cbb6ca44b3fa09465053d7f2b145ac0f517a691a292a545cec28a70069170",
+      "size": 857
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/devices/carminite_builder.json",
+      "sha256": "f8491879fff4aa76154b2313c5c8d9b6a2729bdb9dc11e601f19e75f61ba35b2",
+      "size": 935
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/devices/carminite_reactor.json",
+      "sha256": "3be66b2fb7ad14d5f88da70b7b889e10cd337a01cef1356793e5239a2e0bc693",
+      "size": 1094
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/devices/encased_fire_jet.json",
+      "sha256": "0b1b42349d83adcafc2dcdbb7eb7f250634d7b4accd9c90fb5f418f0437eeae7",
+      "size": 919
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/devices/encased_smoker.json",
+      "sha256": "bc6721a27c33b5d7ff470f7293485869f3dbe84719234b99f99366f349a871cc",
+      "size": 688
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/devices/fire_jet.json",
+      "sha256": "91d793aa82af08feeeb636c8fecdffe45d583abf49e4bc70d23f09ca1f34be94",
+      "size": 689
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/devices/ghast_trap.json",
+      "sha256": "be1f8406fa853166cf8b889826df432f96e5040c24a4d92d7d40e95c65343442",
+      "size": 1094
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/devices/locked_vanishing_block.json",
+      "sha256": "9c258add1ff592f7980bf6cf86cd22e506857e1d28c7a8f08446d8a332a31996",
+      "size": 971
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/devices/reappearing_block.json",
+      "sha256": "eb8d02084cd55fb49123c8d844f80c3a8b61902ccf1eb562ffe1fefdd6fc67af",
+      "size": 658
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/devices/smoking_block.json",
+      "sha256": "aa7d58e759e6ae69c0813d181cc9f0c6117a908689900554cf1e9f63458901bb",
+      "size": 667
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/devices/vanishing_block.json",
+      "sha256": "c60237a6e3bcbf61fd638345d13efad4e5d71f31fcce346024701ffc8e06f24c",
+      "size": 626
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/adherent.json",
+      "sha256": "5696fc432779f528d4894bf313379f8e35a609488f8f432d3abb25f9a9612b37",
+      "size": 358
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/animals.json",
+      "sha256": "710719f51d0582880996672c0f08c8a2b9648d57752aeaef8accf431d1fe1b51",
+      "size": 1679
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/arthopods.json",
+      "sha256": "55b28f5c6e311030b280931e2c90431619fa0e698e610d57fd84e31e12b18103",
+      "size": 1964
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/castle_guardians.json",
+      "sha256": "ca6505b2ece97a408a63ffae1a1a0897e33214fdde0d84d76859870acd290c36",
+      "size": 201
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/death_tome.json",
+      "sha256": "a55a9ddc4707e887ca011a708c5036e04c539194143b6427fe31e23b3519b5df",
+      "size": 361
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/ghasts.json",
+      "sha256": "35a4fcb7bb21c61b68fcfca93121ceb15d21e2e416353c60336d5057fb3e716e",
+      "size": 599
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/giants.json",
+      "sha256": "b09e832e68c75f6d0106a022984a3a3accf36291772cf5eefde0e429538c8e28",
+      "size": 830
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/goblins.json",
+      "sha256": "e5e52344c97ac4ccc947719dc2c600e44c0f4f20a18441ceb6405c6c47adbdaa",
+      "size": 1893
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/harbinger_cube.json",
+      "sha256": "4a75020d0f038e901616cd0cf5db44b6e4379464ba6648151a1b6200e0b3b4bc",
+      "size": 383
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/ice_cores.json",
+      "sha256": "8009c3c83db6abde8bbb87478f9fe8317938988e5c515a36e1647e9c3a43c26e",
+      "size": 654
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/kobold.json",
+      "sha256": "167caa73cf6b46769d6ece8598c6dbd1bcf50e19262fafb08fa45bf60dd61bd6",
+      "size": 344
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/maze_slime.json",
+      "sha256": "7290f31046d4aa96c3a11ee2594c27c9b230a75294c56831ae5a7eef18ba4c5b",
+      "size": 746
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/minotaur.json",
+      "sha256": "7c357495537649d35263f5195eff2715835ca5a6d204d5e381fbafed3ae31d32",
+      "size": 1007
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/troll.json",
+      "sha256": "0a8cfc82084ecab669a80fc93f7c461c346cf65e98de306a89116f292bbdb827",
+      "size": 339
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/undead.json",
+      "sha256": "8fe8a461ad5efa7928c23471feb23972c460ade98e12e2a3490bae73bba86017",
+      "size": 795
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/wolves.json",
+      "sha256": "03a9086abd8c4f16e616933bc5885899fbaf38e3524880e78109c16b48c86aaf",
+      "size": 789
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/entities/yeti.json",
+      "sha256": "d9e8b8b200fe2fb3deb84994fae19f3a98e8479d67874bf67abeb4bf25a93a7c",
+      "size": 389
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/armors.json",
+      "sha256": "d57386d689b597e002c16f14b2e98d3cedd2614f37d1fdcb9b2a6e4d39e5fbb8",
+      "size": 1387
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/bows.json",
+      "sha256": "26c69ed069e4ef18be4b3d8886e79581ac28081da355e3ce94b4e8aa52df9506",
+      "size": 1165
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/carminite.json",
+      "sha256": "297e6b62ca44f49fef9641eb3970f4b51e599bdc7ef1fb7a04b3179c9f3fefeb",
+      "size": 351
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/charms.json",
+      "sha256": "fcdd15c99bfd7460518990c469e6d18f59dff74953331208c881568c46a81542",
+      "size": 2119
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/crumble_horn.json",
+      "sha256": "ed6af7d8a4731e073d238b03f58f3fa00afb79707072ba8c20e116917e3afe85",
+      "size": 988
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/fiery_blood_tears.json",
+      "sha256": "c2937aaf9916963b27766a9683d12955cb0bc0bfe79c3d505c56b99b3cfb0c30",
+      "size": 754
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/foods.json",
+      "sha256": "2e0c19c9bcbae5592730e9a20cecbb5ec6d21380d0f499bb48830f89d9fbd827",
+      "size": 2470
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/giant_blocks.json",
+      "sha256": "b205a262eb87257cac04f26ce4b332736412b05183391e4384644f8670bc011c",
+      "size": 1142
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/glass_sword.json",
+      "sha256": "dc1467c2830e84901f4ea79e3dc753388e512e001d654d26d08e27ab91d42ffa",
+      "size": 2661
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/ice_bomb.json",
+      "sha256": "546a97f632fcc659995c1161f4bbcda5cd23a0849f7400e8e774120d68077e17",
+      "size": 465
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/ie_shaders.json",
+      "sha256": "42bc97abe0918fe70c1e7c0baa539d8c80d4935d56279444d392a12d6c9896a2",
+      "size": 540
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/magic_beans.json",
+      "sha256": "90f1d68d336c39f77a7c407a608e3ab608ffa62b2c64495f935f5205549ce24c",
+      "size": 1437
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/magic_trees.json",
+      "sha256": "3c432de3ce46553594b1200f40bfded047d3d08bbee904511ae2b79e424ba005",
+      "size": 1059
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/maps.json",
+      "sha256": "d53d5c0726fa532e560cfbad90e93f2587cbe735f363519481d3eb236bbf0b5d",
+      "size": 1201
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/mazebreaker_pickaxe.json",
+      "sha256": "a786ce78b2b3e14d16a54534c2fc5329d1f4f54fde419f71e577016d8c269611",
+      "size": 465
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/minotaur_axes.json",
+      "sha256": "46cda88258084600c068fd4ef29f81f8f815617f599e80ab4062ad4b71ed54c6",
+      "size": 1339
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/moon_dial.json",
+      "sha256": "8d4112027e70bbdc30e93b09311ea86a7ca6cb20e9aacd99aa1e6ac037034e8a",
+      "size": 384
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/phantom_armor.json",
+      "sha256": "2092a42ad22e9c9163684d19f26399e3fbfeab41da617c3c0e7a1b00488faa82",
+      "size": 1306
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/scepters.json",
+      "sha256": "fc0d8faff5aa699d092071989d68a44898c8b83551af2398b92784849bef0fb2",
+      "size": 1649
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/tc_aspects.json",
+      "sha256": "6c223f1965fef3f605d70b54468d036099f2bf96bbfeeae3e6a4ea0d730524dc",
+      "size": 436
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/tconstruct.json",
+      "sha256": "077aad78f339596ac39c2316a8b13c5112347519f4ce2abc355b0d26b3af5569",
+      "size": 398
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/tools.json",
+      "sha256": "197b67be061573531dc0aa21e6fd6313fabd36e58f0e62955e87216f0e7d86ed",
+      "size": 1671
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/trophies.json",
+      "sha256": "92365ac67b5c73486c5b74e8aa0fe3114c252d422f0439f276fb92827bc32bc7",
+      "size": 2799
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/treasures/uncrafting_table.json",
+      "sha256": "81a31920781ead668fd249504606a397912e1d0dc00003d230da4ec3af2eec9a",
+      "size": 428
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/biomes/dark_forest.json",
+      "sha256": "7f1e93aee47c803d9fad8718bcac4cc32e13d74723dc8130b1c1a73d5396d5bc",
+      "size": 422
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/biomes/enchanted_forest.json",
+      "sha256": "0255f69b0a0ebddf0ad14af3195485d19456b9323846a974d5d1efd28ebf83b6",
+      "size": 294
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/biomes/general_biomes.json",
+      "sha256": "3c24c1e889bfcc7182ba8b77d44d861e7c0f4ed7c918865581afa99923699053",
+      "size": 1864
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/biomes/glacier.json",
+      "sha256": "e882b7d0701bfea7bb9cbcbb077305120e340cbc5eb4b588d160acc0f98367a2",
+      "size": 262
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/biomes/snow_forest.json",
+      "sha256": "97b65e58a8a2a6bf0f295e0af294df71d3b01a4f9f3869441d1eb4aa5fcfbb76",
+      "size": 261
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/biomes/twilight_swamp.json",
+      "sha256": "d24d09124e71864c36172171afea2ce14edd72d1a7d40968f5c1928e78e6f402",
+      "size": 1245
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/magic_map.json",
+      "sha256": "3093fb8f185f103c8a7489ebfea5d0d4caaa7e882fb78a7a4dcbb3301443ae83",
+      "size": 262
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/aurora_palace.json",
+      "sha256": "ee2789f3f15624b8b45ec9b3beae5ec61d8fcdde308c78b8f9c1334506aa4b2e",
+      "size": 303
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/dark_tower.json",
+      "sha256": "790cc243f3bbc5f5259e07aefbd9c57661878067996da499cef32edddf8fb9a8",
+      "size": 302
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/final_castle.json",
+      "sha256": "fb4fc3346e8d905a0bcbf591b0ee4dad829ebbe992d1d2c798f5e56ea200d4d5",
+      "size": 310
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/giant_house.json",
+      "sha256": "54ae01c22474192cc5143a9c0f014667cebe9b0a79e9a00227214e35c9784f2d",
+      "size": 303
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/hedge_maze.json",
+      "sha256": "68daee6444a7ffc8919f0a02a9356103da5fa333150bcaeb545cfefcca54c587",
+      "size": 312
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/hollow_hills.json",
+      "sha256": "aeef18b34b956e27178d9182c1f28494d89608ebb6e8f0827858330b03b88ba8",
+      "size": 685
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/hydra_lair.json",
+      "sha256": "7e62ba227faf856433b9e318fc3335992a770669248c6b62f325b53e6d23a62e",
+      "size": 663
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/knight_stronghold.json",
+      "sha256": "a7959ec5567d503ee7531a0ed0230a0b4c8cd8bb8a98bf3a96189ec89f731434",
+      "size": 320
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/labyrinth.json",
+      "sha256": "7bec28daaaabcbd041677646988964b203cf185c6a184de4d7232e95f9aa48ed",
+      "size": 1452
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/lich_tower.json",
+      "sha256": "5f2a045bcab4e0a6d843431a541e99bb25e6922e06e6872b4da49ed5e0c27fb9",
+      "size": 297
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/naga_courtyard.json",
+      "sha256": "91258a24e271d211b0b5b69829e6b7b2de57286912097d32feff7b35dcae26ac",
+      "size": 299
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/troll_caves.json",
+      "sha256": "f2d01666ebad79e294e6f86c82c18882bc6b335fdcd97977bd6109088ada1ac8",
+      "size": 307
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/major_landmarks/yeti_caves.json",
+      "sha256": "a4781900071d91a6cb3d84e265cc3f6e522d015095e2d9b0da694c105c966dba",
+      "size": 300
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/minor_landmarks/druid_hut.json",
+      "sha256": "2e85008f87d94e2379508716f5af260b8de3b82f015ec497768c54b28f7d96e7",
+      "size": 220
+    },
+    {
+      "path": "resources/twilightforest/patchouli_books/guide/ru_ru/entries/world/portal.json",
+      "sha256": "34cab44509055228b0c413f9162f6089f146a36c5c99f7b82cb03bda6c6aaa1e",
+      "size": 2447
+    },
+    {
+      "path": "resources/undergroundbiomes/lang/ru_ru.lang",
+      "sha256": "0ac38fcd13af0dc7ced25e21525781586b201a08bbb306e4f5807a83f973a673",
+      "size": 6006
+    },
+    {
+      "path": "resources/universaltweaks/lang/ru_ru.lang",
+      "sha256": "d89707548d4a6b1777a571fbe9f285fa792df2a10ee2192f09c3e2ef4759f633",
+      "size": 8274
+    },
+    {
+      "path": "resources/valkyrielib/lang/ru_ru.lang",
+      "sha256": "12cf6a3b00c2159c7d2ddd6cc29df3e5282b79f27f95f8d86d264412b4fade87",
+      "size": 4260
+    },
+    {
+      "path": "resources/waila/lang/ru_ru.lang",
+      "sha256": "f29ffbfd160fd82d6b925286b4bb39bef1c0d67c7d6b979bb033f5ebb721fb12",
+      "size": 1923
+    },
+    {
+      "path": "resources/wailaharvestability/lang/ru_ru.lang",
+      "sha256": "87b5c60e98a11e893f78770db66a712dcb6324f622baa8b71c0ae0dcc537da2c",
+      "size": 166
+    },
+    {
+      "path": "resources/wanionlib/lang/ru_ru.lang",
+      "sha256": "066e5b41db6caaea245bfe434756a1cf192bac18cb94d77ac7d34098756167ed",
+      "size": 659
+    },
+    {
+      "path": "resources/wawla/lang/ru_ru.lang",
+      "sha256": "f50c67d654296e7fa211030550399589e429b801cfb7f69102dc56b9ec9b5c28",
+      "size": 96
+    },
+    {
+      "path": "resources/wrcbe/lang/ru_ru.lang",
+      "sha256": "6bdf1b4eb404c4852788ab8033fec52845688d06077343225e2b916a18e32fea",
+      "size": 6278
+    },
+    {
+      "path": "resources/zenutils/lang/ru_ru.lang",
+      "sha256": "a837ed7f34ebb74b7f26c1ac891b24c37cbc9995893b4970bd43e86a326e9ca3",
+      "size": 351
+    },
+    {
+      "path": "resources/zerocore/lang/ru_ru.lang",
+      "sha256": "1065ceef67fcf61033e7ad404c22337c9edb973cb1a13a3892c749fe859aaa3c",
+      "size": 3048
+    }
+  ],
+  "jvm_args_required": [
+    "-Domkality.books.locale.forge112=true",
+    "-Domkality.appearance.forge112=true"
+  ]
+}
