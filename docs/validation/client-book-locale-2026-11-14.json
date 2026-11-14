@@ -9,7 +9,7 @@
   "artifact": {
     "component": "OmkalityClient",
     "version": "0.1.2",
-    "sha256": "1fb46d6dfbcf394acd12ddc79c475720dc7d2470191f51d611d1750dbc2a45bb",
+    "sha256": "743854878f226f1538ee1a55cc0e367910b510b2b14c7962ce37d78e8574ab77",
     "runtime_classes": 15,
     "unchanged_previous_classes": 10,
     "core_version": "0.3.8",
@@ -21,16 +21,19 @@
     "fix": "ILateMixinLoader and separate mixin package",
     "second_finding": "Missing pack.mcmeta invoked legacy language adapter",
     "resource_format": 3,
-    "failed_prototype_published": false
+    "failed_prototype_published": false,
+    "ci_difference": "CRLF in a new JSON resource differed from Git index; now LF enforced before packaging"
   },
   "fixtures": {
     "jvm_conditions_per_build": 95,
-    "resource_tests_windows": 9,
-    "resource_tests_linux_docker": 9,
-    "negative_resource_controls": 8,
+    "resource_tests_windows": 10,
+    "resource_tests_linux_docker": 10,
+    "negative_resource_controls": 9,
     "canonical_identical_builds": 2,
     "source_boundary_files": 118,
-    "fixtures_are_not_native_transformations": true
+    "fixtures_are_not_native_transformations": true,
+    "clean_git_archive_reproduced_twice": true,
+    "line_endings_negative_control": true
   },
   "native": {
     "client": "Windows DJ2 2.23.4 Forge14.23.5.2860",
@@ -46,12 +49,12 @@
     "roots_edition_russian": true,
     "xu2_pages": 82,
     "xu2_first_middle_last_destinations_verified": true,
-    "ru_en_ru_on_content_identical_prototype": true,
+    "ru_en_ru_on_identical_class_and_language_bytes": true,
     "zero_and_developer_subtitles_preserved": true,
     "initial_pages": 18,
     "author_preserved": true,
     "starting_items": 3,
-    "repeat_join_millis": 2843,
+    "repeat_join_millis": 3151,
     "repeat_join_gui_open": false,
     "client_exit": 0,
     "server_exit": 0,
@@ -59,7 +62,7 @@
     "crash_reports": 0,
     "owned_scopes_removed": true,
     "baseline_warning": "PlusTiC optional Construct Armory capability missing superclass also present in accepted0.1.1 lab; not a new book Mixin failure",
-    "unrelated_lab_incident": "Unattended actor drowned at initial terrain position; respawned onto owned safe platform; final lifecycle repeated alive"
+    "unrelated_lab_incident": "Separate previous lab actor drowned while unattended; this final actor moved to safe platform immediately upon join"
   },
   "layout_metrics": {
     "entries": 447,
