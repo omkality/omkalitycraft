@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "date": "2026-11-14",
+  "pack": "Divine Journey 2",
+  "pack_version": "2.23.4",
+  "issue": 175,
+  "status": "new_world_native_verified_not_released",
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "server_limits": {
+    "memory_bytes": 6442450944,
+    "cpus": 4
+  },
+  "profile": "profiles/pack-overlays/dj2-2.23.4/profile.json",
+  "policy_sha256": "8363b5324740756004d89a54e65d55c1a11406be1ede6eb3c31d3efda05ac2a0",
+  "cause": {
+    "server_redstone_ore_dictionary_order": [
+      "dustRedstone",
+      "alloyBasic"
+    ],
+    "client_redstone_ore_dictionary_order": [
+      "alloyBasic",
+      "dustRedstone"
+    ],
+    "filter_tests_only_last_ore_name": true,
+    "mismatched_registry_id": "atum:redstone_ore_redstone"
+  },
+  "checks": {
+    "negative_control_rejected_login": true,
+    "negative_kiln_key_counts": [
+      133,
+      132
+    ],
+    "fixed_kiln_key_counts": [
+      132,
+      132
+    ],
+    "only_removed_kiln_key": "atum:redstone_ore_redstone",
+    "observed_redstone_furnace_input_output_tuples_unchanged": true,
+    "furnace_recipe_count_before_and_after": 1284,
+    "real_furnace_smelt_verified": true,
+    "graphical_client_join_with_observer": true,
+    "separate_cold_graphical_client_join_without_observer": true,
+    "strict_client_mod_count_without_observer": 257,
+    "normal_disconnect_and_reconnect": true,
+    "no_stuck_login_overlay": true,
+    "matching_policy_world_cold_restart_in_new_volume": true,
+    "normal_client_and_server_shutdown": true,
+    "no_oom": true,
+    "owned_scopes_removed_after_export": true
+  },
+  "existing_world_transition": {
+    "registry_saved_in_level_dat": true,
+    "pre_policy_world_copy_refused_for_one_missing_entry": true,
+    "automatic_fml_confirmation_used": false,
+    "migration_accepted": false
+  },
+  "limits": {
+    "full_atum_recipe_input_output_table_compared": false,
+    "all_pack_recipes_tested": false,
+    "full_translation_accepted": false,
+    "all_desktop_platforms_native_verified": false,
+    "player_manifest_changed": false,
+    "vps_changed": false,
+    "ready_for_players": false
+  }
+}

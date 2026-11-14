@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "minecraft": "1.12.2",
+  "loader": "forge-14.23.5.2860",
+  "status": "native_new_world_verified_not_released",
+  "install_on": [
+    "client",
+    "dedicated_server"
+  ],
+  "existing_world_migration_accepted": false,
+  "artifacts": [
+    {
+      "id": "atum",
+      "version": "2.0.20",
+      "filename": "Atum-1.12.2-2.0.20.jar",
+      "bytes": 2683652,
+      "sha256": "0973e747df932e5d4170071ce4cdb3ce5517d0b90a48d767bdc8cdbfc032e91d",
+      "source": "https://www.curseforge.com/minecraft/mc-mods/atum"
+    },
+    {
+      "id": "crafttweaker",
+      "version": "4.1.20.711",
+      "filename": "CraftTweaker2-1.12-4.1.20.711.jar",
+      "bytes": 1608673,
+      "sha256": "dc11a0cb527019385a732907a8057ecd673cdf6bf56d4b5358693e3c2e572a82",
+      "source": "https://www.curseforge.com/minecraft/mc-mods/crafttweaker"
+    }
+  ],
+  "files": [
+    {
+      "path": "scripts/Unique/AtumKilnRegistryPolicy.zs",
+      "bytes": 129,
+      "sha256": "8363b5324740756004d89a54e65d55c1a11406be1ede6eb3c31d3efda05ac2a0"
+    }
+  ],
+  "validation": "docs/validation/dj2-atum-kiln-policy-2026-11-14.json"
+}
