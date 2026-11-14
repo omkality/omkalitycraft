@@ -302,20 +302,6 @@
     "BetterQuesting": {
       "version": "3.5.329",
       "QuestTranslation.class": "8a748aad338b58ca58bd7ce002fff330da94d3bbdc430d66da6ad374a87d70af"
-    },
-    "DefaultOptions": {
-      "version": "9.2.8",
-      "jar_sha256": "1a4007ec8c503fe75faf7429b66c0ffe1555fa7a7d43147386049913ce6ebf4a",
-      "DefaultOptions.class": "1cc2850cf0700af76213477c3456b835ce12f30790b2579c9d273e3bd8e5984e"
     }
-  },
-  "initial_key_defaults": {
-    "source_sha256": "3e38410b1a0d4abe75e3036e2fcfa443a0ae5b22d8ecc2eff3dfac4a20dd4d99",
-    "required_lines": [
-      "key_key.betterquesting.quests:37:NONE",
-      "key_Toggle Sensor Goggles Mode:0:NONE"
-    ],
-    "addition": "key_Переключить режим Очков с сенсорами:0:NONE",
-    "result_sha256": "9c093d590824356812285908ff5b0270fdbf0e826131ccbcc104f6e08436e257"
   }
 }

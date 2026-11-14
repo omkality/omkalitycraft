@@ -11,35 +11,6 @@ RUNES = re.compile(r"[\u16a0-\u16ff]+")
 HINTS = re.compile(r"§4([A-Za-z0-9])§r")
 
 
-def render_initial_key_defaults(source: bytes, review: dict) -> bytes:
-    """Add a pinned localized key-description alias to DefaultOptions' template only."""
-    try:
-        if len(source) > 64 * 1024 or _sha(source) != review["source_sha256"]:
-            raise ValueError("Initial key template source changed")
-        text = source.decode("utf-8")
-        lines = text.splitlines()
-        required = review["required_lines"]
-        added = review["addition"]
-        if (
-            not isinstance(required, list)
-            or not 1 <= len(required) <= 8
-            or any(lines.count(line) != 1 for line in required)
-            or not isinstance(added, str)
-            or re.fullmatch(r"key_[^:\r\n\0]{1,256}:0:NONE", added) is None
-            or any(line.startswith(added.split(":", 1)[0] + ":") for line in lines)
-            or "\0" in text
-        ):
-            raise ValueError("Unsafe or repeated initial key alias")
-        result = (
-            source + (b"" if source.endswith(b"\n") else b"\n") + added.encode() + b"\n"
-        )
-        if _sha(result) != review["result_sha256"]:
-            raise ValueError("Initial key template result changed")
-        return result
-    except (KeyError, TypeError, UnicodeError) as error:
-        raise ValueError("Invalid initial key template review") from error
-
-
 def _sha(raw):
     return hashlib.sha256(raw).hexdigest()
 

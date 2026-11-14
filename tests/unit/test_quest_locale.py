@@ -7,7 +7,6 @@ import pytest
 from omk.locale_overlay import parse_lang
 from omk.quest_locale import (
     audit_quest_references,
-    render_initial_key_defaults,
     render_quest_locale,
 )
 
@@ -210,40 +209,3 @@ def test_boolean_is_not_a_profile_schema(inputs):
     inputs[3]["schema"] = True
     with pytest.raises(ValueError, match="Unknown quest review"):
         render_quest_locale(*inputs)
-
-
-def test_initial_alias_only_appends_to_pinned_defaultoptions_template():
-    raw = b"key_quests:37:NONE\r\nkey_Toggle Sensor Goggles Mode:0:NONE\r\n"
-    addition = "key_Переключить режим Очков с сенсорами:0:NONE"
-    review = {
-        "source_sha256": sha(raw),
-        "result_sha256": sha(raw + addition.encode() + b"\n"),
-        "required_lines": [
-            "key_quests:37:NONE",
-            "key_Toggle Sensor Goggles Mode:0:NONE",
-        ],
-        "addition": addition,
-    }
-    result = render_initial_key_defaults(raw, review)
-    assert result.startswith(raw)
-    assert result[len(raw) :].decode() == review["addition"] + "\n"
-    with pytest.raises(ValueError, match="source changed"):
-        render_initial_key_defaults(raw + b"key_personal:4:NONE\n", review)
-    review["result_sha256"] = "0" * 64
-    with pytest.raises(ValueError, match="result changed"):
-        render_initial_key_defaults(raw, review)
-
-
-@pytest.mark.parametrize(
-    "addition",
-    ["key_bad:37:NONE", "key_bad:0:NONE\nkey_quests:0:NONE", "key_quests:0:NONE"],
-)
-def test_initial_alias_cannot_replace_other_bindings_or_inject_lines(addition):
-    raw = b"key_quests:37:NONE\n"
-    review = {
-        "source_sha256": sha(raw),
-        "required_lines": ["key_quests:37:NONE"],
-        "addition": addition,
-    }
-    with pytest.raises(ValueError):
-        render_initial_key_defaults(raw, review)
