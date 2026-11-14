@@ -1,0 +1,521 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "stage": "after reviewed translation and first Quick Start pagination",
+  "ready_for_players": false,
+  "runtime_resolution_checked": false,
+  "entries": [
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/creatures/clam.json",
+      "upstream_json_sha256": "11d1edde3a6d420c5dbe9bdf720351853c1091f1c0e9974a312f97aaf815d356",
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/creatures/clam.json",
+      "before_sha256": "664d8e21e385dade64230c867d77d6ac046fd55340a375cbcb3ac493eb78f170",
+      "edits": [
+        {
+          "kind": "unlink",
+          "pointer": "/pages/1/text",
+          "macro": "l",
+          "old": "items/pearl",
+          "new": null
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "89f0e2452a88d7e456807e77adddc48aff0333dd1729c67cc26cdb5123b7b489",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/pearleporter.json",
+      "upstream_json_sha256": "6cf00d2db5589bbe6a3b9966c9bcf4d7b1450961089c01a6f3eb984ffbdf99f9",
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/pearleporter.json",
+      "before_sha256": "81e608616d7a9ed71304f1e9d11ffb9d853265a6adeb3be7c57f13bdbccfac36",
+      "edits": [
+        {
+          "kind": "unlink",
+          "pointer": "/pages/0/text",
+          "macro": "l",
+          "old": "items/pearls",
+          "new": null
+        },
+        {
+          "kind": "unlink",
+          "pointer": "/pages/0/text",
+          "macro": "l",
+          "old": "creatures/clam",
+          "new": null,
+          "reason": "Target is excluded by current book flags; no flag or gameplay change"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "b6d1c185872667be2ac9b798b03a1be76e828a1c7317fbf53752efa3d19d91e3",
+      "reference_changes": 2
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/herbs/baffle_cap.json",
+      "upstream_json_sha256": "62eded81f1f6bf8f37ea976c22c4c505248aa0ead575bec7ec071daf4ae1b0b4",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/baffle_cap.json",
+      "before_sha256": "cc2f72e0a16c013730a68bc61d7e75a17466d36f03fa5a7ea5dffa6cde417289",
+      "edits": [
+        {
+          "kind": "relation",
+          "pointer": "/pages/4/entries/0",
+          "old": "spells/growth_infusion",
+          "new": "spells/spell_growth_infusion"
+        }
+      ],
+      "anchors": {
+        "2": "renew"
+      },
+      "after_sha256": "94299fe630ede5cc9f6a9ca862304870e6e6b6338bd68289c4dd3506e60d61dc",
+      "reference_changes": 2
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/herbs/introduction.json",
+      "upstream_json_sha256": "00bc5e403b1ba2afce8f53159a0a1360a01a9983ea8c6ae95516178be196e183",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/introduction.json",
+      "before_sha256": "3ce2c49e5fad657645290deb54ce0105205c4824327ffe13f376cdbc0e88b0c9",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/4/text",
+          "old": "crafting/pyre",
+          "new": "crafting/pyres",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "7a580da8efdb02fb74f992311e6b2f2bd314d07f573b0e4225e28e84184360fe",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/herbs/moonglow.json",
+      "upstream_json_sha256": "61bd284dcc3e67946339d2e3d1926cf813bd9d52974a84b8d82954e93be7ad19",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/moonglow.json",
+      "before_sha256": "bb768fdbf428940db8b16fffb59c6f317634c746f44126ece0be2f70f22fca27",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/0/text",
+          "old": "herbs/moonglow_leaf#anchor",
+          "new": "herbs/moonglow#renew",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "0a7957f320d83837ff89c276e6c79a380e306b55e9f943b3501a94a45501b733",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/herbs/wildroot.json",
+      "upstream_json_sha256": "c37b3577ec9e9344203ed459728c3d7a517ee1f27fb68ce125d14c28af19f64d",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/wildroot.json",
+      "before_sha256": "07a8e50dc3e36876c6ebb6603ed055e3c4db1c3ffa23e50c3d28c4743ce852fa",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/0/text",
+          "old": "spells/natures_scythe",
+          "new": "spells/spell_natures_scythe",
+          "macro": "l"
+        },
+        {
+          "kind": "relation",
+          "pointer": "/pages/2/entries/0",
+          "old": "crafting/wildroot_stew",
+          "new": "resources/wildroot_stew"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "6e8c2aa0c4e9bc9d0264b9018458dd3a4bf9a9ccc35ea582da8f40a60073ff74",
+      "reference_changes": 2
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/herbs/renewable_resources.json",
+      "upstream_json_sha256": "26528ea839cd44b1459a9e0e8be71c7aaaa326acd979c1a5aa4b5fb94b4640fb",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/renewable_resources.json",
+      "before_sha256": "788befa38e9056d799a2db5d4215681ad442e62f7697468628a577bea7d65d86",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/2/text",
+          "old": "herbs",
+          "new": "herbs/infernal_bulb",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "7711413c24d1fb71078ee4d3324e079ebca26837c802126a34c9e54aed36df36",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/herbs/stalicripe.json",
+      "upstream_json_sha256": "0b7989bafb2cf1a54e189149534d126ccb480ed5b441e2bac06f5c1ac84be3ab",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/herbs/stalicripe.json",
+      "before_sha256": "5ee785dbe74da8c608e2deeae95bc38e9bbb5d61cc1dd85ee37130d9a25767aa",
+      "edits": [],
+      "anchors": {
+        "2": "renew"
+      },
+      "after_sha256": "62dea951fd8d07a1f0f341cb8f5acf77847061b8cc1bc16bdf810e1741c553f5",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/resources/introduction.json",
+      "upstream_json_sha256": "4e22fefaa292bdcfe2a44bdc450d994cee7ff4f858efd57db91bb69789c60a72",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/introduction.json",
+      "before_sha256": "b2f444a3daf2a8091eca60ef6bc32c83febd283c9db91ed529bae6d69aee8627",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/1/text",
+          "old": "resource",
+          "new": "resources",
+          "macro": "cat"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "b6671fa8f254c2fd525f41b7d9791d66240a0cc2cf25257d7d975f0f7e1737c5",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/resources/runed_wood.json",
+      "upstream_json_sha256": "2006eb5a35c6578586a4a25e740dbb4308a2c141be26b4ae01580655ee3b1482",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/runed_wood.json",
+      "before_sha256": "77f0a66672867aed4f543649fb7627dc5b8010a71aa29b02e822935d016036bd",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/0/text",
+          "old": "crafting/knife",
+          "new": "crafting/knives",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "3f8369b3e125364f817919be2b27f226facb68e802ca04a48f91a3f430e4c905",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/resources/roasted_pereskia.json",
+      "upstream_json_sha256": "841fef612b56789c7dad10db61c9e0a11ce1491f94f13fb9ce4ac3a4f05856fa",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/resources/roasted_pereskia.json",
+      "before_sha256": "4c6950e0728a68bcd0155eeb644dc1e0cf29809969fdb5b32d3b3e094013ed1e",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/0/text",
+          "old": "herbs/perskia",
+          "new": "herbs/pereskia",
+          "macro": "l"
+        },
+        {
+          "kind": "inline",
+          "pointer": "/pages/0/text",
+          "old": "crafting/pyre",
+          "new": "crafting/pyres",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "bcf739b6211f6671c8072f92d96cdffe51ec1eb35ae54394f20fbe34b266e5ad",
+      "reference_changes": 2
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/concepts/quick_start.json",
+      "upstream_json_sha256": "e8b44fded19851a77ab1e5ab98bcf0f355811d86e1f41e91f9c8387dbc9cdcac",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/concepts/quick_start.json",
+      "before_sha256": "be5eb745d0be04ec458ea636cf7d2763df3f170e479d61e98b2f72467749b20a",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/7/text",
+          "old": "crafting/living_tools",
+          "new": "crafting_armor_tools_living",
+          "macro": "cat"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "2011053abe0025ffda077e117c978e417fbda4e991965bcfe3d555db438e4d69",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/automation/crafting.json",
+      "upstream_json_sha256": "f888cdb96ae35e3cfef2750821e38be84eaad6f6904510b3fa3bb88772480bf2",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/automation/crafting.json",
+      "before_sha256": "368ed0fdee2c614091c086f6ba652c851c291f56d8eca9bb9864f94490516ec8",
+      "edits": [
+        {
+          "kind": "relation",
+          "pointer": "/pages/2/entries/1",
+          "old": "crafting/grove_stones",
+          "new": "crafting/grove_stone"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "8893e7107f8726f558e5bae904a59b21e1ed3c537e6bf7239e47b5b8f31cd27d",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/rituals/ritual_healing_aura.json",
+      "upstream_json_sha256": "72a659ec573ae3f1a19b0dda31f609114dfdb672456d368ed39b81e7e7394ed1",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_healing_aura.json",
+      "before_sha256": "43f47d7a09be27f065984b67bd481e205f5c36cd63411c3cb5c068a88f011346",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/2/text",
+          "old": "rituals/standing_stone",
+          "new": "rituals/standing_stones",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "15ed391eb786c4ca273218cdef6e0f118e71ecb222b814e3a3436565331b8008",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/rituals/ritual_divine_protection.json",
+      "upstream_json_sha256": "c9932b6cbd9dd3e42cde3a91a97c3e2aaf25a16995495cf0af47dde9045e57f8",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_divine_protection.json",
+      "before_sha256": "548c5880b7627aa76099b178ce349f16efab842495d198f2e514aed828429abb",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/2/text",
+          "old": "rituals/standing_stone",
+          "new": "rituals/standing_stones",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "c163fd4f02f47f9cd0197093f7347fe5a73814968ce3b598023da250bab946a1",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/rituals/ritual_germination.json",
+      "upstream_json_sha256": "be6140acdc7ede035e3bed40ee85a5ab6377cd834a82c5f3747b9e8ad4949ad6",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_germination.json",
+      "before_sha256": "2ec059a8baebdf71e3bd1095bf69b5b9f1d077809626c3e46cff7574c7d6738a",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/2/text",
+          "old": "rituals/standing_stone",
+          "new": "rituals/standing_stones",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "09cce70fed2069243d78383306eb3aff1070911f85d213f717b9ade76f336fe4",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/rituals/ritual_flower_growth.json",
+      "upstream_json_sha256": "fbd09741c4eb50d852bdf79baf1918506a5fa4838e3d1673e0638281b55d3597",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_flower_growth.json",
+      "before_sha256": "66a8e8c12134dac3b6ee16e6ff5c81e29dfb3c8dd04d8121d4365b8bc167d428",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/0/text",
+          "old": "spells/natures_scythe",
+          "new": "spells/spell_natures_scythe",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "177dfc8cb9229591d78fbfb5cc425f068b79ac7630c4fa4f27c725fb64f5290d",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/rituals/ritual_grove_supplication.json",
+      "upstream_json_sha256": "65046a7bd023df199da6166430c953cd745ec93ca760cec65e59daa74e4eb38b",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_grove_supplication.json",
+      "before_sha256": "0087cd002106112c9488d6f426e4376265f8999225546708427e6d4fe90353e5",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/2/text",
+          "old": "rituals/grove_stone",
+          "new": "crafting/grove_stone",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "47bb2feae217c382ddf8a2ad7b9ee6aeb5409d101b8ab779cef12c2bbcdb2d32",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/rituals/ritual_heavy_storms.json",
+      "upstream_json_sha256": "302518da81a5529dd90ac793e87e7871632a65b6abae5e9e8e5bf0bcaa6fcda0",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/rituals/ritual_heavy_storms.json",
+      "before_sha256": "99377537fa050267a714828fe6e83d0d4d24151d880285e8c600aa8ee40bc74a",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/2/text",
+          "old": "rituals/standing_stone",
+          "new": "rituals/standing_stones",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "24056c7d16f6bf177aaec4fb4b48a40c14771233ad4bd66deb1c3e0b25dc8b32",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/crafting/salmon_of_knowledge.json",
+      "upstream_json_sha256": "a14ce48607a4b741a718dcde4d1c3a610019763b4aa18624f6c6acddb1bc8e14",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/salmon_of_knowledge.json",
+      "before_sha256": "05e4d1530abcf5df1d7169a85ef5713fb2a1a3d4e7df0fbae9d925b59638d016",
+      "edits": [
+        {
+          "kind": "relation",
+          "pointer": "/pages/2/entries/0",
+          "old": "crafting/fey_crafting",
+          "new": "crafting/fey_crafter"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "b06519d5ab1cc976636cc47de3995710b404793821d9a9473ce5ce2ed9523d39",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/crafting/imbuer.json",
+      "upstream_json_sha256": "019306eafb20b7496304be1ea84854cb01830d10139838164a913c8a6b9c59b4",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/imbuer.json",
+      "before_sha256": "a9b43319e6aaea43d103f34c68317936dd2814abd58718398781a0a8d02aac9d",
+      "edits": [
+        {
+          "kind": "relation",
+          "pointer": "/pages/4/entries/1",
+          "old": "spells/introduction1",
+          "new": "spells/introduction"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "96401e8775bb45ce011af02c2354b24389049bb7a7a0ac986b8926a06593b467",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/crafting/mortar_and_pestle.json",
+      "upstream_json_sha256": "92d09ae019486cbb8a45bdc78e2f048ab88ed1e3885d2f0861552bff515313a5",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/mortar_and_pestle.json",
+      "before_sha256": "2fbc4d04df2c8aefed6840f13538717f1eda744f84a53ae5da46ef8832b00080",
+      "edits": [
+        {
+          "kind": "relation",
+          "pointer": "/pages/4/entries/0",
+          "old": "automation/mortar_and_pestle",
+          "new": "automation/mortar_pestle"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "d1d30dafa09284f651a754c688e2dae6768570085bc54a6d460721114361a9e4",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/crafting/knives.json",
+      "upstream_json_sha256": "2312a8e23bc9a392a1e5eeb25066ee0e2fca471a0075c5d83a4d4646325a4c35",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/knives.json",
+      "before_sha256": "72ac6fcd85fc2be30d2bfb30289679a1bb15d9c5403447388371351a6f8e19da",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/5/text",
+          "old": "herbs",
+          "new": "herbs/wildroot",
+          "macro": "l"
+        },
+        {
+          "kind": "relation",
+          "pointer": "/pages/6/entries/5",
+          "old": "crafting/runic_dagger",
+          "new": "crafting/runed_dagger"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "9a845442c82c580c6b3354212a8c0a2c17d5fc9fdda0fed89f690665910837b1",
+      "reference_changes": 2
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/crafting/pyres.json",
+      "upstream_json_sha256": "558928053fe04df4231fae0941d6da5df28242d8d79806779c6e0399c96060ff",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/pyres.json",
+      "before_sha256": "c3d6e575d9a4eb844046ac94af4337a7d3f3b7ac6a2b44089b0596f6732e605f",
+      "edits": [
+        {
+          "kind": "relation",
+          "pointer": "/pages/4/entries/3",
+          "old": "crafting/decorative_pyres",
+          "new": "crafting/decorative_pyre"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "40ed2cb27b95d01766f9428a18162bfd335eb89a1f36c48a157efa2dc5332b3d",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/crafting/living_arrow.json",
+      "upstream_json_sha256": "f975f34b87e94a7474933a01cea618dad8667bd74e4d5bb4afc65cdc5d2d495b",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/living_arrow.json",
+      "before_sha256": "f86bbd98f18e45482497d9feff7f5faabc16a51b35f7cf3d8b062e56837c0c14",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/0/text",
+          "old": "rituals/ritual_aniaml_harvest",
+          "new": "rituals/ritual_animal_harvest",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "c9d4b4b7c18bb89cabc1b391c110837103f9ce27d7da03f4ff920a49b35b6816",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/crafting/grove_stone.json",
+      "upstream_json_sha256": "497e5834d83617359f1d22f672f9e4c70a1a06b7c3db34f2f7f3ae47a89b996a",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/crafting/grove_stone.json",
+      "before_sha256": "74ab042624965828d158cf937d451cc6edc1642361e58a4eebd59a99204400e9",
+      "edits": [
+        {
+          "kind": "inline",
+          "pointer": "/pages/1/text",
+          "old": "rituals/Grove Supplication",
+          "new": "rituals/ritual_grove_supplication",
+          "macro": "l"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "68f9babd02f85e2f8b7899dea7a50653908ef13192af465a2982d54d5873ba79",
+      "reference_changes": 1
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/silk_cocoon.json",
+      "upstream_json_sha256": "c55e98afe2e46d71ab2c6bb675fbcc3d3ef837b227967529c9f982c7ec76242d",
+      "path": "resources/mysticalworld/patchouli_books/world_guide/ru_ru/entries/items/silk_cocoon.json",
+      "before_sha256": "9829d41409dc845c68a31bbf097c90e74a50ec7142e6d1e097e0d31066ba5a02",
+      "before_resource_present": false,
+      "fallback_ru_jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "fallback_ru_jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515",
+      "fallback_ru_json_sha256": "4df5beb2d6ddb8c3a144b1863e61fcfdcca560252eb77b53af9994b2d53d0a8c",
+      "edits": [
+        {
+          "kind": "unlink",
+          "pointer": "/pages/0/text",
+          "macro": "l",
+          "old": "creatures/silkworm",
+          "new": null,
+          "reason": "Target is excluded by current book flags; no flag or gameplay change"
+        }
+      ],
+      "anchors": {},
+      "after_sha256": "965f3b2237e4e07799ad7916dcd70339786c0459fe880d84dd57d7a0f667e625",
+      "reference_changes": 1
+    }
+  ],
+  "parent_layout_profile_sha256": "4d2fdd411a89987f020d74b8b12c1e8f01db7db5c887a9b68d1f83909c5de482",
+  "expected_active_entry_set_sha256": "b9cb245bc2cfd7e817035e098bbd8e8fd4ef8e2a3af272cf7c63feb32f85acf4"
+}

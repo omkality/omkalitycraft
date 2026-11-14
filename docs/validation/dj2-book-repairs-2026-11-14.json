@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "date": "2026-11-14",
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "ready_for_players": false,
+  "scope": "Source-pinned internal references and Roots modifier cards, not full book-layout acceptance",
+  "profiles": {
+    "book-reference-repairs.json": "5c00825ddf8816bfeeb65ed33071a060b68993835ff85c0fa334195a5034e44c",
+    "book-modifier-layout.json": "995aa5be614008984b177cec9dbfdaad544ca3a19f1553f1f473b7b2a97d912a"
+  },
+  "reference_resources": 27,
+  "reference_changes": 32,
+  "static_books": 7,
+  "static_internal_references": 887,
+  "static_missing_targets_or_anchors": 0,
+  "probe_native": {
+    "entries": 447,
+    "build_errors": 0,
+    "bad_link_or_anchor_markers": 0,
+    "active_modifier_cards": 193,
+    "inactive_original_flag_cards": 27,
+    "exact_live_field_comparisons": 1544,
+    "viewport_sizes": [
+      [
+        1280,
+        800
+      ],
+      [
+        854,
+        480
+      ]
+    ],
+    "max_bottoms": {
+      "cost": 64,
+      "additions": 110,
+      "conflicts": 138,
+      "description": 62,
+      "name": 15
+    },
+    "anchor_click_samples": [
+      "Inversion",
+      "Mindful Consumption"
+    ],
+    "audit_sha256": "e2dba4c051c3204c795125400456403c60c81e50508fa6ad0d474568ed82226f"
+  },
+  "resource_rollback": {
+    "resources": 24,
+    "previous_bytes_restored": true,
+    "reapplied": true,
+    "entry_build_errors_each_phase": 0,
+    "personal_options_preserved": true,
+    "audit_sha256": [
+      "b13bb7d3eb1c6f89d7c08b248176c221fe05cd0d996e72f886206ca66ec4c591",
+      "e2dba4c051c3204c795125400456403c60c81e50508fa6ad0d474568ed82226f"
+    ]
+  },
+  "ordinary_native": {
+    "cold_start": true,
+    "strict_mods": 258,
+    "book_probe": false,
+    "platform": "Windows x64 client with Linux Docker server",
+    "scope": "Representative modifier pages after cold join; not another full read-only probe pass",
+    "client_exit_code": 0,
+    "server_exit_code": 0,
+    "oom": false,
+    "owned_scopes_removed": true,
+    "report_sha256": "ac872db42ddcc987a4d32434e7f1458b523d70a2f6ea0e71a30fe742e64056eb",
+    "stopped_world_tar_sha256": "6cbc37b5fe7131303cfe97497148b072fe573b4dcf46924f69c176643e94b6ca",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "server_memory_bytes": 6442450944,
+    "server_cpu_nano": 4000000000
+  },
+  "unit_tests": {
+    "windows_locale_book": 142,
+    "linux_book": 59,
+    "linux_data_checks": 7,
+    "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "linux_read_only": true,
+    "linux_user": "65534:65534",
+    "linux_network": "none",
+    "linux_memory_bytes": 268435456,
+    "linux_cpu_nano": 1000000000,
+    "exit_code": 0,
+    "oom": false,
+    "owned_container_removed": true
+  },
+  "limits": [
+    "Not every external URL or manual link path accepted",
+    "Other literal pages, titles, templates and Extreme Reactors landing still open in #174",
+    "Release composition and full-game release rollback separate",
+    "No player manifest or launcher release activation; no VPS deployment",
+    "Known unrelated model-case and audio issues are not fixed by this change"
+  ]
+}
