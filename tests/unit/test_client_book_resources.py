@@ -25,6 +25,7 @@ def test_book_pack_declares_modern_language_format():
         "locale",
         "pagination",
         "duplicate",
+        "crlf",
     ],
 )
 def test_book_pack_rejects_missing_or_incompatible_locale_resources(tmp_path, fault):
@@ -34,6 +35,9 @@ def test_book_pack_rejects_missing_or_incompatible_locale_resources(tmp_path, fa
         (resource / "pack.mcmeta").unlink()
     elif fault == "legacy":
         (resource / "pack.mcmeta").write_text(json.dumps({"pack": {"pack_format": 2}}))
+    elif fault == "crlf":
+        path = resource / "mixins.omkalityclient.books.json"
+        path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
     elif fault in {"helper_package", "optional", "global"}:
         path = resource / "mixins.omkalityclient.books.json"
         data = json.loads(path.read_bytes())
@@ -53,6 +57,6 @@ def test_book_pack_rejects_missing_or_incompatible_locale_resources(tmp_path, fa
             data = data.replace("Оглавление\\n\\n", "Оглавление")
         else:
             data += "omkalityclient.books.locale=ru_ru\n"
-        path.write_text(data, encoding="utf-8")
+        path.write_text(data, encoding="utf-8", newline="\n")
     with pytest.raises(ValueError):
         verify(resource)
