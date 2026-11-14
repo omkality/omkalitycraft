@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "scope": "Explicit resource-only text-page pagination; no automatic installation or font-fit inference",
+  "ready_for_players": false,
+  "entries": [
+    {
+      "source_file": "assets/roots/patchouli_books/roots_guide/en_us/entries/concepts/quick_start.json",
+      "upstream_json_sha256": "e8b44fded19851a77ab1e5ab98bcf0f355811d86e1f41e91f9c8387dbc9cdcac",
+      "path": "resources/roots/patchouli_books/roots_guide/ru_ru/entries/concepts/quick_start.json",
+      "before_sha256": "d4b45cb0bfee445e529cc564e3176c4af6c2973a35748feed097241ef125aba9",
+      "after_sha256": "be5eb745d0be04ec458ea636cf7d2763df3f170e479d61e98b2f72467749b20a",
+      "original_pages": 4,
+      "new_pages": 8,
+      "splits": [
+        {
+          "page": 0,
+          "offsets": [
+            134
+          ]
+        },
+        {
+          "page": 1,
+          "offsets": [
+            297
+          ],
+          "title": "Первые шаги"
+        },
+        {
+          "page": 2,
+          "offsets": [
+            348
+          ],
+          "title": "Ритуалы"
+        },
+        {
+          "page": 3,
+          "offsets": [
+            218
+          ],
+          "title": "Что дальше"
+        }
+      ],
+      "body_text_preserved_exactly": true,
+      "native_windows_checked": [
+        {
+          "window": [
+            1280,
+            800
+          ],
+          "pages_checked": 8
+        },
+        {
+          "window": [
+            854,
+            480
+          ],
+          "pages_checked": 8
+        }
+      ],
+      "native_link_checked": "crafting/imposer"
+    }
+  ]
+}

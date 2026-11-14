@@ -1,0 +1,247 @@
+{
+  "schema": 1,
+  "date": "2026-11-14",
+  "scope": "Roots Quick Start resource pagination, reviewed base source profiles, isolated native session; not full book acceptance",
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "layout_profile_sha256": "4d2fdd411a89987f020d74b8b12c1e8f01db7db5c887a9b68d1f83909c5de482",
+  "windows_unit_tests": 93,
+  "ruff_and_black_passed": true,
+  "linux_data_verification": {
+    "ok": true,
+    "checks": [
+      "all_80_Patchouli_template_lookups_preserved_in_candidate_or_existing_fallback",
+      "executable_commands_runtime_placeholders_IF_colour_markup_and_IE_manual_link_targets",
+      "public_owned_464_entry_profile_exactly_matches_guarded_private_resource_replay",
+      "public_171_long_fields_match_source_previous_Russian_and_resource_replay",
+      "all_10_public_book_profiles_1998_fields_source_JSON_JAR_and_Russian_pins_verified",
+      "nonempty_book_labels_and_exact_intentional_cipher_preservation",
+      "player_catalog_and_explicit_developer_exclusion_no_runtime_claim",
+      "exact_case_sensitive_resource_only_inventory_and_utf8_syntax",
+      "all_language_values_exact_replay_and_prior_Russian_preservation",
+      "only_reviewed_actual_consumers_enable_literal_percentage_context",
+      "all_book_text_leaves_match_and_no_implicit_nontext_JSON_edits",
+      "only_missing_two_gate_pages_use_exact_current_source_descriptors",
+      "existing_translated_book_values_retained_except_explicit_source_pinned_corrections",
+      "every_selected_book_field_has_a_russian_resource_counterpart",
+      "previous_tips_groovy_owned_values_and_unrelated_resources_unchanged",
+      "real_temporary_tree_returns_exact_prior_layer_and_preserves_personal_files",
+      "unexpected_managed_file_blocks_rehearsal_before_any_rollback_writes",
+      "original_copyright_and_existing_and_added_source_notices_present",
+      "readonly_linux_input_volume",
+      "public_pagination_plan_replays_native_8_page_resource_without_body_changes",
+      "focused_existing_and_literal_percentage_tests_pass"
+    ],
+    "files": 658,
+    "book_files": 501,
+    "selected_entries": 15967,
+    "negative_data_controls": 14,
+    "unit_tail": "93 passed in 0.09s",
+    "game_tested": false,
+    "ready_for_players": false,
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "seed_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "exit_code": 0,
+    "oom": false,
+    "cpu_limit": 1,
+    "memory_bytes": 268435456,
+    "seed_unchanged": true,
+    "owned_scopes_removed": true
+  },
+  "native_acceptance": {
+    "scope": "Roots Quick Start pagination only; not all books or modpack",
+    "game": "DJ2 2.23.4",
+    "windows_client": true,
+    "server_linux_docker": true,
+    "source_candidate_archive_sha256": "cd2fa9c5368bbcb44922fe434dcc92630af972dc14c49b5e0ebbce444d19d50c",
+    "in_world": true,
+    "original_mods": true,
+    "strict_mod_policy_count": 257,
+    "extra_probe_mod": false,
+    "pages_checked": 8,
+    "windows_checked": [
+      [
+        1280,
+        800
+      ],
+      [
+        854,
+        480
+      ]
+    ],
+    "forward_and_backward_navigation_checked": true,
+    "last_next_button_disabled": true,
+    "link_tooltip_and_imposer_destination_checked": true,
+    "old_resource_restored_and_observed": true,
+    "new_resource_reapplied_and_observed": true,
+    "personal_options_preserved_during_resource_rollback": true,
+    "normal_disconnect_and_reconnect": true,
+    "all_books_accepted": false,
+    "ready_for_players": false
+  },
+  "native_runtime": {
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "core_sha256": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+    "atum_policy_sha256": "8363b5324740756004d89a54e65d55c1a11406be1ede6eb3c31d3efda05ac2a0",
+    "strict_client_mod_count": 257,
+    "registry_probe_present": false,
+    "client_exit_code": 0,
+    "server_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "game_crash_detected": false,
+    "owned_scopes_removed": true,
+    "auth_cleanup": true,
+    "orchestrator_permissions_removed": true
+  },
+  "static_link_audit": {
+    "ordinary_l_links_checked": 500,
+    "books": 7,
+    "source_suspect_occurrences": 20,
+    "new_suspects_introduced_by_translation": 0,
+    "roots": 18,
+    "mysticalworld": 2,
+    "custom_macros_and_gates_tested": false
+  },
+  "screenshots": [
+    {
+      "name": "ru-books-layout-rollback-old-pages-20261114.png",
+      "sha256": "072ddb35d45478d78b125d82d6146c1eeb4b329d1f30c0c7306d56bb03d2d4a3"
+    },
+    {
+      "name": "ru-books-quickstart-balanced-spread-1-20261114.png",
+      "sha256": "64d823c90e4f41c7dcd729ad522ad9b152ca9f1cdd2b181d9da01e487dc3e3f5"
+    },
+    {
+      "name": "ru-books-quickstart-balanced-spread-2-20261114.png",
+      "sha256": "b6379c98d5de075ae394f6f34ebdf3325146c900142502c3f12135e6c022cd65"
+    },
+    {
+      "name": "ru-books-quickstart-balanced-spread-3-20261114.png",
+      "sha256": "02cbddb8c932453bc700573e08c8681362c916039849681ea67e57a00f4c28e1"
+    },
+    {
+      "name": "ru-books-quickstart-balanced-spread-4-20261114.png",
+      "sha256": "41f6acfc2c8d37b7bd7e5aa0200ecf368bd25cdbed134b6878266eeac3711943"
+    },
+    {
+      "name": "ru-books-quickstart-final-reapplied-20261114.png",
+      "sha256": "d47accede7a1fe05e49e6ecb3df26dc22aabd8fe5cfb2bc3bbfdac8191d6b786"
+    },
+    {
+      "name": "ru-books-quickstart-link-hover-20261114.png",
+      "sha256": "cdd1fb9a343679035cc2cfe0e29034361d8b26d9d5ab6e042319469d8ee4e0fd"
+    },
+    {
+      "name": "ru-books-quickstart-link-imposer-20261114.png",
+      "sha256": "2c24e12e3617aa6bf3ed7d28fde98a1fe4219f852bf11d57a05eedfbd6b7512f"
+    },
+    {
+      "name": "ru-books-quickstart-pages-1-2-prototype-20261114.png",
+      "sha256": "b2c7052c094ffa6b36c2e416fa5287e95fec5268670d6827507af705b732e1e3"
+    },
+    {
+      "name": "ru-books-quickstart-small-spread-1-20261114.png",
+      "sha256": "25f22ef601f976e9506e0a756198538d41b02d48428824c7cae84ec49138b8e4"
+    },
+    {
+      "name": "ru-books-quickstart-small-spread-2-20261114.png",
+      "sha256": "69c04baef37c84d531cf6302977cf9f4abcf9dd452d0da900a60e364bae69606"
+    },
+    {
+      "name": "ru-books-quickstart-small-spread-3-20261114.png",
+      "sha256": "1fc7c984eccea2dc3f4f253ce653c27c99136dcf2e71f0946f1995c3a931e8db"
+    },
+    {
+      "name": "ru-books-quickstart-small-spread-4-20261114.png",
+      "sha256": "6db28524cb1e050377706642579d7a394e4d5eff9eae84ef5fdd9305046c44e3"
+    },
+    {
+      "name": "ru-books-quickstart-split-spread-1-20261114.png",
+      "sha256": "5b5c49091e01f766bf09d94386932cdc1ef89e1ef1b64cc96cf465d79b0647ff"
+    },
+    {
+      "name": "ru-books-quickstart-split-spread-2-20261114.png",
+      "sha256": "fce9b5417e3464aea82e00cb4eb315d92ccb27dc59b5253da7f38d8c9af9b70c"
+    },
+    {
+      "name": "ru-books-quickstart-split-spread-3-20261114.png",
+      "sha256": "18cc037883d429e0bdc656f08c37e29056360c271ed391697adfd0a024667d34"
+    },
+    {
+      "name": "ru-books-quickstart-split-spread-4-20261114.png",
+      "sha256": "672826ab0a1a474c79bde313f0da5912f825cf8c9fe3016f91b5ee6485c023fe"
+    },
+    {
+      "name": "ru-books-reactors-landing-20261114.png",
+      "sha256": "dfd84867115893374435cf52e9f6d75fe6059b476c728c40a7b06ae584a5f3fd"
+    },
+    {
+      "name": "ru-books-roots-category-baseline-20261114.png",
+      "sha256": "d41e9e8e24ecb052e40e52eae35d23163474588d3a654e507052dba0b006b75d"
+    },
+    {
+      "name": "ru-books-roots-landing-baseline-20261114.png",
+      "sha256": "81d40d3dd69f4b59b6e96bd33489b7c0ccf1dcfae5cc5665560126a36c4d1464"
+    },
+    {
+      "name": "ru-books-roots-layout-prototype-first-20261114.png",
+      "sha256": "61ee9175039c67cfe9921ee5c72dee14e6fbd996130143f0a3e3f36d29c1bda6"
+    },
+    {
+      "name": "ru-books-roots-quickstart-baseline-20261114.png",
+      "sha256": "744f29f9fdf2a08222a9cc6f451b5dd69ec1fee6889540a7ebd4addfe4df3cd6"
+    },
+    {
+      "name": "ru-books-roots-quickstart-later-baseline-20261114.png",
+      "sha256": "ba4d9e7a1e8b5e8749e2e158850316dfceb5cccced896da1e0c471ee8cffc0bb"
+    }
+  ],
+  "remaining": [
+    "Other Roots text and recipe descriptions overflow",
+    "Extreme Reactors landing and other book layouts",
+    "Source-authored invalid links need guarded corrections and native clicking",
+    "Runtime edition suffixes and InitialInventory NBT"
+  ],
+  "ready_for_players": false,
+  "player_release_changed": false,
+  "vps_changed": false,
+  "native_log_review": {
+    "error_lines": 489,
+    "fatal_lines": 1,
+    "counts_by_logger": {
+      "FML": 141,
+      "defaultoptions": 1,
+      "reborncore": 1,
+      "immersiveengineering": 1,
+      "org.embeddedt.vintagefix.dynamicresources.model.DynamicModelProvider": 115,
+      "org.embeddedt.vintagefix.dynamicresources.model.DynamicBakedModelProvider": 111,
+      "VintageFix": 26,
+      "Atum2": 1,
+      "mousetweaks": 1,
+      "loottweaker.sanity_checks": 86,
+      "CoFH World": 6
+    },
+    "previous_control_counts_by_logger": {
+      "FML": 141,
+      "defaultoptions": 1,
+      "reborncore": 1,
+      "immersiveengineering": 1,
+      "org.embeddedt.vintagefix.dynamicresources.model.DynamicModelProvider": 27,
+      "org.embeddedt.vintagefix.dynamicresources.model.DynamicBakedModelProvider": 23,
+      "VintageFix": 6,
+      "Atum2": 1,
+      "mousetweaks": 1,
+      "loottweaker.sanity_checks": 86,
+      "CoFH World": 6
+    },
+    "fml_error_messages_and_counts_equal_previous_control_after_private_path_normalization": true,
+    "mouse_tweaks_fatal_is_initialization_message_also_present_in_control": true,
+    "patchouli_or_book_parser_error_lines": 0,
+    "remaining": "Resource/model errors are retained for investigation; no assertion that every model or recipe is correct"
+  }
+}
