@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "pack": "DJ2 2.23.4",
+  "quest_text_scope_accepted": true,
+  "ready_for_players": false,
+  "resources": 681,
+  "composed_files": 683,
+  "archive_sha256": "00dedff71930b8342fde32fc2559bade871c510d39bd0d2a9cb0a3cb0a3822f4",
+  "quest_database_sha256": "ab4700ec69ca9883a06f1b6f93a4bf710e794c46363530c332f39e34b389bc77",
+  "quest_language_sha256": "93f991feda9f3c90969c17af43845f82d1a2d18648e425a6ee615eaa85ef8993",
+  "quests": 1736,
+  "chapters": 30,
+  "references": 3532,
+  "owned_updates": 35,
+  "literal_location_labels": 12,
+  "quest_database_and_other_locale_values_unchanged": true,
+  "tests": {
+    "windows": 136,
+    "linux_docker": 136,
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "cpus": 1,
+    "memory_mib": 256,
+    "readonly_nonroot_network_none": true,
+    "exit_code": 0,
+    "oom": false,
+    "two_identical_compositions": true
+  },
+  "diagnostic_client": {
+    "private_fixture": true,
+    "mods": 259,
+    "locale": "ru_ru",
+    "all_exact_i18n_values": 3544,
+    "russian_glyph_width": 6,
+    "real_quest_panels_observed": true,
+    "all_quest_screens_visually_read": false
+  },
+  "ordinary_client": {
+    "private_fixture": false,
+    "mods": 258,
+    "starts": 3,
+    "same_docker_world_and_auth": true,
+    "production_defaults_used_before_first_and_restarts": true,
+    "personal_goggles_home_preserved": true,
+    "original_logic_recipe_crafted": true,
+    "original_logic_book_pages": 8,
+    "client_exit": 0,
+    "server_exit": 0,
+    "oom": false,
+    "server_memory_mib": 6144,
+    "server_cpus": 4,
+    "auth_and_scopes_removed": true
+  },
+  "known_open_failure": {
+    "issue": 191,
+    "scenario": "quit first session without Options; restart",
+    "three_other_mod_bindings_return_to_K": true,
+    "fixed_by_this_quest_text_change": false
+  },
+  "remaining": [
+    "literal NBT item names and book views",
+    "remaining book and controls layout acceptance",
+    "DefaultOptions persistence issue191"
+  ],
+  "components_unchanged": {
+    "core": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+    "client": "0a5d000c64be041023e752de0e74141b57d3e86427b80b55181a95601de79077",
+    "dj2fix": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+  },
+  "deployment": {
+    "player_manifest_changed": false,
+    "release_published": false,
+    "vps_changed": false,
+    "scheduler_enabled": false
+  }
+}
