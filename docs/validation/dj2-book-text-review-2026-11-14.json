@@ -1,0 +1,125 @@
+{
+  "ok": true,
+  "checks": [
+    "all_80_Patchouli_template_lookups_preserved_in_candidate_or_existing_fallback",
+    "executable_commands_runtime_placeholders_IF_colour_markup_and_IE_manual_link_targets",
+    "public_owned_464_entry_profile_exactly_matches_guarded_private_resource_replay",
+    "public_171_long_fields_match_source_previous_Russian_and_resource_replay",
+    "all_10_public_book_profiles_1998_fields_source_JSON_JAR_and_Russian_pins_verified",
+    "nonempty_book_labels_and_exact_intentional_cipher_preservation",
+    "player_catalog_and_explicit_developer_exclusion_no_runtime_claim",
+    "exact_case_sensitive_resource_only_inventory_and_utf8_syntax",
+    "all_language_values_exact_replay_and_prior_Russian_preservation",
+    "only_reviewed_actual_consumers_enable_literal_percentage_context",
+    "all_book_text_leaves_match_and_no_implicit_nontext_JSON_edits",
+    "only_missing_two_gate_pages_use_exact_current_source_descriptors",
+    "existing_translated_book_values_retained_except_explicit_source_pinned_corrections",
+    "every_selected_book_field_has_a_russian_resource_counterpart",
+    "previous_tips_groovy_owned_values_and_unrelated_resources_unchanged",
+    "real_temporary_tree_returns_exact_prior_layer_and_preserves_personal_files",
+    "unexpected_managed_file_blocks_rehearsal_before_any_rollback_writes",
+    "original_copyright_and_existing_and_added_source_notices_present",
+    "readonly_linux_input_volume",
+    "focused_existing_and_literal_percentage_tests_pass"
+  ],
+  "files": 658,
+  "book_files": 501,
+  "selected_entries": 15967,
+  "negative_data_controls": 14,
+  "unit_tail": "76 passed in 0.08s",
+  "game_tested": false,
+  "ready_for_players": false,
+  "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+  "seed_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+  "exit_code": 0,
+  "oom": false,
+  "cpu_limit": 1,
+  "memory_bytes": 268435456,
+  "seed_unchanged": true,
+  "owned_scopes_removed": true,
+  "schema": 1,
+  "date": "2026-11-14",
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "scope": "Reviewed resource source profiles; no native layout acceptance or player activation",
+  "profiles": [
+    {
+      "path": "profiles/locale-overlays/dj2-2.23.4/long-text-review.json",
+      "sha256": "e08139ed7b082e5d26659622c6bfb410ce11a139c1a7ea0870b266ace64d0a4f",
+      "reviewed_entries": 171,
+      "translated_entries": 170
+    },
+    {
+      "path": "profiles/locale-overlays/dj2-2.23.4/books/alchemistry.json",
+      "sha256": "199fd5f5e65df26609d1246313f8d907defee051d92fed350ac450bd1d4ff5da",
+      "reviewed_entries": 16,
+      "translated_entries": 16
+    },
+    {
+      "path": "profiles/locale-overlays/dj2-2.23.4/books/bewitchment.json",
+      "sha256": "e84090f478d2fa0902f9abee23ab9b17960e159b88fa221a43aa9b09dc5894f0",
+      "reviewed_entries": 693,
+      "translated_entries": 650
+    },
+    {
+      "path": "profiles/locale-overlays/dj2-2.23.4/books/bigreactors.json",
+      "sha256": "6d5034afa2148807039b077ed455c4484b0f7d8c5a26e01fdc7dda5fb5025c15",
+      "reviewed_entries": 193,
+      "translated_entries": 181
+    },
+    {
+      "path": "profiles/locale-overlays/dj2-2.23.4/books/enderio.json",
+      "sha256": "737ee341875c57294a9e5edb8c2016abe77c9a7b5267b305146f9f120d4eca50",
+      "reviewed_entries": 14,
+      "translated_entries": 13
+    },
+    {
+      "path": "profiles/locale-overlays/dj2-2.23.4/books/extrautils2.json",
+      "sha256": "eadb739330f440175e7c7c3c6eb26326b222e85f5b0dc55caafc66b0a71bc547",
+      "reviewed_entries": 62,
+      "translated_entries": 62
+    },
+    {
+      "path": "profiles/locale-overlays/dj2-2.23.4/books/mysticalworld.json",
+      "sha256": "ae7869adf913caffaab59a7b3e3ee519c16f40b87b848da8a089b6524c7575dd",
+      "reviewed_entries": 39,
+      "translated_entries": 33
+    },
+    {
+      "path": "profiles/locale-overlays/dj2-2.23.4/books/roots.json",
+      "sha256": "0283eb18237f8a9ae038f1fff5ab322f1c9673636ca5f57368856af861f1d6a8",
+      "reviewed_entries": 697,
+      "translated_entries": 670
+    },
+    {
+      "path": "profiles/locale-overlays/dj2-2.23.4/books/tconstruct.json",
+      "sha256": "db92a325f70d549b9c4eaa73adbdd07113ef4858393c8f43996b628e982cea60",
+      "reviewed_entries": 19,
+      "translated_entries": 19
+    },
+    {
+      "path": "profiles/locale-overlays/dj2-2.23.4/books/toolprogression.json",
+      "sha256": "cc51b22019aa2fc76eb60cabc4ff7ec6103e6b61ed29cc81255439cc5c982dbf",
+      "reviewed_entries": 3,
+      "translated_entries": 3
+    },
+    {
+      "path": "profiles/locale-overlays/dj2-2.23.4/books/twilightforest.json",
+      "sha256": "4a1dc55b255fb73d75e4a12ae1ecc55fd2e96902a28fcf7ecf802cbb434a064a",
+      "reviewed_entries": 262,
+      "translated_entries": 255
+    }
+  ],
+  "reviewed_entries": 2169,
+  "owned_translations": 2072,
+  "intentional_literals": 97,
+  "windows_unit_tests": 76,
+  "linux_unit_tests": 76,
+  "windows_ruff_passed": true,
+  "deterministic_inventory": true,
+  "deterministic_archive_sha256": "cd2fa9c5368bbcb44922fe434dcc92630af972dc14c49b5e0ebbce444d19d50c",
+  "original_runtime_jars_checked": 225,
+  "original_runtime_jars_unchanged": true,
+  "player_release_changed": false,
+  "vps_changed": false
+}
