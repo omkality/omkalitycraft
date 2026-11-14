@@ -1,3 +1,19 @@
+## Тексты игрока и синтаксис команд — 14 ноября 2026
+
+#49: отдельная вычитанная порция 315 собственных переводов и 149 точных command
+usage. Сохранены прежние owned/reuse/guide profiles и общий термин двух модов.
+Потребители проверены по установленным IF PageText и IE ManualPages: подписи
+ссылок переводятся, адреса и страницы прежние; цветовые скобки отличаются от
+runtime placeholders. Пины EN и прежнего RU обязательны.
+
+Linux Docker: 17 data checks/8 отрицательных контролей/76 unit tests, readonly
+non-root/no network/socket/1 CPU/256 МиБ, exit 0/OOM=false. Windows: 76 tests.
+Две композиции и ZIP совпали, исходные 225 JAR прежние. Это не полная русификация
+или графическая приёмка: Patchouli layout #174, холодный Atum registry #175,
+NBT начальных предметов и вычитка полного кандидата открыты. GUI/release/manifest/
+VPS прежние; ready_for_players=false. [Контракт](DJ2_PLAYER_TEXT_REVIEW.md),
+[протокол](validation/dj2-player-text-review-2026-11-14.json).
+
 ## Русские руководства Dynamics/Tunnels — 14 ноября 2026
 
 #49/P1: ещё 229 записей (218/11): 198 с точным EN и 31 после отдельного ревью

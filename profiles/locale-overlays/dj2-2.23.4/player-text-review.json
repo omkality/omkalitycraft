@@ -1,0 +1,3777 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "scope": "Owned UI, item, subtitle and manual prose plus exact executable command usage; no complete third-party locale or developer wiki",
+  "base_owned_profile_sha256": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+  "reviewed_entries": 464,
+  "owned_translations": 315,
+  "preserved_command_values": 149,
+  "game_tested": false,
+  "ready_for_players": false,
+  "entries": [
+    {
+      "namespace": "abyssalcraft",
+      "key": "key.configurator_filter.desc",
+      "source_sha256": "6ca92656bb68a8cbc0b662c10045b022418517c783941d601c99e7a290a04575",
+      "ru": "Открыть фильтр таблички духов",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "key.configurator_mode.desc",
+      "source_sha256": "61ef60ea43e8f79e88a6d55e3919c760615b9510eb40c97431f5276464affc72",
+      "ru": "Сменить режим таблички духов",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "necronomicon.text.itemtransportsystem.8",
+      "source_sha256": "76c8ebd13385cfdc11170c88d936463f596ff384fca65bf49a19c63cc5956286",
+      "ru": "Два служебных заклинания — «Показать маршруты» и «Позвонить в колокол» — помогают отслеживать заданные маршруты, запускать и останавливать их. «Показать маршруты» показывает все активные маршруты поблизости. «Позвонить в колокол» запускает или останавливает маршруты от блока, на который вы смотрите; если блок не выбран, затрагиваются все маршруты рядом.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "76c8ebd13385cfdc11170c88d936463f596ff384fca65bf49a19c63cc5956286"
+    },
+    {
+      "namespace": "aenetvistool",
+      "key": "gui.netvistool.cfg.p2p_colour_1",
+      "source_sha256": "0c6f4235eed442caa41e76b14703b77a37116da6fbcb7d96b792c3db45e9177b",
+      "ru": "Цвет предметных P2P",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "aenetvistool",
+      "key": "gui.netvistool.cfg.p2p_colour_1.info",
+      "source_sha256": "19223afca098003d19daee2cda9657653e7433807f47a6465a8a0b8fabf09118",
+      "ru": "Цвет связей между предметными шинами P2P.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "aenetvistool",
+      "key": "gui.netvistool.cfg.p2p_colour_2",
+      "source_sha256": "1301fca193f302d27457170c4f473721d4b27436d57cc827643466cdb7c80e3e",
+      "ru": "Цвет редстоуновых P2P",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "aenetvistool",
+      "key": "gui.netvistool.cfg.p2p_colour_2.info",
+      "source_sha256": "ec22625400ff3b80ba3d98528693826503c929b9daa66e0e8cc0706c3c9205ba",
+      "ru": "Цвет связей между редстоуновыми шинами P2P.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "aenetvistool",
+      "key": "gui.netvistool.cfg.p2p_colour_4.info",
+      "source_sha256": "d2d2dc6f0d4835ae3f3f450230861ba204416b0435460081fd3600bf1a764784",
+      "ru": "Цвет связей между энергетическими шинами P2P: FE (Forge Energy/Redstone Flux).",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "aenetvistool",
+      "key": "gui.netvistool.cfg.p2p_colour_5",
+      "source_sha256": "486553b8a3d571dd02ec653d65d52392b7a107f08523fbf92b3c2909f171bf86",
+      "ru": "Цвет жидкостных P2P",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "aenetvistool",
+      "key": "gui.netvistool.cfg.p2p_colour_5.info",
+      "source_sha256": "fa019900791463b5da742362f2f42d1ab0e9966e959d1ffc28c1f164ae0c328f",
+      "ru": "Цвет связей между жидкостными шинами P2P.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "aenetvistool",
+      "key": "gui.netvistool.cfg.p2p_colour_6",
+      "source_sha256": "41ca51004cfff0ac7ad77d1838c68007b194dc4465e1eaaa2fc4b70b737e6abd",
+      "ru": "Цвет световых P2P",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "aenetvistool",
+      "key": "gui.netvistool.cfg.p2p_colour_6.info",
+      "source_sha256": "d5de980eefaf03cea0ca49786c2792c74228ad32f6bd40d37da0db7ffcf55f73",
+      "ru": "Цвет связей между световыми шинами P2P.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "astralsorcery",
+      "key": "config.astralsorcery.category.aevitas_ore_perk.tooltip",
+      "source_sha256": "7f8135bbc142d62addc05d524c5bab56542ba2078c4c8c4b1e8de2b35ac4c41c",
+      "ru": "Определяет руды из рудного словаря, которые может создавать этот талант.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "astralsorcery",
+      "key": "config.astralsorcery.category.mineralis_ritual.tooltip",
+      "source_sha256": "bea4cc2bb1136c5d203718220303c755bd2a6ab88bfccc65891e28265b461217",
+      "ru": "Определяет руды из рудного словаря, которые может создавать ритуал.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "astralsorcery",
+      "key": "config.astralsorcery.category.perk_void_trash_replacement.tooltip",
+      "source_sha256": "0da961fa0468ba036f904dec68cbe8362ae85da448d62003ed415bab051c1379",
+      "ru": "Определяет предметы из рудного словаря и их веса для случайной выдачи ценного предмета талантом «Мусор в сокровище».",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "astralsorcery",
+      "key": "config.astralsorcery.category.treasure_shrine.tooltip",
+      "source_sha256": "331664b9714e02609f35f5b585190f209a4597037cefa4676b611aa84cf866dd",
+      "ru": "Определяет руды из рудного словаря, которые могут появляться в святилище сокровищ.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.clear.usage",
+      "source_sha256": "8f568ed9020fc9d990bd32e7b8d5fa3d8db30a352a319c00f66bb3d419eff1c3",
+      "ru": "  /baubles clear <player> [<slot>]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.help.usage",
+      "source_sha256": "54a41cfbfa6d8290c18740c52a0ede090f96593590bc1b372d1096978d01d2ef",
+      "ru": "  /baubles help",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.slots.grow.usage",
+      "source_sha256": "1efa768f23493c9080768563bb4745f31e4766a1bce37dcff6a1d95073407674",
+      "ru": "  /baubles slots grow <player> <type> <amount>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.slots.reset.usage",
+      "source_sha256": "d51b440c366e28d14d8b7a40bbeceeeece26a04279e9313d39d4f164435cc143",
+      "ru": "  /baubles slots reset",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.slots.set.usage",
+      "source_sha256": "494c8cd3f969084cbb0a25fc6b5ce8eaf01a5e15b8f2c6e5f475024d1546c5dc",
+      "ru": "  /baubles slots set <player> <type> <amount>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.slots.shrink.usage",
+      "source_sha256": "0fbf1f3b99190e5b8dc7e159f2a0f7bb4d4d6c098c86a2ba19fece33db305226",
+      "ru": "  /baubles slots shrink <player> <type> <amount>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.usage",
+      "source_sha256": "a89d4ecda068851c26c76a338ef85e479b872135c66fdca3c4ee7c8bb39d37c2",
+      "ru": "/baubles <action> [<player> [<params>]]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.view.desc",
+      "source_sha256": "0f439f375899e30ff69ed3e984629520009a1e89b30dfa62326f2cf5c7132609",
+      "ru": "Показывает инвентарь аксессуаров указанного игрока.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.view.usage",
+      "source_sha256": "51b3428267b585bb3116c7b184986fc7cd1b12a6fee2a268f5aad6d23de3abaf",
+      "ru": "  /baubles view <player>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.654.title",
+      "source_sha256": "e0658e102c754f19d4ee445a68e6e80d6d33227501790b872ba4db649cf1ede2",
+      "ru": "Давай, давай, раскачай свой кристалл",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "e0658e102c754f19d4ee445a68e6e80d6d33227501790b872ba4db649cf1ede2"
+    },
+    {
+      "namespace": "biometweaker",
+      "key": "biometweaker.msg.setbiome.usage.text",
+      "source_sha256": "0befcd79ed7e7252d426930588cd1e7d0cecbe6dfaa5521dc038fa2a90592d22",
+      "ru": "/btsetbiome <biome id|name> <radius> (block|chunk)",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.bind.usage",
+      "source_sha256": "68d1e81751433fb6b781a02920601ad00ea6076d920c634ea2400ae03c8bd5a7",
+      "ru": "/bloodmagic bind [true|false] [player] (\"?\" or \"help\" for help)",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.help.usage",
+      "source_sha256": "f6e4edb231fcd0d01873b5853776043e79b00ee4bf838a6c090496f228a44f7c",
+      "ru": "/bloodmagic help",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.network.add.usage",
+      "source_sha256": "6f0fdb6dd036eb6e1009e8d1d62529eee74034e8a19c78260860fa95d0eb361d",
+      "ru": "/bloodmagic network add [player] [amount]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.network.cap.usage",
+      "source_sha256": "3c2deeb2ba5eb67d10a12c90c0aa2150462f5878f38202ca5f1a74056d8f1f24",
+      "ru": "/bloodmagic network cap [player]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.network.fill.usage",
+      "source_sha256": "b13c4d086c28731a2ad44acc80148e51d5be9f6d4ca256dc54d6117e60f79458",
+      "ru": "/bloodmagic network fill [player]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.network.get.usage",
+      "source_sha256": "87a0a6ff1389cd39fe8b9c0307a8b930726c4f4ca87858bdc58e0fc31986a3ed",
+      "ru": "/bloodmagic network get [player]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.network.set.usage",
+      "source_sha256": "8f04339c05c3c5a3e9ac22b4ab42a2d2fd73f9d2e3016df7228eb4ad13dcf71d",
+      "ru": "/bloodmagic network set [player] [amount]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.network.syphon.usage",
+      "source_sha256": "e8aad9259217b4e96e6b750c96f3aa1f8b654ee084cda6d5ced2274497ac3df9",
+      "ru": "/bloodmagic network syphon [player] [amount]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.network.tickethistory.usage",
+      "source_sha256": "c0712fcb4b7dab49171267f6805904217ab69fb7521c5d6e644c974bd093ca84",
+      "ru": "/bloodmagic network tickethistory [player]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.network.usage",
+      "source_sha256": "be212c4218fb0d1765f7e8d60ef2800284175880bb45ba6cd4bd0d391c0c94fa",
+      "ru": "/bloodmagic network [syphon|add|get|fill|cap] player [amount]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.orb.get.usage",
+      "source_sha256": "666959cff2676337e36983ce2ae96488fbb20c1979e873233816d5cd8c865be3",
+      "ru": "/bloodmagic orb get [player|?|help]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.orb.set.usage",
+      "source_sha256": "d5364b33c25a6de259afbe4e64e830a3729eab2685fbbea4b205d7117c0de8a3",
+      "ru": "/bloodmagic orb set [player|?|help]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.orb.usage",
+      "source_sha256": "e763c9b4d09bb4bc6ae20718f6b04798d278e08f76ec4c2a5a1ddccef3546f2a",
+      "ru": "/bloodmagic orb [set|get] player [tier] (\"?\" or \"help\" for help)",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.teleposer.anddimension",
+      "source_sha256": "52626803434591136198d7815e30bf786f33495c330c196c31e68c8423624c55",
+      "ru": ": Телепозер: ID измерения:",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.teleposer.focusanddim",
+      "source_sha256": "cdce9b085b7d4c3affcd08acf09e09c49f748b89bd4a06305e4a18714ea34f72",
+      "ru": "Фокус: ID измерения:",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.teleposer.list.usage",
+      "source_sha256": "edee7d9f45f9f5fd4de4db603673504a0e186850c617c559dc74efb494611de9",
+      "ru": "/bloodmagic teleposer list [player|?|help]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.teleposer.remove.usage",
+      "source_sha256": "ed0e01c2e859598ba61b79798f663480d90b03aeef37631a4be2c7cb1cffa944",
+      "ru": "/bloodmagic teleposer remove [ID|?|help]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.teleposer.removeall.usage",
+      "source_sha256": "8a473bac7f769840a046a508c79e0d3fabcd2bc5c4c4974a5a1567735ea2c21f",
+      "ru": "/bloodmagic teleposer removeall [player|?|help]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.teleposer.rmrf.usage",
+      "source_sha256": "b6f18bc4860f838575aa0019afab8260315cdf075b596923757269c4105dd6ff",
+      "ru": "/bloodmagic teleposer rmrf [ID|?|help]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.teleposer.teleport.usage",
+      "source_sha256": "141a3b672391500f816d27948e73c6e6accebec974e61088bcbdce967dd8fd2c",
+      "ru": "/bloodmagic teleposer teleport [ID|?|help]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "tooltip.bloodmagic.ritualReader.desc.set_will_types",
+      "source_sha256": "a8575d1a00938031cbba5217a7a085b9a11999493adb0c13ad1c2a662cc76e9f",
+      "ru": "Чтобы задать типы демонической воли, расходуемые ритуалом из ауры, щёлкните ПКМ по главному ритуальному камню, держа кристаллы нужных типов на панели быстрого доступа.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "botania",
+      "key": "botania.subtitle.lexiconOpen",
+      "source_sha256": "99bb76e35a951694796772f3b27d1c4d1af30c757e71db8f08cf2e0c385d9140",
+      "ru": "Открывается Лексика Ботании",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "botania",
+      "key": "botania.subtitle.lexiconPage",
+      "source_sha256": "4a9933b5d0b8875cf6398bb4e98b7897e899810ac8cc4326b6a38672a6100fe1",
+      "ru": "Переворачивается страница Лексики Ботании",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "botania",
+      "key": "botania.tagline.bcIntegration",
+      "source_sha256": "a8d71f80762fd896819ccc9bef51b5d0a41ba207d78aab56ec24bc95344a0138",
+      "ru": "Гейты для взаимодействия с Botania",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "botania",
+      "key": "botaniamisc.crystalCubeLocked",
+      "source_sha256": "a4056facfbf8017f5d4ab9a99c572378e050bf69faf4b08683137fa1e387abd0",
+      "ru": "Кристаллический куб заблокирован. Чтобы сменить отображаемый предмет, разблокируйте куб Жезлом леса.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "brandonscore",
+      "key": "bc.commands.tpx.usage",
+      "source_sha256": "3b8ba432610a0faa122a13d69dac5edbae5f7c6c4702ec30086b578416a7debb",
+      "ru": "/tpx [target player] <destination player> OR /tpx [target player] <destination dimension> OR /tpx [target player] <x> <y> <z> [dimension] [<yaw> <pitch>]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "chiselsandbits",
+      "key": "commands.setbit.usage",
+      "source_sha256": "17e18f6856b56133aa00ffffc07da8e5d62d058a31121ad2b3941cbcec8fa86d",
+      "ru": "/setbit <x> <y> <z> <bitx> <bity> <bitz> <TileName> [dataValue]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "chiselsandbits",
+      "key": "mod.chiselsandbits.config.useGetLightValue",
+      "source_sha256": "4b6244fc78b594008667b0039c4a330697a6d8bf4287a22bcc9e84240d29e014",
+      "ru": "Получать освещённость блоков через метод Get Light Value.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "cofh",
+      "key": "chat.cofh.command.clearblocks.syntax",
+      "source_sha256": "b5114298d165c8afccdb09b95fd11220dd5da4422fdd9f1bc0e74d9bf9ceaa46",
+      "ru": "/cofh clearblocks {<user> <x radius> <y radius> <z radius> | <x start> <y start> <z start> <x end> <y end> <z end>} [block#meta] [block#meta] ...",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "cofh",
+      "key": "chat.cofh.command.countblocks.syntax",
+      "source_sha256": "44fdb6e8c35224d184958bf5942cda264967225bed7e00e02828460d3dfb310a",
+      "ru": "/cofh countblocks {<user> <x radius> <y radius> <z radius> | <x start> <y start> <z start> <x end> <y end> <z end>} [block#meta] [block#meta] ...",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "cofh",
+      "key": "chat.cofh.command.enchant.syntax",
+      "source_sha256": "6502dd3759a83f38dbef25547e3996c52552c5f436b7e90eaf1472d7f6a99507",
+      "ru": "/cofh enchant [player] <enchantment ID> [level]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "cofh",
+      "key": "chat.cofh.command.friend.syntax",
+      "source_sha256": "bb8542f3977b02beaaf5feec5fbf53bfb6cdd99d10eec3b8f1abd75cc9ff79b1",
+      "ru": "/cofh friend {gui | add <username> | remove <username>}",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "cofh",
+      "key": "chat.cofh.command.help.syntax",
+      "source_sha256": "771b3895aa6b0eb3e87fcb3b6b012c48c2946d12c844bbb793a38a5561c944aa",
+      "ru": "/cofh help [command]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "cofh",
+      "key": "chat.cofh.command.killall.syntax",
+      "source_sha256": "6bed5416f99ec73db7af922b4290adaf2972a81b275735810d3c7036d69b0465",
+      "ru": "/cofh killall [partial name]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "cofh",
+      "key": "chat.cofh.command.replaceblocks.syntax",
+      "source_sha256": "c7c5feb576c634590cc42be39e23c622efbd63b59f4b9cc32f62dd402192f75d",
+      "ru": "/cofh replaceblocks {<user> <x radius> <y radius> <z radius> | <x start> <y start> <z start> <x end> <y end> <z end>} <replaceBlock#meta> [block#meta] [block#meta] ...",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "cofh",
+      "key": "chat.cofh.command.syntax.syntax",
+      "source_sha256": "20383f94eec5c9a98b7c5c004de06301ed6e0a3147abe13217b7e56aad85c3c7",
+      "ru": "/cofh syntax [command]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "cofh",
+      "key": "chat.cofh.command.tpx.syntax",
+      "source_sha256": "ddafc31162c3d01d1abbd6734c450ad02814883e43685f154a77fba6e86d4e1c",
+      "ru": "/cofh tpx [player] {(<player> | <dimension>) | <x> <y> <z> [dimension]}",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "cofh",
+      "key": "chat.cofh.command.version.syntax",
+      "source_sha256": "ab38b0ee09e8b69ad63b36944c7ad7e486ccfa4b85d7b19770046a3658346a46",
+      "ru": "/cofh version",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "crafttweaker",
+      "key": "dj2.silver_plate.desc0",
+      "source_sha256": "c3bc9ad14e3c4439013f19151d739aecfbc6eda24c4ba54b57d40cae86de24be",
+      "ru": "§5§oПожалуйста",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "danknull",
+      "key": "item.dank_null_0.name",
+      "source_sha256": "5f0a7a0708c0f2eb30812cbdbdb97d4531f0372ddd3eca3535746d94df3217a7",
+      "ru": "/dank/null/",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "danknull",
+      "key": "item.dank_null_1.name",
+      "source_sha256": "d762e9ea1fe1724ee94d022bb586b6aae3e641ca16a6dabeee4b3fb13b85e849",
+      "ru": "/dank/null/MK II",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "danknull",
+      "key": "item.dank_null_2.name",
+      "source_sha256": "311513c137372303b4b90fe439f4295a2a683565746982fe54307a47f0d7070e",
+      "ru": "/dank/null/MK III",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "danknull",
+      "key": "item.dank_null_3.name",
+      "source_sha256": "6254c932aff89f820bd79f7a6dce66ac2634acfe3398ea9cdef5e51a2ae81cf3",
+      "ru": "/dank/null/MK IV",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "danknull",
+      "key": "item.dank_null_4.name",
+      "source_sha256": "b7176679e81ab3474c17609b76f706f022842cef10874a71640d1211515a9366",
+      "ru": "/dank/null/MK V",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "danknull",
+      "key": "item.dank_null_5.name",
+      "source_sha256": "9f785fa835e5c3d41b43a10b13549f2d9735dcd77b72118be1fa44e37e2d9aeb",
+      "ru": "/dank/null/MK VI",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "dj2addons",
+      "key": "dj2addons.commands.desc",
+      "source_sha256": "50289dd2f538210c8df200c50efe9a79e70df9e1378acafb2c59219eb2ff55af",
+      "ru": "§2/ct dj2addons [category] §3Prints data relevant to CraftTweaker extensions.",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "draconicadditions",
+      "key": "item.draconicadditions\\:portable_wired_charger.draconic.name",
+      "source_sha256": "642f2bc48cd153aa6ed0c1071ca46fdce55ec8292139a10b90ac7871c5521934",
+      "ru": "Переносной проводной драконий зарядник",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "draconicadditions",
+      "key": "item.draconicadditions\\:portable_wired_charger.draconicactive.name",
+      "source_sha256": "368238703471881082a43470dc3a6f2a8476a4597ecb030d141e446651fe59a1",
+      "ru": "Переносной проводной драконий зарядник (активен)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "draconicadditions",
+      "key": "item.draconicadditions\\:portable_wired_charger.wyvern.name",
+      "source_sha256": "7b2f7945f7281d91bbb26a8380d6ae5ffc0704ffb888b4ff226485a2117c12d8",
+      "ru": "Переносной проводной зарядник виверны",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "draconicadditions",
+      "key": "item.draconicadditions\\:portable_wired_charger.wyvernactive.name",
+      "source_sha256": "a097f2abd789f02e80422c25632500a6c75fdd51181c7e2139f3645014ff077a",
+      "ru": "Переносной проводной зарядник виверны (активен)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "draconicadditions",
+      "key": "item.draconicadditions\\:potato_legs.name",
+      "source_sha256": "31d55dc0e3baf9723e7f6fa6ac01bc6ad3fbbe3127c4e584e8c5b530c97e0982",
+      "ru": "Заряженные картофельные поножи",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "draconicevolution",
+      "key": "button.de.BaseSafeAOE.name",
+      "source_sha256": "07e76ae4bb53f4cd44f5d271444c8ef56389e6f62db8ef635299b0c19a0c0557",
+      "ru": "Безопасный режим добычи по области",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "draconicevolution",
+      "key": "gui.de.transfer.discharge.txt",
+      "source_sha256": "34b1f8ec286cdba710605aa9dc33daeb214f56198f2d4aef3d55a0ee127e41fb",
+      "ru": "Расчётное время переноса / разрядки",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "draconicevolution",
+      "key": "gui.reactor.rsMode_field_inv.txt",
+      "source_sha256": "f22f199b6cca52c40f308b0d7336285a363b92439fd2aa9a1c34f4f502f50241",
+      "ru": "Как в режиме щита, но сигнал инвертирован.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "draconicevolution",
+      "key": "key.draconicevolution.cycleDigAOE",
+      "source_sha256": "3969a1a59ce053f1333d544f8971c157616637151f441b5f7c635f75abc9a9e3",
+      "ru": "Переключить область / глубину копания",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.block.tooltip.disallowMonsters",
+      "source_sha256": "c1a47f7b77c9713e4fc19bb816ba1b59219b317a9b7f5ba6bf5314f2046eae0f",
+      "ru": "Непроницаем только для монстров",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.block.tooltip.disallowPlayers",
+      "source_sha256": "52aa777af9d48a945e360deea4b5bff820167b9339a787a2ca753d7ec95cf95b",
+      "ru": "Непроницаем только для игроков",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.command.config.help.4",
+      "source_sha256": "cfdf21be0a23ac9cd4a6be69b28ec78e3df34b4cba2a0506a3f153de908dca4e",
+      "ru": "Перед изменением значения настройки рекомендуется выполнить для неё «config get»: команда покажет комментарий с допустимыми значениями. Для поиска разделов также служит команда «list» — достаточно ввести часть названия.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.config.items.darksteel.upgrades.theoneprobe",
+      "source_sha256": "ff742697e8d0ebcbc47dd60e1bd5adf9b36d6dbc87d2243618980bbe1935852b",
+      "ru": "Шлем: улучшение The One Probe",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrade.inv.2.name",
+      "source_sha256": "5c0f02f125e5e57e782524f9cd799fdb44045c15474495d57cc92a80b660e51a",
+      "ru": "Инвентарь III",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrade.step_assist.disabled",
+      "source_sha256": "8121e7a07ab8d512f4a768f1cbbff2b437367d376b6035feffafdb52adfec050",
+      "ru": "Автоподъём выключен",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrade.step_assist.enabled",
+      "source_sha256": "9138ab7df0320c6c922d205e28b3e69c360a662685bfdaa14e2b8706e5fdf3fa",
+      "ru": "Автоподъём включён",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrade.tnt.2.name",
+      "source_sha256": "edaf1c616a78b6def09c470252e38860c1e7077d1cbe9df4521dc36b87c3c7d4",
+      "ru": "Взрывное действие III",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrades.tooltip.apply.line2",
+      "source_sha256": "a137ae8850353c4e521adeabc04cc3e3870ead0ccd358ab1f159f38c517fc26d",
+      "ru": "(Откройте интерфейс щелчком ПКМ с Shift, через любую тёмную наковальню или улучшение наковальни)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.gui.conduit_probe.redstone.heading",
+      "source_sha256": "fa229ea2c116060dd572b45e5ff58123998adcfde58c4a52c0a01733b3892e69",
+      "ru": "Соединение редстоунового канала с: %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.gui.conduit_probe.redstone.heading.no_connections",
+      "source_sha256": "bcf6767c063bd1e5044190d480a8a217e608ba24e420f472127faa98252cb65b",
+      "ru": "У редстоунового канала нет внешних соединений.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.gui.step_assis_unavailable",
+      "source_sha256": "ae919f2fe9f84f3b0b27d868f5b3c0f2f3e206dee85a836516a7f814667590c2",
+      "ru": "Автоподъём может быть отключён другим модом.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.remoteinv.chat.outoffluid",
+      "source_sha256": "653feb8b92165a55e74ee95604efae12af9a7ec67dbc5d4413822596d1828b00",
+      "ru": "ОШИБКА: закончилась жидкость {FLUIDNAME}",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.soulvial.dead.denied",
+      "source_sha256": "9ba252a7305cf329511926c519d1fd2bcf4885f6e3292fc08d1ec2b11b606cfe",
+      "ru": "Захват не удался. Это существо §cмертво§r, как норвежский попугай!",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "item.item_inventory_remote_ender.name",
+      "source_sha256": "70edd1df91e2e658f319dda9ab1e2374cb0c9f7026bad3788f586f181fac45dc",
+      "ru": "Эндер-пульт панели инвентаря",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "tile.block_alloy_endergy.name",
+      "source_sha256": "6118a70b9c877d05ea918e90186053f92d9646ab2b2ee15aed44722e3634cf34",
+      "ru": "Блок сплава эндергии",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "tile.block_holier_fog.tooltip.detailed.line3",
+      "source_sha256": "cbf6e3caf385b9939f80f98133c898b237d9a48f871173520f902d867c7059f8",
+      "ru": "Может нанести урон §lнежити§r§6. Смывается жидкостями и дождём.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "tile.block_infinity_1.name",
+      "source_sha256": "80abf7c258f9ebad187fcf2bf1eeb6218bf8405f726a04585b2ef60debbc49e0",
+      "ru": "Сжатый блок пыли бесконечности",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "tile.block_infinity_2.name",
+      "source_sha256": "905c51ae0d99261e259cd3b4553b8691942802a3b67629b1fb0381717dc306e4",
+      "ru": "Дважды сжатый блок пыли бесконечности",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderio",
+      "key": "tile.block_inventory_chest_tiny.name",
+      "source_sha256": "4e6b5a3efeb163a684a67d49e28498537b339ded0846386a9c82788fce199cec",
+      "ru": "Хранилище мини-системы инвентаря",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.infoarea.msu",
+      "source_sha256": "933e2a99a92cd5de3a29c86627fb0ac88f4a06293b65dcf34c36b451feb733d8",
+      "ru": "- Средняя кнопка мыши с предметом на курсоре или в слоте: закрепить слот за предметом|lf- Alt + средняя кнопка мыши: поменять две стопки местами|lf- Shift + средняя кнопка мыши в творческом режиме: заполнить стопку (> 1 предмета на курсоре)|lf  или менять размер стопки с шагом x10 (1 предмет на курсоре)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "933e2a99a92cd5de3a29c86627fb0ac88f4a06293b65dcf34c36b451feb733d8"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.infoarea.sound_block",
+      "source_sha256": "1841920bc6b07525bc58e82dc1b0a18507a4645a19af96be26dce36e45d09e15",
+      "ru": "- Громкость выше 1 увеличивает предельную дальность|lf- Дальность равна громкости * 16 блоков",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "1841920bc6b07525bc58e82dc1b0a18507a4645a19af96be26dce36e45d09e15"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.label.redstone.high",
+      "source_sha256": "e8a351b7216628cd07b6b94f35d8acd8f4f5836d2bb1427c4210c4165b20e549",
+      "ru": "Режим редстоуна: работать при наличии сигнала",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "e8a351b7216628cd07b6b94f35d8acd8f4f5836d2bb1427c4210c4165b20e549"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.label.redstone.ignored",
+      "source_sha256": "9ddaa43efe2fb0cbaa7de367d9e1456c6f3eb7cc8369464417d2414a421b26b9",
+      "ru": "Режим редстоуна: игнорировать сигнал",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "9ddaa43efe2fb0cbaa7de367d9e1456c6f3eb7cc8369464417d2414a421b26b9"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.label.redstone.low",
+      "source_sha256": "bc9766f43f962c320e7f89f720cbb85cc37e213ca1effa5e8e9f32232a3d589d",
+      "ru": "Режим редстоуна: работать без сигнала",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "bc9766f43f962c320e7f89f720cbb85cc37e213ca1effa5e8e9f32232a3d589d"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.label.use.linkcrystaltargets",
+      "source_sha256": "29401fc7987e1f9f3d45a2395a1c096015e288c1270ba96113a561be58070d40",
+      "ru": "Использовать цели кристаллов связи",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "29401fc7987e1f9f3d45a2395a1c096015e288c1270ba96113a561be58070d40"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.label.useoredictionary.enabled",
+      "source_sha256": "9c8ee5ef9a5ad53cc8290de7dc328b32b937bfa6c11c568465164e355536b216",
+      "ru": "Рудный словарь: включён",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "9c8ee5ef9a5ad53cc8290de7dc328b32b937bfa6c11c568465164e355536b216"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.subtitle.jailer",
+      "source_sha256": "c70373c80c5afc20cece3436520c29b76798b167dd9f634d24c7c6cefdba25f9",
+      "ru": "Скрипит модуль тюремщика",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "c70373c80c5afc20cece3436520c29b76798b167dd9f634d24c7c6cefdba25f9"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.subtitle.molecular_exciter",
+      "source_sha256": "ced86087c2bbf06c53570d4f3eeff9246ba32bd5247c6c5128ea6accf040200d",
+      "ru": "Потрескивает молекулярный возбудитель",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "ced86087c2bbf06c53570d4f3eeff9246ba32bd5247c6c5128ea6accf040200d"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.tooltip.item.creative_breaking_enabled",
+      "source_sha256": "96d0db3a2005b4e8053910d2ca4c5155e007d6160fe13d0989ab38ed097a3fad",
+      "ru": "Разрушение как в творческом режиме включено: %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "96d0db3a2005b4e8053910d2ca4c5155e007d6160fe13d0989ab38ed097a3fad"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.tooltip.item.creative_breaking_installed",
+      "source_sha256": "26b17c5a0982706f94886b302b23c0eb399501baee218950055d414cd3af549e",
+      "ru": "Модуль разрушения как в творческом режиме: %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "26b17c5a0982706f94886b302b23c0eb399501baee218950055d414cd3af549e"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.tooltip.item.nolinkcrystals",
+      "source_sha256": "0ad8ca252fbfd335b22a75d2a3493afd2c6ed2f935431cc54a4e51aba4f21c76",
+      "ru": "Кристаллы связи не установлены",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "0ad8ca252fbfd335b22a75d2a3493afd2c6ed2f935431cc54a4e51aba4f21c76"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.tooltip.item.usetoolworkstation",
+      "source_sha256": "99f4a5c51c1b65c0d0f41a5659ced3eae7acf6ffee7674f7666bcba855abe79c",
+      "ru": "Для установки или удаления модулей используйте рабочую станцию",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "99f4a5c51c1b65c0d0f41a5659ced3eae7acf6ffee7674f7666bcba855abe79c"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.endercapacitor_0.tooltips",
+      "source_sha256": "43ad033420bb491356f295245178aa155580029a15835aaeb818aa232d17fa7b",
+      "ru": "- ПКМ по кристаллу Края заряжает предмет (в Крае)|lf- Также можно использовать эндер-зарядник|lf- Или построить энергетический мост",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "43ad033420bb491356f295245178aa155580029a15835aaeb818aa232d17fa7b"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.endercapacitor_1.tooltips",
+      "source_sha256": "43ad033420bb491356f295245178aa155580029a15835aaeb818aa232d17fa7b",
+      "ru": "- ПКМ по кристаллу Края заряжает предмет (в Крае)|lf- Также можно использовать эндер-зарядник|lf- Или построить энергетический мост",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "43ad033420bb491356f295245178aa155580029a15835aaeb818aa232d17fa7b"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.endercapacitor_2.tooltips",
+      "source_sha256": "43ad033420bb491356f295245178aa155580029a15835aaeb818aa232d17fa7b",
+      "ru": "- ПКМ по кристаллу Края заряжает предмет (в Крае)|lf- Также можно использовать эндер-зарядник|lf- Или построить энергетический мост",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "43ad033420bb491356f295245178aa155580029a15835aaeb818aa232d17fa7b"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.enderpart_jailer.name",
+      "source_sha256": "5cfae01ba8d085d870bd2e7fa5d69713b3a6cb75cf5bec7cafb73eabd61ff1cb",
+      "ru": "Модуль тюремщика",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.enderpart_memorycard_items_0.tooltips",
+      "source_sha256": "11acbf3923bbdaf1d4f16cccc3dcc4a6677b0340c6db0e38bab8e619427493e0",
+      "ru": "- Хранит предметы в стопках до 2^(число бит) = 64|lf- ПКМ переключает общий / личный доступ|lf- Shift + ПКМ удаляет сведения о владельце",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "11acbf3923bbdaf1d4f16cccc3dcc4a6677b0340c6db0e38bab8e619427493e0"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.enderpart_memorycard_items_3.tooltips",
+      "source_sha256": "a4cdcb9ad8b5d6c91f5a07578960bed15dd0a1011b38446c63cc1c2640951d47",
+      "ru": "- Хранит предметы в стопках до 2^(число бит) = 4096|lf- ПКМ переключает общий / личный доступ|lf- Shift + ПКМ удаляет сведения о владельце",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "a4cdcb9ad8b5d6c91f5a07578960bed15dd0a1011b38446c63cc1c2640951d47"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.enderporter_advanced.name",
+      "source_sha256": "2925257b97d944dcce63b545b14cf0fad4913cf3cb9f2054000fee3f6865835d",
+      "ru": "Улучшенный эндер-переносчик",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.linkcrystal_0.name",
+      "source_sha256": "2e4bc5983049686b4c6313a1798a7d15cabd1f34b5126e4318049a6c2860e1f8",
+      "ru": "Кристалл связи (местоположение)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.linkcrystal_2.tooltips",
+      "source_sha256": "6080355bc3203d31434568d2d9fa066390017ce156c93a76360dd31d5e3f4cbd",
+      "ru": "- Связывает порталы попарно,|lf  вместо обычной произвольной точки назначения|lf- Shift + ПКМ по блоку портала Ender Utilities создаёт связь|lf  (имеется в виду блок, возникающий при активации портала)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "6080355bc3203d31434568d2d9fa066390017ce156c93a76360dd31d5e3f4cbd"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.syringe_passifier.name",
+      "source_sha256": "da44f3c780cf05eea67d16a8a50ef3d078c46846bc46eb5f0dfb8eed87998c07",
+      "ru": "Усмиряющий шприц",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.syringe_stimulant.tooltips",
+      "source_sha256": "d2ce2bffcdbe9f5c21b99abb98eb03feddf0dde4955d3e8411cfafa91b7f6d4e",
+      "ru": "- Снимает паралич с мобов (удаляет флаг NoAI)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "d2ce2bffcdbe9f5c21b99abb98eb03feddf0dde4955d3e8411cfafa91b7f6d4e"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.void_pickaxe.tooltips",
+      "source_sha256": "5a37209e5ecd57f0c5b0d55e00afcb7ac810d715fd2058d42c728ffeb52afb97",
+      "ru": "- Разрушенные блоки ничего не оставляют, даже содержимое инвентаря|lf- Работает и в творческом режиме|lf- «Эффективность V» позволяет|lf  мгновенно добывать большинство блоков в быстром режиме|lf- Клавиша переключения: обычный / быстрый режим",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.ender_elevator_layer.name",
+      "source_sha256": "a0092e624d6498c8abad9334f91d1006e00b4ab0a0b45b73a2e5ee12ee471ac7",
+      "ru": "Слой эндер-лифта ({COLOR})",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.ender_elevator_slab.name",
+      "source_sha256": "d645ac9edbb352be98d50fb334d3789d58072a4db256900374c299417d34ad21",
+      "ru": "Плита эндер-лифта ({COLOR})",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.quick_stacker_advanced.tooltips",
+      "source_sha256": "f0f93f1f73bda190beb5105b8999bb111648eef73b741b77d13291f540af5cb8",
+      "ru": "- Стационарный вариант быстрого укладчика с расширенными настройками",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "erebus",
+      "key": "tile.erebus.spider_spawner.name",
+      "source_sha256": "3157fd10311bafacf50c4bde2167dceeaf1a122e09899f70748644a284f9eb1e",
+      "ru": "Спаунер плюющегося паука",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "evilcraftcompat",
+      "key": "info_book.evilcraftcompat.mod_integrations.blood_magic.text",
+      "source_sha256": "868ccd08acfb2cc525f463c31d1ce1e1ed683eb622249781a2fc2a8fa9400546",
+      "ru": "Однажды я нашёл странную &1сферу крови&0, прежде принадлежавшую какому-то &1магу&0. Используя её, я ощущал необъяснимую связь. Позже выяснилось, что сфера связана с моим потоком &4крови&0. Пропустив через неё много &4крови&0 с помощью &1кровавого наполнителя&0, я создал предмет, связанный с моим потоком &4крови&0 и одновременно служащий простым контейнером. Его можно устанавливать в любимые машины и использовать с моими предметами.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "evilcraftcompat",
+      "key": "info_book.evilcraftcompat.mod_integrations.enderio.text",
+      "source_sha256": "d7ec131db0c1cf3d9758c146fa8c13f092d7b565a92ce9dae4c70f24797a9f69",
+      "ru": "Эти технологии Края очень интересны. Возможно, когда-нибудь я использую их для улучшения своих машин. Уже сейчас их механизмы позволяют обрабатывать &1тёмную руду&0 и &1тёмные самоцветы&0, что весьма полезно.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "evilcraftcompat",
+      "key": "info_book.evilcraftcompat.mod_integrations.forestry.text",
+      "source_sha256": "d89aeb0b42ae043a17a19101bcbbbfc679ab48b5b7f3710e55c316c8af32b0b8",
+      "ru": "Когда я &oнавещал&r друзей, занимающихся деревьями и пчёлами, то заметил: в некоторые их сумки можно класть и мои предметы. Кроме того, их машина — &1соковыжималка&0 — умеет извлекать &4кровь&0 из частей &1мёртвого дерева&0. А само дерево легко выращивать с помощью их системы лесоводства.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "evilcraftcompat",
+      "key": "info_book.evilcraftcompat.mod_integrations.ic2.text",
+      "source_sha256": "a0d4ecd7a9b3f470613ca3319ac284469b52c1da66fca73c7fa0efd88e58d34b",
+      "ru": "Есть чудаки, которые постоянно возятся с жужжащими машинами. Я не понимаю, что они делают, за исключением &1дробителя&0. Если положить в него &1тёмную руду&0, он сразу выдаёт &1тёмные самоцветы&0 и их дроблёную разновидность. Обычные &1тёмные самоцветы&0 тоже можно измельчить в этой машине.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "evilcraftcompat",
+      "key": "info_book.evilcraftcompat.mod_integrations.thaumcraft.text",
+      "source_sha256": "7705172e3989e8e95997fb88a4053709975430032726b7bec51f4a5f098d2e68",
+      "ru": "Тауматургия заметно отличается от других видов магии. Тауматурги очень радуются моим предметам и постоянно разгуливают здесь со странными шестиугольниками. Чтобы порадовать друзей, я создал &1инструменты для письма с прожилками&0: ими можно писать &4кровью&0 вместо чернил.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "evilcraftcompat",
+      "key": "info_book.evilcraftcompat.mod_integrations.tinkers_construct.text",
+      "source_sha256": "013517f4f93844eecd6853ecc09aa58531d7e53e167b9b176ea27db18878cf31",
+      "ru": "&0Инструменты, инструменты и ещё раз инструменты!&r Кажется, эти люди больше ни о чём не думают. Постоянная работа сильно изнашивает инструменты, но, к счастью, для их починки есть &1кровавый сундук&0!",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "extrautils2",
+      "key": "extrautils2.text.ignoremetadata.off",
+      "source_sha256": "cfa838713453df9bfc9be5421076fbaa3ec8e4bffc795762a5c84fb9e57fa03b",
+      "ru": "Учитывать метаданные",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "extrautils2",
+      "key": "extrautils2.text.ignoremetadata.on",
+      "source_sha256": "1637ced5883d517e1a2098d7e978922f8aa44f4a6d94556e5d72e2e1e7cb9d6b",
+      "ru": "Игнорировать метаданные",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "extrautils2",
+      "key": "extrautils2.text.useoredictionary.off",
+      "source_sha256": "470b7f50fbfe51d1b87049d09db94f0d8f5d7cad77025f6f204fcbe3d32247d8",
+      "ru": "Игнорировать рудный словарь",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "extrautils2",
+      "key": "extrautils2.text.useoredictionary.on",
+      "source_sha256": "8b3000f9193c3122519ba3140c98d90bdbd5b3ffd04d03505c4cad7ca0a66560",
+      "ru": "Учитывать рудный словарь",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "ftbbackups",
+      "key": "commands.backup.size.usage",
+      "source_sha256": "9b91d2509f07bfc9394fda22315f28a5b18fe2a8dd0b40875db0204e29f91925",
+      "ru": "/backup size",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbbackups",
+      "key": "commands.backup.time.usage",
+      "source_sha256": "7b1299a7b7779a03b43459b742f62900ac91baf7361d5035007d1d66744d3c4a",
+      "ru": "/backup time",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbbackups",
+      "key": "commands.backup.usage",
+      "source_sha256": "2d5dec6656d6fc02f6b56c2bb8262d7ca0d658cbd3a1f6ccd70ec7bb02454b76",
+      "ru": "/backup",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.client_config.usage",
+      "source_sha256": "c8cdcf967396f418954807c6201ebd13f9ad9e622c43bd1d548cf51c0ac28d46",
+      "ru": "/client_config",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.my_settings.usage",
+      "source_sha256": "b426a7c8c2bcf8682831a023ddaa0bd2079bf1e5fbdfbaf969e7403a7160f615",
+      "ru": "/my_settings <config id> [value]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.create.usage",
+      "source_sha256": "a0e21fe238d85d231b3fa30cf52f12269945edf2fb3ad7ec260566aa55362324",
+      "ru": "/team create <id> [color]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.create_server_team.usage",
+      "source_sha256": "8b172e34f0b93c6ac55791b6572dd4269ffbecaac29972ef902b31b09ae1efbf",
+      "ru": "/team create_server_team <id>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.delete.usage",
+      "source_sha256": "598abb0667758a4d75a9dc721ab0c4cc1dfcda805b25fe99a931b6f177103168",
+      "ru": "/team delete <team>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.join.usage",
+      "source_sha256": "ca7cc7eb4a9d2e3893c1a9a52485d15937fcdecf914e4b3b784b2f5cab528c9b",
+      "ru": "/team join <team>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.kick.usage",
+      "source_sha256": "cc6fa72f40f89f8f98d9e812278cb1046d9dfcd65d4fb22191b1629d54d59f79",
+      "ru": "/team kick <player>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.leave.usage",
+      "source_sha256": "c1d526e40e810e4888f7ff44ff1e15906dcd497e1be6f98d604be69d5ec7e722",
+      "ru": "/team leave",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.list.usage",
+      "source_sha256": "c1415fa02b9ad8772be1ea53bf770655280815a51f4cb75bf4a434f7e2372031",
+      "ru": "/team list",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.msg.usage",
+      "source_sha256": "b19dccf05fe902e854fdd1aa28b8c72d7b1683fc2393f5b4761f7fc13737bb02",
+      "ru": "/team msg <message...>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.request_invite.usage",
+      "source_sha256": "b3123beefc4461c9f941c7028b2a8fd69c67e6e733db571c6f51d769a80b614c",
+      "ru": "/team request_invite <team>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.settings.usage",
+      "source_sha256": "a0707eba5f65ef523b7e559f9a04c505773a9037d691acdad93ea3a86430eb3f",
+      "ru": "/team settings <config id> [value]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.status.usage",
+      "source_sha256": "f6584727f2d591732c8a48ed8d5c9344b77c8066963b7ac663b3f17d94c724e9",
+      "ru": "/team status <player> [set_status]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftblib",
+      "key": "commands.team.usage",
+      "source_sha256": "ef0c9409946714a3b492c553ab54ca26b60c299a9f1c749c136f637a90c2a46c",
+      "ru": "/team",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.back.usage",
+      "source_sha256": "798c3520b3fe0375df0ce0ed21f7c6b1b787b2305f9145e509aa45adeddecaa5",
+      "ru": "/back",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.chunks.claim.usage",
+      "source_sha256": "02301833e55e46b6b6aa18aed4f1315337fa190da14a63c942267bcbd1f436d1",
+      "ru": "/chunks claim",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.chunks.claim_as.usage",
+      "source_sha256": "463002583b73ad877845b0cb5228fa90266cc82011df4bac75f235c45bf52e7a",
+      "ru": "/chunks claim_as <server team> [radius in chunks]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.chunks.info.usage",
+      "source_sha256": "2ca6882bacef2c54517d31b31f41ae45e38a051edc6234ec7237d7925d983a80",
+      "ru": "/chunks info",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.chunks.load.usage",
+      "source_sha256": "c5f8cbef334874f3d57711260616a2db54ab252c5afd3eac8c685d157458dde3",
+      "ru": "/chunks load",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.chunks.unclaim.usage",
+      "source_sha256": "2a873f195827cea04cf4c32e4a3b557598dd278c66994d214794fa69c9c750c5",
+      "ru": "/chunks unclaim",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.chunks.unclaim_all.usage",
+      "source_sha256": "6740b89c9496da760ab853c666eda036398a3f6ad66ac189c493345256229d33",
+      "ru": "/chunks unclaim_all [dimension] [player]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.chunks.unclaim_everything.usage",
+      "source_sha256": "39172500ce48878098671c05e963ebd302a560e85b789720ce3a92129c457ecf",
+      "ru": "/chunks unclaim_everything [dimension]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.chunks.unload.usage",
+      "source_sha256": "a6f8373de90fa94bb9abdf7d4ee314e3dd3e165a0e5ecd8d3c6bac29951d9f0d",
+      "ru": "/chunks unload [player]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.chunks.unload_all.usage",
+      "source_sha256": "548fca2acefb41cfca237509fe27adf29e339394fde13a8310880d56f6eacd0b",
+      "ru": "/chunks unload_all [dimension] [player]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.chunks.unload_everything.usage",
+      "source_sha256": "967dc29c7b96c14b283fc4903911414cd4d1c2b8eb94975d9075683bdb747667",
+      "ru": "/chunks unload_everything [dimension]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.chunks.usage",
+      "source_sha256": "4f702c7aca8ecf0929ec492261c76d6f0946408183831fbef018931965ba563a",
+      "ru": "/chunks",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.delhome.usage",
+      "source_sha256": "b663a3eeaf6a42305f6ca907fb2aab86b5d493a2e56a8efb4877577866d9bd92",
+      "ru": "/delhome [home]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.fly.usage",
+      "source_sha256": "8ad4e44d5e345ae2be5f71311004bf30e552b1a155bfe0fbc46d5ca554ea5079",
+      "ru": "/fly",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.heal.usage",
+      "source_sha256": "52581eca3b1f20902a38b91db11008db694a09ebe41440992d42aa10f3e6967b",
+      "ru": "/heal [player]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.home.usage",
+      "source_sha256": "fb6604e76c40723f7362aa7899cf37e3ba6fb084cca347edb4ad21bb7b08d94d",
+      "ru": "/home [list|list_all|home] [player]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.inv.list.usage",
+      "source_sha256": "c7f8534433df9a345c4719840f0febe2c59620c97a35c06223aff1faf088c9fb",
+      "ru": "/inv list",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.inv.load.usage",
+      "source_sha256": "a04f1be30b57b1db5b3c8a056a24c1c7eebbe7fbd2e60a97b3b5cb5a8191f95b",
+      "ru": "/inv load <player> <id>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.inv.save.usage",
+      "source_sha256": "76c3bd10e081a82c4d7cbbabcd9dea079e9ccd9dcba6ad1abaaca1e842e3a150",
+      "ru": "/inv save <player> <id>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.inv.usage",
+      "source_sha256": "72b7a65d7d3293c523bd0acdaeba5242408671c3a43e9965e7a623ef79ad6a90",
+      "ru": "/inv",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.inv.view.usage",
+      "source_sha256": "d5435bab9a8f5991424fc4e3e64fbfe5451e65334c003eaab4ddff9a7aa9b572",
+      "ru": "/inv view <player>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.killall.usage",
+      "source_sha256": "8d13ff9ddaf843690c7a21e688a22fa4e2807ff70ab2b3fe257e73dfb9ff0a00",
+      "ru": "/killall [type] [dimension]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.leaderboards.usage",
+      "source_sha256": "e218e216b018e3f50a00a18c841775a6647912f8b9807eb1a37f8fc770e2a2ac",
+      "ru": "/leaderboards [id]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.mute.usage",
+      "source_sha256": "603f183d8161d72fd3c1ae45dcb4ffc6e7c5f0320820e6f50d1c70a5bc797948",
+      "ru": "/mute <player>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.nbtedit.block.usage",
+      "source_sha256": "b7b1caadfa5931f0d7c982a2f70ccfd31afd8e0ce3165136fb327504786a6f5a",
+      "ru": "/nbtedit block <x> <y> <z>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.nbtedit.entity.usage",
+      "source_sha256": "457509984ee91bb445f6c6ed53a6cae7633da283da1d286312db12f8e8514043",
+      "ru": "/nbtedit entity <id>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.nbtedit.player.usage",
+      "source_sha256": "620f0698febd7940b07f12afcf64d3ef147070dfc07e664b964c5447b6dfe863",
+      "ru": "/nbtedit player <player>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.nick.usage",
+      "source_sha256": "e7e3a3f6e553fa88eba343edf32fed3e7a1feeaa85d8eadd6de1cf787ea0701b",
+      "ru": "/nick <name...>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.nickfor.usage",
+      "source_sha256": "fc813be50915329283b76cf3380bbbd1231ac012ffef56e0bf35c750dae919d7",
+      "ru": "/nickfor <player> <name...>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.ranks.create.usage",
+      "source_sha256": "18ab76a8b01fa6d4dbca0f5845ec01df8436bc42667d9b7b2044aab5f6cd5791",
+      "ru": "/ranks create <id> [parent]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.ranks.delete.usage",
+      "source_sha256": "052fe1b4c89dece45d0a6cbd3466e7dbcf03ce43390038ac4ea78c844b270e1d",
+      "ru": "/ranks delete <rank>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.ranks.info.usage",
+      "source_sha256": "fefe2e0b0a590d0571d348d06efe32d48afb2a7a93b9cde246c3630e21388392",
+      "ru": "/ranks info <rank|player>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.ranks.remove.usage",
+      "source_sha256": "f71854cd3496861de4513856282026b992af7eef6079c68d114d7631b50db87b",
+      "ru": "/ranks remove <rank|player> [rank]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.ranks.set_permission.usage",
+      "source_sha256": "f3338465ee35e79321910ee35e3b30dce64874ba041ff79c03e52a9683ac3d56",
+      "ru": "/ranks set_permission <rank> <permission> <true|false|value|none>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.ranks.usage",
+      "source_sha256": "a3eb6f84bc7bc9ee464b7c3b273888b5b20d233e0aa499d5bb8b01a90a7b5f5e",
+      "ru": "/ranks",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.rec.usage",
+      "source_sha256": "f3aba5a367dfa60ba562baf819f94e4f1875da92dd5ee0116d101341ba29ad05",
+      "ru": "/rec",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.sethome.usage",
+      "source_sha256": "4f1f958e32c28b860128cb5b7a2b8d06e6e3a485f3cabf55bbf42402e7519147",
+      "ru": "/sethome [home]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.shrug.usage",
+      "source_sha256": "22f2aa9167c28aefdaa4a6f62746ec577a6c6a31fc2c9f6be12c4698e854ad60",
+      "ru": "/shrug [text...]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.shutdown.usage",
+      "source_sha256": "cfeb7eed9a9f0cb30d3bae72332085bf883703c1218a3394c2ac8f352138d017",
+      "ru": "/shutdown",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.spawn.usage",
+      "source_sha256": "32b39d49303671f788434dd3c9c8a777e06277b50c790e4bb58fd23a195a6998",
+      "ru": "/spawn",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.tpa.usage",
+      "source_sha256": "805ee2bf58e4d2b741d216b88327e2bdef6809f416b0b1a0dd95aa5d5092c52d",
+      "ru": "/tpa <player>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.tpl.usage",
+      "source_sha256": "75e60ba5db7ec0026d42cdc72d771353c83d3785ff5198c0d7df5bcea2804dac",
+      "ru": "/tpl (<x> <y> <z>) | ([who] <player>)",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.unmute.usage",
+      "source_sha256": "dec8f789722c79a951872765a3262ecb9a9bb6caf54cff4ca80fb6c9f67f3ff9",
+      "ru": "/unmute <player>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "commands.warp.usage",
+      "source_sha256": "2c3a34f229f26701969c36e01d3b6aa1a3f8c7a354e4a6703321cc2fe67a7eb9",
+      "ru": "/warp <warp>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "ftbutilities.general.scan_items_blacklist",
+      "source_sha256": "d27ca9c9327aa091aaddbe4dc681ec6e9cd0efaa1cfe1f8c312f945db3b34e30",
+      "ru": "/scan_items Blacklist",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "ftbutilities.general.scan_items_whitelist",
+      "source_sha256": "45708aed212763946aa418b74e357ead5cdc7cf14b1a5024375be09bcfab0091",
+      "ru": "/scan_items Whitelist",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "permission.ftbutilities.back.cooldown",
+      "source_sha256": "a0f24bec604463b138034a06b04ce7ab58175fee666d71bf0bf211f524650386",
+      "ru": "/back Cooldown Timer",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "permission.ftbutilities.back.warmup",
+      "source_sha256": "6410be6eead29295ad4853287b355dfe398fa340f08a2879fe11c44c2c4c9ca0",
+      "ru": "/back Warmup Timer",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "permission.ftbutilities.homes.cooldown",
+      "source_sha256": "2b1a9e5095e19afd746de52035a5af1a2804f03c06f79f13aad44b1423d3e00d",
+      "ru": "/home Cooldown Timer",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "permission.ftbutilities.homes.warmup",
+      "source_sha256": "901afc8c9c5779d1105f42467be284450cb8f923aecc45ecc379ade4acf96940",
+      "ru": "/home Warmup Timer",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "permission.ftbutilities.spawn.cooldown",
+      "source_sha256": "2f495e55684ed41359d7e3a49df0108403e3c4b706cff3cde1479b13db75852b",
+      "ru": "/spawn Cooldown Timer",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "permission.ftbutilities.spawn.warmup",
+      "source_sha256": "b56513ff8fe1e6fb909cf06e29f28ed4aa3f344640c47421f7b235e420b72a0b",
+      "ru": "/spawn Warmup Timer",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "permission.ftbutilities.tpa.cooldown",
+      "source_sha256": "4342ef9fc6cd5a42fa2f3707f03c5302a832ffeba6817611b04d4a332e665924",
+      "ru": "/tpa Cooldown Timer",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "permission.ftbutilities.tpa.warmup",
+      "source_sha256": "606a7d8ff41cd3deae38182543f80d281ca65d68f189cfece27acbc3174aa947",
+      "ru": "/tpa Warmup Timer",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "permission.ftbutilities.warps.cooldown",
+      "source_sha256": "c98cbd0fe588e261e2468cce2dc3de5d28401685e25991457f2048ed3a9f2815",
+      "ru": "/warp Cooldown Timer",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "ftbutilities",
+      "key": "permission.ftbutilities.warps.warmup",
+      "source_sha256": "c5eefb7d14ffbd0d3a7f4d5da70270e66c58152c5b16b90cdbda34bd2d94f490",
+      "ru": "/warp Warmup Timer",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "groovyscript",
+      "key": "groovyscript.infoparser.brew",
+      "source_sha256": "fcf7f529d686cbfab4296a996e3b18b196530a17151d440d5fb265b3123b43d9",
+      "ru": "Зелья Botania, связанные с предметом в руке",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "groovyscript",
+      "key": "groovyscript.infoparser.oredict",
+      "source_sha256": "dbf7daa77b96b2aa40f9f19406735547d10c58599a9c47ad2d486151727c64d6",
+      "ru": "Записи рудного словаря, к которым относится предмет в руке",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "groovyscript",
+      "key": "groovyscript.infoparser.tunnel",
+      "source_sha256": "dcbfba6b1beaabb3bbd8049cf081e87f1f0caaf116c6fc77860e08dacbf73b68",
+      "ru": "Типы настройки туннелей Applied Energistics 2 для предмета в руке",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "immersiveengineering",
+      "key": "ie.manual.entry.updateNews_00",
+      "source_sha256": "c1a069bd0318433df419e48155583a28b66021209079ae945f75f78916783e76",
+      "ru": "Дорогой инженер!<br><br>Со времени твоей последней работы с Immersive Engineering многое изменилось! Появились дома жителей, <link;lighting;§o§nновые §o§nсветильники§r>, <link;barrel;§o§nдеревянные §o§nбочки§r>, <link;tanksilo;§o§nрезервуары§r>, <link;tanksilo;§o§nсилосы§r;1> и <link;fluidPipes;§o§nжидкостные §o§nтрубы§r>, достижения, <link;shader;§o§nшейдеры§r>, <link;assembler;§o§nсборщик§r> и <link;bottlingMachine;§o§nразливочная §o§nмашина§r>!",
+      "decision": "own_translation",
+      "consumer_contract": "IE_manual_links",
+      "expected_previous_sha256": "c1a069bd0318433df419e48155583a28b66021209079ae945f75f78916783e76"
+    },
+    {
+      "namespace": "immersiveengineering",
+      "key": "ie.manual.entry.updateNews_01",
+      "source_sha256": "ea6a6d572a30ec3b7d67b7125c2807987c20ea78f27e862d3727a4b0a391c322",
+      "ru": "Сильнее всего изменилась передача энергии. Чтобы избежать ошибок, обязательно прочти раздел <link;wiring;§o§nПроводка§r>, особенно страницу 5: там подробно объясняется новое различие между пропускной способностью провода и скоростью приёма и выдачи энергии коннектором.",
+      "decision": "own_translation",
+      "consumer_contract": "IE_manual_links",
+      "expected_previous_sha256": "ea6a6d572a30ec3b7d67b7125c2807987c20ea78f27e862d3727a4b0a391c322"
+    },
+    {
+      "namespace": "immersiveengineering",
+      "key": "ie.manual.entry.updateNews_10",
+      "source_sha256": "1c9266087adc9fbc92afedfc8459bdf44d90206ef65b2ee82fe26bdd1937faf6",
+      "ru": "Дорогой инженер!<br><br>Последнее обновление принесло новые возможности и изменения в Immersive Engineering:<br><br><link;metalbarrel;§o§nМеталлические §o§nбочки§r> стали более надёжным переносным хранилищем жидкостей. Дуговая печь теперь умеет сплавлять некоторые металлы и перерабатывать старые инструменты и броню. А по строительным лесам, закрывающим <link;fluidPipes;§o§nжидкостную §o§nтрубу§r>, теперь можно взбираться.",
+      "decision": "own_translation",
+      "consumer_contract": "IE_manual_links",
+      "expected_previous_sha256": "1c9266087adc9fbc92afedfc8459bdf44d90206ef65b2ee82fe26bdd1937faf6"
+    },
+    {
+      "namespace": "immersiveengineering",
+      "key": "ie.manual.entry.updateNews_21",
+      "source_sha256": "3e127e4e6840da28bdece4b77fe9f89a79605dc1c51f4110d67729dbb536d0fd",
+      "ru": "Изобретён новый <link;breaker;§o§nвыключатель§r;2>, управляемый сигналом редстоуна и совместимый с высоковольтными линиями. Подключать такие линии к обычным выключателям теперь запрещено из-за опасного для жизни напряжения. Нам ни к чему неприятности с профсоюзом.",
+      "decision": "own_translation",
+      "consumer_contract": "IE_manual_links",
+      "expected_previous_sha256": "3e127e4e6840da28bdece4b77fe9f89a79605dc1c51f4110d67729dbb536d0fd"
+    },
+    {
+      "namespace": "immersiveengineering",
+      "key": "ie.manual.entry.updateNews_30",
+      "source_sha256": "7a25a0af7deac98eaaae8a615a35b277783373845c3f71a6c1f3f1cdc66b1102",
+      "ru": "Дорогой инженер!<br><br>Последнее обновление принесло новые возможности и изменения в Immersive Engineering:<br><br>После тяжёлого сотрясения главный инженер Адамс начертил <link;chemthrower;§o§nхимический §o§nраспылитель§r> — устройство, распыляющее любые жидкости где угодно. Встроенная горелка позволяет поджигать струю. Кажется, Адамс сошёл с ума.",
+      "decision": "own_translation",
+      "consumer_contract": "IE_manual_links",
+      "expected_previous_sha256": "7a25a0af7deac98eaaae8a615a35b277783373845c3f71a6c1f3f1cdc66b1102"
+    },
+    {
+      "namespace": "immersiveengineering",
+      "key": "ie.manual.entry.updateNews_31",
+      "source_sha256": "01d1d6ad3dd4bfd0c2f020813b52cb3e1602a92c2d942a73ab99cf404016aad3",
+      "ru": "Ещё одна новинка исследовательского отдела — <link;chargingStation;§o§nзарядная §o§nстанция§r>, передающая энергию предметам.<br>Помощник инженера по прозвищу «Кобра» представил <link;conveyor;§o§nсбрасывающий §o§nконвейер§r;2>: он сбрасывает проходящие предметы в инвентари под собой.<br>Наконец, интерфейс <link;sorter;§o§nпредметного §o§nмаршрутизатора§r> теперь позволяет фильтровать предметы по рудному словарю и NBT, а также использовать нечёткое сравнение!",
+      "decision": "own_translation",
+      "consumer_contract": "IE_manual_links",
+      "expected_previous_sha256": "01d1d6ad3dd4bfd0c2f020813b52cb3e1602a92c2d942a73ab99cf404016aad3"
+    },
+    {
+      "namespace": "immersiveengineering",
+      "key": "ie.manual.entry.updateNews_32",
+      "source_sha256": "c5022644f297b83e5e12c2916a983d88b455d98fd555934cc21097096dbb6da5",
+      "ru": "Среди других новинок для транспорта и украшения:<br>- <link;shader;§o§nШейдеры§r> теперь можно наносить на вагонетки.<br>- <link;skyhook;§o§nНебесный §o§nкрюк §o§nинженера§r> позволяет носиться по проводам и обгонять вагонетки.<br>- <link;balloon;§o§nШары§r> удобны для подвешивания коннекторов и прокладки воздушных линий для крюка.<br>- <link;concrete;§o§nБетон§r> обеспечит жёсткую посадку, если сорвёшься с провода.",
+      "decision": "own_translation",
+      "consumer_contract": "IE_manual_links",
+      "expected_previous_sha256": "c5022644f297b83e5e12c2916a983d88b455d98fd555934cc21097096dbb6da5"
+    },
+    {
+      "namespace": "immersiveengineering",
+      "key": "ie.manual.entry.updateNews_33",
+      "source_sha256": "cff6dfb6b04d2ead93924f8642f44b1f82063dfd0adc01ddb31f9441e8d89dc8",
+      "ru": "Финансовый отдел замучил нас претензиями: мол, мы не следим за расходом энергии. После жаркого спора нам выдали чертежи <link;eMeter;§o§nтрансформатора §o§nтока§r> — устройства, измеряющего проходящую энергию. Узнав, сколько на самом деле потребляет дуговая печь, финансисты расстроились ещё сильнее.",
+      "decision": "own_translation",
+      "consumer_contract": "IE_manual_links",
+      "expected_previous_sha256": "cff6dfb6b04d2ead93924f8642f44b1f82063dfd0adc01ddb31f9441e8d89dc8"
+    },
+    {
+      "namespace": "immersiveengineering",
+      "key": "ie.manual.entry.updateNews_40",
+      "source_sha256": "35b92a8271a4eb7f3942cba650cc665a9c39042f1a527a649ce9118fa179fab3",
+      "ru": "Дорогой инженер!<br><br>Последнее обновление принесло лишь небольшие изменения.<br>Передачу энергии снова исправили, а сломавшего её инженера в наказание окунули в холодную воду.<br><link;furnaceHeater;§o§nПечной §o§nнагреватель§r> улучшили: теперь он нагревает алхимические печи из Thaumcraft и испарители из Cutting Edge.<br><br>Пока всё. Будем надеяться, что система останется достаточно стабильной.",
+      "decision": "own_translation",
+      "consumer_contract": "IE_manual_links",
+      "expected_previous_sha256": "35b92a8271a4eb7f3942cba650cc665a9c39042f1a527a649ce9118fa179fab3"
+    },
+    {
+      "namespace": "industrialforegoing",
+      "key": "text.industrialforegoing.book.black_hole_controller",
+      "source_sha256": "7173f07b4826b88d232224b498407b2234976d5b70c8bf97d4a1fe8695dfe704",
+      "ru": "Устарел. Используйте контроллер чёрной дыры v2.0.",
+      "decision": "own_translation",
+      "consumer_contract": "IF_highlight_braces",
+      "expected_previous_sha256": "a98d726915017dd8159b64f3759f9ae1facd8c43c19f761da60fbe6de9f4abe4"
+    },
+    {
+      "namespace": "industrialforegoing",
+      "key": "text.industrialforegoing.book.black_hole_controller_reworked",
+      "source_sha256": "1dbf95f10deaf2263f709c385f246395ea51856a2d4bde87cabc99729522d66e",
+      "ru": "Вмещает 12 {хранилищ чёрной дыры} и {резервуаров чёрной дыры} и предоставляет доступ к их содержимому.",
+      "decision": "own_translation",
+      "consumer_contract": "IF_highlight_braces"
+    },
+    {
+      "namespace": "industrialforegoing",
+      "key": "text.industrialforegoing.book.fortune_addon",
+      "source_sha256": "0c58d907a7a632494c8edf5d7233de922f91b540ecc652979f53f56ad52d4919",
+      "ru": "Добавляет {Удачу/Добычу} совместимым машинам. Улучшение нужно зачаровать на {Удачу}: машина будет использовать уровень этих чар при работе.",
+      "decision": "own_translation",
+      "consumer_contract": "IF_highlight_braces"
+    },
+    {
+      "namespace": "industrialforegoing",
+      "key": "text.industrialforegoing.book.infinity_drill",
+      "source_sha256": "2c720caaaa6fbcf780f4befae06b66fcc9cdc32503251363e9b981e2fc407194",
+      "ru": "Мощный бур, утративший всю энергию. Зарядите его, чтобы добывать огромные области: чем больше запас энергии, тем больше область добычи. Для экономии заряда бур может эффективнее расходовать {биотопливо}. Shift + ПКМ меняет область добычи. @L@@L@{В нём есть секреты, доступные сторонникам автора на Patreon и некоторым редким мобам мира.}",
+      "decision": "own_translation",
+      "consumer_contract": "IF_highlight_braces"
+    },
+    {
+      "namespace": "industrialforegoing",
+      "key": "text.industrialforegoing.book.pitiful_fuel_generator",
+      "source_sha256": "f23d74f03c66fd83c25cd4dcb5c2eac02327d5784b41e0be131991fbf1f92f15",
+      "ru": "Работает как окаменелый топливный генератор, но принимает только предметы из {дерева}.",
+      "decision": "own_translation",
+      "consumer_contract": "IF_highlight_braces"
+    },
+    {
+      "namespace": "industrialforegoing",
+      "key": "text.industrialforegoing.book.upgrades",
+      "source_sha256": "4ee44fdb345d16e481c208e6978e5ff66ef2927b888f9bf14bdb6687bbe28ddd",
+      "ru": "У Industrial Foregoing нет собственных улучшений скорости. Для ускорения машин подходят {энергетические улучшения} и {улучшения скорости} из Tesla Core Lib. Чтобы установить следующий уровень, сначала установите предыдущий.",
+      "decision": "own_translation",
+      "consumer_contract": "IF_highlight_braces"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "aspect.aspects.integrateddynamics.read.long.world.time.info",
+      "source_sha256": "ed455d37cfcbeb1ce547b7979264bb1ccd66b3d697b288138fa1d5b863c7d6d7",
+      "ru": "Время мира, зависящее от команды установки времени.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "aspect.aspects.integrateddynamics.read.long.world.totaltime.info",
+      "source_sha256": "d06b4978116915a3b63f3869218b07f2aa9a043ee9df28a974571047d2406c2a",
+      "ru": "Полное время мира, не зависящее от команды установки времени.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.nbt.valueListByte.name",
+      "source_sha256": "4ef5db2c826e012f6ac422286fd3a81e8edbdfc8d563872a1faad0f4f730d629",
+      "ru": "Значение NBT: массив Byte",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.nbt.valueListInt.name",
+      "source_sha256": "26cb529407aa55dbfdbd1bf00fba4b8666ac4d21138e23e6d5098a142303597b",
+      "ru": "Значение NBT: массив Int",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.nbt.valueListTag.name",
+      "source_sha256": "3afcfb57bb250879ee7865754f1b19e106abf83c96b77432720a570f5987cde9",
+      "ru": "Значение NBT: список NBT",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.nbt.valueLong.name",
+      "source_sha256": "16dfd8b3f2b26a7c64732520a12e364d466ff50c7bd29f1bc3b0ab394b4c150e",
+      "ru": "Значение NBT: Long",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.nbt.withListByte.name",
+      "source_sha256": "4b9c62844b39c9ecd2e39ab9251fb0b53bc94e2fe400e939ee9e2c0f6e3b7019",
+      "ru": "NBT со списком Byte",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.nbt.withListInt.name",
+      "source_sha256": "6b0ca603cf28b9f6cf0fefbe8dd2eb31b6253d0d64c7cbba7ffab1e938f3ecb0",
+      "ru": "NBT со списком Int",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.nbt.withListLong.name",
+      "source_sha256": "b2e086bfedd6c8a96d72d0a9e38f4b74c27929765a0bbff442f20775f2090999",
+      "ru": "NBT со списком Long",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.nbt.withListTag.name",
+      "source_sha256": "d0edafa5febea4b8774198f4de843d88c8eaa626811ac47508752018091a300b",
+      "ru": "NBT со списком NBT",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.nbt.withLong.name",
+      "source_sha256": "d4565f5e6c8e4fbeed9de856bb4e9a43bcf3f5bc370df510ec111807671975eb",
+      "ru": "NBT с Long",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.nbt.withShort.name",
+      "source_sha256": "ba4e1ce43f8d65b60b0b3a87fcadee6505f316baa8f77740204ef7eef61aae34",
+      "ru": "NBT с Short",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.operator.reduce1.info",
+      "source_sha256": "0c1ba28d05a383f540b1665c30c2f526c1550388be4964769402dea2ec70d5e1",
+      "ru": "Применяет заданный оператор ко всем элементам списка, сворачивая список в одно значение. reduce1(op, list) эквивалентно reduce(op, tail(list), head(list)).",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.string.contains_regex.name",
+      "source_sha256": "9b946aa59512f7374691ae161e2dc53f340a690dbf9b72d8b9fa72f338f8c047",
+      "ru": "Содержит регулярное выражение",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.string.index_of_regex.name",
+      "source_sha256": "1df1d477e9c9d808725ee90c3ca1fb4f821e16718ae64c012f2e473ff52e64d5",
+      "ru": "Индекс регулярного выражения",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.string.matches_regex.name",
+      "source_sha256": "2c8549068c47989188d21c8c3f3e939eb93890464d209ca35ed4db143cc996a5",
+      "ru": "Соответствует регулярному выражению",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.string.regex_group.name",
+      "source_sha256": "a886cf97896ca291c79726a2c819322a98fda9b4450e00506089bdfa2085e856",
+      "ru": "Группа регулярного выражения",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.string.regex_groups.name",
+      "source_sha256": "4d5aaa69f6cc9c367bfba9a85c2c76e32d425752d39629bd3100cffa3f8e763f",
+      "ru": "Группы регулярного выражения",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.string.regex_scan.name",
+      "source_sha256": "250df75cbf4aa3089e1bf331d023c7fcd21349d28cbef28550e4fb814698cace",
+      "ru": "Поиск по регулярному выражению",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.string.replace_regex.name",
+      "source_sha256": "ac243462118bb9ad04c282bb49abe51a01551f6b191209d8468dcd1267451632",
+      "ru": "Замена по регулярному выражению",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "operator.operators.integrateddynamics.string.split_on_regex.name",
+      "source_sha256": "6652569b41b72b9c768e92d22460452b1b52c26159f4a4e1312f83e4cac63887",
+      "ru": "Разделение по регулярному выражению",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamics",
+      "key": "valuetype.valuetypes.integrateddynamics.ingredients.match.oredict.desc",
+      "source_sha256": "5d2bd33334808ab07060915f278f908cc7fb4281a2fb0d11fff4f4fbcdb6da34",
+      "ru": "§cСопоставлять эквивалентные записи §nрудного словаря§r§c.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.tesla.applicable.info",
+      "source_sha256": "9e14dad4e281581b2169c71cd2262534350cea32b4f38f191ef8c35837d979ea",
+      "ru": "Цель каким-либо образом работает с энергией Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.tesla.applicable.name",
+      "source_sha256": "208879954d00907f75b971925aefdc3175df55aeeb33d7c34fb72c7f69edcc79",
+      "ru": "Работает с энергией Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.tesla.canextract.info",
+      "source_sha256": "ef12ac122a4fae39204d3120f3a8f757b45f93ad92952d41259c2e401df8fcfd",
+      "ru": "Из цели действительно можно извлечь энергию Tesla с учётом её запаса",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.tesla.caninsert.name",
+      "source_sha256": "526ca69d55628c4b0203ceab70364c64306dbdfc59f5c9494130b747975e8608",
+      "ru": "Можно передать энергию Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.tesla.isempty.info",
+      "source_sha256": "19c485dee0eb75195b6d0100abe22d1e41033c078403971ad05053a221d83c95",
+      "ru": "Энергетический буфер Tesla цели полностью пуст",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.tesla.isfull.info",
+      "source_sha256": "253b127281eaf3d3b57d567044c9339a7b6f015938e357dcb899b956db89a036",
+      "ru": "Энергетический буфер Tesla цели полностью заполнен",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.tesla.isnonempty.info",
+      "source_sha256": "73e3ac044b626d8122b4195b61648ca04d621b936b81838a2b925370f550d99d",
+      "ru": "Энергетический буфер Tesla цели не пуст",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.tesla.isprovider.info",
+      "source_sha256": "77c331c54ac0850f0ec84e2640a2a123da555311b7f1d7de08b89a9e5ebeb1a1",
+      "ru": "Цель может выдавать энергию Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.tesla.isprovider.name",
+      "source_sha256": "999ce147255a4fab62b4b987de05db2c86d9daf228ec9b5b69f0e83db8134ff2",
+      "ru": "Выдаёт энергию Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.tesla.isreceiver.name",
+      "source_sha256": "94b800c1ef9cce8ab57143a9fcf361a9590ab669a3236a3d481bf6fa256853b9",
+      "ru": "Принимает энергию Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.thaumcraft.isessentiaprovider.name",
+      "source_sha256": "e043feadc8c35cd837339e088ed5ca00de44de515b4957deb0d539d0bd6c1a04",
+      "ru": "Выдаёт эссенцию",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.thaumcraft.isessentiareceiver.name",
+      "source_sha256": "3207f5c3de14f996d9a89631611c10e50642810c960d5c7e9440c7a511d5629d",
+      "ru": "Принимает эссенцию",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.thaumcraft.isessentiatransport.name",
+      "source_sha256": "afee1d203489edcf4349977d19c91ef7aea83a29a6d77a9a91c2b32b374ad9ed",
+      "ru": "Является транспортом эссенции",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.double.tesla.fillratio.info",
+      "source_sha256": "e95253964f56cd64c8c9eb0b77e547fcbe5d23c562577ed1e5f6809c8a8cbff3",
+      "ru": "Отношение запаса энергии Tesla в цели к её ёмкости",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.double.tesla.fillratio.name",
+      "source_sha256": "c45dcef070650225e24f232e300d3f3d8823413cf22fcfc25efa1b81d094f6fb",
+      "ru": "Доля заполнения энергией Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.integer.thaumcraft.essentiaminsuction.name",
+      "source_sha256": "478184a4be7745bedcfbafe78297d020985a32b22a108bd9f7921b9a6ef82ba3",
+      "ru": "Минимальная сила всасывания эссенции",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.integer.thaumcraft.suction.name",
+      "source_sha256": "927a24c0527d635757d12d94fe8109662a011a71733f6256db5b3131fe517cc4",
+      "ru": "Сила всасывания транспорта эссенции",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.long.tesla.amount.info",
+      "source_sha256": "d68b9af267d21fab71fa512b50b96e989a1c1d071451a589993ad99698416972",
+      "ru": "Запас энергии Tesla в цели",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.long.tesla.capacity.info",
+      "source_sha256": "3b003fc8ddd248a976d2fd3e6ce77faeaa518b933c507458561e7bb05c62f605",
+      "ru": "Ёмкость энергетического буфера Tesla цели",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.string.tesla.amount.info",
+      "source_sha256": "a988dba2b8afee7cd8f7fb7ede64b7b92086338051523ca25f5070630fc36ce4",
+      "ru": "Форматированное значение запаса энергии Tesla в цели",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.string.tesla.capacity.info",
+      "source_sha256": "acda5ccb914cc447b2b1aa42cf105da2d6cc677ca5239d447a95eadba5fb1ff8",
+      "ru": "Форматированное значение энергетической ёмкости Tesla цели",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.thaumcraftaspect.thaumcraft.essentia.name",
+      "source_sha256": "681db7692083fc41f5ae898e0f68224d6d4beae234af51d1a3ddc040aea527d6",
+      "ru": "Содержимое транспорта эссенции",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.thaumcraftaspect.thaumcraft.suction.name",
+      "source_sha256": "73f3009e73ef133c5f76cb8a9f842e9484882097a064636b9b612d8fb6f86c33",
+      "ru": "Аспект всасывания транспорта эссенции",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.write.operator.charsetpipe.shifterfluid.name",
+      "source_sha256": "a802b4bee9c88e505b1100e7a451feb528926c3d1d0085481d75d9729be71a79",
+      "ru": "Сдвиг жидкостной трубы по предикату",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "operator.operators.integrateddynamics.itemstack.isteslacontainer.name",
+      "source_sha256": "9b6124474b915fba7b550fc7914edbe684f4ff452fed94d7fc18a27d3ad3c4d0",
+      "ru": "Является хранилищем энергии Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "operator.operators.integrateddynamics.itemstack.isteslaprovider.info",
+      "source_sha256": "187dcd365d4c1104038a832dab0e1e360964c1560104c72183ac0ad80b5aef5f",
+      "ru": "Предмет способен выдавать энергию Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "operator.operators.integrateddynamics.itemstack.isteslaprovider.name",
+      "source_sha256": "999ce147255a4fab62b4b987de05db2c86d9daf228ec9b5b69f0e83db8134ff2",
+      "ru": "Выдаёт энергию Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "operator.operators.integrateddynamics.itemstack.isteslareceiver.info",
+      "source_sha256": "9180850357c9ef061b63aed04dd1e2b39e3a156e13689c2b369bacf45d3af129",
+      "ru": "Предмет способен принимать энергию Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "operator.operators.integrateddynamics.itemstack.isteslareceiver.name",
+      "source_sha256": "94b800c1ef9cce8ab57143a9fcf361a9590ab669a3236a3d481bf6fa256853b9",
+      "ru": "Принимает энергию Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "operator.operators.integrateddynamics.itemstack.teslacapacity.info",
+      "source_sha256": "31d1a3d034f98bbf3dd41ddbe40651b0bc2308d920c6b185f6b741712ff05cd5",
+      "ru": "Предельное количество энергии Tesla в этом предмете",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "operator.operators.integrateddynamics.itemstack.teslafillratio.name",
+      "source_sha256": "c45dcef070650225e24f232e300d3f3d8823413cf22fcfc25efa1b81d094f6fb",
+      "ru": "Доля заполнения энергией Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "operator.operators.integrateddynamics.itemstack.teslastored.info",
+      "source_sha256": "ab6676d3880ef95f7be4131e3c75d4e9922a1a87a34e803a0c7f3bf3beac25d9",
+      "ru": "Количество энергии Tesla в этом предмете",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "operator.operators.integrateddynamics.itemstack.teslastored.name",
+      "source_sha256": "fda9555731e5d68b717e55ef7219ba801bcbf3232c43ddca9133bb6fc918108f",
+      "ru": "Запас энергии Tesla",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "jei",
+      "key": "description.jei.wooden.door.3",
+      "source_sha256": "44b3e4380f6b4864720c749bc6b06f47dc59a205bb97f0bce0bded8e0f153b2a",
+      "ru": "Деревянные двери можно открывать и закрывать редстоуновыми схемами.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "44b3e4380f6b4864720c749bc6b06f47dc59a205bb97f0bce0bded8e0f153b2a"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.common.discord",
+      "source_sha256": "8361a1bd0ff40f5cbd70c0e3eac37fb8d769bca1079a2274a30a2de42e3b2650",
+      "ru": "Discord JourneyMap",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "8361a1bd0ff40f5cbd70c0e3eac37fb8d769bca1079a2274a30a2de42e3b2650"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.common.system_time_format.tooltip",
+      "source_sha256": "cd44019153bab7a9b2dea902cfbd7b8c0b2d1348b29b84c105a6e6fcfb659c6b",
+      "ru": "Формат времени в информационном поле «Системное время»",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.common.time_format",
+      "source_sha256": "609a43f384468edd89af3cf37751844c2a953da1e4ceef40f84bf59f749dad4a",
+      "ru": "Формат игрового времени",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.common.time_format.tooltip",
+      "source_sha256": "f26103c4ec9fba781c16eedfb754bae825e3b81682120aaaf3248a818520b8e7",
+      "ru": "Формат времени в информационном поле «Игровое время»",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.chkbox.world.id.tooltip3",
+      "source_sha256": "13ceddd16324f249208c2795669ec0f462b4b35a33c22392ebcc64876574fb64",
+      "ru": "§4ВНИМАНИЕ§f: если §c[выключить]§f, а затем §9[включить]§f эту настройку на работающем сервере, все данные карт игроков будут сброшены.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.label.selection.dimension.tooltip",
+      "source_sha256": "22306f9a2f7b566f79b33d25f973c7efcdca66f21fcf9aa59a19d3ec2e563ed1",
+      "ru": "Если §a[включено]§f, эти свойства заменяют общие настройки.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.label.worldId.singleplayer.tooltip",
+      "source_sha256": "b48c9940682fe727d22078ed780dae53661695053dc95325012948556a5ad62b",
+      "ru": "Вы играете в одиночном режиме. Некоторые настройки могут отсутствовать или не действовать. Значение §a[Ops]§f фактически отключает соответствующую функцию в одиночной игре.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.radar.toggle.tooltip2",
+      "source_sha256": "d3ee9a66478ca2ecb0b9a884803b5a79ed3adeb806ea49ae4c92236411ba8480",
+      "ru": "При значении §a[Ops]§f или §a[Все]§f -> у операторов включены все функции радара.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.defaultgamemode.print",
+      "source_sha256": "2c60fe6dd7b2f323b8f617dea9a500a747c1d7cc2a7139753af03de2ca21fd1d",
+      "ru": "Измерение %s: режим игры по умолчанию — %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.defaultgamemode.success",
+      "source_sha256": "e3b47dd096758975b637de3016105764b67653707f04585d728773543a1e5618",
+      "ru": "Измерение %s: режим игры по умолчанию изменён на %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.difficulty.print",
+      "source_sha256": "bebe2af50212246fe9c9974380711bb9eeb7b9a2da8563b5049fb9e575a7dbb2",
+      "ru": "Измерение %s: текущая сложность — %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.difficulty.success",
+      "source_sha256": "491938901cfadfa8c1988da15191ca214b4ec1e6cd650079d09eb93bd380af1e",
+      "ru": "Измерение %s: сложность изменена на %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.dimbuilder.dimtype.success",
+      "source_sha256": "63082679e2a4b1d92d4495c0513405d146483e84054459ec5aed4cd2b07106c8",
+      "ru": "Сведения о типе измерения заданы",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.error.command_in_derived_world_info_dimension",
+      "source_sha256": "9d85eacb4c350e630fb3857651066ccfcf5526b4cab640769e4112c617ab4bd3",
+      "ru": "Целевое измерение использует DerivedWorldInfo и получает значения из Верхнего мира. Поэтому выполненная команда, скорее всего, ничего не изменила. Чтобы у измерения были собственные значения, настройте для него переопределение WorldInfo.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.error.command_in_derived_world_info_dimension.gamerule",
+      "source_sha256": "cb7159fafb21c4c9f66d93d7af8e24ce4df6a2239cb5f54449edefc2fff7a011",
+      "ru": "Целевое измерение использует DerivedWorldInfo: изменённое вами игровое правило также изменилось в Верхнем мире и всех измерениях без собственного переопределения WorldInfo. Если нужны отдельные игровые правила, настройте для этого измерения переопределение WorldInfo.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.error.dimension.cannotunregisteroverworld",
+      "source_sha256": "36d6f524fc4b5b8a8629ed025b5b84d996a5ae8efc52e9ced5a1034a968320bb",
+      "ru": "Нельзя отменить регистрацию Верхнего мира!",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.error.gamerule.norule",
+      "source_sha256": "b4fcd13b23e20583d33a52c46bf085045df8c20432931517cfb82a9536d24d92",
+      "ru": "Измерение %s: игровое правило «%s» не существует",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.error.invalid.worldprovider.name",
+      "source_sha256": "ab16f3841f76f49dbd9d7295f8dc7d4ffcf378c89390171912ef5d48e8522df2",
+      "ru": "Неверное имя WorldProvider «%s»",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.gamerule.success",
+      "source_sha256": "01c914327656279c1cbded9b07ba55e8fb7a2b19fb8ee91b0d171bfd85c03d55",
+      "ru": "Измерение %s: правило %s изменено на %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.register.create.simple",
+      "source_sha256": "b40ceb23630fca5c14262657db40bfb57232e10c916ab3b9962e29b82256b262",
+      "ru": "Измерение %s зарегистрировано со стандартными параметрами типа измерения %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.seed.success",
+      "source_sha256": "8f42bc855d208494d48cd384af3034e402fb89f11ed220defee2c0fe6e0c8b24",
+      "ru": "Измерение: %d — сид: %d",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.setworldspawn.query",
+      "source_sha256": "4cee599be00d9b75214dfe7f50ee6b1da90140e7c18e706c04b2d3fcdea80c9e",
+      "ru": "Измерение %s: точка появления — x: %s, y: %s, z: %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.setworldspawn.success",
+      "source_sha256": "6b4fc81dcd4954e70d8433c2cb606f20208b5e7c8ebda85500949f7ad5b36066",
+      "ru": "Измерение %s: точка появления перенесена в x: %s, y: %s, z: %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.time.add",
+      "source_sha256": "991cfd6da6ffbe98b3abfcddf5394732c754c51e11e8e187c8e2195d11e6a123",
+      "ru": "Измерение %s: ко времени прибавлено %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.time.query.day",
+      "source_sha256": "d3ca63100846df5abdf63f1a34be36ba3325b692fe07e6d343e5ea6eeeacd3aa",
+      "ru": "Измерение %s: сейчас %s-й день",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.time.query.daytime",
+      "source_sha256": "20e0c1fc60467b29f15ea977314c2c5d1aaaad100a8252dde4f990086c3b51f1",
+      "ru": "Измерение %s: текущее время — %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.time.query.gametime",
+      "source_sha256": "cfb8cda2e80d367317e866bfb4c1ae3f97ebde76a5aad1487bfec15df1f1ed9a",
+      "ru": "Измерение %s: полное время мира — %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.time.set",
+      "source_sha256": "3a9a1efe5662c5a106524ce8f55baf4cda7e4836cc91af72f84640565949bc8c",
+      "ru": "Измерение %s: время изменено на %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.generic",
+      "source_sha256": "9743f06b558a943f9d4a8074331227fc5072a44ddc26ba4113b9ad3ae1e482d7",
+      "ru": "'/jed <debug | defaultgamemode | difficulty | dimbuilder | gamerule | list-loaded-dimensions | list-registered-dimensions | load-dimension | register | reload | setworldspawn | time | unload-empty-dimensions ['unload-chunks' to try to unload chunks] | unregister | unregister-remove | weather | worldborder> [dimension] ...'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.load_dimension",
+      "source_sha256": "7d0f48bb54034f1b89e9ff625a0c0aa5062daae4e57d78ffce09909779cb032b",
+      "ru": "'/jed load-dimension <id>'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.register",
+      "source_sha256": "6a07712dfdf03bb0bd45f71f6920ad5ebdcf80ddfdebcf5b71e99db19939da61",
+      "ru": "'/jed register <dim id>' OR '/jed register <dim id> create' OR '/jed register <dim id> <name> <suffix> <keeploaded true/false> <worldproviderClass> [override true/false]'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.setworldspawn",
+      "source_sha256": "4356d50df53d488bcabb2b3dd922de6c3ee20243065253953b55682adb5ae3bd",
+      "ru": "'/jed setworldspawn [dimension] [query]' OR '/jed setworldspawn <dimension> <x> <y> <z>'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.time",
+      "source_sha256": "44a846541c2859f2f814099b412f2fa542633e5a3c667dc039b00f95058e4ebd",
+      "ru": "'/jed time [dimension] <add | set> <amount>' OR '/jed time [dimension] <query> <day | daytime | gametime>'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.tp",
+      "source_sha256": "ea200d51ac54c58203b70b3d02991608ea8ddbc7f4687bce2cead114d70e2a37",
+      "ru": "'/tpj <to-entity>' OR '/tpj <entity> <to-entity>' OR '/tpj <dimensionId> [x y z] [yaw] [pitch]' OR '/tpj <entity> <dimensionId> [x y z] [yaw] [pitch]'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.weather",
+      "source_sha256": "8f36b29c361f2e1d823b074fab6e62fe34f53c9061dcfbf9dfcbd437e230ab65",
+      "ru": "'/jed weather [dimension id] <clear | rain | thunder> [duration]'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.worldborder",
+      "source_sha256": "aa83e47476b185bfe73a111f50620439f63a0e00d6040b2f4ff9670347417e33",
+      "ru": "'/jed worldborder [dimension] <get | add | set | center | damage | warning> ...'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.worldborder.add",
+      "source_sha256": "520d0d7668d854d4256cbf6ab8f85eb162b2f0e6874496b2ec4253bea4522a6b",
+      "ru": "'/jed worldborder [dimension] add <sizeInBlocks> [timeInSeconds]'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.worldborder.center",
+      "source_sha256": "1d8017451d34f0edc154a11dcec0ae979240add6f3eb40df73408716a0341ccc",
+      "ru": "'/jed worldborder [dimension] center <x> <z>'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.worldborder.damage",
+      "source_sha256": "b76040d131c2bfd40fa21dac3344feed3167a5461cfb841cb1ec855d3d90e28b",
+      "ru": "'/jed worldborder [dimension] <damage> <amount | buffer>'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.worldborder.damage.amount",
+      "source_sha256": "b14a35dc8b025671c9918c699b248927425254d65b76c2ee6d961caf53ceae50",
+      "ru": "'/jed worldborder [dimension] damage amount <damagePerBlock>'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.worldborder.damage.buffer",
+      "source_sha256": "1cd9c0432a91e86a1f899ec413628f1bb44dbacdd3cb09cac9a1c540b17b6b59",
+      "ru": "'/jed worldborder [dimension] damage buffer <sizeInBlocks>'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.worldborder.set",
+      "source_sha256": "986e29bc7fc5cf15c23441f872cd4baa3389890666b9479b95e6486831d24eba",
+      "ru": "'/jed worldborder [dimension] set <sizeInBlocks> [timeInSeconds]'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.worldborder.warning",
+      "source_sha256": "74df2d7ced610768b2be9fd614b216928dee212bec6391bf3b75d3f615054be7",
+      "ru": "'/jed worldborder [dimension] warning <distance | time> <value>'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.worldborder.warning.distance",
+      "source_sha256": "2e768bf2170dfc538336d43cfa4bbfc78a167d5da94250e1e8c201646ca11839",
+      "ru": "'/jed worldborder [dimension] warning distance <distance>'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.usage.worldborder.warning.time",
+      "source_sha256": "4c20f402680fd018a7538fc0fca1ae24217d4372b92048c731ed7ffc5b81329c",
+      "ru": "'/jed worldborder [dimension] warning time <seconds>'",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.weather.clear",
+      "source_sha256": "6a17ca549568936934b2bd617c2b712c92e3596fdeff3cf740c8c95174ff5884",
+      "ru": "Измерение %s: погода меняется на ясную",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.weather.rain",
+      "source_sha256": "701da096b39925b8d8337c61c7bcdc3f88991318e2bd3c4f32e289013b7f255c",
+      "ru": "Измерение %s: начинается дождь",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.weather.thunder",
+      "source_sha256": "9e7aa5e495b8b02653b6866eefd824497ecb6509bc96d74039d2cf280969234e",
+      "ru": "Измерение %s: начинается гроза",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.worldborder.center.success",
+      "source_sha256": "e9663d7837ba9d9cdbec52cdbcc28de57727bd903bd5dda7da41db6ae74c4839",
+      "ru": "Измерение %s: центр границы мира перенесён в x = %s, z = %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.worldborder.damage.amount.success",
+      "source_sha256": "f659e39ea9fca31b5ea127b39b9a12d1fa9f0a849c72f71c8fda444c6ff08887",
+      "ru": "Измерение %s: урон за пределами границы — %s за блок (ранее %s за блок)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.worldborder.damage.buffer.success",
+      "source_sha256": "193cb999befc00c4be4f9121303acc2eb7396aaba9e1482bc27a6b6741e20c35",
+      "ru": "Измерение %s: безопасный отступ за границей — %s блоков (ранее %s)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.worldborder.get.success",
+      "source_sha256": "d141e3c0150438209bbd00319116f506b7e01babe6c21ef4e9f767dab73c475a",
+      "ru": "Измерение %s: ширина области мира — %s блоков, центр — %s, %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.worldborder.set.slowly.grow.success",
+      "source_sha256": "fc3b495849aee002e1f68d392400f960dbba8bab750c370a7d56472ce6a26743",
+      "ru": "Измерение %s: граница расширяется до ширины %s блоков с %s за %s секунд",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.worldborder.set.slowly.shrink.success",
+      "source_sha256": "d26f12ea76e901c85a39e70c6984d9bf1dcae77b56d1660abfe6b2f769a66f8f",
+      "ru": "Измерение %s: граница сужается до ширины %s блоков с %s за %s секунд",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.worldborder.set.success",
+      "source_sha256": "1b90adbdd405a814f55f092cb13bf2795915c44dd30775f646064f70ea298bec",
+      "ru": "Измерение %s: ширина области мира изменена на %s блоков (ранее %s)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.worldborder.warning.distance.success",
+      "source_sha256": "f1ffe19e0dfe070161504517431d46703e5767dcfc7e35f5f9e38b814717a9a2",
+      "ru": "Измерение %s: расстояние предупреждения о границе — %s блоков (ранее %s)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "justenoughdimensions",
+      "key": "jed.commands.worldborder.warning.time.success",
+      "source_sha256": "fc7e14d9549cffc9fdd01014739243c2008ad8341f215a4d37881bbdb638a7cf",
+      "ru": "Измерение %s: предупреждение о движущейся границе — за %s секунд (ранее %s)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "achievement.lightningcraft:craftInfuser.desc",
+      "source_sha256": "ff026810576b8d09a32eb0b4a73292489abba3c0839beb167a09d98010ab67d3",
+      "ru": "Создайте мощный молниумовый стол наполнения",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "ff026810576b8d09a32eb0b4a73292489abba3c0839beb167a09d98010ab67d3"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "achievement.lightningcraft:craftMiner.desc",
+      "source_sha256": "abe7ee7a8f2d00035023516a1bf8c41e7e2d448d5530807f2c6e02964e0dd439",
+      "ru": "Создайте молниумового шахтёра: отдыхайте, пока он добывает для вас руду",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "abe7ee7a8f2d00035023516a1bf8c41e7e2d448d5530807f2c6e02964e0dd439"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "achievement.lightningcraft:upgradeCell.desc",
+      "source_sha256": "09a636acf2233165429369d52d0f8d8444562c77e51e58bf4767ad74db386517",
+      "ru": "Улучшите любую машину молниевым улучшением",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "09a636acf2233165429369d52d0f8d8444562c77e51e58bf4767ad74db386517"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "item.lightningcraft:battery_0.name",
+      "source_sha256": "196b6b8c9a46b17dcf7d37c4f18e45e448491c71965fed5a224947a43f5a3d36",
+      "ru": "Молниевая батарея (уровень 1)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "196b6b8c9a46b17dcf7d37c4f18e45e448491c71965fed5a224947a43f5a3d36"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "item.lightningcraft:battery_2.name",
+      "source_sha256": "fe73b282f264149d9cc6ac2b837c8edaacb489961b9d8b1e14605163d67f8f43",
+      "ru": "Молниевая батарея (уровень 3)",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "fe73b282f264149d9cc6ac2b837c8edaacb489961b9d8b1e14605163d67f8f43"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "lightningcraft.skyfather_info",
+      "source_sha256": "90685aa6e794b52c1367dc24e0efc8e9fc0a62d0165f53b5d55078bc6507d922",
+      "ru": "Небесные слитки на один уровень выше электриумных. Довольно крутая штука.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "90685aa6e794b52c1367dc24e0efc8e9fc0a62d0165f53b5d55078bc6507d922"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "subtitle.mob.underworld_ghast.death",
+      "source_sha256": "419b692de8c1eb5adb2f8d2bbfa679f6dc63ed454918e70c19acdca440f0a376",
+      "ru": "Подземный гаст умирает",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "419b692de8c1eb5adb2f8d2bbfa679f6dc63ed454918e70c19acdca440f0a376"
+    },
+    {
+      "namespace": "loottweaker",
+      "key": "loottweaker.commands.dump.all.usage",
+      "source_sha256": "f53b2ac0c7da9aaad187d7f3a70c12d5e54446ef13339d26fc281676c71720b3",
+      "ru": "/ct loottables all",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "loottweaker",
+      "key": "loottweaker.commands.dump.byName.usage",
+      "source_sha256": "49a878c10caa03699fbd59fcde218fbaedbdb04b828a121adc47c99ba5b68f92",
+      "ru": "/ct loottables byName <lootTableId>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "loottweaker",
+      "key": "loottweaker.commands.dump.generate.usage",
+      "source_sha256": "8cbccd5d128fef959b9cb6d8a7ffe4a1e9e8489f185cbcbc4078140e3e1f78aa",
+      "ru": "/ct loottables generate chest <lootTableId>\\n/ct loottables generate entity <entityId> [entityNbt]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "loottweaker",
+      "key": "loottweaker.commands.dump.list.usage",
+      "source_sha256": "24172a61288f4f5d51219b33625cb2ce2c1e87366c92996e5ab85562af864d98",
+      "ru": "/ct loottables list",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "loottweaker",
+      "key": "loottweaker.commands.dump.target.usage",
+      "source_sha256": "0f0ae0cdb0db2c06b0c48bb67c5d218902994d3a75605760d34a31c776051d0c",
+      "ru": "/ct loottables target",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "modulardiversity",
+      "key": "component.missing.laser.input",
+      "source_sha256": "ae9b8476b7c2fd607c8353dee6cb2da0851f980c04d786dde557236c3e880f1c",
+      "ru": "Нет входного люка для лазера BuildCraft.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "modulardiversity",
+      "key": "craftcheck.ember.output",
+      "source_sha256": "85346191f1f7aa648a8af4f4868ca2fe9e6cc6b5f8c7790d8fa772e1a5743391",
+      "ru": "Выходной буфер углей переполнен.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "modulardiversity",
+      "key": "craftcheck.laser.input",
+      "source_sha256": "8383c28034c588e381c70142b2a71668a56d690e5c84f9b4482dbf2793b67054",
+      "ru": "Подведите лазер BuildCraft.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "modularmachinery",
+      "key": "command.modularmachinery.hand",
+      "source_sha256": "8e3f994019df97bfaf6b973d740853c8a8d2c7319768841da8ac5b2f2eb243bd",
+      "ru": "/mm-hand",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "modularmachinery",
+      "key": "command.modularmachinery.syntax",
+      "source_sha256": "f53015e79338d7f9de5e9edb5a45ef031ccec2d721a394d560b0fa3b16bdf87d",
+      "ru": "/mm-syntax",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "modularmagic",
+      "key": "error.modularmagic.requirement.constellation.missingprovider",
+      "source_sha256": "f891611faf502b7eb3197eade74096f307755859c0c9ef76d7ee86b43a594155",
+      "ru": "Люк детектора созвездий не найден",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "modularmagic",
+      "key": "error.modularmagic.requirement.lifeessence",
+      "source_sha256": "e34a412fd597c3ebee93e28a347fa161d1fd03432c0c4387300a41c9081925cf",
+      "ru": "Ошибка при проверке требуемого количества жизненной эссенции",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "modularmagic",
+      "key": "error.modularmagic.requirement.starlight.missingprovider",
+      "source_sha256": "b3b373bbc0f7f1a1dc81915fe5e0b127da1bb93f6560babb1bf1d14e5ebab95d",
+      "ru": "Люк звёздного света не найден",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "modularmagic",
+      "key": "tile.blockaspectproviderinput.name",
+      "source_sha256": "bb4544d06c6d16fd1c839f87c3c35d5914b229bf844245eec7efa3131b9a0065",
+      "ru": "Входной люк эссенции",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "modularmagic",
+      "key": "tile.blockaspectprovideroutput.name",
+      "source_sha256": "4d8008de12781327a5ab2f62fbb202a1584177cb202aa619d9aa0ea4c7a2f17d",
+      "ru": "Выходной люк эссенции",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "modularmagic",
+      "key": "tile.blockstarlightprovideroutput.name",
+      "source_sha256": "524b6c43abec2b889e34639936947b46dbca7a26a3994b5307d5bc0c5ece3983",
+      "ru": "Распределительный люк звёздного света",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "mysticalagriculture",
+      "key": "item.ma.hop_graphite_essence.name",
+      "source_sha256": "2ab2a7ac6747e9f185873542983dd2645013d3380a9de3e32dd0878be9b71f1f",
+      "ru": "Эссенция ВОП-графита",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "mysticalagriculture",
+      "key": "item.ma.hop_graphite_seeds.name",
+      "source_sha256": "ae491fcdffb214ca8b034ab77e4760dec8584c4123139d9f7862ddc3ccacb85c",
+      "ru": "Семена ВОП-графита",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "mysticalagriculture",
+      "key": "tile.ma.hop_graphite_crop.name",
+      "source_sha256": "d459ed2358f53abbabb8f1263f44f76c44b57091b26ad1ce8e9eb6b2f9bb25a9",
+      "ru": "Культура ВОП-графита",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "mysticalagriculture",
+      "key": "tile.ma.prudentium_reprocessor.name",
+      "source_sha256": "f011baa5a9f7a42bfff566742f5c30a38406be2381b5bb5c596ee0491ea17625",
+      "ru": "§aПрудентиумный переработчик семян",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "mysticalagriculture",
+      "key": "tile.ma.superium_reprocessor.name",
+      "source_sha256": "dd8b468e2df0aae999a39ebd3e8baf2163c1b7beba1e54be1d1b09d0621b9be2",
+      "ru": "§bСупериумный переработчик семян",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "mysticalworld",
+      "key": "mysticalworld.guidebook.name",
+      "source_sha256": "2e36e29f23741a88f58b399ccf26a1c71a2c4faa7bf4b6dfd7ca2ffd411e5c72",
+      "ru": "Мистическая энциклопедия",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "natura",
+      "key": "item.natura.ghostwood_hoe.name",
+      "source_sha256": "e576a499ec1627076f9d91b9f5eb57eeb494ba6645b6efb080d8ce7516e15674",
+      "ru": "Мотыга из призрачного дерева",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.apple_button.name",
+      "source_sha256": "613f05d6f33dd99cdbb27af1bd1a9b412d78b3a0f23afb0375157e085b94ac7a",
+      "ru": "Яблоневая кнопка",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.apple_log.apple.name",
+      "source_sha256": "06666b8f5415572d9eee521ed45d30fa4337e3ae176ec3c0b5f1df67f9b8e89a",
+      "ru": "Яблоневое бревно",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.apple_pressure_plate.name",
+      "source_sha256": "a8f0fdee21f98483489c0477d9f0040a83c26abcf27e15c6df91b02567e9cc99",
+      "ru": "Яблоневая нажимная пластина",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.netherrack_bricks.name",
+      "source_sha256": "49a2774a0daa7bd4e62789833ccb68b93578cf5d892977aef660a60f720a9a8a",
+      "ru": "Кирпичи из незерака",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_bookshelves.apple.name",
+      "source_sha256": "e78a83bfa11286e642cb9a7f60a81aabfdc82d990fd9e7ea99dbbbb080901d4d",
+      "ru": "Яблоневая книжная полка",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "natura",
+      "key": "tile.natura.overworld_workbenches.apple.name",
+      "source_sha256": "d99423274d782e07fe18c063d49c4efb47d28208b2f6341d8571dede60f9a767",
+      "ru": "Яблоневый верстак",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "openblocks",
+      "key": "item.openblocks.dev_null.name",
+      "source_sha256": "fd5d32feb2d3562582258990ecfca9b88376957e512d5caac72ad89fc78d2df4",
+      "ru": "/dev/null",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.command.main.usage",
+      "source_sha256": "574fc5f2c7d12c382bf40ab2a70f94d2a176ed94ff3d0ece457ddf64b8309df3",
+      "ru": "/projecte <changelog, clearKnowledge, setEMC, reloadEMC, removeEMC, resetEMC>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.command.showbag.usage",
+      "source_sha256": "365d991b1eeecbea450483a9e17ec42a752ee240726b6484ba97f9c5cadbb76f",
+      "ru": "/projecte showBag <color> <player selector>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_collector_MK1",
+      "source_sha256": "54bb36ef858d686669e717ed5600ce9abd1034da1c7caec780048b4afb259411",
+      "ru": "Коллекторы — одни из самых спорных алхимических устройств: для выработки EMC им нужен только источник света. Энергия передаётся подключённому устройству, например реле или конденсатору, либо заряжает внутри коллектора алхимический предмет, например звезду Кляйна. Кроме того, коллектор способен превращать обычное топливо в более мощное. Примечание автора: страницы ещё предстоит объединить.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_dm_block",
+      "source_sha256": "72cbf7fbde7a3c9963195644c61ac1a9257123a777cf0e9d7561e957c6eb67ea",
+      "ru": "Тёмную и красную материю можно превращать в блоки. Они служат дорогим украшением и важным материалом для ряда алхимических устройств. Примечание автора: страницы ещё предстоит объединить.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_dm_furnace",
+      "source_sha256": "26055b58330da4c85230d7541fde2c4d489a237f7364c94c46febeac54f3efcf",
+      "ru": "Печи материи — мощные алхимические устройства, работающие от источника EMC, например реле или коллектора. Их эффективность обеспечивают высокая скорость и автоматическая выгрузка в соседний сундук. Примечание автора: страницы ещё предстоит объединить.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_fuel_block_0",
+      "source_sha256": "709e82d9c34d255d3a3b15a65c12994762e47b4941977c2625fd71515b8f6e20",
+      "ru": "Как и другое твёрдое топливо, топливо Мёбиуса можно спрессовать в блок. Используйте его как эффективное горючее или дешёвую замену красной материи для украшения.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_fuel_block_2",
+      "source_sha256": "3360ef29f5b126b47ebcaf5f289ad97f45dc095547c08f1185de51ce86c29a6b",
+      "ru": "Как и другое твёрдое топливо, эфирное топливо можно спрессовать в блок. Красиво и эффективно.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_nova_cataclysm",
+      "source_sha256": "929f7ce5f5b7e9ea04bc55fd5794535f5b0edbcebc59ebd3f628fa527b093b0c",
+      "ru": "Всё веселье катализатора Сверхновой — но взрыв вдвое мощнее!",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_relay_MK1",
+      "source_sha256": "70b68201f7257a549ec9cf9ea8bc2c806d092ade688ec5fcd118346926d3ad9b",
+      "ru": "Реле подают EMC в конденсаторы и другие алхимические устройства. Просто подключите реле сбоку — и всё готово. EMC можно получать из сырья или подключённого коллектора. Примечание автора: страницы ещё предстоит объединить.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "projectred",
+      "key": "tile.projectred.expansion.machine2|10.name",
+      "source_sha256": "8f15966c88da4a3867395490360a601cf9149a3df0e2616da26b873f6f5f28b1",
+      "ru": "Проектный верстак",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "quark",
+      "key": "commands.quarkconfig.usage",
+      "source_sha256": "58c9f7835398741c8b0979f3885d4daac7df905614f6e0684bf741131db11ea4",
+      "ru": "/quark-config <category> <key> <value> [player] [save?]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "reborncore",
+      "key": "reborncore.gui.tooltip.energy_storage_redstone_mode_0",
+      "source_sha256": "5fade241af3fa31b1294d7857fa01bfe8e4f7ca384a6dd9c8d75f8febe6dd121",
+      "ru": "Редстоун: не выдавать сигнал",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "reborncore",
+      "key": "reborncore.gui.tooltip.energy_storage_redstone_mode_1",
+      "source_sha256": "1e4e69d3f0665df81b5c1532abbaf71145d5fd15ae728ad8aaa36178a1a189c1",
+      "ru": "Редстоун: сигнал при заполнении",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "reborncore",
+      "key": "reborncore.gui.tooltip.energy_storage_redstone_mode_2",
+      "source_sha256": "47ab26a3f8d4646d97206bfaae91f77b5408b494463e69d6dceb2c5c4b2f0ce1",
+      "ru": "Редстоун: сигнал при частичном заполнении",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "reborncore",
+      "key": "reborncore.gui.tooltip.energy_storage_redstone_mode_3",
+      "source_sha256": "d164b6514f7dd0ca0fa6c6ab0769ab9f8dc558499c1dd8af32eadd45bb255bca",
+      "ru": "Редстоун: сигнал при частичном заполнении или опустошении",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "reborncore",
+      "key": "reborncore.gui.tooltip.energy_storage_redstone_mode_4",
+      "source_sha256": "8257d76a09da42f9749c0c75fac4fdec64daf6227dac13cde371fc9be04c1007",
+      "ru": "Редстоун: сигнал при опустошении",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "rftools",
+      "key": "advancements.rftools.firstteleport.description",
+      "source_sha256": "87ec537919fabb81c4b5a3f3541ead1c4c50e62ec04de7ce53d3c585dddc3834",
+      "ru": "Телепортируйтесь в новое место.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "rftools",
+      "key": "advancements.rftools.firstteleport.title",
+      "source_sha256": "eab5002a5d8cd27f503b5784073306aa6ddc5c6836bbf28c50e3f75b22f08bb1",
+      "ru": "Мир сдвинулся!",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.controls.flyKey.tooltip",
+      "source_sha256": "37a59b89ae966b49acf8e21feefb2714fc32a390c00c4e42900812f8f0326bd5",
+      "ru": "Название клавиши полёта при включённом собственном управлении.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.gui.enableEnergyHUD.tooltip",
+      "source_sha256": "f2bfbd537cab0dfb959e35b9f10be6a2e9d82357c6291e9aadde2165d29d09a0",
+      "ru": "Показывать на экране запас энергии надетого реактивного ранца или флаксового хранилища.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.gui.enableStateHUD.tooltip",
+      "source_sha256": "57cb6ebc2e5a122ec60a788ab1b058a745bf1b539bcb961812925918918b3584",
+      "ru": "Показывать на экране состояние двигателя, зависания и зарядки надетого реактивного ранца или флаксового хранилища.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.gui.enableStateMessages.tooltip",
+      "source_sha256": "c74f9d21f689dbcc6bd6c867495d77a80db80fceb464a13e2c081be2ead57f68",
+      "ru": "При включении, выключении или смене режима реактивного ранца либо флаксового хранилища показывать сообщение над панелью инвентаря.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.integration.enableIntegrationEIO.tooltip",
+      "source_sha256": "0b28370e3b3ebf65e6334c390e18f76b17509983517c27b3cbbdfc9ddfac0029",
+      "ru": "Регистрировать в Simply Jetpacks реактивные ранцы и флаксовые хранилища Ender IO.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.integration.enableIntegrationIE.tooltip",
+      "source_sha256": "bcb728ba5c1350703d58c395641c806da67e2279c1d2b47b5435e0de00e40242",
+      "ru": "Регистрировать в Simply Jetpacks реактивные ранцы Immersive Engineering.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.integration.enableIntegrationMek.tooltip",
+      "source_sha256": "a10985f532c5709cf3fef01654866530c8ce65223806fa3a87889dd73f2afad3",
+      "ru": "Регистрировать в Simply Jetpacks реактивные ранцы Mekanism.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.integration.enableIntegrationRA.tooltip",
+      "source_sha256": "5867019b39772f0cbf74e2974c551d3b81b1b7d66c5b2f7bc450bd7c02485b09",
+      "ru": "Регистрировать рецепты реактивного ранца Redstone Arsenal уровня 5.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.integration.enableIntegrationRR.tooltip",
+      "source_sha256": "11458b9900ecaf132f0ebe69e6a7fc8d79d179b70577aa3e01892a2a3421ea1e",
+      "ru": "Регистрировать рецепты реактивной кирасы Redstone Repository уровня 5.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.integration.enableIntegrationTD.tooltip",
+      "source_sha256": "5180488c93af6097fc71c01de1603c443d241275e1120971651fda546e2d60f1",
+      "ru": "Регистрировать в Simply Jetpacks предметы Thermal Dynamics для рецептов двигателей.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.integration.enableIntegrationTE.tooltip",
+      "source_sha256": "86464b53f8cf4fea21fde0ece3e5934c8bda18627e38afccfc1d8ae9f9694eb8",
+      "ru": "Регистрировать в Simply Jetpacks реактивные ранцы и флаксовые хранилища Thermal Expansion.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.integration.enableIntegrationVanilla.tooltip",
+      "source_sha256": "00862059ed4068c83d03c633dc7bb1cf821de28acf85c1d1b5c786f444175f8d",
+      "ru": "Регистрировать в Simply Jetpacks ранцы на основе предметов обычного Minecraft.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.items.addRAItemsIfNotInstalled.tooltip",
+      "source_sha256": "26c656c36db785bb665dbf3c5a6c2129c516a46fc4781cf139f40dc847cd7072",
+      "ru": "Регистрировать в Simply Jetpacks компоненты Redstone Arsenal, чтобы наполненную флаксом реактивную кирасу можно было создать и без установленного Redstone Arsenal.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.tuning.tooltip",
+      "source_sha256": "4b04dd161674c37be3b7cf5e35f08b590fe4e4c6dca1ea75ff95ce1ae39281c0",
+      "ru": "Настройка параметров реактивных ранцев и флаксовых хранилищ.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "spartanshields",
+      "key": "config.spartanshields:category.moddedBWM",
+      "source_sha256": "ee60e1fc37003926afabe3dc8240b1816dc3c3215ac713c241833cb6b6f727e8",
+      "ru": "Щиты Better With Mods",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "spartanshields",
+      "key": "config.spartanshields:cooldownShieldBash",
+      "source_sha256": "f3796f2f8ec72dc3580b5754fd648cd2099976f74442c6627aad381c7ddb3559",
+      "ru": "Перезарядка удара щитом",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "spartanshields",
+      "key": "config.spartanshields:disableTowerShields",
+      "source_sha256": "69e122a2856c31d359711b1158550740c22c9d8a31ffbe8f8c089a62c0273bf8",
+      "ru": "Отключить башенные щиты",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "spartanshields",
+      "key": "tooltip.spartanshields:shieldBash",
+      "source_sha256": "a0100412f0eb8dde1f0af7c3aa2fa483dda88c97d0b6275c2504eabf0f9c9922",
+      "ru": "Удерживайте блок и нажмите [%s], чтобы ударить щитом",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "supersoundmuffler",
+      "key": "item.sound_muffler_bauble.tooltip.header",
+      "source_sha256": "1055b95e0deeac34538575eeffed2f427653b037e45b844150f313f23a598fa2",
+      "ru": "§8§oВерсия для слота аксессуара",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "supersoundmuffler",
+      "key": "jei.item.sound_muffler_bauble",
+      "source_sha256": "48d23c6b8aca142c614955d602ea6c9463ca702be6fe210f44171fd66c81f258",
+      "ru": "Глушитель звука для слота аксессуара. ПКМ открывает настройки; ПКМ в приседе включает или выключает действие.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "supersoundmuffler",
+      "key": "jei.tile.sound_muffler",
+      "source_sha256": "c88b26b5c79a827f44bef45abc9dfe407fe2d6e5047382b1139e85e227e407d2",
+      "ru": "Глушит звуки поблизости. Можно выбрать определённые звуки для подавления.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "teslacorelib",
+      "key": "gui.teslacorelib.redstone.active_on_redstone_signal",
+      "source_sha256": "d470022121bf102b660a697a768fd71361196e033465f13bddd73b38597a235f",
+      "ru": "Работает при наличии сигнала редстоуна",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "thaumcraft.subtitle.crabdeath",
+      "source_sha256": "be210fe6e6dfd2116025c6efb5e08b7a238083f96dd81af7a9a96ee7c6f69470",
+      "ru": "Потусторонний краб умирает",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "thaumcraft.subtitle.egdeath",
+      "source_sha256": "cc54b644a73e5119d326968c66efe499c8c13811c4194a572b858d9adb218658",
+      "ru": "Потусторонний страж умирает",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "thaumcraft.subtitle.fly",
+      "source_sha256": "96991ed52b21c116ab042184839db972d16da208a6c6ba4b88a64209183fc0a8",
+      "ru": "Заражённый рой жужжит",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "thaumcraft.subtitle.swarm",
+      "source_sha256": "38fdd8fb87bc028e9454994b49bafcfafa6c75b8bfbaaedcfea1388b9618a0f6",
+      "ru": "Заражённый рой поёт",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "thaumcraft.subtitle.swarmattack",
+      "source_sha256": "ea833a797c2db0e525034ac54f501b2cc198aac9368db08756887d6dc2235bcd",
+      "ru": "Заражённый рой сердито жужжит",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "thaumcraft.subtitle.tentacle",
+      "source_sha256": "eb59f7fe0f9949c8540a5e36331aa5835869c9fcbff3889a3bdc8858e4fb9ba8",
+      "ru": "Заражённое щупальце хрюкает",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "thaumcraft.subtitle.wispdead",
+      "source_sha256": "d0220d01f9ab0dfed69d8e26dad265cecba58b0b068a680b8ac463717cd50d9a",
+      "ru": "Огонёк умирает",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "thaumcraft.subtitle.wisplive",
+      "source_sha256": "fd9e3b8bb46965bfc8e75de1b3cc22e951b468102ab468e0c6e101426141cc1d",
+      "ru": "Огонёк искрится",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumcraftfix",
+      "key": "thaumcraftfix.text.config.optimizedFluxRiftRenderer",
+      "source_sha256": "1eb6f422f556a43e6dde37878f91bc890dfc6a3d657e95c3858827226f90fda7",
+      "ru": "Оптимизированное отображение разломов заражения",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumcraftfix",
+      "key": "thaumcraftfix.text.config.primordialPearlDamageFix",
+      "source_sha256": "7b17ee706b229e68de6f034724a3605abbffb5066c7f8f34175e26d678631108",
+      "ru": "Исправление значения повреждения первобытного жемчуга",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumcraftfix",
+      "key": "thaumcraftfix.text.renderer.failedRiftRendererRequirements",
+      "source_sha256": "9e5fa565c7876b4681735a1df28a87096dbb43521a9ff12d06a13b304e17eef1",
+      "ru": "[TC Fix] Оптимизированное отображение разломов заражения недоступно: видеокарта не поддерживает OpenGL 3.3.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.command.fixaura.aura_ok",
+      "source_sha256": "af3a235f9f166447ce21409c511d6581f848a881e7dc21c7811ea3084717e8c8",
+      "ru": "Аура в этом чанке в порядке. Для принудительной повторной генерации используйте параметр force.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.command.fixaura.warn_daylight",
+      "source_sha256": "1ac6aa454ff86f123064c66b4c88ef1dc099b27e139b58685240edaeda75e00c",
+      "ru": "ВНИМАНИЕ: игровое правило doDaylightCycle отключено. Для восстановления ауры и её распространения в соседние чанки это правило должно быть включено!",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.command.ward.usage",
+      "source_sha256": "3387b141c47a75fab7ead454bd8305e20993b89d2e15d95cb8c7c852dd4ba44f",
+      "ru": "thaumicaugmentation ward <clear> [x] [z] [dim]",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.research.glass_tube.0",
+      "source_sha256": "a20c7486acdeffc1fbde620f064215309b091b0538de18873ec1de1a63515ab0",
+      "ru": "Системы труб для эссенции стали важным шагом в тауматургической алхимии, но усложнили работу. В них легко запутаться: все трубы непрозрачны, и с первого взгляда не понять, куда и когда течёт эссенция.<BR>Раньше я не мог изготовить преимущественно стеклянную трубу, способную выдерживать постоянный поток магической эссенции. Возможно, стоит вернуться к этим исследованиям и найти стекло, устойчивое даже к самым нестабильным видам эссенции. Начать можно с изучения защищённых банок.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.research.item_grate.1",
+      "source_sha256": "a3d4e2d95720249c96f9a55ccb452e360b842cb65ff8bd8283adfa069a001a7e",
+      "ru": "§lПечать хранения§r<DIV>Печать хранения особенно полезна с решёткой для предметов. Если установить печать над решёткой, подходящие големы будут сбрасывать предметы сквозь неё, сами оставаясь сверху. Но это работает только с открытой решёткой: закрытую големы полностью игнорируют.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.research.item_grate.2",
+      "source_sha256": "605d82bdf140a0e191645fed42e232b69baa23d8912cc0b354c14661e62d3459",
+      "ru": "§lМистические подъёмники§r<DIV>Мистические подъёмники хорошо сочетаются с решётками для предметов. Луч свободно проходит через открытую решётку, позволяя поднимать сквозь неё предметы и задерживая всё остальное. Закрытая решётка не даёт подъёмнику воздействовать на объекты с другой стороны.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.research.more_infusion.0",
+      "source_sha256": "d0a64d455c4ee43f22420322d28be899ab784fc53460a864dfac941fb182f230",
+      "ru": "Мистическое наполнение открыло множество возможностей для создания предметов. Стоит изучить этот более совершенный способ изготовления.<BR>Правильно устроить алтарь наполнения непросто. Поэтому я отметил подходящие для его стабилизации блоки: в их описании есть строка §5Стабилизатор наполнения§r. Такие блоки нужно размещать симметрично вокруг алтаря и не использовать в чрезмерном количестве.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.text.config.ward",
+      "source_sha256": "6662ed3b48f17c4ba1d0b445848548cd0da92f040db0d4dc638e436c1b4ae491",
+      "ru": "Линза укрепления и защищённые блоки",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "tile.thaumicaugmentation.impetus_creative.impetus_creative_sink.name",
+      "source_sha256": "bf5e84379e52a884aa9075ed3f853d99bb13a11c14434cf67654947d9848b289",
+      "ru": "Творческий поглотитель импульса",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "tinkersaether",
+      "key": "tinkersaether.config.title",
+      "source_sha256": "5a0712457f3905ab355c647cc746cdaeda2bcdeed1dab3f2578e583030bd1f51",
+      "ru": "Настройки Tinker's Aether",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "commands.tffeature.locate.usage",
+      "source_sha256": "41b05594b9efeddeed5601877acc9ce0a9f646d226df61fdbbdfda6f87fb6f81",
+      "ru": "/tffeature locate <feature>",
+      "decision": "preserve_command_syntax",
+      "consumer_contract": "exact_command_syntax"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "entity.twilightforest.harbinger_cube.name",
+      "source_sha256": "c31c04efa15e98154399019c76cae3b218e10d2c816fb4b4885f523314511398",
+      "ru": "Куб-предвестник [ещё не реализован]",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "entity.twilightforest.roving_cube.name",
+      "source_sha256": "9eef4917955147782bc16b948293b16f365f0a0664ac32db6a8198a3e91b01c3",
+      "ru": "Бродячий куб [ещё не реализован]",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.parry_non_twilight.tooltip",
+      "source_sha256": "73338294e3d54254500a0abc970f09ec0e89371c15b4e8907db04b10206cadeb",
+      "ru": "Включите, чтобы парировать снаряды из других модов, кроме Twilight Forest. Вместо этой настройки рекомендуется мод Shield Parry.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.portal_lighting",
+      "source_sha256": "7db392fc961da0c80f22efe72a533292d500d9131ed0a01b405afe67c6f1a6aa",
+      "ru": "Огонь от молнии при создании портала",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "7db392fc961da0c80f22efe72a533292d500d9131ed0a01b405afe67c6f1a6aa"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.uncrafting_whitelist",
+      "source_sha256": "d66f0cdbe0dbf6d1fac0b77db80417a2ca3724138264e4f71fcbec19fd98bd77",
+      "ru": "Использовать белый список для раскрафта",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "universaltweaks",
+      "key": "cmd.universaltweaks.time.set",
+      "source_sha256": "3a9a1efe5662c5a106524ce8f55baf4cda7e4836cc91af72f84640565949bc8c",
+      "ru": "Измерение %s: время изменено на %s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "valkyrielib",
+      "key": "valkyrielib.documentation.version.regen",
+      "source_sha256": "511624279a5c91bb68a9202b0cb9156d847ef2146bdbe57bc139689188fec4aa",
+      "ru": "Документация обновляется только при выходе новой версии мода.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "wrcbe",
+      "key": "wrcbe.command.usage",
+      "source_sha256": "ef8d4179155735e5d524d88922798d1cd1b3872acb24fb9636631e9ed91c4c02",
+      "ru": "Управление эфиром WR-CBE. Синтаксис: freq [params...]",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "ef8d4179155735e5d524d88922798d1cd1b3872acb24fb9636631e9ed91c4c02"
+    },
+    {
+      "namespace": "wrcbe",
+      "key": "wrcbe.command.usage2",
+      "source_sha256": "e2b3e1ae71defb06ef50fa788dda20985e5e92071ff2f0eae58bd61f867c93f7",
+      "ru": "Подробнее: /freq help [param]",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "e2b3e1ae71defb06ef50fa788dda20985e5e92071ff2f0eae58bd61f867c93f7"
+    },
+    {
+      "namespace": "wrcbe",
+      "key": "wrcbe.param.get.usage",
+      "source_sha256": "db5e5db05d7e2326d666f896770713fb8447d9b34883d6416efc3c92446f8d1b",
+      "ru": "Синтаксис: freq get [public | shared | private]",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "db5e5db05d7e2326d666f896770713fb8447d9b34883d6416efc3c92446f8d1b"
+    },
+    {
+      "namespace": "wrcbe",
+      "key": "wrcbe.param.jam.usage5",
+      "source_sha256": "04c2a0e3e65b6d6c2f160b9c0bb5bbba57f758eacc9ae8c345e008045d7e4527",
+      "ru": "Пример: freq %s 100-250",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "04c2a0e3e65b6d6c2f160b9c0bb5bbba57f758eacc9ae8c345e008045d7e4527"
+    },
+    {
+      "namespace": "wrcbe",
+      "key": "wrcbe.param.private.usage2",
+      "source_sha256": "7e7f1bbf74d9ce1167e641eb873a7a976764881b25b11fd625130937d1b63551",
+      "ru": "Пример: freq private [username] [freq]. Назначает [username] владельцем частоты [freq]",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "7e7f1bbf74d9ce1167e641eb873a7a976764881b25b11fd625130937d1b63551"
+    },
+    {
+      "namespace": "wrcbe",
+      "key": "wrcbe.param.private.usage3",
+      "source_sha256": "8f266a528e1acb433e76391d6e9fd300b533e66db5cc7c7aa817f7f00117e617",
+      "ru": "Пример: freq private [freq]. Показывает владельца частоты [freq]",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "8f266a528e1acb433e76391d6e9fd300b533e66db5cc7c7aa817f7f00117e617"
+    },
+    {
+      "namespace": "wrcbe",
+      "key": "wrcbe.param.private.usage4",
+      "source_sha256": "ca637216680ed2b0a2b10c669a0e29a4993bb22cae2cef673a175754c936aa2a",
+      "ru": "Пример: freq private clear [freq | username | all]. Удаляет владельца частоты [freq]",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "ca637216680ed2b0a2b10c669a0e29a4993bb22cae2cef673a175754c936aa2a"
+    },
+    {
+      "namespace": "wrcbe",
+      "key": "wrcbe.param.set.usage2",
+      "source_sha256": "b4b1ce306d8767683d605c3af06c55163b34af82163c65137eb19dea19f025e4",
+      "ru": "Пример: freq set shared. Делает частоты от [public+1] до [value] общими",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text",
+      "expected_previous_sha256": "b4b1ce306d8767683d605c3af06c55163b34af82163c65137eb19dea19f025e4"
+    },
+    {
+      "namespace": "zerocore",
+      "key": "zerocore:debugTool.block.intro",
+      "source_sha256": "27a2de298ea35935aa86f4840546d735b8f72d410b8b95455a3c473bc08c6f9f",
+      "ru": "В рудном словаре найдено %1$d имён для блока %2$s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "zerocore",
+      "key": "zerocore:debugTool.block.notfound",
+      "source_sha256": "0c5a434247e6c72889132ee8e4e2c31d3e007f65abb637a97019716155eda467",
+      "ru": "Блок не зарегистрирован в рудном словаре.",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "zerocore",
+      "key": "zerocore:debugTool.tile.header",
+      "source_sha256": "3ff6fc05bf9f615ec7324f3fe53e7082585fbcf862ee86bc5aeb683977031fe6",
+      "ru": "Отчёт об отладке блочной сущности на стороне %1$s в точке %2$d, %3$d, %4$d",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "zerocore",
+      "key": "zerocore:vercheck.update1",
+      "source_sha256": "bb8a737e5834ee930374a57bc5f1e24e2a8d8eeacd7796f14b67c4f8158dd39b",
+      "ru": "§6Доступна §lНОВАЯ§r§6 версия§f %2$s §6(§f%1$s§6):§f пожалуйста, обновите мод!",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    },
+    {
+      "namespace": "zerocore",
+      "key": "zerocore:vercheck.update2",
+      "source_sha256": "bf912367a94b8f4f1028cf11a5e0e0b246a32d7aafdc3fb5db3aaba924dd7b4d",
+      "ru": "§6Доступна §lНОВАЯ§r§6 версия§f %2$s §6(§f%1$s§6):§f %3$s",
+      "decision": "own_translation",
+      "consumer_contract": "formatted_text"
+    }
+  ]
+}
