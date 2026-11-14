@@ -128,3 +128,26 @@ def test_roots_category_link_must_close_before_split():
     value["pages"][0]["text"] = text.replace("$(/cat)", "")
     with pytest.raises(ValueError, match="format"):
         render(value, splits={0: (value["pages"][0]["text"].index("$(br2)"),)})
+
+
+def test_plain_word_boundaries_require_explicit_review_and_preserve_text():
+    value = sample()
+    text = "First sentence. Second sentence."
+    value["pages"][0]["text"] = text
+    cut = text.index(" Second")
+    with pytest.raises(ValueError):
+        render(value, splits={0: (cut,)})
+    out = json.loads(render(value, splits={0: (cut,)}, allow_word_boundaries=True))
+    assert "".join(p["text"] for p in out["pages"][:2]) == text
+    with pytest.raises(ValueError):
+        render(value, splits={0: (3,)}, allow_word_boundaries=True)
+
+
+def test_full_native_reset_ends_previous_formatting_before_a_word_cut():
+    value = sample()
+    text = "$(italic)First$() sentence. Second sentence."
+    value["pages"][0]["text"] = text
+    out = json.loads(
+        render(value, splits={0: (text.index(" Second"),)}, allow_word_boundaries=True)
+    )
+    assert "".join(p["text"] for p in out["pages"][:2]) == text
