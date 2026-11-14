@@ -23,6 +23,7 @@ from tuf.api.metadata import (
 
 from launcher.install import current_platform
 from launcher.releases import PLATFORMS, safe_path, sha256_file
+from launcher.update_sources import github_asset_url as validate_github_asset_url
 from launcher.updater import MAX_ARCHIVE, LauncherUpdater
 
 
@@ -45,6 +46,17 @@ def _signer(folder: Path, role: str) -> CryptoSigner:
     )
 
 
+def _target_custom(
+    version: str, entrypoint: str, platform: str, asset_url: str | None
+) -> dict[str, str]:
+    custom = {"version": version, "entrypoint": entrypoint}
+    if asset_url is not None:
+        custom["github_asset_url"] = validate_github_asset_url(
+            asset_url, version, platform
+        )
+    return custom
+
+
 def publish_update(
     repository: Path,
     keys: Path,
@@ -54,6 +66,7 @@ def publish_update(
     *,
     platform: str | None = None,
     now: datetime | None = None,
+    github_asset_url: str | None = None,
 ) -> Path:
     """Sign one platform bundle while retaining targets for other platforms."""
     import zipfile  # noqa: PLC0415
@@ -64,6 +77,7 @@ def publish_update(
     if platform not in PLATFORMS or archive.stat().st_size > MAX_ARCHIVE:
         raise ValueError("Unsupported platform or archive size")
     Version(version)
+    custom = _target_custom(version, entrypoint, platform, github_asset_url)
     safe_path(entrypoint)
     with zipfile.ZipFile(archive) as bundle:
         LauncherUpdater._validate_zip(bundle.infolist())
@@ -96,10 +110,7 @@ def publish_update(
         shutil.copyfile(archive, temporary)
         os.replace(temporary, destination)
     target = TargetFile.from_file(target_name, str(destination), ["sha256"])
-    target.unrecognized_fields["custom"] = {
-        "version": version,
-        "entrypoint": entrypoint,
-    }
+    target.unrecognized_fields["custom"] = custom
     retained[target_name] = target
     targets = Metadata(
         Targets(version=counter, expires=now + timedelta(days=90), targets=retained)
