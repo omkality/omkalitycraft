@@ -1,3 +1,21 @@
+## GitHub как источник архива обновления — 14 ноября 2026
+
+#172: лаунчер 0.3.0.dev14 использует необязательный подписанный
+`targets.custom.github_asset_url`. Доверенные метаданные остаются на своём origin;
+GitHub даёт только ZIP конкретной версии. Разрешены наш репозиторий/имя архива,
+ограниченные HTTPS redirect на официальный release-assets CDN; API latest/PAT нет.
+Недоступность/обрыв повторяется с нуля на VPS через тот же TUF verifier.
+Ошибки hash/избыточной длины/redirect не ослабляют проверки и не распаковываются.
+
+Windows92 и Linux Docker92: реальные TUF/loopback HTTP, сетевые отказы, кеш,
+подписи/метаданные/минимальная версия, личные данные, прежний mock health-handoff.
+Linux readonly/non-root/no network/socket, 1 CPU/256 МиБ, exit0/noOOM, scope removed;
+версии пяти библиотек совпали с uv.lock. Новых GUI/игровых запусков не было.
+Реальный GitHub TLS asset, доступ из сетей игроков и готовый portable handoff
+остаются до публичного выпуска. Никакой Release/manifest/VPS не переключён;
+#172 остаётся открыт, ready_for_players=false.
+[Контракт](RELEASES.md), [протокол](validation/launcher-github-transport-2026-11-14.json).
+
 ## Ссылки и динамические карточки Roots — 14 ноября 2026
 
 #174/#49: адресный план 32 ссылок в 27 ресурсах воспроизводится из закреплённых
