@@ -1,9 +1,58 @@
 """Check cosmetic Mixin targets against the pinned Forge class files before ECJ."""
 
 import io
+import json
 import re
 import zipfile
 from pathlib import Path
+
+
+def verify_book_resources(resources: Path) -> int:
+    """Reject legacy pack fallback and accidentally inaccessible helper packages."""
+    try:
+        metadata = json.loads((resources / "pack.mcmeta").read_bytes())
+        if (
+            type(metadata["pack"]["pack_format"]) is not int
+            or metadata["pack"]["pack_format"] != 3
+        ):
+            raise ValueError("Client language resources require pack format 3")
+        config = json.loads(
+            (resources / "mixins.omkalityclient.books.json").read_bytes()
+        )
+        if config != {
+            "required": True,
+            "minVersion": "0.8.5",
+            "package": "net.omkality.client.mixin.books",
+            "compatibilityLevel": "JAVA_8",
+            "client": ["ExtraUtilitiesBookLabelsMixin", "PatchouliEditionMixin"],
+            "injectors": {"defaultRequire": 1},
+        }:
+            raise ValueError("Book mixins must have their own package")
+        expected = {
+            "en_us": (
+                "Extra Utilities 2\\nManual\\n(temp GUI stand in)",
+                "Table of Contents\\n\\n",
+            ),
+            "ru_ru": ("Extra Utilities 2\\nРуководство", "Оглавление\\n\\n"),
+        }
+        for locale, (cover, contents) in expected.items():
+            path = resources / "assets/omkalityclient/lang" / (locale + ".lang")
+            entries = [
+                line.split("=", 1)
+                for line in path.read_text(encoding="utf-8").splitlines()
+                if line and not line.startswith("#")
+            ]
+            values = dict(entries)
+            wanted = {
+                "omkalityclient.books.locale": locale,
+                "omkalityclient.books.xu2.cover": cover,
+                "omkalityclient.books.xu2.contents": contents,
+            }
+            if len(entries) != len(values) or values != wanted:
+                raise ValueError("Unexpected client book language labels")
+    except (OSError, KeyError, TypeError, json.JSONDecodeError) as error:
+        raise ValueError("Incomplete client book resource contract") from error
+    return 4
 
 
 def methods(data):

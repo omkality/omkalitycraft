@@ -10,7 +10,7 @@ import sys
 import zipfile
 from pathlib import Path
 
-from verify_targets import verify
+from verify_targets import verify, verify_book_resources
 
 root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(root))
@@ -38,6 +38,9 @@ for path, name in [
     if hashlib.sha256(path.read_bytes()).hexdigest() != pins[name]["sha256"]:
         raise ValueError("Unreviewed build input: " + name)
 print("Cosmetic Forge class targets:", verify(args.forge))
+print(
+    "Client book resource contracts:", verify_book_resources(root / "client/resources")
+)
 build_root = root / "build"
 if build_root.resolve() != build_root:
     raise ValueError("Linked or external build directory")
@@ -92,22 +95,37 @@ subprocess.run(
         "-encoding",
         "UTF-8",
         "-classpath",
-        str(classes),
+        os.pathsep.join(
+            [str(classes), str(args.forge.resolve()), str(args.mixinbooter.resolve())]
+        ),
         "-d",
         str(tests),
-        str(root / "client/test/net/omkality/client/ClientNetworkTasksTest.java"),
+        *map(str, ordered((root / "client/test").rglob("*.java"))),
     ],
     check=True,
 )
-subprocess.run(
-    [
-        str(args.java.resolve()),
-        "-cp",
-        os.pathsep.join([str(classes), str(tests)]),
-        "net.omkality.client.ClientNetworkTasksTest",
-    ],
-    check=True,
-)
+for test_class in [
+    "net.omkality.client.ClientNetworkTasksTest",
+    "net.omkality.client.books.BookLocaleTextTest",
+    "net.omkality.client.books.BookMixinHandlersTest",
+    "net.omkality.client.books.BookLocaleLoaderTest",
+]:
+    subprocess.run(
+        [
+            str(args.java.resolve()),
+            "-cp",
+            os.pathsep.join(
+                [
+                    str(tests),
+                    str(classes),
+                    str(args.mixinbooter.resolve()),
+                    str(args.forge.resolve()),
+                ]
+            ),
+            test_class,
+        ],
+        check=True,
+    )
 jar = root / "build" / version["file"]
 with zipfile.ZipFile(jar, "w", zipfile.ZIP_DEFLATED) as archive:
     for path in ordered((classes / "net/omkality/client").rglob("*.class")):
