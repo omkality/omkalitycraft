@@ -1,6 +1,6 @@
 # OmkalityCraft · Forge 1.12.2
 
-Текущие исходники: Core 0.3.8, DJ2Fix 0.1.4 и Client 0.1.1.
+Текущие исходники: Core 0.3.8, DJ2Fix 0.1.4 и Client 0.1.2.
 Первый импорт сохраняется отдельными тегами и `source-import.json`.
 Два чистых Linux Docker build должны побайтно совпадать с принятыми JAR из
 `versions.json`; это проверяет CI. Игровые миры, внешние моды, учётные данные
@@ -50,8 +50,9 @@ Python 3.14.2 отдельный compiler container и выполняет две
 
 Выполняются 13 Python-контролей загрузки/упаковки, 12 Java helper-условий
 maintenance (отмена/повтор/частичный сбой/лимит/JAR URL), 27 условий metrics,
-49 условий welcome policy/queue, 14 Java helper-условий клиента,
-две проверки Forge splash ABI, проверка Java 8 class version, отсутствия чужих
+49 условий welcome policy/queue, 95 Java helper-условий клиента,
+две проверки Forge splash ABI, четыре ресурсных контракта книг,
+проверка Java 8 class version, отсутствия чужих
 классов и совпадения всех трёх JAR с
 [`versions.json`](versions.json). Это проверка сборки, а не новый игровой тест.
 

@@ -37,6 +37,9 @@ def main():
             ".gitattributes",
             ".dockerignore",
             "Dockerfile.build",
+            "client/resources/pack.mcmeta",
+            "client/resources/assets/omkalityclient/lang/en_us.lang",
+            "client/resources/assets/omkalityclient/lang/ru_ru.lang",
         }:
             raise ValueError("Non-source payload is tracked: " + name)
         data = subprocess.check_output(["git", "show", ":" + PREFIX + name], cwd=ROOT)

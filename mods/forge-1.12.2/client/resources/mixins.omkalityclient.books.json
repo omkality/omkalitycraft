@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "net.omkality.client.mixin.books",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "ExtraUtilitiesBookLabelsMixin",
+    "PatchouliEditionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
