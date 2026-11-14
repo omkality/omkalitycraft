@@ -1,0 +1,1458 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "base_owned_profile_sha256": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+  "game_tested": false,
+  "ready_for_players": false,
+  "scope": "Reviewed long ordinary-game tooltips, config help, lore and author credits; developer wiki excluded",
+  "reviewed_entries": 171,
+  "translated_entries": 170,
+  "entries": [
+    {
+      "namespace": "abyssalcraft",
+      "key": "necronomicon.text.crafting.sacrificialaltar.2",
+      "source_sha256": "12549c5d3fe39d35446f6b742081b9b3d96d080a3ddfc1b5791b90238479a747",
+      "ru": "Выбранный моб начинает светиться. После его смерти алтарь получает PE в количестве, равном максимальному здоровью моба. Он выбирает только взрослых мобов, которые не являются нежитью или игроками. Набрав пятую часть своей максимальной вместимости, алтарь прекращает сбор на минуту.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "12549c5d3fe39d35446f6b742081b9b3d96d080a3ddfc1b5791b90238479a747"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "necronomicon.text.itemtransportsystem.1",
+      "source_sha256": "d79d898500a512288ba37132c6e52d758f0d826c9426d9a3763185b7cadb5ae2",
+      "ru": "Осколки таблички духов можно купить у Пережитков или найти в постройках Омотула. Ритуал с 4 осколками и кристаллом жизни создаёт табличку духов.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "d79d898500a512288ba37132c6e52d758f0d826c9426d9a3763185b7cadb5ae2"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "necronomicon.text.itemtransportsystem.2",
+      "source_sha256": "b9f636e88bdcbc4d3713cd0e28e96c09f4faeb5c9504dafa1b29aaedb4b2dc77",
+      "ru": "Табличка духов перемещает предметы, вселяя в них духов. Для смены режима, открытия фильтра и очистки маршрута назначены клавиши. Есть режимы прокладки пути, применения настроек и их удаления.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "b9f636e88bdcbc4d3713cd0e28e96c09f4faeb5c9504dafa1b29aaedb4b2dc77"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "necronomicon.text.itemtransportsystem.3",
+      "source_sha256": "a2b43012084c3f493626548cd065d69586f47da89f03bfd3a36717e2a8ac629d",
+      "ru": "В режиме «Установить путь» нажимайте табличкой ПКМ по земле, чтобы проложить маршрут предметов. Конечный блок выберите щелчком ПКМ, присев.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "a2b43012084c3f493626548cd065d69586f47da89f03bfd3a36717e2a8ac629d"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "necronomicon.text.itemtransportsystem.4",
+      "source_sha256": "59eaf1d0843177a8d5bd8977b7aa09222a1a61b397a6f2ff96271ad0def73767",
+      "ru": "Прокладывать весь маршрут необязательно: можно выбрать только конечный блок. В режиме «Установить путь» маршрут показан частицами редстоуна, а последняя выбранная точка — зелёными частицами. Очистить путь можно клавишей, указанной в подсказке таблички.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "59eaf1d0843177a8d5bd8977b7aa09222a1a61b397a6f2ff96271ad0def73767"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "necronomicon.text.itemtransportsystem.5",
+      "source_sha256": "6679bf6d453c6261076b73c213c7094d1c3e09b46f9247f98ac199deac353b1a",
+      "ru": "Клавиша из подсказки предмета открывает фильтр на 5 предметов. Он поддерживает подтипы: например, камень позволяет учитывать андезит, гранит и другие варианты. Можно учитывать и NBT: зачарованная броня пропускает другие зачарованные части брони. Если фильтр не задан, принимаются любые предметы.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "6679bf6d453c6261076b73c213c7094d1c3e09b46f9247f98ac199deac353b1a"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "necronomicon.text.itemtransportsystem.6",
+      "source_sha256": "0be354ff9ffdf2cf48f1466226d95516b9a7273656ec8ceb7ff1039b340523a6",
+      "ru": "В режиме «Применить конфигурацию» нажмите ПКМ по исходному блоку, присев. Выбранная сторона важна: некоторые блоки выдают предметы только с определённой стороны.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "0be354ff9ffdf2cf48f1466226d95516b9a7273656ec8ceb7ff1039b340523a6"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "necronomicon.text.itemtransportsystem.7",
+      "source_sha256": "f3db5c74e8f7a3d80b4be17e1e1966744bc234c086d22054d87b6e498d992c2a",
+      "ru": "В режиме «Удалить конфигурацию» щелчок ПКМ по блоку, присев, удаляет все настройки транспорта. Разрушение и повторная установка блока дали бы тот же результат, но табличка экономит время.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "f3db5c74e8f7a3d80b4be17e1e1966744bc234c086d22054d87b6e498d992c2a"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "ac.ritual.curing.desc",
+      "source_sha256": "75e6e5c7c21c29ded5a303ae6b54a638e91b7fb89c40547bb4c7c6fb385cad02",
+      "ru": "Ритуал с 4 противоядиями от Ужасной чумы очищает местность от неё и Ужасных земель, восстанавливая прежнее состояние. Вместо Ужасных земель устанавливается ближайший обычный биом.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "75e6e5c7c21c29ded5a303ae6b54a638e91b7fb89c40547bb4c7c6fb385cad02"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "ac.ritual.spiritTablet.desc",
+      "source_sha256": "a48d386db3779273a303579b4a58b6a6bb55f0954ca442c60ffa5b9b152b3b94",
+      "ru": "Ритуал наполняет кристалл жизни 4 осколками таблички духов, создавая табличку духов. Она позволяет предметам самостоятельно двигаться между блоками. Подробнее — в разделе книги об Омотуле.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "a48d386db3779273a303579b4a58b6a6bb55f0954ca442c60ffa5b9b152b3b94"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "ac.spell.toggleState.desc",
+      "source_sha256": "660096666ee5a59f1227d5ff862c686ab4acce170ee56181ae2a0593651d4fa4",
+      "ru": "Запускает или останавливает перенос предметов у всех блоков в радиусе 16 блоков от игрока или блока под прицелом.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "660096666ee5a59f1227d5ff862c686ab4acce170ee56181ae2a0593651d4fa4"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "ac.spell.floating.desc",
+      "source_sha256": "f07ac05fbfa360d36992ed4e6d175cd3c407d2de805b71cf380add52bdd2ea3e",
+      "ru": "Пока вы произносите заклинание, вы легки, как перышко, и можете ходить по воздуху. Кому вообще нужна гравитация?",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "f07ac05fbfa360d36992ed4e6d175cd3c407d2de805b71cf380add52bdd2ea3e"
+    },
+    {
+      "namespace": "abyssalcraft",
+      "key": "ac.spell.teleportHome",
+      "source_sha256": "92891dacbffba44b65600e53e00703f8334e891e13d1301cb0de8fc86501d2c0",
+      "ru": "При использовании телепортирует вас обратно в точку появления, где бы вы ни находились (включая другие измерения).",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "92891dacbffba44b65600e53e00703f8334e891e13d1301cb0de8fc86501d2c0"
+    },
+    {
+      "namespace": "astralsorcery",
+      "key": "astralsorcery.journal.ALTAR1.2.text",
+      "source_sha256": "0d22fd06e1ab7065b4aeabb782582deb4c3e3cb53a4918cb6678f37269e073e9",
+      "ru": "Светящийся верстак из чистейшего мрамора решает обе проблемы. Он способен поглощать и удерживать намного больше звёздного света, чем обычный верстак. Собственный приёмник позволяет ему собирать свет без подключения к сборному кристаллу.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "astralsorcery",
+      "key": "astralsorcery.journal.ALTAR1.5.text",
+      "source_sha256": "311213731ad616a1fcdc4af109dacaba48f3bff4936aad483bbfa5aa0fc05b56",
+      "ru": "Положите ингредиенты в светящийся верстак и нажмите по нему ПКМ резонирующим жезлом. Готовый предмет будет выброшен из верстака.<NL>Количество собираемого звёздного света сильно зависит от места: его может почти не быть, а может хватать на полное заполнение запаса и даже больше.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "astralsorcery",
+      "key": "astralsorcery.constellation.gelu.effect",
+      "source_sha256": "970aad8d96e653be9f939d19e21074fa32e6d16e187d4edbdd012d5a68e11237",
+      "ru": "Холодные глубины астрала словно созданы для сверхъестественных сил этого ледяного созвездия.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "astralsorcery",
+      "key": "knowledge.astralsorcery.fragment.constellation.gelu.trait.description",
+      "source_sha256": "c43940037edd8480061e62c56a45f02d684bab610ca997e256d55d7758525b05",
+      "ru": "Расширяет область действия ритуала почти в 4 раза, но снижает его силу примерно до 1/6 прежней.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "c43940037edd8480061e62c56a45f02d684bab610ca997e256d55d7758525b05"
+    },
+    {
+      "namespace": "astralsorcery",
+      "key": "knowledge.astralsorcery.fragment.constellation.ulteria.potions.description",
+      "source_sha256": "2422a7d445c1531bbd78312e2a2e33627f5dae419d5e63e4db72d14137803682",
+      "ru": "Эти зелья усиливают естественное восстановление здоровья и сразу исцеляют часть полученного урона, но при этом уменьшают урон, который вы сами можете нанести.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "2422a7d445c1531bbd78312e2a2e33627f5dae419d5e63e4db72d14137803682"
+    },
+    {
+      "namespace": "astralsorcery",
+      "key": "knowledge.astralsorcery.fragment.constellation.ulteria.enchantments.description",
+      "source_sha256": "9fed115a82dced2bc28fbcc32d148c9e20583ca3275b275965f6bf33b10c4390",
+      "ru": "Обычные защитные чары несовместимы друг с другом: броня не может проводить энергию нескольких таких чар сразу. У чар, созданных светом этого созвездия, такого ограничения нет.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "9fed115a82dced2bc28fbcc32d148c9e20583ca3275b275965f6bf33b10c4390"
+    },
+    {
+      "namespace": "betterquesting",
+      "key": "dj2.quest.db.75.desc",
+      "source_sha256": "5dd92dd190326f5f651aa2ee795c8ff278e955c0b3ae986e9c29dceb6b427ee4",
+      "ru": "Создайте перечисленные справа компоненты и чертёж машины Tender Ender Blender. Нажмите чертежом ПКМ, чтобы увидеть проекцию мультиблока, и соберите его по ней. Машина заряжает любые ядра Края из Ender Utilities без поездки в Край и риска взорвать кристалл Края. Нужна только энергия!%n%nИспользуются 3 люка: 1 для ввода предметов, 1 для вывода предметов и 1 для ввода энергии. Их расположение можно выбрать самостоятельно. Предметные люки подходят любого размера, но энергетический должен быть как минимум усиленным.%n%nЦентральный блок — стабилизированный кристалл Края; проекция не всегда показывает его правильно. В нижнем слое находятся 3 люка, контроллер машины и 1 блок корпуса в центре. Над люками и контроллером разместите 4 блока укреплённого стекла, затем накройте конструкцию слоем из 5 блоков корпуса. Для работы машины чертёж должен находиться внутри.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "5dd92dd190326f5f651aa2ee795c8ff278e955c0b3ae986e9c29dceb6b427ee4"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.ritual.create.help",
+      "source_sha256": "1b50498b583a0f5dd6469c1604d9bcc6baec268bf155006fd8ae246bd8f5d7bb",
+      "ru": "Создаёт указанный ритуал с главным ритуальным камнем (MRS) у ваших ног; по умолчанию игнорирует другие блоки. Необязательные параметры: ([<player> (safe|true|false)] | [safe|true|false])",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "bloodmagic",
+      "key": "commands.bloodmagic.ritual.repair.help",
+      "source_sha256": "72b49854d55c697ab703ddee4f90f394aa0f828e96bfc19e48d91f3a82c9a7d8",
+      "ru": "Восстанавливает ритуал, наиболее соответствующий оставшимся ритуальным камням; по умолчанию игнорирует другие блоки. Необязательные параметры: ([<player> (safe|true|false)] | [safe|true|false])",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "botania",
+      "key": "botania.page.keepIvy2",
+      "source_sha256": "1d343cfddf0adda0ee28ec0e4a49e0da2315528e8bd429ebd3051df984711c45",
+      "ru": "Есть одно ограничение на предметы, к которым можно прикрепить этот плющ.<br>По &oтехническим причинам&r он несовместим с предметами, которые оставляют что-либо после крафта: например, с &1ведром воды&0 или &1ступкой и пестиком&0.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "botania",
+      "key": "botania.subtitle.way",
+      "source_sha256": "b414ed7ef4c99493223856db8bfbd9d62a736393d5c8ffeff65860b778c7d0e4",
+      "decision": "preserve_source_literal",
+      "reason": "preserve_intentional_nonverbal_vocalisation_not_machine_transliterated_expansion"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.clear.desc",
+      "source_sha256": "4289103824683265375d53393172d6e5f764770bd9ef7d4198a5b3d9c2f78a0c",
+      "ru": "Очищает инвентарь аксессуаров игрока. По умолчанию очищается весь инвентарь аксессуаров; если указан слот — только он.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.slots.grow.desc",
+      "source_sha256": "7ae1efed1847d81383dc2344d1fb7caac96df63f27a471add420040e13333fe6",
+      "ru": "Увеличивает количество слотов указанного типа на заданную величину. Примеры типов: ring, charm и другие.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "baubles",
+      "key": "baubles.command.slots.shrink.desc",
+      "source_sha256": "611df0c04de0ca27cf69abd86aff0869137ca2e8b8057cc55bf0fd243769f041",
+      "ru": "Уменьшает количество слотов указанного типа на заданную величину. Примеры типов: ring, charm и другие.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "draconicadditions",
+      "key": "config.field.armorChaosInjection.description",
+      "source_sha256": "87decd1b066cd6277e52d14e326b281e8fe5be5ffa8d1338f8716e75aa1f12a5",
+      "ru": "Задаёт скорость введения хаоса в кровь после активации.\\n\\nЧем быстрее введение, тем труднее щиту сохранять ваше тело невредимым. Чем больше хаоса в крови, тем сильнее вы становитесь, но тем дольше придётся его выводить.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "draconicevolution",
+      "key": "gui.draconiumChest.regionSelect.info",
+      "source_sha256": "a1a6c4fa74eb78568e4691e13975241abdbaa7b976fbf4778db872c8971e3efa",
+      "ru": "Нажмите и перетащите указатель по инвентарю сундука, чтобы выбрать слоты этой области. Сначала включите область. Области не могут пересекаться.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "a1a6c4fa74eb78568e4691e13975241abdbaa7b976fbf4778db872c8971e3efa"
+    },
+    {
+      "namespace": "enderio",
+      "key": "item.item_conduit_probe.tooltip.detailed",
+      "source_sha256": "0ce3ada4478c26b7ac1cba2cac9b9b888c19393160bdedafeea296ce05d28c48",
+      "ru": "В режиме зонда нажмите ПКМ по трубе, чтобы увидеть сведения о сети|В режиме копирования/вставки нажмите Shift + ПКМ, чтобы скопировать настройки соединений блока труб|Нажмите ПКМ, чтобы вставить настройки|Меняйте режим сочетанием Shift + колесо мыши или клавишей Y",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "item.item_material.infinity_goop.tooltip.detailed.line2",
+      "source_sha256": "1ef7738429ac83424505988839deb5bc733e1b5f3aea485c8e2f8841ce54bfa6",
+      "ru": "Однажды Рэндальф испачкался этим и на 6 месяцев прилип к своему посоху путешествий...",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "tile.block_holier_fog.tooltip.detailed.line1",
+      "source_sha256": "1f2db7ca4582d76e9945489293a4fd400a0c386e52dc2c3871bd6ca1d6b8eb59",
+      "ru": "Измельчение светящегося камня до сверхмелких частиц позволяет пыли вечно висеть в воздухе.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrade.tnt.2.tooltip.detailed.line1",
+      "source_sha256": "e56203f82fab9fa20725b1c8ce8b819703fca9f33863e398bb628842bc5802eb",
+      "ru": "Ещё сильнее увеличивает взрывное действие кирки, разрушающее соседние блоки при добыче.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrade.tnt.3.tooltip.detailed.line1",
+      "source_sha256": "84d899d65f58575983ce4965e8f0116feb89105c2c1d91b290dee0a614c36440",
+      "ru": "Добавляет кирке чудовищную взрывную мощь, разрушающую соседние блоки при добыче.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrade.tnt.4.tooltip.detailed.line1",
+      "source_sha256": "fbb3a80fbb38b63eb54eb5eabe5e1a7284f9d3bfc7f0ca1c618718ce9ed6e454",
+      "ru": "Добавляет кирке безумную взрывную мощь, разрушающую соседние блоки при добыче.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrade.anvil.0.tooltip.detailed.line2",
+      "source_sha256": "c8888cd7f296c51459ea175b4cea59809555af81d971dcc4a32b9a087f3b3c6c",
+      "ru": "Активируется горячей клавишей или щелчком ПКМ с Shift по предмету с улучшениями, если у этого сочетания нет другого действия.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrade.anvil.1.tooltip.detailed.line2",
+      "source_sha256": "c8888cd7f296c51459ea175b4cea59809555af81d971dcc4a32b9a087f3b3c6c",
+      "ru": "Активируется горячей клавишей или щелчком ПКМ с Shift по предмету с улучшениями, если у этого сочетания нет другого действия.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrade.anvil.2.tooltip.detailed.line1",
+      "source_sha256": "8554d6097bc8386430aded38822f19969a22a20aae584c0695f74aca36310c46",
+      "ru": "Даёт все возможности наковальни и позволяет менять улучшения любого предмета прямо на месте.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.darksteel.upgrade.anvil.2.tooltip.detailed.line2",
+      "source_sha256": "c8888cd7f296c51459ea175b4cea59809555af81d971dcc4a32b9a087f3b3c6c",
+      "ru": "Активируется горячей клавишей или щелчком ПКМ с Shift по предмету с улучшениями, если у этого сочетания нет другого действия.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.network.bad_config",
+      "source_sha256": "8c42a8f7a2c7778adbbad0b91e8a67b2c0ab075d33ef7fa5d8604bc79b549cea",
+      "ru": "ОШИБКА: параметр Ender IO «%s.%s» имеет на сервере другое значение. Он влияет на запуск игры, поэтому применить серверное значение сейчас нельзя. Продолжить подключение невозможно. Синхронизируйте конфигурации Ender IO вручную или задайте этому параметру значение «%s».",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.command.config.help.0",
+      "source_sha256": "51cbd986e156a2a6eb9e966c47b5b5a509ca9cbfc62dd1916802142f16db4d38",
+      "ru": "Команда config меняет настройки Ender IO на выделенном сервере. Она не предназначена для основной настройки мода: удобнее открыть его настройки в одиночной игре, а затем перенести файлы конфигурации на сервер.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.command.config.help.1",
+      "source_sha256": "d101ca158328fbdf59c6fa684fd5d1f250d15bc84cf9567615ef1debc45a4ac4",
+      "ru": "Команда работает с необработанными значениями из файла конфигурации. Как и при правке файла, можно ввести недопустимое значение. Такие значения будут молча проигнорированы.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.command.config.help.2",
+      "source_sha256": "1d2831d1844e36553a4af6fdf7692d6a0751268af7e7dfaf997d46ec25fbcd9d",
+      "ru": "Новое значение сначала хранится только в памяти. Чтобы записать его в файл конфигурации, выполните команду save.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "enderio.command.config.help.3",
+      "source_sha256": "d965aafdb31d1eac8cdeb3129e145fa7e6d892d6389711e84b28fa1ac26f8618",
+      "ru": "Есть 3 вида настроек: синхронизируемые при входе, только клиентские и требующие одинакового значения на обеих сторонах вручную. Эта команда безопасно меняет только первый вид; для синхронизации клиентам нужно переподключиться.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "item.item_inventory_remote_advanced.tooltip.detailed.line1",
+      "source_sha256": "764119d0514d55bfb2cd0c0ea5c896bc20a702103f28856d5ef8cf36bf8e5bcd",
+      "ru": "Доступ к панели инвентаря из любой точки того же измерения, если её чанк загружен.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "tile.block_creative_spawner.tooltip.detailed.line1",
+      "source_sha256": "6d899b0a23472cddf55789132024bd1bd78eeb8317de71e38f4b5aeed7293745",
+      "ru": "Администратор: поместите флакон души и, при необходимости, предмет, который будет служить платой за появление мобов.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderio",
+      "key": "tile.block_niard.tooltip.detailed.line2",
+      "source_sha256": "d3489cdd3839636c39ce9ccbf6cc10ed2376612043f0841298a6d7485b4efda5",
+      "ru": "Ищем более удачное название. Предлагайте варианты в Discord: имя победителя попадёт в эту подсказку.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.chairwand.tooltips",
+      "source_sha256": "6676730b9fc36b2f484580a012c2ba4920e99cb6beec359e3695c48fb0682cfe",
+      "ru": "- Создаёт невидимые сиденья, на которых можно сидеть|lf- Подходит, например, для ваших стульев из C&B|lf- Shift + колесо мыши: ширина сиденья|lf- Alt + колесо мыши: высота сиденья|lf- ПКМ по блоку: создать сиденье|lf- ЛКМ по сиденью: удалить его",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "6676730b9fc36b2f484580a012c2ba4920e99cb6beec359e3695c48fb0682cfe"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.dolly.tooltips",
+      "source_sha256": "48c1763bafb5058a2e3d5615b2e7c219955685e51b0482cb003d172ec627277f",
+      "ru": "- Переносит блоки с инвентарём|lf- В творческом режиме может переносить любой блок",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "48c1763bafb5058a2e3d5615b2e7c219955685e51b0482cb003d172ec627277f"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.enderbag.tooltips",
+      "source_sha256": "822f1140214b23f4545ce276a856a7899112b6d9e317ffb15f1b57c2d242c12b",
+      "ru": "- Приседание + ПКМ: привязать к обычному сундуку Края|lf- Ctrl (+ Shift) + колесо мыши: выбрать кристалл связи|lf- Другие инвентари пока не поддерживаются:|lf  нужное сумке событие удалено в версии 1.10|lf  (новые возможности запланированы)",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "822f1140214b23f4545ce276a856a7899112b6d9e317ffb15f1b57c2d242c12b"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.enderpart_endercore_0_active.tooltips",
+      "source_sha256": "50adc0a40e8f2ea571b443d19496618cba16528578b251d250360be4a709db52",
+      "ru": "- Чтобы получить этот предмет:|lf   нажмите неактивным ядром Края ПКМ по кристаллу Края|lf   на обсидиановой колонне в Крае",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "50adc0a40e8f2ea571b443d19496618cba16528578b251d250360be4a709db52"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.enderpart_endercore_1_active.tooltips",
+      "source_sha256": "50adc0a40e8f2ea571b443d19496618cba16528578b251d250360be4a709db52",
+      "ru": "- Чтобы получить этот предмет:|lf   нажмите неактивным ядром Края ПКМ по кристаллу Края|lf   на обсидиановой колонне в Крае",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "50adc0a40e8f2ea571b443d19496618cba16528578b251d250360be4a709db52"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.enderpart_endercore_2_active.tooltips",
+      "source_sha256": "50adc0a40e8f2ea571b443d19496618cba16528578b251d250360be4a709db52",
+      "ru": "- Чтобы получить этот предмет:|lf   нажмите неактивным ядром Края ПКМ по кристаллу Края|lf   на обсидиановой колонне в Крае",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "50adc0a40e8f2ea571b443d19496618cba16528578b251d250360be4a709db52"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.enderpart_memorycard_items_1.tooltips",
+      "source_sha256": "22154a70570985898c1da89c4b5fcf251b6fc3639d98b9d85db0d0e30aef2ae9",
+      "ru": "- Хранит предметы в стопках до 2^(bits) = 256|lf- ПКМ: переключить публичный/частный доступ|lf- Приседание + ПКМ: очистить данные владельца",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "22154a70570985898c1da89c4b5fcf251b6fc3639d98b9d85db0d0e30aef2ae9"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.enderpart_memorycard_items_2.tooltips",
+      "source_sha256": "362c838a774891f17fb20245195199e9dd309cf95bf10700ac9c2a7560b6b7fa",
+      "ru": "- Хранит предметы в стопках до 2^(bits) = 1024|lf- ПКМ: переключить публичный/частный доступ|lf- Приседание + ПКМ: очистить данные владельца",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "362c838a774891f17fb20245195199e9dd309cf95bf10700ac9c2a7560b6b7fa"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.enderpart_mobpersistence.tooltips",
+      "source_sha256": "307442493be799173966d150206b1594402a23fff2f250b8151ce5b8b643d636",
+      "ru": "- Нажмите ПКМ по мобу, чтобы он не исчезал|lf- Установка в некоторые модульные предметы даёт тот же эффект|lf- При прямом использовании предмет расходуется; в модульном — нет",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "307442493be799173966d150206b1594402a23fff2f250b8151ce5b8b643d636"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.icemelter_super.tooltips",
+      "source_sha256": "54e7734324e400b68c4e37d821f29e599005c9f205de04a0c0ad265b7b8fad47",
+      "ru": "- Превращает лёд в неподвижный источник воды,|lf  даже не вызывая обновления блоков!|lf- Да здравствуют водяные завесы!",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "54e7734324e400b68c4e37d821f29e599005c9f205de04a0c0ad265b7b8fad47"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.pet_contract_blank.tooltips",
+      "source_sha256": "9a5bc41cc281dc3512f5111c2002776f8cd621a756a3ea8a2f5bc152dd1507b8",
+      "ru": "- Передаёт владение приручаемыми мобами|lf- Владелец нажимает ПКМ по мобу, подписывая контракт|lf- Другой игрок может стать новым владельцем,|lf   нажав по мобу ПКМ подписанным контрактом",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "9a5bc41cc281dc3512f5111c2002776f8cd621a756a3ea8a2f5bc152dd1507b8"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.portalscaler.tooltips",
+      "source_sha256": "9449d10eba9593bf198350a7d78b2292baa3eea787c759bde8de8211f02f420f",
+      "ru": "- Меняет масштаб переноса через портал Незера,|lf  если нажать ПКМ, стоя в портале|lf- Чтобы изменить масштаб:|lf  - Выберите предмет на панели быстрого доступа|lf  - Посмотрите вдоль нужной оси (x/y/z)|lf  - Удерживайте Alt + Shift и крутите колесо мыши|lf  - Или нажмите Alt + Shift (+ Ctrl) + клавишу смены режима|lf- Также зажигает и тушит порталы|lf  (ПКМ по блоку портала или обсидиановой рамке,|lf  когда вы НЕ стоите внутри портала)",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "9449d10eba9593bf198350a7d78b2292baa3eea787c759bde8de8211f02f420f"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.quickstacker.tooltips",
+      "source_sha256": "b6c3f938a792e579b5677760043fcbd23d4728f15f777e0c9ea8819d4c1d3434",
+      "ru": "- Быстро переносит предметы из инвентаря игрока|lf  в ближайшие инвентари|lf- Радиус: 4 блока по горизонтали, 3 по вертикали|lf- Активируется клавишей смены режима|lf- Работает, даже если не держать в руке|lf- Обычно переносит только совпадающие предметы|lf- При активации присев переносит и остальные предметы|lf- Можно также нажать ПКМ по инвентарю, присев,|lf  чтобы быстро переместить предметы именно в него",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "b6c3f938a792e579b5677760043fcbd23d4728f15f777e0c9ea8819d4c1d3434"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "item.enderutilities.syringe_passifier.tooltips",
+      "source_sha256": "5199a875d543d05e17ab38faec5986ae4fc226632b711282c97b08154691cb73",
+      "ru": "- Успокаивает мобов, удаляя их задачи выбора цели|lf- Если успокоенного моба кто-либо атакует, он|lf   снова разозлится и станет враждебным",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "5199a875d543d05e17ab38faec5986ae4fc226632b711282c97b08154691cb73"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.barrel.tooltips",
+      "source_sha256": "fa7409572a438f4c055c61f2663ea68fc0ab43682eae3690f49510c7bf7cc5d3",
+      "ru": "- Приседание + ПКМ: открыть интерфейс|lf- Средняя кнопка мыши с пустой основной рукой|lf   и блоком во второй руке: замаскировать бочку|lf- То же действие присев: убрать маскировку",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "fa7409572a438f4c055c61f2663ea68fc0ab43682eae3690f49510c7bf7cc5d3"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.draw_bridge.tooltips",
+      "source_sha256": "8578cb8ebd1efe2dac22fe8ef45cc49a1ce39c7e5db5a4914ac0bf861106223b",
+      "ru": "- Выдвигает и втягивает ряд блоков|lf- Длина: до 64 у обычного моста, до 32 у улучшенного|lf- Улучшенный мост допускает разные блоки в каждой позиции|lf- Для маскировки нажмите ПКМ пустой основной рукой,|lf  держа нужный блок во второй руке|lf- Приседание + ПКМ пустой рукой: убрать маскировку",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "8578cb8ebd1efe2dac22fe8ef45cc49a1ce39c7e5db5a4914ac0bf861106223b"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.ender_furnace.tooltips",
+      "source_sha256": "491970ee0fdca1f3a144513cbe75e8f5bdbab02b0ee264c333c27c847cb08da3",
+      "ru": "- Намного быстрее обычной печи|lf  (3 секунды на предмет, в быстром режиме — 1 секунда)|lf- Помимо обычного топлива принимает жемчуг Края, око Края|lf  и огненный порошок|lf- Принимает лаву из ёмкостей с жидкостью,|lf  например из ведра Края или переносных резервуаров|lf- Работает и без топлива (1 предмет за 60 секунд)|lf- В медленном режиме одно топливо обрабатывает в 1.5x больше предметов|lf  относительно обычной печи|lf- Быстрый режим сжигает топливо в 6x быстрее медленного|lf  (= 0.75x предметов на топливо относительно обычной печи)|lf- Может выдавать результат прямо в обычный сундук Края владельца",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "491970ee0fdca1f3a144513cbe75e8f5bdbab02b0ee264c333c27c847cb08da3"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.energy_bridge_resonator.tooltips",
+      "source_sha256": "07385d93c01dea7a5d669932d078dd0c295272bc5893e9bbbe54b3720e47bbaf",
+      "ru": "- См. описание передатчика и приёмника|lf- Между резонаторами должен быть только воздух|lf  (на пути диагональных лучей между ними,|lf  а также между резонаторами и приёмником)",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "07385d93c01dea7a5d669932d078dd0c295272bc5893e9bbbe54b3720e47bbaf"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.inserter_filtered.tooltips",
+      "source_sha256": "b17f803f278cdeb08122e8e96e0fbe43dd718e07d4435e4ede3e138add5ca4b7",
+      "ru": "- Похож на трубу, но работает иначе|lf- Сначала направляет предметы в разрешённые боковые выходы|lf- Если это не удалось — в передний выход|lf- Несколько выходов обслуживаются по очереди,|lf  равномерно распределяя предметы|lf- Приседание + ПКМ пустой рукой: переключить боковые выходы|lf- Фильтры задают, что разрешено на боковых выходах|lf- Остальные предметы идут в передний выход|lf- Фильтры пока общие для всех сторон",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "b17f803f278cdeb08122e8e96e0fbe43dd718e07d4435e4ede3e138add5ca4b7"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.inserter_normal.tooltips",
+      "source_sha256": "f13b1710a3e7cc77679abf6547c2a252f92a4ae01ad0d1bfdf86ed7895e428fb",
+      "ru": "- Похож на трубу, но работает иначе|lf- Сначала направляет предметы в разрешённые боковые выходы|lf- Если это не удалось — в передний выход|lf- Несколько выходов обслуживаются по очереди,|lf  равномерно распределяя предметы|lf- Приседание + ПКМ пустой рукой: переключить боковые выходы",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "f13b1710a3e7cc77679abf6547c2a252f92a4ae01ad0d1bfdf86ed7895e428fb"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.frame.tooltips",
+      "source_sha256": "93396cf1722693c86538c9ae626dbf5bf3b784933dbd2f69e5b9bc21ea8fc4ab",
+      "ru": "- Портал может иметь любую форму и размер|lf  в пределах настраиваемых ограничений|lf- Рама должна образовывать замкнутый контур|lf- Для маскировки нажмите ПКМ пустой основной рукой,|lf  держа нужный блок во второй руке|lf- Приседание + ПКМ пустой рукой: убрать маскировку",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "93396cf1722693c86538c9ae626dbf5bf3b784933dbd2f69e5b9bc21ea8fc4ab"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.handy_chest.tooltips",
+      "source_sha256": "b1e4a258058fde949ce91032f5e1be10e195684ff05a95054b100ce01a28838b",
+      "ru": "- Удобное управление инвентарём и много|lf  места для хранения|lf- Средняя кнопка мыши: поменять местами большие стопки|lf- Shift + щелчок по кнопке перемещения|lf  назначает её быстрым действием|lf- Двойной щелчок ЛКМ по сундуку|lf  выполняет выбранное быстрое действие|lf- Владелец карты памяти может|lf  нажать ПКМ по кнопке выбора карты и закрепить|lf  карту в слоте, чтобы другие игроки|lf  не могли извлечь её|lf- Сундук с закреплёнными картами нельзя сломать",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "b1e4a258058fde949ce91032f5e1be10e195684ff05a95054b100ce01a28838b"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.jsu.tooltips",
+      "source_sha256": "a3dfc73a42fb20a61ef1f61577b6dcfe36d963084a8edb52a9e05255ee9fd5a1",
+      "ru": "- Хранит только предметы, которые обычно не складываются в стопки|lf- 270 слотов, до 256 предметов в стопке",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "a3dfc73a42fb20a61ef1f61577b6dcfe36d963084a8edb52a9e05255ee9fd5a1"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.msu_0.tooltips",
+      "source_sha256": "90eb416b37c425803fa089376cad564ebf8b6511fa7741b5c549a19b735e8320",
+      "ru": "- 1 слот для большого количества предметов|lf- Средняя кнопка мыши в творческом режиме заполняет/очищает слот|lf  - 1 предмет под курсором => увеличить стопку в x10 раз|lf  - Больше 1 предмета под курсором => заполнить/очистить слот",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "90eb416b37c425803fa089376cad564ebf8b6511fa7741b5c549a19b735e8320"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.msu_1.tooltips",
+      "source_sha256": "3f67fe3ffea8614c6d0b83add3c236f697ca6da603036f9c9a04f9afa0026251",
+      "ru": "- 9 слотов для большого количества предметов|lf- Средняя кнопка мыши в творческом режиме заполняет/очищает слот|lf  - 1 предмет под курсором => увеличить стопку в x10 раз|lf  - Больше 1 предмета под курсором => заполнить/очистить слот",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "3f67fe3ffea8614c6d0b83add3c236f697ca6da603036f9c9a04f9afa0026251"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.portal_panel.tooltips",
+      "source_sha256": "c9b0126e639cc3585cb8b33746a9b24bba2de2a7cb9632c547e511f799425743",
+      "ru": "- Активирует портал из блоков портальной рамы|lf- Панель устанавливается на блок рамы|lf- Он должен соединяться с замкнутым контуром портала|lf  _непрерывной_ цепочкой блоков рамы|lf  (без диагональных разрывов)|lf- Сам контур портала может иметь диагональные углы|lf- Для цели нужен кристалл связи типа «Местоположение» или «Портал»",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "c9b0126e639cc3585cb8b33746a9b24bba2de2a7cb9632c547e511f799425743"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.molecular_exciter.tooltips",
+      "source_sha256": "9b1dd11b66bf9cfe76c9195538f678da7c775e3ec1b97f5c46f95761d4d54a0d",
+      "ru": "- Превращает блоки перед собой в падающие|lf  при импульсе редстоуна или обновлении блока|lf- Для работы нужен сигнал редстоуна",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "9b1dd11b66bf9cfe76c9195538f678da7c775e3ec1b97f5c46f95761d4d54a0d"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "tile.enderutilities.sound_block.tooltips",
+      "source_sha256": "dc115df5ae40ca2b5c9a3e3d3e2d2a28bef2f8ba203047a7741699648ba6f893",
+      "ru": "- Да, воспроизводит звуки...|lf- Выбор любого звука из зарегистрированных звуков|lf- Регулируемая высота и громкость",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "dc115df5ae40ca2b5c9a3e3d3e2d2a28bef2f8ba203047a7741699648ba6f893"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.tooltip.placementproperties.tooltips",
+      "source_sha256": "985a3aa5a7cd4369e06070ce8c2488dd0480d911965ac295d336136673b46b3d",
+      "ru": " |lf§f*** Свойства размещения ***§r|lf- (Shift +) клавиша смены режима: выбрать свойство|lf- Shift/Ctrl/Alt + колесо мыши: изменить значение",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "985a3aa5a7cd4369e06070ce8c2488dd0480d911965ac295d336136673b46b3d"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.infoarea.asu",
+      "source_sha256": "c627b1671c8044c2caa9043b56d35b7ffcfda70148b47e963b839844b37152a9",
+      "ru": "- Здесь задаётся максимальный размер стопки в инвентаре|lf- (Ctrl/Shift +) ЛКМ/ПКМ/средняя кнопка или колесо: изменить значение|lf- Средняя кнопка с предметом в слоте/под курсором: закрепить тип предмета|lf- Alt + средняя кнопка: поменять стопки местами|lf- Shift + средняя кнопка в творческом режиме: заполнить стопку (> 1 предмета)|lf  либо менять её размер в x10 раз (1 предмет под курсором)",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "c627b1671c8044c2caa9043b56d35b7ffcfda70148b47e963b839844b37152a9"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.infoarea.creation_station",
+      "source_sha256": "f708ff9adb160694d2b31d60921e7ac265aa60a3df9b0acc5b01a68cc947d989",
+      "ru": "Шаблоны крафта:|lf- ЛКМ (1-й раз): загрузить рецепт|lf- ЛКМ (2-й раз): добавить предмет в сетку|lf- ЛКМ (3-й раз): заполнить сетку до наибольшей имеющейся стопки|lf- Shift + ЛКМ: сохранить рецепт|lf- ПКМ: очистить сетку (как кнопка x)|lf- Повторная очистка пустой сетки скрывает рецепт|lf- Средняя кнопка: удалить сохранённый рецепт|lf- Shift + щелчок по кнопке перемещения назначает быстрое|lf  действие для двойного щелчка ЛКМ по блоку|lf- Для заполнения рецепта из JEI используется последняя|lf  выбранная сетка крафта (она выделена)",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "f708ff9adb160694d2b31d60921e7ac265aa60a3df9b0acc5b01a68cc947d989"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.infoarea.inserter_filtered",
+      "source_sha256": "eb3584f07c8aed03876b37b69c693a3e773bf0c06971f42ef073a96f875f8fad",
+      "ru": "- Сначала пытается выдать предметы через боковые выходы|lf- Если это невозможно или предметы не подходят под фильтры,|lf  они идут через обычный передний выход|lf- Входной фильтр действует только при извлечении: другие устройства|lf  могут помещать в загрузчик неподходящие предметы|lf- Приседание + ПКМ пустой рукой: изменить выходные стороны|lf- Предел стопки задаёт число предметов, передаваемых за раз|lf- (Shift и/или Ctrl) ЛКМ/ПКМ/средняя кнопка или колесо|lf  над кнопками +/- меняет значения",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "eb3584f07c8aed03876b37b69c693a3e773bf0c06971f42ef073a96f875f8fad"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.infoarea.inventoryswapper",
+      "source_sha256": "e74fbd6b44a62590f8b4f4b3ed9c523603ef87d5d016046854e0a083caac5714",
+      "ru": "- Меняет инвентарь игрока на содержимое|lf  выбранной карты памяти|lf- Синие слоты инвентаря игрока|lf  включены в обмен|lf- Средняя кнопка мыши переключает отдельные слоты|lf- В режиме цикла смена карты выполняет|lf  «обмен + смена карты + обмен»,|lf  позволяя быстро менять несколько|lf  комплектов предметов",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "e74fbd6b44a62590f8b4f4b3ed9c523603ef87d5d016046854e0a083caac5714"
+    },
+    {
+      "namespace": "enderutilities",
+      "key": "enderutilities.gui.infoarea.memory_chest",
+      "source_sha256": "e78949eb2559d5997a190f1b7a7eb85f31f8da2f1682705f96ed6174aec95685",
+      "ru": "- Средняя кнопка закрепляет текущий тип предмета за слотом|lf- С предметами под курсором это можно делать|lf  средней кнопкой и перетаскиванием|lf- В пустой слот принимаются только предметы этого типа|lf- Другие игроки не могут открыть частный сундук,|lf  а также не могут его сломать",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "e78949eb2559d5997a190f1b7a7eb85f31f8da2f1682705f96ed6174aec95685"
+    },
+    {
+      "namespace": "evilcraftcompat",
+      "key": "info_book.evilcraftcompat.mod_integrations.baubles.text",
+      "source_sha256": "09d8c326e789d2001b9fad58d3d346ba934723f02c05825b3d0b21a89036b411",
+      "ru": "Мод Baubles добавляет удобные слоты аксессуаров. В них можно носить кольца и подвески из этой книги: они работают так же, как в обычном инвентаре. Аксессуары для всех!",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "evilcraftcompat",
+      "key": "info_book.evilcraftcompat.mod_integrations.ee3.text",
+      "source_sha256": "7f4a47d098a75451aff6559afd8d06e5434ed43dc4d10770c8a290fb91229942",
+      "ru": "Маги обнаружили, что у почти каждой вещи есть &1ценность&0 относительно других вещей. Они научились &1превращать&0 их друг в друга. Похоже, эти странные методы работают даже с моими предметами.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "evilcraftcompat",
+      "key": "info_book.evilcraftcompat.mod_integrations.jei.text",
+      "source_sha256": "18b813aa2b66e940f6f0a571d2fb07b4f816b559f08861a237cc62ba20997644",
+      "ru": "У одних «&oToo Many Items&r», у других «&oNot Enough Items&r». Наконец-то мы дошли до «&oJust Enough Items&r»: теперь знания из этой книги понятны и им.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "evilcraftcompat",
+      "key": "info_book.evilcraftcompat.mod_integrations.thermal_expansion.text",
+      "source_sha256": "f45800fb307ae1f497abb10d49bcebc29726c3ca0dcbf84287209ff4081dc393",
+      "ru": "Странные люди: носят необычную одежду и зачем-то постоянно размахивают разными гаечными ключами. Я знаю лишь, что их машина перемещения жидкостей позволяет выполнять простейшее наполнение кровью. К сожалению, такое наполнение нельзя улучшить.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "extendedcrafting",
+      "key": "desc.item.ec.recipe_maker",
+      "source_sha256": "e1137cea2de01207e67f9a1fb065f371b6f805d84e248d90fffed54b7326cca7",
+      "ru": "Копирует содержимое верстака Extended Crafting или Ender Crafter в скрипт CraftTweaker. Нажмите предметом ПКМ по блоку. Приседание + ПКМ меняет режим.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "e1137cea2de01207e67f9a1fb065f371b6f805d84e248d90fffed54b7326cca7"
+    },
+    {
+      "namespace": "groovyscript",
+      "key": "groovyscript.infoparser.item",
+      "source_sha256": "ad85198c823a3eb513e6cc1b9671aeba4e188aab79046ba8cbd17fffaebfbae7",
+      "ru": "ItemStack в основной или второй руке игрока либо соответствующий блоку под прицелом",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "groovyscript",
+      "key": "groovyscript.infoparser.potioneffect",
+      "source_sha256": "a71a4a3ae348f47fbdd579062d871873789db2b50adcb898f3ea735e80f77d00",
+      "ru": "Эффекты зелий у предмета в руке либо активные эффекты выбранной сущности или игрока",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "immersiveengineering",
+      "key": "ie.manual.entry.updateNews_20",
+      "source_sha256": "98bddb426db72d39d993c50a09903a130356ba532329f91d8dff5b9475a5444a",
+      "ru": "Дорогой инженер!<br><br>Прошлое обновление добавило в Immersive Engineering новые возможности и изменения:<br><br>Появились строительные леса, у которых открытые стальные распорки сверху закрыты деревянными досками. Алюминий оказался удобен для декора: теперь в вашей инженерной мастерской доступны алюминиевые заборы и строительные леса.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "98bddb426db72d39d993c50a09903a130356ba532329f91d8dff5b9475a5444a"
+    },
+    {
+      "namespace": "integrateddynamicscompat",
+      "key": "aspect.aspects.integrateddynamics.read.boolean.tesla.caninsert.info",
+      "source_sha256": "bb227b316a060722e4a1410584b0526f160fbee32b8583923f97d12c2bea0fc0",
+      "ru": "Можно ли передать энергию Tesla в цель с учётом запаса и вместимости",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "jei",
+      "key": "description.jei.wooden.door.1",
+      "source_sha256": "ed5eac84f7311c112bc5f32e785196ecaeb243c8e91b647ab138a34ed64512c1",
+      "ru": "Деревянные двери не дают монстрам войти в здание.\\nПроверочные предложения.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "ed5eac84f7311c112bc5f32e785196ecaeb243c8e91b647ab138a34ed64512c1"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.waypoint.teleport_command.tooltip",
+      "source_sha256": "525b488c2c2ccdfa986df1551d9f9eeaae92850988aac848e6ceff64e74ffc1c",
+      "ru": "Шаблон команды телепортации сервера. Переменные: имя игрока {name}; координаты метки {x} {y} {z}; целевое измерение {dim}.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.waypoint.auto_deathpoint_remove_distance.tooltip",
+      "source_sha256": "57d2d93725bd78b7c92c31390aa3140413460b46847bcdc568493a2ef4d5d063",
+      "ru": "Расстояние удаления метки смерти. Минимум — 2, иначе метка удалится сразу после создания.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.label.selection.global.tooltip",
+      "source_sha256": "ab535a1df712be0985ab6a60760dc486a2ac2f8fdd9a050603ee2779f8c98ad7",
+      "ru": "Настройки сервера по умолчанию. Включите отдельные настройки измерения, чтобы переопределить их для него.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.label.worldId.tooltip",
+      "source_sha256": "e4c8dd78a86f5e0aa36a15a2d1f614220e59aaf6cda524d12711af669025a605",
+      "ru": "Уникальный ID защищает карты игрока от перезаписи, если на сервере несколько миров или серверы названы одинаково.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.chkbox.enable.tooltip",
+      "source_sha256": "7764e318e7084e765b8a2bb83a77cffd2f3f0a1453724d7d828b149fc14f6de7",
+      "ru": "§1[Включить/Отключить]§f: Включает отдельные настройки этого измерения вместо общих.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.chkbox.teleport.dimension.tooltip",
+      "source_sha256": "74eb999ee8214282c9e598a73c6f3c351f9ee8b9d5b07deb2855c2078faf41d8",
+      "ru": "§1[Включить/Отключить]§f: Если §a[выключено]§f, запрещает телепортацию в это измерение, из него и внутри него.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.chkbox.teleport.dimension.tooltip2",
+      "source_sha256": "332ec6f360e7941dcd3618401355156284323d1bf932d4d68e4f46a4ab09cc72",
+      "ru": "Если §a[включено]§f, разрешает телепортацию внутри измерения и в другие измерения с телепортацией §a[включено]§f.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.chkbox.world.id.tooltip",
+      "source_sha256": "f5fb1c91f98809e8da32bdc4310ba0c768ea9403ca9d02f750e2f5c91c9d2a5b",
+      "ru": "§1[Включить/Отключить]§f: Меняет папку сохранения карт этого сервера.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.chkbox.world.id.tooltip2",
+      "source_sha256": "de694b543a3ae6600f8f90fe4f1b5034dc7d78535ad12eeb205f337f721ba322",
+      "ru": "Защищает карты и настройки от перезаписи при нескольких мирах или одинаковых названиях серверов.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.tracking.tooltip1",
+      "source_sha256": "6e33e7b56fd1c38eab1f9e444f18031c6dd84f274633b0c118d445e97dc4b4d6",
+      "ru": "Если §a[радар игроков]§f §a[включён]§f, сервер отслеживает игроков за пределами дальности клиента.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.tracking.tooltip2",
+      "source_sha256": "3c1374491415eee9076477fd81217d0c08b14090ed123d4ed5bc7045cfb1145f",
+      "ru": "Игроки могут видеть друг друга на карте независимо от расстояния, пока они находятся в одном измерении.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.tracking.tooltip3",
+      "source_sha256": "b20c36fcc38b23366abe11a6cd28ddb3f5c52626e875c95eeba65d6f3db036e6",
+      "ru": "Если эта функция §a[включена]§f, но радар игроков §c[выключен]§f, отслеживание не работает.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.tracking.tooltip4",
+      "source_sha256": "e63603eca720b64944e9dd9ef3f8aae8115ddcd1df9d8b9bcb4d739e4b9d41da",
+      "ru": "Если эта функция §c[выключена]§f, но радар игроков §a[включён]§f, работает только обычный радар поблизости.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "journeymap",
+      "key": "jm.server.edit.radar.toggle.tooltip1",
+      "source_sha256": "aaccfeaf750a2e31e1a6644104127b70b594c625e842d4ec2a3c15b32bdcb26b",
+      "ru": "Значение §a[Все]§f позволяет настраивать радар для игроков без прав §bоператора§f.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "lore.lightningcraft:angergods",
+      "source_sha256": "39f57085330b8db9cc95c9e898e60c87e2b23f9d678b4bb0dd98285e8d3e5632",
+      "ru": "Создание слитков небесного металла разгневало богов... Теперь демоны враждебны к вам!",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "39f57085330b8db9cc95c9e898e60c87e2b23f9d678b4bb0dd98285e8d3e5632"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "lightningcraft.electricium_info",
+      "source_sha256": "99f45f95c32ef0207013d9a768fa41d7d0d5e337e71ffb9ae90c395749ea2312",
+      "ru": "Молниум — важнейший металл LightningCraft. Впервые его получают ударом молнии по лежащим на земле железному слитку, золотому слитку и алмазу.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "99f45f95c32ef0207013d9a768fa41d7d0d5e337e71ffb9ae90c395749ea2312"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "lightningcraft.ichor_info",
+      "source_sha256": "abb8851d5909b9807173f356c61e1729809d9b90c8dbd7d2ff9fc48ecd6c9e50",
+      "ru": "Ингредиент для крафта. Впервые его получают ударом молнии по лежащим на земле крови демона, слитку небесного металла и изумруду.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "abb8851d5909b9807173f356c61e1729809d9b90c8dbd7d2ff9fc48ecd6c9e50"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "lightningcraft.mystic_info",
+      "source_sha256": "a3c96ff2a620e58c87a5ee425b7a86acf3ddf3c1a9323b6610a71334aad10d37",
+      "ru": "Мистические слитки создаются из божественной эссенции. Это самый мощный металл LightningCraft.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "a3c96ff2a620e58c87a5ee425b7a86acf3ddf3c1a9323b6610a71334aad10d37"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "achievement.lightningcraft:killDemon.desc",
+      "source_sha256": "96b0b7c37bece72b47bb5c940272dcca4b15e1d99475fc78f445c5c2da2859dc",
+      "ru": "Они натравили на вас демонов, но вас это не пугает. Пусть идут!",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "96b0b7c37bece72b47bb5c940272dcca4b15e1d99475fc78f445c5c2da2859dc"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "achievement.lightningcraft:reachUnderworld.desc",
+      "source_sha256": "648c53abf85b192040eb9bde81af7cea40914c732e15fbc0996948f639de5a98",
+      "ru": "Наполните огненный заряд кровью демона, зажгите им портал из демонического камня и отправляйтесь в Подземный мир.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "648c53abf85b192040eb9bde81af7cea40914c732e15fbc0996948f639de5a98"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "achievement.lightningcraft:craftReallocator.desc",
+      "source_sha256": "5bed8eb27fa12fc3e93da1e46acbab1b7266c531a80cd1d82f4d793041b5a172",
+      "ru": "Создайте перераспределитель чар из костей стражей башен Подземного мира и других мистических материалов.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "5bed8eb27fa12fc3e93da1e46acbab1b7266c531a80cd1d82f4d793041b5a172"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "achievement.lightningcraft:infuseMystic.desc",
+      "source_sha256": "941847b025890d4651806dfad331fdae0da2526aa848be540e628f708e48d130",
+      "ru": "Улучшите слиток небесного металла до мистического слитка с помощью ихора, добытого в смертоносных бастионах Подземного мира.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "941847b025890d4651806dfad331fdae0da2526aa848be540e628f708e48d130"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "achievement.lightningcraft:mysticArmor.desc",
+      "source_sha256": "ae78fdeb7005bec5df2c287c98e2d556094cf5d166e2ee33997714f9fe8be052",
+      "ru": "Облачитесь в полный комплект мистической брони с Электростатической аурой III и сокрушайте всех, кто желает вам зла.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "ae78fdeb7005bec5df2c287c98e2d556094cf5d166e2ee33997714f9fe8be052"
+    },
+    {
+      "namespace": "lightningcraft",
+      "key": "achievement.lightningcraft:perfectCell.desc",
+      "source_sha256": "ca985ffce5769f1b7d7c20718a5a2fbfb3628f2514fd7d2e3f91d39f41476c22",
+      "ru": "Совершенный биоандро... То есть совершенная система LE с ячейкой и молниеотводом высшего уровня!",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "ca985ffce5769f1b7d7c20718a5a2fbfb3628f2514fd7d2e3f91d39f41476c22"
+    },
+    {
+      "namespace": "openmods",
+      "key": "openmodslib.config.update_warning",
+      "source_sha256": "77668ee4b3e283691f4db75b07dcdaab1d293ee0de0ef40c3a7edc6023401354",
+      "ru": "§c§lПримечание:§r для изменения настроек во время игры используйте §l/om_config_s§r или §l/om_config_m§r",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_alchemical_bag",
+      "source_sha256": "dbbff3721b72e57faa6ec37ca1c13136f4690bf367ff3f3cb4be22d708523ca3",
+      "ru": "Практикующему алхимику некогда постоянно переносить алхимические сундуки. Посыпьте сундук высокоэнергетической ковалентной пылью и оберните тканью — он сожмётся до сумки, сохранив вместимость. Сумки связаны некой метафизической сетью: при открытии сумки одного цвета показывают одинаковое содержимое, даже если взять сумку соседа. Магические предметы в сумке действуют так же, как в сундуке.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_philosophers_stone",
+      "source_sha256": "b86b75841ab5afbcefde6ddd8f165e009a8b437e0f648792e7519f0111980861",
+      "ru": "О философском камне веками ходили легенды: трансмутация без кругов, бессмертие, несметные богатства и многое другое. Хотя подлинный камень, возможно, навсегда утрачен, современные алхимики научились создавать замену некоторым его простейшим силам. Но будьте осторожны: в глазах тех, кому это удалось, появляется нечто новое, а в их рассказах — огонь и демоны.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_repair_talisman",
+      "source_sha256": "681fbdf6e8c759b1f3f945fcd24de0f5f2d0d83975cb869dd7d17be7d536c23e",
+      "ru": "Ковалентная пыль помогает от износа инструментов, но вручную втирать её в царапины и вмятины быстро надоедает. Талисман ремонта объединяет три цвета пыли в плотный свёрток и постепенно распределяет её по инструментам в сумке. А вы тем временем можете ухаживать за овцами и заниматься другими делами первостепенной важности.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_alchemy_chest",
+      "source_sha256": "0f3a978a3ecd29c9e362fb433f7081f2d1edd1440b630a5e786d660a93a2d764",
+      "ru": "Алхимики обожают блестящие вещи и бесконечные запасы золота, но обычных хранилищ им мало. Алхимический сундук вмещает 104 стопки: немного ковалентной пыли и одна блестяшка позволят хранить почти неисчерпаемые сокровища.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_condenser",
+      "source_sha256": "8c3a8d00a71026c451392a99b0e8e5e5c2873acc99e0c24b81da9943afe933fa",
+      "ru": "Столы трансмутации удобны для превращения одних вещей в другие, но работают вручную. Конденсатор решает проблему автоматизации: задайте предмет-цель, и всё помещённое внутрь будет превращаться в него. Цель можно создавать и за счёт EMC от подключённого реле или коллектора.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_condenser_mk2",
+      "source_sha256": "d2cf9d62d79c2e62872d5bff09be9f3e9a98143468a3434418e0227084cbded3",
+      "ru": "Конденсатор энергии MK2 обладает всеми функциями MK1, но разделяет инвентарь, чтобы иметь отдельные вход и выход.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_interdiction_torch",
+      "source_sha256": "c572d2f9640497696eed641420737fe571bad825689f3eb58eefcf9e4730e948",
+      "ru": "Запретный факел — не просто стильная замена углю с палкой. Он отталкивает приближающихся мобов. Как сказал один мудрец... НИКТО НЕ ПРОЙДЁТ!",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_nova_catalyst",
+      "source_sha256": "478f0e96ad0404e561f316a9c1d940634a4c15038c1910c4cdf1c923a024f004",
+      "ru": "Катализатор Новы — мощная алхимическая взрывчатка. Она создаёт сильный взрыв и оставляет разрушенные блоки в виде предметов, которые можно подобрать.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.pe_transmutation_stone",
+      "source_sha256": "f0b6dd855c80cf12151d2c7c4e52daee6f09fceb950333f0360e0d9cb80e32ff",
+      "ru": "Стол трансмутации позволяет изучать состав материалов и разбирать другие вещи, чтобы создавать нужные. На входе земля — на выходе алмазы!",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "projecte",
+      "key": "pe.manual.introduction",
+      "source_sha256": "e22a770aaa5948d6d6fead52b879683753cc156c30343714f411cb09f7085608",
+      "ru": "Открыв эту книгу, вы сделали первые шаги к званию высшего алхимика. Возможно, вам надоела однообразная работа; возможно, нужна сила для... некоторых целей; а может, хочется полезной и искусной магии. Алхимия поможет в любом случае. Но сначала — немного истории...    Искусство алхимии известно с древности. Его открыл x3n0ph0b3 и постепенно совершенствовал. После ухода x3n0ph0b3 дело продолжил ученик Pahimar, но его методы понравились не всем. Между двумя лагерями началась война под крики «ленивые читеры» и «EE2 OP!!!!!!». Последователи x3n0 уже потеряли надежду, когда странник MozeIntel увёл их в подполье: он изучил и воспроизвёл труды x3n0, сохранив старое искусство. Позже Moze отошёл от дел по загадочным причинам, названным им «IRL», и передал работу увлечённому ученику SinkillerJ. Sin не только примирил оба лагеря, позволив им сосуществовать, но и собрал совет хранителей старого искусства:    Williewillus — повелитель рефакторинга    Blubberbub — архивариус алхимических ценностей    Lilylicious — госпожа маленьких больших вещей    Теперь мы, совет алхимиков, делимся с вами знаниями и приветствуем вас, юный алхимик, в мире ProjectE.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "reccomplex",
+      "key": "commands.rc.large.error",
+      "source_sha256": "e6ded30512dce9d2c4da33ff7d97d0a0624d0c177198bb34ff9f98c484c3e5bd",
+      "ru": "Выделенная область слишком велика! Даже если бы это было допустимо, выполнение команды, вероятно, заняло бы несколько дней!",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "reccomplex",
+      "key": "reccomplex.structure.dependencies.tooltip",
+      "source_sha256": "4a105a39d1597818a398f76c2c106f516afb4b6624ed4e4b8f70d4e686d747ce",
+      "ru": "При невыполнении условия структура не появится.<br>Проверку можно<br>не использовать, но она полезна<br>для структур из модов.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "reccomplex",
+      "key": "reccomplex.structure.deleteOther.tooltip",
+      "source_sha256": "de9fe9b4aa64ce929340cea8a4524928467d0325c9841d0f11de80b80f073b90",
+      "ru": "Важно: структуры из папки %s<br>имеют приоритет загрузки<br>над структурами из папки %s.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "reccomplex",
+      "key": "reccomplex.gui.random.weight.tooltip",
+      "source_sha256": "fcec4a2186142d5eb960d075be49496400e2e260a1c22a0fda1c75d346fefce5",
+      "ru": "Вес элемента при случайном выборе.<br>§achance = weight / sum_of_all_weights§r<br>Удвоение веса означает<br>удвоение вероятности.<br>Введите D для значения по умолчанию.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "reccomplex",
+      "key": "reccomplex.inventorygen.dependencies.tooltip",
+      "source_sha256": "4f0cc1ad61a1d022370e83e32e74db41897e5abe4925dcd17ad95ede09829124",
+      "ru": "При невыполнении условия таблица добычи не сработает.<br>Проверку можно<br>не использовать, но она полезна<br>для структур из модов.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "reccomplex",
+      "key": "reccomplex.placer.baseline.tooltip",
+      "source_sha256": "5f759db72f0c0d8a48f90d1a65d0c71c9b975508dffb9071b5a6dbae656313da",
+      "ru": "Высота поверхности внутри структуры.<br>При значении 0 первый ряд<br>блоков находится на уровне поверхности.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "reccomplex",
+      "key": "reccomplex.placer.factor.priority.tooltip",
+      "source_sha256": "2dd1514f1fbcbe89da5b7d72914191036fbbe5dab2f4ad8f7a2b9e8cdb182888",
+      "ru": "Приоритет, с которым<br>учитывается этот фактор.<br>Вес возводится в эту степень:<br>weight ^ priority",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "reccomplex",
+      "key": "reccomplex.placer.factors.limit.ray.weight.tooltip",
+      "source_sha256": "6e868e068c52f8064b43cad9643b56aea7c8fa0f8250954dd1d0be52524b8783",
+      "ru": "Коэффициент допустимости места.<br>(0 — не генерировать, 1 — генерировать).<br>Выберите ignore, чтобы только сместить<br>позицию, не меняя допустимость.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.integration.tooltip",
+      "source_sha256": "36a8a9a48fb01d48ebf647b963e7c8e6e728f55f2cf14da6a3d7bd98d3aced2b",
+      "ru": "Включает или отключает интеграции с другими модами. Учтите: интеграции разных модов могут быть не сбалансированы между собой!",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.controls.customControls.tooltip",
+      "source_sha256": "8db9b3c2133457003662a0a12f8eaf690b650425815e10503fab59d973b128ff",
+      "ru": "При включении полёт и снижение используют заданные здесь коды клавиш. Иначе используются обычные клавиши прыжка и приседания.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.controls.doubleTapSprintInAir.tooltip",
+      "source_sha256": "fd5032818ee708f3aa68815b2523a4c6859f91d1c1daffcde706e3b195a2f973",
+      "ru": "Двойное нажатие клавиши движения вперёд включает бег и при полёте на ранце. Это удобный способ включать ускорение в воздухе; обычная клавиша бега тоже работает.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.aesthetics.enableArmor3DModels.tooltip",
+      "source_sha256": "46545c5170109fc0255eed5f1dcf6791e533de71da4b9d5a8fa5c6473c27c7ec",
+      "ru": "Показывает надетые реактивные ранцы и флаксовые хранилища как 3D-модели брони. Иначе используются плоские текстуры.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.gui.HUDOffsetX.tooltip",
+      "source_sha256": "6e246d7c670095b75bd4d69ab536d8302a3ef36bcb4986b1e954c5f147cd7af6",
+      "ru": "Горизонтальный сдвиг HUD; значение может быть отрицательным.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.gui.showExactEnergyInHUD.tooltip",
+      "source_sha256": "f471d6a7a00278ebad79c7b159fe23bcbf5f9718f35620214e38a892545c78d5",
+      "ru": "Показывает в HUD точный запас RF вместо одних процентов.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.tuning.energyPerTickIn.tooltip",
+      "source_sha256": "de90eb076b7ebd25824a4831a66959e118a48b02eb806ba768e729321216a2c5",
+      "ru": "Количество энергии, принимаемое ранцем/флаксовым хранилищем от внешних источников за тик.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.tuning.energyPerTickOut.tooltip",
+      "source_sha256": "ba13fc0a540dd12bea923047dbf43feafe9396691d641e9b7b1d9fd450b362c0",
+      "ru": "Количество энергии, отдаваемое ранцем/флаксовым хранилищем за тик. Также определяет скорость зарядки других предметов.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.tuning.armorReduction.tooltip",
+      "source_sha256": "a79f084ae94c61a0ab5a1c7d5b4ea664648187e445b02c8bb753526079c808fb",
+      "ru": "Защита бронированного ранца/флаксового хранилища от урона. Чем выше значение, тем сильнее защита.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.tuning.accelVertical.tooltip",
+      "source_sha256": "60ddb3837d44996bdbce47919643df53f93a8b2ff7721f43c139d0083bc64c8d",
+      "ru": "Вертикальное ускорение ранца: каждый тик настолько увеличивается вертикальная скорость, пока не достигнет максимума.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.tuning.speedSideways.tooltip",
+      "source_sha256": "2176369ce6d727241bbe17409953afb0d189b50ec7166da1be386b1d4bc673bd",
+      "ru": "Скорость бокового движения при полёте на ранце. Особенно заметна в режиме зависания.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.tuning.sprintSpeedModifier.tooltip",
+      "source_sha256": "b348eb6f065641dacc5b945ea094d986a9f4e409121548a9b2f5950b9e39c553",
+      "ru": "Ускорение ранца при движении вперёд с бегом. При 1.0 дополнительного эффекта нет, кроме обычного ускорения Minecraft.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.tuning.sprintEnergyModifier.tooltip",
+      "source_sha256": "641eda5c100d09ec9e3db820ba49c627652c717b3ffb0dc9ceacbd9df47b4329",
+      "ru": "Множитель расхода энергии ранца при беге. При 1.0 бег не увеличивает энергопотребление.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.tuning.emergencyHoverMode.tooltip",
+      "source_sha256": "c95e9997406f9e7d2a7bc587afd90d3fccf9c52349e6c11b475e7410964a9a27",
+      "ru": "Разрешает автоматически включать зависание, когда падение угрожает владельцу ранца смертью.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.tuning.enchantability.tooltip",
+      "source_sha256": "7e5358c9d3c08446f0bf91798903287b1be445a279a0d647a7bd973c09ab33a0",
+      "ru": "Зачаровываемость ранца/флаксового хранилища. При 0 чары наложить нельзя.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "simplyjetpacks",
+      "key": "config.simplyjetpacks.misc.joinAdvancements.tooltip",
+      "source_sha256": "8c0cfc2bb65d53b4d22abe01de39784d24f2c215cd06e1e4d167617ee743506a",
+      "ru": "Выдаёт несколько достижений при первом входе в мир.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "bq_standard",
+      "key": "bq_standard.importer.adv_json.desc",
+      "source_sha256": "529303c77221810ec129192673598ea2e9e21dd7b0480ec9dfd83c3efd499c62",
+      "ru": "Импортирует достижения Minecraft из JSON.%n%nВНИМАНИЕ: для правильного импорта файлы должны находиться в исходных папках Minecraft или Triumph!",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "thaumcraft",
+      "key": "research.METALPURIFICATION.stage.2",
+      "source_sha256": "6de07ae5b4d42df38aac9a328abcaa46b2da810d83b8a04647af7f4a0e85287f",
+      "ru": "Как я и надеялся, удалось создать алхимический рецепт очистки металлических руд в самородные кластеры. Их переплавка даёт вдвое больше слитков, чем обычная руда, — значит, можно реже спускаться в шахты. Рецепт универсален и подходит для разных металлических руд, которые мне удастся найти.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "thaumcraftfix",
+      "key": "thaumcraftfix.text.loader.missingMixin",
+      "source_sha256": "36a6961235c95209e47c920cfe0fcd86eac9d449688765e728ad7d361c547428",
+      "ru": "Должна быть установлена совместимая версия MixinBooter или FermiumBooter (или обоих).",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.command.fixaura.warn_rng_failed",
+      "source_sha256": "a47bd87f49475e94bb85ec8abd92e198088b1409bd3aa3974ca49bc928022ce7",
+      "ru": "ПРЕДУПРЕЖДЕНИЕ: генератор случайных чисел выдал неожиданные значения. Аура будет восстановлена, но может отличаться от той, что возникла при первоначальной генерации мира.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.command.ward.not_server",
+      "source_sha256": "b2e88ee7ce418e4e031220b5ac4ac84629fd395b5709080cb34fe1d140753e43",
+      "ru": "Ошибка: реализация защитных чар в чанке не соответствует серверной стороне. Такого быть не должно!",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.research.item_grate.0",
+      "source_sha256": "3015d52119b387574e89e8a4ab7e86c9062e2e1d122b2fadff71aa18f55ea324",
+      "ru": "Автоматизации иногда нужны необычные приспособления. Порой я хочу пропускать в область лежащие в мире предметы, не позволяя пройти себе и другим существам.<BR>Тауматургия здесь излишня: обычный люк с железной решёткой даст простую и полезную решётку для предметов.<BR>Её можно открывать и закрывать вручную или сигналом редстоуна: любой сигнал закрывает, отсутствие сигнала открывает. Через закрытую решётку не проходит ничто. Открытая пропускает предметы, но задерживает всё остальное, включая живых существ.<BR>С ней удобно использовать воронки и другие транспортные устройства: пока решётка открыта, они могут сбрасывать предметы прямо сквозь неё.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.research.thaumium_robes.0",
+      "source_sha256": "a6edd0daa895a68e7d3fa919fd90a189bdcdc2d57a50d9d38820229609ac045f",
+      "ru": "Мантии из зачарованной ткани давно мне доступны, но теперь кажутся §oнедостаточно надёжными.§r Они почти не защищают от здешних существ. Опасности не должны мешать исследованиям, но пренебрегать защитой было бы глупо. К счастью, недавно изобретённый таумий может улучшить мои одеяния.<BR>Его уникальная магическая проводимость усилит зачарованную ткань и поможет в колдовстве. Металл также даст больше защиты от ударов — возможно, даже нематериальных.<BR>Для новых одеяний нужны подходящие рецепты наполнения. Заодно стоит обновить их облик: достойный тауматург сочетает полезность, эффективность и стиль.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.research.thaumium_robes.2",
+      "source_sha256": "d130be6ba48a94e6debff7a6d7c73768b769bf328c3013009ef45189bbcb4e47",
+      "ru": "Маски таумиевой крепостной брони стоит приспособить и к одеяниям адепта. Они сохраняют свои особые свойства и добавляются обычным магическим наполнением. Встроенные очки откровения остаются в капюшоне после установки маски.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "thaumicaugmentation",
+      "key": "thaumicaugmentation.research.glass_tube.1",
+      "source_sha256": "4d5700913ebca85befda7e1d1b44f0aae085cb472896db55d00dd199618f3cec",
+      "ru": "Дальнейшее изучение эссенции позволило переработать обычные трубы. Защитная магия запечатывает щели: новая труба полностью прозрачна, но эссенция не просачивается и не расплавляет её.<BR>Стеклянные трубы работают как обычные, зато проходящую эссенцию видно без резонатора. Это поможет разобраться в работе трубопровода.<BR>Более сложные трубы со встроенными механизмами и клапанами всё ещё требуют прочного металла. Но они соединяются со стеклянными трубами, а перчатка заклинателя по-прежнему позволяет соединять и разъединять их сегменты.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.dimension_id.tooltip",
+      "source_sha256": "c806cec120af8c8bedd6e1bcca9fb8ed33945cdc1caf42b4f12e92e55fa6e35e",
+      "ru": "ID измерения Сумеречного леса. Измените при конфликте с другим модом.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "c806cec120af8c8bedd6e1bcca9fb8ed33945cdc1caf42b4f12e92e55fa6e35e"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.dimension_seed.tooltip",
+      "source_sha256": "2afb364dd40dcf668bee34e838e066084eba468116efc59455834b50f1a6de95",
+      "ru": "Если задан, заменяет обычный сид мира при генерации частей измерения Сумеречного леса.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "2afb364dd40dcf668bee34e838e066084eba468116efc59455834b50f1a6de95"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.compat.tooltip",
+      "source_sha256": "766ee69a1dc8c4c9af50e26a58c8088b2a3c139cac88d4cddb9236ebd252e03c",
+      "ru": "Включает интеграции Сумеречного леса с другими модами. Отключите, если они не нужны или вызывают сбои.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "766ee69a1dc8c4c9af50e26a58c8088b2a3c139cac88d4cddb9236ebd252e03c"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.canopy_coverage.tooltip",
+      "source_sha256": "be1fd78ead45435a4d0c779609adf0d90f51bef38ed78d451055bee3d88d393f",
+      "ru": "Плотность крон деревьев. Меньшие значения ускоряют генерацию чанков, но лес становится реже.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "be1fd78ead45435a4d0c779609adf0d90f51bef38ed78d451055bee3d88d393f"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.twilight_oaks.tooltip",
+      "source_sha256": "8790e8b5be29edea03d1830b07e08c43188ad428b4f07fb3c3067bf224266637",
+      "ru": "Частота сумеречных дубов в чанках. Чем больше значение, тем реже деревья и выше производительность.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "8790e8b5be29edea03d1830b07e08c43188ad428b4f07fb3c3067bf224266637"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.glacier_packed_ice.tooltip",
+      "source_sha256": "2224b83749eb39ea739f3176622e082c7d344e25af7d88465ab89fc04511a6cb",
+      "ru": "При true ледники Сумеречного леса состоят из плотного льда вместо обычного полупрозрачного. Это уменьшает число проверок освещения.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "2224b83749eb39ea739f3176622e082c7d344e25af7d88465ab89fc04511a6cb"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.silent_cicadas.tooltip",
+      "source_sha256": "5396810be445dcd57fa7d7ba6968c55ddfe1ee1f43a6465431776720b31a138f",
+      "ru": "Отключает звуки цикад при проблемах со звуковой библиотекой или если они просто надоедают.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "5396810be445dcd57fa7d7ba6968c55ddfe1ee1f43a6465431776720b31a138f"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.portals.tooltip",
+      "source_sha256": "8ac36c8435fac60cedd79b9fe397cfc4d18c4e38743bd40476676c8b7f386855",
+      "ru": "Полностью отключает создание порталов Сумеречного леса. Полезно администраторам, ограничивающим игру одним измерением.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "8ac36c8435fac60cedd79b9fe397cfc4d18c4e38743bd40476676c8b7f386855"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.portal_lighting.tooltip",
+      "source_sha256": "419f61126f9599e3f758e1c4dc177091ea6b8f15c733bbc2be4f22d09a5cb23e",
+      "ru": "При true молния, активирующая портал, ничего не поджигает. Для тех, кто не любит веселья.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "419f61126f9599e3f758e1c4dc177091ea6b8f15c733bbc2be4f22d09a5cb23e"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.uncrafting.tooltip",
+      "source_sha256": "4a8a9381f4264c6cf22b37943571fa5815aeaf512a5ed85ba20cbb6f805dfc6f",
+      "ru": "Отключает разбор предметов на разборочном верстаке. Можно использовать при ошибках совместимости рецептов, позволяющих получать лишние ресурсы.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "4a8a9381f4264c6cf22b37943571fa5815aeaf512a5ed85ba20cbb6f805dfc6f"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.animate_trophyitem.tooltip",
+      "source_sha256": "a01ba3c04da1ab8dcf75671b8e824815db31cd36f741c50afa0dd472629ad5af",
+      "ru": "Вращает трофейные головы на модели предмета. Не влияет на производительность. Для тех, кто не любит веселья.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "a01ba3c04da1ab8dcf75671b8e824815db31cd36f741c50afa0dd472629ad5af"
+    },
+    {
+      "namespace": "twilightforest",
+      "key": "twilightforest.config.loading_icon_enable.tooltip",
+      "source_sha256": "9108302370e2768f4471c4a5e7fa439735b51bd0e24e70e71376ba3fdba8bd03",
+      "ru": "Анимирует покачивание значка загрузки. Не влияет на производительность. Для тех, кто не любит веселья.",
+      "decision": "reviewed_translation",
+      "review": "whole_source_and_russian",
+      "expected_previous_sha256": "9108302370e2768f4471c4a5e7fa439735b51bd0e24e70e71376ba3fdba8bd03"
+    }
+  ]
+}
