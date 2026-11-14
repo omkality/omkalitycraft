@@ -1,0 +1,152 @@
+{
+  "schema": 1,
+  "date": "2026-11-14",
+  "scope": "Client runtime book labels; not a complete player release",
+  "issues": [
+    49,
+    174
+  ],
+  "artifact": {
+    "component": "OmkalityClient",
+    "version": "0.1.3",
+    "sha256": "0a5d000c64be041023e752de0e74141b57d3e86427b80b55181a95601de79077",
+    "runtime_classes": 17,
+    "unchanged_previous_classes": 14,
+    "core_version": "0.3.8",
+    "dj2fix_version": "0.1.4",
+    "core_and_dj2fix_unchanged": true,
+    "book_flag_default": false
+  },
+  "targets": [
+    {
+      "mod": "Bewitchment",
+      "version": "0.0.22.65",
+      "jar_sha256": "ab9206e0f2ba092da007a0c89f82b7727862ed58d63ef431f1cd237307cc8218",
+      "class": "com.bewitchment.common.integration.patchouli.ProcessorRitual",
+      "class_sha256": "d92164954547ce5279f0f3110e5bf80d707f9f2a27b2fedf104afacfa0c1ea8b",
+      "changed_constants": [
+        "Starting Cost: ",
+        "Running Cost: "
+      ]
+    },
+    {
+      "mod": "Roots",
+      "version": "3.1.9.2",
+      "jar_sha256": "ee43b8a6ee89100874b363b538bea3d7016f8ad5268fbb7e113493e8f7e8bb94",
+      "class": "epicsquid.roots.integration.patchouli.SpellModifierProcessor",
+      "class_sha256": "37a088d1a15eb3ec8bc52336d1bfe649c3585367df8d5e11ff145e7212ee6994",
+      "changed_constant": "Invalid cost.",
+      "missing_main_cost_is_not_free": true
+    }
+  ],
+  "fixtures": {
+    "jvm_conditions_per_build": 119,
+    "windows_resource_tests": 13,
+    "linux_docker_resource_tests": 13,
+    "negative_resource_controls": 12,
+    "source_boundary_files": 121,
+    "git_archive_identical_builds": 2,
+    "git_archive_build_image": "sha256:eade57feef3151e4d27bbe4120f718076317e45df303c96104f9c6d882b0c071",
+    "git_archive_build_readonly_nonroot_network_none": true,
+    "git_archive_owned_scope_removed": true,
+    "resource_fixture_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4"
+  },
+  "native": {
+    "client": "Windows DJ2 2.23.4 Forge14.23.5.2860",
+    "server": "isolated Linux Docker",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "server_memory_mib": 6144,
+    "server_cpus": 4,
+    "observation_strict_mod_count": 259,
+    "ordinary_strict_mod_count": 258,
+    "same_jvm_original_bytecode_oracle": true,
+    "recipe_numeric_values_unchanged": true,
+    "locale_checks": [
+      {
+        "registered_rituals": 37,
+        "labels_compared": 74,
+        "other_processed_values_unchanged": 777,
+        "registered_power_values_unchanged": true,
+        "original_bytecode_oracle": true,
+        "locale": "ru",
+        "book_entries": 447,
+        "page_build_errors": 0,
+        "modifier_card_oracles": 386,
+        "modifier_processed_values_compared": 2702,
+        "missing_main_cost_occurrences": 2,
+        "visible_missing_main_cost_occurrences": 1,
+        "cached_cost_labels": 70
+      },
+      {
+        "registered_rituals": 37,
+        "labels_compared": 74,
+        "other_processed_values_unchanged": 777,
+        "registered_power_values_unchanged": true,
+        "original_bytecode_oracle": true,
+        "locale": "en",
+        "book_entries": 447,
+        "page_build_errors": 0,
+        "modifier_card_oracles": 193,
+        "modifier_processed_values_compared": 1351,
+        "missing_main_cost_occurrences": 1,
+        "visible_missing_main_cost_occurrences": 1,
+        "cached_cost_labels": 70
+      },
+      {
+        "registered_rituals": 37,
+        "labels_compared": 74,
+        "other_processed_values_unchanged": 777,
+        "registered_power_values_unchanged": true,
+        "original_bytecode_oracle": true,
+        "locale": "ru-restored",
+        "book_entries": 447,
+        "page_build_errors": 0,
+        "modifier_card_oracles": 386,
+        "modifier_processed_values_compared": 2702,
+        "missing_main_cost_occurrences": 2,
+        "visible_missing_main_cost_occurrences": 1,
+        "cached_cost_labels": 70
+      }
+    ],
+    "cached_book_labels_require_full_resource_reload_after_locale_change": true,
+    "all_447_entries_rebuilt_in_each_checked_locale": true,
+    "no_probe_cold_launch": true,
+    "ordinary_checks": {
+      "cold_join": true,
+      "roots_book_opened_from_held_item": true,
+      "bewitchment_book_opened_from_held_item": true,
+      "book_gates_preserved": true,
+      "rejoin": true,
+      "inventory_slots_preserved": 5,
+      "inventory_nbt_preserved": true,
+      "health": 20,
+      "creative": false,
+      "gui_open_after_rejoin": false,
+      "unattended_lab_pause_on_lost_focus": false,
+      "repeat_join_millis": 3585
+    },
+    "client_exit": 0,
+    "server_exit": 0,
+    "server_oom": false,
+    "crash_reports": 0,
+    "owned_scopes_removed": true,
+    "auth_cleanup": true,
+    "baseline_warning": "PlusTiC optional Construct Armory missing superclass also present before these changes; no new book Mixin failure"
+  },
+  "layout": {
+    "measured_ritual_labels": 70,
+    "usable_width_pixels": 90,
+    "maximum_width_pixels": 66,
+    "maximum_glyph_bottom": 151,
+    "page_height": 156,
+    "every_page_visually_reviewed": false
+  },
+  "limits": [
+    "No player manifest, Release or VPS switch",
+    "No full gameplay regression of all mod mechanics",
+    "No Linux or macOS graphical game acceptance in this batch",
+    "Packaged translation and coherent client/server/world rollback remain separate acceptance work in issue171",
+    "Raw observation fixtures and upstream classes remain private and are not shipped"
+  ],
+  "ready_for_players": false
+}
