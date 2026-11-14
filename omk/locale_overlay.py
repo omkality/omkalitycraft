@@ -8,6 +8,9 @@ MAX_LANG_BYTES = 2 * 1024**2
 FORMAT = re.compile(
     r"%(?:%|n|(?:(\d+)\$)?[-#+ 0,(<]*\d*(?:\.\d+)?(t[A-Za-z]|T[A-Za-z]|[A-Za-z]))"
 )
+# Some unformatted mod descriptions contain prose such as "20% chance".
+# Declaration is per reviewed key; never infer literal mode for an entire file.
+LITERAL_PERCENTAGE = re.compile(r"(?<!%)%(?!%)(?= +[A-Za-z]{2})")
 
 
 def parse_lang(raw: bytes) -> dict[str, str]:
@@ -167,6 +170,17 @@ def reuse_reviewed_lang_values(
     )
 
 
+def _translation_format_matches(original, translated, literal_percentage):
+    if literal_percentage:
+        if not LITERAL_PERCENTAGE.search(original) or original.count(
+            "%"
+        ) != translated.count("%"):
+            return False
+        original = LITERAL_PERCENTAGE.sub("%%", original)
+        translated = LITERAL_PERCENTAGE.sub("%%", translated)
+    return format_signature(translated) == format_signature(original)
+
+
 def render_lang(
     base: bytes,
     english: bytes,
@@ -175,8 +189,14 @@ def render_lang(
     additions=None,
     removals=(),
     expected_source_sha256=None,
+    literal_percentage_keys=(),
 ) -> bytes:
-    """Preserve unrelated lines; each changed key must match the new English contract."""
+    """Preserve unrelated lines and the pinned source/format contract.
+
+    Literal percentages require explicit reviewed keys and source guards. Callers
+    must verify the mod's text consumer; this is not automatic format detection.
+    Actual argument directives remain checked, including in mixed prose.
+    """
     old, source = parse_lang(base), parse_lang(english)
     updates, additions, removals = (
         dict(updates or {}),
@@ -193,13 +213,23 @@ def render_lang(
         raise ValueError("Ambiguous or unknown translation change")
     changed = {**updates, **additions}
     _check_source_guards(source, changed, expected_source_sha256)
+    if not isinstance(literal_percentage_keys, (tuple, set, frozenset)) or any(
+        not isinstance(key, str) for key in literal_percentage_keys
+    ):
+        raise ValueError("Invalid literal percentage keys")
+    literal_keys = set(literal_percentage_keys)
+    if not literal_keys <= changed.keys() or (
+        literal_keys and expected_source_sha256 is None
+    ):
+        raise ValueError("Literal percentages require changed keys and source guards")
     for key, value in changed.items():
         if (
             key not in source
             or not isinstance(value, str)
             or any(c in value for c in "\r\n\0")
-            or format_signature(value) != format_signature(source[key])
         ):
+            raise ValueError("Translation does not match the new source contract")
+        if not _translation_format_matches(source[key], value, key in literal_keys):
             raise ValueError("Translation does not match the new source contract")
     result = []
     for line in base.decode("utf-8-sig").splitlines(keepends=True):
