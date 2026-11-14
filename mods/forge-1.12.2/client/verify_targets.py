@@ -10,6 +10,14 @@ from pathlib import Path
 def verify_book_resources(resources: Path) -> int:
     """Reject legacy pack fallback and accidentally inaccessible helper packages."""
     try:
+        for relative in (
+            "pack.mcmeta",
+            "mixins.omkalityclient.books.json",
+            "assets/omkalityclient/lang/en_us.lang",
+            "assets/omkalityclient/lang/ru_ru.lang",
+        ):
+            if b"\r" in (resources / relative).read_bytes():
+                raise ValueError("Client book resources require canonical LF bytes")
         metadata = json.loads((resources / "pack.mcmeta").read_bytes())
         if (
             type(metadata["pack"]["pack_format"]) is not int
