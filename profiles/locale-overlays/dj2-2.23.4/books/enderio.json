@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "base_owned_profile_sha256": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+  "game_tested": false,
+  "ready_for_players": false,
+  "namespace": "enderio",
+  "scope": "Reviewed ordinary-game book fields and intentional literals; no full borrowed locale or game payload",
+  "reviewed_entries": 14,
+  "translated_entries": 13,
+  "source_files": [
+    {
+      "path": "assets/enderio/book/en_us/modifiers/pickup.json",
+      "sha256": "9945e12375a8175021cfe27fb75546fad07dd8dc0f07ce66e796a71d912f0a78",
+      "jar": "EnderIO-1.12.2-5.3.72.jar",
+      "jar_sha256": "9b5e7756af35a191de8bc8f010c0f7c7ffc2e1e056a69ec265d1dd5ce90d19b4"
+    },
+    {
+      "path": "assets/enderio/eiobook/en_us/intro/welcome.json",
+      "sha256": "4e48da8c33b2e158dc9e0c1078477be372c0ba87e369841eacee4c21a87d464c",
+      "jar": "EnderIO-1.12.2-5.3.72.jar",
+      "jar_sha256": "9b5e7756af35a191de8bc8f010c0f7c7ffc2e1e056a69ec265d1dd5ce90d19b4"
+    },
+    {
+      "path": "assets/enderio/eiobook/en_us/starting/p11a_randalf.json",
+      "sha256": "29e69e993c2a3d65975c377ef97f155eb2774b74714b127cb8458ee0009697ba",
+      "jar": "EnderIO-1.12.2-5.3.72.jar",
+      "jar_sha256": "9b5e7756af35a191de8bc8f010c0f7c7ffc2e1e056a69ec265d1dd5ce90d19b4"
+    },
+    {
+      "path": "assets/enderio/eiobook/en_us/starting/p11b_randalf.json",
+      "sha256": "a085206a31eb26f45706836e6c9f6f616995bd19d0793c0da1b6b7a0951c65bc",
+      "jar": "EnderIO-1.12.2-5.3.72.jar",
+      "jar_sha256": "9b5e7756af35a191de8bc8f010c0f7c7ffc2e1e056a69ec265d1dd5ce90d19b4"
+    },
+    {
+      "path": "assets/enderio/eiobook/en_us/starting/p1_intro.json",
+      "sha256": "3be28c8ae4a0fbfc6c4b9de50bde6fabba270a07efb83fc14703b83d3194c2be",
+      "jar": "EnderIO-1.12.2-5.3.72.jar",
+      "jar_sha256": "9b5e7756af35a191de8bc8f010c0f7c7ffc2e1e056a69ec265d1dd5ce90d19b4"
+    },
+    {
+      "path": "assets/enderio/eiobook/en_us/starting/p3_chassis.json",
+      "sha256": "4c992977cc152ce9adaccdc6be65cdade6499ed6a0c1efa082b180a69015c850",
+      "jar": "EnderIO-1.12.2-5.3.72.jar",
+      "jar_sha256": "9b5e7756af35a191de8bc8f010c0f7c7ffc2e1e056a69ec265d1dd5ce90d19b4"
+    }
+  ],
+  "entries": [
+    {
+      "source_file": "assets/enderio/book/en_us/modifiers/pickup.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "be26819780967e25eda0f11df0c61407181deb81f92f3649215015c24b55905e",
+      "ru": "Это мое, все мое!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/book/en_us/modifiers/pickup.json",
+      "pointer": "/effects/0",
+      "source_sha256": "1cc7a2d26a5527947d97c7718e2765cd07e1573ddc29bc80c8059bcccfe65f50",
+      "ru": "Телепортирует добытые предметы прямо в ваш инвентарь.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/book/en_us/modifiers/pickup.json",
+      "pointer": "/effects/1",
+      "source_sha256": "ddb0e7df1701b6fdcb5df7aa8f41a743d60ea77689214b51c4b771652e164878",
+      "ru": "Конфликты с одноименной чертой",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/book/en_us/modifiers/pickup.json",
+      "pointer": "/effects/2",
+      "source_sha256": "2f6182b257edd2a1c4d1933175d18e3b1b2958b4df4f26b1878406ceca88edbe",
+      "ru": "Конфликты с «Исчезновением»",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/eiobook/en_us/intro/welcome.json",
+      "pointer": "/title",
+      "source_sha256": "81f069ce76d2d6455b34bb6279e0e9358a20644042573934766e7de718592860",
+      "decision": "preserve_source_literal",
+      "reason": "Ender_IO_mod_name_not_transliterated",
+      "consumer_contract": "intentional_literal"
+    },
+    {
+      "source_file": "assets/enderio/eiobook/en_us/intro/welcome.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "aef5323aff507c169120345930fbabdcb41a67acf93d5941775bb68716fdd4e1",
+      "ru": "Добро пожаловать в самое неполное руководство по Ender IO.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/eiobook/en_us/starting/p11a_randalf.json",
+      "pointer": "/title",
+      "source_sha256": "e5334760a7851b01141febaa9845fb26fc8a57dd940c5252fe647a32138a5560",
+      "ru": "История Рандальфа-мастера",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/eiobook/en_us/starting/p11a_randalf.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "62d6527f023f364166350ca5220c08b2f82281c416078d1c9be696ab8a6231fd",
+      "ru": "Давным-давно, ещё до появления деревенских жителей, жил Рандальф. Седьмой сын кузнеца Седобородого, он с детства учился ремеслу. Многие истории о нём забыты, но одно известно: он никогда не делал того, что просили заказчики. Закажут меч — получат ящик с инструментами и острым краем. Закажут мотыгу — получат большую коробку со светящейся штуковиной.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/eiobook/en_us/starting/p11b_randalf.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "090732a2a62bc99bb4b1dae7efd29be3bd8e830b45cbe8811fa1daaabe891a53",
+      "ru": "Его изделия до сих пор скрыты по Верхнему и даже Нижнему миру. То, что не захотели покупать; то, что он сам не хотел держать рядом; то, что просто положил и забыл. Возможно, вам попадутся его безумные изобретения. Если повезёт, они пригодятся в современных машинах. Но будьте осторожны: никогда не знаешь, что достанется...",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/eiobook/en_us/starting/p1_intro.json",
+      "pointer": "/title",
+      "source_sha256": "831d0f72d242b7d12d4ef15123d43145e97e95be5aba57cd150e434159aae202",
+      "ru": "Первые шаги",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/eiobook/en_us/starting/p1_intro.json",
+      "pointer": "/text/0/text",
+      "source_sha256": "6a5630f2214d92ebdf84d660277dcd5a2cd8bdb0e38ea9ff9c121be186d2434c",
+      "ru": "Освоить Ender IO несложно, но сначала стоит спуститься в шахту. Нужны железо, булыжник, печь-другая, кремень и доступ к слою бедрока.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/eiobook/en_us/starting/p1_intro.json",
+      "pointer": "/text/1/text",
+      "source_sha256": "5fd355bf58046b1987f94f0f21365d317188a220daf4adfc013b34671d666f77",
+      "ru": "Сначала создайте огниво. Спуститесь к бедроку и подожгите несколько его блоков. Сам бедрок не пострадает — он ведь вечен, — зато иногда отделятся крошечные зёрна бесконечности.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/eiobook/en_us/starting/p3_chassis.json",
+      "pointer": "/title",
+      "source_sha256": "1fbf67972d1ed05258ee2b3f8cb7c7f727d16cbc421c5f77341545995466e1fd",
+      "ru": "Создание вещи",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/enderio/eiobook/en_us/starting/p3_chassis.json",
+      "pointer": "/description/0/text",
+      "source_sha256": "a0d2f10cb82aaea9f7f64ab3fd7a6f43d6d99215e975f3fc4d51b4b5cfbdccaf",
+      "ru": "Теперь, когда у вас есть зёрна бесконечности, можно создать первый нужный предмет — простой корпус машины.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    }
+  ]
+}

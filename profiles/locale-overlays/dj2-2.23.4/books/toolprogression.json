@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "base_owned_profile_sha256": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+  "game_tested": false,
+  "ready_for_players": false,
+  "namespace": "toolprogression",
+  "scope": "Reviewed ordinary-game book fields and intentional literals; no full borrowed locale or game payload",
+  "reviewed_entries": 3,
+  "translated_entries": 3,
+  "source_files": [
+    {
+      "path": "assets/toolprogression/book/en_us/modifiers/magic_mushroom.json",
+      "sha256": "0509c8943ed3a43f469928174555e9af4d0083d7ecf92b0bd6297ac1645a3ccd",
+      "jar": "toolprogression-1.12.2-1.6.12.jar",
+      "jar_sha256": "077e0153a7347e86e75970cc900f09323b89b01effb6fb322db2591137eb354e"
+    }
+  ],
+  "entries": [
+    {
+      "source_file": "assets/toolprogression/book/en_us/modifiers/magic_mushroom.json",
+      "pointer": "/effects/0",
+      "source_sha256": "ee8ae93809c6cf0a20e85798467ad7663e63f3f144efc5a90123c97f0f3ad737",
+      "ru": "Уровень добычи увеличен на один",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/toolprogression/book/en_us/modifiers/magic_mushroom.json",
+      "pointer": "/effects/1",
+      "source_sha256": "8e6211592b3d82db97d120cae695f86109143b882fd4775d795b01627dffb51e",
+      "ru": "Одноразовое использование",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    },
+    {
+      "source_file": "assets/toolprogression/book/en_us/modifiers/magic_mushroom.json",
+      "pointer": "/effects/2",
+      "source_sha256": "5b293cb987e72fa8f6fbb029e00cd227281376a07da01e3aa86ef28053859f6f",
+      "ru": "Волшебно!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "TConstruct_book_text"
+    }
+  ]
+}

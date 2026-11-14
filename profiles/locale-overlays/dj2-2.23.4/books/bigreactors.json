@@ -1,0 +1,1867 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "base_owned_profile_sha256": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+  "game_tested": false,
+  "ready_for_players": false,
+  "namespace": "bigreactors",
+  "scope": "Reviewed ordinary-game book fields and intentional literals; no full borrowed locale or game payload",
+  "reviewed_entries": 193,
+  "translated_entries": 181,
+  "source_files": [
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/categories/intro.json",
+      "sha256": "8666935c9a82337527b263731c32950ad3e16b4c8a3f56510a239356ec27a601",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/categories/misc.json",
+      "sha256": "68774b325a1cf446c76247820992362b5d73c55588636750b98ff432b33e0f51",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/categories/reactor-operational_mode.json",
+      "sha256": "c7798835293fda62d04ffb58e662e0233af0d7cd7275c6a78832bb79fb7c857f",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/categories/reactor-parts.json",
+      "sha256": "dc8dd9863ed5cded6f851a036c5e87036c9c9ffa71e92470ca6cf0499bd53be3",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/categories/reactor.json",
+      "sha256": "1fc17a32225ba2ae6235837f2d27feaeb294dded9d216884141c578f5c7f0be0",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/categories/turbine-parts.json",
+      "sha256": "6e9b4eb6dc9331629de79b1dc83b7546eb45d7987a7fd1f2ab6aef9b2719245e",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/categories/turbine.json",
+      "sha256": "c77286266d08dcda591e31229ca0af1f9a56ccc5290207a554feb875ea773fdf",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/first.json",
+      "sha256": "3e561e38e3e1a104bfc8958069b0f9df0e04e32076f8df276e4d5dee5142f795",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/ores.json",
+      "sha256": "fa2c05459195e4a33536f3fbce38c7573cd2c37fb0a1f89c5f1312538b5d182d",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/coolantsystem.json",
+      "sha256": "8abc71ecb91f93d65154676068ace08b900d2cd3aa57ebefce55592a11084ca1",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/powersystem.json",
+      "sha256": "21223ad09fb561001c1f9a4031bdf5f8d6e0a3a395f2fec073d97f27e475d263",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/wrench.json",
+      "sha256": "52320bcf7dfc78c2da45ef20779e6f8bfc46cc65972dfd73f6143cab90e5e2cf",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/active.json",
+      "sha256": "de41e00e1d725ab5369a1b1e997336b6e2f028d3a0b1218f4bf1578e0eee090c",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/innerworking.json",
+      "sha256": "9edf77abc6696ac4096b5c62db74f275d3960b678034bdd0fe1d63c4b3dc95d1",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/moderators.json",
+      "sha256": "c3e4153a91d49b88d3ad13dc24dbfb4a23f481b6f3e3c78d78b1e5354746982a",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-casing.json",
+      "sha256": "8f0a8e9a3b3d777af36e2030cb90775db6c2a268c4cedcf530bd620d5616d4b8",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-computerport.json",
+      "sha256": "6703028e9e830d69e6936ae48cce3aecb50a3c8460542a8ec9a240260b62723b",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-controller.json",
+      "sha256": "44ab54e6d325706654bec14ab7e30c6598107a0a99f14bcb87c98f54e477042c",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-controlrod.json",
+      "sha256": "9269836e58fb535a13c8883a1a8d5e683d7d871c0499d3cbbb9e6b45dc124529",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-creativewatergen.json",
+      "sha256": "847d691432eec5704b9b5510e272f32fb14478d03d56e62fe91437d52e414ad2",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgefluidport.json",
+      "sha256": "34e9e9afb017a7e1f273012d924e49bc5354c2931a705cb9b47881f9361e26a3",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap-tesla.json",
+      "sha256": "37a0abd5a39ed8171f1bb70d5966507804002c78276d548c36de0a9af115766a",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap.json",
+      "sha256": "bc410319814238e00ff1e7ae3bdc5e0f62a44a66b99988e0d3595929bc22db7c",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-fuelrod.json",
+      "sha256": "6b6e8bebdd1f105c41bc32b93e07445d01dbde67de17a26987d4a0d3ce53cf42",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-glass.json",
+      "sha256": "0a7ba3bc971e6b974899d77099bf64949b652b42fe6f66a6731a9f3eb790c6e1",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-redstoneport.json",
+      "sha256": "828b8ed791abfe76cc9e916341a892956f5edd58b5351609d3aac13573f0490b",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-solidaccessport.json",
+      "sha256": "527c69149cd5174ba83899de70293fd656eecc4b7e0b00dbabaaa0817c53464a",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/passive.json",
+      "sha256": "688f23d146a856979d6f42cacceb7355db85e4e3b2ae6ae62446e1fa72c0b220",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/reactants.json",
+      "sha256": "c1933e231e7237693121e5f813a0e1ad9bbfec3206910f5de99ecc8608dc6e5c",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/coils.json",
+      "sha256": "1b693f208ad3bce6cf0740cf4f7a69fe8df499dfdaf70b0269269cab10baba14",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/innerworking.json",
+      "sha256": "66777d37ac5775f1506f4842d7273445be91f88718fdeff0fe7850acc9d09408",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-casing.json",
+      "sha256": "d40a163caeefb7f44747667bdd63ccb89538bd9fb008b2a92cbbaa4fd9f4cbac",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-computerport.json",
+      "sha256": "79b30094788118a2f9a5c31d0082fe5127ada463388b1f614dc6f2ebb63c95e0",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-controller.json",
+      "sha256": "0ec0bd0f66d801767e27e290cc92c32a99fdcc585ca44cea837c7f779a479497",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-creativesteamgen.json",
+      "sha256": "5516e7a62343c6234d1b6ab4af994e533005a5368626e735c442f3ece5aa709c",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgefluidport.json",
+      "sha256": "834ebcf25087c877f6b9e6e76c89ad7aaec7c1bef2e6cd5563b6195f7fba0938",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap-tesla.json",
+      "sha256": "29dc280d72cdd4a1495c173a62ba0da4ada99106758b4f165ede0d883f751f5c",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap.json",
+      "sha256": "14471da06fcc4af42705000312bf5d3ddab37410552b85230b2310d5ceaa7ab0",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-glass.json",
+      "sha256": "71ca30473e790265911c0928e5835e999e1870d2b39914ed18b876353de0ae78",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorbearing.json",
+      "sha256": "17a1714cc1323d908855b9a42fae45c88374546e51f677b0a82fd8e91ee87958",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorblade.json",
+      "sha256": "1d4c6f5b29508a7233273c768155e10ad1c1b54027f02ef872493067432e38f8",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorshaft.json",
+      "sha256": "2cb728ba4ff5a54f5779301e622e06bb1f13e47c2e03088909d1804932e572d8",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/rotor.json",
+      "sha256": "8b2585f89729f41a52c806e4ac1eeb1cc0b789f66062087d0891afe70d84b583",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/templates/crafting-text.json",
+      "sha256": "ab021c2cf17a9f325a0c62fd9aeb2cf7acdd8f1c03dde882db059afa56fcf626",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/templates/crafting1x.json",
+      "sha256": "3a14157c1c57024018b94e5d43f9b8c7d28dc4e458154aec13da42afacd344a4",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/templates/crafting2x.json",
+      "sha256": "1ed28eade53536112bd5d333ad6ebb23524f7bf061cfafd13faac0d902c90ff2",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/templates/part_usage.json",
+      "sha256": "2c775ed6060d379553aeae0b476f8103c6a7f631ab95cb6098b4483dbbea9b2b",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/templates/spotlight-item.json",
+      "sha256": "f77bde8123eb04fc50b3b9a5b4b194f97ff41ecfb098e454ded8be0b55351ffd",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/templates/spotlight-smelting.json",
+      "sha256": "26ad1dfa547fdcb78af940b5d0a692854b64adf1e5065c254fdb5a79e6f58f33",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/templates/text-crafting.json",
+      "sha256": "0c760d82dca04df901d2d69ce744e771b723943131c8f0dfb4f4f3e203348cdd",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    },
+    {
+      "path": "assets/bigreactors/patchouli_books/erguide/en_us/templates/zcmultiblock.json",
+      "sha256": "2c4fb70605370008754d9dbd39d4e49b9734cad5f5a674f5a52663be7db8f2af",
+      "jar": "ExtremeReactors-1.12.2-0.4.5.68.jar",
+      "jar_sha256": "175d0317c0e6637d7dc8910e0126f204582656def61d6aef700a6180dc22f712"
+    }
+  ],
+  "entries": [
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/intro.json",
+      "pointer": "/name",
+      "source_sha256": "4b941993a936cef250f2b70e700a4d44233ed27942deac98fb2f54b623982922",
+      "ru": "Начало",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/intro.json",
+      "pointer": "/description",
+      "source_sha256": "6285c83e5617f40fe9a1bbd6472d7362479c8f3e6c2c62428f64f2770346ea72",
+      "ru": "В этом разделе содержится все, что вам нужно знать, чтобы построить свой первый реактор и начать производить энергию.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/misc.json",
+      "pointer": "/name",
+      "source_sha256": "641ca7cc3df03b2e3b61e705f37361a2e977c1d39fead96778d13694f3544200",
+      "ru": "Прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/misc.json",
+      "pointer": "/description",
+      "source_sha256": "5d5a67f068a8d678f2c3caacf8c58629e93901141e01406f670d75c7c7544bde",
+      "ru": "В этом разделе собраны темы, которые не совсем вписываются в другие категории.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/reactor-operational_mode.json",
+      "pointer": "/name",
+      "source_sha256": "9a83ddfc952d70cf5c20b76163ac29273fc47342e3595d15c03f6224efbaef92",
+      "ru": "Режим работы",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/reactor-operational_mode.json",
+      "pointer": "/description",
+      "source_sha256": "9e589042795bda0e51167637b9679260886f233e3f87967253ebc33bbca94423",
+      "ru": "Реактор работает в одном из двух режимов: с пассивным или активным охлаждением.$(br2)От режима зависит, что вырабатывает включённый реактор.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/reactor-parts.json",
+      "pointer": "/name",
+      "source_sha256": "d9b4cb22bb754aef5b909b5254608e8e2e4c1f4a8c90bfaecdf79b41260a9627",
+      "ru": "Детали реактора",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/reactor-parts.json",
+      "pointer": "/description",
+      "source_sha256": "7993aaa5c07e6cd71b6650fe1b5f6a8e23213c861387508bf85e5289d2339ef6",
+      "ru": "Реактор строится из перечисленных здесь деталей.$(br2)Одни обязательны, другие — нет. В статье каждой детали указаны требования, ограничения и обязательность её установки.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/reactor.json",
+      "pointer": "/name",
+      "source_sha256": "05fe24db5e03a4d68466dc763aac662eb735ea3c065949811d150270030b44e8",
+      "ru": "Реактор",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/reactor.json",
+      "pointer": "/description",
+      "source_sha256": "b53a72136cde2ca3d653e76d274af360df3154b08270c840e2d53381d0b66277",
+      "ru": "Реактор — многоблочная машина. Он либо напрямую вырабатывает энергию, либо испаряет теплоноситель, а полученный пар затем вращает ротор турбины.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/turbine-parts.json",
+      "pointer": "/name",
+      "source_sha256": "36fdbf6c84eafed04f47369ca63ee5dcf9137a684981fd98e5e44ee5f70df7a9",
+      "ru": "Детали турбины",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/turbine-parts.json",
+      "pointer": "/description",
+      "source_sha256": "e53c34c548585c440e3dc0a1e8947d196bfb58ffbef7ee42b07f06c3f82beccb",
+      "ru": "Турбину собирают из следующих деталей.$(br2)Одни обязательны, другие нет. На странице каждой детали указаны требования и ограничения.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/turbine.json",
+      "pointer": "/name",
+      "source_sha256": "a6c7ea748426fc6a44c2360fe9afa92baa5a7c725bd3149b4ada4955f342cc89",
+      "ru": "Турбина",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/categories/turbine.json",
+      "pointer": "/description",
+      "source_sha256": "02c3ca7d627aa3d9aa166407c2bcdb7e6b6fc3d6cbb9e85753be67941ea7c2f5",
+      "ru": "В этом разделе содержится все, что вам нужно знать о турбине и о том, как использовать ее для производства энергии.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/first.json",
+      "pointer": "/name",
+      "source_sha256": "b62f31fe63b7e751de3f62630022e4b07df5b36a0028b03dcce61c1d76720c77",
+      "ru": "Ваш первый реактор",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/first.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "22efa09442858a12facf377ce3a32df6af69aec73953f27b17b2a9ab3cb0ed00",
+      "ru": "Реактор — многоблочная машина для выработки энергии. И вырабатывает он её немало.$(br2)Многоблочная машина состоит из разных блоков, размещённых вплотную друг к другу.$(br2)Для создания и заправки реактора нужны йеллориумовые слитки. Добудьте йелоритовую руду и переплавьте её!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/first.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "0746cdda17a4617e9e9af564178d64f3b99228a874c1af99df42459c23e4ce6c",
+      "ru": "Для первого реактора создайте следующие базовые блоки:$(br2)$(li)22x корпус$(li)1x контроллер$(li)1x управляющий стержень$(li)1x топливный стержень$(li)1x порт доступа$(li)1x энергетическая розетка Redstone Flux$(br2)Стекло необязательно: его заменяет ещё один блок корпуса.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/first.json",
+      "pointer": "/pages/7/text",
+      "source_sha256": "328c8128f919a56b00faefbf8a9053e60364d27e818ed4713075f474983a80b0",
+      "ru": "Создав необходимые блоки, соберите свой первый реактор.$(br2)Разместите их по схеме ниже: топливный стержень в центре, блок корпуса под ним.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/first.json",
+      "pointer": "/pages/8/text",
+      "source_sha256": "e81a33b5e2862bfa4bf98b1be0fcbc1bd1b3d0e30e182d3ff19f12750b565699",
+      "ru": "Если всё правильно, после установки последнего блока реактор соберётся. Щёлкните ПКМ по контроллеру, чтобы открыть интерфейс.$(br2)Если ничего не произошло, щёлкните ПКМ по любому установленному блоку: сообщение об ошибке подскажет причину. После исправления реактор либо соберётся, либо сообщит о следующей ошибке.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/first.json",
+      "pointer": "/pages/9/text",
+      "source_sha256": "78cd264f626427d88dfede2feee52ee6a145291cf0554940e9229df645290bc3",
+      "ru": "Реактор готов — пора добавить топливо.$(br2)Возьмите йеллориумовые слитки и откройте порт доступа ПКМ. Переведите его в режим ввода и положите слитки во входной слот.$(br2)Реактор быстро превратит слитки в топливо.$(br2)Откройте интерфейс контроллера и включите реактор!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/first.json",
+      "pointer": "/pages/10/text",
+      "source_sha256": "90a895cc48729a8f3aec99a22da263c3d3c2c87c5b62c52f0fdedc32c82ff6d4",
+      "ru": "По мере нагрева реактор вырабатывает энергию и заполняет внутренний буфер.$(br2)Чтобы использовать её, подключите энергетическую трубу или машину к энергетической розетке.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/first.json",
+      "pointer": "/pages/11/text",
+      "source_sha256": "72a745023e8abd2dd1f19d7d01dfcdf90e1e25821e2e8332c2382b451f10f850",
+      "ru": "Поздравляем, ваш первый реактор построен!$(br2)Он обеспечит начальные потребности в энергии. Прочтите остальное руководство, прежде чем строить новые реакторы и турбины.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/ores.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "ec66a59add8ad7c057c4329c8bf88400e4e547f71e60f74ffa72105ef3843d95",
+      "ru": "Обычный источник реакторного топлива.$(br2)Йелорит встречается почти во всех биомах. Переплавьте его в йеллориумовые слитки.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/ores.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "b1f5fb90214b7f6a796d19aa96ae95a7994f9d722ae990b2cb8feb6a7ce9c500",
+      "ru": "Йеллориумовые слитки и блоки, помещённые в порт доступа, превращаются в реакторное топливо.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/ores.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "947d7305c5a0e52d7585f6641cf46161a0a66966b56a21c6d4c1e9ed323d13e1",
+      "ru": "Эта руда встречается лишь в самых отдалённых уголках ада.$(br2)Поищите наверху. Или внизу.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/ores.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "10bf80fd080d00930fd193a4cee1d33b0a81c91c4a28b5a3751180cd00900090",
+      "ru": "Кристаллы бенитоита обладают необычными свойствами, применения которым вы пока не нашли.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/ores.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "9b1c5d848e7dc4a7c170e7990e8a94c890f0a4cdbe5a247fa93981e580de1a81",
+      "ru": "Вам нужно дойти до конца своего путешествия, чтобы найти эту неуловимую руду.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/intro/ores.json",
+      "pointer": "/pages/5/text",
+      "source_sha256": "2ff7ddfbf286a1eeb67f354e5c7a3f31c4c4a572de72bbed357f5033713eb47b",
+      "ru": "Кристаллы блестящие и красивые, но вы до сих пор не знаете, как их можно использовать в своих целях.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/coolantsystem.json",
+      "pointer": "/name",
+      "source_sha256": "ed32de75b7ff2f2e960223ff2f6e58f4f8746eeb43d5ffa8dc72d4893b5e3b1c",
+      "ru": "Система охлаждения",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/coolantsystem.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "ed6330e8f9ce742b6b68c8dca1e956dce11a47eb243411e9cd4cfb6847fc0143",
+      "ru": "Связка реактора и турбин с $(l:reactor/active)активным охлаждением$(/l) использует тепло реактора, чтобы испарять теплоноситель. Полученный пар вращает роторы турбин и позволяет вырабатывать энергию.$(br2)$(bold)Теплоноситель$() — это подходящая жидкость, которую можно закачать во внутренний резервуар реактора через $(l:reactor/part-forgefluidport)жидкостный порт$(/l) в режиме ввода.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/coolantsystem.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "8e145d10f89a1f2736f446d5bb6f4b28693173b1c0b517cca05a975cd90a883c",
+      "ru": "$(bold)Пар$() образуется при испарении теплоносителя в реакторе. Через $(l:reactor/part-forgefluidport)жидкостные порты$(/l) его подают в турбину для вращения ротора. Затем он конденсируется в исходный теплоноситель, и цикл повторяется.$(br2)В реакторах и турбинах используются только подходящие теплоносители и пары.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/coolantsystem.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "cad2d5b927522a9d9c17323a9012b33eff80fcc1a947514ae38c3f6748092606",
+      "ru": "По умолчанию Extreme Reactors использует воду как теплоноситель, превращающийся в пар.$(br2)Другие моды и сборки могут добавлять свои жидкости, изменять или удалять стандартные.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/powersystem.json",
+      "pointer": "/name",
+      "source_sha256": "da11c15e5392d813e375b0498a67b30be63f72996b54d13be2d68a8eaad7cdb5",
+      "ru": "Энергетические системы",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/powersystem.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "3f3d8d07a820259be55979bf28d93d18dad3364e57d6911f40b5950b3fea4fdf",
+      "ru": "Генераторы Extreme Reactors не привязаны к одной энергосистеме Minecraft.$(br2)Энергия хранится во внутреннем буфере, а при извлечении энергетические розетки преобразуют её в нужный формат.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/powersystem.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "12e8cdd89fa4a8289787fb6b95661b172890bfa8ddc37cc32f204e33bd0a1589",
+      "ru": "Энергетические розетки реактора или турбины определяют систему выдаваемой энергии.$(br2)В мод входит $(l:reactor/part-forgepowertap)розетка Forge Energy$(/l), выдающая единицы $(bold)Forge Energy$().$(br2)Другие системы можно поддержать, добавив новые типы розеток.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/wrench.json",
+      "pointer": "/name",
+      "source_sha256": "e686e6432edfec2793a733cb36bcab7639ed9fe6dee31828b9f791e2b61e08e2",
+      "ru": "Экстремальный ключ",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/wrench.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "e686e6432edfec2793a733cb36bcab7639ed9fe6dee31828b9f791e2b61e08e2",
+      "ru": "Экстремальный ключ",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/misc/wrench.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c66fa93f20144f9d3fe185ed6b1c350d77d05361bd63eeffe9acbabb3655833b",
+      "ru": "Экстремальный гаечный ключ — это… э-э… гаечный ключ.$(br2)Он переключает ввод и вывод у таких деталей, как порты доступа и охлаждения.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/active.json",
+      "pointer": "/name",
+      "source_sha256": "57f148eb406c13c3a6d09c1da045cca6e4d2a3cda53d0ba01ce7ca65dea463c6",
+      "ru": "Активное охлаждение",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/active.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "f693ccad4ed8c672e6d52fbf1bd998dbe7e018cc9b445d377d93e23737bc2bde",
+      "ru": "Реактор с активным охлаждением отводит внутреннее тепло внешним теплоносителем.$(br2)Тот испаряется, и полученный пар можно вывести для вращения роторов одной или нескольких турбин.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/active.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "f8638c2991a4f25e3c704cd5904f26a38d09085e1a25ca176f8c3cda4c12b906",
+      "ru": "Для активного охлаждения добавьте в реактор хотя бы два порта охлаждения: один для ввода теплоносителя, другой для вывода пара.$(br2)Пар подаётся по трубам в турбины для выработки энергии.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/innerworking.json",
+      "pointer": "/name",
+      "source_sha256": "c546c14f6abfb5e7d3d554c08f4e8af2af381c9f7c850a78d8aae5c172d4b45a",
+      "ru": "Внутреннее устройство",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/innerworking.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "46353cdf9aba64d44e1f43660a767de846c5c6be2acc0e2c31fc7002e8661727",
+      "ru": "Как реактор $(l:reactor/passive)вырабатывает энергию$(/l) или $(l:reactor/active)испаряет теплоноситель$(/l)?$(br2)За счёт тепла.$(br2)Облучаемое $(l:reactor/reactants)топливо$(/l) нагревается. $(l:reactor/moderators)Замедлители$(/l) поглощают часть излучения и отводят тепло от $(l:reactor/part-fuelrod)топливных стержней$(/l) к $(l:reactor/part-casing)корпусу$(/l).$(br2)Именно тепло корпуса в конечном счёте используется для выработки энергии или испарения $(l:misc/coolantsystem)теплоносителя$(/l).",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/innerworking.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "993b7e474589baf5b9181192106f58fe44401bc3eed905f7352330ea19ab2c22",
+      "ru": "Отвод тепла от $(l:reactor/part-fuelrod)топливных стержней$(/l) очень важен при проектировании реактора, и $(l:reactor/moderators)замедлители$(/l) играют в этом ключевую роль. Излучение распространяется во всех направлениях, перпендикулярных оси столба $(l:reactor/part-fuelrod)топливных стержней$(/l).$(br2)$(italic)Это упрощённое описание происходящего внутри реактора. Однако его достаточно, чтобы спроектировать эффективный реактор.$()",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/moderators.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "ac344c1bf363dead36c1a501867f13a6adfd8f28cd5fb854f532ad8a4f857b32",
+      "ru": "Замедлитель — блок или жидкость внутри реактора, поглощающие часть излучения топлива и $(l:reactor/innerworking)отводящие тепло$(/l) от $(l:reactor/part-fuelrod)топливных стержней$(/l).$(br2)Разные замедлители по-разному превращают излучение в тепло, поглощают его и проводят тепло.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/moderators.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "aee5f3fc8f5f5d270a42362ccdafaf94d71e1fe55499fdf2aec8ae939b07f232",
+      "ru": "Замедлитель может быть очень дешёвым, но крайне неэффективным. Например, воздух: работает, но едва-едва.$(br2)Обычно редкие или дорогие в создании блоки и жидкости эффективнее доступных.$(br2)Extreme Reactors по умолчанию поддерживает множество блоков и жидкостей из Minecraft и модов.$(br)Другие моды и сборки могут добавлять замедлители, изменять или удалять стандартные.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/moderators.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "69ea246e62b7f9bdb582846bd88744d829bf3c29e7a36488c14eac630fc2d590",
+      "ru": "Внутри реактора разрешены только подходящие замедлители. Неподходящие не дадут собрать многоблочную конструкцию.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-casing.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "254b6ccf76d4d07abb10bdfdc6ee37584949dc8c237b469d10ef1916d053c6bd",
+      "ru": "Корпус — основа реактора.$(br2)Его блоки нужны для каркаса и создания других деталей. Ими также можно заполнить стены, если стекло вам не по душе.$(br2)Понадобится немало таких блоков.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-casing.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "1bdc2fce5e7e05cf3b19fb02162f924d61f4b9b13a370765092679266dfb8fda",
+      "ru": "$(l)Обязательность:$() нужны для каркаса$(br)$(l)Размещение:$() в любом месте$(br)$(l)Интерфейс:$() нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-computerport.json",
+      "pointer": "/name",
+      "source_sha256": "4c7c20b37dd522b133fb552f6414cb761680de89c3f06c429e5c52670e6646d9",
+      "ru": "Компьютерный порт",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-computerport.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "4c7c20b37dd522b133fb552f6414cb761680de89c3f06c429e5c52670e6646d9",
+      "ru": "Компьютерный порт",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-computerport.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "583d9509588ed07e39d64a7fe4056f1287f7a7cb49bb62d962a6ee9c53d9cd5e",
+      "ru": "Компьютерный порт подключает реактор к компьютеру для сложной автоматизации.$(br2)Компьютеру доступен стандартный набор методов, позволяющих узнавать состояние реактора и управлять его работой.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-computerport.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "5d691147f82ab6f6eecb6cea22ac6f5f2c573a273bfc42a510a19c0fe0099056",
+      "ru": "Чтобы использовать компьютерный порт, вам понадобится внешний мод, добавляющий в игру программируемые компьютеры.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-computerport.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "4c7c20b37dd522b133fb552f6414cb761680de89c3f06c429e5c52670e6646d9",
+      "ru": "Компьютерный порт",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-computerport.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "dde9ca8f2c81ce83755e842e06979abcc5cfb4b0f8ab35d571f89c37e74bdc69",
+      "ru": "$(l)Обязателен:$() нет$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-controller.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "be24a5e6b84caf076d3d4ea10544014e24aa7c5f245418d5ed538b26456952fa",
+      "ru": "Контроллер — основной интерфейс реактора.$(br2)Откройте его ПКМ, чтобы включить или выключить реактор, проверить содержимое топливных стержней, температуру и другие показатели.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-controller.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "d0aac4f89372f3ed0ef752b5df6feb6c02f8af1e7cae4c789106afa8422f2ca2",
+      "ru": "Для реактора с $(l:reactor/passive)пассивным охлаждением$(/l) также показаны запас энергии и скорость её выработки. Для $(l:reactor/active)активного охлаждения$(/l) — количество теплоносителя и пара.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-controller.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "0fbfb8134a30b57637d0f96282435846e45e5a83fb1eaab9f86752108914a91b",
+      "ru": "$(l)Обязателен:$() хотя бы один$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() да",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-controlrod.json",
+      "pointer": "/name",
+      "source_sha256": "32060032ec203164dea5074b1a1f22679461e945c10a123adb1556394dd0091c",
+      "ru": "Управляющий стержень",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-controlrod.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "32060032ec203164dea5074b1a1f22679461e945c10a123adb1556394dd0091c",
+      "ru": "Управляющий стержень",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-controlrod.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "876404c9f73a70aa2add4c3b4c522e2e356ac30902eccaf64e8b92c88998bb35",
+      "ru": "Управляющие стержни входят в соответствующие колонны $(l:reactor/part-fuelrod)топливных стержней$(/l). Их материал поглощает нейтроны, которые иначе попали бы в реагенты внутри $(l:reactor/part-fuelrod)топливных стержней$(/l). Это замедляет или полностью останавливает расход топлива, выделение тепла и образование отходов.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-controlrod.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "ac51fff3e4a05db1efdee9a4fa5d41223c182ebba8a2f6b1744976c831f0d86e",
+      "ru": "Откройте управляющий стержень ПКМ.$(br2)В интерфейсе ему можно задать имя, чтобы обращаться к нему через $(l:reactor/part-computerport)компьютерный порт$(/l).$(br2)Процент погружения определяет, насколько глубоко он входит в колонну $(l:reactor/part-fuelrod)топливных стержней$(/l). Меняйте значение отдельно или для всех управляющих стержней.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-controlrod.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "32060032ec203164dea5074b1a1f22679461e945c10a123adb1556394dd0091c",
+      "ru": "Управляющий стержень",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-controlrod.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "b01a70a4d251eea76d86b92e6754018dac6a82443f390aacc14f76922a428372",
+      "ru": "$(l)Обязателен:$() да$(br)$(l)Размещение:$() все на одной грани, на концах рядов топливных стержней$(br)$(l)Интерфейс:$() да",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-creativewatergen.json",
+      "pointer": "/name",
+      "source_sha256": "a7129b88b9ba3a0d6d5298e02369e0c5aa173966ff4125f9990acbe716ef794e",
+      "ru": "Творческий порт теплоносителя",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-creativewatergen.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "a7129b88b9ba3a0d6d5298e02369e0c5aa173966ff4125f9990acbe716ef794e",
+      "ru": "Творческий порт теплоносителя",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-creativewatergen.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "a44058e65bbe81b61d1116e29493e606d4f397bb7fc5af0cba865af9e6d835e1",
+      "ru": "Творческий порт теплоносителя доступен только в творческом режиме и служит постоянным источником воды для реактора с $(l:reactor/active)активным охлаждением$(/l).",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-creativewatergen.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c63658c9c6f1350f553ded276191c5dd25829623f9a6484da15f02c99788935f",
+      "ru": "$(l)Обязателен:$() нет$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() нет$(br)$(l)Творческий режим:$() доступен только в нём; рецепта нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgefluidport.json",
+      "pointer": "/name",
+      "source_sha256": "e2f4cb5b071d99d921bb1788d6370f40193573aa34c6c828577ff05a0e62de32",
+      "ru": "Порт охлаждения",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgefluidport.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "e2f4cb5b071d99d921bb1788d6370f40193573aa34c6c828577ff05a0e62de32",
+      "ru": "Порт охлаждения",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgefluidport.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "2a667a03f3a542b12a97ebde1b574904a49c0d9bd56d6ca3fea48c0edb4021c6",
+      "ru": "Порт теплоносителя позволяет подавать жидкости в реактор с $(l:reactor/active)активным охлаждением$(/l) и выводить их из него.$(br2)Порт принимает и выдаёт жидкости стандартной системы Minecraft, но только подходящие $(l:misc/coolantsystem)теплоносители или пар$(/l).$(br2)С помощью $(l:misc/wrench)гаечного ключа$(/l) можно переключить порт с ввода на вывод.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgefluidport.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "e2f4cb5b071d99d921bb1788d6370f40193573aa34c6c828577ff05a0e62de32",
+      "ru": "Порт охлаждения",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgefluidport.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "b8fddaab9560fb619af4e0c816788ae9687f37a3d65e5fbad4ed00277a41f594",
+      "ru": "$(l)Обязательность:$() нет$(br)$(l)Размещение:$() на любой грани, кроме каркаса$(br)$(l)Интерфейс:$() нет$(br)$(l)Гаечный ключ:$() $(l:misc/wrench)ключ$(/l) переключает режим порта",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap-tesla.json",
+      "pointer": "/name",
+      "source_sha256": "50777b90a493fec31d0648abb3f30f08f4167bcdb8f6ebd40718edae5d38b39d",
+      "ru": "Энергетическая розетка Tesla",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap-tesla.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "50777b90a493fec31d0648abb3f30f08f4167bcdb8f6ebd40718edae5d38b39d",
+      "ru": "Энергетическая розетка Tesla",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap-tesla.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "74fd1d2f12e34dace52cb91d9ef8f2788d17ef17a7fcf5ff62d941997ee78b4a",
+      "ru": "Энергетическая розетка Tesla выводит энергию из реактора с $(l:reactor/passive)пассивным охлаждением$(/l).$(br2)Работает с $(l:misc/powersystem)энергосистемой$(/l) Tesla и подключается только к совместимым трубам и машинам.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap-tesla.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "305610b452ed26b2d4bfed3ffadc9c4437d5c8fe98d26924a098e0b32e81c28f",
+      "ru": "В одном реакторе разрешён только один тип энергетических розеток.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap-tesla.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "50777b90a493fec31d0648abb3f30f08f4167bcdb8f6ebd40718edae5d38b39d",
+      "ru": "Энергетическая розетка Tesla",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap-tesla.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "1a00d83673127a8b6f777f3ca4bc72765aa015060fca9afa0e1ecfd833726862",
+      "ru": "$(l)Обязателен:$() нет$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() нет$(br)$(l)Энергосистема:$() Tesla",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap.json",
+      "pointer": "/name",
+      "source_sha256": "0e40802969ef67c88ed9819116df92e40b6077b7207a91ec2b45381f0a661299",
+      "ru": "Энергетическая розетка Redstone Flux",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "0e40802969ef67c88ed9819116df92e40b6077b7207a91ec2b45381f0a661299",
+      "ru": "Энергетическая розетка Redstone Flux",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "6fb27740607e27556294f017aa950d0f272417dc56c6d3db589421246ddf92f4",
+      "ru": "Энергетическая розетка Redstone Flux выводит энергию из реактора с $(l:reactor/passive)пассивным охлаждением$(/l).$(br2)Работает с $(l:misc/powersystem)энергосистемами$(/l) Redstone Flux и Forge Energy и подключается только к совместимым трубам и машинам.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "305610b452ed26b2d4bfed3ffadc9c4437d5c8fe98d26924a098e0b32e81c28f",
+      "ru": "В одном реакторе разрешён только один тип энергетических розеток.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "0e40802969ef67c88ed9819116df92e40b6077b7207a91ec2b45381f0a661299",
+      "ru": "Энергетическая розетка Redstone Flux",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-forgepowertap.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "d0e09c10250c7c2e85142b2aec58079678553f27509311bb8c49dafb9dcb6f68",
+      "ru": "$(l)Обязателен:$() нет$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() нет$(br)$(l)Энергосистема:$() Redstone Flux и Forge Energy",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-fuelrod.json",
+      "pointer": "/name",
+      "source_sha256": "7f761a37317c143bd82b8bafc6dd2ccdf098192cabd4d6fc421d3995b99b0a6c",
+      "ru": "Топливный стержень",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-fuelrod.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "7f761a37317c143bd82b8bafc6dd2ccdf098192cabd4d6fc421d3995b99b0a6c",
+      "ru": "Топливный стержень",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-fuelrod.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c5706b8fcef358c0a5ed7322e69367f4f6dcdd51e6eff6d518e7e5c4aff7d790",
+      "ru": "Топливные стержни размещают внутри реактора длинными вертикальными или горизонтальными рядами.$(br2)Они хранят топливо, отходы или их смесь. Во включённом реакторе их облучение создаёт тепло, которое превращается в энергию или испаряет теплоноситель.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-fuelrod.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "aef4ed195fcc9c9219e13280b511209dc750e21fb1d6efb7534f4c7ceb4ff556",
+      "ru": "Первый топливный стержень в ряду должен примыкать к $(l:reactor/part-casing)блоку корпуса$(/l), а за последним устанавливается $(l:reactor/part-controlrod)управляющий стержень$(/l).$(br2)Все ряды должны идти вертикально, по оси Y, либо горизонтально, по оси X или Z. Смешивать направления нельзя.$(br2)Поэтому все управляющие стержни располагаются на одной грани реактора.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-fuelrod.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "7f761a37317c143bd82b8bafc6dd2ccdf098192cabd4d6fc421d3995b99b0a6c",
+      "ru": "Топливный стержень",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-fuelrod.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "ae32fc3092200ff1fc6cf80ca977b33d90a8da24bc8f43abe8cb5aeb2c8d7a31",
+      "ru": "$(l)Обязателен:$() да$(br)$(l)Размещение:$() внутри реактора$(br)$(l)Интерфейс:$() нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-glass.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "e5a0bb77565f31ff28b9ebb02f416423b770d9d50d978ee167bdb600fb6963b6",
+      "ru": "Стеклянные блоки — это декоративные блоки, которые можно использовать вместо блока Корпуса, чтобы показать внутреннюю часть Реактора.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-glass.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "dde9ca8f2c81ce83755e842e06979abcc5cfb4b0f8ab35d571f89c37e74bdc69",
+      "ru": "$(l)Обязателен:$() нет$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-redstoneport.json",
+      "pointer": "/name",
+      "source_sha256": "1cb976c832db28ad452b6bf4e93614076bca82e61c595ecc827096995e969691",
+      "ru": "Редстоуновый порт",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-redstoneport.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "1cb976c832db28ad452b6bf4e93614076bca82e61c595ecc827096995e969691",
+      "ru": "Редстоуновый порт",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-redstoneport.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c1365ed986b68caf26a83563738d643f6f9ebcbbea7e7570f3db07a1821d66cf",
+      "ru": "Редстоун-порт позволяет автоматизировать реактор сигналами редстоуна.$(br2)В его интерфейсе можно выбрать один из трёх режимов входа, принимающих сигнал, или шести режимов выхода, выдающих сигнал.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-redstoneport.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "b53c67e3d3115d1488edce13f40961e89d11a5239d616de9033fa493a55b5e10",
+      "ru": "$(bold)Настройки входа$()$(br2)При получении сигнала редстоуна выполняется выбранное действие:$(br2)$(li)$(o)Вкл. / Выкл.:$() переключает реактор по сигналу.$(li)$(o)Вывод отходов:$() выводит отходы через порты доступа в режиме вывода.$(li)$(o)Погружение стержней:$() задаёт глубину погружения всех управляющих стержней.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-redstoneport.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "f0864daf53cef3d43948ae0e78e11e3458e23a9d43d7c6cb488963df2beb558e",
+      "ru": "$(bold)Настройки выхода$()$(br2)Выдаёт сигнал редстоуна при выбранном условии:$(br2)$(li)$(o)Температура корпуса:$() выше или ниже заданной.$(li)$(o)Температура топлива:$() температура активной зоны выше или ниже заданной.$(li)$(o)Доля топлива:$() процент топлива в смеси выше или ниже заданного.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-redstoneport.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "a348539d9187ab9932f48713fbf8a586dc3f9bf8cb1ef6c6c1c5f247c087418c",
+      "ru": "$(li)$(o)Запас топлива:$() выше или ниже заданного значения.$(li)$(o)Запас отходов:$() выше или ниже заданного значения.$(li)$(o)Запас энергии:$() энергия во внутреннем буфере выше или ниже заданного значения.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-redstoneport.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "a6c7338e6d8ec339b15847fc859496cc3912fc6adc5819bac7a48d0e25992101",
+      "ru": "Для полной автоматизации реактора обычно нужны два редстоун-порта или больше.$(br2)Для более сложной автоматизации используйте $(l:reactor/part-computerport)компьютерный порт$(/l).",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-redstoneport.json",
+      "pointer": "/pages/5/title",
+      "source_sha256": "1cb976c832db28ad452b6bf4e93614076bca82e61c595ecc827096995e969691",
+      "ru": "Редстоуновый порт",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-redstoneport.json",
+      "pointer": "/pages/6/text",
+      "source_sha256": "5c0845860c749b19826fa8c39c5e76efa52c1e0268e10d7f0520f44498db9838",
+      "ru": "$(l)Обязателен:$() нет$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() да",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-solidaccessport.json",
+      "pointer": "/name",
+      "source_sha256": "982d5d929c67b683d1adc3ef2412cd42dfe2747a12f932d06ff0947ceea72361",
+      "ru": "Порт доступа",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-solidaccessport.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "982d5d929c67b683d1adc3ef2412cd42dfe2747a12f932d06ff0947ceea72361",
+      "ru": "Порт доступа",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-solidaccessport.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "9782a1ec14c27f2a4b6bc7483877f31fea55a7f92449ce88731b6862fe9b8e15",
+      "ru": "Порт доступа превращает твёрдые материалы, обычно слитки, в топливо для $(l:reactor/part-fuelrod)топливных стержней$(/l).$(br2)Выберите режим в интерфейсе: $(bold)ввод$() принимает сырьё для топлива, $(bold)вывод$() выдаёт отходы.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-solidaccessport.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "9ab415aa09bd9d963a635b7a86d6d058e8c144455620d7491db56b8bf8dadd27",
+      "ru": "Режим порта переключается $(l:misc/wrench)гаечным ключом$(/l).$(br2)Через интерфейс также можно вручную загружать и выгружать материалы.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-solidaccessport.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "982d5d929c67b683d1adc3ef2412cd42dfe2747a12f932d06ff0947ceea72361",
+      "ru": "Порт доступа",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/part-solidaccessport.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "f1c7bcc892d1c2906fd83ff5d9f52fae0f891e64f380c42761a6f51b10a9f8e4",
+      "ru": "$(l)Обязательность:$() нет, но пара портов всё равно пригодится$(br)$(l)Размещение:$() на любой грани, кроме каркаса$(br)$(l)Интерфейс:$() есть$(br)$(l)Гаечный ключ:$() $(l:misc/wrench)ключ$(/l) переключает режим порта",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/passive.json",
+      "pointer": "/name",
+      "source_sha256": "8e87da66b77618e62178767f38b8d13a2a6c95464c74a0e87b7181266433232f",
+      "ru": "Пассивное охлаждение",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/passive.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "491913db1a3b1b65ba29b68d25be0e96c95416c2d694e7ae35344962e08adf83",
+      "ru": "Реактор с пассивным охлаждением $(l:reactor/innerworking)вырабатывает энергию$(/l) напрямую и не использует внешний теплоноситель для отвода внутреннего тепла.$(br2)$(l:intro/first)Первый реактор$(/l), описанный в начале книги, работает именно в режиме пассивного охлаждения.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/reactants.json",
+      "pointer": "/name",
+      "source_sha256": "a64b86a3b02ad555a0d4e3a32d25b5bba84ce828be2a0133eb2385480d3e3e6e",
+      "ru": "Реагенты",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/reactants.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "f728d52afab4b77a55c16ad6b8485efee6e25f7b889aca9237ab8302f6cd1032",
+      "ru": "Реагент — вещество, участвующее в ядерной реакции внутри реактора.$(br2)Есть два вида:$(li)$(bold)Топливо:$() поддерживает цепную реакцию в $(l:reactor/part-fuelrod)топливных стержнях$(/l).$(li)$(bold)Отходы:$() образуются при расходовании облучённого топлива.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/reactants.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c116efe3273f259abb06d3266f2d9493840cdd8d3a3a5bf0792454646f04b0c9",
+      "ru": "По умолчанию Extreme Reactors регистрирует два реагента: топливо йеллориум и его отход — цианит.$(br2)Для каждого есть список исходных предметов, которые загружают, например, в $(l:reactor/part-solidaccessport)порт доступа$(/l).$(br2)Йеллориум получают из $(l:intro/ores)йеллориумовых слитков$(/l). Цианит при выгрузке превращается в цианитовые слитки.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/reactor/reactants.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "c73d424b8bc9858648ea287f67a23768fa18b25b2e6e86a5353fc7e3b655b073",
+      "ru": "Другие моды или пакеты модов могут добавлять свои собственные реагенты и источники реагентов или изменять/удалять стандартные.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/coils.json",
+      "pointer": "/name",
+      "source_sha256": "1003f3e1ccce9ae98df661b0a46edc365c7663b03833e02c6b9dead222e7ad20",
+      "ru": "Индукторные катушки",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/coils.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "90de36a3bcda5b99ab3eae882765d10dbd882eec4f622d392d44a1efebbfc3df",
+      "ru": "Индукторная катушка — обычно металлический блок вокруг вала ротора. При включении она отбирает энергию вращения, замедляя ротор.$(br2)Разные катушки могут извлекать энергию с разной эффективностью и скоростью.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/coils.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "92e5b1b1ca9a78f580595868c717dac5b837e5ade6b3036a060963864fd25f1d",
+      "ru": "Обычно редкие или дорогие в создании блоки эффективнее доступных.$(br2)Extreme Reactors по умолчанию поддерживает множество обычных и модовых блоков как индукторные катушки.$(br2)Другие моды и сборки могут добавлять свои материалы, изменять или удалять стандартные.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/coils.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "6a72bddfdd86939533b241ab99a3319c75880c02cf1ac2059cd1b27e4864cf51",
+      "ru": "Вокруг вала ротора внутри турбины разрешены только подходящие блоки катушек. Неподходящие не дадут собрать многоблочную конструкцию.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/innerworking.json",
+      "pointer": "/name",
+      "source_sha256": "c546c14f6abfb5e7d3d554c08f4e8af2af381c9f7c850a78d8aae5c172d4b45a",
+      "ru": "Внутреннее устройство",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/innerworking.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "2227e86df686bb6f0793a6f5fdb85eda4b194d37a7bb67143e44c6b57ff91f05",
+      "ru": "Как турбина вырабатывает энергию?$(br2)За счёт вращения $(l:turbine/rotor)ротора$(/l).$(br2)Пар из внутреннего резервуара поступает в камеру $(l:turbine/rotor)ротора$(/l) с расходом, заданным в интерфейсе $(l:turbine/part-controller)контроллера$(/l).$(br2)Каждая $(l:turbine/part-rotorblade)лопасть$(/l) захватывает немного пара, заставляя $(l:turbine/rotor)ротор$(/l) вращаться.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/innerworking.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "0c7cf912ceb8d41384aabce97d314e7128451f813bf1f3f9cdd6ef6f521ae1be",
+      "ru": "При $(l:turbine/coils)включённых индукционных катушках$(/l), управляемых через $(l:turbine/part-controller)контроллер$(/l), выработка энергии зависит от скорости $(l:turbine/rotor)ротора$(/l) и средних характеристик блоков катушек, в том числе эффективности и сопротивления вращению.$(br2)$(italic)Это упрощённое описание происходящего внутри турбины. Однако его достаточно, чтобы спроектировать эффективную турбину.$()",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-casing.json",
+      "pointer": "/name",
+      "source_sha256": "76f5ad6722c4fc7918d522028ab55f403aff0caf7122fdb228c1537a7531f4d8",
+      "ru": "Корпус",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-casing.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "76f5ad6722c4fc7918d522028ab55f403aff0caf7122fdb228c1537a7531f4d8",
+      "ru": "Корпус",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-casing.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "89efa2be0f9371579a4862fc64cfe78ab1235a13a4f3adc2c778b40b375c49c9",
+      "ru": "Блоки корпуса — основной строительный материал турбины.$(br2)Из них строят каркас и опоры $(l:turbine/rotor)ротора$(/l), а также изготавливают другие детали. Ими можно заполнить грани турбины, если вам не нравится стекло.$(br2)Этих блоков понадобится много.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-casing.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "76f5ad6722c4fc7918d522028ab55f403aff0caf7122fdb228c1537a7531f4d8",
+      "ru": "Корпус",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-casing.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "5376ad6f5b2c1c7c75e420f858cf9e446623dec2d898b87ba44c3287870f9327",
+      "ru": "$(l)Обязательность:$() нужны для каркаса и $(l:turbine/rotor)ротора$(/l)$(br)$(l)Размещение:$() в любом месте$(br)$(l)Интерфейс:$() нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-computerport.json",
+      "pointer": "/name",
+      "source_sha256": "4c7c20b37dd522b133fb552f6414cb761680de89c3f06c429e5c52670e6646d9",
+      "ru": "Компьютерный порт",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-computerport.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "4c7c20b37dd522b133fb552f6414cb761680de89c3f06c429e5c52670e6646d9",
+      "ru": "Компьютерный порт",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-computerport.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "cb7c42332ebee3578a1f72855806dd691c2bb02f5163224e517f0e6afee58949",
+      "ru": "Компьютерный порт соединяет турбину с компьютером для сложной автоматизации.$(br2)Подключённому компьютеру доступны методы проверки состояния и управления турбиной.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-computerport.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "5d691147f82ab6f6eecb6cea22ac6f5f2c573a273bfc42a510a19c0fe0099056",
+      "ru": "Чтобы использовать компьютерный порт, вам понадобится внешний мод, добавляющий в игру программируемые компьютеры.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-computerport.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "4c7c20b37dd522b133fb552f6414cb761680de89c3f06c429e5c52670e6646d9",
+      "ru": "Компьютерный порт",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-computerport.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "dde9ca8f2c81ce83755e842e06979abcc5cfb4b0f8ab35d571f89c37e74bdc69",
+      "ru": "$(l)Обязателен:$() нет$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-controller.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "aa8555ac2ca343c7cca59e7f1aa3861aed2176ddeae2f8f99732e26c1b710ad8",
+      "ru": "Контроллер — основной интерфейс турбины.$(br2)Щёлкните по нему ПКМ, чтобы включить или выключить турбину, проверить запасы пара и теплоносителя, скорость $(l:turbine/rotor)ротора$(/l) и выработку энергии.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-controller.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "843ee3007b83042004a037b7ffd36967c723e1bff8cf618ea2a83d0ec7252289",
+      "ru": "Также можно регулировать расход пара вокруг $(l:turbine/rotor)ротора$(/l), выбирать, что делать с паром после его конденсации в исходный теплоноситель, и включать или отключать $(l:turbine/coils)индукционные катушки$(/l).",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-controller.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "0fbfb8134a30b57637d0f96282435846e45e5a83fb1eaab9f86752108914a91b",
+      "ru": "$(l)Обязателен:$() хотя бы один$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() да",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-creativesteamgen.json",
+      "pointer": "/name",
+      "source_sha256": "be0c9349dc9939f68c2664844facd92104dceedf89d38a097f2ce2420a22f5cc",
+      "ru": "Креативный парогенератор",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-creativesteamgen.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "cb9893b88c42c949a290a974d31b7b2b3d886b9993dfbdec0101a5e103c38371",
+      "ru": "Парогенератор",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-creativesteamgen.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "5fac1468f4e76a6db1db18ff4b53464fb00db51941c16aa7c956119e451a79fb",
+      "ru": "Парогенератор — доступная только в творческом режиме деталь, постоянно снабжающая турбину паром.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-creativesteamgen.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c63658c9c6f1350f553ded276191c5dd25829623f9a6484da15f02c99788935f",
+      "ru": "$(l)Обязателен:$() нет$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() нет$(br)$(l)Творческий режим:$() доступен только в нём; рецепта нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgefluidport.json",
+      "pointer": "/name",
+      "source_sha256": "32bd8fa1f4517158b9603207447c3bd30a5a01ded8a8e4ee881f4c6c8a44da43",
+      "ru": "Порт для жидкости",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgefluidport.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "32bd8fa1f4517158b9603207447c3bd30a5a01ded8a8e4ee881f4c6c8a44da43",
+      "ru": "Порт для жидкости",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgefluidport.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "0aa0bcbcd2131266c261561d74f7aad7c4dd8a845a70786eb7e77cb58931b57d",
+      "ru": "Жидкостный порт вводит жидкости в турбину или выводит их.$(br2)Он принимает и выдаёт обычные жидкости, подходящие в качестве $(l:misc/coolantsystem)теплоносителя или пара$(/l).$(br2)$(l:misc/wrench)Гаечный ключ$(/l) переключает порт между вводом и выводом.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgefluidport.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "32bd8fa1f4517158b9603207447c3bd30a5a01ded8a8e4ee881f4c6c8a44da43",
+      "ru": "Порт для жидкости",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgefluidport.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "b8fddaab9560fb619af4e0c816788ae9687f37a3d65e5fbad4ed00277a41f594",
+      "ru": "$(l)Обязательность:$() нет$(br)$(l)Размещение:$() на любой грани, кроме каркаса$(br)$(l)Интерфейс:$() нет$(br)$(l)Гаечный ключ:$() $(l:misc/wrench)ключ$(/l) переключает режим порта",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap-tesla.json",
+      "pointer": "/name",
+      "source_sha256": "50777b90a493fec31d0648abb3f30f08f4167bcdb8f6ebd40718edae5d38b39d",
+      "ru": "Энергетическая розетка Tesla",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap-tesla.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "50777b90a493fec31d0648abb3f30f08f4167bcdb8f6ebd40718edae5d38b39d",
+      "ru": "Энергетическая розетка Tesla",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap-tesla.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "ba5a73a76cb0ca6994cefa621072d54da1a1e3ab6f834b46d1c222e59888a43b",
+      "ru": "Энергетическая розетка Tesla выводит энергию из турбины.$(br2)Работает с $(l:misc/powersystem)энергосистемой$(/l) Tesla и подключается только к совместимым трубам и машинам.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap-tesla.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "fe673036f436ea98f9e06fa6703000deb0270a3c4a9417b56407e0f700fd85a1",
+      "ru": "В одной турбине разрешён только один тип энергетических розеток.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap-tesla.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "50777b90a493fec31d0648abb3f30f08f4167bcdb8f6ebd40718edae5d38b39d",
+      "ru": "Энергетическая розетка Tesla",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap-tesla.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "1a00d83673127a8b6f777f3ca4bc72765aa015060fca9afa0e1ecfd833726862",
+      "ru": "$(l)Обязателен:$() нет$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() нет$(br)$(l)Энергосистема:$() Tesla",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap.json",
+      "pointer": "/name",
+      "source_sha256": "0e40802969ef67c88ed9819116df92e40b6077b7207a91ec2b45381f0a661299",
+      "ru": "Энергетическая розетка Redstone Flux",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "0e40802969ef67c88ed9819116df92e40b6077b7207a91ec2b45381f0a661299",
+      "ru": "Энергетическая розетка Redstone Flux",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "87dcaa84f5eb5157b7bd62a79c55fc7350d5ab01c462951742456558e4873982",
+      "ru": "Энергетическая розетка Redstone Flux выводит энергию из турбины.$(br2)Работает с $(l:misc/powersystem)энергосистемами$(/l) Redstone Flux и Forge Energy и подключается только к совместимым трубам и машинам.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "fe673036f436ea98f9e06fa6703000deb0270a3c4a9417b56407e0f700fd85a1",
+      "ru": "В одной турбине разрешён только один тип энергетических розеток.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "0e40802969ef67c88ed9819116df92e40b6077b7207a91ec2b45381f0a661299",
+      "ru": "Энергетическая розетка Redstone Flux",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-forgepowertap.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "d0e09c10250c7c2e85142b2aec58079678553f27509311bb8c49dafb9dcb6f68",
+      "ru": "$(l)Обязателен:$() нет$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() нет$(br)$(l)Энергосистема:$() Redstone Flux и Forge Energy",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-glass.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "974ecbd3534d011fde553a256dfd41dc57bf4cdc2fc09417f984fbf52bde98e2",
+      "ru": "Стекло — декоративный блок, которым можно заменить $(l:turbine/part-casing)корпус$(/l), чтобы видеть внутреннее устройство турбины.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-glass.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "dde9ca8f2c81ce83755e842e06979abcc5cfb4b0f8ab35d571f89c37e74bdc69",
+      "ru": "$(l)Обязателен:$() нет$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorbearing.json",
+      "pointer": "/name",
+      "source_sha256": "87926396a8fe4f2bf51262404dcc915a44c3fd0ee8a2b94cbc2d36ada69f03ac",
+      "ru": "Подшипник ротора",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorbearing.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "87926396a8fe4f2bf51262404dcc915a44c3fd0ee8a2b94cbc2d36ada69f03ac",
+      "ru": "Подшипник ротора",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorbearing.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "6e14b752ab0a3e7af86118a1360a7eca6654745a24b5b4ac9ef4b6b17dff1b55",
+      "ru": "Подшипник служит основанием $(l:turbine/rotor)ротора$(/l) турбины.$(br2)Его ставят на одной из граней, обычно посередине. За ним устанавливают блоки $(l:turbine/part-rotorshaft)вала$(/l).",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorbearing.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "87926396a8fe4f2bf51262404dcc915a44c3fd0ee8a2b94cbc2d36ada69f03ac",
+      "ru": "Подшипник ротора",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorbearing.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "abb5c724f87884b11199ddf917d7bf1a14d8538a9a693b52a2de3c2d884c57ff",
+      "ru": "$(l)Обязателен:$() ровно один$(br)$(l)Размещение:$() любая грань, кроме каркаса$(br)$(l)Интерфейс:$() нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorblade.json",
+      "pointer": "/name",
+      "source_sha256": "d2ec6f20c5e7a242f32eecc8e5f93c96763a254f17270a56450a7d40fb3e1053",
+      "ru": "Лопасть ротора",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorblade.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "d2ec6f20c5e7a242f32eecc8e5f93c96763a254f17270a56450a7d40fb3e1053",
+      "ru": "Лопасть ротора",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorblade.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "ce61d4b460d4943b3690f6285de245df49e3d050c3ee7d21be3807e9e77b69ea",
+      "ru": "Лопасть — последняя деталь $(l:turbine/rotor)ротора$(/l), но именно она заставляет его вращаться.$(br2)Лопасти ставят перпендикулярно $(l:turbine/part-rotorshaft)валу$(/l), вплотную к нему, либо рядом с уже установленной лопастью, продолжая ряд от вала наружу.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorblade.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "d2ec6f20c5e7a242f32eecc8e5f93c96763a254f17270a56450a7d40fb3e1053",
+      "ru": "Лопасть ротора",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorblade.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "85dc2b22337b82d762e093cdf4b0fe09cf41d760c61942e9759cb9168dde051c",
+      "ru": "$(l)Обязательна:$() да$(br)$(l)Размещение:$() внутри турбины, вплотную к лопасти или блоку вала$(br)$(l)Интерфейс:$() нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorshaft.json",
+      "pointer": "/name",
+      "source_sha256": "b05569a05264528e92b75aa83b81d46c2e49e4739abbcb3e1d90f3cc1aa8c168",
+      "ru": "Вал ротора",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorshaft.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "b05569a05264528e92b75aa83b81d46c2e49e4739abbcb3e1d90f3cc1aa8c168",
+      "ru": "Вал ротора",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorshaft.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "443b091e10062420fe1c2ba0638b7f80a524ca66fbd933e77c6e2e0624aecded",
+      "ru": "Вал — основная часть $(l:turbine/rotor)ротора$(/l) турбины.$(br2)Блоки вала ставят подряд через всю внутреннюю длину турбины: от $(l:turbine/part-rotorbearing)подшипника ротора$(/l) до блока $(l:turbine/part-casing)корпуса$(/l) на противоположной стороне.$(br2)",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorshaft.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "b05569a05264528e92b75aa83b81d46c2e49e4739abbcb3e1d90f3cc1aa8c168",
+      "ru": "Вал ротора",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/part-rotorshaft.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "479ad3c4dadd4c9f1c18da543120db83291e55b30eb90a4ddd86dc5a0058e5d0",
+      "ru": "$(l)Обязателен:$() да$(br)$(l)Размещение:$() внутри турбины$(br)$(l)Интерфейс:$() нет",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/rotor.json",
+      "pointer": "/name",
+      "source_sha256": "9067c582492fb9b2aeb39e15f668671ccec59af0d7d110c98cbd58f17f871e00",
+      "ru": "Ротор",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/rotor.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "2f1cef8fed98e2eec1ecd9d5cb25a843640c913b053e508dff25916b29d88ae6",
+      "ru": "Ротор — важнейшая часть турбины: его конструкция напрямую влияет на $(l:turbine/innerworking)выработку энергии$(/l).$(br2)Ротор собирается из четырёх типов блоков:$(li)одного $(l:turbine/part-rotorbearing)подшипника ротора$(/l)$(li)нескольких блоков $(l:turbine/part-rotorshaft)вала ротора$(/l)$(li)нескольких $(l:turbine/part-rotorblade)лопастей ротора$(/l)$(li)одного блока $(l:turbine/part-casing)корпуса$(/l)",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/rotor.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "55654907d6e6242ae4fd1ee0c59da173ba835b9a389be7923d00489e1009a980",
+      "ru": "$(bold)Постройка ротора$()$(br2)Ротор можно расположить вдоль любой из трёх осей турбины: X, Y или Z.$(br2)Первый блок — $(l:turbine/part-rotorbearing)подшипник$(/l) на одной из граней турбины, обычно посередине.$(br2)От подшипника проведите $(l:turbine/part-rotorshaft)вал$(/l) до противоположной грани, где он должен упираться в $(l:turbine/part-casing)блок корпуса$(/l).",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/rotor.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "7280fb8599325f4864598486dd62832d57723037c46a5eaa0ccb828ee25192cd",
+      "ru": "Завершив вал, установите $(l:turbine/part-rotorblade)лопасти ротора$(/l). Их можно ставить вплотную к $(l:turbine/part-rotorshaft)валу$(/l), перпендикулярно его оси, либо рядом с уже установленной лопастью.$(br2)Количество и сочетание лопастей могут быть любыми.$(br)Однако число лопастей и объём пара, который они способны захватить, напрямую влияют на скорость ротора.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/rotor.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "55a5d97d59efd003b4bfb56fe1d0d1ada17943d34b6a6d8d03b429ec5edc7a12",
+      "ru": "$(bold)Сколько лопастей?$()$(br2)Каждая лопасть принимает до 25 mB пара — столько она может захватить и $(italic)использовать$() для вращения ротора.$(br2)По этому значению рассчитайте число лопастей для расхода пара, заданного в интерфейсе контроллера турбины.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/rotor.json",
+      "pointer": "/pages/5/text",
+      "source_sha256": "d045df6768fb7f416201dd108d18dbbda41f27bbe727db07ccac69ce83a00f61",
+      "ru": "$(bold)Индукторные катушки$()$(br2)Для выработки энергии установите $(l:turbine/coils)индукторные катушки$(/l) у конца ротора, рядом с замыкающим блоком $(l:turbine/part-casing)корпуса$(/l).$(br2)$(italic)Не забудьте включить их в интерфейсе $(l:turbine/part-controller)контроллера$(/l)!$()$(br2)Допускается до трёх колец, в каждом — до восьми блоков катушек.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/entries/turbine/rotor.json",
+      "pointer": "/pages/6/text",
+      "source_sha256": "404ce2dd725127314cbee6b1fd3e14586c642d450771dc3ffdd7460e1b73f8bb",
+      "ru": "Можно смешивать типы катушек: турбина усреднит их характеристики.$(br2)Так вы начнёте с доступных катушек и постепенно замените их, не дожидаясь накопления редких и дорогих материалов.$(br2)На следующей странице показан прежний пример ротора с добавленными $(l:turbine/coils)индукторными катушками$(/l).",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/crafting-text.json",
+      "pointer": "/components/0/title",
+      "source_sha256": "7162822be7da5ccb353a309a69d383fa08cab73c252001723480a86842648f52",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/crafting-text.json",
+      "pointer": "/components/1/text",
+      "source_sha256": "df6c252ae7cf3334d5e407825db4755cab9a17a5f06cfa3d00c0c5ee308ef392",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/crafting1x.json",
+      "pointer": "/components/0/title",
+      "source_sha256": "238c2ec6cba27978f64d9e797dacce09ef2374018c0b8a82ac33d4023caccd91",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/crafting2x.json",
+      "pointer": "/components/0/title",
+      "source_sha256": "238c2ec6cba27978f64d9e797dacce09ef2374018c0b8a82ac33d4023caccd91",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/crafting2x.json",
+      "pointer": "/components/1/title",
+      "source_sha256": "64d69fd958b9ed04c55e313aa075813f492216d1dd51b05379ca3b98513fd0eb",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/part_usage.json",
+      "pointer": "/components/0/text",
+      "source_sha256": "9a707a94891b243a64adc7f90aa2ac6704b92812917c12869e2666b7f1ca42cf",
+      "ru": "Использование детали",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/part_usage.json",
+      "pointer": "/components/1/text",
+      "source_sha256": "df6c252ae7cf3334d5e407825db4755cab9a17a5f06cfa3d00c0c5ee308ef392",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/spotlight-item.json",
+      "pointer": "/components/0/text",
+      "source_sha256": "04d3e2e9ef49c6ec4059c50a84a0b11d7abcc1660bd75ccb5e49fa8698e0165f",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/spotlight-smelting.json",
+      "pointer": "/components/0/text",
+      "source_sha256": "04d3e2e9ef49c6ec4059c50a84a0b11d7abcc1660bd75ccb5e49fa8698e0165f",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/spotlight-smelting.json",
+      "pointer": "/components/1/text",
+      "source_sha256": "8a98d039bdbbc7942a4db97e05641f58d37532257e951dc7dc7f22134555472e",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/text-crafting.json",
+      "pointer": "/components/0/text",
+      "source_sha256": "df6c252ae7cf3334d5e407825db4755cab9a17a5f06cfa3d00c0c5ee308ef392",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/text-crafting.json",
+      "pointer": "/components/1/title",
+      "source_sha256": "7162822be7da5ccb353a309a69d383fa08cab73c252001723480a86842648f52",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/bigreactors/patchouli_books/erguide/en_us/templates/zcmultiblock.json",
+      "pointer": "/components/0/text",
+      "source_sha256": "df6c252ae7cf3334d5e407825db4755cab9a17a5f06cfa3d00c0c5ee308ef392",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    }
+  ]
+}

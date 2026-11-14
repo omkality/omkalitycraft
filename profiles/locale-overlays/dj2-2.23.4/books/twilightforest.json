@@ -1,0 +1,2677 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "base_owned_profile_sha256": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+  "game_tested": false,
+  "ready_for_players": false,
+  "namespace": "twilightforest",
+  "scope": "Reviewed ordinary-game book fields and intentional literals; no full borrowed locale or game payload",
+  "reviewed_entries": 262,
+  "translated_entries": 255,
+  "source_files": [
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/categories/biomes.json",
+      "sha256": "ea9a165bfa193a95a75e8b0e4fe643b7228d1782fcf908ed6ff6295d94768476",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/categories/bosses.json",
+      "sha256": "b95e08b24c8eb92b13be054c94ad96accb2c1147254e031a6a9a0363831fd9a4",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/categories/devices.json",
+      "sha256": "53ac634b1927a41a9c63114a7947019e61671805e622d3f17c10364c9ee31302",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/categories/entities.json",
+      "sha256": "8401749a23fc08949b32ddbc2d5f60b87398dbad5d37ee73c63cc4ece6936ab5",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/categories/major_landmarks.json",
+      "sha256": "65cfdbfd6648a7817854d1c58f6f71a4cb3dcd097652d34e1b05d64524c2c66c",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/categories/minor_landmarks.json",
+      "sha256": "36adf37208d812d7df1ab3afc45b7e2a25395e828466ace3ed2ee5c347680366",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/categories/treasures.json",
+      "sha256": "b25b898c8ebc7247632d875867356e2329088ae975e239ad3a19a487ed0a41cf",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/categories/world.json",
+      "sha256": "00651832e11d70be279bbd72e5f7fe48bba81cfc408db00df5d74007688a6784",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/alpha_yeti.json",
+      "sha256": "0c25c43cc76a69fe446f9c669bf1feb509e378a3145a0e625e82911b68256e3d",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/hydra.json",
+      "sha256": "6776c411b5654ab5c7651317e2a69843aeafc05373cc643d69c80bb91f437249",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/lich.json",
+      "sha256": "a0e169b9e1627da7a486f0b54041b92305847e3624ea5bdf9003f78ccc668fd5",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/minoshroom.json",
+      "sha256": "1a8d31727b5d02adbae532fb55ea71ea013e35edca8d3b5f040285de1f4f8194",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/naga.json",
+      "sha256": "c86c4aea9913af46a2e0d6bb8e203efa13c6300483989e016c75beffb21d1909",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/phantom_knights.json",
+      "sha256": "41fad8c714adfd85a541b8adf04beaf6b909e8d6559245fa10205b74d1efcb4b",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/snow_queen.json",
+      "sha256": "b2c2caaec71ca6785c70222e55d48e24e6c204161cd9f8d6eeb80cd747d58a1c",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/ur_ghast.json",
+      "sha256": "dadb864ec25f31bce84f2dde3ea2f366ca5e48e841f4f016e8c8a3877da87ad7",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/anti-builder.json",
+      "sha256": "cdfbad5ae83fb4cd865bd8a3b941610f8b7e1a0dd33a059f21d6fc34bc463310",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/carminite_builder.json",
+      "sha256": "6c6242dfb2fbd4d5af57a2da777f6efdcea6c9152dacf705170a127ea2a6ed89",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/carminite_reactor.json",
+      "sha256": "103ce7f48ae9e2fb7cd68a9735bfc669c755c80a5e8e891ffa1f2d104c44fd05",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/encased_fire_jet.json",
+      "sha256": "59ed4690b5d6cb1b97071e3817e82d2145ec80ba1e6409f55e2d3dbb959e1a6f",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/encased_smoker.json",
+      "sha256": "4c74346d5cfd379c2a087aca6ae9e8f13f98bb347efa2f9f487565856204e973",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/fire_jet.json",
+      "sha256": "a05737edd075b2b309bfe138eca39391c0cdc0e1ce2d2d6d1b8eac7092acf9c9",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/ghast_trap.json",
+      "sha256": "82b2661480042c4d006875b8e909b7e6f07bedb500b69c6f305e1038dbf0e360",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/locked_vanishing_block.json",
+      "sha256": "202cd2dfce77834f866c63759649cad6ffd7c3279cd03cb21f5cdf95740a9801",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/reappearing_block.json",
+      "sha256": "0dee47cda1cb1a741710e26f3c1366ac7c9598d5a59c98193423fe34525c30a1",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/smoking_block.json",
+      "sha256": "f55800f03388435d5a4768c735a840490a56e000319a3fdc9512f9daa3d231ea",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/vanishing_block.json",
+      "sha256": "76134741364f097c5bbafede08dd4a135f79f692aa182b8046853e58eb1c2f2b",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/adherent.json",
+      "sha256": "b9f3cc250e28bd443598991b9dd8576c36885f9ea8d22b22e20d0c0e08ca112a",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/animals.json",
+      "sha256": "cf54b2bac29f233fc857dd642bf9b3c03daa6abb7212e8a7852bb381d56449a9",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/arthopods.json",
+      "sha256": "2fcb18a809e38c990342d31ad8a703d59b7410eff7e2ed664efdfef406c46e3e",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/castle_guardians.json",
+      "sha256": "59b1531c99d785969e1b8224688280d480f73ae83cd7afa2259ab1f3c359ecfe",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/death_tome.json",
+      "sha256": "dfb20442514b84ecdb2e511e3e71aa5f966fdf47525e382cb5701d93346a1f3c",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/ghasts.json",
+      "sha256": "83c799f99ae2964b5aa010f3a7f11e8bd4d6e623c7eb3e648aafcf71843914a0",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/giants.json",
+      "sha256": "08740e4f9bb038411a5db527a6c89fce7f2a437ba66447d5da5f67c235c55823",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/goblins.json",
+      "sha256": "9c1a817cbdfd64c623fb1ade69c27f72625eb80a256792e0d3416490c7fef208",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/harbinger_cube.json",
+      "sha256": "f1c00bf783e9284408e643ee606d87a2cad495abb46277688440df431b48b6c9",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/ice_cores.json",
+      "sha256": "cbc759ad94b8abf858623b8c57d3a42f7f7eb8501d7e9ef842872d30db2a1d98",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/kobold.json",
+      "sha256": "f1808e42c77962d8af29eb22f10c4f8159af91cdff953c8827d29b5591871ac4",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/maze_slime.json",
+      "sha256": "32e509ae875efe152d8bb828d9eefd590faa10c853c9e690216e71704bca93a5",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/minotaur.json",
+      "sha256": "c9d72d4d3174068373e394e46fe6ffe66e04dce721051c33be0142e81006087a",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/troll.json",
+      "sha256": "d7fa1cf5241554bd17b61cbbeabff794b48a18b5add57557311f3a5ff6f0c68e",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/undead.json",
+      "sha256": "aac535cfbcc57e96773d9bd61a25f4aa502162ecedfcd57ea9cf4efa6e658960",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/wolves.json",
+      "sha256": "378116c2fc66aeb0814add0b90f59ea05c069192f1c57924edb90c53ae664632",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/yeti.json",
+      "sha256": "18428ee2b23414c8588fbeb1e714c416da5abc4a9df9d726cbae15780358980c",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/armors.json",
+      "sha256": "bda38fdde896f1093b10ae6d7a39cab9c0013e1f54a855340f42929a95ee0fb1",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/bows.json",
+      "sha256": "046e207dca7d43d3119435336cb09a04b956437f2a38b358d4b64b76bf0dbf1c",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/carminite.json",
+      "sha256": "90643d246d35bba8ad3d6ec1e967df4dd52fccc402db83137641e2032ec8d61c",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/charms.json",
+      "sha256": "d8cfd70a0730956bcc9b6b5d47c6e7ad5731c927f13097cdad8acde36ff9ff3a",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/crumble_horn.json",
+      "sha256": "4d39fa2cabe28dd928c5ba15484171f80615cf6519e5c13ae392fa2dd9659131",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/fiery_blood_tears.json",
+      "sha256": "a52846fe02fa80c4e165e76faf59bdb50db82d10e8d0fc5cda6b2cd0e37d8a90",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/foods.json",
+      "sha256": "5f2e76ad985e776396c00a8186423d70dce825b7e1cc0417929ea8e3037a54bd",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/giant_blocks.json",
+      "sha256": "ec5acb63f45f30ba77550e6e798ee2e0debe930c9d8dec7f21fd6761c81ca5ce",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/glass_sword.json",
+      "sha256": "746eaaedc1c9be52e811a4df1457f043fc06eba5136417502831931c05533fed",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/ice_bomb.json",
+      "sha256": "5474a671047e8a59308bbda3af76a19e21f554c261de3d54358f680761237d19",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/ie_shaders.json",
+      "sha256": "000966063e4ac56484060229aa5834d7e806f6a92ca90aa16d91038cf9311a9a",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/magic_beans.json",
+      "sha256": "2d7bec0d578486b8e41f7d270986f92d0446d0d56c2dcca045dc7fdb8674c38f",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/magic_trees.json",
+      "sha256": "26472dac0376a87d73b50dbe2aae7b73109eff3496b51a36002185c70efa0399",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/maps.json",
+      "sha256": "f358e7a9a930d0c1c2ae4a8dc967818561754153f959aa6bc9726013412b8404",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/mazebreaker_pickaxe.json",
+      "sha256": "6dbe30276697a7978811d8076494138c3cea011a31d57253c95f856bba3c992f",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/minotaur_axes.json",
+      "sha256": "c2dadfda639b1269beb3038fcf793a9e3cd9e96a3a4e34edaf79d9dd99756963",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/moon_dial.json",
+      "sha256": "3308d1c30d0e1948af6ace32f15006ab0566a98459ca3918d2aae0e3993b98fe",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/phantom_armor.json",
+      "sha256": "3550b24baa7d9aae06336be9e4ac88b77d8d20ebeb57d93f71258db58a7083d9",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/scepters.json",
+      "sha256": "37216d4a7665f4f8b0e6e8246fc278b6061818aea2bdc7fb30cfc6faa466886f",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tc_aspects.json",
+      "sha256": "f513c7c3f003c0b3f97bc1953bd8114211c56de462d9d3c0f1ac425cf5ca6c4b",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tconstruct.json",
+      "sha256": "adc95ec91e060879afecf7b5554ebf7d6c5f9c73d60f5744c1532cec09098306",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tools.json",
+      "sha256": "d97dd9ecc839bbff0d99347bc1b670c6b9d8e7d6ee9fecb8c57af3cd779f9f20",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "sha256": "461223db76b70386d634d96ad98110fb5a204506b92cd8047f6e325e17ec02a3",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/uncrafting_table.json",
+      "sha256": "4a4ed2c103a0d65d479e4fc121500bb6c26bec8effd1422d7e8087d45591d746",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/dark_forest.json",
+      "sha256": "a6ad137e7fafb335832e5277e049603300443d6228dba95c72f4b4bed68cebe3",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/enchanted_forest.json",
+      "sha256": "e0c2165bdf976418bf65109fbcd69d630ccf8d25b26ce89095d4eae91dfa9d34",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/general_biomes.json",
+      "sha256": "a9294ae4b749b6ab3b5d1b6628d777cdff9eca6d90de2853d4b5659d2a519be1",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/glacier.json",
+      "sha256": "e5ad3341361cd2e5f404d16ab46ccf17866dd33e39f5e9367b6a569c9019a108",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/snow_forest.json",
+      "sha256": "09354aa988c5ec08b3ae4afb914f2de20eac6f9f8c7252feddb6e3214d2836b9",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/twilight_swamp.json",
+      "sha256": "86bb5e252ce01b04fe06564928c3795be0bc365d796b9fa0327249803962429e",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/magic_map.json",
+      "sha256": "3cf42f1904ed851dd0c0cc866dcc682dfe7c3639196993d64308994b6274a757",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/aurora_palace.json",
+      "sha256": "fa85988e6cf71db1e71ea508001a99ba573fe2bc0282e8d3e342de5fe94011ac",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/dark_tower.json",
+      "sha256": "1567c74735479e2b4343d49234820e25ce4be361493bb511b0d4001dfdb3f8a9",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/final_castle.json",
+      "sha256": "2980af06e0ff19e97b7244dcb6a5c37725d4bb4081f769cf576225f45afbfa90",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/giant_house.json",
+      "sha256": "00a5894406f34f5e549ff74a64f61b1d3e04283ff80ee52de525e581ac32ace3",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/hedge_maze.json",
+      "sha256": "062b9f1b14530ce648f62cdf5e69a3afcc396f2dedb196eaf54777523f6067b0",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/hollow_hills.json",
+      "sha256": "85e211bba390d391c5f66a5209cd3fed1c0398d21606c53be0668ad0fe1b1930",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/hydra_lair.json",
+      "sha256": "924a0ad47212e8bbcd5bb9f90d2538f01fdd56ee96687276e4fdac7f90c20979",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/knight_stronghold.json",
+      "sha256": "811cd4be916708ce38eb27617b7ec3a5d259679e0768f44e62c236e37aa915b6",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/labyrinth.json",
+      "sha256": "bd2619931afc3ce273df66f532b13fffbfa8aaa6a48468bb771cac82676e412b",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/lich_tower.json",
+      "sha256": "dfa26f0b1f5a81f1c26ead0ab113797805fbe984eb25390d701c88d69197a5f1",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/naga_courtyard.json",
+      "sha256": "4317ba864c3affdb1b20d85a07ce3ee8210f4641cd89960436f77a6e0c6a9ae1",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/troll_caves.json",
+      "sha256": "b23a4142350fe3e47fbd2d495d9679f9dff10be298b17ed4cd26800ed17fce1a",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/yeti_caves.json",
+      "sha256": "83f4cc13610de33b986a0f6c70943ea59ab039bfc9238f0c6884560f79d18d76",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/minor_landmarks/druid_hut.json",
+      "sha256": "57dd85fc78ce69c4dd7f22fe060f6d242d44cf76371de676200733146b0970d4",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/portal.json",
+      "sha256": "3ff1dfff2e244df93cfadb7e27b2078f83a811c3f5e3894d82c75e81789b6f51",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/templates/gallery.json",
+      "sha256": "3e2bcff14dea16fd5d38e4980055c67f3c246d26fc537f7982dccd5339236d31",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/templates/headed_gallery.json",
+      "sha256": "122a1954b59fe7c0443d81c0fbaaa585121d0b72c1cce318aff41457115747d1",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/templates/headed_spotlight.json",
+      "sha256": "80474c52f5c95334a44415ca423b12b80aebde1d589ae270087976681ec7f422",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    },
+    {
+      "path": "assets/twilightforest/patchouli_books/guide/en_us/templates/headed_spotlight2.json",
+      "sha256": "7371cd6861a7b30297781663edb79a4a8d6f9832b5d0eb4868f2a212a5a9eaaf",
+      "jar": "twilightforest-1.12.2-3.15.1.jar",
+      "jar_sha256": "16ebf2da008d3f8351669c19036e5e50a14125f925c3ee194caac0b7edaf2fb2"
+    }
+  ],
+  "entries": [
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/biomes.json",
+      "pointer": "/description",
+      "source_sha256": "ba8825ab4df3731f68a5afafa5f7723c8008ba2be20baade8f8de3916f9c7a00",
+      "ru": "Далёкие земли повсюду!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/bosses.json",
+      "pointer": "/name",
+      "source_sha256": "addb8394e9ecb296ca2c7617edfc5f1c5c819500bd17112bd502f4db14b362b8",
+      "ru": "Боссы",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/bosses.json",
+      "pointer": "/description",
+      "source_sha256": "9ba996032489c362f529b7d1336a466cf1294ae10d4dd92a147e88c615f2746e",
+      "ru": "Самые опасные злодеи!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/devices.json",
+      "pointer": "/name",
+      "source_sha256": "2b4869937fe921840d5118a1ed12aa08f6fea9688c6a243035c342a33af7c1ce",
+      "ru": "Устройства и механизмы",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/devices.json",
+      "pointer": "/description",
+      "source_sha256": "149e3bb472eb2c82ce5c78be512b7352ace45837ed606b3f25de88ebd58103f9",
+      "ru": "Технологии Сумеречного леса",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/entities.json",
+      "pointer": "/description",
+      "source_sha256": "770e2598ea35c5f1be22b92754c692d06fea1e04806390b3c596832b79ce0737",
+      "ru": "Все друзья и враги!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/major_landmarks.json",
+      "pointer": "/name",
+      "source_sha256": "813aadd1415d4427735567540edb7ae9d2ba55bb55733419487d3b1bcede0954",
+      "ru": "Крупные сооружения",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/major_landmarks.json",
+      "pointer": "/description",
+      "source_sha256": "18d2f987fdf9c7431c261b0dc8c049de04b60b5ae933ba0d6dfb82f99744380e",
+      "ru": "Время побить этих боссов!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/minor_landmarks.json",
+      "pointer": "/name",
+      "source_sha256": "00d1f9ad822d8a30ad23e4f2f4a085c54270d58280a43ec23719b1af0e8e7587",
+      "ru": "Малые сооружения",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/minor_landmarks.json",
+      "pointer": "/description",
+      "source_sha256": "f177ddf6a687fa376dbb69806d49427e9192ebf047788c95628714c12f606ccd",
+      "ru": "Хижины, колодцы, руины!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/treasures.json",
+      "pointer": "/name",
+      "source_sha256": "a6fe878a7c1245f5a5ba42374ae091dbdd56a1f2775cd9e5c0bc08ecd225b3ab",
+      "ru": "Сокровища",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/treasures.json",
+      "pointer": "/description",
+      "source_sha256": "d96248dbfe0e6e163027257ed9ddc439638a3ee6fbd0530f0242bd321056d8fc",
+      "ru": "Там столько сокровищ!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/categories/world.json",
+      "pointer": "/description",
+      "source_sha256": "b2ae11ae594b369be0ec77a23a8cd434c16d72d992ab8a81ce39adcd14dfe3c4",
+      "ru": "Это совершенно новый мир!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/alpha_yeti.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "962a69fbe9e269d6a5d1b5bf3bd7c1daf41df664fa1137190e9f0cfd33d4f97a",
+      "ru": "Злодей он грозный, но трофеем пока не обзавёлся.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/hydra.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "1bb8c19778b317121c34b5115ea25af638ffc35e4fecbe47a3524dad5209885e",
+      "ru": "Гидра — великое чудовище Огненного болота с прочной шкурой. Каждая голова действует по-своему: огненное дыхание, взрывные снаряды, сокрушительные укусы. А способность отращивать головы делает этого зверя поистине неостановимым.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/lich.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "fb683e038e6a1a2c0eafb57f9c4d29f39ccabe20655fbd37807af001e418e2c8",
+      "ru": "Зла в нём больше, чем можно себе представить.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/minoshroom.json",
+      "pointer": "/name",
+      "source_sha256": "ea0acd4e1c50d1d9354648decc075843df74dd22e24deec1b8522b0e89f3f626",
+      "ru": "Гриботавр",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/minoshroom.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "a6dddba0aa300d37329c4692160677081100003e014e7ef38a5dc92c5b4fc831",
+      "ru": "Он всего лишь хотел поставить вопрос ребром… топора.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/minoshroom.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "df1e5a5eb6b2658f162d6290e60dcd36b3533dba1fb90a5178b465fa81d9391c",
+      "ru": "Этот ужасный зверь Лабиринта быстро расправляется с беспечными искателями приключений. Алмазный топор минотавра пробивает любую защиту, а стремительный рывок застаёт врасплох.$(br)Будьте осторожны в бою с гриботавром.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/naga.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "60473e50a5fd931a06804501f33fc9113839e4ee2128f3d93d090b5b68c027f0",
+      "ru": "Огромное зелёное змееподобное существо с почти человеческим лицом. На чешуе едва заметны оттенки других цветов.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/phantom_knights.json",
+      "pointer": "/name",
+      "source_sha256": "6ade8089697a8052f82d7d5cd5b5fe3af9c2b1fc264ec9a6bd2effd71dbc8ce5",
+      "ru": "Призраки рыцарей",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/phantom_knights.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "5030e63d29d816b74974b6ca9bb1430bd72737e121dc5acd89e9edc322759755",
+      "ru": "Поистине рыцарский кошмар.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/snow_queen.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "09a3c808a918180eb1576077895c1acdd8205b8b6f2cc37e1a916815092d65a3",
+      "ru": "Лучшая вайфу",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/bosses/ur_ghast.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "ac98b5b3e6552d6e0c4cdae65f0cd48edfb9b18088c52ac5bf967f7673d702f2",
+      "ru": "Пора вызывать охотников за гастами.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/anti-builder.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "a3b913d6050dc10402d434f31c6d664238064b3507c42a2661e6f44deaba725e",
+      "ru": "Блок излучает странную ауру, защищающую всё в её пределах. Поставленные в поле блоки разрушаются, а попытки что-либо сломать усиливают странный красно-зелёный блок. Выключателя не видно, но какой-то способ должен быть.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/carminite_builder.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "cdd8b44c097635b9abac3c320596a063ef899e2ccae9226ca46f1fe3f51db15f",
+      "ru": "При сигнале редстоуна это странное устройство создаёт красные прозрачные блоки. Карминитовый строитель прокладывает дорожку в зависимости от направления моего взгляда. Дорожка существует недолго, и для повторного включения нужен новый сигнал редстоуна.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/carminite_reactor.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "86085c500da4487e4416c97e47397230b1eda220f591e9af0336972eb4097fb0",
+      "ru": "Не могу понять, для чего это нужно. Какой-то реактор: я ожидал выработки энергии, но он лишь простаивает. Может, энергия нужна ему самому?",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/carminite_reactor.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "e8e5b728e6efb2004dca5eb34ab97ca30bef6029b7b214c7375137dd724f88ad",
+      "ru": "Восхищаться или бояться? Если подать достаточно редстоунового сигнала, вокруг возникают золото и алмазы. Но блоки ненастоящие, а реактор схлопывается, выпуская детёнышей карминитового гаста. Был ли это неудачный опыт? Уже не узнаю.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/encased_fire_jet.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "9a8daa95ec2a468db1ab716733159eec351af0471010721ba170060fd2eab6cc",
+      "ru": "Немного технической смекалки превращает огненную струю в автономное устройство, которое срабатывает от кнопки или сигнала редстоуна. Недостаток в том, что перед выбросом огня ему нужно прогреться, поэтому сигналы придётся подавать вовремя.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/encased_smoker.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "e1a35a2b7dc47138e778cbebda8b3f5274184889dbf61292cb529dfddc40df80",
+      "ru": "Дымящие блоки постоянно испускают дым, а мне это неудобно. Подключив такой блок к редстоуну, я могу выпускать дым лишь по команде. Осталось найти этому практическое применение.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/fire_jet.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "7f4b84bfa52db83a0f4f723cd5bfd4f667089415bd5b2a837118ace5a230d6a2",
+      "ru": "Эти нестабильные жерла случайным образом выпускают струи огня. Нужно быть осторожнее: кажется, их ничто не запускает. Почему-то без лавы снизу извержения прекращаются. Может, в этом секрет?",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/ghast_trap.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c855097090b6ce468e32239996a38f31a71be1d9ea2afbbaf7483f493ce15ef0",
+      "ru": "Как следует из названия, устройство ловит гастов. Но сигнал редстоуна ничего не делает. Может, нужен особый источник энергии?",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/ghast_trap.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "6c1f8262d98e37ba94632c8aa16b75a8c6232b48c85008aaf9cbf8dc3aec10bb",
+      "ru": "Вот что мне нужно! Если убивать слабых детёнышей гастов возле ловушки, она поглощает их энергию. Из неё доносится тихий звон. Когда он станет достаточно громким, сигнал редстоуна запустит ловушку: она стянет гастов с неба и вытянет из них жизнь.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/locked_vanishing_block.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "0448365f319293771f97d08e64a95181d37f42dabdb616b04844aa55a32c50aa",
+      "ru": "Что-то здесь не так. Ни само устройство, ни соседние исчезающие блоки не реагируют на мои действия. В центре виднеется странная форма. Может, нужен ключ?",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/locked_vanishing_block.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "be4be8351db2a79eeec0598840b438305c6d4a02f4b6471c729719c127d8fe66",
+      "ru": "Конечно, это подобие дверного замка. Ключ башни отпирает устройство. После этого взаимодействие с ним заставляет исчезнуть и его, и соседние исчезающие блоки.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/reappearing_block.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "b0335c6cfb0653fd01801c70280a7c96383c395be77ea0d7ee79875c0f48350c",
+      "ru": "Любопытное устройство. Стоит коснуться блока или подать сигнал редстоуна — он исчезает. Через определённое время возвращается. Почему — мне, наверное, не понять.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/smoking_block.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "877f3fe6ee546b639e69099cad090698b2e90835d7d914ae200a95d985d359e2",
+      "ru": "Стоять сверху вроде бы безопасно: ноги не покрываются волдырями, кожа не горит. Вот только дышать неприятно. Устройство работает само, без нагрева. Интересно, пригодится ли это?",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/devices/vanishing_block.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c0f047a4f16d6cc70f6406abb2a8114c321101c878d312259a5c4b6f47cbd4bd",
+      "ru": "Страннее, чем я думал. От прикосновения или сигнала редстоуна блок исчезает. Сколько ни жди, не возвращается. Какую же защиту он может обеспечить?",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/adherent.json",
+      "pointer": "/name",
+      "source_sha256": "26dadf63ae0f94f58a246774b26fb9d81ede338bf2728dfb76b6f8e588a9ca51",
+      "ru": "Приверженец",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/adherent.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/animals.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/animals.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/animals.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/animals.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/animals.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/animals.json",
+      "pointer": "/pages/5/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/animals.json",
+      "pointer": "/pages/6/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/animals.json",
+      "pointer": "/pages/7/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/arthopods.json",
+      "pointer": "/name",
+      "source_sha256": "eec98fe99a56623edfe9a468780a0d34b20eac06ff2fe9d105afd6c9130df1ed",
+      "ru": "Членистоногие",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/arthopods.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/arthopods.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/arthopods.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/arthopods.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/arthopods.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/arthopods.json",
+      "pointer": "/pages/5/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/arthopods.json",
+      "pointer": "/pages/6/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/arthopods.json",
+      "pointer": "/pages/7/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/arthopods.json",
+      "pointer": "/pages/8/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/castle_guardians.json",
+      "pointer": "/name",
+      "source_sha256": "94991b10ba3c0f9b678a7a4097a121e7843c6e900ebbcf33167dd9eb427af7fe",
+      "ru": "Стражи замка",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/death_tome.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/ghasts.json",
+      "pointer": "/name",
+      "source_sha256": "1d75639feb5c7dcc888d702de08022ef5b17ab9458b4fe3341a810360cf3691c",
+      "ru": "Гасты",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/ghasts.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/ghasts.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/giants.json",
+      "pointer": "/name",
+      "source_sha256": "d0eb20469e6dc061512849bf6538ae4b71149dcc99b6aa4d4420591b17b8c31d",
+      "ru": "Гиганты",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/giants.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/giants.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/goblins.json",
+      "pointer": "/name",
+      "source_sha256": "198474c00db41929359467c6101ab99ebb0d90456622629b42df9fadaf904fc6",
+      "ru": "Гоблины",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/goblins.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/goblins.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/goblins.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "746714b7d6f272f7cc41fc4983decd202eb34572b8f0ab7001e307c0b8cced46",
+      "ru": "На плечах Нижнего гоблина всегда лежит весь мир Верхнего. День ног он явно не пропускает.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/goblins.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/goblins.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "14a23ab4fb9a2fb4fe23044c10d2e55e4155be510f3de9f079ec3b634fe2a0e8",
+      "ru": "Гоблин с цепью готов поразить всех своим новейшим мастерством владения блоками и цепями. Настоящий специалист по блокчейну!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/harbinger_cube.json",
+      "pointer": "/name",
+      "source_sha256": "afdee605498f8c0aab8593cddd3c3eda2be47a71c82cdc13f54679badc9e0fe6",
+      "ru": "Куб-Предвестник",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/harbinger_cube.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/ice_cores.json",
+      "pointer": "/name",
+      "source_sha256": "bb28cf7a1cf5a337d84cff71fef4609b50d0ac3c50777ba08983846c91f2664f",
+      "ru": "Ледяные сердечники",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/ice_cores.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/ice_cores.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/kobold.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/maze_slime.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "8ef9a4eeb2c46ae252d9e72ae35739c162001666b73201b6b4a261be432a60e5",
+      "ru": "Странные слизни живут в Лабиринте. На вид и на ощупь они почти обычные, но тела напоминают лабиринтовые кирпичи. Кажется, внутри скрывается особый секрет — возможно, редкое сокровище?",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/minotaur.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "14931daba14487eb13e76f3e28909ccb8df240107013bc6564f2d9d1ba64bac2",
+      "ru": "Человекоподобные быки из Лабиринта. Вооружены золотыми топорами, пробивающими защиту. Их рывки быстры и внезапны, а группа таких зверей одолеет даже осторожного путника.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/minotaur.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "49cc244757af4fff6b8ba5c3d4484f279c7008ffc33bc796503214b5dcee0d95",
+      "ru": "Особенно опасны минотавры с золотым топором минотавра. Они редки, но это оружие наносит ещё больший урон.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/troll.json",
+      "pointer": "/name",
+      "source_sha256": "9bac25686c53aa859d6179d914be697db510e5dfa7513cad362d76b1c86c9d3b",
+      "ru": "Тролль",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/troll.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/undead.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/undead.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/undead.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/wolves.json",
+      "pointer": "/name",
+      "source_sha256": "7edff113a6b28288f16b484282b6ea428b128710c54d32b69c31c8599c7b17b1",
+      "ru": "Волки",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/wolves.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/wolves.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/wolves.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/entities/yeti.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/armors.json",
+      "pointer": "/name",
+      "source_sha256": "c4c5cc95154c2f2deb8afc84d4722e377a3a56ac12d24e722a63841fa80fa64f",
+      "ru": "Броня",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/armors.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "cd60fc19e5b48a738d434d3b846ec36626c4c87b5bef70aff1109393f95583d7",
+      "ru": "Сведения о броне",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/armors.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "6a063f2b77db14c9eaf7846fd215d847ed1ffa2dabe5a1ef5e57826f969bc246",
+      "ru": "Броня из железного дерева",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/armors.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "4f30b74a3a3d4ec3f86e009c7feb5d4d29603a8bb64ea1fe17bb0dee0a3225d9",
+      "ru": "Доспехи из чешуи наги",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/armors.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "fab49afe89faad32b0105bd13a1e352c4dea7bbf4492e2e02397ccab727232f3",
+      "ru": "Броня из стальных листьев",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/armors.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "2d2acac53570cedb260608492fd6042061cf00e607d3c6568c22fcee4b3c0898",
+      "ru": "Огненные доспехи",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/armors.json",
+      "pointer": "/pages/5/text",
+      "source_sha256": "8577e945228a92f0e13e251ea91290951d222e6c0e023115fa5eed03c6a3a9ee",
+      "ru": "Рыцарские доспехи",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/armors.json",
+      "pointer": "/pages/6/text",
+      "source_sha256": "dbeac0c1b7ce8d7a5d9bed22103729f859639b75f7b6667f9ca832977048b249",
+      "ru": "Арктическая броня",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/armors.json",
+      "pointer": "/pages/7/text",
+      "source_sha256": "486be76dac74a51fbdb4cb43cf485c3c63315f620763ccda45cf896d72b742fe",
+      "ru": "Доспехи Йети",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/bows.json",
+      "pointer": "/name",
+      "source_sha256": "f09abd259d0ada2a71f64986f21151295c655e4b05f149860050436a4e3124cd",
+      "ru": "Луки",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/bows.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "b4f2720b7738ff0e3e5f92cf5363e8c0f04715c2bca4dfe8c1a368913314dcb6",
+      "ru": "Сведения о луках",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/bows.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/bows.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/bows.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/bows.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/carminite.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/charms.json",
+      "pointer": "/name",
+      "source_sha256": "536ae063db94420116be8a0bae6e2c80ecee9c28806162cd22aff2973639dfb1",
+      "ru": "Подвески",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/charms.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "95c472406e9419aa5ef5fd430de78ad55a7a260f9e5196d55b54a1448e765a7d",
+      "ru": "Общие сведения об оберегах. Этот раздел авторы мода ещё не заполнили.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/charms.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "536ae063db94420116be8a0bae6e2c80ecee9c28806162cd22aff2973639dfb1",
+      "ru": "Подвески",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/charms.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "66a0c7016e3b86676cc04063a48c8de45dd25923d80a23fa5e3112dcbfb905c8",
+      "ru": "ЗАГЛУШКА: обереги хранения сохраняют разные вещи после смерти. ЭТА ВЕРСИЯ ПОКАЗЫВАЕТСЯ БЕЗ BAUBLES.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/charms.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "536ae063db94420116be8a0bae6e2c80ecee9c28806162cd22aff2973639dfb1",
+      "ru": "Подвески",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/charms.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "310c0a18ff396edc303ff990443c3f9ec347afdc207dbee6d67b558f99bc7396",
+      "ru": "ЗАГЛУШКА: обереги хранения сохраняют разные вещи после смерти. ЭТА ВЕРСИЯ ПОКАЗЫВАЕТСЯ ПРИ НАЛИЧИИ BAUBLES.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/charms.json",
+      "pointer": "/pages/3/title",
+      "source_sha256": "536ae063db94420116be8a0bae6e2c80ecee9c28806162cd22aff2973639dfb1",
+      "ru": "Подвески",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/charms.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "19d40823e2890591727570134242e8d6a8dd66325f9e36afb1fd7e762431418c",
+      "ru": "С виду неприметный оберег, но сзади выгравировано: «Даже смерть нас не разлучит».",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/charms.json",
+      "pointer": "/pages/4/title",
+      "source_sha256": "536ae063db94420116be8a0bae6e2c80ecee9c28806162cd22aff2973639dfb1",
+      "ru": "Подвески",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/charms.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "018144d214ab62f1d8841a020a9c240b97f1e5d79831bbabf2155d261beadbfc",
+      "ru": "С виду неприметный оберег, но сзади выгравировано: «Даже смерть нас не разлучит».$(br2)Он достаточно мал, чтобы носить его вместе с другими украшениями.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/crumble_horn.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "843d9db6495138cde49ba914338727c6f2e8546e18efc29173ad9f27fe13ea5f",
+      "ru": "Поиски цветной шерсти завершены, и баран подарил мне рог. Похож на музыкальный инструмент. Может, стоит в него подуть?",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/crumble_horn.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "82d4d0a414f3c7755d4d3883d8857bb3bdd55c5e3a8b07d90f1c2fb2e2ac6bee",
+      "ru": "Рог оказался не просто украшением для каминной полки. Его звук заставляет землю и камень рассыпаться, словно снег на солнце. Может, это удастся с пользой автоматизировать?",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/fiery_blood_tears.json",
+      "pointer": "/name",
+      "source_sha256": "c182540d612f7e8145e5c2e4f1da6e97c0d891184811a3bf457c269432cef0cb",
+      "ru": "Огненная кровь и слезы",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/fiery_blood_tears.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "c182540d612f7e8145e5c2e4f1da6e97c0d891184811a3bf457c269432cef0cb",
+      "ru": "Огненная кровь и слезы",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/fiery_blood_tears.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "b6ccaf345e4bac4b27d8ec625127e7cc847cb923efe1b4fb564a6d885cefc044",
+      "ru": "Маленькие пузырьки с обжигающим веществом. Его эссенция настолько горяча, что пропитывает железо и превращает его в огненный металл для крафта. Добывается у нескольких могущественных чудовищ.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/foods.json",
+      "pointer": "/name",
+      "source_sha256": "8cce925b65ef686f2222ed310f2d443fc21fbf294244813405249d09936a84f3",
+      "ru": "Мясо, блюда и съедобные продукты",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/foods.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "50e73d3471e6f7cfb4af64193f763d3de155808b9d27bc596c06720e6a091024",
+      "ru": "Еда, прекрасная еда!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/foods.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "6a957e289514ab50376f5b2417eb5f204a2e398d80773331f6c0dd7c4822c484",
+      "ru": "Сытное блюдо из одной отбивной гидры. Это питательное мясо надолго утоляет голод и ненадолго даёт быстрое восстановление здоровья. Достойная награда победителю могучего зверя.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/foods.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "acb84eb3d6dd31bc8d0232929dd6fdeaa3f0f2ceedad225918830d42ae12e076",
+      "ru": "Небольшие закуски из лабиринтов. Насыщают слабо, но выручат при исследовании запутанных сооружений, когда еда на исходе.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/foods.json",
+      "pointer": "/pages/3/title",
+      "source_sha256": "a4130f82aead9aadc913b8a2a418746e1115729c63d90159a3ec570d74ccec8f",
+      "ru": "Мясо минотавра",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/foods.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "b4aa3988da131e22ade5493f0e0656ead18e323d756f40551dd938097ef7d320",
+      "ru": "Говядина минотавра. Сырая не слишком питательна, но после приготовления не уступает жареной курице.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/foods.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/foods.json",
+      "pointer": "/pages/5/text",
+      "source_sha256": "11769b49a2d69a47f9e0f22eefef278c368debc49d1f610bf9ed6b2010635044",
+      "ru": "Питательный и сытный бефстроганов из мяса минотавра придаёт сил и позволяет безопасно войти в Огненное болото, не страдая от жары. Как любезно со стороны гриботавра после всех этих усилий!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/foods.json",
+      "pointer": "/pages/6/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/giant_blocks.json",
+      "pointer": "/name",
+      "source_sha256": "14ed6c0438812fa6c68ba0643d0758615a4b5de6d829dd940c24904944f77637",
+      "ru": "Гигантские блоки",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/giant_blocks.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "b6125a38976caf5c048d3bdb6bc1fb8232915e602175d043bd811d7ac9ae79d4",
+      "ru": "Гигантские блоки!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/giant_blocks.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "60c05d673111d32d25ea47a27dfa291cd0fe3af55e0bc020f191bbf58d4b23f2",
+      "ru": "Гигантский булыжник!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/giant_blocks.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "5e31a4640395d826ee546817f54c45402d235842df54285f7e2d76ae9e48071a",
+      "ru": "Вот это ОГРОМНОЕ бревно! Мне бы такое в свои владения ;) ;)",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/giant_blocks.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "84b1a040443d9e3ac6e951595ab6c5f3fd7ce51b96fa1ff6fc70bc2a36f28b65",
+      "ru": "Гигантские листья!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/glass_sword.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "45c66aa48937183fa94e520dcf2d0d733e8eeaa10fc50533d1b5ecdd29e9e83f",
+      "ru": "Выдающееся творение мастера. Острота этой сабли несравненна, а прозрачная отражающая поверхность пропускает сумеречный свет, рассыпая вокруг узоры, похожие на снежинки. Воистину вершина мастерства.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/glass_sword.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "f16a1d476a31b2d2fac8d9a3e43ea563b1cc2afabf28988698760b837248deed",
+      "ru": "Увы, за красоту приходится платить. Стеклянная сабля — скорее демонстрация мастерства, чем полезное оружие. Острота несравненна, но сила удара рождается из тысяч разбивающихся осколков. Для столь изящной вещи это довольно варварский приём. Настоящее чудо одного удара.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/ice_bomb.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "4f4e7e68ef47bea8b67c212344f38d5b0416c06a51b6cc1a00a3ae7e62c071b0",
+      "ru": "Ледяная бомба — просто лучшая! Прохладная. Крутая. Буквально бомба!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/ie_shaders.json",
+      "pointer": "/name",
+      "source_sha256": "893f37ff234af06e7e73c10656c21303d567f8bd9215abbd9eb00395efbd89f3",
+      "ru": "[IE] Шейдеры",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/ie_shaders.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "bb37f3820a05d0fbfecd0facd793e282d4c79aa84b9529d7438d5d3b83ce2237",
+      "ru": "О шейдерах Immersive Engineering",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/magic_beans.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "9dc904dfcbc26058345dca2b2f30fc4fd894712005b38338b6f3a20d6ba894ec",
+      "ru": "Какие огромные бобы! Обычная почва явно им не подойдёт. Раз они нашлись здесь, их естественная среда должна быть где-то в этих высокогорьях.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/magic_beans.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "d52db70412a2bebf008c35e405d33c4da98c69c586f20bb18b439e9433fcb8be",
+      "ru": "Бобы мгновенно откликнулись на невероятно плодородную почву. Впечатляет! Стебель вырос подобием лестницы, словно зовущей меня всё выше. Когда не делаешь дурного, бояться нечего: шагаю вперёд и напеваю весёлую песню.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/magic_trees.json",
+      "pointer": "/name",
+      "source_sha256": "474db71ec9ab555b7fa94cbd603ab207d79954a82aaf4fa57e26a279241c79e8",
+      "ru": "Волшебные деревья",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/magic_trees.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "3c4f0f1cb56e23855a869bb536177e634a71a9a4e341805a7de580619a59324c",
+      "ru": "Саженцы волшебных деревьев встречаются в сундуках подземелий на вершинах больших деревьев.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/magic_trees.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "b131743357fc80714afef9ea9f9a9b2a24ac3f516adc5a844aee0f7f8827e297",
+      "ru": "Древо времени",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/magic_trees.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "1623e3411087fd630d9ddb00c68580b9417911f9e2914f2855b82be14d014393",
+      "ru": "Дерево трансформации",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/magic_trees.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "b4ff8ac0394652b988ccd5bc7acd859659e2fd3c8349d50ca7204c2d100cc12c",
+      "ru": "Шахтерское дерево",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/magic_trees.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "fa0d79d3417cf09f9b88a6b85e9aebd8ea560de27516ec14370537f0c55909d3",
+      "ru": "Дерево сортировки",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/maps.json",
+      "pointer": "/name",
+      "source_sha256": "119e66d117ae8f0cfaf46ff97f0344f21ba0487574db7ea5f36d5399fe948792",
+      "ru": "Карты",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/maps.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "59b56dc19dccee175abe724d26343e9589bc772d0ab38e107c1dcfada29ec051",
+      "ru": "Информация о карте",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/maps.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "824ae8ad3dfdee5f26188fe38d2d519354b4e0f1c83c4e8aa6c5ad5cbc768dcc",
+      "ru": "Магическая карта помогает находить биомы и постройки.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/maps.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "a0952be18c7e065cf582f9cf40e6570c62f83a22c81c2c67a9948bfa5ce28c75",
+      "ru": "Карта лабиринта показывает его устройство.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/maps.json",
+      "pointer": "/pages/3/title",
+      "source_sha256": "bfc89d1c24186cd2247965adccb86639121e93cc7cab7bac9d423516ba73b968",
+      "ru": "Карта руд",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/maps.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "ec77a770062575d2245f76eb2932d345d6206bb06bfb1b4424d8e22d517de1e5",
+      "ru": "Карта руд показывает подземные слои, особенно рудные залежи.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/mazebreaker_pickaxe.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/minotaur_axes.json",
+      "pointer": "/name",
+      "source_sha256": "029db035751ddbf0d82ac3b4c35d19e1839397835c7bd63edf20dcf568c32a0c",
+      "ru": "Топоры Минотавра",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/minotaur_axes.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "ec18bc4fd36a1b4cdd33814d6deebd721d318ca729d6ef00603eb90dd2332985",
+      "ru": "Искусно выкованное оружие минотавров и гриботавра. На первый взгляд обычные топоры, но устройство странное: лёгкие в руке, они тяжелеют во время бега.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/minotaur_axes.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "a9f439316751eb8c3bd9b7ddff299ce62a2318027ecd25e784cea5720ff7ae02",
+      "ru": "Острый, мощный, но невероятно хрупкий. Только самые достойные из Минотавров имеют это оружие.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/minotaur_axes.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "bbf2b3fa6da72402a2e05d34dd7bb564e2965cdae8fc5bcdf6f2047de5e509c7",
+      "ru": "Искусно выкованное оружие с прочностью алмаза. Мощный топор гриботавра, достойный великого зверя.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/moon_dial.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "ae9adf4c7f1290e0726379fd827b04aebeaa09f9e8a80221965fe666ab8eb568",
+      "ru": "Он читает луну.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/phantom_armor.json",
+      "pointer": "/name",
+      "source_sha256": "d56f3e07955103d9f1b0f647fb1d6b843afbbdfd1d66c544572956c223115760",
+      "ru": "Фантомная броня",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/phantom_armor.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "d56f3e07955103d9f1b0f647fb1d6b843afbbdfd1d66c544572956c223115760",
+      "ru": "Фантомная броня",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/phantom_armor.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "857093c3869b6e0c9bcd3cd3ffcae2883403438fa3b171c3633556e0312046a4",
+      "ru": "Странный шлем. Даже с первого взгляда ясно, что он необычен. Материал похож на металл, но чуть тёплый на ощупь и словно резонирует с окружением.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/phantom_armor.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "b0de9d2824cf7cd8cd1c011557e770e42a825f2a6e8b1bc64fd0753175926dc4",
+      "ru": "Несмотря на жуткую природу, качество шлема превосходно: от ударов он наверняка защищает хорошо. Надев его, ощущаешь странную близость и желание не расставаться с ним любой ценой. Иногда на грани слышимости раздаётся злобный шёпот, почти как собственный голос.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/scepters.json",
+      "pointer": "/name",
+      "source_sha256": "bac55095859bc83cac207e746f22485564169980b3b3f988bf7b6f772941c7e5",
+      "ru": "Скипетры",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/scepters.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "fb4b779c176d0057025d136b9b26f7f742b734fb1857e62f7f65464c12419075",
+      "ru": "Лич, с которым я сражался, пользовался несколькими скипетрами. После его гибели выпал один. Возможно, победив его несколько раз, я соберу их все.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/scepters.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "d5be061a374a5c42b9dad41c298faa469825829736b9699f6d8e87a37d63aa0e",
+      "ru": "Сумеречный скипетр",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/scepters.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "00e6b8947cef197ea23e34beed8872b328ff1f22a3436a9487e0c6d62199bb71",
+      "ru": "Стреляет сферами.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/scepters.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "d5be061a374a5c42b9dad41c298faa469825829736b9699f6d8e87a37d63aa0e",
+      "ru": "Сумеречный скипетр",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/scepters.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "565a1f101be31f5073da5bb8b2f5212c2fb4f0d6c3b28790748f45dde69276ac",
+      "ru": "Истощает здоровье.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/scepters.json",
+      "pointer": "/pages/3/title",
+      "source_sha256": "d5be061a374a5c42b9dad41c298faa469825829736b9699f6d8e87a37d63aa0e",
+      "ru": "Сумеречный скипетр",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/scepters.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "2abde3bb6d1fc3dd5c8f8bab1740567382dc535fa2bef9e1128a860d026bd1ed",
+      "ru": "Призывает монстров из могилы, чтобы помочь вам в бою.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/scepters.json",
+      "pointer": "/pages/4/title",
+      "source_sha256": "d5be061a374a5c42b9dad41c298faa469825829736b9699f6d8e87a37d63aa0e",
+      "ru": "Сумеречный скипетр",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/scepters.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "f1f845e8f6ed99962b439d4c8c3c821c6b677c7a502b8ee69106c3bcc8c80d26",
+      "ru": "Создает временную защитную ауру.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tc_aspects.json",
+      "pointer": "/name",
+      "source_sha256": "26c8efbf17cc607bf9be288d63f8caa229d32c2ec965572aefb3f2535a22b779",
+      "ru": "[TC6] Аспекты",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tc_aspects.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "d63cf4f6943854de0dc1011c2ea6651fffea1b18c756dd3b26343fd23494471b",
+      "ru": "Сведения Thaumcraft об аспектах предметов и блоков Сумеречного леса.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tconstruct.json",
+      "pointer": "/name",
+      "source_sha256": "a7a02482dd0e90428c653551b28d6821b115de0d9e375267f1072d6918afce68",
+      "ru": "Инструменты Tinkers’ Construct",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tconstruct.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "659af488cf9954fb89e7bf1bf9aee48bbdb50d19fab569bcabcdd4464ff34eba",
+      "ru": "Сведения Tinkers’ Construct об инструментах Сумеречного леса.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tools.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "429faee586d82ad1e8fd69a6152c64d4de8310fae423caf5bec99569bec98717",
+      "ru": "Этот мир полон магии. Полагаю, его материалы позволяют создавать инструменты с врождёнными волшебными свойствами, которые обычно даёт зачарование.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tools.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "5e52d28bce3425eae23a6f13fefdbae6224e25fae69bea93d0b81aa5ee1b7af0",
+      "ru": "Инструменты из железного дерева",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tools.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "60a1b49f8997cff7ee98893b4c2543b8192c0b9da3bd7f7261ebf544f5894559",
+      "ru": "Инструменты из стального листа",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tools.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "599108a7e0333be19777d7e2801377bbe528009a41efa716b0bcf1efbf1adfa7",
+      "ru": "Огненные инструменты",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tools.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "599108a7e0333be19777d7e2801377bbe528009a41efa716b0bcf1efbf1adfa7",
+      "ru": "Огненные инструменты",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tools.json",
+      "pointer": "/pages/5/text",
+      "source_sha256": "53c0cd87e4f3da6676b467eb6d43973614698cc09112494db834c3bbd5c1c35e",
+      "ru": "Рыцарские инструменты",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/tools.json",
+      "pointer": "/pages/7/text",
+      "source_sha256": "759d1693b761e70da8a3665dffd13f912a1ee3e5c9dc7e9344488db4e6ff46b6",
+      "ru": "Гигантские инструменты",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/name",
+      "source_sha256": "8a925df9f049ff4ed5d839d6b4e7386d0ff628c945907c4d6241ae5a5bb7a8f4",
+      "ru": "Трофеи",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "9b8f7066679fd9fa1c5dd3c52943980818e4acc88350c7d67ec26d87fc2922af",
+      "ru": "Сведения о трофеях",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "ca1b87a208035b4cc8bbf08e3026369128516db75b2e3d9c719268f3ecb75d28",
+      "ru": "В благодарность за пир баран подарил… копию собственной головы. Иногда лучше не задавать лишних вопросов. Трофей можно выставить в знак признательности за изысканную шерстяную трапезу или даже носить как шлем. Достойная награда за труды… Наверное.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/5/title",
+      "source_sha256": "5ec6610913f6a3863e47f6ee78edc7c088db64ea261148a1dbd3f2d18f8983b2",
+      "ru": "Трофей гриботавра",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/5/text",
+      "source_sha256": "f22d104f7c27ba695e42a9c15f8003fb58305ca1dab517104f359b76ad7f493c",
+      "ru": "Трофей за победу над зверем Лабиринта. Пусть он и покрыт железом, но заслужен в честном бою — силой или хитростью, смотря как был побеждён гриботавр.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/6/text",
+      "source_sha256": "a0281dcda9d7bc24d519e17fe6a7e2fa190077779f0e3f92c9cf4eb4ef332b0f",
+      "ru": "Трофей в виде одной из голов гидры. Отсечёшь голову — вырастут новые, но эта награда доказывает: даже такое чудовище можно убить. Кажется, пасть открывается, если под трофеем нет твёрдой поверхности.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/7/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/8/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/9/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/trophies.json",
+      "pointer": "/pages/10/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/treasures/uncrafting_table.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "207c0837ba844150c15b384886e3d4f506d5deb779610dc1aa363ad9b50d349e",
+      "ru": "Разбираем по деталям",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/dark_forest.json",
+      "pointer": "/name",
+      "source_sha256": "77029e2145378527f192348d8b717cc8c4e2e57e89b6b7d481c086958654bd1f",
+      "ru": "Темный лес",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/dark_forest.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/dark_forest.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/enchanted_forest.json",
+      "pointer": "/name",
+      "source_sha256": "987b2beefb6c77f39e5836026025e37ab7df90b08d764a90b762a5bbcfc06d7d",
+      "ru": "Зачарованный лес",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/enchanted_forest.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/general_biomes.json",
+      "pointer": "/name",
+      "source_sha256": "936e1963af5bf9d2c1e3d12e046782594dca2f35ceff6eaaa66f493c80544ec4",
+      "ru": "Обычные биомы",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/general_biomes.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "7aabaf5c2cdbc6c173bbb158897fd4daa61a097204a739fc4e9f64b78919a6a8",
+      "ru": "Об обычных биомах. Ничего особенно примечательного.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/general_biomes.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "8d37affc508f579f836208b82c90a07814d8bf9050fc8610f5c1c0629445716e",
+      "ru": "Лес светлячков",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/general_biomes.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "9035768b1eb9391dcb5c68bdab04eb8164f23b8a7010dca545982d0575470d46",
+      "ru": "Сумеречная поляна",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/general_biomes.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "586f1f2929a294b2106b43d4758b81d19256959763d43302f5784f9647e651df",
+      "ru": "Дубовая саванна",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/general_biomes.json",
+      "pointer": "/pages/5/text",
+      "source_sha256": "823c25d36432c3463b929344cd8f881b08b9bafe689cb41b05653557ff3b614d",
+      "ru": "Густой сумеречный лес",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/general_biomes.json",
+      "pointer": "/pages/6/text",
+      "source_sha256": "7336b31eb3b1540825bd55d36ed01c519a236ce66352a881b79dfa1a5509092b",
+      "ru": "Грибной лес",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/general_biomes.json",
+      "pointer": "/pages/7/text",
+      "source_sha256": "ade2a3152bb76b2c9b5d485c4bcc25550ff08287024da18b3da5e30d242bfe5c",
+      "ru": "Густой грибной лес",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/general_biomes.json",
+      "pointer": "/pages/8/text",
+      "source_sha256": "79140feaf3cc7798042cf5517cb6f708d1f04f149424fbc7ad245e6e603965d7",
+      "ru": "Что содержат эти озера, остается загадкой. Кажется, в этих озерах нет ничего особенного, кроме обилия воды. Ходят слухи, что однажды среди озер может появиться остров. Кто знает, что там будет?",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/glacier.json",
+      "pointer": "/name",
+      "source_sha256": "eebc86af637975fb8417c9c9ff7186a247bfa9d842ae60e7ff06a08b11df3ec2",
+      "ru": "Ледник",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/glacier.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/snow_forest.json",
+      "pointer": "/name",
+      "source_sha256": "0977ae03da22a911bf8b2c920156ebd1b108a9300620a8fee89a4583dbb4f704",
+      "ru": "Снежный лес",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/snow_forest.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/twilight_swamp.json",
+      "pointer": "/name",
+      "source_sha256": "0410aab66e3f48e5e61581670247a2c84f6b8c28e21f36052c3153acb51fba7f",
+      "ru": "Болото",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/twilight_swamp.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "61d6772727dd8c0610186e76657a6cd417ba73002b1109a32eb4933d84d4cbab",
+      "ru": "Обширные сырые земли Сумеречного леса. Комары кишат повсюду и насылают болезнь на вторгшихся путников. Чтобы отогнать их, нужен один из магических скипетров Сумеречного лича. В биоме видны курганы — возможно, там есть сооружения?",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/biomes/twilight_swamp.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "dd5ff16871a342d49618a733e1403d71ae4f4a4fe144b0f89802a4741ec51d79",
+      "ru": "В центре Сумеречного болота лежит Огненное болото. По ржаво-красным землям разливается лава, жерла извергают дым и огонь. Чтобы выдержать жару, путешественнику нужно хорошо питаться. Говорят, в остатках большого полого холма обитает страшное чудовище.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/magic_map.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/aurora_palace.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/dark_tower.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/final_castle.json",
+      "pointer": "/name",
+      "source_sha256": "483dd732d5b7c507b69cda8e752ab99f1fe6d4beba893f06967160947466b11d",
+      "ru": "Последняя башня",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/final_castle.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/giant_house.json",
+      "pointer": "/name",
+      "source_sha256": "4c9f317e9cdff9a321f28e23f003fe84e6edb216da5bd39940b893b8b21b7393",
+      "ru": "Дом великана",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/giant_house.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/hedge_maze.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/hollow_hills.json",
+      "pointer": "/name",
+      "source_sha256": "9326b242b601ae3566488f1ae0b9ecee2b2b5cfee41d95767fa8e3e91087e665",
+      "ru": "Полые холмы",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/hollow_hills.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/hollow_hills.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/hollow_hills.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/hydra_lair.json",
+      "pointer": "/name",
+      "source_sha256": "292c4646225ca253acaf52c1c79f5c7878e4a07bcf735455900d9c307dd624f2",
+      "ru": "Логово Гидры",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/hydra_lair.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "00362fab1974cd64c1528135a1aad510b16b1fa41c7fac040b0f75260d5ef650",
+      "ru": "Глубоко в Огненном болоте находится логово гидры — большой полый холм, ставший её домом. Вокруг полно редкой руды: идеальное место для сбора сокровищ. Если не считать гигантской мифической рептилии посреди них.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/knight_stronghold.json",
+      "pointer": "/name",
+      "source_sha256": "77b67c276f5e6e8664fdac952b5ea2050ab3a7b43bc9b467bdb18032d0c9e279",
+      "ru": "Рыцарская крепость",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/knight_stronghold.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/labyrinth.json",
+      "pointer": "/name",
+      "source_sha256": "df308b59c64cddbc466fde6e358e016e2a60678aa3d1e4769aafbf2174e9c751",
+      "ru": "Лабиринт",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/labyrinth.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c444eff88468a081ca1707e1c753d6d9e778a3840b2f2927f021e9ab715894d8",
+      "ru": "Огромные запутанные лабиринты под Сумеречным болотом. Вход скрыт в холме размером с малый полый холм: чтобы заметить его, нужно внимательно осматривать местность.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/labyrinth.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "2988d70a38f3109a5097d9e11d22c7174a2f88d860325675989036a585b7bb44",
+      "ru": "Упорный путник, умеющий ориентироваться, может найти логово гриботавра. За деревянной оградой, среди грибов, стоят сундуки с добычей, охраняемые зверем Лабиринта.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/labyrinth.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "58e3b81d809128118d039568f9dcdc81c31e22239d8b60631bcb5f884c667b3d",
+      "ru": "В стенах Лабиринта скрыто небольшое хранилище с ловушками. Осторожный искатель найдёт там ценные материалы и желанный Разрушитель лабиринтов. Награда велика, но требует осмотрительности.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/lich_tower.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/naga_courtyard.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/troll_caves.json",
+      "pointer": "/name",
+      "source_sha256": "cff0b728d5b68ebc689f12421fabe6298f658cf47e25653a62ed896d5e655ccf",
+      "ru": "Пещеры троллей",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/troll_caves.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/yeti_caves.json",
+      "pointer": "/name",
+      "source_sha256": "bab2ed6fafd6eed73753ebff850cb90bba933028829175879d47e0dd6b0de3b2",
+      "ru": "Пещеры Йети",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/major_landmarks/yeti_caves.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/minor_landmarks/druid_hut.json",
+      "pointer": "/name",
+      "source_sha256": "064d59c64b99aaea0e728d9d6b0ada272a0251d3222a4e3f2138760e98e87f73",
+      "ru": "Хижина друида",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/minor_landmarks/druid_hut.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "c2ed15503fefe1cf1c3e343f4d0293ecd387f868197ad1af765b71126f56d7ce",
+      "ru": "вещи и прочее",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/portal.json",
+      "pointer": "/name",
+      "source_sha256": "4dc4ffef00f15b8e41fbd128a473dd42d861e23178cabb9dbc6584e43ac76027",
+      "ru": "Создание портала",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/portal.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "ed3e5a6cedc80c35ad707bbe227caac8b3904a78e16f290cca69bded5b345c13",
+      "ru": "Выкопав углубление и высадив растения вокруг, заполните его водой!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/portal.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "825dfcd6928535434d16ec56161defe16eb0d8f8cd2d072862680bc5bf7855e8",
+      "ru": "Предмет для активации",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/portal.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "e0fd029b0baf99ba7913118e35f6b7e9fd3156899bd3e5c5ca8c303e3d43b6d6",
+      "ru": "Брось алмаз в воду!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/portal.json",
+      "pointer": "/pages/2/name",
+      "source_sha256": "45325d7676e5bd3423078ed153b53342a03f08296fbad6e7a0da1f32e133d250",
+      "ru": "Завершенный Сумеречный портал",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/entries/world/portal.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "437622f7b839dfe15e735bc1b7ee451c81c20cfbb5285921e3e903342f86f70f",
+      "ru": "Увидели фиолетовые завитки? Прыгайте внутрь!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/templates/gallery.json",
+      "pointer": "/components/1/text",
+      "source_sha256": "df6c252ae7cf3334d5e407825db4755cab9a17a5f06cfa3d00c0c5ee308ef392",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/templates/headed_gallery.json",
+      "pointer": "/components/0/text",
+      "source_sha256": "7162822be7da5ccb353a309a69d383fa08cab73c252001723480a86842648f52",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/templates/headed_gallery.json",
+      "pointer": "/components/3/text",
+      "source_sha256": "df6c252ae7cf3334d5e407825db4755cab9a17a5f06cfa3d00c0c5ee308ef392",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/templates/headed_spotlight.json",
+      "pointer": "/components/0/text",
+      "source_sha256": "7162822be7da5ccb353a309a69d383fa08cab73c252001723480a86842648f52",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/templates/headed_spotlight.json",
+      "pointer": "/components/3/text",
+      "source_sha256": "df6c252ae7cf3334d5e407825db4755cab9a17a5f06cfa3d00c0c5ee308ef392",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/templates/headed_spotlight2.json",
+      "pointer": "/components/0/text",
+      "source_sha256": "7162822be7da5ccb353a309a69d383fa08cab73c252001723480a86842648f52",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/twilightforest/patchouli_books/guide/en_us/templates/headed_spotlight2.json",
+      "pointer": "/components/4/text",
+      "source_sha256": "df6c252ae7cf3334d5e407825db4755cab9a17a5f06cfa3d00c0c5ee308ef392",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    }
+  ]
+}

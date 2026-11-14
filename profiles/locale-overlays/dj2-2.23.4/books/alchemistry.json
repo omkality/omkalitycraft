@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "base_owned_profile_sha256": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+  "game_tested": false,
+  "ready_for_players": false,
+  "namespace": "alchemistry",
+  "scope": "Reviewed ordinary-game book fields and intentional literals; no full borrowed locale or game payload",
+  "reviewed_entries": 16,
+  "translated_entries": 16,
+  "source_files": [
+    {
+      "path": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/categories/compounds_category.json",
+      "sha256": "cca6877102c7907860e988b011e3eba87c1ac7621732a3ad25f734afc893b2a5",
+      "jar": "alchemistry-1.12.2-42.jar",
+      "jar_sha256": "8815705433e54f84f8752ca7562637b3832189b53e09af113ef4953f144684ab"
+    },
+    {
+      "path": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/active_compounds.json",
+      "sha256": "b023aac33912f8c986a48c9d7a23134fd3b273e2f38ae3eaaed9339f022be014",
+      "jar": "alchemistry-1.12.2-42.jar",
+      "jar_sha256": "8815705433e54f84f8752ca7562637b3832189b53e09af113ef4953f144684ab"
+    },
+    {
+      "path": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/spiking_food.json",
+      "sha256": "78c95a56f4f56db2a7acf39133afdb0bca237526d5c615ed7254530df075465d",
+      "jar": "alchemistry-1.12.2-42.jar",
+      "jar_sha256": "8815705433e54f84f8752ca7562637b3832189b53e09af113ef4953f144684ab"
+    },
+    {
+      "path": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/utility/slot_filler.json",
+      "sha256": "40946b232120cd32bb3c1759573147d1071bbe914ad4774291acca38056e795c",
+      "jar": "alchemistry-1.12.2-42.jar",
+      "jar_sha256": "8815705433e54f84f8752ca7562637b3832189b53e09af113ef4953f144684ab"
+    }
+  ],
+  "entries": [
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/categories/compounds_category.json",
+      "pointer": "/name",
+      "source_sha256": "f3c16295512514c5da7cbae2439321ffab37d95651ae7318934fb868cea693d8",
+      "ru": "Активные соединения",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/categories/compounds_category.json",
+      "pointer": "/description",
+      "source_sha256": "4e7419abf218e8b8215c04ad461916d3b6ba3af15908d339d78bbb97a4ea5b2a",
+      "ru": "Обзор активных соединений",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/active_compounds.json",
+      "pointer": "/name",
+      "source_sha256": "83e199120404e49751c3c8042760c4c98c0286ca065e0c80e85bafaf410c2a2b",
+      "ru": "Список активных соединений",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/active_compounds.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "b761f5816d1aca18a12bb9f2e9801325eb536117ba93e49d5153f5de5cb72077",
+      "ru": "Чрезвычайно ядовит, не употреблять!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/active_compounds.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "e8501b022e96cc65b4a052cffee260dc9b6308091d40bd3eeeee907f09c93910",
+      "ru": "Даёт ночное зрение, замедление и способность замечать мельчайшие детали природы.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/active_compounds.json",
+      "pointer": "/pages/2/text",
+      "source_sha256": "125735c225312718be278be2bbc0cf9bb9a1275b1debcb3afd843d0851d9ee7e",
+      "ru": "Снимает все эффекты и немного восстанавливает здоровье.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/active_compounds.json",
+      "pointer": "/pages/3/text",
+      "source_sha256": "37cf3adef920480150715c50c1223216c79e3f7a0c07d0562a6f2760c72f7465",
+      "ru": "Даёт ночное зрение и увеличивает скорость.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/active_compounds.json",
+      "pointer": "/pages/4/text",
+      "source_sha256": "692d8d29902f0d204fba7409917b53e9ef3b7a7a25cb28ca9d144c4a71c0b93f",
+      "ru": "Даёт ночное зрение и увеличивает скорость — как и адреналин.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/active_compounds.json",
+      "pointer": "/pages/5/text",
+      "source_sha256": "79148068bc934764bb4c38f28da624402232b7aabeff08727951b8b9285a7159",
+      "ru": "Пользователь может прыгать и бегать, как гепард.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/active_compounds.json",
+      "pointer": "/pages/6/text",
+      "source_sha256": "19d9c334ec14696240444686dbd8ecfa8b136b906cb9eeb613de754ef4279fb5",
+      "ru": "Восстанавливает 2.5 сердца здоровья.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/spiking_food.json",
+      "pointer": "/name",
+      "source_sha256": "48ad761e9dfe7cf190f0eb82905d7fbd5b96119f573fe406128ce42a3531dcd5",
+      "ru": "Еда с добавками",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/spiking_food.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "48ad761e9dfe7cf190f0eb82905d7fbd5b96119f573fe406128ce42a3531dcd5",
+      "ru": "Еда с добавками",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/spiking_food.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "e8e4526b1249903cbae065d64d60bed318d7693d6d8c2978851ccf39411d692c",
+      "ru": "К обычной еде можно подмешать активное соединение: достаточно объединить по одному предмету каждого вида в сетке крафта. Съев такую еду, игрок получит эффекты добавленного соединения.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/spiking_food.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "6e48853bfd4597bf69e9a2cdc8d7e8455686b8e0ef9464e73ad14890f6e5ad71",
+      "ru": "Маскировка вкуса",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/compounds/spiking_food.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "481ebe99a07135bca119bd93be727a1d1bb5e30a9d781de5a392d9a0f0e496a6",
+      "ru": "В условном игровом примере: предположим, вы хотите незаметно дать другу еду с цианидом калия. Вкус добавки и подсказку `Spiked with [x]` можно скрыть, изготовив еду вместе с 8 предметами соединения хлорида натрия.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/alchemistry/patchouli_books/alchemistry_book/en_us/entries/utility/slot_filler.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "0b0c59c52bfefe92fb45c722c1b7be01ab00e9caf1b96281eb1b4ff4a2ff6edc",
+      "ru": "Для шаблонов крафта AE2/RS/и т. д., предназначенных для химического комбайна, заполните пустые ячейки предметом для заполнения слотов. Так ингредиенты попадут в нужные слоты. Рецепт машины игнорирует заполнитель, а затем расходует его вместе с остальными ингредиентами.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    }
+  ]
+}
