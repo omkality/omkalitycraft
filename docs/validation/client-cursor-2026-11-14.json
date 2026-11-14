@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "date": "2026-11-14",
+  "issue": 182,
+  "scope": "Real Windows x64 DJ2 2.23.4 client and isolated Linux Docker server; owner confirms physical cursor behavior.",
+  "pack": "dj2",
+  "pack_version": "2.23.4",
+  "core_version": "0.3.8",
+  "core_sha256": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+  "server_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "server_memory_bytes": 6442450944,
+  "server_cpus": 4,
+  "strict_client_mod_count": 258,
+  "book_probe_present": false,
+  "cursor_observation_agent": "Private read-only JVM/game-thread observation, not a runtime mod; no world or mod-policy edits.",
+  "cases": [
+    {
+      "case": "Original exclusive fullscreen",
+      "result": "Owner: invisible in inventory/settings, Alt+Tab did not restore; windowed pointer visible."
+    },
+    {
+      "case": "Normal restart without a new Windows capture",
+      "result": "Owner: cursor still invisible. The existing capture helper was still running."
+    },
+    {
+      "case": "Borderless mode before capture helper stop",
+      "native": {
+        "display_fullscreen": false,
+        "undecorated": true,
+        "mouse_grabbed": false
+      },
+      "result": "Owner: cursor still invisible."
+    },
+    {
+      "case": "Stop the observed computer-use capture helper",
+      "result": "Owner: cursor visible immediately in the same client; no game restart."
+    },
+    {
+      "case": "Disable borderless feature; native exclusive fullscreen",
+      "native": {
+        "display_fullscreen": true,
+        "undecorated": false,
+        "mouse_grabbed": false
+      },
+      "result": "Owner: inventory/settings, two F11 transitions and Alt+Tab work with visible cursor."
+    },
+    {
+      "case": "Enable borderless for the requested second-monitor workflow",
+      "native": {
+        "display_fullscreen": false,
+        "undecorated": true,
+        "mouse_grabbed": false,
+        "cursor_clipped": false,
+        "size": [
+          2560,
+          1440
+        ]
+      },
+      "result": "Owner: mouse moves to the other monitor, other windows can be used and Minecraft remains expanded."
+    }
+  ],
+  "initial_game_settings_observed": {
+    "fov_degrees": 80,
+    "fov_options_value": 0.25,
+    "view_bobbing": false,
+    "gamma": 1.0,
+    "auto_jump": false,
+    "gui_scale": 2
+  },
+  "artifact_sha256": "4b28e3ff8c9f4a08a8c091739ff70bc5df2c682aaa640c81742df42c30e1ec42",
+  "accepted": {
+    "local_cursor_workflow": true,
+    "windows_multi_monitor": true,
+    "all_operating_systems": false,
+    "universal_windows_capture_fix": false
+  },
+  "limits": [
+    "Cursor visibility is confirmed by the owner; OpenGL screenshots do not include or prove the OS cursor.",
+    "A later external Windows capture session can reintroduce the upstream condition; use MCMCP for full-screen game testing.",
+    "Linux/macOS native client acceptance remains in #36.",
+    "Player manifest/release and VPS not activated."
+  ],
+  "upstream": [
+    "https://github.com/microsoft/Windows.UI.Composition-Win32-Samples/issues/128",
+    "https://www.curseforge.com/minecraft/mc-mods/borderless-mining/files/2654481"
+  ]
+}

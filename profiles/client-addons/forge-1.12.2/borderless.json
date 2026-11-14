@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "purpose": "Безрамочный F11 и свободный переход курсора между мониторами из меню; не исправление Windows Graphics Capture.",
+  "minecraft": "1.12.2",
+  "loader": "forge",
+  "release_active": false,
+  "accepted_native_platforms": [
+    "windows-x64"
+  ],
+  "other_platforms_accepted": false,
+  "artifacts": [
+    {
+      "filename": "FullscreenWindowed-1.12-1.6.0-1.jar",
+      "mod_id": "fw",
+      "mod_version": "1.6.0",
+      "version_id": "EMFjX5cf",
+      "version_number": "0.0.0-1.6.0+1.12",
+      "url": "https://cdn.modrinth.com/data/kYq5qkSL/versions/0.0.0-1.6.0%2B1.12/FullscreenWindowed-1.12-1.6.0-1.jar",
+      "curseforge_file": "https://www.curseforge.com/minecraft/mc-mods/borderless-mining/files/2654481",
+      "sha256": "4b28e3ff8c9f4a08a8c091739ff70bc5df2c682aaa640c81742df42c30e1ec42",
+      "sha512": "f450d40fd59ab1033d92a658433f4b14d7e6da500d82012e9eb2db69880225876b8e08505b9e4b10278c770d93d7f2ce0fa31ea6bf652bfc5891e7b195d54228",
+      "size": 18825,
+      "side": "client",
+      "source": "https://github.com/comp500/Fullscreen-Windowed-Minecraft",
+      "license": "BSD-2-Clause; legacy Forge artifact, not the later Fabric rewrite",
+      "license_source": "https://raw.githubusercontent.com/comp500/Fullscreen-Windowed-Minecraft/33853b8378023b018d45273b729a93b230c2bafe/LICENSE",
+      "license_notice": "notices/FullscreenWindowed-LICENSE.txt",
+      "license_notice_sha256": "400c86f3ef6c0d1854370dd17d5a640bd2bdabd75764c7c4e2de3b25c0039ff5",
+      "source_commit": "33853b8378023b018d45273b729a93b230c2bafe"
+    }
+  ],
+  "configuration_policy": "Use the mod defaults: enabled, maximum compatibility, current monitor (0). Do not manage fw.cfg as a pack-owned file; preserve personal monitor/settings.",
+  "composition_requires": [
+    "Copy the exact verified JAR into staged client mods, retaining the license notice.",
+    "Regenerate the exact approved client mod policy including fw=1.6.0 for the same candidate.",
+    "Verify hashes, native launch/join and signed manifest; no activation follows from editing this profile."
+  ]
+}
