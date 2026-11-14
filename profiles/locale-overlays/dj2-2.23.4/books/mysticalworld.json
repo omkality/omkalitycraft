@@ -1,0 +1,425 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "base_owned_profile_sha256": "f112b4d82ac71cace9b7cb2d3b6120fa897bf8fef52b61ae74020a61af8aab6d",
+  "game_tested": false,
+  "ready_for_players": false,
+  "namespace": "mysticalworld",
+  "scope": "Reviewed ordinary-game book fields and intentional literals; no full borrowed locale or game payload",
+  "reviewed_entries": 39,
+  "translated_entries": 33,
+  "source_files": [
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/mud_block_decoration.json",
+      "sha256": "c633058e79e52020d436477071e68d031f75abdb0ad39f43e097e1a1cf018387",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/pearl_block_decoration.json",
+      "sha256": "ce8bad81956332c4bfb27e0d91b996f6298c263042a7fe3c367fd64d4df8159f",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/pearl_block_utility.json",
+      "sha256": "543cd377326580b256690e21ed24ef26bcde237e83396eca36e6e7d78d84b0df",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/creatures/clam.json",
+      "sha256": "11d1edde3a6d420c5dbe9bdf720351853c1091f1c0e9974a312f97aaf815d356",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/cuisine/salads.json",
+      "sha256": "cbb4a5df619c3d6493d1ee54fb6c09f8790d75db20abe86a9fcbaa1b2497de75",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/cuisine/toasted_seeds.json",
+      "sha256": "11932b0c98f55820a54a703ec9ae2984d1e048d488bbd3c4539ec786ea57c9d5",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/antler_hat.json",
+      "sha256": "c58cb5c4e2bbfe19a9abc6ec915927894aca13bde1590f17e98a58c44a20e4a3",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/beetle_mask.json",
+      "sha256": "9226173ff3a127df2dba05f5f3fa753988b503ac665aefc713a59386fd883421",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/copper_armor.json",
+      "sha256": "2a4d443723e379b9f0b8fe753d388365fd91eb6c03afe53c9fb898eb74f6bbac",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/gall_apple.json",
+      "sha256": "02cece28859c0d6213146fe212ed05c25250f23e9632487fecad5db34d97a802",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/pearleporter.json",
+      "sha256": "6cf00d2db5589bbe6a3b9966c9bcf4d7b1450961089c01a6f3eb984ffbdf99f9",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/silver_armor.json",
+      "sha256": "70f9802ac686e1998570703d40676d8ff8dec53537aaf6a2232eb68fcf23621d",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/tannins.json",
+      "sha256": "70cf0c3750c75394eeab309b82121be911cc49a945978b44cba032a321142338",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/wasp_attractant.json",
+      "sha256": "ef2b3d44f1645d0e18f6aea9cacbccf7a107bb595207d24bd4da8214f725c0bf",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    },
+    {
+      "path": "assets/mysticalworld/patchouli_books/world_guide/en_us/templates/animal_spawn_info.json",
+      "sha256": "278a6ebb75c2a43ce6058c16fb019e719d3e3b398e95a5850c747654ebec9812",
+      "jar": "mysticalworld-1.12.2-1.11.0.jar",
+      "jar_sha256": "c39ef78039aa2740fd90112fc488456ba9ae8ed6c07e52420d198338367a1515"
+    }
+  ],
+  "entries": [
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/mud_block_decoration.json",
+      "pointer": "/pages/8/text",
+      "source_sha256": "893955522f9f8db9eb97bda3c19727c2c99dcf7cd8da152d39e004430ce248a9",
+      "ru": "Калитки делают как из высушенных блоков грязи, так и из высушенных грязевых кирпичей.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/mud_block_decoration.json",
+      "pointer": "/pages/9/title",
+      "source_sha256": "20801865a2021857a7cd53bd4b3cc5f66ec1a9e0cb32fd702d96ae8584700648",
+      "ru": "Заборы",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/pearl_block_decoration.json",
+      "pointer": "/name",
+      "source_sha256": "7c97c64cd3df81d7ec7777c2582037e8ce8a5f3ef4da94ee7993a7aaf29e9525",
+      "ru": "Жемчужный декор",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/pearl_block_decoration.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "667638e23730c99715f639fd14413618ec6bef8a4489c1ddbe3928c361b2554b",
+      "ru": "Для жемчужного блока нужны 9 жемчужин. Блок можно разобрать обратно.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/pearl_block_decoration.json",
+      "pointer": "/pages/1/title",
+      "source_sha256": "7cc155fbf682f182c01ecbc865afa20d02709f9c7421089d7c18a53f2592ea22",
+      "ru": "Ступеньки и плиты",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/pearl_block_decoration.json",
+      "pointer": "/pages/2/title",
+      "source_sha256": "2aeeeafc3911568ff5e69dd0232a7cd730d9fd7ad291adb6061b222411aa3170",
+      "ru": "Ограды и заборы",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/pearl_block_decoration.json",
+      "pointer": "/pages/3/title",
+      "source_sha256": "fdd2b7981f43de6cc82e8d836774c7197b5eb6304b467836b8c8cc1e15cb9ba3",
+      "ru": "Калитки",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/pearl_block_utility.json",
+      "pointer": "/name",
+      "source_sha256": "413e0c7b4d687a507ce6d9f9e7b1870d941a76130765d6fa9f3f42f98a70b9f9",
+      "ru": "Применение жемчужного блока",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/blocks/pearl_block_utility.json",
+      "pointer": "/pages/0/title",
+      "source_sha256": "ba09169426b55e4011b68b389e139615ee862201bfda0cdcafd130f401a00181",
+      "ru": "Нажимные плиты и кнопки",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/creatures/clam.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "0c4abcf0e4c4c9e2acc5f7594138ae20a1e6e7a167c31a6bf75be55a7dabc96b",
+      "ru": "Зрелые моллюски испускают частицы. При убийстве из них выпадает $(l:items/pearl)жемчужина$(), а из особых моллюсков, возможно, даже жемчуг Эндера!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/cuisine/salads.json",
+      "pointer": "/name",
+      "source_sha256": "e209d05dba2181f66163d6e712abf2c16ec46607394bacf829f498adda336601",
+      "ru": "Салат",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/cuisine/salads.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "43dec4253e2a8429370fc1453081e6ed4fab7309c3ad808c8dad8c77e70fb0ea",
+      "ru": "Наполните миску салатом — и утолите голод!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/cuisine/toasted_seeds.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "be6fb4864e4119dfafe354ab0fcb70dccb627e4d0f9441e084276d2eaee6dd93",
+      "ru": "Объедините любые 4 семени, одного или разных видов, чтобы получить смесь семян.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/cuisine/toasted_seeds.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "b3e47e74e04b2e423940561ceb7ee2ac3dc47c029d78f3dd1f0a8631d5161f36",
+      "ru": "Простая быстрая закуска из лишних семян — прилив сил, когда он нужен!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/antler_hat.json",
+      "pointer": "/name",
+      "source_sha256": "60f8d81f354b037fca667139606a16e8954aaef2109b54d64829ea2c2e2366b0",
+      "ru": "Шапка с рогами",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/antler_hat.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "5f11532277a02d600c0eff7d9aa87bbb32b7414370a875a472ef87a6d2a08b3d",
+      "ru": "Из рогов можно сделать очень красивую и полезную шляпу!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/antler_hat.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "f4078aabf7b2359e576f185879d35a7625ea3856b5942df09315c1b6177972f6",
+      "ru": "В минуту опасности эта шляпа призывает призрачных оленей, которые вас лечат.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/beetle_mask.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "2e2171aa22b9084f95273759b58ced6b56de6f0383da0d5122b48943279c3e3a",
+      "ru": "Из панциря можно создать устрашающую маску.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/beetle_mask.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "ff607581801fbf4cfbc60d8125610ae2715807c1c7dcf3c29d0a5d3693fea561",
+      "ru": "Маска призывает призрачных жуков, помогающих в бою.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/copper_armor.json",
+      "pointer": "/name",
+      "source_sha256": "8e56b77a7d1dedaee90629d72aef71339e20eb6b07d6c60dbaca6bfa169ef5b7",
+      "ru": "Медная броня",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/copper_armor.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "e7ab2f1654e2e79ab1d6abd9ec010bfa3b2b8b4b0dc712c1d52465ff04ce3f05",
+      "ru": "Из меди получается удивительно прочная броня, которая также увеличивает ваш максимальный запас здоровья, пока вы ее носите!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/gall_apple.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "adfffe478a669d31402c8799e94f890936051989f810241751be5e5ccb2e10e3",
+      "ru": "Желчные яблоки — чернильные орешки — собирают с деревьев, заражённых личинками ос. Чтобы начать процесс, нанесите $(l:items/wasp_attractant)приманку для ос$() на дуб или тёмный дуб.$(br2)Эти наросты богаты $(l:items/tannins)танинами$() для выделки кожи.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/pearleporter.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "a5ca8d94b8856425c94537d9003c6c1dbc771261d65c63b31653b4b66fcb0b6f",
+      "ru": "Жемчужный портатор — хитроумное устройство, которое извлекает $(l:items/pearls)жемчужины$() из $(l:creatures/clam)моллюсков$(), не причиняя им вреда!$(br2)Но для начала всё же понадобится одна жемчужина.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/silver_armor.json",
+      "pointer": "/name",
+      "source_sha256": "ccf02d6bf81563824ed43efd9ef24d31303e2c42aa103edcac1d3c43e62161dd",
+      "ru": "Серебряная броня",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/silver_armor.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "9264f2ebac152ceda83cca2a64f3c892cbdeda4b75e078dbc5fbf934052f9e7c",
+      "ru": "Серебро дает вам броню с красивым блеском, которая увеличивает урон от атаки, а также наносит урон любой нежити, которая вас ударит!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/tannins.json",
+      "pointer": "/name",
+      "source_sha256": "60c0ccea8dde3b1949ef3ea0941581e4ade380a22a9e1c3254448dc1e753aac7",
+      "ru": "Производство танинов и кожи",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/tannins.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "f7e5972ae093bf1e45d302b148d020c46101686df65430a84bfc5178fb72835a",
+      "ru": "Одного желчного яблока хватает на четыре пузырька танинов.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/tannins.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "e8d6d61bf2c711632b10a7e49942063cc164523e8390e7b60343c9dfc1fe2f3b",
+      "ru": "Одного пузырька танинов хватает, чтобы выделать кожу из трёх кусков гнилой плоти.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/wasp_attractant.json",
+      "pointer": "/pages/0/text",
+      "source_sha256": "156f346233c97e5c271ca822ad1438397d9f62c38bbc9f052f3bf275ed8f17cf",
+      "ru": "Комбинация белков и сахаров — идеальное сочетание для привлечения ос!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/items/wasp_attractant.json",
+      "pointer": "/pages/1/text",
+      "source_sha256": "4692beb8456cb32e1d518adcef592ce4dce9cd9997bd81a3619d1ad28f5158a8",
+      "ru": "Нанесите приманку на обычный или тёмный дуб. Осы отложат личинки, и вскоре появится $(l:items/gall_apple)желчное яблоко$().",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/templates/animal_spawn_info.json",
+      "pointer": "/components/0/text",
+      "source_sha256": "7162822be7da5ccb353a309a69d383fa08cab73c252001723480a86842648f52",
+      "expected_previous_sha256": "7162822be7da5ccb353a309a69d383fa08cab73c252001723480a86842648f52",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/templates/animal_spawn_info.json",
+      "pointer": "/components/1/text",
+      "source_sha256": "8c30bf1a494d610124429c1a147f87ea06574ec99e5b4100e5a1f5a979b7f5ab",
+      "expected_previous_sha256": "8c30bf1a494d610124429c1a147f87ea06574ec99e5b4100e5a1f5a979b7f5ab",
+      "decision": "preserve_source_literal",
+      "reason": "patchouli_template_variable_not_literal_text",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/templates/animal_spawn_info.json",
+      "pointer": "/components/2/text",
+      "source_sha256": "7f0524ae166f09df0610087306d829b3cf3d2d06219fa50651d9079074b17504",
+      "expected_previous_sha256": "7f0524ae166f09df0610087306d829b3cf3d2d06219fa50651d9079074b17504",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/templates/animal_spawn_info.json",
+      "pointer": "/components/3/text",
+      "source_sha256": "a7f3eaecbaf70f23a40d12d795cbe9af229dc06b50469fa9828c7a4c3f64a7ed",
+      "expected_previous_sha256": "a7f3eaecbaf70f23a40d12d795cbe9af229dc06b50469fa9828c7a4c3f64a7ed",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/templates/animal_spawn_info.json",
+      "pointer": "/components/4/text",
+      "source_sha256": "cdd65fd9462dd0f6fc6d94253ddca3813e3a4ee41c75a0c07099418e7f5e5869",
+      "expected_previous_sha256": "cdd65fd9462dd0f6fc6d94253ddca3813e3a4ee41c75a0c07099418e7f5e5869",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/templates/animal_spawn_info.json",
+      "pointer": "/components/5/text",
+      "source_sha256": "1fe189195e63c29e175c1aa09a1a013ebd4e1575e95d0cb2c8047d0d4dda2a4c",
+      "expected_previous_sha256": "1fe189195e63c29e175c1aa09a1a013ebd4e1575e95d0cb2c8047d0d4dda2a4c",
+      "decision": "preserve_source_literal",
+      "reason": "Patchouli_template_variable_reference_not_display_literal",
+      "consumer_contract": "Patchouli_template_variable"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/creatures/clam.json",
+      "pointer": "/pages/0/breed",
+      "source_sha256": "f406ce64dc4afe057f95a764bda38643ebddacae6b6995b12e446edcf4ac087a",
+      "ru": "Не размножается.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/creatures/clam.json",
+      "pointer": "/pages/0/tame",
+      "source_sha256": "5e09d28daea6e2fcda38d27a0aa6e6a657ab9d2724fd71b39c9c5fdb46b6bebf",
+      "ru": "Не приручается.",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    },
+    {
+      "source_file": "assets/mysticalworld/patchouli_books/world_guide/en_us/entries/creatures/clam.json",
+      "pointer": "/pages/0/blurb",
+      "source_sha256": "543b63f3e5a5da5705f70e0dc269f7e63240221dce16578c7aab38be8e5eef5a",
+      "ru": "С $(l:items/pearleporter)жемчужным портатором$() жемчуг становится возобновляемым ресурсом!",
+      "decision": "reviewed_translation",
+      "consumer_contract": "Patchouli_text"
+    }
+  ]
+}
