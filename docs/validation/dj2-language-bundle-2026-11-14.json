@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "date": "2026-11-14",
+  "scope": "Locked DJ2 language generation and presentation-only rollback; not production promotion",
+  "issues": [
+    49,
+    174,
+    171
+  ],
+  "composition": {
+    "resources": 681,
+    "files_with_client_and_shared_script": 683,
+    "resource_bytes": 3838246,
+    "locale_archive_sha256": "e46293f9d232635ee3f6aca3bd32c1e8d6fb4bce93fccb816b8813faf524eb13",
+    "lock_sha256": "9f884b16e2e99f231435459b28cecd71c0c2e1c44c9f866f8c4097413a562ff8",
+    "book_review_sha256": "cc2eb4981eb916930de4cb9a29e8f945e399ee43f6745aad0b2b476e538e7c50",
+    "initial_inventory_source_sha256": "aad9e23ad1246230b819514fc3bb89f84cab8d5448f2c1dd5b5049b725905d9e",
+    "initial_inventory_result_sha256": "be860dd10dc56e068aacb4811d055a2757803e9d257074616386960d2d9c638f",
+    "book_pages": 18,
+    "client_version": "0.1.3",
+    "client_sha256": "0a5d000c64be041023e752de0e74141b57d3e86427b80b55181a95601de79077",
+    "public_upstream_payload": false,
+    "notices_retained": true,
+    "new_cli_or_service": false
+  },
+  "fixtures": {
+    "windows_passed": 80,
+    "windows_skipped": 2,
+    "windows_scope": "37 new composition/book controls + release-store controls +13 prior client resource tests",
+    "linux_passed": 69,
+    "linux_scope": "37 composition/book controls and32 release-store controls",
+    "linux_real_compositions": 2,
+    "linux_real_result_files": 683,
+    "linux_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "readonly_nonroot_network_none": true,
+    "memory_mib": 256,
+    "cpus": 1,
+    "oom": false,
+    "owned_scope_removed": true,
+    "resign_data_proof": {
+      "real_language_files_in_snapshots": true,
+      "launcher_dependencies_nonexecuted_fixtures": true,
+      "new_generation_of_old_bytes": true,
+      "minimum_launcher_preserved": "0.3.0.dev14",
+      "original_snapshot_preserved": true,
+      "corrupt_old_snapshot_refused_before_switch": true,
+      "candidate_snapshot_unchanged": true
+    }
+  },
+  "native": {
+    "pack": "DJ2 2.23.4 Forge14.23.5.2860",
+    "graphical_client": "Windows",
+    "game_and_drasl_server": "isolated Linux Docker named volumes",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "server_memory_mib": 6144,
+    "server_cpus": 4,
+    "strict_client_mod_count": 258,
+    "book_probe_present": false,
+    "phases": [
+      {
+        "generation": "candidate",
+        "client_exit": 0,
+        "server_exit": 0,
+        "server_oom": false,
+        "cold_backup_sha256": "044d1e8d544cbd7b066555135d956360e99c571290a1ef12a407a36ba0a1673b"
+      },
+      {
+        "generation": "previous",
+        "client_exit": 0,
+        "server_exit": 0,
+        "server_oom": false,
+        "cold_backup_sha256": "4f33e64143c0ab03ab361f02c853088ab3c16f5df611c602ba6a43100cceabcd"
+      },
+      {
+        "generation": "candidate",
+        "client_exit": 0,
+        "server_exit": 0,
+        "server_oom": false,
+        "cold_backup_sha256": "b32683548c60b76675a3677c2365e0879d61eda281b36602f3a8bc4730f6979f"
+      }
+    ],
+    "complete_client_snapshots": {
+      "previous": {
+        "digest": "b6724b9138423fd722a9d5274b61f9cfe39a606280f8eb5b37433877903dff45",
+        "files": 5931,
+        "bytes": 747533055
+      },
+      "candidate": {
+        "digest": "cdaa33d1d5f2df9b5a4eaa9b4d26692f08f15caf0a215a73129b930ff1e7daa5",
+        "files": 5953,
+        "bytes": 747594841
+      }
+    },
+    "fresh_books_pages": [
+      18,
+      12,
+      18
+    ],
+    "fresh_books_titles": [
+      "Добро пожаловать",
+      "Welcome",
+      "Добро пожаловать"
+    ],
+    "author": "Atricos",
+    "starting_items": 3,
+    "candidate_item_values_equal_between_fresh_players": true,
+    "same_world_and_auth": true,
+    "shared_script_and_strict_policy_changed_only_cold": true,
+    "rejoin_millis": 3050,
+    "rejoin_items_nbt_and_slots_preserved": true,
+    "first_player_inventory_preserved_in_both_later_cold_tars": true,
+    "first_player_original_russian_book_retained": true,
+    "health": 20,
+    "creative": false,
+    "crash_reports": 0,
+    "owned_scopes_removed": true,
+    "auth_cleanup": true,
+    "delivery_fixture": "loopback HTTP in native coordination; independent full-payload Docker CDN delivery cycle below"
+  },
+  "personal_settings": {
+    "native_options_and_note_and_fullmap_byte_exact": true,
+    "native_minimap_runtime_changes": [
+      "comment header rewritten",
+      "preferredMapType day to night"
+    ],
+    "native_other_minimap_values_equal_seed": true,
+    "full_minimap_native_byte_equality_claimed": false,
+    "additional_installer_custom_files_exact_each_phase": 4,
+    "custom_values": [
+      "FOV87",
+      "gamma0.75",
+      "Circle",
+      "grid enabled",
+      "BottomRight"
+    ],
+    "additional_cycle_started_game": false
+  },
+  "installer_delivery": {
+    "phases": [
+      {
+        "generation": "candidate",
+        "version": "2.23.4+omk.language.1",
+        "signed_files_verified": 5953,
+        "minimum_launcher": "0.3.0.dev14",
+        "all_four_custom_personal_files_exact": true
+      },
+      {
+        "generation": "previous",
+        "version": "2.23.4+omk.language.2",
+        "signed_files_verified": 5931,
+        "minimum_launcher": "0.3.0.dev14",
+        "all_four_custom_personal_files_exact": true
+      },
+      {
+        "generation": "candidate",
+        "version": "2.23.4+omk.language.3",
+        "signed_files_verified": 5953,
+        "minimum_launcher": "0.3.0.dev14",
+        "all_four_custom_personal_files_exact": true
+      }
+    ],
+    "signing_key_ephemeral": true,
+    "source_native_generations_verified_by_digest_and_file_hash": true,
+    "minimum_launcher": "0.3.0.dev14",
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "cdn_in_docker": true,
+    "cdn_exit": 0,
+    "cdn_oom": false,
+    "loopback_only": true,
+    "dedicated_bridge_network": true,
+    "read_only_source": true,
+    "nonroot": true,
+    "memory_mib": 128,
+    "cpus": 1,
+    "game_started": false,
+    "owned_scopes_removed": true
+  },
+  "negative_and_rehearsal_findings": {
+    "old_generation_resource_count": 659,
+    "new_generation_resource_count": 681,
+    "old_full_client_files": 5931,
+    "new_full_client_files": 5953,
+    "initial_private_preflight_count_assumption_corrected_before_client_launch": true,
+    "nested_snapshot_source_refused_then_separate_staging_used": true,
+    "isolated_internal_bridge_health_unpublished_then_dedicated_bridge_loopback_used": true,
+    "game_crash_caused_by_these_findings": false
+  },
+  "limits": [
+    "No public player manifest, Release or VPS change",
+    "This is not an atomic production switch or general world/database migration rollback; issue171 remains open",
+    "No downgrade of game world, Drasl or player inventory in this language test",
+    "Data-only re-sign tests use ephemeral test keys, not owner production keys",
+    "Source input payload ZIP/script remain private; Git contains metadata and owned translations/implementation",
+    "No fresh all-mechanics regression or Linux/macOS graphical Minecraft acceptance",
+    "HTTP fixtures do not validate production TLS or player network routes"
+  ],
+  "ready_for_players": false
+}
