@@ -1,6 +1,8 @@
 import copy
 import hashlib
+import json
 import os
+import shutil
 import sqlite3
 import sys
 import tarfile
@@ -290,4 +292,254 @@ def test_case_sensitive_mode_cannot_loosen_portable_inventory():
         validate_inventory(
             {"ok": {"bytes": 0, "sha256": hashlib.sha256(b"").hexdigest()}},
             case_sensitive=True,
+        )
+
+
+@pytest.fixture
+def release_context():
+    return {
+        "source_commit": "1" * 40,
+        "client_manifests": {"windows-x64": "2" * 64, "linux-x64": "3" * 64},
+        "declared_state_contract": "dj2-2.23.4-world-v1",
+    }
+
+
+def test_release_context_is_detached_from_mutable_controller_input(release_context):
+    expected = copy.deepcopy(release_context)
+    frozen = project._release_context(release_context)
+    release_context["client_manifests"]["windows-x64"] = "4" * 64
+    assert frozen == expected
+
+
+@pytest.mark.parametrize("fault", ["missing_pin", "mutable_image", "boolean_digest"])
+def test_malformed_selected_runtime_identity_is_rejected(release_context, fault):
+    identity = {
+        **release_context,
+        "game_image_id": "sha256:" + "a" * 64,
+        "runtime_archive_sha256": "b" * 64,
+        "runtime_manifest_sha256": "c" * 64,
+    }
+    if fault == "missing_pin":
+        identity.pop("runtime_archive_sha256")
+    elif fault == "mutable_image":
+        identity["game_image_id"] = "image:latest"
+    else:
+        identity["runtime_manifest_sha256"] = True
+    with pytest.raises(OffsiteError):
+        project._release_identity(identity)
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "missing_commit",
+        "mutable_tag",
+        "short_commit",
+        "uppercase_commit",
+        "empty_clients",
+        "unknown_platform",
+        "mutable_client_tag",
+        "contract_newline",
+        "contract_oversize",
+        "extra_secret_field",
+        "non_mapping",
+    ],
+)
+def test_invalid_release_context_never_echoes_input(release_context, fault):
+    marker = "private-identity-fixture"
+    if fault == "missing_commit":
+        release_context.pop("source_commit")
+    elif fault == "mutable_tag":
+        release_context["source_commit"] = "dev"
+    elif fault == "short_commit":
+        release_context["source_commit"] = "1" * 7
+    elif fault == "uppercase_commit":
+        release_context["source_commit"] = "A" * 40
+    elif fault == "empty_clients":
+        release_context["client_manifests"] = {}
+    elif fault == "unknown_platform":
+        release_context["client_manifests"] = {"unreviewed": "2" * 64}
+    elif fault == "mutable_client_tag":
+        release_context["client_manifests"]["windows-x64"] = "latest"
+    elif fault == "contract_newline":
+        release_context["declared_state_contract"] = marker + "\n"
+    elif fault == "contract_oversize":
+        release_context["declared_state_contract"] = marker * 10
+    elif fault == "extra_secret_field":
+        release_context["password"] = marker
+    else:
+        release_context = [marker]
+    with pytest.raises(OffsiteError) as error:
+        project._release_context(release_context)
+    assert marker not in str(error.value)
+
+
+def test_selected_release_binds_existing_sealed_components(fixture, release_context):
+    result = project.capture(
+        fixture.out, release_context=release_context, **fixture.args
+    )
+    assert result["manifest"]["schema"] == 2
+    identity = result["manifest"]["release_identity"]
+    assert {key: identity[key] for key in release_context} == release_context
+    assert identity["game_image_id"] == fixture.stopped["game"]["image_id"]
+    assert identity["runtime_archive_sha256"] == archive.digest(
+        fixture.out / "runtime.tar"
+    )
+    assert identity["runtime_manifest_sha256"] == archive.digest(
+        fixture.out / "runtime.json"
+    )
+    assert result["manifest"]["closed_sources"] == fixture.stopped
+    assert set(result["export"]["files"]) == project.FILES
+    assert result["quarantine_required"] and not result["ready_for_players"]
+    assert (
+        project.verify(
+            fixture.out,
+            fixture.args["settings"],
+            expected_release_identity=identity,
+        )
+        == result
+    )
+    for role in ("runtime", "auth", "operator"):
+        archive.verify(
+            fixture.out / (role + ".tar"),
+            archive.json_read(fixture.out / (role + ".json")),
+            fixture.args["settings"][role + "_bytes"],
+        )
+
+
+def test_legacy_export_is_readable_but_not_a_selected_release(fixture, release_context):
+    result = project.capture(fixture.out, **fixture.args)
+    assert result["manifest"]["schema"] == 1
+    assert "release_identity" not in result["manifest"]
+    assert project.verify(fixture.out, fixture.args["settings"]) == result
+    expected = {
+        **release_context,
+        "game_image_id": fixture.stopped["game"]["image_id"],
+        "runtime_archive_sha256": archive.digest(fixture.out / "runtime.tar"),
+        "runtime_manifest_sha256": archive.digest(fixture.out / "runtime.json"),
+    }
+    with pytest.raises(OffsiteError):
+        project.verify(
+            fixture.out,
+            fixture.args["settings"],
+            expected_release_identity=expected,
+        )
+
+
+@pytest.mark.parametrize(
+    "changed", ["source_commit", "client_manifests", "contract", "image", "runtime"]
+)
+def test_wrong_selected_release_refuses_without_changing_export(
+    fixture, release_context, changed
+):
+    result = project.capture(
+        fixture.out, release_context=release_context, **fixture.args
+    )
+    expected = copy.deepcopy(result["manifest"]["release_identity"])
+    if changed == "client_manifests":
+        expected["client_manifests"]["windows-x64"] = "4" * 64
+    elif changed == "contract":
+        expected["declared_state_contract"] = "different-world-v2"
+    elif changed == "image":
+        expected["game_image_id"] = "sha256:" + "6" * 64
+    elif changed == "runtime":
+        expected["runtime_archive_sha256"] = "7" * 64
+    else:
+        expected[changed] = "5" * 40
+    with pytest.raises(OffsiteError):
+        project.verify(
+            fixture.out,
+            fixture.args["settings"],
+            expected_release_identity=expected,
+        )
+    assert project.verify(fixture.out, fixture.args["settings"]) == result
+
+
+@pytest.mark.parametrize("fault", ["strip", "legacy_field", "extra", "bool_schema"])
+def test_release_metadata_cannot_be_stripped_or_downgraded_for_selection(
+    fixture, release_context, fault
+):
+    result = project.capture(
+        fixture.out, release_context=release_context, **fixture.args
+    )
+    expected = copy.deepcopy(result["manifest"]["release_identity"])
+    manifest = result["manifest"]
+    if fault == "strip":
+        manifest.pop("release_identity")
+        manifest["schema"] = 1
+    elif fault == "legacy_field":
+        manifest["schema"] = 1
+    elif fault == "extra":
+        manifest["unreviewed"] = "not an instruction"
+    else:
+        manifest["schema"] = True
+    path = fixture.out / "project.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(OffsiteError):
+        project.verify(
+            fixture.out,
+            fixture.args["settings"],
+            expected_release_identity=expected,
+        )
+    # The existing transport signature covers metadata too, not just the TARs.
+    assert (
+        project.signature(
+            fixture.out,
+            {"max_files": 9, "max_bytes": fixture.args["settings"]["max_bytes"]},
+        )
+        != result["export"]
+    )
+
+
+def test_bad_release_context_refuses_before_creating_export(fixture, release_context):
+    release_context["client_manifests"]["windows-x64"] = "latest"
+    with pytest.raises(OffsiteError):
+        project.capture(fixture.out, release_context=release_context, **fixture.args)
+    assert not fixture.out.exists()
+
+
+@pytest.mark.parametrize("fault", ["image", "runtime_manifest", "missing_runtime_pin"])
+def test_release_record_must_bind_the_enclosed_runtime(fixture, release_context, fault):
+    result = project.capture(
+        fixture.out, release_context=release_context, **fixture.args
+    )
+    manifest = result["manifest"]
+    if fault == "image":
+        manifest["closed_sources"]["game"]["image_id"] = "sha256:" + "4" * 64
+    elif fault == "runtime_manifest":
+        manifest["release_identity"]["runtime_manifest_sha256"] = "5" * 64
+    else:
+        manifest["files"]["runtime.tar"].pop("sha256")
+    (fixture.out / "project.json").write_text(json.dumps(manifest), encoding="utf-8")
+    # Internal inconsistency refuses even when no release selection was requested.
+    with pytest.raises(OffsiteError):
+        project.verify(fixture.out, fixture.args["settings"])
+
+
+@pytest.mark.parametrize("rebind", [False, True])
+def test_another_valid_runtime_cannot_be_substituted_for_the_selected_release(
+    fixture, release_context, rebind
+):
+    original = project.capture(
+        fixture.out, release_context=release_context, **fixture.args
+    )
+    selected = copy.deepcopy(original["manifest"]["release_identity"])
+    (fixture.args["game"] / "server.properties").write_text("online-mode=false\n")
+    other_dir = fixture.out.with_name("other-export")
+    other = project.capture(other_dir, release_context=release_context, **fixture.args)
+    assert other["manifest"]["release_identity"] != selected
+    # Both components are valid TAR/manifest pairs, but belong to different code/config.
+    for name in ("runtime.tar", "runtime.json"):
+        shutil.copyfile(other_dir / name, fixture.out / name)
+        original["manifest"]["files"][name] = other["manifest"]["files"][name]
+    if rebind:
+        original["manifest"]["release_identity"] = other["manifest"]["release_identity"]
+    (fixture.out / "project.json").write_text(
+        json.dumps(original["manifest"]), encoding="utf-8"
+    )
+    with pytest.raises(OffsiteError):
+        project.verify(
+            fixture.out,
+            fixture.args["settings"],
+            expected_release_identity=selected,
         )

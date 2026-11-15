@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "Optional release binding and exact selection in existing stopped-project export; not restore execution",
+  "ready_for_players": false,
+  "project_format_versions": [
+    1,
+    2
+  ],
+  "legacy_default_unchanged": true,
+  "top_level_files": 9,
+  "new_owner_cli": false,
+  "new_runtime_dependencies": false,
+  "new_schedule": false,
+  "declared_fields": [
+    "source_commit",
+    "client_manifests",
+    "declared_state_contract"
+  ],
+  "computed_binding_fields": [
+    "game_image_id",
+    "runtime_archive_sha256",
+    "runtime_manifest_sha256"
+  ],
+  "windows": {
+    "passed": 71,
+    "linux_only_skipped": 39
+  },
+  "linux": {
+    "ok": true,
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "tests": "110 passed in 1.59s",
+    "exit_code": 0,
+    "oom_killed": false,
+    "readonly_nonroot_network_none": true,
+    "cpu_limit": 1,
+    "memory_mib": 256,
+    "temporary_capacity_mib": 512,
+    "project_export_schema2_tested": true,
+    "owned_container_removed": true
+  },
+  "retained_dj2_export_readonly": {
+    "ok": true,
+    "real_retained_dj2_export_schema": 1,
+    "files": 9,
+    "runtime_archive_bytes": 516014080,
+    "input_unchanged": true,
+    "metadata_free_legacy_refused_for_release_selection": true,
+    "no_extraction_or_game_auth_start": true,
+    "ready_for_players": false,
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "exit_code": 0,
+    "oom_killed": false,
+    "readonly_nonroot_network_none": true,
+    "cpus": 1,
+    "memory_mib": 256,
+    "owned_container_removed": true
+  },
+  "accepted_cases": [
+    "schema2 capture and exact expected-identity selection over real file/TAR/ZIP/SQLite fixture IO",
+    "legacy schema1 readable but not auto-adopted as a selected release",
+    "different valid runtime TAR/JSON pair rejected even after ordinary outer hashes are updated",
+    "rebound foreign runtime still rejected against original selected identity",
+    "wrong commit, client refs, declared contract, image or runtime identity refused",
+    "metadata removal, schema downgrade, extra schema2 fields, boolean schema and missing pins refused",
+    "controller input detached; malformed context refuses before creating output and without echo",
+    "all source archives remain unchanged; quarantine_required and ready_for_players flags preserved"
+  ],
+  "limits": [
+    "Synthetic file fixtures are not real Forge/Drasl runtime acceptance.",
+    "Retained DJ2 compatibility check only hashes/reads existing sealed data; no extraction or boot.",
+    "Context is an owner declaration: no Git lookup or verification of referenced client signatures.",
+    "State contract name does not prove backward compatibility of saves.",
+    "Expected identity must come from a trusted saved plan; external receipt/whole-export signature verification remains required.",
+    "No world/auth restore, promotion, VPS deploy or calendar installation.",
+    "Full coherent release return and producer validation remain issue171."
+  ]
+}

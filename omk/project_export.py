@@ -3,6 +3,9 @@
 The trusted owner holds its shared operation lock and supplies checkpoints from
 actual Docker inspection before and after this call. No stop/start, auth reset,
 schedule or transfer is implicit. A project manifest is published LAST.
+Optional release context is an owner declaration, not Git or client-signature
+attestation. Release selection uses the saved full identity, never one rebuilt
+from the candidate being checked. Authentication rollback is not implied.
 """
 
 import json
@@ -13,6 +16,7 @@ import sys
 import tempfile
 from datetime import UTC, datetime
 
+from launcher.releases import PLATFORMS
 from omk import (
     auth_state_archive,
     component_archive as archive,
@@ -29,6 +33,92 @@ ROLES = {"world": "zip", "auth": "tar", "runtime": "tar", "operator": "tar"}
 FILES = {"project.json"} | {
     f"{role}.{suffix}" for role, kind in ROLES.items() for suffix in (kind, "json")
 }
+_RELEASE_CONTEXT = {"source_commit", "client_manifests", "declared_state_contract"}
+_RELEASE_BINDING = {
+    "game_image_id",
+    "runtime_archive_sha256",
+    "runtime_manifest_sha256",
+}
+_RELEASE_MANIFEST = {
+    "schema",
+    "kind",
+    "scope",
+    "closed_sources",
+    "started_at",
+    "finished_at",
+    "files",
+    "settings",
+    "quarantine_required",
+    "ready_for_players",
+    "release_identity",
+}
+
+
+def _release_context(value):
+    if (
+        not isinstance(value, dict)
+        or set(value) != _RELEASE_CONTEXT
+        or not isinstance(value["source_commit"], str)
+        or not re.fullmatch(r"[a-f0-9]{40}", value["source_commit"])
+        or not isinstance(value["declared_state_contract"], str)
+        or not re.fullmatch(r"[A-Za-z0-9_.-]{1,64}", value["declared_state_contract"])
+        or not isinstance(value["client_manifests"], dict)
+        or not 1 <= len(value["client_manifests"]) <= len(PLATFORMS)
+        or any(
+            platform not in PLATFORMS
+            or not isinstance(digest, str)
+            or not IDENTITY.fullmatch(digest)
+            for platform, digest in value["client_manifests"].items()
+        )
+    ):
+        raise OffsiteError("Invalid declared project release context")
+    return {
+        "source_commit": value["source_commit"],
+        "declared_state_contract": value["declared_state_contract"],
+        "client_manifests": dict(sorted(value["client_manifests"].items())),
+    }
+
+
+def _release_identity(value):
+    if not isinstance(value, dict) or set(value) != _RELEASE_CONTEXT | _RELEASE_BINDING:
+        raise OffsiteError("Missing or invalid project release identity")
+    context = _release_context({key: value[key] for key in _RELEASE_CONTEXT})
+    if (
+        not isinstance(value["game_image_id"], str)
+        or not re.fullmatch(r"sha256:[a-f0-9]{64}", value["game_image_id"])
+        or any(
+            not isinstance(value[key], str) or not IDENTITY.fullmatch(value[key])
+            for key in ("runtime_archive_sha256", "runtime_manifest_sha256")
+        )
+    ):
+        raise OffsiteError("Invalid project release runtime identity")
+    return {**context, **{key: value[key] for key in _RELEASE_BINDING}}
+
+
+def _bound_release(context, sources, files):
+    try:
+        return {
+            **context,
+            "game_image_id": sources["game"]["image_id"],
+            "runtime_archive_sha256": files["runtime.tar"]["sha256"],
+            "runtime_manifest_sha256": files["runtime.json"]["sha256"],
+        }
+    except KeyError, TypeError:
+        raise OffsiteError("Invalid project release runtime binding") from None
+
+
+def _seal(destination, manifest, settings, release):
+    if release is not None:
+        manifest["release_identity"] = _bound_release(
+            release, manifest["closed_sources"], manifest["files"]
+        )
+    archive.json_write(destination / "project.json", manifest)
+    _sync_directory(destination.parent)
+    return verify(
+        destination,
+        settings,
+        expected_release_identity=manifest.get("release_identity"),
+    )
 
 
 def policy(environment=None):
@@ -145,9 +235,11 @@ def capture(
     scope,
     checkpoint,
     settings,
+    release_context=None,
 ):
     # checkpoint must independently bind these mounts to the allowlisted volumes.
     validate_sources(destination, (game, auth, operator), scope)
+    release = None if release_context is None else _release_context(release_context)
     before = checkpoint()
     closed(before)
     # Detach nested mutable checkpoint objects supplied by a controller.
@@ -281,7 +373,7 @@ def capture(
     if sum(e["bytes"] for e in entries.values()) > settings["max_bytes"]:
         raise OffsiteError("Prepared project set exceeds its byte bound")
     manifest = {
-        "schema": 1,
+        "schema": 1 if release is None else 2,
         "kind": "omk-closed-project-export",
         "scope": scope,
         "closed_sources": before,
@@ -292,20 +384,25 @@ def capture(
         "quarantine_required": True,
         "ready_for_players": False,
     }
-    archive.json_write(destination / "project.json", manifest)
-    _sync_directory(destination.parent)
-    return verify(destination, settings)
+    return _seal(destination, manifest, settings, release)
 
 
-def verify(directory, settings):
+def verify(directory, settings, *, expected_release_identity=None):
     # Hash the exact set before allowing transport; no extraction or lifecycle.
+    expected = (
+        None
+        if expected_release_identity is None
+        else _release_identity(expected_release_identity)
+    )
     if resolved(directory) != directory.absolute() or not directory.is_dir():
         raise OffsiteError("Project export requires an unlinked directory")
     if {p.name for p in directory.iterdir()} != FILES:
         raise OffsiteError("Incomplete or foreign project export set")
     manifest = archive.json_read(directory / "project.json")
     if (
-        manifest.get("schema") != 1
+        not isinstance(manifest, dict)
+        or type(manifest.get("schema")) is not int
+        or manifest["schema"] not in {1, 2}
         or manifest.get("kind") != "omk-closed-project-export"
         or manifest.get("settings") != settings
         or manifest.get("ready_for_players") is not False
@@ -314,6 +411,21 @@ def verify(directory, settings):
     ):
         raise OffsiteError("Invalid project export manifest")
     closed(manifest["closed_sources"])
+    if manifest["schema"] == 2:
+        if set(manifest) != _RELEASE_MANIFEST:
+            raise OffsiteError("Invalid project release manifest fields")
+        identity = _release_identity(manifest["release_identity"])
+        context = {key: identity[key] for key in _RELEASE_CONTEXT}
+        if identity != _bound_release(
+            context, manifest["closed_sources"], manifest["files"]
+        ):
+            raise OffsiteError("Project release does not bind its runtime components")
+    else:
+        if "release_identity" in manifest:
+            raise OffsiteError("Release identity requires project export schema 2")
+        identity = None
+    if expected is not None and expected != identity:
+        raise OffsiteError("Project export differs from the selected release identity")
     if sum(p.stat().st_size for p in directory.iterdir()) > settings["max_bytes"]:
         raise OffsiteError("Sealed export exceeds its byte bound")
     for name, entry in manifest["files"].items():
