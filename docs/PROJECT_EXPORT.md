@@ -203,3 +203,36 @@ case collision. Ошибочные исходные reports сохранены. 
 Далее #33: durable capture/lifecycle и общий бюджет в одном nightly, внешнее
 destination/retention, полноценный boot/cutover в карантине и актуальные права/
 отозванные доступы. До VPS остаётся аудит владельца; лаунчер/owned JAR не изменены.
+
+## Проверенные клиенты при capture — 15 ноября 2026
+
+209 focused Linux Docker tests и 74 Windows/135 Linux skips; 18 новых контролей.
+Отдельное исполнение прежнего producer действительно создало schema 2 с digest
+отсутствующего клиента. Новый код отказал до output; позднее повреждение клиента
+в unit fixture оставило export без seal. Проверены wrong signature/keys, extra
+files, same-size corruption, pack/platform/Minecraft, overlapping roots,
+callback mutation и lifecycle change во время финального client verifier.
+
+Свежая DJ2 2.23.4/Core0.3.8/Fix0.1.4 с постоянным Drasl: настоящий protocol actor
+прошёл strict257, получил три алмаза; normal stop игры/auth exit0/noOOM. Из этих
+закрытых sources под owner lock создан полный девятифайловый комплект. Client ref
+теперь реальный: windows-x64 2.23.4-omk.3-rc.1,
+`4ea6af7a476e1bed67d75a95e3bcdbf19ba4c35e18fb995b0fff6af762c63a31`,
+5971 файлов/759730113 байт. Оригинальный ReleaseStore подключён readonly;
+подписи/bytes проверены до/после capture, после этого независимы mount/lifecycle.
+
+33 nonroot readonly Linux checks перечитали все 9 файлов, 2320 runtime/5 auth/
+4 operator/309 world files, SQLite, Ed25519 и все client hashes. Весь мир совпал
+с отдельным cold TAR; saved inventory содержит три тестовых алмаза. Independent
+archive/signature readers не используют project_export/ReleaseStore, NBT reader
+прежний. Для reader подготовлены private Linux-копии тех же bytes с его uid;
+root-produced mode700/600 оригинала не ослаблен. Game tokens в reader не копируются.
+
+Первый game fixture ошибочно ожидал Count byte вместо фактического TAG_Int;
+id/byte/int console controls и cold NBT подтвердили исправление только теста.
+Его diagnostic stop143 не считается clean game pass. Первый nonroot-reader
+ожидаемо отказал на private source permissions. Исходные failed reports/cold data
+сохранены; свои scopes/reader cache удалены. Графическая игра не повторялась:
+JAR/клиентские bytes прежние. Production controller/ingress/совместимость мира и
+повторный контроль сохранённых клиентов перед promotion остаются #171.
+[Протокол и точные ограничения](validation/project-client-inputs-2026-11-15.json).

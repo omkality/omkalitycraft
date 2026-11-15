@@ -9,11 +9,20 @@ CLI/env/deps/модулей/таймеров нет; Git/state остаются 
 
 209 focused Linux Docker tests, Windows 74 passed/135 Linux skips; Ruff/Black и
 pre-commit. Отдельное исполнение старого кода действительно создало экспорт с
-несуществующим client ref; новый producer отказал до output. Полная native-проверка
-с текущим подписанным клиентом выполняется отдельно, до её завершения приёмка
-серверного scope не объявляется. Production lifecycle/ingress/post-boot authority
-и несовместимые данные #171 открыты. Календарь/master/player release/VPS прежние.
-[Контракт](PROJECT_EXPORT.md).
+несуществующим client ref; новый producer отказал до output.
+
+Свежие Linux Docker Forge/Drasl: strict257 protocol actor, normal stop0/noOOM,
+реальный подписанный Windows-клиент 4ea6af7a… (5971 файлов/759730113 байт),
+10 native conditions и полный coherent nine-file capture. 33 независимых nonroot
+readonly Linux checks перечитали все архивы, SQLite, полные hashes/Ed25519 клиента,
+весь cold world и сохранённый inventory. Reader использует private Linux-копии
+тех же bytes, исходные permissions прежние. Ошибка Count byte/int в первом
+fixture и ожидаемый отказ nonroot-чтения mode700/600 сохранены отдельно; они не
+считаются clean pass. Свои scopes/cache удалены, source/export retained.
+
+Production lifecycle/ingress/post-boot authority и несовместимые данные #171
+открыты. Календарь/master/player release/VPS прежние.
+[Контракт](PROJECT_EXPORT.md), [протокол](validation/project-client-inputs-2026-11-15.json).
 
 ## Адресная локаль Forge и файловый возврат — 15 ноября 2026
 

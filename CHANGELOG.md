@@ -11,8 +11,11 @@
   CLI/env/deps/форматы не добавлены. [Контракт](docs/PROJECT_EXPORT.md).
 - 209 focused Linux Docker tests; Windows 74 passed/135 Linux skips. Проверка
   старого кода воспроизвела создание экспорта с отсутствующим client ref; новый
-  отказал до записи. Полный native-прогон проверяется отдельно. Git/state context
-  остаётся owner declaration; production lifecycle/ingress ещё не принят.
+  отказал до записи. Свежие Linux Docker Forge/Drasl дали clean stop и coherent
+  capture с реальным полным signed Windows client. 33 независимых readonly checks
+  подтвердили архивы/подпись/все файлы, cold world и inventory; ошибки fixtures
+  сохранены в [протоколе](docs/validation/project-client-inputs-2026-11-15.json).
+  Git/state остаются owner declaration; production lifecycle/ingress ещё не принят.
 
 ## Не выпущено — русская кнопка Forge и возврат языкового файла
 
