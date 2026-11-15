@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "pack": "DJ2 2.23.4",
+  "client_version": "0.1.4",
+  "client_sha256": "bd3606858023cc107f7931f24c8d2a929da237b49aee3d9670eb268685a01003",
+  "ready_for_players": false,
+  "build": {
+    "ok": true,
+    "source": "canonical Git index bytes",
+    "jar_sha256": "bd3606858023cc107f7931f24c8d2a929da237b49aee3d9670eb268685a01003",
+    "two_clean_builds": true,
+    "java_checks": 149,
+    "image": "sha256:eade57feef3151e4d27bbe4120f718076317e45df303c96104f9c6d882b0c071",
+    "changed_previous_entries": [
+      "net/omkality/client/OmkalityClient.class"
+    ],
+    "added_entries": [
+      "mixins.omkalityclient.defaults.json",
+      "net/omkality/client/bootstrap/DefaultOptionsMixinLoader.class",
+      "net/omkality/client/defaults/KnownKeySnapshot.class",
+      "net/omkality/client/mixin/defaults/DefaultOptionsKnownKeysMixin.class"
+    ],
+    "all_other_previous_entries_identical": true,
+    "private_abi_and_tests_excluded": true,
+    "owned_build_containers_removed": true
+  },
+  "windows_focused_tests": 153,
+  "linux_focused_tests": 153,
+  "linux_data_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+  "native": {
+    "strict_client_mod_count": 258,
+    "book_layout_probe_present": false,
+    "private_quest_observation_fixture": false,
+    "production_client_defaults_used": true,
+    "client_restarts": 2,
+    "graphical_exit_code": 0,
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "game_crash_detected": false,
+    "auth_cleanup": true,
+    "owned_scopes_removed": true,
+    "owned_volume_removed_after_export": true,
+    "orchestrator_permissions_removed": true
+  },
+  "accepted_cases": [
+    "first start with real launcher defaults",
+    "normal exit without Options then unchanged sole K and SHIFT+O",
+    "custom Roots HOME and disabled sensor key survive next launcher preparation and restart",
+    "physical K opens original Better Questing GuiHomeOverride"
+  ],
+  "limits": [
+    "new modifier chord editing through automated input not accepted",
+    "no full pack playthrough",
+    "no player manifest, Release or VPS deployment"
+  ],
+  "rollback_preserves_personal_files": true,
+  "server_world_nbt_unchanged_by_adapter": true,
+  "issue191_remaining_modifier_editing_check": true
+}

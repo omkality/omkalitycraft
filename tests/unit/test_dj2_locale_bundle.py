@@ -107,6 +107,30 @@ def test_literal_book_and_complete_generation_match_review(inputs):
     assert b"recipes.keep();" in expected and b'"Bag"' in expected
 
 
+def test_default_key_compatibility_keeps_the_old_bundle_contract(inputs):
+    data, _ = inputs
+    old = compose_locale_bundle(**data)
+    data["lock"]["jvm_args_required"].append(
+        "-Domkality.defaults.persist.forge112=true"
+    )
+    assert compose_locale_bundle(**data) == old
+
+
+@pytest.mark.parametrize(
+    "flag",
+    [
+        "-Domkality.defaults.persist.forge112=false",
+        "-Dunreviewed.behavior=true",
+        "-javaagent:unreviewed.jar",
+    ],
+)
+def test_bundle_does_not_accept_arbitrary_launch_extensions(inputs, flag):
+    data, _ = inputs
+    data["lock"]["jvm_args_required"].append(flag)
+    with pytest.raises(ValueError):
+        compose_locale_bundle(**data)
+
+
 @pytest.mark.parametrize(
     "fault",
     [

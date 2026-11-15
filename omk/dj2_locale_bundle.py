@@ -139,10 +139,14 @@ def _validate_lock(lock):
         or re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", lock["version"]) is None
     ):
         raise ValueError("A reviewed DJ2 version is required")
-    if lock["jvm_args_required"] != [
+    original_flags = [
         "-Domkality.books.locale.forge112=true",
         "-Domkality.appearance.forge112=true",
-    ]:
+    ]
+    if lock["jvm_args_required"] not in (
+        original_flags,
+        [*original_flags, "-Domkality.defaults.persist.forge112=true"],
+    ):
         raise ValueError("Language bundle launch contract changed")
     if (
         not isinstance(lock["locale_archive_sha256"], str)

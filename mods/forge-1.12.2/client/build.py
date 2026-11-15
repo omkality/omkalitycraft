@@ -110,6 +110,7 @@ for test_class in [
     "net.omkality.client.books.BookMixinHandlersTest",
     "net.omkality.client.books.BookLocaleLoaderTest",
     "net.omkality.client.books.BewitchmentBookLabelsTest",
+    "net.omkality.client.defaults.KnownKeySnapshotTest",
 ]:
     subprocess.run(
         [
