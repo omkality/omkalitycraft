@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "Graphical guide flow on the accepted final language layer; not whole release acceptance",
+  "ready_for_players": false,
+  "pack": "DJ2 2.23.4",
+  "runtime": {
+    "client_os": "Windows x64",
+    "server": "isolated Linux Docker",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "core_version": "0.3.8",
+    "core_sha256": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+    "fix_version": "0.1.4",
+    "fix_sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b",
+    "client_version": "0.1.6",
+    "client_sha256": "8175e8698e276b164c8208e7e3e4f42da29b24d8e766ee0f926968085b6dd395",
+    "strict_mod_count": 258,
+    "language_archive_sha256": "39685a9288e93a5de5c47c3cf41e1aa0969bcaf1b3755e61c16d891a467167a2",
+    "language_bundle_entries": 682,
+    "private_book_probe": false,
+    "initial_inventory_sha256": "be860dd10dc56e068aacb4811d055a2757803e9d257074616386960d2d9c638f",
+    "server_memory_mib": 6144,
+    "server_cpus": 4,
+    "sound_master": 1.0
+  },
+  "native_cases": {
+    "one_process_start": true,
+    "first_login_six_auto_lines_received": true,
+    "delay_seconds": 8,
+    "approx_observed_login_to_auto_seconds": 9,
+    "manual_guide_rendered_all_six_lines": true,
+    "chat_open_and_closed_hud_checked": true,
+    "viewports": [
+      [
+        854,
+        480
+      ],
+      [
+        1280,
+        800
+      ]
+    ],
+    "nonop_survival_hard": true,
+    "death_respawn": true,
+    "ordinary_resource_command_warmup_seconds": 5,
+    "resource_dimension": -18000,
+    "no_auto_from_death_or_dimension_change": true,
+    "two_quick_requests_one_six_line_response": true,
+    "rejoin_wait_ms_without_auto": 10000,
+    "manual_guide_works_after_rejoin": true,
+    "total_guide_batches": 4,
+    "auto_batches": 1,
+    "manual_batches": 3,
+    "inventory_rows_identical_across_rejoin": true,
+    "xp_level_preserved": 12
+  },
+  "fixture_policy": {
+    "new_world_accounts_and_volumes": true,
+    "loopback_only": true,
+    "keep_inventory": true,
+    "keep_inventory_is_test_only_not_grave_drop_acceptance": true,
+    "play_hours": 1,
+    "help_cooldown_seconds": 2,
+    "unchanged_production_defaults_play_hours": 3,
+    "unchanged_production_defaults_help_cooldown_seconds": 5,
+    "auto_cooldown_seconds": 1800
+  },
+  "cold_linux": {
+    "ok": true,
+    "read_only_cold_linux_world": true,
+    "inventory_rows": 4,
+    "no_duplicate_starting_items": true,
+    "emerald_count": 7,
+    "experience_level": 12,
+    "dimension": -18000,
+    "initial_book_pages": 18,
+    "initial_book_all_pages_title_author_unchanged": true,
+    "guide_timestamps_long_positive_equal": true,
+    "saved_play_ticks": 6598,
+    "saved_playtime_is_world_local_not_lifetime": true,
+    "world_archive_unchanged": true,
+    "client_exit_code": 0,
+    "server_exit_code": 0,
+    "oom_killed": false,
+    "auth_cleanup": true,
+    "owned_scopes_removed": true,
+    "verification_environment": {
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "network": "none",
+      "readonly_inputs": true,
+      "nonroot": true,
+      "cpus": 1,
+      "memory_mib": 128,
+      "exit_code": 0,
+      "oom_killed": false,
+      "owned_container_removed": true
+    }
+  },
+  "cleanup": {
+    "graphical_exit_code": 0,
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "game_crash_detected": false,
+    "orchestrator_permissions_removed": true,
+    "owned_volume_removed_after_export": true,
+    "auth_cleanup": true,
+    "owned_scopes_removed": true
+  },
+  "shift_assignment": {
+    "physical_keyboard_accepted": false,
+    "synthetic_attempt": "MCP raw LSHIFT hold 160 ticks, separate GUI keyTyped Home, explicit release",
+    "observed": "HOME",
+    "issue": 191,
+    "no_input_save_code_change": true
+  },
+  "limits": [
+    "Automatic chat receipt is recorded; visual readability is verified on the same six lines through manual /guide.",
+    "One client process start and one reconnect; no new server restart or killed-process acceptance in this run.",
+    "Previous protocol threshold/early logout/server restart tests remain separate evidence.",
+    "MCP renders real game frames and invokes GUI input; this is not physical-keyboard Shift acceptance.",
+    "No Windows.Graphics.Capture/computer-use helper was started.",
+    "Guide is still plain white with default vanilla fading; soft colors and longer display remain issue44.",
+    "Saved vanilla ticks are world-local, include AFK and do not implement account lifetime rewards.",
+    "A clean sound-enabled exit does not prove a fix for historical OpenAL issue163.",
+    "No Linux/macOS graphical client, whole-pack playthrough, complete release composition or server release return acceptance.",
+    "No player manifest, GitHub launcher Release, VPS or calendar switch."
+  ]
+}
