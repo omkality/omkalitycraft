@@ -4,10 +4,10 @@
   "version": "2.23.4",
   "locale_archive_sha256": "39685a9288e93a5de5c47c3cf41e1aa0969bcaf1b3755e61c16d891a467167a2",
   "client": {
-    "version": "0.1.6",
-    "path": "mods/OmkalityClient-0.1.6.jar",
-    "sha256": "8175e8698e276b164c8208e7e3e4f42da29b24d8e766ee0f926968085b6dd395",
-    "size": 84966
+    "version": "0.1.7",
+    "path": "mods/OmkalityClient-0.1.7.jar",
+    "sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1",
+    "size": 95089
   },
   "initial_inventory": {
     "path": "scripts/ModSpecific/InitialInventory.zs",

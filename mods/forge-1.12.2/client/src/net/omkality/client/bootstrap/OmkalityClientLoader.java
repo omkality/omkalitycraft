@@ -26,6 +26,7 @@ public final class OmkalityClientLoader implements IFMLLoadingPlugin, IEarlyMixi
         configs.add("mixins.omkalityclient.network.json");
         if (Boolean.getBoolean("omkality.appearance.forge112")) configs.add("mixins.omkalityclient.appearance.json");
         if (Boolean.getBoolean("omkality.itemviews.locale.forge112")) configs.add("mixins.omkalityclient.itemviews.json");
+        if (Boolean.getBoolean("omkality.guide.chat.forge112")) configs.add("mixins.omkalityclient.guides.json");
         return configs;
     }
 

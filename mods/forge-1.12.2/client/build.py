@@ -113,6 +113,7 @@ for test_class in [
     "net.omkality.client.defaults.KnownKeySnapshotTest",
     "net.omkality.client.itemviews.ItemViewCatalogTest",
     "net.omkality.client.controls.ControlSortLabelTest",
+    "net.omkality.client.guides.GuideChatTimingTest",
 ]:
     subprocess.run(
         [
@@ -132,6 +133,53 @@ for test_class in [
         check=True,
     )
 jar = root / "build" / version["file"]
+for flags, expected in [
+    ([], 1000),
+    (["-Domkality.guide.chat.forge112=false"], 1000),
+    (["-Domkality.guide.chat.forge112=true"], 1000),
+    (
+        [
+            "-Domkality.guide.chat.forge112=true",
+            "-Domkality.guide.chat.profile=../outside",
+        ],
+        1000,
+    ),
+    (
+        [
+            "-Domkality.guide.chat.forge112=true",
+            "-Domkality.guide.chat.profile=missing",
+        ],
+        1000,
+    ),
+    *[
+        (
+            [
+                "-Domkality.guide.chat.forge112=true",
+                "-Domkality.guide.chat.profile=dj2-2.23.4",
+                "-Domkality.guide.chat.seconds=" + seconds,
+            ],
+            expected,
+        )
+        for seconds, expected in [
+            ("20", 1100),
+            ("15", 1067),
+            ("0", 1000),
+            ("61", 1000),
+            ("bad", 1000),
+        ]
+    ],
+]:
+    subprocess.run(
+        [
+            str(args.java.resolve()),
+            *flags,
+            "-cp",
+            os.pathsep.join([str(tests), str(classes), str(root / "client/resources")]),
+            "net.omkality.client.guides.GuideChatRuntimeTest",
+            str(expected),
+        ],
+        check=True,
+    )
 with zipfile.ZipFile(jar, "w", zipfile.ZIP_DEFLATED) as archive:
     for path in ordered((classes / "net/omkality/client").rglob("*.class")):
         archive.writestr(

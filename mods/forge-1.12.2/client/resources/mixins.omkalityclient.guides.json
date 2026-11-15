@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "net.omkality.client.mixin.guides",
+  "compatibilityLevel": "JAVA_8",
+  "client": ["GuideChatLifetimeMixin"],
+  "injectors": {"defaultRequire": 1}
+}

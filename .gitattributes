@@ -3,3 +3,5 @@ launcher/assets/fonts/*.ttf -text
 launcher/assets/fonts/*.txt text eol=lf
 deploy/drasl/*.patch text eol=lf whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
 profiles/client-addons/forge-1.12.2/notices/FullscreenWindowed-LICENSE.txt text eol=lf whitespace=-blank-at-eol
+# The server guide profile must match the pinned client resource byte for byte.
+profiles/server-defaults/dj2/omkalitycore-welcome.properties text eol=lf

@@ -7,7 +7,7 @@
 проверку соответствующего действия в Minecraft.
 
 Для первого запуска выбрана DJ2 2.23.4 / Forge 1.12.2. Текущие принятые owned
-artifacts: Core 0.3.8, DJ2Fix 0.1.4, Client 0.1.6 — `mods/forge-1.12.2/versions.json`.
+artifacts: Core 0.3.8, DJ2Fix 0.1.4, Client 0.1.7 — `mods/forge-1.12.2/versions.json`.
 Это версии исходников/отдельных scope, не переключённый player manifest.
 GTNH не объявляем готовой. Стабильность и полнота перевода важнее свежести версии.
 Все серверные acceptance выполняются в изолированных Linux Docker labs.
@@ -19,7 +19,7 @@ GTNH не объявляем готовой. Стабильность и пол�
 | Аккаунты и проходки | `AUTH_STORAGE.md`, `ACCOUNT_RECOVERY.md`, `deploy/drasl/README.md` | Одноразовая регистрация без гонки, chosen password, отзыв сессий, постоянные auth volumes и signing key |
 | Лаунчер, manifest, update | `PORTABLE_SESSIONS.md`, `SIGNED_PACK_INSTALL.md`, `RELEASES.md` | Подписи, minimum version, repair/сеть, сохранение настроек, portable paths и реальные клиенты |
 | Перевод DJ2 | `DJ2_TRANSLATION_COMPLETION.md`, `DJ2_LANGUAGE_BUNDLE.md`, `DJ2_QUEST_LOCALE.md`, `CLIENT_ITEM_VIEWS.md`, #49 | Приняты квестовый текст, стартовая книга, известная вёрстка/ссылки, runtime-подписи и сохранность NBT. Интерфейс управления принят; остаётся общая выпускная/миграционная приёмка; происхождение заимствованных локалей проверяется отдельно |
-| Помощь и игровые часы | `NEW_PLAYER_GUIDE.md`, `PLAYER_TIME.md`, #43/#44 | Opt-in `/guide` принята также обычным Windows-клиентом с Linux Docker-сервером: читабельность, смерть/ресурсный мир/rejoin и сохранение отметок. Открыты цвета/длительность и выпускной состав. Saved ticks не являются несбрасываемым account lifetime |
+| Помощь и игровые часы | `NEW_PLAYER_GUIDE.md`, `PLAYER_TIME.md`, #43/#44 | Opt-in `/guide` принята также обычным Windows-клиентом с Linux Docker-сервером: читабельность, смерть/ресурсный мир/rejoin и сохранение отметок. Спокойные цвета/20 секунд и выключение адаптера приняты в Client 0.1.7; открыт выпускной состав. Saved ticks не являются несбрасываемым account lifetime |
 | Разделение модов | `mods/README.md`, `mods/forge-1.12.2/THIRD_PARTY.md` | Generic Core отдельно от pack fixes, reproducible hashes, архив/lab не в публичном runtime |
 | Команды, роли, FTB | `commands/dj2/README.md`, `DJ2_PLANT_PLACEMENT.md` | Все игроки без OP, PvP/Hard, лимиты, защита spawn, обычные разрешённые действия вместе с негативными контролями |
 | Измерения и ресурсный мир | `OWNER_WORLD_CUTOVERS.md`, `RESOURCE_WORLD.md` и связанные с #32/#37 документы | Безопасная высадка, mod portal/teleporter state, очистка приватов/домов/варпов только выбранного мира |

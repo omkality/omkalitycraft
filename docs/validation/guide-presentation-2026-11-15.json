@@ -1,0 +1,259 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "Muted guide colors and optional 20-second display; not full release promotion",
+  "ready_for_players": false,
+  "pack": "DJ2 2.23.4",
+  "artifacts": {
+    "core": {
+      "version": "0.3.8",
+      "file": "OmkalityCore-0.3.8.jar",
+      "sha256": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e"
+    },
+    "dj2fix": {
+      "version": "0.1.4",
+      "file": "OmkalityDJ2Fix-0.1.4.jar",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client": {
+      "version": "0.1.7",
+      "file": "OmkalityClient-0.1.7.jar",
+      "sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+    }
+  },
+  "language_archive_sha256": "39685a9288e93a5de5c47c3cf41e1aa0969bcaf1b3755e61c16d891a467167a2",
+  "language_unchanged": true,
+  "server_profile_sha256": "4b78606e2e26dbe801d7f58498d895f391b2d0f22587d86bb00b75496da78f00",
+  "build": {
+    "indexed_source_two_identical_builds": true,
+    "prototype_image": "sha256:eade57feef3151e4d27bbe4120f718076317e45df303c96104f9c6d882b0c071",
+    "public_build": {
+      "schema": 1,
+      "ok": true,
+      "rounds": [
+        {
+          "core": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+          "dj2fix": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b",
+          "client": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+        },
+        {
+          "core": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+          "dj2fix": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b",
+          "client": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+        }
+      ],
+      "matches_accepted_jars": true,
+      "class_counts": {
+        "core": 52,
+        "dj2fix": 26,
+        "client": 33
+      },
+      "graphical_or_gameplay_test": false
+    },
+    "java_helper_conditions": 278,
+    "guide_time_matching_and_capacity_conditions": 42,
+    "fresh_runtime_configuration_conditions": 20,
+    "python_profile_regression_tests": 1,
+    "source_boundary_files": 159,
+    "changed_previous_jar_entries": [
+      "net/omkality/client/bootstrap/OmkalityClientLoader.class",
+      "net/omkality/client/OmkalityClient.class"
+    ],
+    "added_jar_entries": [
+      "assets/omkalityclient/guides/dj2-2.23.4.properties",
+      "mixins.omkalityclient.guides.json",
+      "net/omkality/client/guides/GuideChatLifetime.class",
+      "net/omkality/client/guides/GuideChatTiming$1.class",
+      "net/omkality/client/guides/GuideChatTiming.class",
+      "net/omkality/client/mixin/guides/GuideChatLifetimeMixin.class"
+    ],
+    "all_other_previous_jar_entries_identical": true,
+    "minecraft_forge_abi_and_tests_excluded": true,
+    "python_profile_regression_platforms": [
+      "Windows",
+      "Linux Docker"
+    ],
+    "linux_profile_verification": {
+      "ok": true,
+      "linux_profile_tests": 1,
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "exit_code": 0,
+      "oom_killed": false,
+      "readonly_inputs": true,
+      "nonroot": true,
+      "network": "none",
+      "owned_container_removed": true
+    }
+  },
+  "native": {
+    "client_os": "Windows x64",
+    "server": "isolated Linux Docker",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "strict_mod_count": 258,
+    "sound_master": 1.0,
+    "viewports": [
+      [
+        1280,
+        800
+      ],
+      [
+        854,
+        480
+      ]
+    ],
+    "timing_on_samples_ms": [
+      0,
+      2001,
+      4001,
+      6001,
+      8001,
+      10001,
+      12001,
+      14001,
+      16001,
+      18000,
+      20000,
+      22000
+    ],
+    "timing_off_samples_ms": [
+      0,
+      2000,
+      4000,
+      6000,
+      8000,
+      10000,
+      12001
+    ],
+    "visual_checks": {
+      "ordinary_control_present_initially": true,
+      "ordinary_control_gone_by_10001_ms": true,
+      "all_guide_lines_readable_at_14001_ms": true,
+      "guide_gone_by_20000_ms": true,
+      "small_window_resize_at_12_seconds_preserves_remaining_time": true,
+      "guide_gone_8_seconds_after_resize_not_restarted": true,
+      "history_keeps_guide_batches_and_ordinary_control": true,
+      "optout_cold_start_guide_and_control_gone_by_10000_ms": true,
+      "quiet_muted_palette_and_all_line_wraps_checked": true
+    },
+    "normal_restart_count": 1,
+    "guide_mixin_absent_in_second_process_log": true,
+    "inventory_identical_across_restart_and_rejoin": true,
+    "client_exit_codes": [
+      0,
+      0
+    ],
+    "server_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "game_crash_detected": false,
+    "private_book_probe": false
+  },
+  "cold_linux": {
+    "ok": true,
+    "read_only_cold_linux_save": true,
+    "inventory_items": 3,
+    "guide_long_markers_preserved": true,
+    "initial_book_pages": 18,
+    "all_pages_title_author_equal_reviewed_source": true,
+    "no_duplicate_starting_items": true,
+    "client_exit_codes": [
+      0,
+      0
+    ],
+    "server_exit_code": 0,
+    "oom_killed": false,
+    "game_crash_detected": false,
+    "owned_scopes_removed": true,
+    "auth_cleanup": true,
+    "verification_environment": {
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "network": "none",
+      "readonly_inputs": true,
+      "nonroot": true,
+      "cpus": 1,
+      "memory_mib": 128,
+      "exit_code": 0,
+      "oom_killed": false,
+      "owned_container_removed": true
+    }
+  },
+  "world_archive_matches_closed_export": true,
+  "cleanup": {
+    "orchestrator_permissions_removed": true,
+    "owned_volume_removed_after_export": true,
+    "auth_cleanup": true,
+    "owned_scopes_removed": true
+  },
+  "limits": [
+    "Visual frame checks are human/model review of real MCMCP framebuffer captures, not OCR assertions.",
+    "Timing uses standard client ticks; a stalled client is not promised wall-clock precision.",
+    "Only exact profile text matches; arbitrary player prefixes and unknown strings use vanilla duration.",
+    "Bounded weak metadata resets at 256 entries; excess marking falls back to vanilla rather than changing history.",
+    "Core/Fix/JAR language resources, shared scripts and quest/gameplay logic remain unchanged.",
+    "Opt-out after restart was tested; full server/JAR return and release composition remain issue171/44.",
+    "No Linux/macOS graphical Minecraft or full-pack playthrough acceptance.",
+    "Clean sound-enabled runs do not establish a fix for historical OpenAL issue163.",
+    "No physical Shift reassignment retest, no WGC/computer-use helper started.",
+    "No public player manifest, launcher Release, VPS deployment or calendar installation."
+  ],
+  "language_composition": {
+    "windows": {
+      "ok": true,
+      "real_inputs_composed": true,
+      "total_files": 684,
+      "resource_files": 682,
+      "all_682_resources_identical": true,
+      "initial_inventory_unchanged": true,
+      "only_lock_client_descriptor_changed": true,
+      "jvm_args_unchanged": true,
+      "client_size": 95089,
+      "client_sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1",
+      "no_install_or_signature_or_game_launch": true
+    },
+    "linux": {
+      "ok": true,
+      "real_inputs_composed": true,
+      "total_files": 684,
+      "resource_files": 682,
+      "all_682_resources_identical": true,
+      "initial_inventory_unchanged": true,
+      "only_lock_client_descriptor_changed": true,
+      "jvm_args_unchanged": true,
+      "client_size": 95089,
+      "client_sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1",
+      "no_install_or_signature_or_game_launch": true
+    },
+    "unit_tests_each_platform": 50,
+    "docker": {
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "network": "none",
+      "readonly_inputs": true,
+      "nonroot": true,
+      "memory_mib": 256,
+      "cpus": 1,
+      "exit_code": 0,
+      "oom_killed": false,
+      "owned_container_removed": true
+    }
+  },
+  "windows_git_checkout": {
+    "before": {
+      "stage": "before",
+      "core_autocrlf": true,
+      "profile_bytes_equal": false,
+      "pytest_exit_code": 1
+    },
+    "after": {
+      "stage": "after",
+      "core_autocrlf": true,
+      "profile_bytes_equal": true,
+      "pytest_exit_code": 0
+    },
+    "targeted_lf_attribute": true,
+    "same_test_unchanged": true
+  }
+}
