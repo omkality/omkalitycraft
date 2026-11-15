@@ -41,6 +41,12 @@ HTTP-источником: новая версия с прежними байт�
 RCON/network и известные FTB authority с полным файловым readback. Его отдельная
 приёмка на native payload не включает candidate boot/gameplay; producer/journal
 и общий application return остаются в #171.
+Последующий [PROJECT_RETURN](PROJECT_RETURN.md) связывает обе файловые фазы
+owner journal и проверен настоящими Forge/Drasl actors: historical/current
+inventory/home/claim/access и отдельный возврат pre-change state после намеренного
+отказа в приёмке. Есть независимые cold NBT/current-source проверки. Это explicit
+loopback lab; production producer/client provenance, внешний lifecycle/ingress
+и несовместимые данные ещё не приняты.
 
 Книжный #174 закрыт по последующим протоколам: 447 статей без ошибок сборки,
 4566 измеренных текстовых блоков без непустых глифов ниже реальной страницы,
