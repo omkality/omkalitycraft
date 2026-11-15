@@ -251,6 +251,31 @@ def operations_clear(config, server, operation=None):
         raise AdminError("Candidate slot is pending; ingress must stay closed")
 
 
+def operator_disk(config, server, target, binding):
+    if (
+        backups.target_for(config, server) != target
+        or maintenance.binding(config, server) != binding
+    ):
+        raise AdminError("Operator-policy source differs from the owner allowlist")
+    proof = maintenance.worker(
+        {"operation": uuid4().hex, "target": target, "binding": binding}, "operators"
+    )
+    if (
+        set(proof) != {"operators_sha256", "operator_count"}
+        or type(proof["operator_count"]) is not int
+        or proof["operator_count"] != 0
+        or not isinstance(proof["operators_sha256"], str)
+        or not re.fullmatch(r"[a-f0-9]{64}", proof["operators_sha256"])
+    ):
+        raise AdminError("Invalid empty operator-list disk proof")
+    if (
+        backups.target_for(config, server) != target
+        or maintenance.binding(config, server) != binding
+    ):
+        raise AdminError("Operator-policy source changed during inspection")
+    return proof
+
+
 def source_ready(config, server, value):
     binding = maintenance.binding(config, server)
     source = maintenance.snapshot(value["target"], binding)
@@ -276,15 +301,26 @@ def source_ready(config, server, value):
     adapter = nightly.adapter(config, server)
     live = MaintenanceConsole(console, password)
     loaded = live.ready(adapter)
+    operators = live.no_operators(boot=loaded["boot"])
     disk = nightly.disk_policy(config, server, value["target"], binding)
+    disk_operators = operator_disk(config, server, value["target"], binding)
+    after_operators = live.no_operators(boot=loaded["boot"])
     after = live.ready(adapter, boot=loaded["boot"])
-    if after != loaded or maintenance.snapshot(value["target"], binding) != source:
+    if (
+        after != loaded
+        or after_operators != operators
+        or maintenance.snapshot(value["target"], binding) != source
+    ):
         raise AdminError("Source changed during readiness")
     # The worker proves the full tree stable within each inspection. Normal
     # generated runtime files may change between inspections on this same boot;
     # opening binds the reviewed backup artifact/config and loaded state only.
     policy = {key: value for key, value in disk.items() if key != "runtime_sha256"}
-    return {**source, "backup_policy": {"disk": policy, "loaded": after}}
+    return {
+        **source,
+        "backup_policy": {"disk": policy, "loaded": after},
+        "operator_policy": {"disk": disk_operators, "loaded": after_operators},
+    }
 
 
 def backend_address(value):

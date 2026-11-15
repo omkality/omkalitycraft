@@ -1,0 +1,219 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "Same-source admission requires empty loaded and disk operator lists on one Core boot",
+  "ready_for_players": false,
+  "new_cli": false,
+  "new_env": false,
+  "new_dependencies": false,
+  "new_python_modules": false,
+  "artifacts": {
+    "core": {
+      "version": "0.3.9",
+      "file": "OmkalityCore-0.3.9.jar",
+      "sha256": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4"
+    },
+    "dj2fix": {
+      "version": "0.1.5",
+      "file": "OmkalityDJ2Fix-0.1.5.jar",
+      "sha256": "88ce06b75a202fea03ed5f54d0940f0a9720bf49cf61893256bc52232cde9605"
+    },
+    "client": {
+      "version": "0.1.7",
+      "file": "OmkalityClient-0.1.7.jar",
+      "sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+    }
+  },
+  "tested_code_sha256_lf": {
+    "omk/ingress.py": "e05563f114d0ecb733e110b99d15dcd7de2e37b29f92700c28b80dad26ea41af",
+    "omk/maintenance_console.py": "86a95c423f0e4ad9cc25baa5572506989af507fe7ad9413b3dbc94806a6e999f",
+    "omk/maintenance_worker.py": "95996d93b92eb6e3c0306d5d7d294b72a35a292235362fccd280a3d827c7bcd3",
+    "omk/recovery_console.py": "5088313d0543251dd8a81ebe13b891c2a99d285f0fc725954372c72ad2800df3",
+    "mods/forge-1.12.2/src/net/omkality/MaintenanceBridge.java": "9e791b9215dcdd7e0d03193793c060507af4a04e2a2fa8ddf77a55747095a4aa",
+    "mods/forge-1.12.2/src/net/omkality/OmkalityCore.java": "1cc4ed5276c5edd3f4ec7f59ba86a7746c697c1c0b7055d3841f4ffaf54cad46"
+  },
+  "unit": {
+    "linux": {
+      "exit_code": 0,
+      "oom": false,
+      "source_unchanged": true,
+      "readonly": true,
+      "network": "none",
+      "user": "65534:65534",
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "passed": 2771,
+      "skipped": 1,
+      "workers": 4,
+      "distribution": "loadfile",
+      "seconds": 24.99
+    },
+    "windows_focused_passed": 162,
+    "windows_focused_skipped": 1,
+    "new_cases": 42,
+    "old_regressions_failed": 10,
+    "ruff_black": true
+  },
+  "native": {
+    "ok": true,
+    "conditions": [
+      "first_boot_no_operators_without_fixture_deop",
+      "proxy_initially_closed",
+      "main_thread_operator_probe_bound_to_backup_boot",
+      "player_operator_probe_denied_before_privileged_bridge",
+      "real_owner_console_grant_loaded_in_memory",
+      "fixture_operator_file_readback",
+      "empty_disk_does_not_revoke_loaded_operator",
+      "old_readiness_accepts_loaded_operator_with_empty_file",
+      "loaded_operator_with_empty_disk_refused_before_intent",
+      "loaded_operator_with_empty_disk_did_not_edit_operators",
+      "explicit_lab_fault_cleanup_restored_empty_loaded_list",
+      "fixture_operator_file_readback",
+      "disk_only_operator_is_not_loaded",
+      "old_readiness_accepts_disk_only_operator",
+      "disk_only_operator_refused_before_intent",
+      "disk_only_operator_did_not_edit_operators",
+      "fixture_operator_file_readback",
+      "late_operator_refused_before_open_intent",
+      "closed_stale_plan_cancelled_explicitly",
+      "legacy_open_plan_readable",
+      "legacy_open_plan_refused_without_proxy_write",
+      "closed_legacy_plan_cancelled_explicitly",
+      "new_plan_freezes_empty_loaded_and_disk_policy",
+      "only_empty_operator_policy_opens_proxy",
+      "ordinary_strict257_actor_joins_checked_proxy",
+      "closing_preserves_existing_actor_and_blocks_new_connections",
+      "first_boot_stops_cleanly",
+      "same_source_cold_backup_published",
+      "same_immutable_source_resumed",
+      "new_core_boot_same_container",
+      "second_boot_has_no_operators_without_deop",
+      "old_boot_cannot_open_new_boot",
+      "fresh_second_boot_plan_opens",
+      "ordinary_actor_rejoins_second_boot",
+      "second_boot_stops_cleanly_with_gate_closed",
+      "final_stopped_window_cancelled_without_reopen",
+      "frozen_controller_source_unchanged"
+    ],
+    "boots": 2,
+    "same_container": true,
+    "graphical_client": false,
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "core_sha256": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4",
+    "fix_sha256": "88ce06b75a202fea03ed5f54d0940f0a9720bf49cf61893256bc52232cde9605",
+    "normal_exit_zero": true,
+    "oom": false,
+    "owned_scopes_removed": true,
+    "test_only_console_grant_and_deop": true,
+    "automatic_deop_in_product": false
+  },
+  "independent": {
+    "ok": true,
+    "checks": [
+      "two_completed_native_boots_protocol_actor_only",
+      "all_owned_game_auth_proxy_backup_scopes_removed_after_exports",
+      "final_game_exit_zero_no_oom",
+      "first_backup_ready_on_main_thread",
+      "first_empty_operator_list_on_same_core_boot",
+      "second_backup_ready_on_main_thread",
+      "second_empty_operator_list_on_same_core_boot",
+      "independent_core_boot_identity_changed",
+      "unsafe_operator_states_created_no_ingress_journal",
+      "two_explicit_cancels_two_checked_opens_two_closes",
+      "legacy_plan_not_silently_upgraded",
+      "both_open_plans_bind_their_own_loaded_boot",
+      "only_empty_loaded_and_disk_lists_were_admitted",
+      "same_immutable_container_two_docker_boots",
+      "completed_restart_and_final_stopped_window",
+      "one_exact_cold_backup_used_for_restart",
+      "first-stopped_cold_operator_file_empty",
+      "first-stopped_cold_operator_hash_bound_to_open_plan",
+      "first-stopped_hard_world_preserved",
+      "first-stopped_actual_saved_core_and_fix_versions",
+      "first-stopped_real_player_three_diamonds_preserved",
+      "first-stopped_real_world_archive",
+      "second-stopped_cold_operator_file_empty",
+      "second-stopped_cold_operator_hash_bound_to_open_plan",
+      "second-stopped_hard_world_preserved",
+      "second-stopped_actual_saved_core_and_fix_versions",
+      "second-stopped_real_player_three_diamonds_preserved",
+      "second-stopped_real_world_archive",
+      "cold_backup_archive_hash_and_size",
+      "exact_backup_inventory",
+      "every_backup_file_hash_and_size",
+      "both_original_runtime_readiness_failures_reproduced"
+    ],
+    "count": 32,
+    "backup_files": 315,
+    "runtime_code_matches_final_worktree": true,
+    "owned_volumes_absent": true,
+    "exports_sha256": {
+      "backups.tar": "2cc9b5e2e806da1825eefc18543f15305f819f0d40ac9d9120381c8fec686921",
+      "first-stopped.tar": "4521ed189f29e13281a369f526fd30d44af9f23276b176bbc001c2cf982931c1",
+      "second-stopped.tar": "417cbcdefbf3fb2cf3991728a2dae081c2bfa524615efafa7a1d7e8ac1fe25c9"
+    }
+  },
+  "rejected_attempts": [
+    {
+      "stage": "first native player permission response",
+      "accepted": false,
+      "conditions": 3,
+      "reason": "Expected console_only bridge error; actual server denied player earlier with generic.permission. Separate fresh rerun uses that denial; original diagnostics and cold world retained, scopes removed."
+    },
+    {
+      "stage": "initial Windows pytest parameter naming",
+      "accepted": false,
+      "reason": "Oversized byte fixture produced oversized node identifier; explicit short IDs applied, focused/full tests rerun."
+    }
+  ],
+  "limits": [
+    "Only operator-list readiness, not all FTB permissions or current authority",
+    "Two observations and a stable disk read, not continuous prevention of future grants",
+    "No candidate promotion, incompatible-save migration, player release, host timer or VPS activation",
+    "Raw drivers, operator/account data, worlds and native failure diagnostics remain private"
+  ],
+  "build": {
+    "verification": {
+      "schema": 1,
+      "ok": true,
+      "rounds": [
+        {
+          "core": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4",
+          "dj2fix": "88ce06b75a202fea03ed5f54d0940f0a9720bf49cf61893256bc52232cde9605",
+          "client": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+        },
+        {
+          "core": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4",
+          "dj2fix": "88ce06b75a202fea03ed5f54d0940f0a9720bf49cf61893256bc52232cde9605",
+          "client": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+        }
+      ],
+      "matches_accepted_jars": true,
+      "class_counts": {
+        "core": 52,
+        "dj2fix": 28,
+        "client": 33
+      },
+      "graphical_or_gameplay_test": false
+    },
+    "artifact_review": {
+      "ok": true,
+      "core_archive_members_unchanged": true,
+      "changed_core_entries": [
+        "net/omkality/GameMetrics.class",
+        "net/omkality/MaintenanceBridge$1.class",
+        "net/omkality/MaintenanceBridge$2.class",
+        "net/omkality/MaintenanceBridge.class",
+        "net/omkality/OmkalityCore.class"
+      ],
+      "other_core_entries_identical": 48,
+      "dj2fix_identical": true,
+      "dj2fix_sha256": "88ce06b75a202fea03ed5f54d0940f0a9720bf49cf61893256bc52232cde9605"
+    },
+    "source_boundary_files": 161,
+    "packaging_python_controls": 13,
+    "maintenance_jvm_conditions": 12,
+    "metrics_jvm_conditions": 27,
+    "welcome_jvm_conditions": 49,
+    "client_jvm_conditions": 278
+  }
+}

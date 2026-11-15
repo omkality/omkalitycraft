@@ -1,5 +1,14 @@
 # Изменения Forge-модов
 
+## Core 0.3.9 — 15 ноября 2026
+
+- Existing maintenance bridge читает только число загруженных OP на главном
+  потоке, с прежним boot identity и fixed RCON grammar. Записей/имён не выдаёт,
+  права не меняет; это не новая CLI-команда. Backup probe и notice прежние.
+- Native Forge/Drasl/HAProxy: 37 условий/two same-container boots, zero-list и
+  расхождения с диском, late grant/legacy plan/чистый stop/cold backup. DJ2Fix и
+  Client прежние. [Протокол](../../docs/validation/ingress-operators-2026-11-15.json).
+
 ## DJ2Fix 0.1.5 — 15 ноября 2026
 
 - Только startup-grant exact pinned PlaneFix подавлен; native identity fix

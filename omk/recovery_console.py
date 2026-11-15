@@ -70,6 +70,7 @@ def command(config, password, text):
         "list uuids",
         "list omk-recovery version",
         "list omk-maintenance probe",
+        "list omk-maintenance operators",
     } and not any(
         re.fullmatch(pattern, text)
         for pattern in (

@@ -1,3 +1,28 @@
+## Загруженный OP-список перед открытием ingress — 15 ноября 2026
+
+#171/#41: single-source ingress требует пустые loaded и disk OP-списки на
+одном boot Core 0.3.9. Existing maintenance bridge даёт только count на главном
+потоке; readonly worker проверяет bounded unlinked UTF-8 ops.json. Два loaded
+ответа окружают чтение диска, точный SHA и boot сохраняются в plan и повторяются
+при apply/verify. Старый plan без proof требует закрытого cancel/нового plan.
+Close/status/cancel сохраняются. Никаких OP-исключений, автоматического deop,
+новых CLI/env/deps или отдельных Python-модулей нет; DJ2Fix/Client прежние.
+
+2771 Linux unit passed/1 skip на четырёх workers/loadfile, 162 Windows focused
+passed/1 POSIX skip, Ruff/Black. Старый код провалил 10 новых regression cases.
+Настоящие Forge/Drasl/HAProxy: 37 условий, два старта одного контейнера, обычный
+strict257 actor, cold backup и штатный stop0/noOOM. Старый gate действительно
+принял loaded OP при пустом файле и disk-only OP; новый отказал до intent,
+сохранил файлы и закрытый proxy. Проверены поздний grant, legacy cancel и смена
+boot. 32 independent nonroot readonly checks перечитали journals, два Hard world
+и все 315 cold-backup files; свои scopes удалены.
+
+Первый private прогон ожидал bridge error вместо более раннего permission denial
+игроку; partial report/diagnostics/cold export сохранены, новый прогон отдельный.
+Это OP-list barrier, не полная FTB authority, непрерывное enforcement, candidate
+promotion или save compatibility. #171/#41 открыты; host timer/player release/VPS
+прежние. [Контракт](OWNER_INGRESS.md), [протокол](validation/ingress-operators-2026-11-15.json).
+
 ## Автоматическая выдача OP PlaneFix отключена — 15 ноября 2026
 
 #171/#41: DJ2Fix 0.1.5 подавляет только startup-grant установленного PlaneFix

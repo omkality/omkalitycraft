@@ -1,5 +1,17 @@
 # Журнал изменений
 
+## Не выпущено — проверка OP-списка работающего сервера
+
+- Открытие ingress требует пустых OP в памяти и ops.json, bound к одному boot
+  Core 0.3.9. План фиксирует file SHA и loaded proof, apply/verify проверяют их
+  снова. Правка только файла не отнимает загруженные права. Старый open plan
+  требует явной отмены при закрытом входе; close/status доступны как прежде.
+- Existing maintenance bridge/readonly worker, без OP-исключений, выдачи/снятия
+  прав, новых CLI/env/deps. DJ2Fix 0.1.5 и Client 0.1.7 прежние.
+- 2771 Linux unit/1 skip, 162 Windows focused/1 skip; 37 native условий на двух
+  стартах и 32 independent cold-data checks. Полная FTB authority/controller
+  #171 этим не принимаются. [Протокол](docs/validation/ingress-operators-2026-11-15.json).
+
 ## Не выпущено — PlaneFix без автоматического OP
 
 - DJ2Fix 0.1.5 предотвращает startup-grant служебного OP только в точном

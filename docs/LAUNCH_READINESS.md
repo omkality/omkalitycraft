@@ -7,7 +7,7 @@
 проверку соответствующего действия в Minecraft.
 
 Для первого запуска выбрана DJ2 2.23.4 / Forge 1.12.2. Текущие принятые owned
-artifacts: Core 0.3.8, DJ2Fix 0.1.5, Client 0.1.7 — `mods/forge-1.12.2/versions.json`.
+artifacts: Core 0.3.9, DJ2Fix 0.1.5, Client 0.1.7 — `mods/forge-1.12.2/versions.json`.
 Это версии исходников/отдельных scope, не переключённый player manifest.
 Полный приватный Windows-кандидат 2.23.4-omk.2-rc.2 теперь связывает эти слои
 одной подписью: настоящий install/upgrade/kill/repair и обычный вход/ресурсный мир
@@ -76,6 +76,11 @@ DJ2Fix 0.1.5 отдельно убирает автоматический startu
 spawn-protection=0 и FTB spawn claims. Native AE2 matrix/restart и отрицательные
 boot controls приняты в [DJ2_AE2_BOUNDARIES](DJ2_AE2_BOUNDARIES.md). Старые OP
 не удаляются; полный controller/post-boot authority #171 всё ещё требуется.
+
+Core 0.3.9 дополнительно подтверждает пустой loaded OP-список на том же boot;
+ingress сверяет его с ops.json до intent и при verify. Старые open plans без
+proof требуют закрытого cancel/нового plan. Это узкая часть post-boot authority;
+полный controller и FTB permissions #171 остаются отдельными требованиями.
 
 Книжный #174 закрыт по последующим протоколам: 447 статей без ошибок сборки,
 4566 измеренных текстовых блоков без непустых глифов ниже реальной страницы,
