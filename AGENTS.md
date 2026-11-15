@@ -32,6 +32,7 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
 - Launcher updates use TUF and separate version folders with health-checked handoff; never overwrite
   the running executable or extract an update over userdata/instances. Private signing keys stay offline.
 - Run the relevant tests and Ruff. CI covers CDN, transport, profiles and a disposable Drasl smoke test.
+- Use bounded `-n 4 --dist=loadfile` for `tests/unit`; keep Qt/GC tests (`-n 0`) and real game lifecycle labs sequential. Do not enable global parallel pytest defaults or `-n auto` on a shared host.
 - Keep CHANGELOG.md and owner/player documentation in Russian; commit subjects and AGENTS.md remain English.
 - Public GitHub Releases are player launcher distributions, not source-only development checkpoints. Attach only tested portable launcher bundles and their release integrity/license material; never upload the backend, repository source bundles, server data or modpack payloads. Git history/tags track development checkpoints independently. Do not publish loopback previews as player releases.
 - After launcher UI changes, show the actual UI state as a PNG and provide a link to the tested local executable bundle for review. Never substitute a GitHub screenshot for launcher visual validation.

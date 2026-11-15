@@ -1,0 +1,175 @@
+{
+  "ok": true,
+  "base_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+  "test_image": "sha256:50e69140b6271f1b81872a79a9aef801d45cdf4a543295b6039264ca6a38d277",
+  "results": [
+    {
+      "stage": "serial",
+      "exit_code": 0,
+      "seconds": 64.235,
+      "summary": "2711 passed, 1 skipped, 3 warnings in 62.39s (0:01:02)",
+      "python": "3.14.2",
+      "packages": {
+        "pytest": "9.0.3",
+        "pytest-xdist": "3.8.0",
+        "execnet": "2.1.2",
+        "PySide6": "6.11.0"
+      },
+      "nonroot_uid": 65534,
+      "memory_peak_bytes": 639836160
+    },
+    {
+      "stage": "parallel",
+      "exit_code": 0,
+      "seconds": 22.707,
+      "summary": "2711 passed, 1 skipped, 6 warnings in 21.52s",
+      "python": "3.14.2",
+      "packages": {
+        "pytest": "9.0.3",
+        "pytest-xdist": "3.8.0",
+        "execnet": "2.1.2",
+        "PySide6": "6.11.0"
+      },
+      "nonroot_uid": 65534,
+      "memory_peak_bytes": 1315069952
+    },
+    {
+      "stage": "repeat",
+      "exit_code": 0,
+      "seconds": 22.705,
+      "summary": "2711 passed, 1 skipped, 6 warnings in 21.57s",
+      "python": "3.14.2",
+      "packages": {
+        "pytest": "9.0.3",
+        "pytest-xdist": "3.8.0",
+        "execnet": "2.1.2",
+        "PySide6": "6.11.0"
+      },
+      "nonroot_uid": 65534,
+      "memory_peak_bytes": 1341198336
+    },
+    {
+      "stage": "qt",
+      "exit_code": 0,
+      "seconds": 8.378,
+      "summary": "79 passed in 7.28s",
+      "python": "3.14.2",
+      "packages": {
+        "pytest": "9.0.3",
+        "pytest-xdist": "3.8.0",
+        "execnet": "2.1.2",
+        "PySide6": "6.11.0"
+      },
+      "nonroot_uid": 65534,
+      "memory_peak_bytes": 256016384
+    },
+    {
+      "stage": "qt-gc",
+      "exit_code": 0,
+      "seconds": 22.354,
+      "summary": "237 passed in 21.17s",
+      "python": "3.14.2",
+      "packages": {
+        "pytest": "9.0.3",
+        "pytest-xdist": "3.8.0",
+        "execnet": "2.1.2",
+        "PySide6": "6.11.0"
+      },
+      "nonroot_uid": 65534,
+      "memory_peak_bytes": 251613184
+    }
+  ],
+  "source_unchanged": true,
+  "junit_unit_case_sets_identical": true,
+  "readonly_nonroot_network_none": true,
+  "cpu_limit": 4,
+  "memory_limit_mib": 2048,
+  "owned_scopes_removed": true,
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "Bounded unit pytest-xdist adoption; sequential Qt and GC; no game lifecycle changes",
+  "ready_for_players": false,
+  "new_owner_cli": false,
+  "runtime_dependency_changes": false,
+  "environment": {
+    "base": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "image": "sha256:50e69140b6271f1b81872a79a9aef801d45cdf4a543295b6039264ca6a38d277",
+    "uv": "0.11.12",
+    "source_files": 944,
+    "source_is_tracked_worktree_snapshot": true,
+    "max_cpus": 4,
+    "max_memory_mib": 2048
+  },
+  "dependencies": [
+    {
+      "name": "pytest-xdist",
+      "version": "3.8.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      },
+      "wheels": [
+        {
+          "url": "https://files.pythonhosted.org/packages/ca/31/d4e37e9e550c2b92a9cbc2e4d0b7420a27224968580b5a447f420847c975/pytest_xdist-3.8.0-py3-none-any.whl",
+          "hash": "sha256:202ca578cfeb7370784a8c33d6d05bc6e13b4f25b5053c30a152269fd10f0b88",
+          "size": 46396,
+          "upload-time": "2025-07-01T13:30:56.632Z"
+        }
+      ]
+    },
+    {
+      "name": "execnet",
+      "version": "2.1.2",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      },
+      "wheels": [
+        {
+          "url": "https://files.pythonhosted.org/packages/ab/84/02fc1827e8cdded4aa65baef11296a9bbe595c474f0d6d758af082d849fd/execnet-2.1.2-py3-none-any.whl",
+          "hash": "sha256:67fba928dd5a544b783f6056f449e5e3931a5c378b128bc18501f7ea79e296ec",
+          "size": 40708,
+          "upload-time": "2025-11-12T09:56:36.333Z"
+        }
+      ]
+    }
+  ],
+  "dependency_audit": {
+    "ok": true,
+    "only_added_packages": [
+      "pytest-xdist==3.8.0",
+      "execnet==2.1.2"
+    ],
+    "other_package_entries_unchanged": true,
+    "no_xdist_or_execnet_in_api_runtime": true,
+    "linux_skips": [
+      {
+        "test": "tests.unit.test_mod_policy.test_extra_windows_junction_does_not_remove_target",
+        "reason": "Windows junction safety"
+      }
+    ]
+  },
+  "windows": {
+    "ok": true,
+    "python": "3.14.2",
+    "pytest": "9.0.3",
+    "pytest_xdist": "3.8.0",
+    "execnet": "2.1.2",
+    "actual_uv_locked_all_groups": true,
+    "command": "uv run --no-sync pytest tests/unit -q -n 4 --dist=loadfile",
+    "passed": 2500,
+    "skipped": 212,
+    "seconds_reported_by_pytest": 56.56,
+    "exit_code": 0
+  },
+  "linux_unit_speedup": 2.829,
+  "observations": [
+    "First preparation attempt failed before pytest: chmod after handing directory ownership to uid65534 with dropped capabilities; order corrected.",
+    "Second preparation attempt failed before pytest: Docker copy-up from derived image reset empty result-volume ownership. Isolated control reproduced uid0/755; volume-nocopy preserved uid65534/700. Only private lab mounts changed; source permissions not weakened.",
+    "Failed attempts and raw diagnostics retained privately; their containers/volumes/images removed.",
+    "Warnings are the existing Litestar/Pydantic-v1 import warning repeated per worker and two intentionally duplicate ZIP fixture warnings."
+  ],
+  "limits": [
+    "One Linux machine at four CPU/two GiB container caps; not a VPS capacity measurement or universal speedup guarantee.",
+    "No graphical Minecraft, game server or player deployment acceptance. Existing real game lab commands remain unchanged and sequential.",
+    "No global pytest addopts or automatic worker-count detection; only explicit tests/unit commands use four workers."
+  ]
+}

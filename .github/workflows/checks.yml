@@ -29,7 +29,7 @@ jobs:
       - run: uv sync --locked --no-default-groups --group shared --group api --group dev
       - run: uv run --no-sync ruff check api omk launcher scripts tests mods app.py
       - run: uv run --no-sync black --check api omk launcher scripts tests mods app.py
-      - run: uv run --no-sync pytest tests/unit -q
+      - run: uv run --no-sync pytest tests/unit -q -n 4 --dist=loadfile
       - name: Standard monitoring configuration and real PromQL rules
         run: uv run --no-sync python -m scripts.check_monitoring
       - name: Disposable Linux backup filesystem faults
@@ -67,11 +67,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libegl1 libopengl0
       - run: uv sync --locked --all-groups
-      - run: uv run --no-sync pytest tests/unit tests/ui -v
+      - name: Unit tests across four workers
+        run: uv run --no-sync pytest tests/unit -q -n 4 --dist=loadfile
+      - name: Qt UI tests in one process
+        run: uv run --no-sync pytest tests/ui -v -n 0
       - name: Launcher widget lifetime under cyclic GC
         env:
           OMK_TEST_QT_GC_STRESS: "1"
-        run: uv run --no-sync pytest --keep-duplicates tests/ui tests/ui tests/ui -v
+        run: uv run --no-sync pytest --keep-duplicates tests/ui tests/ui tests/ui -v -n 0
       - if: runner.os == 'Linux'
         run: docker compose -f deploy/auth-lab/compose.yaml build --pull
       - if: runner.os == 'Linux'
