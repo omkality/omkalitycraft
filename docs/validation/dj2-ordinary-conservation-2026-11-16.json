@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "scope": "Ordinary DJ2 inventory and resource conservation with the accepted Core and DJ2Fix, without runtime changes",
+  "tested_source_commit": "5505ab2ad451bd51f8fee98206223468fe9c62f3",
+  "ready_for_players": false,
+  "runtime_changed": false,
+  "new_cli": false,
+  "new_dependencies": false,
+  "artifacts": {
+    "core": {
+      "version": "0.3.9",
+      "file": "OmkalityCore-0.3.9.jar",
+      "sha256": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4"
+    },
+    "dj2fix": {
+      "version": "0.1.6",
+      "file": "OmkalityDJ2Fix-0.1.6.jar",
+      "sha256": "e77b9bc9be3165f7f0fd94282eaba7994b82c02c44a533e286040017416169d1"
+    },
+    "client": {
+      "version": "0.1.7",
+      "file": "OmkalityClient-0.1.7.jar",
+      "sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+    }
+  },
+  "native": {
+    "ok": true,
+    "conditions": 189,
+    "conservation_checkpoints": 41,
+    "inventory_clicks": 32,
+    "all_native_click_confirmations": true,
+    "named_nbt_markers": 6,
+    "initial_item_units": 77,
+    "final_item_units": 76,
+    "normal_conversions": [
+      "4 minecraft:stone -> 4 minecraft:stonebrick",
+      "1 minecraft:iron_ore -> 1 minecraft:iron_ingot; 1 minecraft:coal consumed as furnace fuel"
+    ],
+    "source_mutations_after_seed": false,
+    "boots": 2,
+    "same_world_volume": true,
+    "container_recreated_between_boots": true,
+    "drasl_accounts": 2,
+    "operators": "none",
+    "player_mode": "survival",
+    "graphical_client": false,
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "cpu_limit": 4,
+    "memory_gib": 6,
+    "heap_gib": 4,
+    "accepted_actions": [
+      "normal left/right clicks, split and merge, hotbar shift return",
+      "own single chest, double chest, Iron Chest and wilderness chest round trips",
+      "team member and owner transfers without OP",
+      "personal Ender Chest storage and withdrawal after restart",
+      "native crafting table recipe and furnace smelting",
+      "four normal dirt placements, breaks and pickups",
+      "reconnect and full server restart with typed named-item NBT preserved",
+      "named tool deposit and withdrawal after restart"
+    ],
+    "clean_exit": true,
+    "oom": false,
+    "owned_scopes_removed": true,
+    "world_sha256": "ba90b0d1b91f7a5dc744809f3e6c10d7c3e3c5997a7a2d0aa9c4cce321ba53f8",
+    "pre_restart_world_sha256": "f6b5a67cd53ac7d996050d589926da122cae3882c92ea32428764d6cd6d9aba9",
+    "private_readonly_observer_sha256": "84a3688119c75fda5bf18271325b82f581e871e8ade7ee423cfa18022a196fcf",
+    "private_driver_sha256": "5d606302f44dff30925bceae924d120e167cc37cfca6b051a20b13a838adde0b"
+  },
+  "independent": {
+    "ok": true,
+    "checks": 106,
+    "private_reader_sha256": "825bcd7a01ac97b1313a30fead163570eca99dfc63c1c113315a5dc3f349def0",
+    "execution": {
+      "user": "65534:65534",
+      "readonly_root_and_inputs": true,
+      "network": "none",
+      "cpu_limit": 1,
+      "memory_mib": 256
+    },
+    "accepted_reads": [
+      "snapshot digests and both stopped-world archives",
+      "saved Core and Fix versions, survival mode and actual FTB claim boundaries",
+      "independent seed and crafting/fuel accounting formula",
+      "complete player and personal Ender inventories, container inventories and item entities",
+      "all custom marker NBT including tag types; each named stack exactly once",
+      "placed blocks returned to air after ordinary pickup"
+    ]
+  },
+  "excluded_private_fixture_failures": [
+    "initial seed arithmetic expected 78 instead of 77",
+    "protocol actor originally predicted the source stack for a full QUICK_MOVE; pinned Container returns EMPTY",
+    "serialized air placeholder has a nonzero Count; native empty wire slot is the authoritative emptiness check"
+  ],
+  "limits": [
+    "Server-side protocol actors do not execute client mods or render the inventory GUI",
+    "This is a finite set of ordinary actions, not exhaustive inventory, crafting or machine acceptance",
+    "ME networks, autocrafting, portable inventory variants, death and interrupted transactions are separate scopes",
+    "No live world, VPS, release, calendar or new runtime guard was changed"
+  ]
+}
