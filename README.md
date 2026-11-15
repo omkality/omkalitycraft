@@ -1,5 +1,16 @@
 # OmkalityCraft
 
+[![Проверки dev](https://github.com/omkality/omkalitycraft/actions/workflows/checks.yml/badge.svg?branch=dev&event=push)](https://github.com/omkality/omkalitycraft/actions/workflows/checks.yml?query=branch%3Adev+event%3Apush)
+
+[![Python 3.14](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](pyproject.toml)
+[![Qt 6 · PySide6](https://img.shields.io/badge/Qt_6-PySide6-41CD52?logo=qt&logoColor=white)](launcher/)
+[![Litestar](https://img.shields.io/badge/API-Litestar-5561D9)](api/)
+[![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](deploy/)
+[![Forge · Minecraft 1.12.2](https://img.shields.io/badge/Forge-Minecraft_1.12.2-6F7E91)](mods/README.md)
+[![Java 8 · Forge runtime](https://img.shields.io/badge/Java-8-ED8B00)](mods/forge-1.12.2/versions.json)
+[![Drasl](https://img.shields.io/badge/Аутентификация-Drasl-627D98)](docs/AUTH_STORAGE.md)
+[![Prometheus](https://img.shields.io/badge/Мониторинг-Prometheus-E6522C?logo=prometheus&logoColor=white)](docs/RESOURCE_HISTORY.md)
+
 Переносимый лаунчер и CDN API для игры сообщества стримера на модовых Minecraft-серверах.
 Лаунчер находится в `launcher/` того же репозитория. Python + Qt, Drasl + authlib-injector,
 Forge сборки без гибридных Bukkit-ядер.
@@ -9,7 +20,7 @@ manifest и автообновление самого лаунчера чере�
 на Forge 1.12.2; прежняя 2.21.3 остаётся частью истории тестов. Серверные проверки
 выполняются в Linux Docker, графический вход проверялся Windows-клиентом.
 GTNH пока планируется; публичного сервиса и финального допуска игроков ещё нет.
-Версия `0.3.0.dev12` — этап разработки, не публичный игровой релиз.
+Версия `0.3.0.dev14` — этап разработки, не публичный игровой релиз.
 
 **[Входная точка для аудита запуска DJ2](docs/LAUNCH_READINESS.md)** — где смотреть
 код, контракты, подтверждённые проверки и ещё открытые блокеры. Канонический трекер —
