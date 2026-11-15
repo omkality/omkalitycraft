@@ -37,6 +37,10 @@ HTTP-источником: новая версия с прежними байт�
 Файловая подготовка серверного runtime + мира по выбранному snapshot принята
 отдельно: [PROJECT_STAGE](PROJECT_STAGE.md). Сохраняются auth/access quarantine
 и запрет boot; это не закрывает полный запуск/возврат приложения в #171.
+Поверх этой копии [PROJECT_POLICY](PROJECT_POLICY.md) переносит текущие access,
+RCON/network и известные FTB authority с полным файловым readback. Его отдельная
+приёмка на native payload не включает candidate boot/gameplay; producer/journal
+и общий application return остаются в #171.
 
 Книжный #174 закрыт по последующим протоколам: 447 статей без ошибок сборки,
 4566 измеренных текстовых блоков без непустых глифов ниже реальной страницы,

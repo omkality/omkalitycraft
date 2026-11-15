@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "Current access/FTB policy on a selected complete server release copy; no boot or promotion",
+  "ready_for_players": false,
+  "boot_allowed": false,
+  "new_cli": false,
+  "new_env": false,
+  "new_dependencies": false,
+  "reused": [
+    "omk.linux_restore_policy.compose_payload/write_payload",
+    "omk.ftb_restore_reconcile.merged_records",
+    "omk.ftb_restore_authority.check_runtime/read_zip/read_staged",
+    "omk.project_stage._bound/_check_files",
+    "omk.component_archive inventory/hash/json guards"
+  ],
+  "unit": {
+    "linux_docker_tests": 88,
+    "new_policy_tests": 33,
+    "existing_world_policy_tests": 11,
+    "existing_raw_stage_tests": 44,
+    "windows_policy_passed": 23,
+    "windows_policy_explicit_linux_skips": 21,
+    "environment": {
+      "ok": true,
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "tests": "88 passed in 3.40s",
+      "exit_code": 0,
+      "oom_killed": false,
+      "readonly_nonroot_network_none": true,
+      "cpu_limit": 1,
+      "memory_mib": 256,
+      "temporary_capacity_mib": 512,
+      "project_export_schema2_tested": true,
+      "owned_container_removed": true
+    }
+  },
+  "native_payload_consumer": {
+    "ok": true,
+    "native_payload_consumer_only": true,
+    "synthetic_release_metadata_and_current_policy_fixture": true,
+    "runtime_files": 2319,
+    "world_files": 317,
+    "raw_bytes": 528012910,
+    "policy_files": 8,
+    "changed_runtime_and_world_hashes_modes_fully_verified": true,
+    "current_bans_ranks_rcon_ports_and_ftb_permissions_verified": true,
+    "all_other_selected_world_and_runtime_bytes_unchanged": true,
+    "lost_process_after_receipt_verified_in_fresh_readonly_process": true,
+    "process_abort_after_first_replace_refused_without_retry_or_raw_fallback": true,
+    "nine_original_input_files_unchanged": true,
+    "credentials_absent_from_receipts": true,
+    "no_game_auth_ingress_or_promotion": true,
+    "ready_for_players": false,
+    "boot_allowed": false,
+    "environment": {
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "cpus": 1,
+      "memory_mib": 256,
+      "nonroot": true,
+      "network": "none",
+      "original_input_readonly": true,
+      "stage_input_readonly": true,
+      "final_output_readonly": true,
+      "outcomes": [
+        {
+          "phase": "initialize",
+          "exit_code": 0,
+          "oom_killed": false
+        },
+        {
+          "phase": "complete",
+          "exit_code": 23,
+          "oom_killed": false
+        },
+        {
+          "phase": "partial",
+          "exit_code": 24,
+          "oom_killed": false
+        },
+        {
+          "phase": "verify",
+          "exit_code": 0,
+          "oom_killed": false
+        }
+      ],
+      "owned_scopes_removed": true,
+      "elapsed_seconds": 109.43
+    }
+  },
+  "limits": [
+    "Native payloads are real but schema2 declarations and changed current policy are explicitly synthetic test fixtures, not trusted producer provenance.",
+    "Only the reviewed pinned FTB54 adapter is supported; current/historical player and team inventories and identities must match.",
+    "Current bans/ranks/empty OP/whitelist, RCON/network, PvP/Hard and reviewed FTB authority are overlaid; historical progress and other selected runtime bytes remain.",
+    "Caller serializes owner operations, validates stopped Docker ownership/lifecycle and mounts both sources readonly.",
+    "Both normal completion and abrupt process exits are file consumer checks; Minecraft/Drasl/ingress are never started.",
+    "Process exits23/24 are deliberate os._exit faults, not power loss acceptance.",
+    "Partial attempt is retained/refused without retry, repair or raw verifier fallback.",
+    "Auth/operator archives are verified but not extracted; Drasl is not rolled back.",
+    "Trusted producer/journal, candidate authenticated join/gameplay, late failure, promotion and full application return remain issue171.",
+    "No public manifest, launcher Release, VPS deployment or calendar installation."
+  ]
+}
