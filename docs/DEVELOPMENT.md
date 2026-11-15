@@ -1,3 +1,31 @@
+## Журнал полного возврата и настоящая игровая репетиция — 15 ноября 2026
+
+#171: `omk.project_return` связывает прежние raw/policy file workers общим owner
+lock и приватным bounded journal. Точная selection сохраняется до target write,
+intent до каждого этапа; unknown apply не повторяется, verify только подтверждает
+полный receipt. Current/fence/allowlist/TTL/clock проверяются повторно.
+Используются прежние OMK_BACKUP_* limits, новых CLI/env/deps/writers/таймеров нет.
+
+110 Linux Docker focused tests (22 новых), включая реальные subprocess deaths
+после receipts/первых записей и второй процесс lock. Windows 1 portable/21 Linux
+skip для нового модуля, Ruff/Black. В настоящем DJ2 2.23.4/Core0.3.8/Fix0.1.4
+с persistent Drasl прошли 34 native conditions: historical inventory/home,
+current bans/ranks/whitelist/deop/revoked ally, положительные claim/join controls,
+намеренное позднее отклонение и отдельный pre-change current return.
+
+20 независимых readonly nonroot Linux NBT/journal checks: 7→1→7→1, old→none→old→none,
+current FTB authority и 3 completed journals. Все 344 current world/2320 runtime
+files/modes неизменны. Guard пустого OP реально отказал до target writes;
+известный PlaneFix fake profile снят прежней точной fixture-процедурой. Guard
+не ослаблен. Предварительные ошибки стенда сохранены и не считаются clean game
+acceptance; финальный fallback stop0/noOOM/fatalfalse. Свои scopes удалены.
+
+Свежие coherent captures, но Git context остаётся owner declaration, client ref
+явно lab fixture. Boot/ready false; внешний production producer/client provenance,
+lifecycle/ingress и несовместимые данные #171 открыты. JAR/player release/переводы
+прежние, календарь/VPS до аудита выключены. [Контракт](PROJECT_RETURN.md),
+[протокол](validation/project-return-2026-11-15.json).
+
 ## Текущие права на полном серверном выпуске — 15 ноября 2026
 
 #171: `omk.project_policy` повторно использует FTB reconciliation и writer

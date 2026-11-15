@@ -1,5 +1,19 @@
 # Журнал изменений
 
+## Не выпущено — журнал полного возврата и игровая репетиция
+
+- Выбор точного snapshot сохраняется до записи target. Raw/policy intent,
+  общий owner lock, TTL и проверки текущих полномочий запрещают повтор неизвестной
+  записи; новый процесс подтверждает только полностью завершённый этап.
+  Используются прежние file workers/настройки; новых CLI/env/deps/таймеров нет.
+- Настоящие Linux Docker Forge/Drasl проверили возврат historical inventory/home
+  с current bans/ranks/whitelist/deop и отзывом ally, затем отдельный возврат
+  pre-change state после намеренного отклонения кандидата. Независимый reader
+  подтвердил cold NBT/journals и неизменность полного current source.
+- Boot/ready остаются false. Это loopback rehearsal, внешний production
+  controller/producer/ingress и несовместимые сохранения #171 ещё открыты.
+  [Контракт и ограничения](docs/PROJECT_RETURN.md).
+
 ## Не выпущено — текущие права при возврате полного выпуска
 
 - Внутренний `project_policy` накладывает текущие ban/whitelist/ranks, пустой OP,

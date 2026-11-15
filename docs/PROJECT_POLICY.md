@@ -114,7 +114,8 @@ FTB revoke, несовместимые identity/поля/версии, stale pla
 Исходные девять архивных файлов неизменны; свои scopes удалены.
 
 Minecraft/Drasl/ingress не запускались, power loss не моделировался. Не закрыты
-доверенный producer/journal, loopback candidate boot с обычным authenticated
-join/gameplay, поздний отказ, promotion и полный application return #171.
+доверенный producer, production lifecycle/promotion и полный application return
+#171. Последующий [owner journal и loopback gameplay](PROJECT_RETURN.md) проверены
+отдельно, не меняя ограничений этой ранней файловой приёмки.
 Player manifest/Release/VPS/календарь не переключены.
 [Обезличенный протокол](validation/project-policy-2026-11-15.json).
