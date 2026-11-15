@@ -1,3 +1,31 @@
+## Адресная локаль Forge и файловый возврат — 15 ноября 2026
+
+#49: один `fml.menu.modoptions` → «Моды...» через existing render_lang и EN/value
+пины Forge 2860. Новый owned review и 683-resource lock; старые 682 bytes, JAR,
+18-page InitialInventory и flags прежние. Нет Java/code/deps/CLI изменений.
+92 focused tests на Windows и nonroot readonly Linux Docker. Полный signed
+Windows 2.23.4-omk.3-rc.1: 5971 файлов/759730113 байт, digest
+4ea6af7a476e1bed67d75a95e3bcdbf19ba4c35e18fb995b0fff6af762c63a31.
+
+Настоящий Linux API: previous signed install → one-file upgrade/locale repair,
+все 5970 прежних mtimes/hashes и personal FOV0.4 сохранены. Обычный exact signed
+client без MCP вошёл на свежие Linux Forge/Drasl strict257, native F2 подтвердил
+«Моды...» без обрезания. Client/server exit0/noOOM/no new crash, observer clean;
+свои scopes удалены после cold export. Содержимое квестов/книг/resource matrix и
+вся прежняя fault regression не повторялись: их принятые bytes/код прежние.
+
+На остановленном клиенте return старых/новых payload через две новые подписанные
+generation, minimum dev14 прежний, actual Installer/HTTP fixture. Новый managed
+RU-файл удалён/возвращён, полные hashes и 11 личных файлов сохранены, cold world
+archive не изменён. После файлового return игра не перезапускалась; это не новый
+server/world/auth/TUF/production-CDN acceptance и не решение OpenAL163/Shift191.
+
+Следом #171: реальный client ref нового кандидата в coherent server captures и
+доверенный producer/lifecycle/ingress/current-authority. Owner Git declaration
+по-прежнему не build attestation. Календарь/master/публичный release/VPS прежние.
+[Контракт](DJ2_LANGUAGE_BUNDLE.md),
+[протокол](validation/forge-menu-locale-2026-11-15.json).
+
 ## Цельный подписанный клиентский кандидат — 15 ноября 2026
 
 #49/#44/#171: существующие locale composer/build_release/ReleaseStore собрали

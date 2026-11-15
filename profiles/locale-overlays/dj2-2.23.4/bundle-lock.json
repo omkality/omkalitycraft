@@ -2,7 +2,7 @@
   "schema": 1,
   "pack": "dj2",
   "version": "2.23.4",
-  "locale_archive_sha256": "39685a9288e93a5de5c47c3cf41e1aa0969bcaf1b3755e61c16d891a467167a2",
+  "locale_archive_sha256": "7effbd8054d7efce6e8c3848b0d5ca36201ddb44de1b7e9525b8281ff33ded76",
   "client": {
     "version": "0.1.7",
     "path": "mods/OmkalityClient-0.1.7.jar",
@@ -1449,6 +1449,11 @@
       "path": "resources/extrautils2/lang/ru_ru.lang",
       "sha256": "378b57b9f6e3f6d781d9db38df0cd1d0f5df000dd15c5d5b0b812ad1c95c051e",
       "size": 70714
+    },
+    {
+      "path": "resources/forge/lang/ru_ru.lang",
+      "sha256": "2ab342d284039c396e38fd28f49cc66495791046006ecf386cabda44a6e011c2",
+      "size": 32
     },
     {
       "path": "resources/framedcompactdrawers/lang/ru_ru.lang",
