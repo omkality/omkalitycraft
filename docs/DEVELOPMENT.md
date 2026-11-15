@@ -1,3 +1,31 @@
+## Цельный подписанный клиентский кандидат — 15 ноября 2026
+
+#49/#44/#171: существующие locale composer/build_release/ReleaseStore собрали
+внутренний windows-x64 2.23.4-omk.2-rc.2, 5970 файлов/759730081 байт/226 JAR.
+RU 682 ресурса, InitialInventory, Client 0.1.7, оформление, defaults/guide flags,
+borderless и JED согласованы в одном signed manifest. Старый baseline не содержал
+JED: настоящий Forge/Core отказал во входе. Исправленный кандидат добавляет ровно
+этот pinned JAR; остальные файлы и launch прежние. Общий Atum ZS сохраняет LF.
+
+44 focused tests на Windows/Linux Docker (8 новых отрицательных контролей),
+22 условия полного transport lab с настоящим Linux API и 15 настоящего kill.
+Личные values/backups сохраняются при новых defaults; repair побайтный.
+Обычный точный signed client без MCP вошёл в свежие Linux Forge/Drasl, strict 257,
+survival/book/K RU/цветная памятка/Square map и /resource → -18000. Native F2
+подтвердил UI; WGC timeout не скрыт. Client/server exit 0/no OOM/no new crash.
+Приватный exit-observer поймал NoSuchProcess; сырой failed сохранён. Независимый
+nonroot readonly Linux-reader подтвердил cold NBT, 3 вещи/18 страниц/guide Longs;
+отдельно приняты settings и неизменность обоих полных source snapshots. Свои scopes
+удалены после холодного экспорта. Это не чистый pass исходного exit-observer.
+
+Следом #171: привязать новый настоящий signed client ref к coherent server captures
+и доверенному producer/lifecycle/ingress, сохраняя current authority. Полная
+upgrade/gameplay матрица #49 и Linux/macOS #36 открыты; Forge Mod Options...
+остаётся английским остатком интерфейса. OpenAL #163/ручной Shift #191 отдельно.
+JAR/переводы прежние; player manifest/Release/master/календарь/VPS не переключены.
+[Контракт](SIGNED_PACK_INSTALL.md),
+[протокол](validation/dj2-client-composition-2026-11-15.json).
+
 ## Журнал полного возврата и настоящая игровая репетиция — 15 ноября 2026
 
 #171: `omk.project_return` связывает прежние raw/policy file workers общим owner

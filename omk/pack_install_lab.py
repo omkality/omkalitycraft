@@ -1,6 +1,7 @@
 """Owned signed-pack transport regression; never starts Minecraft or uses accounts."""
 
 import contextlib
+import hashlib
 import json
 import shutil
 import socket
@@ -12,6 +13,7 @@ from urllib.parse import unquote, urlsplit
 from uuid import uuid4
 
 from launcher.client_defaults import prepare_client_defaults
+from launcher.client_policy import ClientDefaults
 from launcher.install import Installer, ReleaseClient, current_platform
 from launcher.mod_policy import clean_extra_mods, verify_mods
 from launcher.nbt import Tag, read_nbt, write_nbt
@@ -185,6 +187,46 @@ def _personal_files(folder, release):
     return {name: sha256_file(folder / name) for name in paths}
 
 
+def _options_preserved(original, folder, release):
+    """Permit only declared additions and required font changes on first upgrade."""
+    current = (folder / "options.txt").read_bytes()
+    before, after = (
+        dict(line.split(":", 1) for line in data.decode().splitlines() if ":" in line)
+        for data in (original, current)
+    )
+    defaults = ClientDefaults.parse(release.launch.get("client_defaults", {}))
+    allowed = dict(defaults.initial_options)
+    allowed.update(("key_" + k, str(v)) for k, v in defaults.initial_keybindings)
+    if defaults.language:
+        allowed["lang"] = defaults.language
+    managed = {"resourcePacks"}
+    if defaults.unicode_font is not None:
+        managed.add("forceUnicodeFont")
+        if after.get("forceUnicodeFont") != str(defaults.unicode_font).lower():
+            return False
+    packs = json.loads(before.get("resourcePacks", "[]"))
+    if json.loads(after.get("resourcePacks", "[]")) != list(
+        dict.fromkeys([*packs, *defaults.resourcepacks])
+    ):
+        return False
+    if any(after.get(k) != v for k, v in before.items() if k not in managed):
+        return False
+    if any(
+        k not in allowed or allowed[k] != after[k]
+        for k in after.keys() - before.keys() - managed
+    ):
+        return False
+    if current != original:
+        backup = (
+            folder
+            / ".omk-defaults-backups"
+            / (hashlib.sha256(original).hexdigest() + "-options.txt")
+        )
+        if not backup.is_file() or backup.read_bytes() != original:
+            return False
+    return True
+
+
 def _all_files_match(folder, release):
     return all(
         (folder / f.path).is_file() and sha256_file(folder / f.path) == f.sha256
@@ -257,6 +299,8 @@ def run_pack_install_lab(  # noqa: PLR0915 -- ordered regression in owned folder
                 "source_signed_payload_installed_and_hash_verified",
             )
             personal = _personal_files(folder, old)
+            personal.pop("options.txt")
+            original_options = (folder / "options.txt").read_bytes()
             userdata = lab / "upgrade/userdata/lab-sentinel.txt"
             userdata.parent.mkdir(parents=True)
             userdata.write_bytes(b"Synthetic launcher data, no token")
@@ -322,9 +366,11 @@ def run_pack_install_lab(  # noqa: PLR0915 -- ordered regression in owned folder
                 all(
                     sha256_file(folder / name) == digest
                     for name, digest in personal.items()
-                ),
+                )
+                and _options_preserved(original_options, folder, new),
                 "options_maps_saves_and_screenshots_preserved",
             )
+            upgraded_options = (folder / "options.txt").read_bytes()
             expect(
                 sha256_file(userdata) == userdata_hash, "launcher_userdata_preserved"
             )
@@ -370,7 +416,8 @@ def run_pack_install_lab(  # noqa: PLR0915 -- ordered regression in owned folder
                 all(
                     sha256_file(folder / name) == digest
                     for name, digest in personal.items()
-                ),
+                )
+                and (folder / "options.txt").read_bytes() == upgraded_options,
                 "repair_does_not_reset_personal_settings",
             )
             mark = sum(wire.requests.values())

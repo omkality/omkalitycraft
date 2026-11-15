@@ -5,3 +5,5 @@ deploy/drasl/*.patch text eol=lf whitespace=-blank-at-eol,-blank-at-eof,-space-b
 profiles/client-addons/forge-1.12.2/notices/FullscreenWindowed-LICENSE.txt text eol=lf whitespace=-blank-at-eol
 # The server guide profile must match the pinned client resource byte for byte.
 profiles/server-defaults/dj2/omkalitycore-welcome.properties text eol=lf
+# Shared client/server scripts must retain their reviewed byte hashes on Windows.
+profiles/pack-overlays/**/*.zs text eol=lf
