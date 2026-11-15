@@ -23,7 +23,7 @@ public final class MaintenanceBridge {
     private final Object server;
     private final Class<?> rcon;
     private final Method eventSender,eventCommand,eventParameters,commandName,sendMessage;
-    private final Method mainThread,schedule,playerList,players;
+    private final Method mainThread,schedule,playerList,players,operators;
     private final Constructor<?> text;
     private final String boot=UUID.randomUUID().toString().replace("-","");
     private final MaintenanceNotices notices=new MaintenanceNotices();
@@ -47,6 +47,7 @@ public final class MaintenanceBridge {
         schedule=method(mc,"func_152344_a","addScheduledTask",Runnable.class);
         playerList=method(mc,"func_184103_al","getPlayerList");
         players=method(Class.forName("net.minecraft.server.management.PlayerList"),"func_181057_v","getPlayers");
+        operators=method(Class.forName("net.minecraft.server.management.PlayerList"),"func_152606_n","getOppedPlayerNames");
         sendMessage=method(sender,"func_145747_a","sendMessage",component);
         text=Class.forName("net.minecraft.util.text.TextComponentString").getConstructor(String.class);
         eventSender=CommandEvent.class.getMethod("getSender");
@@ -57,12 +58,18 @@ public final class MaintenanceBridge {
     private boolean onMain() throws Exception { return Boolean.TRUE.equals(mainThread.invoke(server)); }
     private String run(final String[] args) throws Exception {
         if(!onMain()) throw new IllegalStateException("wrong_thread");
+        String prefix="OMK_MAINTENANCE_V1 {\"schema\":1,\"boot\":\""+boot+"\",\"main_thread\":true";
+        if(args.length==2 && "operators".equals(args[1])) {
+            Object value=operators.invoke(playerList.invoke(server));
+            if(!(value instanceof String[]) || ((String[])value).length>10000)
+                throw new IllegalStateException("invalid_operators");
+            return prefix+",\"operator_count\":"+((String[])value).length+"}";
+        }
         BackupPolicyAccess provider=CoreServices.backupPolicy();
         String adapter=provider==null?"unavailable":provider.adapter();
         if(adapter==null || !adapter.matches("[a-z0-9][a-z0-9.-]{0,79}")) throw new IllegalStateException("invalid_backup_adapter");
         boolean disabled=provider!=null && provider.automaticBackupsDisabled();
         boolean running=provider==null || provider.backupRunning();
-        String prefix="OMK_MAINTENANCE_V1 {\"schema\":1,\"boot\":\""+boot+"\",\"main_thread\":true";
         if(args.length==2 && "probe".equals(args[1]))
             return prefix+",\"backup_adapter\":\""+adapter+"\",\"automatic_backups_disabled\":"+disabled+",\"backup_running\":"+running+"}";
         if(args.length!=5 || !"warn".equals(args[1]) || !boot.equals(args[2]) || !args[3].matches("[a-f0-9]{32}") || !args[4].matches("[1-9][0-9]{0,3}"))

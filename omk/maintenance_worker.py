@@ -1,15 +1,57 @@
 """Readonly runtime / current backup proof, without Docker socket or credentials."""
 
+import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 
 from omk.backup_archive import regular_file
 from omk.backup_store import _json_read
 from omk.cold_backup_worker import runtime_digest, source_summary, store_for
+from omk.fs import regular
+
+
+def no_operators(root):
+    """Read an existing zero-entry list without changing the server's access files."""
+    path = root / "ops.json"
+
+    def signature(info):
+        return (
+            info.st_dev,
+            info.st_ino,
+            info.st_mode,
+            info.st_nlink,
+            info.st_size,
+            info.st_mtime_ns,
+            info.st_ctime_ns,
+        )
+
+    def identity():
+        if not regular(path, root):
+            raise ValueError("Operator list must be an ordinary file")
+        info = path.stat()
+        if info.st_nlink != 1 or info.st_size > 65536:
+            raise ValueError("Invalid operator list file")
+        return signature(info)
+
+    before = identity()
+    with path.open("rb") as stream:
+        if signature(os.fstat(stream.fileno())) != before:
+            raise ValueError("Operator list changed before reading")
+        raw = stream.read(65537)
+        if len(raw) > 65536 or signature(os.fstat(stream.fileno())) != before:
+            raise ValueError("Operator list changed while reading")
+    if identity() != before:
+        raise ValueError("Operator list changed after reading")
+    if json.loads(raw.decode("utf-8")) != []:
+        raise ValueError("Operator list must be an empty array")
+    return {"operators_sha256": hashlib.sha256(raw).hexdigest(), "operator_count": 0}
 
 
 def execute(request, root=Path("/server"), storage=Path("/backup")):
+    if request["action"] == "operators":
+        return no_operators(root)
     if request["action"] == "nightly-policy":
         from omk.ftb_backup_policy import inspect  # noqa: PLC0415
 

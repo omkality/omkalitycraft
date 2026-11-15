@@ -48,6 +48,13 @@ def flow(tmp_path, monkeypatch):
             "backup_running": False,
         },
         "during_disk": lambda: None,
+        "operators": {
+            "schema": 1,
+            "boot": "a" * 32,
+            "main_thread": True,
+            "operator_count": 0,
+        },
+        "operator_disk": {"operators_sha256": "c" * 64, "operator_count": 0},
     }
     calls = []
     monkeypatch.setattr(nightly.backups, "target_for", lambda *a: dict(target))
@@ -66,11 +73,17 @@ def flow(tmp_path, monkeypatch):
     )
 
     def command(_config, _password, text):
+        if text == "list omk-maintenance operators":
+            calls.append("operators")
+            return "OMK_MAINTENANCE_V1 " + json.dumps(state["operators"])
         assert text == "list omk-maintenance probe"
         calls.append("loaded")
         return "OMK_MAINTENANCE_V1 " + json.dumps(state["loaded"])
 
     def worker(record, action):
+        if action == "operators":
+            calls.append("operator-disk")
+            return copy.deepcopy(state["operator_disk"])
         assert action == "nightly-policy" and record["target"] == target
         calls.append("disk")
         state["during_disk"]()
@@ -89,7 +102,14 @@ def test_open_freezes_disk_policy_and_loaded_boot_with_no_new_writer(flow):
         "disk": {k: v for k, v in state["disk"].items() if k != "runtime_sha256"},
         "loaded": state["loaded"],
     }
-    assert calls == ["loaded", "disk", "loaded"]
+    assert calls == [
+        "loaded",
+        "operators",
+        "disk",
+        "operator-disk",
+        "operators",
+        "loaded",
+    ]
     assert gate.writes == []
     assert ingress.execute(gate.cfg, op, "apply")["stage"] == "confirmed"
     assert gate.writes == ["open"]

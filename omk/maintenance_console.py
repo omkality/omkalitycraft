@@ -64,6 +64,19 @@ class MaintenanceConsole:
             raise ConsoleError("Loaded backup policy or server boot is not ready")
         return value
 
+    def no_operators(self, *, boot):
+        if not isinstance(boot, str) or not re.fullmatch(r"[a-f0-9]{32}", boot):
+            raise ConsoleError("Invalid operator probe boot")
+        value = self._request("operators")
+        if (
+            set(value) != {"schema", "boot", "main_thread", "operator_count"}
+            or type(value["operator_count"]) is not int
+            or value["operator_count"] != 0
+            or value["boot"] != boot
+        ):
+            raise ConsoleError("Loaded operator list or server boot is not ready")
+        return value
+
     def warn(self, boot, operation, seconds_before):
         if any(
             not isinstance(value, str) or not re.fullmatch(r"[a-f0-9]{32}", value)
