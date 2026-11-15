@@ -154,3 +154,38 @@ inventory 7→1→7→1, homes old→none→old→none, текущая FTB autho
 save format. Автоматический producer/client provenance, внешний owner lifecycle/
 ingress и все варианты несовместимых данных остаются в #171.
 [Обезличенный протокол](validation/project-return-2026-11-15.json).
+
+## Связка с реальным клиентским выпуском — 15 ноября 2026
+
+После checked capture #205 проверена связка его настоящего schema-2 экспорта,
+`project_stage` и `project_return`. Положительный client ref теперь реальный:
+windows-x64 2.23.4-omk.3-rc.1, `4ea6af7a476e1bed67d75a95e3bcdbf19ba4c35e18fb995b0fff6af762c63a31`.
+ReleaseStore проверил подпись и все 5971 файлов/759730113 байт до и после опыта.
+Это private lab trust, не активация production signer или player manifest.
+
+В отдельных Linux Docker volumes сначала подготовлена current file copy того же
+закрытого снимка, затем отдельный новый target прошёл raw/current-policy journal.
+Другой процесс подтвердил завершённые receipts. Callback читает фактические
+labels, immutable image и mount/RW metadata, исключает других пользователей volumes;
+это fence копий файлов, не имитация остановленного production game container.
+Подмена выбранного client ref отказала до journal/target data. Восемь условий
+стенда прошли; исходные девять архивов остались прежними, свои scopes удалены.
+
+17 независимых readonly Linux checks перечитали все 2629 game files (2320 runtime,
+309 world), runtime modes и шесть объявленных policy files, journal intent,
+точную selection, PvP/Hard/пустой OP и сохранённый NBT трёх алмазов. Все 34 пары
+регистра и Linux-файл `con.dat` сохранены внутри TAR; auth/operator payload не
+извлекался в game. Полный policy receipt и пустая разрешённая структура attempt
+marker проверены: marker не удаляется автоматически и не означает незавершённость
+при наличии принятого receipt.
+
+Первый collector ошибочно попробовал directory Docker cp на Windows и отказал
+на CON filename; его failed report сохранён, новая попытка использовала свежие
+тома и Linux TAR. Первый reader неверно ожидал отсутствия сохранённого marker;
+исправлена только проверка, API/guards прежние. Эти ошибки не скрыты.
+
+Игра/auth здесь не запускались. Current — копия того же закрытого снимка;
+это не новый historical/current authority или authenticated gameplay опыт.
+Boot/ready по-прежнему false. Внешний controller/lifecycle/ingress/post-boot policy
+и несовместимые данные #171 остаются открытыми.
+[Протокол и границы](validation/project-current-client-return-2026-11-15.json).

@@ -1,3 +1,21 @@
+## Файловый возврат с реальным клиентским ref — 15 ноября 2026
+
+#171: принятый coherent capture #205 с настоящим signed Windows ref 4ea6af7a…
+прошёл existing raw/current-policy/project_return в отдельных Linux volumes.
+Current здесь — отдельно подготовленная копия того же закрытого snapshot;
+игра/auth не запускались. Signature/все 5971 client files проверены до/после,
+подмена selected ref отказала до journal/target writes. Новый процесс подтвердил
+files-verified; boot/ready false. Восемь условий стенда и 17 независимых readonly
+проверок всех 2629 game files, modes, journal, PvP/Hard/OP/NBT, 34 case pairs и CON.
+Оригинальные девять архивов прежние, свои scopes удалены. Неудачные попытки
+Windows directory cp и reader layout сохранены; исправлена только private обвязка.
+Новых CLI/deps/модулей/изменений runtime нет.
+
+Это file composition acceptance, не новый game lifecycle или production return.
+Далее внешний controller/ingress, post-boot authority и несовместимые данные.
+Календарь/player release/master/VPS прежние.
+[Контракт](PROJECT_RETURN.md), [протокол](validation/project-current-client-return-2026-11-15.json).
+
 ## Ограниченный параллельный unit-набор — 15 ноября 2026
 
 В dev/uv.lock закреплены pytest-xdist 3.8.0 и execnet 2.1.2. Остальные записи
