@@ -109,24 +109,16 @@ def _expected(request, storage, target, current):
         path_policy="linux-server",
         max_expanded_bytes=request["world_max_bytes"],
     )
-    merged = reconcile.merged_records(current_ftb, historical)
-    payload = dict(data)
     props = _read(target, "server.properties").decode("utf-8")
     if "\0" in props:
         raise ValueError("Invalid target properties")
     props = re.sub(r"^white-list=.*(?:\n|$)", "", props, flags=re.M)
-    payload["server.properties"] = (
+    properties = (
         props.rstrip() + "\nwhite-list=" + summary["whitelist"] + "\n"
     ).encode()
-    expected_world = copy.deepcopy(manifest["files"])
-    for name, record in merged.items():
-        if record != historical[name]:
-            relative = request["world"] + "/data/ftb_lib/" + name
-            payload[relative] = reconcile._encoded(record)
-            expected_world[relative] = {
-                "bytes": len(payload[relative]),
-                "sha256": digest(payload[relative]),
-            }
+    payload, expected_world = compose_payload(
+        data, current_ftb, historical, request["world"], manifest["files"], properties
+    )
     binding = {
         **identity,
         "adapter": "dj2-current-policy-v1",
@@ -139,6 +131,22 @@ def _expected(request, storage, target, current):
         ),
     }
     return payload, expected_world, binding
+
+
+def compose_payload(data, current_ftb, historical, world, world_files, properties):
+    """Share the reviewed authority overlay; preserve historical progress fields."""
+    merged = reconcile.merged_records(current_ftb, historical)
+    payload = {**data, "server.properties": properties}
+    expected_world = copy.deepcopy(world_files)
+    for name, record in merged.items():
+        if record != historical[name]:
+            relative = world + "/data/ftb_lib/" + name
+            payload[relative] = reconcile._encoded(record)
+            expected_world[relative] = {
+                "bytes": len(payload[relative]),
+                "sha256": digest(payload[relative]),
+            }
+    return payload, expected_world
 
 
 def _write_record(path, value):
@@ -173,25 +181,7 @@ def stage(request, storage, target, current):
     ):
         raise OSError("Current policy free-space reserve would be violated")
     _write_record(target / PLAN, {"binding": binding, "before": before})
-    staging = target / STAGING
-    staging.mkdir(mode=0o700)
-    for name, data in payload.items():
-        path = staging / name
-        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        with path.open("xb") as output:
-            path.chmod(0o600)
-            output.write(data)
-            output.flush()
-            os.fsync(output.fileno())
-        if digest(path.read_bytes()) != binding["after"][name]:
-            raise ValueError("Current policy staging readback failed")
-    for name in payload:
-        if _target_hash(target, name) != before[name]:
-            raise ValueError("Target changed during current policy staging")
-        destination = target / name
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        os.replace(staging / name, destination)
-        _sync_directory(destination.parent)
+    write_payload(target, target / STAGING, payload, before, binding["after"])
     _verify_data(request, target, payload, world)
     if _expected(request, storage, target, current)[2] != binding:
         raise ValueError("Current policy source changed during staging")
@@ -202,6 +192,30 @@ def stage(request, storage, target, current):
         "files": len(payload),
         "world_inventory_sha256": binding["world_inventory_sha256"],
     }
+
+
+def write_payload(target, staging, payload, before, after):
+    """Internal single-attempt writer for the validated authority payload."""
+    staging.mkdir(mode=0o700)
+    _sync_directory(staging.parent)
+    for name, data in payload.items():
+        path = staging / name
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        with path.open("xb") as output:
+            path.chmod(0o600)
+            output.write(data)
+            output.flush()
+            os.fsync(output.fileno())
+        _sync_directory(path.parent)
+        if digest(path.read_bytes()) != after[name]:
+            raise ValueError("Current policy staging readback failed")
+    for name in payload:
+        if _target_hash(target, name) != before[name]:
+            raise ValueError("Target changed during current policy staging")
+        destination = target / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        os.replace(staging / name, destination)
+        _sync_directory(destination.parent)
 
 
 def _verify_data(request, target, payload, expected_world):

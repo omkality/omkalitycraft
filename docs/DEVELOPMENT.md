@@ -1,3 +1,24 @@
+## Текущие права на полном серверном выпуске — 15 ноября 2026
+
+#171: `omk.project_policy` повторно использует FTB reconciliation и writer
+world-only adapter. Исторические runtime/world получают актуальные access/ranks,
+пустой OP, RCON/network/PvP/Hard и известные FTB permissions. Неоднозначные properties,
+неизвестные identity/поля/версии отказывают; весь остальной состав сверяется полностью.
+Новых CLI/env/deps/writers/таймеров нет; auth/operator не извлекаются.
+
+88 Linux Docker focused tests (33 новых); Windows 23 portable/21 Linux skips.
+На полном native payload: 2319 runtime +317 world files/528012910 raw bytes,
+8 ожидаемых файлов политики. Schema2/current policy — явно synthetic fixtures,
+не свежий release producer. Реальные process exits после receipt/первой замены:
+новый readonly процесс принимает complete и отказывает partial/retry/raw fallback.
+Все исходные девять файлов прежние, свои scopes удалены; game/auth не запускались.
+
+Далее доверенный producer/journal и candidate boot/authenticated gameplay/failure/
+promotion/полный return #171. `current_policy_reconciled=true` не разрешает boot:
+quarantine=true, boot/ready=false. Player release/JAR/переводы прежние; календарь
+и VPS до аудита выключены. [Контракт](PROJECT_POLICY.md),
+[протокол](validation/project-policy-2026-11-15.json).
+
 ## Подготовка полного файлового состава выпуска — 15 ноября 2026
 
 #171: `omk.project_stage` повторно использует component verifier, ZIP guards и

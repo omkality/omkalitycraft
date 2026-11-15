@@ -1,5 +1,16 @@
 # Журнал изменений
 
+## Не выпущено — текущие права при возврате полного выпуска
+
+- Внутренний `project_policy` накладывает текущие ban/whitelist/ranks, пустой OP,
+  RCON/network/PvP/Hard и известные FTB authority на подготовленные runtime + мир.
+  Старый прогресс и остальные моды/config сохраняются. Прежний FTB adapter/writer
+  используется совместно с world-only restore; новых CLI/deps/таймеров нет.
+- Полные inventories/modes, stale source, частичная замена и потерянный ответ
+  проверены в Linux Docker, в том числе на полном лабораторном DJ2 payload.
+  Boot/ready остаются false: controller/journal и настоящая игровая приёмка #171
+  ещё открыты. [Контракт и ограничения](docs/PROJECT_POLICY.md).
+
 ## Не выпущено — подготовка файлов выбранного серверного выпуска
 
 - Внутренний Linux API подготавливает runtime + мир из выбранного schema-2
