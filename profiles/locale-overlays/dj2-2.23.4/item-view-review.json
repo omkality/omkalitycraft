@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "pack_version": "2.23.4",
+  "scope": "Owned Book of Logic command text and view labels; canonical NBT unchanged",
+  "source_path": "resources/crafttweaker/lang/en_us.lang",
+  "source_sha256": "522137ce116f60b51f5bf0a258c31ba2ba894e71cb29f4e572f66414d2ff6208",
+  "previous_ru_sha256": "d1ec9c2117f0a998aa9b31dfa11e0a29c72cbf74fb94ce1df08e7fb389fb8a35",
+  "result_ru_sha256": "300fa82172d5b4e34ad401d59be2022dc68673044751a65b5ff4397256a07c2f",
+  "entries": [
+    {
+      "key": "dj2.book_of_logic.desc0",
+      "source_sha256": "bb1c48b2b996266a450928f7b9cf37934091788b8e473d469acf1243b66a8324",
+      "expected_previous_sha256": "2c5c7aedb815a66d83b3a6165dff8e809e7962fc9dc4b3c847481056d53ee048",
+      "ru": "Каковы §c§lвозраст§r, §c§lчисло друзей§r и §c§lрост (в см)§r §lСтива§r, §lАлекс§r и §lХеробрина§r?"
+    },
+    {
+      "key": "dj2.book_of_logic.desc1",
+      "source_sha256": "82ba6fb0027d065825f4c2f7294b15c43008db45e2928a09344e2d2bea8b3fbe",
+      "expected_previous_sha256": "b651b9ceb168a61d520aac265a6197c2791aad8bcc4fcb23f1cfbd28e5380e2d",
+      "ru": "Найдите ответ с помощью следующих девяти утверждений."
+    },
+    {
+      "key": "dj2.book_of_logic.desc2",
+      "source_sha256": "39a73f8e4cc49b256ffd44513fbe41ed295c10848c443e9e44109fa3d88a5364",
+      "expected_previous_sha256": "573d2a314c8084612e9af4a0b9bfda7300263e16116fd6a122e78eef9a7b3d78",
+      "ru": "1) У Херобрина только один друг — Нотч."
+    },
+    {
+      "key": "dj2.book_of_logic.desc3",
+      "source_sha256": "b85817bc7789d97c83bf2d8f3b9f6a9cdba69cffff7e803e2727e2a82d58bca6",
+      "expected_previous_sha256": "80349cbedbe06982a0ab063226f2dfc2951bd9a9c00c3917d2725be9262055b1",
+      "ru": "2) Стив на один год старше Алекс."
+    },
+    {
+      "key": "dj2.book_of_logic.desc4",
+      "source_sha256": "9728b5cb1694a7fff5cb23acfc1ed5db0c270961ffbbc74a85b442eecae2b4fb",
+      "expected_previous_sha256": "4126abb92369f986166e16b89f8cc189648c744bb8a9ed3cb6901b1535c9dd2a",
+      "ru": "3) Стив и Херобрин одного роста."
+    },
+    {
+      "key": "dj2.book_of_logic.desc5",
+      "source_sha256": "e793543e9c0810831464dcc5adf6807e2b579e44d0c75e1dc6c71dbac80e19ac",
+      "expected_previous_sha256": "e1b619dfacb916b9991fe0273620aed65ab78cc2d413e7252e90dbb18f0fb1a7",
+      "ru": "4) Двадцать лет назад Херобрин был вдвое старше, чем Стив и Алекс вместе взятые."
+    },
+    {
+      "key": "dj2.book_of_logic.desc6",
+      "source_sha256": "c021ecfe10e9b301f53f61741da5d68e7b79e781c919e839f67eb78dfe92b630",
+      "expected_previous_sha256": "6265e925d7e3e2bc3d02afc398ab5ac2d30f350a044747400ab4f3bc346d12e8",
+      "ru": "5) У Стива каждый год становится на 61 друга больше. Впечатляет!"
+    },
+    {
+      "key": "dj2.book_of_logic.desc7",
+      "source_sha256": "d4894d60927d4e5542e071acdcd8b180bb4772bb2d504ac79f8d5453c0d43b30",
+      "expected_previous_sha256": "cd1758ee5e1f6f6ccf0e72ebc106ea399304f01580b4596cdd313ba9437e7c66",
+      "ru": "6) Разница между числом друзей Алекс и Стива в точности равна росту Херобрина."
+    },
+    {
+      "key": "dj2.book_of_logic.desc8",
+      "source_sha256": "f2abbdb25136ddac5d41dd4767853aed02ec05a85bd7bcc23c4b24b7eba0412b",
+      "expected_previous_sha256": "8c1c987860be61d6cac2c0422be91c3201f89f6bc214355f20807ff144058fd7",
+      "ru": "7) При рождении рост Алекс составлял 66 см. С тех пор она каждый год вырастала на 4 см."
+    },
+    {
+      "key": "dj2.book_of_logic.desc9",
+      "source_sha256": "f7b68496786b114d0e0c5967fc4bba07e0f42d51a5c432bda90393d8179b6a05",
+      "expected_previous_sha256": "3317980d1fe082e113625e8eb31a947a83732a72095c6614f738e87481e9b9c3",
+      "ru": "8) Если начиная с этого момента Херобрин будет ежегодно удваивать число своих друзей, то через 11 лет у него будет на 331 друга меньше, чем у Стива. Помните: Стив тоже каждый год обретает новых друзей!"
+    },
+    {
+      "key": "dj2.book_of_logic.desc10",
+      "source_sha256": "817f75ed8dfc374543aa25abf5dc7995f4bdbe0e8fa5422248b30aaf7e6daedb",
+      "expected_previous_sha256": "3061ec2d77eb53d0dcda75f777b435dca36f2b8a1445a76b87e0e7d4444cc0b1",
+      "ru": "9) У Алекс на 114 друзей больше, чем пятикратная сумма её роста и роста Стива."
+    },
+    {
+      "key": "dj2.book_of_logic.desc11",
+      "source_sha256": "08c70c1e542f5ee44c1dedefd593e29ca18ee97984520afd10136f71d3571fe4",
+      "expected_previous_sha256": "c61e9af170ccca591eced8b444c6620017588a70343c31aebbe0f06009b578d7",
+      "ru": "Используйте модификаторы из книги квестов и обычный бесформенный крафт. Когда найдёте ответ, соедините Стива, Алекс и Херобрина с эссенцией мысли на верстаке!"
+    },
+    {
+      "key": "dj2.book_of_logic.desc12",
+      "source_sha256": "853d0afd9c941f2ab62cd22ac74c341b0a2463184d18904870b796628f313cfc",
+      "expected_previous_sha256": "c1b4ba40083bafa0bef9f3ca5a23c9e7de35e677c10b671a29b297562bdab23c",
+      "ru": "Удачи!"
+    }
+  ],
+  "resource_count": 681,
+  "locale_archive_sha256": "d0d746b71f9697765a5e2035c71c54c79891a8f916cc9cf6301d1beed61687aa",
+  "ready_for_players": false,
+  "native_accepted": true
+}

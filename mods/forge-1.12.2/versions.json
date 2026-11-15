@@ -12,9 +12,9 @@
       "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
     },
     "client": {
-      "version": "0.1.4",
-      "file": "OmkalityClient-0.1.4.jar",
-      "sha256": "bd3606858023cc107f7931f24c8d2a929da237b49aee3d9670eb268685a01003"
+      "version": "0.1.5",
+      "file": "OmkalityClient-0.1.5.jar",
+      "sha256": "8c0d35f245913d7701ea4858aaa8f6d9994b5ede88a66dbe3afe064925796759"
     }
   }
 }

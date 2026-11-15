@@ -111,6 +111,7 @@ for test_class in [
     "net.omkality.client.books.BookLocaleLoaderTest",
     "net.omkality.client.books.BewitchmentBookLabelsTest",
     "net.omkality.client.defaults.KnownKeySnapshotTest",
+    "net.omkality.client.itemviews.ItemViewCatalogTest",
 ]:
     subprocess.run(
         [
@@ -122,6 +123,7 @@ for test_class in [
                     str(classes),
                     str(args.mixinbooter.resolve()),
                     str(args.forge.resolve()),
+                    str(root / "client/resources"),
                 ]
             ),
             test_class,

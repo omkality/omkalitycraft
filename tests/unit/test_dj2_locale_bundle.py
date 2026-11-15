@@ -131,6 +131,56 @@ def test_bundle_does_not_accept_arbitrary_launch_extensions(inputs, flag):
         compose_locale_bundle(**data)
 
 
+def test_item_views_keep_the_existing_bundle_files_and_shared_script(inputs):
+    data, _ = inputs
+    previous = compose_locale_bundle(**data)
+    data["lock"]["jvm_args_required"].extend(
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.locale.forge112=true",
+            "-Domkality.itemviews.profile=dj2-2.23.4",
+        ]
+    )
+    assert compose_locale_bundle(**data) == previous
+
+
+@pytest.mark.parametrize(
+    "extensions",
+    [
+        ["-Domkality.itemviews.locale.forge112=true"],
+        ["-Domkality.itemviews.profile=dj2-2.23.4"],
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.locale.forge112=true",
+        ],
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.profile=dj2-2.23.4",
+        ],
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.locale.forge112=false",
+            "-Domkality.itemviews.profile=dj2-2.23.4",
+        ],
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.locale.forge112=true",
+            "-Domkality.itemviews.profile=dj2-2.21.3",
+        ],
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.locale.forge112=true",
+            "-Domkality.itemviews.profile=../../other",
+        ],
+    ],
+)
+def test_item_views_require_the_complete_matching_launch_profile(inputs, extensions):
+    data, _ = inputs
+    data["lock"]["jvm_args_required"].extend(extensions)
+    with pytest.raises(ValueError, match="launch contract"):
+        compose_locale_bundle(**data)
+
+
 @pytest.mark.parametrize(
     "fault",
     [

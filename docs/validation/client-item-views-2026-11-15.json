@@ -1,0 +1,143 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "pack": "DJ2 2.23.4",
+  "client_version": "0.1.5",
+  "client_sha256": "8c0d35f245913d7701ea4858aaa8f6d9994b5ede88a66dbe3afe064925796759",
+  "ready_for_players": false,
+  "build": {
+    "ok": true,
+    "source": "canonical Git index bytes",
+    "jar_sha256": "8c0d35f245913d7701ea4858aaa8f6d9994b5ede88a66dbe3afe064925796759",
+    "two_clean_builds": true,
+    "java_checks": 191,
+    "image": "sha256:eade57feef3151e4d27bbe4120f718076317e45df303c96104f9c6d882b0c071",
+    "changed_previous_entries": [
+      "net/omkality/client/bootstrap/OmkalityClientLoader.class",
+      "net/omkality/client/OmkalityClient.class"
+    ],
+    "added_entries": [
+      "assets/omkalityclient/itemviews/dj2-2.23.4.properties",
+      "mixins.omkalityclient.itemviews.json",
+      "net/omkality/client/itemviews/ItemViewCatalog$1.class",
+      "net/omkality/client/itemviews/ItemViewCatalog$Text.class",
+      "net/omkality/client/itemviews/ItemViewCatalog$Wrap.class",
+      "net/omkality/client/itemviews/ItemViewCatalog.class",
+      "net/omkality/client/itemviews/ItemViewEvents.class",
+      "net/omkality/client/itemviews/ItemViewRuntime.class",
+      "net/omkality/client/mixin/itemviews/HotbarNameMixin.class"
+    ],
+    "all_other_previous_entries_identical": true,
+    "expected_pin_checked_separately": true,
+    "private_abi_and_tests_excluded": true,
+    "owned_build_containers_removed": true
+  },
+  "windows_focused_tests": 161,
+  "linux_focused_tests": 161,
+  "linux_data_image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+  "language_resources": 681,
+  "composed_files": 683,
+  "changed_language_resources": [
+    "resources/crafttweaker/lang/ru_ru.lang"
+  ],
+  "owned_logic_text_updates": 13,
+  "label_rules": 26,
+  "book_variants": 3,
+  "corpus": {
+    "canonical_label_cases": 53,
+    "book_variants": 3,
+    "preservation_and_negative_conditions": 171
+  },
+  "native": {
+    "strict_client_mod_count": 258,
+    "book_layout_probe_present": false,
+    "private_quest_observation_fixture": false,
+    "production_client_defaults_used": true,
+    "graphical_exit_code": 0,
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "game_crash_detected": false,
+    "auth_cleanup": true,
+    "owned_scopes_removed": true,
+    "owned_volume_removed_after_export": true,
+    "orchestrator_permissions_removed": true
+  },
+  "accepted_cases": [
+    "actual normal Book of Logic crafting and server-authoritative rejoin",
+    "all eight translated view pages with complete short paragraphs",
+    "tooltip and hotbar names, locked startup bag",
+    "synthetic stored numeric lore, information and quest book variants",
+    "foreign author is not translated; custom renamed name preserved",
+    "RU to EN to RU and full resource reload; all nine canonical inventory rows unchanged",
+    "read-only cold Linux save: actual eight original pages and synthetic variants unchanged"
+  ],
+  "cold_linux": {
+    "ok": true,
+    "readonly_linux_cold_save": true,
+    "actual_crafted_eight_pages_equal_source": true,
+    "books": [
+      {
+        "slot": 3,
+        "pages": 8,
+        "source_equal": true
+      },
+      {
+        "slot": 5,
+        "pages": 1,
+        "source_equal": true
+      },
+      {
+        "slot": 6,
+        "pages": 7,
+        "source_equal": true
+      },
+      {
+        "slot": 7,
+        "pages": 7,
+        "source_equal": true
+      },
+      {
+        "slot": 8,
+        "pages": 7,
+        "source_equal": true
+      }
+    ],
+    "synthetic_numeric_clue_tags_and_english_lore_preserved": true,
+    "initial_inventory_count_and_welcome_page_count_preserved": true,
+    "graphical_exit_code": 0,
+    "server_exit_code": 0,
+    "game_crash_detected": false,
+    "owned_scopes_removed": true,
+    "auth_cleanup": true
+  },
+  "limits": [
+    "no whole quest735 puzzle progression",
+    "numeric lore fixture is synthetic; original ContentTweaker question-mark generator unchanged",
+    "no full pack playthrough or all arbitrary player books",
+    "controls UI translation and issue191 modifier editing remain separate",
+    "no player manifest, Release or VPS deployment"
+  ],
+  "rollback": {
+    "previous_client_version": "0.1.4",
+    "previous_locale_archive_sha256": "00dedff71930b8342fde32fc2559bade871c510d39bd0d2a9cb0a3cb0a3822f4",
+    "previous_three_flag_contract_preserved": true,
+    "canonical_nbt_migration_needed": false,
+    "full_world_database_rollback_not_claimed": true
+  },
+  "native_profile_encoding_equivalence": {
+    "ok": true,
+    "native_jar_sha256": "075a4cba63004c9c45d3f664299e6b644878b2ab80fda37aad2f7fe149b7e88e",
+    "source_jar_sha256": "8c0d35f245913d7701ea4858aaa8f6d9994b5ede88a66dbe3afe064925796759",
+    "only_changed_jar_entry": "assets/omkalityclient/itemviews/dj2-2.23.4.properties",
+    "all_classes_and_other_resources_byte_identical": true,
+    "java_properties_values_equal": true,
+    "output": "All 206 Java Properties entries equal; nine numeric prefixes preserve space",
+    "owned_container_removed": true,
+    "image": "sha256:eade57feef3151e4d27bbe4120f718076317e45df303c96104f9c6d882b0c071"
+  }
+}

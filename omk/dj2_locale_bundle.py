@@ -146,6 +146,12 @@ def _validate_lock(lock):
     if lock["jvm_args_required"] not in (
         original_flags,
         [*original_flags, "-Domkality.defaults.persist.forge112=true"],
+        [
+            *original_flags,
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.locale.forge112=true",
+            f"-Domkality.itemviews.profile=dj2-{lock['version']}",
+        ],
     ):
         raise ValueError("Language bundle launch contract changed")
     if (

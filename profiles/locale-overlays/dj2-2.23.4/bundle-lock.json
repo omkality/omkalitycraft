@@ -2,12 +2,12 @@
   "schema": 1,
   "pack": "dj2",
   "version": "2.23.4",
-  "locale_archive_sha256": "00dedff71930b8342fde32fc2559bade871c510d39bd0d2a9cb0a3cb0a3822f4",
+  "locale_archive_sha256": "d0d746b71f9697765a5e2035c71c54c79891a8f916cc9cf6301d1beed61687aa",
   "client": {
-    "version": "0.1.4",
-    "path": "mods/OmkalityClient-0.1.4.jar",
-    "sha256": "bd3606858023cc107f7931f24c8d2a929da237b49aee3d9670eb268685a01003",
-    "size": 48362
+    "version": "0.1.5",
+    "path": "mods/OmkalityClient-0.1.5.jar",
+    "sha256": "8c0d35f245913d7701ea4858aaa8f6d9994b5ede88a66dbe3afe064925796759",
+    "size": 81403
   },
   "initial_inventory": {
     "path": "scripts/ModSpecific/InitialInventory.zs",
@@ -1322,8 +1322,8 @@
     },
     {
       "path": "resources/crafttweaker/lang/ru_ru.lang",
-      "sha256": "d1ec9c2117f0a998aa9b31dfa11e0a29c72cbf74fb94ce1df08e7fb389fb8a35",
-      "size": 80714
+      "sha256": "300fa82172d5b4e34ad401d59be2022dc68673044751a65b5ff4397256a07c2f",
+      "size": 80664
     },
     {
       "path": "resources/cucumber/lang/ru_ru.lang",
@@ -3424,6 +3424,8 @@
   "jvm_args_required": [
     "-Domkality.books.locale.forge112=true",
     "-Domkality.appearance.forge112=true",
-    "-Domkality.defaults.persist.forge112=true"
+    "-Domkality.defaults.persist.forge112=true",
+    "-Domkality.itemviews.locale.forge112=true",
+    "-Domkality.itemviews.profile=dj2-2.23.4"
   ]
 }

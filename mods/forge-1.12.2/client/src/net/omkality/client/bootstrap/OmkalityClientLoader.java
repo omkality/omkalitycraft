@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.util.Collections;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
@@ -23,10 +22,11 @@ public final class OmkalityClientLoader implements IFMLLoadingPlugin, IEarlyMixi
     @Override public List<String> getMixinConfigs() {
         if (FMLLaunchHandler.side() != Side.CLIENT) return Collections.emptyList();
         verifyMinecraft();
-        if (Boolean.getBoolean("omkality.appearance.forge112")) {
-            return Arrays.asList("mixins.omkalityclient.network.json", "mixins.omkalityclient.appearance.json");
-        }
-        return Collections.singletonList("mixins.omkalityclient.network.json");
+        java.util.List<String> configs = new java.util.ArrayList<String>();
+        configs.add("mixins.omkalityclient.network.json");
+        if (Boolean.getBoolean("omkality.appearance.forge112")) configs.add("mixins.omkalityclient.appearance.json");
+        if (Boolean.getBoolean("omkality.itemviews.locale.forge112")) configs.add("mixins.omkalityclient.itemviews.json");
+        return configs;
     }
 
     private static void verifyMinecraft() {
