@@ -1,0 +1,218 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "scope": "Configurable and frozen Docker local logging for the existing single-source HAProxy ingress; partial #30/#33",
+  "base_commit": "ece6a1a1d472acaaffb536421ae54487be5d92fe",
+  "source_sha256_lf": {
+    "omk/ingress_template.py": "1777a126dfa0c67aaba5aeaeca9b5e48b50f18c463807e2ef6cfa7be4f4a5dbe",
+    "omk/ingress_config.py": "90ee0269d11e47b89644eb0f269db021be9fb36c4a84cdbaa0bae3c00c5aab42",
+    "omk/ingress_worker.py": "9346725a0c74ab9e2bd1761be6cf041a9a78d1b4216ab5dada555dbdaa111d21",
+    "deploy/ingress/compose.yaml": "7e8de32f89dab8c711255ea41e0b19b2152d7c0ac797830fba2c00f324baab41",
+    "deploy/ingress/example.env": "d0da891f2bb5ac495ef8ef9ae2e30d1d7c629f9fdd035d905e12cfcf1276399c",
+    "tests/unit/test_ingress_config.py": "20b912ff67a3e5e8873991d73b850770605504bae7091b9d7902a10d607b288d",
+    "tests/unit/test_owner_ingress.py": "90e23ea34cef2837f263be019bd865fbca62c9104939f46496206b87260a9a42"
+  },
+  "configuration": {
+    "OMK_INGRESS_DOCKER_LOG_MIB": {
+      "default": 10,
+      "minimum": 1,
+      "maximum": 64
+    },
+    "OMK_INGRESS_DOCKER_LOG_FILES": {
+      "default": 3,
+      "minimum": 1,
+      "maximum": 10
+    },
+    "driver": "local",
+    "saved_pair_required_if_present": true,
+    "legacy_defaults": "10m / 3",
+    "legacy_journals_rewritten": false,
+    "legacy_policy_adopts_environment": false,
+    "haproxy_configuration_bytes_unchanged": true
+  },
+  "unit": {
+    "old_code_selected_new_cases_failed": 28,
+    "windows_focused_passed": 138,
+    "linux_focused_passed": 138,
+    "coverage": [
+      "inclusive bounds and invalid numeric forms",
+      "incomplete and mistyped saved policy",
+      "exact logging snapshot and driver/options drift",
+      "invalid env before config creation",
+      "frozen new plan and unchanged legacy journal",
+      "existing open/close, loaded policy and OP tests"
+    ],
+    "linux_runtime": {
+      "exit_code": 0,
+      "oom": false,
+      "source_unchanged": true,
+      "readonly": true,
+      "network": "none",
+      "user": "65534:65534",
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4"
+    }
+  },
+  "native": {
+    "ok": true,
+    "conditions": 34,
+    "profiles": 2,
+    "starts": 4,
+    "haproxy_image": "haproxy:3.2.26-alpine3.24@sha256:1c3568e520453cc8ba98c39501febcf450429c80e6cc27ecad779961d76e597c",
+    "helper_and_backend_image": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925",
+    "tested_profiles": [
+      {
+        "name": "defaults",
+        "policy": {
+          "memory_mib": 64,
+          "pids": 64,
+          "max_connections": 128,
+          "connect_seconds": 5,
+          "idle_seconds": 3600,
+          "timeout_seconds": 30,
+          "docker_log_mib": 10,
+          "docker_log_files": 3,
+          "cpu_millis": 500
+        },
+        "starts": 2,
+        "image_id": "sha256:1c3568e520453cc8ba98c39501febcf450429c80e6cc27ecad779961d76e597c",
+        "docker_logging": {
+          "Type": "local",
+          "Config": {
+            "max-file": "3",
+            "max-size": "10m"
+          }
+        },
+        "config_sha256_lf": "ed03226667e654c17eac4abe37449f6f3b69fbea8aa0982510ff0ca149ba4507"
+      },
+      {
+        "name": "override",
+        "policy": {
+          "memory_mib": 64,
+          "pids": 64,
+          "max_connections": 128,
+          "connect_seconds": 5,
+          "idle_seconds": 3600,
+          "timeout_seconds": 30,
+          "docker_log_mib": 1,
+          "docker_log_files": 2,
+          "cpu_millis": 500
+        },
+        "starts": 2,
+        "image_id": "sha256:1c3568e520453cc8ba98c39501febcf450429c80e6cc27ecad779961d76e597c",
+        "docker_logging": {
+          "Type": "local",
+          "Config": {
+            "max-file": "2",
+            "max-size": "1m"
+          }
+        },
+        "config_sha256_lf": "ed03226667e654c17eac4abe37449f6f3b69fbea8aa0982510ff0ca149ba4507"
+      }
+    ],
+    "checks": [
+      "defaults_haproxy_bytes_unchanged",
+      "defaults_compose_logging",
+      "defaults_exact_runtime_snapshot_boot0",
+      "defaults_actual_driver_logging_boot0",
+      "defaults_closed_on_boot0",
+      "defaults_worker_open_and_tcp_boot0",
+      "defaults_worker_close_boot0",
+      "defaults_clean_stop_boot0",
+      "defaults_exact_runtime_snapshot_boot1",
+      "defaults_actual_driver_logging_boot1",
+      "defaults_closed_on_boot1",
+      "defaults_worker_open_and_tcp_boot1",
+      "defaults_worker_close_boot1",
+      "defaults_clean_stop_boot1",
+      "defaults_logging_mismatch_refused",
+      "defaults_legacy_default_accepted",
+      "defaults_legacy_policy_not_rewritten",
+      "override_haproxy_bytes_unchanged",
+      "override_compose_logging",
+      "override_exact_runtime_snapshot_boot0",
+      "override_actual_driver_logging_boot0",
+      "override_closed_on_boot0",
+      "override_worker_open_and_tcp_boot0",
+      "override_worker_close_boot0",
+      "override_clean_stop_boot0",
+      "override_exact_runtime_snapshot_boot1",
+      "override_actual_driver_logging_boot1",
+      "override_closed_on_boot1",
+      "override_worker_open_and_tcp_boot1",
+      "override_worker_close_boot1",
+      "override_clean_stop_boot1",
+      "override_logging_mismatch_refused",
+      "override_legacy_override_refused",
+      "override_legacy_policy_not_rewritten"
+    ],
+    "proxy_cpu_limit": 0.5,
+    "proxy_memory_mib": 64,
+    "source": "synthetic TCP backend and generated non-secret properties in a fresh named volume",
+    "production_components": [
+      "Compose definition",
+      "proxy_snapshot",
+      "ingress.worker and ingress_worker"
+    ],
+    "closed_start_and_restart": true,
+    "worker_open_close_and_tcp_forwarding": true,
+    "logging_mismatch_refused": true,
+    "legacy_default_only": true,
+    "clean_proxy_exit_zero": true,
+    "oom": false
+  },
+  "example_and_cleanup": {
+    "owned_resources_absent": [
+      {
+        "kind": "container",
+        "absent": true
+      },
+      {
+        "kind": "container",
+        "absent": true
+      },
+      {
+        "kind": "container",
+        "absent": true
+      },
+      {
+        "kind": "volume",
+        "absent": true
+      },
+      {
+        "kind": "volume",
+        "absent": true
+      },
+      {
+        "kind": "volume",
+        "absent": true
+      },
+      {
+        "kind": "network",
+        "absent": true
+      }
+    ],
+    "example_compose_config": true,
+    "missing_identities_refused": true,
+    "no_deployment_started_by_example_check": true,
+    "worker_references_absent": true
+  },
+  "limits": {
+    "existing_services_or_worlds_used": false,
+    "gameplay_runtime_changed": false,
+    "new_cli_commands": false,
+    "new_dependencies_or_image_pins": false,
+    "new_collector_or_scheduler": false,
+    "mcp_used": false,
+    "computer_use_used": false,
+    "graphical_client_test": false,
+    "forge_source_readiness_reaccepted": false,
+    "vps_deployed": false,
+    "ct_groovy_active_writers_bounded": false,
+    "full_configuration_audit_complete": false,
+    "issues_remaining_open": [
+      30,
+      33,
+      41
+    ]
+  }
+}

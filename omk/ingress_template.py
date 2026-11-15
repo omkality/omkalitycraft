@@ -30,6 +30,8 @@ def settings(environment=None):
         ("CONNECT_SECONDS", 5, 1, 30),
         ("IDLE_SECONDS", 3600, 60, 86400),
         ("TIMEOUT_SECONDS", 30, 5, 120),
+        ("DOCKER_LOG_MIB", 10, 1, 64),
+        ("DOCKER_LOG_FILES", 3, 1, 10),
     ):
         raw = env.get("OMK_INGRESS_" + key, str(default))
         if (
@@ -49,6 +51,25 @@ def settings(environment=None):
         raise ValueError("Invalid OMK_INGRESS_CPUS")
     result["cpu_millis"] = int(value * 1000)
     return result
+
+
+def docker_log_config(policy):
+    # Schema-1 plans without both fields froze the original 10m / 3 policy.
+    defaults = {"docker_log_mib": 10, "docker_log_files": 3}
+    present = set(policy) & set(defaults)
+    if present and present != set(defaults):
+        raise ValueError("Incomplete ingress Docker logging policy")
+    values = {**defaults, **policy}
+    for key, maximum in (("docker_log_mib", 64), ("docker_log_files", 10)):
+        if type(values[key]) is not int or not 1 <= values[key] <= maximum:
+            raise ValueError("Invalid ingress Docker logging policy")
+    return {
+        "Type": "local",
+        "Config": {
+            "max-size": str(values["docker_log_mib"]) + "m",
+            "max-file": str(values["docker_log_files"]),
+        },
+    }
 
 
 def render(spec, policy, backend):

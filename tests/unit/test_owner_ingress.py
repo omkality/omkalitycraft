@@ -207,6 +207,30 @@ def test_ingress_must_be_closed_before_stop_intent(flow, monkeypatch):
     assert actions.count("stop") == 1
 
 
+def test_new_logging_policy_is_frozen_without_rewriting_legacy_journal(
+    gate, monkeypatch
+):
+    gate.state["deployment"]["policy"] = ingress_template.settings(
+        {"OMK_INGRESS_DOCKER_LOG_MIB": "1", "OMK_INGRESS_DOCKER_LOG_FILES": "2"}
+    )
+    operation = ingress.plan(gate.cfg, "dj2", "closed", {})["operation"]
+    record = ingress.read(gate.cfg, operation)
+    assert record["deployment"]["policy"]["docker_log_mib"] == 1
+    assert record["deployment"]["policy"]["docker_log_files"] == 2
+    record["deployment"]["policy"].pop("docker_log_mib")
+    record["deployment"]["policy"].pop("docker_log_files")
+    ingress.save(gate.cfg, record, "planned")
+    path = ingress.journal(gate.cfg, operation)
+    before = path.read_bytes()
+    monkeypatch.setenv("OMK_INGRESS_DOCKER_LOG_MIB", "64")
+    monkeypatch.setenv("OMK_INGRESS_DOCKER_LOG_FILES", "10")
+    assert (
+        "docker_log_mib"
+        not in ingress.read(gate.cfg, operation)["deployment"]["policy"]
+    )
+    assert path.read_bytes() == before
+
+
 def test_new_ingress_definition_invalidates_old_maintenance_window(flow):
     cfg, _, _, actions = flow
     op = maintenance.plan(cfg, "dj2", {})["operation"]
