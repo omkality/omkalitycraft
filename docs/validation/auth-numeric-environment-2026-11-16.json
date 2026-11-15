@@ -1,0 +1,159 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "scope": "Bounded validation of four existing numeric Drasl generator settings; partial configuration audit #30",
+  "base_commit": "4a34d31cf5b52c8052389f8bfa15e0f01d25047a",
+  "source_sha256_lf": {
+    "omk/auth_config.py": "32fcd188af3bbef9c7ebe149e5d60ba03bb6b64f1a364601f2449cccabac9c46",
+    "tests/unit/test_auth_persistence.py": "fc30c759b0369770f46420be6df1c587b5dd3f584fabd069744075be74bf64cb",
+    "deploy/auth/example.env": "a3106b1b25a3957134652b77ddff5806d9db695fdffc7f9c146020b9bef49c4b"
+  },
+  "regression": {
+    "old_parser_new_cases_failed": 38,
+    "windows_focused_passed": 59,
+    "linux_focused_passed": 59,
+    "cli_private_marker_absent_from_stdout_and_stderr": true,
+    "invalid_configuration_does_not_create_or_overwrite_output": true,
+    "grammar": "1-8 ASCII decimal digits; existing bounds and stale < expire preserved",
+    "compose_port_grammar": {
+      "25585": true,
+      "25_585": false,
+      "+25585": false,
+      "\u0662\u0665\u0665\u0668\u0665": false,
+      " 25585 ": false
+    },
+    "valid_config_bytes_unchanged": [
+      {
+        "environment": {},
+        "sha256_lf": "6dffc155affc6854925154fe5526a2e415999371750782034c7b64a7d800e1e0"
+      },
+      {
+        "environment": {
+          "OMK_AUTH_URL": "http://127.0.0.1:25586",
+          "OMK_AUTH_INTERNAL_PORT": "25443",
+          "OMK_AUTH_TOKEN_EXPIRE_SECONDS": "7200",
+          "OMK_AUTH_TOKEN_STALE_SECONDS": "600",
+          "OMK_AUTH_MIN_PASSWORD_LENGTH": "16"
+        },
+        "sha256_lf": "44d08051ef8ca7e4bea4eefd1027ff977b7f45c4ed0bb6f1f51134f3a91d34eb"
+      }
+    ]
+  },
+  "example": {
+    "existing_env_names_only": true,
+    "generated_toml_equals_defaults": true,
+    "compose_config_passed": true,
+    "omk_auth_config_path_required": true,
+    "validated": [
+      "loopback 25586 -> 25585",
+      "1 CPU / 384 MiB / 128 PIDs",
+      "Go 300MiB",
+      "debug empty",
+      "tmpfs 32m",
+      "Docker local logs 10m x 3",
+      "stop 20s",
+      "readonly config mount",
+      "one replica"
+    ],
+    "deployment_started": false
+  },
+  "native_drasl": {
+    "ok": true,
+    "primary_conditions": 27,
+    "fresh_profiles": 2,
+    "starts": 4,
+    "image": "omkalitycraft-drasl:4.0.0-omk.3",
+    "image_id": "sha256:d699ca17d09e91b0b8d3eaade73b3f8d3d917c1cc6afb6e99f90b74ebe80afb2",
+    "profiles": [
+      {
+        "label": "defaults",
+        "internal_port": 25585,
+        "min_password_length": 12,
+        "token_expire_seconds": 2592000,
+        "token_stale_seconds": 86400,
+        "starts": 2,
+        "config_sha256_lf": "456e9012f480890ecc64efe5845375089aaee55c04f7acf218dca75c3079e36c",
+        "owned_scopes_removed": true
+      },
+      {
+        "label": "overrides",
+        "internal_port": 25443,
+        "min_password_length": 16,
+        "token_expire_seconds": 7200,
+        "token_stale_seconds": 600,
+        "starts": 2,
+        "config_sha256_lf": "c59ddf3c48fa1c6e28db48bbc20c0ca2af557dff454f79ac5992ad852b0b989d",
+        "owned_scopes_removed": true
+      }
+    ],
+    "checks": [
+      "valid_config_bytes_unchanged_0",
+      "valid_config_bytes_unchanged_1",
+      "defaults_compose_port_and_loopback",
+      "defaults_actual_container_port",
+      "defaults_bounded_runtime",
+      "defaults_exact_mounted_configuration",
+      "defaults_mounted_numeric_policies",
+      "defaults_short_password_rejected",
+      "defaults_exact_minimum_password_registered",
+      "defaults_game_session_authenticated",
+      "defaults_admin_session_survives_restart",
+      "defaults_game_profile_survives_restart",
+      "defaults_auth_identity_survives_restart",
+      "defaults_owned_cleanup",
+      "overrides_compose_port_and_loopback",
+      "overrides_actual_container_port",
+      "overrides_bounded_runtime",
+      "overrides_exact_mounted_configuration",
+      "overrides_mounted_numeric_policies",
+      "overrides_short_password_rejected",
+      "overrides_exact_minimum_password_registered",
+      "overrides_game_session_authenticated",
+      "overrides_admin_session_survives_restart",
+      "overrides_game_profile_survives_restart",
+      "overrides_auth_identity_survives_restart",
+      "overrides_owned_cleanup",
+      "same_pinned_drasl_image_for_both_profiles"
+    ],
+    "storage_runtime_checks_per_profile": 8,
+    "cpu_limit": 1,
+    "memory_mib": 384,
+    "clean_stops_exit_zero": true,
+    "oom": false,
+    "expiry_and_stale_policy": "Mounted TOML readback only; no elapsed full-expiry acceptance"
+  },
+  "linux_unit_runtime": {
+    "exit_code": 0,
+    "oom": false,
+    "source_unchanged": true,
+    "readonly": true,
+    "network": "none",
+    "user": "65534:65534",
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4"
+  },
+  "cleanup": {
+    "all_four_owned_auth_scopes_absent": true,
+    "containers_and_volumes_checked_independently": true,
+    "failed_private_harness_attempts_excluded_from_accepted_counts": [
+      "Missing cat in minimal Drasl image; switched to Docker copy for mounted config readback",
+      "Registration response username nested under user; corrected harness field lookup"
+    ]
+  },
+  "limits": {
+    "mcp_used": false,
+    "computer_use_used": false,
+    "graphical_minecraft_test": false,
+    "existing_services_or_accounts_used": false,
+    "drasl_image_changed": false,
+    "gameplay_runtime_changed": false,
+    "new_cli_commands_or_env_names": false,
+    "new_dependencies": false,
+    "vps_deployed": false,
+    "calendar_scheduler_resumed": false,
+    "full_configuration_audit_complete": false,
+    "issues_remaining_open": [
+      30,
+      41
+    ]
+  }
+}
