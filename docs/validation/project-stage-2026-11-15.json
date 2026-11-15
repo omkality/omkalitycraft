@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "Selected server release file preparation only; no application boot or promotion",
+  "ready_for_players": false,
+  "boot_allowed": false,
+  "new_cli": false,
+  "new_dependencies": false,
+  "reused": [
+    "omk.project_export.verify",
+    "omk.component_archive.verify/inventory/json_write",
+    "omk.backup_archive.verify_archive/validate_inventory",
+    "omk.linux_world_restore._copy"
+  ],
+  "unit": {
+    "linux_docker_tests": 104,
+    "new_stage_tests": 44,
+    "existing_export_tests": 60,
+    "windows_stage_passed": 9,
+    "windows_explicit_linux_skips": 35,
+    "environment": {
+      "ok": true,
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "tests": "104 passed in 1.61s",
+      "exit_code": 0,
+      "oom_killed": false,
+      "readonly_nonroot_network_none": true,
+      "cpu_limit": 1,
+      "memory_mib": 256,
+      "temporary_capacity_mib": 512,
+      "project_export_schema2_tested": true,
+      "owned_container_removed": true
+    }
+  },
+  "native_payload_consumer": {
+    "ok": true,
+    "native_payload_consumer_only": true,
+    "schema2_metadata_is_synthetic_fixture": true,
+    "legacy_refused_without_writes": true,
+    "runtime_files": 2319,
+    "world_files": 317,
+    "staged_bytes": 528012910,
+    "casefold_groups_preserved": 34,
+    "all_hashes_and_runtime_modes_checked": true,
+    "lost_process_after_receipt_verified_in_new_process": true,
+    "partial_process_abort_refused_without_writes": true,
+    "partial_diagnostics_retained_during_test": true,
+    "nine_original_input_files_unchanged": true,
+    "auth_operator_not_extracted": true,
+    "no_game_auth_or_ingress_start": true,
+    "ready_for_players": false,
+    "boot_allowed": false,
+    "environment": {
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "cpus": 1,
+      "memory_mib": 256,
+      "nonroot": true,
+      "network": "none",
+      "original_input_readonly": true,
+      "stage_input_readonly": true,
+      "final_output_readonly": true,
+      "outcomes": [
+        {
+          "phase": "initialize",
+          "exit_code": 0,
+          "oom_killed": false
+        },
+        {
+          "phase": "complete",
+          "exit_code": 23,
+          "oom_killed": false
+        },
+        {
+          "phase": "partial",
+          "exit_code": 24,
+          "oom_killed": false
+        },
+        {
+          "phase": "verify",
+          "exit_code": 0,
+          "oom_killed": false
+        }
+      ],
+      "owned_scopes_removed": true,
+      "elapsed_seconds": 51.52
+    }
+  },
+  "limits": [
+    "The retained original export is schema1 and was refused as a selected release without target writes.",
+    "Schema2 metadata on a separate payload copy are explicitly synthetic test declarations, not fresh capture provenance or a production release.",
+    "Caller must independently verify client signatures/code provenance/transport receipt and supply trusted saved project hash and release identity.",
+    "Consumer requires owner lock, readonly input and exclusive fresh private target; it does not inspect Docker ownership or fence other owner processes.",
+    "Files are staged only: historical runtime access/RCON/config values are not reconciled or approved for boot.",
+    "No auth/operator extraction, Drasl restore, game/auth/ingress startup or original archive change.",
+    "Process exits23/24 are deliberate Python os._exit faults, not Minecraft SIGKILL or power-loss acceptance.",
+    "Full producer/journal/current-policy/candidate gameplay/promotion/return remains issue171; no calendar/VPS/player release."
+  ]
+}
