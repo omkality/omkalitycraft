@@ -1,0 +1,191 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "Suppress exact PlaneFix startup operator grant while preserving native AE2 operations and claim guards",
+  "ready_for_players": false,
+  "new_cli": false,
+  "new_env": false,
+  "new_dependencies": false,
+  "artifacts": {
+    "core": {
+      "version": "0.3.8",
+      "file": "OmkalityCore-0.3.8.jar",
+      "sha256": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e"
+    },
+    "dj2fix": {
+      "version": "0.1.5",
+      "file": "OmkalityDJ2Fix-0.1.5.jar",
+      "sha256": "88ce06b75a202fea03ed5f54d0940f0a9720bf49cf61893256bc52232cde9605"
+    },
+    "client": {
+      "version": "0.1.7",
+      "file": "OmkalityClient-0.1.7.jar",
+      "sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+    }
+  },
+  "native_artifacts": {
+    "ae2-uel-v0.56.4.jar": "3505d2e31e9c48a0c96ca058fcde8a6a50b7d673e13af488a398878d6d33b698",
+    "PlaneFix-1.12.2-1.0.0.jar": "7aceca6356b0a7a1a970298081c60135bb458d7780bf1058694c1f0eb8a5172f"
+  },
+  "tested_code_sha256_lf": {
+    "mods/forge-1.12.2/patches/src/net/omkality/patches/PlaneOperatorGuard.java": "d96ba49af739a2b449b321c3dca90d6f6b14fee6458abf2cff21c4451b630b54",
+    "mods/forge-1.12.2/patches/src/net/omkality/patches/mixin/PlaneOperatorMixin.java": "87917001a3c674f5fe4ed4e68b201423cc2dd7cbac1e348f4e6a77e0e3958d17",
+    "mods/forge-1.12.2/packs/dj2/resources/mixins.omkalitydj2fix.ae2.json": "39ceaa86acc3c9affcac1d22d60e1106d7bd7a3179f5575aad5cff281528d535",
+    "mods/forge-1.12.2/packs/dj2/src/net/omkality/dj2/OmkalityDJ2Fix.java": "9b9e4e1e34fa95155f2cc28ae59a5ae6cac66dce5f0d25d85b3c95c1ac2f9cdb"
+  },
+  "native": {
+    "ok": true,
+    "cases": 46,
+    "conditions": 724,
+    "boots": 2,
+    "without_deop": true,
+    "graphical_client": false,
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "cpu_limit": 4,
+    "memory_gib": 6,
+    "heap_gib": 4,
+    "protected_changed_cases": 0,
+    "clean_exit": true,
+    "oom": false,
+    "owned_scopes_removed": true,
+    "world_sha256": "86a54d0acde0c0e0155937168c7743210150da645ccf657c7427223489d5003c",
+    "pre_restart_world_sha256": "ce3b8a24a8e04e93106ae88faf738c1735594521a3bcaa88205dd9d737c27138",
+    "lab_only_regions_per_member": 50,
+    "production_regions_per_member": 3,
+    "lab_spawn_claims_moved_away_from_fixtures": true
+  },
+  "independent": {
+    "checks": 328,
+    "execution": {
+      "exit_code": 0,
+      "oom": false,
+      "source_unchanged": true,
+      "user": "65534:65534",
+      "readonly_root": true,
+      "network": "none",
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4"
+    },
+    "ready_boots_with_empty_ops": 2,
+    "readonly_ops_samples": 28
+  },
+  "controls": {
+    "baseline": {
+      "ok": true,
+      "checks": [
+        "zero_vanilla_spawn_protection_with_ftb_claims",
+        "original_pinned_mod_reproduced_automatic_level4_grant"
+      ],
+      "fix_sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b",
+      "container_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "clean_normal_exit": true,
+      "scope_removed": true
+    },
+    "spawn-denied": {
+      "ok": true,
+      "checks": [
+        "zero_vanilla_spawn_protection_with_ftb_claims",
+        "actual_linux_file_has_nonzero_spawn_protection_before_boot",
+        "unsupported_spawn_policy_refused_by_exact_guard",
+        "unsupported_policy_did_not_grant_operator"
+      ],
+      "fix_sha256": "88ce06b75a202fea03ed5f54d0940f0a9720bf49cf61893256bc52232cde9605",
+      "container_outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      },
+      "clean_normal_exit": false,
+      "scope_removed": true
+    }
+  },
+  "artifact_review": {
+    "ok": true,
+    "new_entries": [
+      "net/omkality/patches/PlaneOperatorGuard.class",
+      "net/omkality/patches/mixin/PlaneOperatorMixin.class"
+    ],
+    "changed_entries": [
+      "mixins.omkalitydj2fix.ae2.json",
+      "net/omkality/dj2/OmkalityDJ2Fix.class"
+    ],
+    "other_runtime_entries_identical": 31,
+    "core_identical": true,
+    "all_new_classes_java8": true,
+    "fix_sha256": "88ce06b75a202fea03ed5f54d0940f0a9720bf49cf61893256bc52232cde9605"
+  },
+  "rejected_attempts": [
+    {
+      "stage": "frozen fixture setup",
+      "game_started": false,
+      "reason": "missing profile data in private source snapshot"
+    },
+    {
+      "stage": "early mixin candidate",
+      "accepted": false,
+      "sha256": "409ad73f0fce93aa5799e86c38439a52aa22fc21abeafe569eee2ab3e766d943",
+      "reason": "PlaneFix class unavailable before mod discovery; diagnostics retained before owned scope removal"
+    },
+    {
+      "stage": "legacy fixture with production territory quota",
+      "accepted": false,
+      "completed_cases": 7,
+      "conditions": 100,
+      "reason": "fourth isolated territory correctly refused by quota 3; clean stop/export; lab fixture limit explicitly raised to 50 only"
+    },
+    {
+      "stage": "first nonzero spawn fixture",
+      "accepted": false,
+      "reason": "CRLF prevented anchored sed replacement; old command left zero, reproduced independently; fresh repeat requires Linux file readback of sixteen before boot",
+      "original_zero_policy_boot_clean": true,
+      "owned_scope_removed": true
+    }
+  ],
+  "limits": [
+    "No existing OP entries are edited or accepted implicitly",
+    "Not full post-boot OP/FTB authority, ingress/candidate promotion, provenance or save compatibility",
+    "No VPS, host timer, player release or graphical client activation",
+    "Native source grids and resources are fixtures; not full quest acquisition",
+    "Raw native drivers, accounts, worlds and failure diagnostics remain private"
+  ],
+  "build": {
+    "verification": {
+      "schema": 1,
+      "ok": true,
+      "rounds": [
+        {
+          "core": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+          "dj2fix": "88ce06b75a202fea03ed5f54d0940f0a9720bf49cf61893256bc52232cde9605",
+          "client": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+        },
+        {
+          "core": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e",
+          "dj2fix": "88ce06b75a202fea03ed5f54d0940f0a9720bf49cf61893256bc52232cde9605",
+          "client": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+        }
+      ],
+      "matches_accepted_jars": true,
+      "class_counts": {
+        "core": 52,
+        "dj2fix": 28,
+        "client": 33
+      },
+      "graphical_or_gameplay_test": false
+    },
+    "packaging_python_controls": 13,
+    "maintenance_jvm_conditions": 12,
+    "metrics_jvm_conditions": 27,
+    "welcome_jvm_conditions": 49,
+    "client_jvm_conditions": 278,
+    "source_boundary_files": 161,
+    "ruff": true,
+    "black_files_unchanged": 381
+  }
+}

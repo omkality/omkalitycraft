@@ -41,4 +41,7 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
 - Run crash/bug/duplication labs locally in isolated Linux Docker volumes matching the intended server runtime; do not load the public server for development tests. Budget backups, logs, worlds, staging and free disk reserve together before deployment.
 - After stopping a local game lab, preserve its diagnostics and close its owned Crash Assistant child processes/windows. Do not disable player crash reporting or terminate unrelated Java processes.
 
-- Keep README technology badges aligned with actual dependencies, runtime profiles and deployment components when those change. Use the real dev workflow status; omit empty popularity/download counters and unverified release/support claims.
+- Keep README technology badges aligned with actual dependencies, runtime profiles and
+  deployment components when those change. Use the real dev workflow status. Keep only
+  useful badges; omit zero/empty counters, broken badge endpoints and unverified
+  release/support claims.

@@ -3,6 +3,6 @@
   "minVersion": "0.8",
   "package": "net.omkality.patches.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": ["AeAnnihilationMixin", "AeIdentityMixin", "AeFormationMixin", "AeFluidAnnihilationMixin", "AeFluidFormationMixin"],
+  "mixins": ["PlaneOperatorMixin", "AeAnnihilationMixin", "AeIdentityMixin", "AeFormationMixin", "AeFluidAnnihilationMixin", "AeFluidFormationMixin"],
   "injectors": {"defaultRequire": 1}
 }

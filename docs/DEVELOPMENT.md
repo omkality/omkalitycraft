@@ -1,3 +1,26 @@
+## Автоматическая выдача OP PlaneFix отключена — 15 ноября 2026
+
+#171/#41: DJ2Fix 0.1.5 подавляет только startup-grant установленного PlaneFix
+1.0.0 после проверки его точного JAR. Сам PlaneFix, его identity/silk-touch fix,
+FTB и прежние AE2 guards сохранены. Требуется spawn-protection=0 и защита спавна
+FTB; другое значение даёт явный отказ старта. Существующие OP-записи не удаляются:
+пустой список по-прежнему обязан проверить controller до допуска игроков.
+
+Linux Docker Forge/Drasl: 46 native сценариев, 724 условий, два старта без deop;
+328 независимых readonly nonroot TAR/Anvil/NBT проверок. Сохранены блоки, права,
+ресурсы и нативная identity-плоскость. Отдельный observer увидел пустой OP-список
+на обоих готовых boots. Старый DJ2Fix 0.1.4 воспроизвёл штатный level4 grant;
+кандидат с ненулевым vanilla spawn protection отказал без выдачи OP. Нормальные
+старты завершены штатно, cold exports сохранены, свои scopes удалены.
+
+Только в лаборатории квота отдельных территорий поднята 3→50 для независимых
+fixtures, spawn claims отнесены от них; рабочие конфиги/квоты прежние. Ошибки
+раннего mixin и старой fixture сохранены, неполные прогоны не включены в числа.
+Core 0.3.8/Client 0.1.7 и 31 прежний runtime entry DJ2Fix побайтно прежние;
+новых CLI/env/deps нет. Это prerequisite, не полный post-boot authority,
+candidate promotion или совместимость save versions. #171/#41 остаются открыты.
+[Правило](DJ2_AE2_BOUNDARIES.md), [протокол](validation/planefix-operator-2026-11-15.json).
+
 ## Загруженная backup-политика перед открытием ingress — 15 ноября 2026
 
 #171/#33: существующий single-source ingress теперь повторно проверяет диск
