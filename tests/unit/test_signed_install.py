@@ -14,6 +14,7 @@ from launcher.install import (
 from launcher.releases import ReleaseError, read_release, safe_path, sha256_file
 from launcher.version import VERSION
 from omk.publish import build_release, signing_key
+from omk.release_store import ReleaseStore, ReleaseStorePolicy
 from tests.http_fixture import serve
 
 
@@ -316,3 +317,90 @@ def test_interrupted_upgrade_remembers_obsolete_files_without_deleting_user_file
         assert not (folder / "mods/old.jar").exists()
         assert (folder / "mods/new.jar").read_bytes() == b"new managed content"
         assert (folder / "mods/personal.jar").read_bytes() == b"user-owned test fixture"
+
+
+@pytest.mark.parametrize("interruption", [None, "missing", "bad_hash"])
+def test_return_to_retained_client_removes_only_added_language_file(
+    repository, tmp_path: Path, interruption
+):
+    root, files, envelope, keys, key = repository
+    launch = envelope["manifest"]["launch"]
+
+    def sign(source, version):
+        return build_release(
+            source,
+            pack_id="dj2",
+            version=version,
+            minecraft="1.12.2",
+            platform=current_platform(),
+            launch=launch,
+            key=key,
+            minimum_launcher_version=VERSION,
+        )
+
+    original = sign(files, "1.0")
+    retained = ReleaseStore.create(
+        tmp_path / "retained", ReleaseStorePolicy(1024**2, 1), keys
+    )
+    snapshot = retained.publish(files, original)
+    old_bytes = (snapshot.files / "mods/old.jar").read_bytes()
+    added = "resources/omkalityclient/lang/ru_ru.lang"
+    with serve(root) as (url, _):
+        installer = Installer(tmp_path / "portable", ReleaseClient(url, keys))
+        folder = installer.install(
+            read_release(json.dumps(original).encode(), keys), lambda _: None
+        )
+        personal = {
+            "options.txt": b"key_roots.keybinds.spell_library:199:SHIFT\n",
+            "journeymap/config/5.7/personal.json": b'{"shape":"Circle"}',
+            "saves/personal.dat": b"player save fixture",
+            "resources/omkalityclient/lang/notes.txt": b"unmanaged neighbour",
+        }
+        for name, content in personal.items():
+            destination = folder / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(content)
+        session = installer.root / "userdata/session.json"
+        session.parent.mkdir()
+        session.write_bytes(b"revocable game session fixture")
+        (files / added).parent.mkdir(parents=True)
+        (files / added).write_text("AutoRun=Автобег\n", encoding="utf-8")
+        (files / "mods/old.jar").write_bytes(b"candidate mod fixture")
+        candidate = sign(files, "2.0")
+        installer.install(
+            read_release(json.dumps(candidate).encode(), keys), lambda _: None
+        )
+        assert (folder / added).is_file()
+        # Return old payload with a NEW signed generation and the same security floor.
+        returned = sign(snapshot.files, "3.0")
+        assert returned["manifest"]["files"] == original["manifest"]["files"]
+        assert returned["manifest"]["minimum_launcher_version"] == VERSION
+        release = read_release(json.dumps(returned).encode(), keys)
+        if interruption:
+            if interruption == "missing":
+                (files / "mods/old.jar").unlink()
+            else:
+                (files / "mods/old.jar").write_bytes(b"x" * len(old_bytes))
+            with pytest.raises(ReleaseError):
+                installer.install(release, lambda _: None)
+            assert installer.local_state("dj2")["state"] == "incomplete"
+            assert (folder / added).is_file()
+            assert (folder / "mods/old.jar").read_bytes() == b"candidate mod fixture"
+            assert all(
+                (folder / name).read_bytes() == data for name, data in personal.items()
+            )
+            assert session.read_bytes() == b"revocable game session fixture"
+            installer.cancel.clear()
+        for artifact in snapshot.release.files:
+            (files / artifact.path).write_bytes(
+                (snapshot.files / artifact.path).read_bytes()
+            )
+        installer.install(release, lambda _: None)
+        assert not (folder / added).exists()
+        assert (folder / "mods/old.jar").read_bytes() == old_bytes
+        assert all(
+            (folder / name).read_bytes() == data for name, data in personal.items()
+        )
+        assert session.read_bytes() == b"revocable game session fixture"
+        assert installer.local_state("dj2")["state"] == "installed"
+        assert retained.verify(snapshot.release.digest).release.version == "1.0"
