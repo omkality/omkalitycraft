@@ -1,3 +1,25 @@
+## Подготовка полного файлового состава выпуска — 15 ноября 2026
+
+#171: `omk.project_stage` повторно использует component verifier, ZIP guards и
+копирование `linux_world_restore`. Выбранный schema-2 snapshot связан с заранее
+сохранёнными release identity **и** SHA точного project.json; runtime identity
+сама по себе не выбирает снимок мира. Новый приватный Linux-target, durable
+plan/receipt и отказ partial retry; auth/operator не извлекаются. Даже успех
+оставляет boot/ready false до актуальных access policy и игровой приёмки.
+
+104 Linux Docker focused tests (44 новых), Windows 9 portable/35 Linux skips.
+На копии настоящих DJ2 payload проверены 2319 runtime +317 world files и 34 case
+groups; metadata schema 2 явно синтетические, прежний legacy source не изменён.
+Процессы действительно оборваны после receipt/первого файла; новый readonly
+процесс подтвердил полную копию и отказал partial/retry. Все SHA/modes сохранены,
+свои scopes удалены. Это file consumer acceptance, не новый capture provenance,
+не Minecraft boot/gameplay, полный promotion/return или приёмка power loss.
+
+Новых CLI/env/deps/таймеров нет; собственные JAR/переводы/player release прежние.
+Далее producer/journal/current-policy и loopback boot/failure в #171. Календарь
+и VPS до аудита владельца выключены. [Контракт](PROJECT_STAGE.md),
+[протокол](validation/project-stage-2026-11-15.json).
+
 ## Спокойные цвета и время чтения памятки — 15 ноября 2026
 
 #44: Client 0.1.7 добавляет отдельный opt-in и профиль данных, без pack-веток
