@@ -10,12 +10,14 @@ from uuid import uuid4
 from omk import (
     admin_backups as backups,
     admin_maintenance as maintenance,
+    admin_nightly as nightly,
     ingress_config as deployment,
     journal_history,
 )
 from omk.admin import AdminError, _private_path, _write_private
 from omk.backup_store import _sync_directory
 from omk.ingress_template import LABEL
+from omk.maintenance_console import MaintenanceConsole
 from omk.profiles import PROJECT_ROOT
 from omk.recovery_console import RecoveryConsole
 
@@ -271,9 +273,18 @@ def source_ready(config, server, value):
         raise AdminError("Source boot lacks clean readiness")
     console, password = maintenance.credential(config, server)
     RecoveryConsole(console, password).ready()
-    if maintenance.snapshot(value["target"], binding) != source:
+    adapter = nightly.adapter(config, server)
+    live = MaintenanceConsole(console, password)
+    loaded = live.ready(adapter)
+    disk = nightly.disk_policy(config, server, value["target"], binding)
+    after = live.ready(adapter, boot=loaded["boot"])
+    if after != loaded or maintenance.snapshot(value["target"], binding) != source:
         raise AdminError("Source changed during readiness")
-    return source
+    # The worker proves the full tree stable within each inspection. Normal
+    # generated runtime files may change between inspections on this same boot;
+    # opening binds the reviewed backup artifact/config and loaded state only.
+    policy = {key: value for key, value in disk.items() if key != "runtime_sha256"}
+    return {**source, "backup_policy": {"disk": policy, "loaded": after}}
 
 
 def backend_address(value):

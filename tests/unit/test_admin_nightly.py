@@ -134,14 +134,16 @@ def test_changed_lifecycle_after_worker_never_accepted(flow, monkeypatch):
 
 
 def test_changed_binding_after_worker_never_accepted(flow, monkeypatch):
-    cfg, *_ = flow
-    calls = []
+    cfg, _path, _state, _proof, _calls, worker = flow
+    current = {"rcon_container_port": 25575}
+    monkeypatch.setattr(owner.maintenance, "binding", lambda *a: dict(current))
 
-    def binding(*args):
-        calls.append(1)
-        return {"rcon_container_port": 25575 if len(calls) == 1 else 25574}
+    def changed(*args):
+        value = worker(*args)
+        current["rcon_container_port"] = 25574
+        return value
 
-    monkeypatch.setattr(owner.maintenance, "binding", binding)
+    monkeypatch.setattr(owner.maintenance, "worker", changed)
     with pytest.raises(AdminError, match="changed"):
         owner.inspect(cfg, "dj2", {})
 

@@ -65,6 +65,13 @@ journal и новым process verify на закрытой копии: все ga
 PvP/Hard/OP/NBT приняты. Это не новый game lifecycle, live authority или promotion;
 границы — в [PROJECT_RETURN](PROJECT_RETURN.md).
 
+Для существующего single-source [ingress](OWNER_INGRESS.md) отдельно принята
+загруженная backup-политика: точный FTB artifact/config на диске, disabled/no-running
+ответы на одном boot Core и повтор перед подтверждением открытия. Два реальных
+старта одного Docker container, ordinary actor и cold backup проверены; старый
+план без proof требует явной отмены. Это один дополнительный барьер #171/#33,
+не общий candidate promotion или полный post-boot OP/FTB authority.
+
 Книжный #174 закрыт по последующим протоколам: 447 статей без ошибок сборки,
 4566 измеренных текстовых блоков без непустых глифов ниже реальной страницы,
 проверенные ссылки/динамические поля и ресурсный возврат. Это не ручной просмотр

@@ -41,6 +41,58 @@ def adapter(config, server):
     return value["servers"][server]["adapter"]
 
 
+def disk_policy(config, server, target, binding):
+    """Read one reviewed disk policy; caller holds the owner lock and boot fence."""
+    expected_adapter = adapter(config, server)
+    if (
+        backups.target_for(config, server) != target
+        or maintenance.binding(config, server) != binding
+    ):
+        raise AdminError("Backup-policy source differs from the owner allowlist")
+    proof = maintenance.worker(
+        {"operation": uuid4().hex, "target": target, "binding": binding},
+        "nightly-policy",
+    )
+    expected_keys = {
+        "adapter",
+        "artifact_sha256",
+        "config_sha256",
+        "runtime_sha256",
+        "stock_enabled_on_disk",
+        "stock_shutdown_on_disk",
+        "live_config_verified",
+        "other_writers_verified",
+    }
+    if (
+        set(proof) != expected_keys
+        or proof["adapter"] != expected_adapter
+        or proof["artifact_sha256"] != SHA256
+        or any(
+            proof[key] is not False
+            for key in (
+                "stock_enabled_on_disk",
+                "stock_shutdown_on_disk",
+                "live_config_verified",
+                "other_writers_verified",
+            )
+        )
+        or any(
+            not isinstance(proof[key], str)
+            or len(proof[key]) != 64
+            or any(c not in "0123456789abcdef" for c in proof[key])
+            for key in ("runtime_sha256", "config_sha256")
+        )
+    ):
+        raise AdminError("Invalid nightly disk-policy proof")
+    if (
+        adapter(config, server) != expected_adapter
+        or backups.target_for(config, server) != target
+        or maintenance.binding(config, server) != binding
+    ):
+        raise AdminError("Backup-policy source changed during inspection")
+    return proof
+
+
 def inspect(config, server, environment=None, *, now=None):
     policy = settings(environment)
     calendar = next_window(policy, now)
@@ -51,41 +103,7 @@ def inspect(config, server, environment=None, *, now=None):
         )
         backups.local_engine()
         before = maintenance.snapshot(target, binding)
-        proof = maintenance.worker(
-            {"operation": uuid4().hex, "target": target, "binding": binding},
-            "nightly-policy",
-        )
-        expected_keys = {
-            "adapter",
-            "artifact_sha256",
-            "config_sha256",
-            "runtime_sha256",
-            "stock_enabled_on_disk",
-            "stock_shutdown_on_disk",
-            "live_config_verified",
-            "other_writers_verified",
-        }
-        if (
-            set(proof) != expected_keys
-            or proof["adapter"] != expected_adapter
-            or proof["artifact_sha256"] != SHA256
-            or any(
-                proof[key] is not False
-                for key in (
-                    "stock_enabled_on_disk",
-                    "stock_shutdown_on_disk",
-                    "live_config_verified",
-                    "other_writers_verified",
-                )
-            )
-            or any(
-                not isinstance(proof[key], str)
-                or len(proof[key]) != 64
-                or any(c not in "0123456789abcdef" for c in proof[key])
-                for key in ("runtime_sha256", "config_sha256")
-            )
-        ):
-            raise AdminError("Invalid nightly disk-policy proof")
+        proof = disk_policy(config, server, target, binding)
         if (
             adapter(config, server) != expected_adapter
             or backups.target_for(config, server) != target
