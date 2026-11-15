@@ -54,8 +54,12 @@ RCON/network и известные FTB authority с полным файловы�
 owner journal и проверен настоящими Forge/Drasl actors: historical/current
 inventory/home/claim/access и отдельный возврат pre-change state после намеренного
 отказа в приёмке. Есть независимые cold NBT/current-source проверки. Это explicit
-loopback lab; production producer/client provenance, внешний lifecycle/ingress
-и несовместимые данные ещё не приняты.
+loopback lab; внешний production lifecycle/ingress и несовместимые данные ещё
+не приняты. Новый producer [PROJECT_EXPORT](PROJECT_EXPORT.md) требует настоящий
+`ReleaseStore` и явный pack для schema 2: подписи/полный клиентский состав
+проверяются до и после capture. Это не build attestation и не ретроспективная
+приёмка прежних schema-2 lab references; перед promotion нужен отдельный контроль
+сохранённых snapshots, trust policy и совместимости сервера/мира/клиента.
 
 Книжный #174 закрыт по последующим протоколам: 447 статей без ошибок сборки,
 4566 измеренных текстовых блоков без непустых глифов ниже реальной страницы,

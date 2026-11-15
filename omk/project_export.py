@@ -3,8 +3,9 @@
 The trusted owner holds its shared operation lock and supplies checkpoints from
 actual Docker inspection before and after this call. No stop/start, auth reset,
 schedule or transfer is implicit. A project manifest is published LAST.
-Optional release context is an owner declaration, not Git or client-signature
-attestation. Release selection uses the saved full identity, never one rebuilt
+Release context is a Git/state owner declaration; selected client bytes and
+signatures are verified independently before and after capture. Release selection
+uses the saved full identity, never one rebuilt
 from the candidate being checked. Authentication rollback is not implied.
 """
 
@@ -16,7 +17,7 @@ import sys
 import tempfile
 from datetime import UTC, datetime
 
-from launcher.releases import PLATFORMS
+from launcher.releases import PLATFORMS, ReleaseError
 from omk import (
     auth_state_archive,
     component_archive as archive,
@@ -25,6 +26,7 @@ from omk.backup_archive import verify_archive
 from omk.backup_store import _sync_directory
 from omk.fs import resolved
 from omk.offsite_process import OffsiteError
+from omk.release_store import ReleaseStore
 from omk.restic_transport import IDENTITY, OPERATION, signature
 from omk.stopped_world_backup import inventory as world_inventory
 from omk.storage_policy import storage_plan
@@ -77,6 +79,50 @@ def _release_context(value):
         "declared_state_contract": value["declared_state_contract"],
         "client_manifests": dict(sorted(value["client_manifests"].items())),
     }
+
+
+def _client_source(context, store, pack_id, roots):
+    release = None if context is None else _release_context(context)
+    if release is None:
+        if store is not None or pack_id is not None:
+            raise OffsiteError("Client source requires a selected release context")
+        return None, None
+    if (
+        not isinstance(store, ReleaseStore)
+        or not isinstance(pack_id, str)
+        or re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,47}", pack_id) is None
+    ):
+        raise OffsiteError("Selected release requires a trusted client store and pack")
+    try:
+        # Freeze the source path, budgets and trust map against caller callbacks.
+        source = ReleaseStore(store.root, store.policy, store.keys)
+        if any(
+            source.root.is_relative_to(root) or root.is_relative_to(source.root)
+            for root in roots
+        ):
+            raise ValueError
+    except OSError, ValueError, TypeError:
+        raise OffsiteError(
+            "Client store must be separate from project sources"
+        ) from None
+    _verify_clients(release, source, pack_id)
+    return release, source
+
+
+def _verify_clients(release, store, pack_id):
+    if release is None:
+        return
+    try:
+        minecraft = set()
+        for platform, digest in release["client_manifests"].items():
+            client = store.verify(digest).release
+            if client.platform != platform or client.pack_id != pack_id:
+                raise ValueError
+            minecraft.add(client.minecraft)
+        if len(minecraft) != 1:
+            raise ValueError
+    except OSError, ValueError, TypeError, ReleaseError:
+        raise OffsiteError("Selected client release is not verified") from None
 
 
 def _release_identity(value):
@@ -236,10 +282,17 @@ def capture(
     checkpoint,
     settings,
     release_context=None,
+    client_store=None,
+    client_pack_id=None,
 ):
     # checkpoint must independently bind these mounts to the allowlisted volumes.
     validate_sources(destination, (game, auth, operator), scope)
-    release = None if release_context is None else _release_context(release_context)
+    release, client_source = _client_source(
+        release_context,
+        client_store,
+        client_pack_id,
+        (destination, game, auth, operator),
+    )
     before = checkpoint()
     closed(before)
     # Detach nested mutable checkpoint objects supplied by a controller.
@@ -360,6 +413,7 @@ def capture(
         )
     ):
         raise OffsiteError("Project source changed before closure")
+    _verify_clients(release, client_source, client_pack_id)
     after = checkpoint()
     closed(after)
     if before != after:

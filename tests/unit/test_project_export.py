@@ -17,10 +17,52 @@ from omk import (
 )
 from omk.backup_archive import validate_inventory
 from omk.offsite_process import OffsiteError
+from omk.publish import build_release, signing_key
+from omk.release_store import ReleaseStore, ReleaseStorePolicy
 
 
 @pytest.fixture
-def fixture(tmp_path):
+def clients(tmp_path):
+    source = tmp_path / "client-files"
+    (source / "runtime").mkdir(parents=True)
+    for name in ("runtime/java", "agent.jar", "forge.jar", "locale.lang"):
+        (source / name).write_bytes(b"opaque signed fixture; not a game")
+    key = signing_key(tmp_path / "client-key.pem", tmp_path / "client-keys.json")
+    keys = json.loads((tmp_path / "client-keys.json").read_bytes())
+    store = ReleaseStore.create(
+        tmp_path / "client-store", ReleaseStorePolicy(1024**2, 1), keys
+    )
+
+    def publish(
+        platform="windows-x64", pack_id="fixture", minecraft="1.12.2", version="one"
+    ):
+        envelope = build_release(
+            source,
+            pack_id=pack_id,
+            version=version,
+            minecraft=minecraft,
+            platform=platform,
+            key=key,
+            launch={
+                "java": "runtime/java",
+                "agent": "agent.jar",
+                "classpath": ["forge.jar"],
+                "main_class": "net.minecraft.launchwrapper.Launch",
+                "assets": "assets",
+                "natives": "natives",
+                "game_args": [],
+            },
+        )
+        return store.publish(source, envelope)
+
+    snapshots = {p: publish(p) for p in ("windows-x64", "linux-x64")}
+    return SimpleNamespace(
+        source=source, keys=keys, store=store, snapshots=snapshots, publish=publish
+    )
+
+
+@pytest.fixture
+def fixture(tmp_path, clients):
     if sys.platform != "linux":
         pytest.skip("Linux project capture")
     game, auth, operator = (tmp_path / n for n in ("game", "auth", "operator"))
@@ -90,7 +132,12 @@ def fixture(tmp_path):
         "checkpoint": lambda: copy.deepcopy(stopped),
         "settings": settings,
     }
-    return SimpleNamespace(args=args, stopped=stopped, out=tmp_path / "out")
+    return SimpleNamespace(
+        args=args,
+        client_args={"client_store": clients.store, "client_pack_id": "fixture"},
+        stopped=stopped,
+        out=tmp_path / "out",
+    )
 
 
 def test_single_closed_set_preserves_all_roles_and_never_claims_admission(fixture):
@@ -295,11 +342,163 @@ def test_case_sensitive_mode_cannot_loosen_portable_inventory():
         )
 
 
+def test_selected_capture_requires_verified_client_source(fixture, release_context):
+    with pytest.raises(OffsiteError):
+        project.capture(fixture.out, release_context=release_context, **fixture.args)
+    assert not fixture.out.exists()
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "missing",
+        "same_size",
+        "extra",
+        "signature",
+        "keys",
+        "platform",
+        "pack",
+        "minecraft",
+        "digest",
+    ],
+)
+def test_invalid_client_refuses_before_export_writes(
+    fixture, clients, release_context, fault
+):
+    snapshot = clients.snapshots["windows-x64"]
+    args = dict(fixture.client_args)
+    path = snapshot.files / "locale.lang"
+    if fault == "missing":
+        path.unlink()
+    elif fault == "same_size":
+        raw = path.read_bytes()
+        path.write_bytes(bytes([raw[0] ^ 1]) + raw[1:])
+    elif fault == "extra":
+        (snapshot.files / "foreign.txt").write_bytes(b"unmanaged")
+    elif fault == "signature":
+        manifest = snapshot.directory / "manifest.json"
+        data = json.loads(manifest.read_bytes())
+        data["signature"] = "AAAA"
+        manifest.write_text(json.dumps(data), encoding="utf-8")
+    elif fault == "keys":
+        clients.store.keys.clear()
+    elif fault == "platform":
+        release_context["client_manifests"]["windows-x64"] = clients.snapshots[
+            "linux-x64"
+        ].release.digest
+    elif fault == "pack":
+        args["client_pack_id"] = "other"
+    elif fault == "minecraft":
+        other = clients.publish("linux-x64", minecraft="1.7.10", version="other")
+        release_context["client_manifests"]["linux-x64"] = other.release.digest
+    else:
+        release_context["client_manifests"]["windows-x64"] = "f" * 64
+    with pytest.raises(OffsiteError, match="client release is not verified"):
+        project.capture(
+            fixture.out, release_context=release_context, **args, **fixture.args
+        )
+    assert not fixture.out.exists()
+
+
+@pytest.mark.parametrize("root", ["game", "auth", "operator", "destination"])
+def test_client_store_cannot_be_nested_in_export_or_sources(
+    fixture, clients, release_context, root
+):
+    parent = fixture.out if root == "destination" else fixture.args[root]
+    copied = parent / "client-cache"
+    shutil.copytree(clients.store.root, copied)
+    store = ReleaseStore(copied, clients.store.policy, clients.keys)
+    with pytest.raises(OffsiteError, match="separate"):
+        project.capture(
+            fixture.out,
+            release_context=release_context,
+            client_store=store,
+            client_pack_id="fixture",
+            **fixture.args,
+        )
+    assert not (fixture.out / "world.zip").exists()
+    assert not (fixture.out / "project.json").exists()
+
+
+def test_client_change_during_copy_leaves_no_project_seal(
+    fixture, clients, release_context, monkeypatch
+):
+    original = archive.write
+    path = clients.snapshots["windows-x64"].files / "locale.lang"
+
+    def changed(*args, **kwargs):
+        result = original(*args, **kwargs)
+        path.write_bytes(b"late modified client")
+        return result
+
+    monkeypatch.setattr(archive, "write", changed)
+    with pytest.raises(OffsiteError, match="client release is not verified"):
+        project.capture(
+            fixture.out,
+            release_context=release_context,
+            **fixture.client_args,
+            **fixture.args,
+        )
+    assert (fixture.out / "world.zip").exists()
+    assert not (fixture.out / "project.json").exists()
+    with pytest.raises(OffsiteError):
+        project.verify(fixture.out, fixture.args["settings"])
+
+
+def test_trust_path_and_selected_refs_are_frozen_against_callbacks(
+    fixture, clients, release_context
+):
+    expected = copy.deepcopy(release_context)
+
+    def checkpoint():
+        clients.store.keys.clear()
+        clients.store.root = fixture.args["game"]
+        release_context["client_manifests"]["windows-x64"] = "f" * 64
+        return copy.deepcopy(fixture.stopped)
+
+    args = {**fixture.args, "checkpoint": checkpoint}
+    result = project.capture(
+        fixture.out, release_context=release_context, **fixture.client_args, **args
+    )
+    actual = result["manifest"]["release_identity"]
+    assert {k: actual[k] for k in expected} == expected
+
+
+def test_lifecycle_fence_is_checked_after_final_client_verification(
+    fixture, release_context, monkeypatch
+):
+    original, calls = ReleaseStore.verify, []
+
+    def verify(store, digest):
+        result = original(store, digest)
+        calls.append(digest)
+        if len(calls) == 3:
+            fixture.stopped["game"]["container_id"] = "d" * 64
+        return result
+
+    monkeypatch.setattr(ReleaseStore, "verify", verify)
+    with pytest.raises(OffsiteError, match="lifecycle changed"):
+        project.capture(
+            fixture.out,
+            release_context=release_context,
+            **fixture.client_args,
+            **fixture.args,
+        )
+    assert len(calls) == 4
+    assert not (fixture.out / "project.json").exists()
+
+
+def test_legacy_capture_cannot_silently_ignore_client_inputs(fixture):
+    with pytest.raises(OffsiteError, match="requires a selected release context"):
+        project.capture(fixture.out, **fixture.client_args, **fixture.args)
+    assert not fixture.out.exists()
+
+
 @pytest.fixture
-def release_context():
+def release_context(clients):
     return {
         "source_commit": "1" * 40,
-        "client_manifests": {"windows-x64": "2" * 64, "linux-x64": "3" * 64},
+        "client_manifests": {p: s.release.digest for p, s in clients.snapshots.items()},
         "declared_state_contract": "dj2-2.23.4-world-v1",
     }
 
@@ -376,7 +575,10 @@ def test_invalid_release_context_never_echoes_input(release_context, fault):
 
 def test_selected_release_binds_existing_sealed_components(fixture, release_context):
     result = project.capture(
-        fixture.out, release_context=release_context, **fixture.args
+        fixture.out,
+        release_context=release_context,
+        **fixture.client_args,
+        **fixture.args,
     )
     assert result["manifest"]["schema"] == 2
     identity = result["manifest"]["release_identity"]
@@ -433,7 +635,10 @@ def test_wrong_selected_release_refuses_without_changing_export(
     fixture, release_context, changed
 ):
     result = project.capture(
-        fixture.out, release_context=release_context, **fixture.args
+        fixture.out,
+        release_context=release_context,
+        **fixture.client_args,
+        **fixture.args,
     )
     expected = copy.deepcopy(result["manifest"]["release_identity"])
     if changed == "client_manifests":
@@ -460,7 +665,10 @@ def test_release_metadata_cannot_be_stripped_or_downgraded_for_selection(
     fixture, release_context, fault
 ):
     result = project.capture(
-        fixture.out, release_context=release_context, **fixture.args
+        fixture.out,
+        release_context=release_context,
+        **fixture.client_args,
+        **fixture.args,
     )
     expected = copy.deepcopy(result["manifest"]["release_identity"])
     manifest = result["manifest"]
@@ -494,14 +702,22 @@ def test_release_metadata_cannot_be_stripped_or_downgraded_for_selection(
 def test_bad_release_context_refuses_before_creating_export(fixture, release_context):
     release_context["client_manifests"]["windows-x64"] = "latest"
     with pytest.raises(OffsiteError):
-        project.capture(fixture.out, release_context=release_context, **fixture.args)
+        project.capture(
+            fixture.out,
+            release_context=release_context,
+            **fixture.client_args,
+            **fixture.args,
+        )
     assert not fixture.out.exists()
 
 
 @pytest.mark.parametrize("fault", ["image", "runtime_manifest", "missing_runtime_pin"])
 def test_release_record_must_bind_the_enclosed_runtime(fixture, release_context, fault):
     result = project.capture(
-        fixture.out, release_context=release_context, **fixture.args
+        fixture.out,
+        release_context=release_context,
+        **fixture.client_args,
+        **fixture.args,
     )
     manifest = result["manifest"]
     if fault == "image":
@@ -521,12 +737,20 @@ def test_another_valid_runtime_cannot_be_substituted_for_the_selected_release(
     fixture, release_context, rebind
 ):
     original = project.capture(
-        fixture.out, release_context=release_context, **fixture.args
+        fixture.out,
+        release_context=release_context,
+        **fixture.client_args,
+        **fixture.args,
     )
     selected = copy.deepcopy(original["manifest"]["release_identity"])
     (fixture.args["game"] / "server.properties").write_text("online-mode=false\n")
     other_dir = fixture.out.with_name("other-export")
-    other = project.capture(other_dir, release_context=release_context, **fixture.args)
+    other = project.capture(
+        other_dir,
+        release_context=release_context,
+        **fixture.client_args,
+        **fixture.args,
+    )
     assert other["manifest"]["release_identity"] != selected
     # Both components are valid TAR/manifest pairs, but belong to different code/config.
     for name in ("runtime.tar", "runtime.json"):

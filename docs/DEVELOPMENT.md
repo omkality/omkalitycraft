@@ -1,3 +1,20 @@
+## Проверенные клиентские входы серверного capture — 15 ноября 2026
+
+#171: новый schema-2 `project_export.capture` требует existing ReleaseStore и явный
+client pack. Подпись/полный inventory/каждый SHA и platform/pack проверяются до
+output и после чтения источников; финальный lifecycle fence идёт после клиента.
+Trust/source/context отделены от callbacks; overlapping roots и mixed Minecraft
+отказывают. Прежние readers/legacy capture и девять файлов сохранены. Новых
+CLI/env/deps/модулей/таймеров нет; Git/state остаются owner declaration.
+
+209 focused Linux Docker tests, Windows 74 passed/135 Linux skips; Ruff/Black и
+pre-commit. Отдельное исполнение старого кода действительно создало экспорт с
+несуществующим client ref; новый producer отказал до output. Полная native-проверка
+с текущим подписанным клиентом выполняется отдельно, до её завершения приёмка
+серверного scope не объявляется. Production lifecycle/ingress/post-boot authority
+и несовместимые данные #171 открыты. Календарь/master/player release/VPS прежние.
+[Контракт](PROJECT_EXPORT.md).
+
 ## Адресная локаль Forge и файловый возврат — 15 ноября 2026
 
 #49: один `fml.menu.modoptions` → «Моды...» через existing render_lang и EN/value

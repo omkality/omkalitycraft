@@ -14,12 +14,16 @@ from omk import (
     project_stage as stage,
 )
 from omk.offsite_process import OffsiteError
-from tests.unit.test_project_export import fixture as capture_fixture
+from tests.unit.test_project_export import (
+    clients as client_fixture,
+    fixture as capture_fixture,
+)
 
 
 @pytest.fixture
 def prepared(tmp_path):
-    base = capture_fixture.__wrapped__(tmp_path)
+    clients = client_fixture.__wrapped__(tmp_path)
+    base = capture_fixture.__wrapped__(tmp_path, clients)
     # Distinct Linux names and executable mode are essential runtime properties.
     game = base.args["game"]
     (game / "config/Case").mkdir()
@@ -28,10 +32,14 @@ def prepared(tmp_path):
     (game / "config/case/value.cfg").write_bytes(b"lower")
     context = {
         "source_commit": "1" * 40,
-        "client_manifests": {"windows-x64": "2" * 64},
+        "client_manifests": {
+            "windows-x64": clients.snapshots["windows-x64"].release.digest
+        },
         "declared_state_contract": "fixture-world-v1",
     }
-    result = project_export.capture(base.out, release_context=context, **base.args)
+    result = project_export.capture(
+        base.out, release_context=context, **base.client_args, **base.args
+    )
     target = tmp_path / "stage"
     target.mkdir(mode=0o700)
     selection = {
