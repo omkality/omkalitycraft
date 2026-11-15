@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "pack": "dj2",
+  "version": "2.23.4",
+  "source_path": "assets/endermodpacktweaks/lang/en_us.lang",
+  "source_sha256": "8ca22d2d4f0001a6106985cadc56d4f81bef4647d712ef822a85c0f96ced31c9",
+  "previous_ru_sha256": "bb06c959b023b7d9f5e2e0b62b06e20b3d844ca278dabcee000e1feb3440d064",
+  "result_ru_sha256": "51cb856b4ce34966cf41be08afcb56013e5b3b880f59f1ec9b7dc8bf2b86c4d3",
+  "mod_version": "0.5.11",
+  "mod_sha256": "9a46e90fbd9ec91f8125663248ebf514fce0b97491f7212ce91624496c8d98cc",
+  "enum_sorting_class_sha256": "a90e7bd212f7220123826dd133de2bd60e36cfb7a91e13b14a7de5d044819386",
+  "gui_controls_class_sha256": "ab1f526451ef75d8a7db230d5beb25383601f3f8e089b9044b0646fd98802e80",
+  "entries": [
+    {
+      "key": "endermodpacktweaks.options.showconflicts",
+      "source_sha256": "92e21941b02619060c4501e22202df233c41522e77853393fef65220278876ff",
+      "expected_previous_sha256": "9b35b69892aacf039ac28b633e92ffcadba61469d5e6fc2ac90f43dcbb42a19b",
+      "ru": "Конфликты"
+    },
+    {
+      "key": "endermodpacktweaks.options.shownone",
+      "source_sha256": "b83c225620301d70fedcfdeec7d5598412d06488abc07fce01c527d9e53f2614",
+      "expected_previous_sha256": "9234f7663f9c04070303a8d4b38dbbf9b39d85a7d2d4f0fdd3837cdd51acadca",
+      "ru": "Без клавиши"
+    },
+    {
+      "key": "endermodpacktweaks.options.showall",
+      "source_sha256": "e1c32645f2f85a25ae64e38f306ded9b82771ab8ac4595e769f9410e632584f4",
+      "expected_previous_sha256": "29beefeb2b7ef65df9997cc163ab4bae9b214dba257e9cc01bdbae35c1f921f3",
+      "ru": "Все"
+    },
+    {
+      "key": "endermodpacktweaks.options.sort",
+      "source_sha256": "bec69036aa27e7fab7d44cad3909477b76631c39ba46fd7841ea71aae7e5a735",
+      "expected_previous_sha256": "9006aeb97265f4493ea5e06a6d4cfb7c67bdf8d84a5a56a56fce81ce2fa068eb",
+      "ru": "Вид"
+    },
+    {
+      "key": "endermodpacktweaks.options.sortnone",
+      "source_sha256": "dc937b59892604f5a86ac96936cd7ff09e25f18ae6b758e8014a24c7fa039e91",
+      "expected_previous_sha256": "43e5ab70f691a6a6391be1da21bc18c31c04892ceb19fde88e44ad50c5ec9052",
+      "ru": "Группы"
+    },
+    {
+      "key": "endermodpacktweaks.options.sortaz",
+      "source_sha256": "098e32817b06f915b22cae7dc44cff34c91f357edcaeaca8c7548e91f3541a25",
+      "expected_previous_sha256": "6f0086c2fb79bbc22669f233a9d54d5a275acce8307dfa2da3e17de23cb6feb1",
+      "ru": "А-Я"
+    },
+    {
+      "key": "endermodpacktweaks.options.sortza",
+      "source_sha256": "b5d2a5f84e4f707864d00389a820606269a49c3d5d30029a86d52f964a64f541",
+      "expected_previous_sha256": "e97daca196f3d89591f5db78b61354e0f101d24bf8b1561380f0daec54e272c6",
+      "ru": "Я-А"
+    },
+    {
+      "key": "endermodpacktweaks.options.togglefree",
+      "source_sha256": "951024804e16b478e0f41d10959a805e1c04fdd8d088bafd207cd6795ca6c81d",
+      "expected_previous_sha256": "830319b5808636ec6c502d9d77e623ce131b51518752707f96ac95c5827fea57",
+      "ru": "Свободные"
+    },
+    {
+      "key": "endermodpacktweaks.options.category",
+      "source_sha256": "292c06f0045a45d044be282b132b7055ae224e18e02b523a451d8ea96fadfd24",
+      "expected_previous_sha256": "41f780fdee89f896c098f9954143f7fc0e62e7956063e92bdb77d867535062cc",
+      "ru": "Раздел"
+    }
+  ],
+  "locale_archive_sha256": "39685a9288e93a5de5c47c3cf41e1aa0969bcaf1b3755e61c16d891a467167a2",
+  "native_accepted": true,
+  "ready_for_players": false,
+  "owned_missing_source_keys": [
+    {
+      "key": "AutoRun",
+      "ru": "Автобег",
+      "mod_file": "simpleautorun-1.12.2-1.2.0.jar",
+      "mod_sha256": "4444de454a6489c48355f54a06ee899995eec90f85f8d18b3c6901e46a930fe3",
+      "consumer": "net/mysticdrew/autorun/AutoRun.class",
+      "consumer_sha256": "de675f6be79f1783e7fc0d26cfd26d57112aaa74c677e9202b3a54ebfc69d891",
+      "absent_from_original_en_and_ru": true
+    },
+    {
+      "key": "Change Caster Focus",
+      "ru": "Сменить набалдашник",
+      "mod_file": "Thaumcraft-1.12.2-6.1.BETA26.jar",
+      "mod_sha256": "9425f8643581b27ff8845b087c8bc6fc10425a32942f1a3f0e265ce6b38f7b5f",
+      "consumer": "thaumcraft/common/lib/events/KeyHandler.class",
+      "consumer_sha256": "4aaa18cc247d53abd704033b7331d035f92c3d8ae80175f71d66b49512e63913",
+      "absent_from_original_en_and_ru": true
+    },
+    {
+      "key": "Misc Caster Toggle",
+      "ru": "Переключить режим заклинателя",
+      "mod_file": "Thaumcraft-1.12.2-6.1.BETA26.jar",
+      "mod_sha256": "9425f8643581b27ff8845b087c8bc6fc10425a32942f1a3f0e265ce6b38f7b5f",
+      "consumer": "thaumcraft/common/lib/events/KeyHandler.class",
+      "consumer_sha256": "4aaa18cc247d53abd704033b7331d035f92c3d8ae80175f71d66b49512e63913",
+      "absent_from_original_en_and_ru": true
+    },
+    {
+      "key": "Profile GUI",
+      "ru": "Открыть профилировщик",
+      "mod_file": "LagGoggles-1.12.2-5.9-140.jar",
+      "mod_sha256": "bc69907451119c14efaca9bfb124beef178be1932ddb32d7f98f7bb8f637f8ed",
+      "consumer": "com/github/terminatornl/laggoggles/client/ClientProxy.class",
+      "consumer_sha256": "3c8860c48905987a80914630d9c46879f1ba4e7fa922f24314e061b497e76e1c",
+      "absent_from_original_en_and_ru": true
+    },
+    {
+      "key": "key.control",
+      "ru": "Модификатор микроблоков",
+      "mod_file": "ForgeMultipart-1.12.2-2.6.2.83-universal.jar",
+      "mod_sha256": "25718bd80799a608c45299d13d86e5d67248f07a3c00657c690948b1821835ce",
+      "consumer": "codechicken/multipart/ControlKeyHandler$.class",
+      "consumer_sha256": "36e0ad6ed2f2af92aa3a186959a1580d5f6bace90a3739e6f6ae80fc43ebc339",
+      "absent_from_original_en_and_ru": true
+    },
+    {
+      "key": "key.craftingtweaks.rotate_counter_clockwise",
+      "ru": "Сетка: поворот против часовой",
+      "mod_file": "CraftingTweaks_1.12.2-8.1.9.jar",
+      "mod_sha256": "b2f6bf5d4a5118a6b07afde92af9b34932c07c1ebbd6b12eb0441547f98b8de6",
+      "consumer": "net/blay09/mods/craftingtweaks/client/ClientProxy.class",
+      "consumer_sha256": "90f9957573ad0afcce274d3fade671ad7e9ee1ff4780a8a7ad7931793f900dc2",
+      "absent_from_original_en_and_ru": true
+    },
+    {
+      "key": "roots.keybinds.delete_spell",
+      "ru": "Убрать заклинание",
+      "mod_file": "Roots-1.12.2-3.1.9.2.jar",
+      "mod_sha256": "ee43b8a6ee89100874b363b538bea3d7016f8ad5268fbb7e113493e8f7e8bb94",
+      "consumer": "epicsquid/roots/client/Keybinds.class",
+      "consumer_sha256": "a8dee55569b901fbdc6cba20c2aa6379427e4b9b6eb30000ed2d5ba39b35db13",
+      "absent_from_original_en_and_ru": true
+    }
+  ],
+  "additional_locale": {
+    "path": "resources/omkalityclient/lang/ru_ru.lang",
+    "inherited_client_language_sha256": "a882f13a83817fd02afedfe8464e23fd1aa203e64e3d86a2febe6a5ba10f6bf0",
+    "result_sha256": "5d4ed58a0974dba47ff1a0d4202e9de738977219f393136a7ea31e5b55a844e9",
+    "resource_count": 682,
+    "actual_registered_bindings_checked": 282
+  }
+}

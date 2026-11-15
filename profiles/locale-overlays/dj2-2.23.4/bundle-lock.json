@@ -2,12 +2,12 @@
   "schema": 1,
   "pack": "dj2",
   "version": "2.23.4",
-  "locale_archive_sha256": "d0d746b71f9697765a5e2035c71c54c79891a8f916cc9cf6301d1beed61687aa",
+  "locale_archive_sha256": "39685a9288e93a5de5c47c3cf41e1aa0969bcaf1b3755e61c16d891a467167a2",
   "client": {
-    "version": "0.1.5",
-    "path": "mods/OmkalityClient-0.1.5.jar",
-    "sha256": "8c0d35f245913d7701ea4858aaa8f6d9994b5ede88a66dbe3afe064925796759",
-    "size": 81403
+    "version": "0.1.6",
+    "path": "mods/OmkalityClient-0.1.6.jar",
+    "sha256": "8175e8698e276b164c8208e7e3e4f42da29b24d8e766ee0f926968085b6dd395",
+    "size": 84966
   },
   "initial_inventory": {
     "path": "scripts/ModSpecific/InitialInventory.zs",
@@ -1412,8 +1412,8 @@
     },
     {
       "path": "resources/endermodpacktweaks/lang/ru_ru.lang",
-      "sha256": "bb06c959b023b7d9f5e2e0b62b06e20b3d844ca278dabcee000e1feb3440d064",
-      "size": 17325
+      "sha256": "51cb856b4ce34966cf41be08afcb56013e5b3b880f59f1ec9b7dc8bf2b86c4d3",
+      "size": 17226
     },
     {
       "path": "resources/enderutilities/lang/ru_ru.lang",
@@ -1804,6 +1804,11 @@
       "path": "resources/normalasm/lang/ru_ru.lang",
       "sha256": "6437b3258d217cbc4c151a2d66392431a63a0c5678166000f361d7a96fafe08e",
       "size": 2652
+    },
+    {
+      "path": "resources/omkalityclient/lang/ru_ru.lang",
+      "sha256": "5d4ed58a0974dba47ff1a0d4202e9de738977219f393136a7ea31e5b55a844e9",
+      "size": 758
     },
     {
       "path": "resources/omniwand/lang/ru_ru.lang",
