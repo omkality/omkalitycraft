@@ -1,5 +1,13 @@
 # Изменения Forge-модов
 
+## DJ2Fix 0.1.5 — 15 ноября 2026
+
+- Только startup-grant exact pinned PlaneFix подавлен; native identity fix
+  сохранён. Ненулевой spawn-protection отказывает, существующие OP не удаляются.
+- 46 native случаев / два Linux Docker старта без deop, 724 условий и 328
+  независимых cold-world checks. Core/Client и 31 прежний entry Fix прежние.
+  [Контракт и ограничения](../../docs/DJ2_AE2_BOUNDARIES.md).
+
 ## Client 0.1.7 — 15 ноября 2026
 
 - Профиль памятки использует приглушённую бирюзу, светло-серый текст и белые
