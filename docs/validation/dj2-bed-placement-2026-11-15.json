@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "Native vanilla bed preflight using existing live FTB player placement authority; item conservation before publication",
+  "ready_for_players": false,
+  "new_cli": false,
+  "new_env": false,
+  "new_dependencies": false,
+  "artifacts": {
+    "core": {
+      "version": "0.3.9",
+      "file": "OmkalityCore-0.3.9.jar",
+      "sha256": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4"
+    },
+    "dj2fix": {
+      "version": "0.1.6",
+      "file": "OmkalityDJ2Fix-0.1.6.jar",
+      "sha256": "e77b9bc9be3165f7f0fd94282eaba7994b82c02c44a533e286040017416169d1"
+    },
+    "client": {
+      "version": "0.1.7",
+      "file": "OmkalityClient-0.1.7.jar",
+      "sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+    }
+  },
+  "tested_code_sha256_lf": {
+    "mods/forge-1.12.2/patches/src/net/omkality/patches/VanillaBedGuard.java": "20182abd23069e830a7e7163047bddbcbfc6be6bb2a6dd77d8e7c46d989405f5",
+    "mods/forge-1.12.2/patches/src/net/omkality/patches/mixin/VanillaBedMixin.java": "e5cf485ace9d73ecd934f3df5f2067a4f5c999120266a71aa1d1b237623341f1",
+    "mods/forge-1.12.2/packs/dj2/src/net/omkality/dj2/OmkalityDJ2Fix.java": "b89628649e69c09c8d5d5e794f501889987926b697b23c036ae2a351f5c8463e",
+    "mods/forge-1.12.2/packs/dj2/resources/mixins.omkalitydj2fix.vanilla.json": "b2986e67aa511a069ec570171889fe61a68592d542c2591189d4e6020e4a648e",
+    "mods/forge-1.12.2/packs/dj2/profile.properties": "233ee7a083067a4938ee879266e2ae860c3f3d6d34c9deae7d8a66e8c8665fe1"
+  },
+  "baseline": {
+    "dj2fix_version": "0.1.5",
+    "dj2fix_sha256": "88ce06b75a202fea03ed5f54d0940f0a9720bf49cf61893256bc52232cde9605",
+    "cases": 6,
+    "conditions": 52,
+    "protected_split_claim_cases_placed": 3,
+    "clean_exit": true,
+    "owned_scopes_removed": true,
+    "world_sha256": "c63ebc62ac5495289727d7b01008196072c27774e5b86cedbcd26086740e6132"
+  },
+  "native": {
+    "ok": true,
+    "cases": 25,
+    "conditions": 327,
+    "boots": 2,
+    "same_world_volume": true,
+    "container_recreated_between_boots": true,
+    "protocol_non_op_survival_players": true,
+    "graphical_client": false,
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "cpu_limit": 4,
+    "memory_gib": 6,
+    "heap_gib": 4,
+    "denied_cases_with_exact_stack_nbt_preserved": 16,
+    "accepted_controls": [
+      "wilderness and owner placement with native item consumption",
+      "foreign and server claims, four facings, incoming boundary, negative coordinates",
+      "explicit block grant and revocation without restart",
+      "team membership and revocation without restart",
+      "native adventure restriction",
+      "same coordinates in another dimension and foreign claim there",
+      "second permission fault before either write, exact item preservation, bounded log and failure latch",
+      "unrelated manual stone placement after bed guard fault",
+      "restart clears fault and preserves ordinary owner/wilderness placement and foreign denial"
+    ],
+    "clean_exit": true,
+    "oom": false,
+    "owned_scopes_removed": true,
+    "world_sha256": "a295aa832febf2e7e3c3638f20d1de92c80a7400c8dc91c4fde67647841b941d",
+    "pre_restart_world_sha256": "bd4bc44da1a36afd81ab0311ab64b0081b06020129780673bcff8ce5aef6d6ff",
+    "private_probe_sha256": "6faeb9a1fd2fb2529461e295b70e8df2cb0d3b195ebdabd293eb51935bb926e5",
+    "lab_only_overrides": {
+      "regions_per_member": 50,
+      "spawn_claims_moved_away_from_fixtures": true
+    }
+  },
+  "independent": {
+    "ok": true,
+    "primary_full_run_checks": 346,
+    "baseline_and_probe_free_candidate_checks": 102,
+    "total_checks": 448,
+    "execution": {
+      "user": "65534:65534",
+      "readonly_root_and_inputs": true,
+      "network": "none",
+      "cpu_limit": 1,
+      "memory_mib": 256
+    },
+    "reads": [
+      "both stopped-world archives and SHA256",
+      "saved component versions and actual FTB ownership in each dimension",
+      "both block states with extended block IDs and bed tile color",
+      "dropped bed entities in fixture chunks",
+      "exact final player inventory bed counts, color and custom NBT"
+    ]
+  },
+  "build": {
+    "ok": true,
+    "rounds": 2,
+    "matches_pinned_artifacts": true,
+    "source_boundary_files": 163,
+    "unchanged_previous_dj2fix_entries": 32,
+    "core_and_client_unchanged": true
+  },
+  "focused_python": {
+    "passed": 15,
+    "skipped": 1
+  },
+  "excluded_diagnostics": [
+    "unloaded fixture support before chunk generation",
+    "over-specific command NBT assertion despite intact cold inventory",
+    "private observer initially compared Java-properties escaped item identifier"
+  ],
+  "limits": [
+    "Only the native ItemBed path is added; no generic post-write cancellation or world transaction",
+    "No proof for arbitrary modded placement, all pack inventories or graphical client prediction",
+    "No player release, production world migration, scheduler activation or VPS deployment",
+    "General #105 and #29 remain open"
+  ]
+}

@@ -27,6 +27,10 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
   Do not delete/wipe worlds, reset schemas or flush live services.
 - Do not claim a profile, security control or mod works before the relevant real test passes.
   Distinguish transport/API checks from Minecraft client/server checks.
+- Add gameplay protection for reproduced failures in the supported profile. Preserve native
+  allowed behavior and item counts/NBT; require ordinary-use controls alongside denial/fault
+  cases. Block-only assertions do not prove item conservation. Avoid speculative guards and
+  generic post-write rollback.
 - Pin external runtime artifacts and images by version/hash. Keep dependency changes in `uv.lock`.
 - Keep launcher/API in this monorepo. Put all player/runtime/update data below the portable root.
 - Launcher updates use TUF and separate version folders with health-checked handoff; never overwrite
