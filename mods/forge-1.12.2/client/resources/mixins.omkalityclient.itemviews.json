@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "net.omkality.client.mixin.itemviews",
+  "compatibilityLevel": "JAVA_8",
+  "client": ["HotbarNameMixin"],
+  "injectors": {"defaultRequire": 1}
+}
