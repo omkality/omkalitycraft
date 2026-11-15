@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "issue": 215,
+  "scope": "Windows false refusal of unchanged empty OP file after filename reuse; separate from auth configuration",
+  "base_commit": "4a34d31cf5b52c8052389f8bfa15e0f01d25047a",
+  "source_sha256_lf": {
+    "omk/maintenance_worker.py": "dc2651aaac594130d39ee2e21eb1e51becdc40f5ba559140e9967fb88562a841",
+    "tests/unit/test_empty_operators.py": "a074e13a67bcf0d7c7d738afecff5b0370198d4ad15f26e85965181c7d79cf45"
+  },
+  "regression": {
+    "ci_job": "https://github.com/omkality/omkalitycraft/actions/runs/43769995355/job/132983533596",
+    "old_code_new_regression_test_failed": true,
+    "native_windows_iterations": 1000,
+    "old_false_refusals": 999,
+    "new_false_refusals": 0,
+    "only_path_vs_descriptor_difference": "st_ctime_ns",
+    "windows_focused_passed": 32,
+    "windows_posix_symlink_skipped": 1,
+    "linux_focused_passed": 33
+  },
+  "contract": {
+    "full_path_signature_before_after": true,
+    "full_descriptor_signature_before_after": true,
+    "full_posix_cross_api_signature": true,
+    "windows_cross_api_signature": "dev/inode/mode/nlink/size/mtime",
+    "descriptor_ctime_change_during_read_refused_on_both_platforms": true,
+    "empty_file_exact_sha_preserved": true,
+    "nonempty_linked_oversized_and_mutated_files_refused": true
+  },
+  "reference": "https://docs.python.org/3.14/library/os.html#os.stat_result.st_ctime",
+  "linux_unit_runtime": {
+    "exit_code": 0,
+    "oom": false,
+    "source_unchanged": true,
+    "readonly": true,
+    "network": "none",
+    "user": "65534:65534",
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4"
+  },
+  "limits": {
+    "temporary_files_only": true,
+    "op_file_writes_by_worker": false,
+    "live_accounts_or_worlds": false,
+    "gameplay_runtime_changed": false,
+    "new_dependencies_or_cli": false,
+    "mcp_used": false,
+    "computer_use_used": false,
+    "vps_deployed": false,
+    "issues_remaining_open": [
+      171,
+      41
+    ]
+  }
+}

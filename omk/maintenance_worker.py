@@ -37,10 +37,13 @@ def no_operators(root):
 
     before = identity()
     with path.open("rb") as stream:
-        if signature(os.fstat(stream.fileno())) != before:
+        opened = signature(os.fstat(stream.fileno()))
+        # Windows ctime is creation time; path/handle APIs can disagree after
+        # NTFS name reuse. Keep full signatures within each API, POSIX unchanged.
+        if opened[:-1] != before[:-1] or (os.name != "nt" and opened[-1] != before[-1]):
             raise ValueError("Operator list changed before reading")
         raw = stream.read(65537)
-        if len(raw) > 65536 or signature(os.fstat(stream.fileno())) != before:
+        if len(raw) > 65536 or signature(os.fstat(stream.fileno())) != opened:
             raise ValueError("Operator list changed while reading")
     if identity() != before:
         raise ValueError("Operator list changed after reading")
