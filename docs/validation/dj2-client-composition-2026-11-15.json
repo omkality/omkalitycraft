@@ -1,0 +1,284 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "private full signed Windows DJ2 candidate composition and installer acceptance",
+  "ready_for_players": false,
+  "published": false,
+  "source_base_commit": "8a0949de3d605d864d4f74c31147832f6c464cf2",
+  "candidate": {
+    "candidate_version": "2.23.4-omk.2-rc.2",
+    "candidate_digest": "d20c3084a79a483e155b1b82bf5fc1acd11b025b69ef4eb00c6ec61a4627767d",
+    "files": 5970,
+    "bytes": 759730081,
+    "mod_jars": 226,
+    "language_files": 682,
+    "overlay_files": 707,
+    "appearance_files": 19,
+    "no_mcmcp_or_private_probes": true,
+    "all_expected_files_hashes_and_sizes_verified": true,
+    "both_release_snapshots_verified": true,
+    "private_signing_key_retained": false
+  },
+  "base_digest": "d93a7b974de0434be24e03f9b7edbfc5c0925df19d12a6faeb1d5866363f2084",
+  "minimum_launcher_version": "0.3.0.dev14",
+  "owned_artifacts": {
+    "core": {
+      "version": "0.3.8",
+      "file": "OmkalityCore-0.3.8.jar",
+      "sha256": "e484d43298cfb5ec8d1f4bf644a6c01a384d9399d4fa33c8cef2dba1a6d2af5e"
+    },
+    "dj2fix": {
+      "version": "0.1.4",
+      "file": "OmkalityDJ2Fix-0.1.4.jar",
+      "sha256": "d0b31385e3a3d55f14e2c63d791a381c385fbb2fcaf993650952fc816cd6dc6b"
+    },
+    "client": {
+      "version": "0.1.7",
+      "file": "OmkalityClient-0.1.7.jar",
+      "sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+    }
+  },
+  "components": {
+    "locale_archive_sha256": "39685a9288e93a5de5c47c3cf41e1aa0969bcaf1b3755e61c16d891a467167a2",
+    "initial_inventory_sha256": "be860dd10dc56e068aacb4811d055a2757803e9d257074616386960d2d9c638f",
+    "atum_policy_sha256": "8363b5324740756004d89a54e65d55c1a11406be1ede6eb3c31d3efda05ac2a0",
+    "borderless_sha256": "4b28e3ff8c9f4a08a8c091739ff70bc5df2c682aaa640c81742df42c30e1ec42",
+    "appearance_review_sha256": "834c061380ec9713c7a2b98d7c06f2212cdc7a7bc6e3aa87dfa351704f6954ec",
+    "jed_sha256": "6840d8ad69059f90c4288c317bf88284a4ccd716d06cc0aa0d37d20b2693dd8f",
+    "jed_profile": "profiles/server-defaults/dj2/resource-world.json"
+  },
+  "installer": {
+    "ok": true,
+    "checks": [
+      "source_signed_payload_installed_and_hash_verified",
+      "interrupted_upgrade_is_not_ready",
+      "interrupted_upgrade_keeps_signed_source_history",
+      "interruption_does_not_delete_obsolete_source_files",
+      "short_body_partial_is_preserved",
+      "new_installer_resumes_actual_http_range",
+      "updated_complete_payload_hashes_match",
+      "resumed_upgrade_is_ready",
+      "obsolete_signed_source_files_removed_after_success",
+      "options_maps_saves_and_screenshots_preserved",
+      "launcher_userdata_preserved",
+      "managed_server_updated_and_personal_entry_preserved",
+      "normal_prelaunch_policy_removes_unsigned_extra",
+      "repair_downloads_only_deleted_and_same_size_corrupt_mods",
+      "repaired_complete_payload_hashes_match",
+      "repair_does_not_reset_personal_settings",
+      "healthy_recheck_downloads_nothing",
+      "fresh_cdn_serves_exact_signed_candidate",
+      "fresh_complete_payload_hashes_match",
+      "fresh_install_ready",
+      "offline_manifest_fetch_fails_instead_of_returning_stale_release",
+      "offline_fetch_does_not_damage_last_complete_install"
+    ],
+    "source_version": "2.21.3-omk.4",
+    "source_digest": "66c15f3081135f98c42ac0c3fbb67372594b822bb07556f31622e8f658a08225",
+    "http_source": "fresh loopback Linux Docker API, two workers",
+    "fault_source": "bounded loopback HTTP fixture",
+    "partial_bytes": 393216,
+    "range_offsets": [
+      0,
+      131072,
+      262144,
+      393216
+    ],
+    "api_image_id": "sha256:ef4b20ae25af3c7e81b92794b43ac0ecba1ddd9ea20ebfc8e6e0da5a8716d404",
+    "api_exit_code": 0,
+    "api_oom_killed": false,
+    "owned_container_removed": true,
+    "owned_image_removed": true
+  },
+  "killed_installer": {
+    "ok": true,
+    "checks": [
+      "source_payload_verified_before_child_start",
+      "actual_child_wrote_partial_before_kill",
+      "child_saved_incomplete_state_and_signed_source_history",
+      "owned_child_was_running_at_kill",
+      "forced_child_exit_observed",
+      "killed_child_never_reported_complete",
+      "old_owned_files_retained_after_process_kill",
+      "new_process_completed_update",
+      "new_process_used_real_http_range",
+      "new_process_confirmed_exact_target_digest",
+      "all_target_hashes_verified_after_restart",
+      "recovered_install_is_ready",
+      "obsolete_owned_files_removed_only_after_success",
+      "options_journeymap_saves_screenshots_preserved",
+      "launcher_userdata_preserved"
+    ],
+    "kill_method": "TerminateProcess",
+    "killed_child_exit_code": 1,
+    "restarted_child_exit_code": 0,
+    "partial_bytes_after_kill": 262144,
+    "range_offsets": [
+      0,
+      262144
+    ],
+    "owned_child_stopped": true
+  },
+  "focused_tests": {
+    "windows": "44 passed",
+    "linux": {
+      "ok": true,
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "tests": "44 passed in 6.99s",
+      "exit_code": 0,
+      "oom_killed": false,
+      "readonly_nonroot_network_none": true,
+      "cpu_limit": 1,
+      "memory_mib": 256,
+      "temporary_capacity_mib": 768,
+      "real_http_installer_oracle": true,
+      "owned_container_removed": true
+    }
+  },
+  "native": {
+    "tested": true,
+    "exact_signed_manifest_used_without_launch_or_files_replacement": true,
+    "platform": "windows-x64",
+    "server": {
+      "kind": "fresh isolated Linux Docker Forge/Drasl",
+      "outcome": {
+        "running": false,
+        "oom_killed": false,
+        "exit_code": 0,
+        "memory_limit_bytes": 6442450944,
+        "nano_cpus": 4000000000
+      }
+    },
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "strict_fml_mod_count": 257,
+    "checks": [
+      "exact_core_pin",
+      "exact_fix_pin",
+      "server_shared_scripts_match_signed_client",
+      "fresh_linux_forge_boot_ready",
+      "empty_operator_list_after_reviewed_fake_profile_control_no_human_or_unknown_operators",
+      "empty_operator_list_after_reviewed_fake_profile_control",
+      "exact_signed_client_authenticated_join_with_strict_catalog",
+      "starting_written_book_present",
+      "ordinary_survival_player"
+    ],
+    "graphical": {
+      "ok": true,
+      "ordinary_client_without_mcmcp": true,
+      "k_opens_russian_quest_front": true,
+      "muted_guide_six_lines_visible": true,
+      "square_map_observed": true,
+      "resource_command_entered_and_executed_by_ordinary_player": true,
+      "resource_dimension_server_sync_observed": -18000,
+      "capture": "ordinary game-native F2; view_image inspection",
+      "wgc_capture_failed": true,
+      "full_quest_book_visual_regression_repeated": false,
+      "known_remaining_label": "Vanilla Forge pause button Mod Options... remains English; no total interface translation claimed"
+    },
+    "client_exit_code": 0,
+    "game_crash_detected": false,
+    "original_harness_ok": false,
+    "observer_error_type": "NoSuchProcess",
+    "observer_error_summary": "Known race: child enumeration after game exits between poll and psutil lookup. Raw failed report retained; acceptance facts independently checked.",
+    "cold_readonly_validation": {
+      "ok": true,
+      "read_only_cold_linux_save": true,
+      "resource_dimension": -18000,
+      "harness_observer_exit_race_recorded": true,
+      "inventory_items": 3,
+      "guide_long_markers_preserved": true,
+      "initial_book_pages": 18,
+      "all_pages_title_author_equal_reviewed_source": true,
+      "no_duplicate_starting_items": true,
+      "client_exit_codes": [
+        0
+      ],
+      "server_exit_code": 0,
+      "oom_killed": false,
+      "game_crash_detected": false,
+      "owned_scopes_removed": true,
+      "auth_cleanup": true,
+      "verification_environment": {
+        "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+        "network": "none",
+        "readonly_inputs": true,
+        "nonroot": true,
+        "cpus": 1,
+        "memory_mib": 128,
+        "exit_code": 0,
+        "oom_killed": false,
+        "owned_container_removed": true
+      }
+    },
+    "after_game_validation": {
+      "ok": true,
+      "candidate_digest": "d20c3084a79a483e155b1b82bf5fc1acd11b025b69ef4eb00c6ec61a4627767d",
+      "all_initial_options_match": true,
+      "options": {
+        "lang": "ru_ru",
+        "fov": "0.25",
+        "gamma": "1.0",
+        "guiScale": "2",
+        "autoJump": "false",
+        "bobView": "false",
+        "forceUnicodeFont": "false",
+        "key_key.betterquesting.quests": "37"
+      },
+      "required_font_active": true,
+      "minimap_shape": "Square",
+      "audio_disabled_by_fixture": false,
+      "sound_value_measured": false,
+      "both_immutable_sources_fully_reverified_after_game": true,
+      "client_exit_code": 0,
+      "server_exit_code": 0,
+      "oom_killed": false,
+      "game_crash_detected": false,
+      "owned_volume_removed_after_export": true,
+      "auth_cleanup": true,
+      "observer_race_recorded": true
+    },
+    "auth_cleanup": true,
+    "owned_volume_removed_after_export": true,
+    "owned_crash_assistant_children_closed": true,
+    "private_screenshot_sha256": {
+      "quest_front": "9f1350beb20e3bdf87281dce4a855a5fca97784e186163d122022c6194766a0b",
+      "guide_chat": "dcac230318cfb42ae77f7131720f7975cc3643699a2ae568d30819c3f8dc759a",
+      "resource_command": "e949c98a52816401474a9d706d25023f490b7d48942232d0da52e101c8f8bcc8",
+      "resource_world": "fa75b4518fa559755101816fcc0313037bc474cc65583a630c8a7bf59c218f81"
+    }
+  },
+  "limitations": [
+    "Internal ephemeral signer is not public release trust or build attestation.",
+    "Full server producer/lifecycle/ingress/post-boot policy/migrations remain issue 171.",
+    "Synthetic personal-data sentinels are not a world migration test.",
+    "Process kill is not a physical power-loss test.",
+    "Minecraft Linux/macOS, OpenAL cause and manual Shift control remain separate.",
+    "No public manifest, GitHub player Release, host schedule, master promotion or VPS deployment.",
+    "Forge pause menu Mod Options... remains English and is tracked in issue 49; this is not total interface translation or a new full quest/book walkthrough."
+  ],
+  "preliminary_lab_failures": [
+    "Whole-options byte oracle incorrectly rejected legitimate missing defaults; reproduced before correction.",
+    "Linux runner initially used wrong cwd and tmpfs below the existing 512 MiB reserve; corrected runner only, guards unchanged.",
+    "The first fully signed rc.1 lacked already-pinned both-side JED. Whole client diff isolated exactly that missing real mod. rc.2 adds only JED; no server guard relaxed.",
+    "Private psutil exit observer raced normal exit and returned NoSuchProcess. Raw report remains failed; separate readonly Linux cold-reader and after-game full source/settings checks passed. A missing explicit sound key and JourneyMap // comments were corrected only in the private verifier; no game settings or runtime files were changed."
+  ],
+  "candidate_delta": {
+    "ok": true,
+    "added": [
+      "mods/justenoughdimensions-1.12.2-1.6.0-dev.20211009.214847.jar"
+    ],
+    "removed": [],
+    "changed": [],
+    "signed_launch_identical": true
+  },
+  "rejected_candidate": {
+    "digest": "8550de58994bc8fa23eb6e4e8ef58dd705074a4c873f3d9ed9543761c3edeeff",
+    "reason": "JED absent in old signed baseline; Forge and Core reject the incompatible client",
+    "client_exit_code": 0,
+    "server_exit_code": 0,
+    "oom_killed": false,
+    "game_crash_detected": false,
+    "owned_scopes_removed": true,
+    "graphical_evidence": "ordinary game-native F2 screenshot, raw kept private"
+  }
+}

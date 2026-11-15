@@ -17,6 +17,7 @@ from omk.pack_install_lab import (
     PackDirectory,
     PackWire,
     _all_files_match,
+    _options_preserved,
     _personal_files,
 )
 from omk.profiles import PROJECT_ROOT
@@ -112,6 +113,8 @@ def run_pack_process_lab(  # noqa: PLR0915 -- one owned process lifecycle
             installer = Installer(lab / "portable", client)
             folder = installer.install(client.fetch(old.pack_id), lambda _p: None)
             personal = _personal_files(folder, old)
+            personal.pop("options.txt")
+            original_options = (folder / "options.txt").read_bytes()
             session = lab / "portable/userdata/lab-session-sentinel.txt"
             session.parent.mkdir(parents=True)
             session.write_bytes(b"No actual token; owned persistence sentinel")
@@ -203,7 +206,8 @@ def run_pack_process_lab(  # noqa: PLR0915 -- one owned process lifecycle
                 all(
                     sha256_file(folder / name) == digest
                     for name, digest in personal.items()
-                ),
+                )
+                and _options_preserved(original_options, folder, new),
                 "options_journeymap_saves_screenshots_preserved",
             )
             expect(
