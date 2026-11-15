@@ -28,7 +28,9 @@ services:
     networks: [project-private]
     logging:
       driver: local
-      options: {max-size: 10m, max-file: "3"}
+      options:
+        max-size: "${OMK_INGRESS_DOCKER_LOG_MIB:-10}m"
+        max-file: "${OMK_INGRESS_DOCKER_LOG_FILES:-3}"
 volumes:
   ingress-control:
     name: ${OMK_INGRESS_CONTROL_VOLUME:?Set a fresh private control volume name}

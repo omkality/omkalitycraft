@@ -201,8 +201,7 @@ def proxy_snapshot(data, spec, target, policy, image, network, control, folder):
         .get("Ports", {})
         .get(str(spec["container_port"]) + "/tcp")
         != h["PortBindings"][str(spec["container_port"]) + "/tcp"]
-        or h.get("LogConfig")
-        != {"Type": "local", "Config": {"max-size": "10m", "max-file": "3"}}
+        or h.get("LogConfig") != template.docker_log_config(policy)
         or h.get("Binds")
         not in (None, [], [str(folder) + ":/usr/local/etc/haproxy:ro"])
         or any(

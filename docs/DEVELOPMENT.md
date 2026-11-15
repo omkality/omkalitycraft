@@ -1,3 +1,22 @@
+## Docker logging TCP-входа через env — 16 ноября 2026
+
+Ограниченный шаг #30/#33: два валидируемых лимита существующего Docker `local`
+driver HAProxy, без нового collector/CLI/dependency. Defaults `10m/3` и render
+HAProxy прежние; Compose использует те же env. Новый owner-план фиксирует пару,
+snapshot проверяет фактический driver/options. Старый schema-1 policy без обоих
+полей означает прежние `10m/3`, не пополняется из env и не переписывается.
+Неполная сохранённая пара отклоняется. Добавлен example с явными private identities.
+
+138 Windows focused и 138 readonly nonroot Linux Docker прошли; старый код
+провалил 28 выбранных новых случаев. Native pinned HAProxy 3.2.26: два отдельных
+профиля `10m/3` и `1m/2`, четыре старта, 34 условия. Production Compose/snapshot/
+worker, closed boot/restart, open/close и TCP synthetic backend, mismatch/legacy
+policy, clean stop0/noOOM. Семь своих ресурсов и worker references удалены,
+проверены отдельно. Игровой Forge/source-ready/GUI/VPS этим не принимаются;
+JAR/image pins/player release/scheduler прежние. Общий аудит и CT/Groovy writers
+остаются #30/#33/#41. [Контракт](OWNER_INGRESS.md#настройки-и-журнал),
+[протокол](validation/ingress-docker-log-policy-2026-11-16.json).
+
 ## Числовая конфигурация Drasl — 16 ноября 2026
 
 Ограниченный шаг #30/#41 без MCP/GUI: воспроизведено расхождение `int` с Compose
