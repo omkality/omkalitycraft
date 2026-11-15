@@ -52,8 +52,17 @@ uv run omk server list
 docker compose -f deploy/auth-lab/compose.yaml build --pull
 uv run omk lab launcher smoke
 uv run omk lab auth expiry
-uv run pytest -q
+uv run --no-sync pytest tests/unit -q -n 4 --dist=loadfile
+uv run --no-sync pytest tests/ui -q -n 0
 ```
+
+Unit-тесты распределяются по файлам между четырьмя процессами. Глобальные pytest
+настройки не включают параллельность: Qt и игровые сценарии выполняются отдельно
+и последовательно. На машине с меньшим запасом памяти можно явно выбрать `-n 2`
+или `-n 0`; `-n auto` не используется. В Linux Docker полный unit-набор дал
+64 → 23 секунды при одинаковых 2711 passed/1 skipped; повтор — те же 23 секунды.
+Сверены все JUnit case/outcome, не только итоговый счётчик.
+[Условия и ограничения замера](docs/validation/pytest-unit-parallel-2026-11-15.json).
 
 Локальный CDN:
 

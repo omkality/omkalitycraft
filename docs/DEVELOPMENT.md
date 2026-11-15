@@ -1,3 +1,25 @@
+## Ограниченный параллельный unit-набор — 15 ноября 2026
+
+В dev/uv.lock закреплены pytest-xdist 3.8.0 и execnet 2.1.2. Остальные записи
+пакетов прежние; в API runtime export этих зависимостей нет. CI запускает unit
+с `-n 4 --dist=loadfile`, Desktop unit отделён от Qt с `-n 0`. Тройной GC stress
+также последовательный. Глобальных addopts/n=auto и новых CLI нет; команды
+настоящих игровых стендов не изменены.
+
+Linux Docker с actual locked all-groups, readonly source, uid 65534/network none,
+4 CPU/2 GiB: 2711 passed/1 Windows-junction skip. Последовательно 64.235 с,
+параллельно 22.707 с, повтор 22.705 с; полные JUnit case/outcome одинаковы.
+Пик контейнера с cache/tmpfs — до 1.25 GiB. Последовательные Qt 79 и тройной GC 237
+прошли. Source bytes прежние, свои scopes и производный test image удалены.
+Windows actual locked all-groups: 2500 passed/212 Linux skips, 56.56 с на 4 workers.
+Ошибки подготовки private result volume до pytest сохранены; исходные права
+и production не ослаблены.
+
+Это приёмка test runner, не измерение VPS или проверка Minecraft Linux/macOS.
+Календарь/player release/master/VPS прежние. Далее #171: внешний controller,
+lifecycle/mount/ingress и post-boot authority/совместимость.
+[Протокол](validation/pytest-unit-parallel-2026-11-15.json).
+
 ## Проверенные клиентские входы серверного capture — 15 ноября 2026
 
 #171: новый schema-2 `project_export.capture` требует existing ReleaseStore и явный

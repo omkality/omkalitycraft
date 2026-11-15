@@ -1,5 +1,16 @@
 # Журнал изменений
 
+## Не выпущено — параллельные unit-тесты
+
+- В dev закреплён pytest-xdist 3.8.0; CI запускает unit-набор на четырёх процессах
+  с группировкой по файлам. Qt и GC stress отделены и явно последовательны.
+  Реальные игровые сценарии, глобальные pytest defaults и runtime deps прежние.
+- В Linux Docker полный набор ускорился с 64 до 23 секунд; повторный запуск и
+  все JUnit case/outcome совпали (2711 passed/1 skip). Qt 79/GC 237 и Windows unit
+  2500 passed/212 skips приняты. Исходники и свои scopes проверены; подготовительные
+  ошибки private lab и границы приведены в [протоколе](docs/validation/pytest-unit-parallel-2026-11-15.json).
+
+
 ## Не выпущено — проверка клиентских snapshots при серверном capture
 
 - Schema-2 producer требует существующий `ReleaseStore` и явный pack. Прежний

@@ -63,7 +63,8 @@ CPU/2 ГиБ и сетью loopback без внешнего доступа; moun
 
 ## Постоянная регрессия
 
-В Desktop CI Windows/Linux/macOS после обычного полного набора запускаются три
+В Desktop CI Windows/Linux/macOS unit-набор запускается отдельно на четырёх
+воркерах; обычный GUI-набор выполняется одним процессом с `-n 0`. Затем идут три
 прохода GUI с `OMK_TEST_QT_GC_STRESS=1`. Fixture задаёт thresholds `(20, 2, 2)`
 и восстанавливает прежние значения после сессии. Этот флаг читается только тестами:
 GC приложения не отключается и не перенастраивается.
@@ -73,7 +74,7 @@ GC приложения не отключается и не перенастра
 ```powershell
 $env:QT_QPA_PLATFORM = "offscreen"
 $env:OMK_TEST_QT_GC_STRESS = "1"
-uv run pytest --keep-duplicates tests/ui tests/ui tests/ui -v
+uv run pytest --keep-duplicates tests/ui tests/ui tests/ui -v -n 0
 ```
 
 Это регрессия владения окнами, не доказательство отсутствия всех ошибок Qt и не
