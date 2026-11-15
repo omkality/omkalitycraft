@@ -17,6 +17,23 @@ Runtime образа/JAR/CLI/env/deps, live-данные, VPS и player release 
 #30; календарный scheduler не возобновлялся. [Описание](AUTH_STORAGE.md),
 [протокол](validation/auth-numeric-environment-2026-11-16.json).
 
+## Чтение метаданных OP-файла на Windows — 16 ноября 2026
+
+#215: Windows CI #214 выявил ложный отказ `Operator list changed before reading`
+на неизменённом пустом файле. Отдельная временная NTFS fixture воспроизвела 999
+отказов из 1000 повторных созданий имени: совпадают dev/inode/mode/nlink/size/mtime,
+расходится только creation time между `stat(path)` и `fstat(handle)`. В Windows
+`st_ctime` ещё означает creation time ([Python](https://docs.python.org/3.14/library/os.html#os.stat_result.st_ctime)).
+
+Теперь полные сигнатуры сравниваются внутри каждого API до/после чтения, а между
+ними Windows не сравнивает только ctime. На POSIX прежнее полное сравнение.
+Непустые/linked/oversized/изменённые файлы по-прежнему отклоняются. Изменение
+descriptor ctime во время чтения отклоняется на обеих ОС; нет file writes,
+изменений списка OP или игровых перехватов. Linux deployment worker прежний по
+критерию допуска. 32 Windows passed / 1 POSIX skip, 33 Linux Docker passed;
+новая regression fixture падает на старом коде, 1000 повторов после fix без отказов.
+[Протокол](validation/windows-operator-stat-2026-11-16.json). #171/#41 открыты.
+
 ## Обычная игра и сохранность вещей — 16 ноября 2026
 
 #41/#36: текущие Core 0.3.9 / DJ2Fix 0.1.6 прошли отдельную обычную игровую

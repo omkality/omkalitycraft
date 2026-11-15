@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+from types import SimpleNamespace
 
 import pytest
 
@@ -72,6 +73,50 @@ def test_empty_disk_list_is_readonly_and_hashes_exact_bytes(tmp_path):
         "operator_count": 0,
     }
     assert path.read_bytes() == raw
+
+
+def test_recreated_empty_disk_list_is_readonly(tmp_path):
+    path = tmp_path / "ops.json"
+    raw = b" [\r\n ]\r\n"
+    for _ in range(3):
+        path.write_bytes(raw)
+        assert maintenance_worker.execute({"action": "operators"}, tmp_path) == {
+            "operators_sha256": hashlib.sha256(raw).hexdigest(),
+            "operator_count": 0,
+        }
+        assert path.read_bytes() == raw
+        path.unlink()
+
+
+def test_descriptor_ctime_change_during_read_is_refused(tmp_path, monkeypatch):
+    path = tmp_path / "ops.json"
+    path.write_bytes(b"[]")
+    original = os.fstat
+    calls = []
+
+    def changed(fd):
+        info = original(fd)
+        calls.append(fd)
+        values = {
+            key: getattr(info, key)
+            for key in (
+                "st_dev",
+                "st_ino",
+                "st_mode",
+                "st_nlink",
+                "st_size",
+                "st_mtime_ns",
+                "st_ctime_ns",
+            )
+        }
+        if len(calls) > 1:
+            values["st_ctime_ns"] += 1
+        return SimpleNamespace(**values)
+
+    monkeypatch.setattr(os, "fstat", changed)
+    with pytest.raises(ValueError, match="changed while reading"):
+        maintenance_worker.execute({"action": "operators"}, tmp_path)
+    assert path.read_bytes() == b"[]"
 
 
 @pytest.mark.parametrize(
