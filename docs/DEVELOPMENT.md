@@ -1,3 +1,30 @@
+## Загруженная backup-политика перед открытием ingress — 15 ноября 2026
+
+#171/#33: существующий single-source ingress теперь повторно проверяет диск
+через прежний FTB adapter и main-thread MaintenanceConsole Core 0.3.8. Новый
+план сохраняет backup artifact/config и загруженное состояние/boot; старый open
+plan без proof читается, но требует явной отмены при закрытом входе и нового
+плана. Close/status/cancel не зависят от готовности backup-политики. Весь runtime
+стабилен внутри чтения, но его transient hash не замораживает generated config
+между проверками. Новых CLI/env/deps/JAR нет; reused typed disk validator.
+
+Linux Docker: 2729 unit passed/1 Windows-junction skip на четырёх workers;
+Windows focused 130 passed, Ruff/Black. Старый код пропустил четыре unsafe loaded
+состояния. Настоящая Forge/Drasl/HAProxy: 22 условия на двух стартах одного
+контейнера; enabled в памяти и disabled на диске действительно различаются,
+новый gate отказывает до intent. После cold backup/restart новый boot принят,
+legacy plan отказал/отменён, обычный strict257 actor вошёл через proxy; закрытие
+сохранило его соединение, новые блокировались. Штатный stop0/noOOM, cold exports,
+свои scopes удалены. 20 independent readonly nonroot Linux проверок перечитали
+journals, Hard world, archive/inventory/каждый hash всех 303 backup files.
+
+Ошибки private harness (expected-stage, stdin/log и reader layout) сохранены;
+продолжение использовало тот же второй boot, lifecycle effects не повторялись.
+Это loaded backup readiness одного source, не candidate promotion, полный
+post-boot OP/FTB authority или совместимость save versions. #171/#33/#41 открыты;
+календарь/master/player release/VPS прежние.
+[Контракт](OWNER_INGRESS.md), [протокол](validation/ingress-loaded-policy-2026-11-15.json).
+
 ## Файловый возврат с реальным клиентским ref — 15 ноября 2026
 
 #171: принятый coherent capture #205 с настоящим signed Windows ref 4ea6af7a…
