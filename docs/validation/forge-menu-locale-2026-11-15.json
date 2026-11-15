@@ -1,0 +1,159 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "one observed Forge pause label, signed client candidate, closed-client file return",
+  "ready_for_players": false,
+  "source_base_commit": "1ba364dad036c843f69a370cc9f3be8e126074b1",
+  "published": false,
+  "candidate": {
+    "candidate_digest": "4ea6af7a476e1bed67d75a95e3bcdbf19ba4c35e18fb995b0fff6af762c63a31",
+    "candidate_version": "2.23.4-omk.3-rc.1",
+    "base_digest": "d20c3084a79a483e155b1b82bf5fc1acd11b025b69ef4eb00c6ec61a4627767d",
+    "files": 5971,
+    "bytes": 759730113,
+    "mod_jars": 226,
+    "language_files": 683,
+    "only_added_resource": "resources/forge/lang/ru_ru.lang",
+    "only_added_resource_sha256": "2ab342d284039c396e38fd28f49cc66495791046006ecf386cabda44a6e011c2",
+    "source_files_unchanged": true,
+    "signed_launch_unchanged": true,
+    "private_signing_key_retained": false
+  },
+  "locale": {
+    "ok": true,
+    "previous_candidate_digest": "d20c3084a79a483e155b1b82bf5fc1acd11b025b69ef4eb00c6ec61a4627767d",
+    "locale_archive_sha256": "7effbd8054d7efce6e8c3848b0d5ca36201ddb44de1b7e9525b8281ff33ded76",
+    "language_files": 683,
+    "composed_files": 685,
+    "only_added_resource": "resources/forge/lang/ru_ru.lang",
+    "added_resource_sha256": "2ab342d284039c396e38fd28f49cc66495791046006ecf386cabda44a6e011c2",
+    "all_682_previous_resources_identical": true,
+    "client_and_book_and_flags_unchanged": true,
+    "source_forge_sha256": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "native_accepted": true
+  },
+  "focus_tests": {
+    "windows": "92 passed",
+    "linux": {
+      "ok": true,
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "tests": "92 passed in 1.05s",
+      "exit_code": 0,
+      "oom_killed": false,
+      "readonly_nonroot_network_none": true,
+      "cpu_limit": 1,
+      "memory_mib": 256,
+      "temporary_capacity_mib": 768,
+      "language_composition_contract": true,
+      "owned_container_removed": true
+    }
+  },
+  "installer": {
+    "ok": true,
+    "api_image_id": "sha256:98632c1e709f86b639f42fc1f59ea4fa1c2a572f3b6e26fd3546b41c1df6d640",
+    "api_manifest_verified_before_installer": true,
+    "api_exit_code": 0,
+    "api_oom_killed": false,
+    "owned_container_removed": true,
+    "owned_image_removed": true,
+    "upgrade_and_repair": {
+      "ok": true,
+      "base_signed_install": true,
+      "exact_signed_candidate_upgrade": true,
+      "all_5970_old_payload_file_mtimes_preserved": true,
+      "new_locale_present_and_repaired": true,
+      "all_target_hashes_match": true,
+      "personal_options_preserved": true,
+      "chosen_fov_preserved": "0.4",
+      "state": "installed",
+      "fault_regression_repeated": false
+    }
+  },
+  "native": {
+    "ok": true,
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "strict_fml_mod_count": 257,
+    "exact_signed_candidate_used": true,
+    "mcmcp_present": false,
+    "checks": [
+      "exact_core_pin",
+      "exact_fix_pin",
+      "server_shared_scripts_match_signed_client",
+      "fresh_linux_forge_boot_ready",
+      "empty_operator_list_after_reviewed_fake_profile_control_no_human_or_unknown_operators",
+      "empty_operator_list_after_reviewed_fake_profile_control",
+      "exact_signed_client_authenticated_join_with_strict_catalog",
+      "starting_written_book_present",
+      "ordinary_survival_player",
+      "ordinary_client_quit_exit_zero",
+      "gameplay_join_observed"
+    ],
+    "ui_label": "Моды...",
+    "button_text_fits": true,
+    "screenshot_sha256": "a7cc763bc5c0ce9c4426ed9d11073c5856d94eb0f1d46904a397aec58b161581",
+    "screenshot_method": "ordinary game-native F2 with computer-use key input; raw image stays private",
+    "client_exit_code": 0,
+    "linux_container_outcome": {
+      "running": false,
+      "oom_killed": false,
+      "exit_code": 0,
+      "memory_limit_bytes": 6442450944,
+      "nano_cpus": 4000000000
+    },
+    "game_crash_detected": false,
+    "owned_crash_assistant_children_closed": true,
+    "owned_volume_removed_after_export": true,
+    "auth_cleanup": true,
+    "exit_observer_clean": true
+  },
+  "closed_client_return": {
+    "ok": true,
+    "client_stopped_before_return": true,
+    "http_source": "bounded loopback fixture; not production CDN",
+    "new_signed_generations": true,
+    "private_signing_key_retained": false,
+    "personal_files": 11,
+    "world_and_auth_restored": false,
+    "world_archive_unchanged": true,
+    "game_restarted_after_file_return": false,
+    "ready_for_players": false,
+    "generations": [
+      {
+        "label": "previous_bytes",
+        "signed_generation": "2.23.4-omk.4-rc.1",
+        "digest": "5a69b9f81d8aa5e410ec0412e4f6fc97af6ef8941fd35398cc89c40a34cdd118",
+        "source_content_digest": "d20c3084a79a483e155b1b82bf5fc1acd11b025b69ef4eb00c6ec61a4627767d",
+        "all_target_hashes_match": true,
+        "personal_files_unchanged": true,
+        "new_locale_present": false,
+        "minimum_launcher_version": "0.3.0.dev14",
+        "world_archive_unchanged": true
+      },
+      {
+        "label": "accepted_new_bytes",
+        "signed_generation": "2.23.4-omk.5-rc.1",
+        "digest": "578313a4fb0a05026ebfeca0fa80d61524047cae8c5f6ecbc9f72a9a128ccf9b",
+        "source_content_digest": "4ea6af7a476e1bed67d75a95e3bcdbf19ba4c35e18fb995b0fff6af762c63a31",
+        "all_target_hashes_match": true,
+        "personal_files_unchanged": true,
+        "new_locale_present": true,
+        "minimum_launcher_version": "0.3.0.dev14",
+        "world_archive_unchanged": true
+      }
+    ]
+  },
+  "source_runtime": {
+    "new_runtime_downloaded": false,
+    "source": "existing verified signed rc.2 snapshot",
+    "official_maven_metadata_recheck": "HTTP 403; no upstream attestation inferred from a lab signature"
+  },
+  "limitations": [
+    "One menu label, not all Forge config/admin/sample strings.",
+    "Previous 682 language resources, Client JAR, InitialInventory and launch flags unchanged.",
+    "Full quest/book/resource/reset/fault matrix was not repeated for this single data file.",
+    "Client file return did not restart the game and did not restore server world/auth/TUF or test production ingress.",
+    "Linux/macOS Minecraft, OpenAL cause, manual Shift and full server producer/lifecycle/ingress remain separate.",
+    "Private return generations 4/5 are fixtures, not public player releases.",
+    "No player manifest/Release/master/calendar/VPS activation."
+  ]
+}

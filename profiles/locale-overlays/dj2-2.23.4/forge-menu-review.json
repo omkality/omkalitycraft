@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "pack": "dj2",
+  "version": "2.23.4",
+  "scope": "One observed Forge pause label; not a translation of all Forge configuration/developer texts.",
+  "source_artifact": {
+    "version": "1.12.2-14.23.5.2860",
+    "path": "libraries/net/minecraftforge/forge/1.12.2-14.23.5.2860/forge-1.12.2-14.23.5.2860.jar",
+    "sha256": "cd3fbf85d7ca744507fd6a37a41b90122d43e616a4f8962332b1b658655e8a64",
+    "source": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2860/forge-1.12.2-14.23.5.2860-universal.jar",
+    "verified_existing_client_digest": "d20c3084a79a483e155b1b82bf5fc1acd11b025b69ef4eb00c6ec61a4627767d",
+    "new_download": false
+  },
+  "source_locale": {
+    "path": "assets/forge/lang/en_US.lang",
+    "sha256": "8ed150e8438bfb06d844f9ccc59267a802036eb33119c94ece65cef01c8409d1"
+  },
+  "target_path": "resources/forge/lang/ru_ru.lang",
+  "entries": [
+    {
+      "key": "fml.menu.modoptions",
+      "source_sha256": "d46860dbe12828f19e7c73d03de8a2fee9f858ad1a2ac2d9551bc2f8c5f1d0cb",
+      "ru": "Моды..."
+    }
+  ],
+  "previous_locale_archive_sha256": "39685a9288e93a5de5c47c3cf41e1aa0969bcaf1b3755e61c16d891a467167a2",
+  "result_sha256": "2ab342d284039c396e38fd28f49cc66495791046006ecf386cabda44a6e011c2",
+  "result_bytes": 32,
+  "native_accepted": true,
+  "ready_for_players": false
+}

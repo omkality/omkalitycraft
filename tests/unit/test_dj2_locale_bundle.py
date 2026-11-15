@@ -7,6 +7,7 @@ import pytest
 
 from launcher.releases import ReleaseError
 from omk.dj2_locale_bundle import compose_locale_bundle, render_initial_book
+from omk.locale_overlay import render_lang
 
 
 def sha(value):
@@ -299,8 +300,23 @@ def test_checked_in_generation_agrees_with_component_and_book_pins():
     assert lock["client"]["sha256"] == client["sha256"]
     assert lock["client"]["version"] == client["version"]
     assert lock["initial_inventory"]["result_sha256"] == book["result_sha256"]
-    assert len(lock["resources"]) == 682 and len(book["pages"]) == 18
-    assert len({x["path"].casefold() for x in lock["resources"]}) == 682
+    assert len(lock["resources"]) == 683 and len(book["pages"]) == 18
+    assert len({x["path"].casefold() for x in lock["resources"]}) == 683
+    menu = json.loads((profile / "forge-menu-review.json").read_bytes())
+    entry = menu["entries"][0]
+    label = render_lang(
+        b"",
+        b"fml.menu.modoptions=Mod Options...\n",
+        additions={entry["key"]: entry["ru"]},
+        expected_source_sha256={entry["key"]: entry["source_sha256"]},
+    )
+    assert sha(label) == menu["result_sha256"]
+    assert len(label) == menu["result_bytes"]
+    assert {
+        "path": menu["target_path"],
+        "sha256": sha(label),
+        "size": len(label),
+    } in lock["resources"]
 
 
 @pytest.mark.parametrize(
