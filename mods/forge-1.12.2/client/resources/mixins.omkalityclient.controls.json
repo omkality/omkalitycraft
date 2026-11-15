@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "net.omkality.client.mixin.controls",
+  "compatibilityLevel": "JAVA_8",
+  "client": ["ControlSortLabelMixin"],
+  "injectors": {"defaultRequire": 1}
+}

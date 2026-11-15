@@ -112,6 +112,7 @@ for test_class in [
     "net.omkality.client.books.BewitchmentBookLabelsTest",
     "net.omkality.client.defaults.KnownKeySnapshotTest",
     "net.omkality.client.itemviews.ItemViewCatalogTest",
+    "net.omkality.client.controls.ControlSortLabelTest",
 ]:
     subprocess.run(
         [

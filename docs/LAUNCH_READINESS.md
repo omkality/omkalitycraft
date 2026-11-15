@@ -7,7 +7,7 @@
 проверку соответствующего действия в Minecraft.
 
 Для первого запуска выбрана DJ2 2.23.4 / Forge 1.12.2. Текущие принятые owned
-artifacts: Core 0.3.8, DJ2Fix 0.1.4, Client 0.1.5 — `mods/forge-1.12.2/versions.json`.
+artifacts: Core 0.3.8, DJ2Fix 0.1.4, Client 0.1.6 — `mods/forge-1.12.2/versions.json`.
 Это версии исходников/отдельных scope, не переключённый player manifest.
 GTNH не объявляем готовой. Стабильность и полнота перевода важнее свежести версии.
 Все серверные acceptance выполняются в изолированных Linux Docker labs.
@@ -18,7 +18,7 @@ GTNH не объявляем готовой. Стабильность и пол�
 |---|---|---|
 | Аккаунты и проходки | `AUTH_STORAGE.md`, `ACCOUNT_RECOVERY.md`, `deploy/drasl/README.md` | Одноразовая регистрация без гонки, chosen password, отзыв сессий, постоянные auth volumes и signing key |
 | Лаунчер, manifest, update | `PORTABLE_SESSIONS.md`, `SIGNED_PACK_INSTALL.md`, `RELEASES.md` | Подписи, minimum version, repair/сеть, сохранение настроек, portable paths и реальные клиенты |
-| Перевод DJ2 | `DJ2_TRANSLATION_COMPLETION.md`, `DJ2_LANGUAGE_BUNDLE.md`, `DJ2_QUEST_LOCALE.md`, `CLIENT_ITEM_VIEWS.md`, #49 | Приняты квестовый текст, стартовая книга, известная вёрстка/ссылки, runtime-подписи и сохранность NBT. Остаток — интерфейс управления и общая выпускная/миграционная приёмка; происхождение заимствованных локалей проверяется отдельно |
+| Перевод DJ2 | `DJ2_TRANSLATION_COMPLETION.md`, `DJ2_LANGUAGE_BUNDLE.md`, `DJ2_QUEST_LOCALE.md`, `CLIENT_ITEM_VIEWS.md`, #49 | Приняты квестовый текст, стартовая книга, известная вёрстка/ссылки, runtime-подписи и сохранность NBT. Интерфейс управления принят; остаётся общая выпускная/миграционная приёмка; происхождение заимствованных локалей проверяется отдельно |
 | Помощь и игровые часы | `NEW_PLAYER_GUIDE.md`, `PLAYER_TIME.md`, #43/#44 | Opt-in `/guide` проверена protocol packets; обычный графический чат открыт. Saved ticks не являются несбрасываемым account lifetime |
 | Разделение модов | `mods/README.md`, `mods/forge-1.12.2/THIRD_PARTY.md` | Generic Core отдельно от pack fixes, reproducible hashes, архив/lab не в публичном runtime |
 | Команды, роли, FTB | `commands/dj2/README.md`, `DJ2_PLANT_PLACEMENT.md` | Все игроки без OP, PvP/Hard, лимиты, защита spawn, обычные разрешённые действия вместе с негативными контролями |
@@ -60,7 +60,8 @@ HTTP-источником: новая версия с прежними байт�
 - **#191:** повторный старт клавиш исправлен и принят в Client 0.1.4; обычная K,
   исходная Shift+O и личные HOME/NONE проверены. Создание нового Shift-сочетания
   обычным вводом остаётся отдельным ручным контролем, а не подтверждённым дефектом
-  перевода. Кандидат коротких русских кнопок управления ещё не стал принятым lock.
+  перевода. Короткие русские кнопки управления приняты в Client 0.1.6; подробности —
+  в `CLIENT_CONTROLS_LOCALE.md`.
 - **#43/#44/#52/#58/#146:** учёт времени, приветствие, структурированный полный чат,
   авторство действий и оставшаяся корреляция мониторинга нельзя считать готовыми
   только потому, что они перечислены в плане. Producer TPS/MSPT/online/heap/GC

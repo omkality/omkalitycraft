@@ -299,8 +299,8 @@ def test_checked_in_generation_agrees_with_component_and_book_pins():
     assert lock["client"]["sha256"] == client["sha256"]
     assert lock["client"]["version"] == client["version"]
     assert lock["initial_inventory"]["result_sha256"] == book["result_sha256"]
-    assert len(lock["resources"]) == 681 and len(book["pages"]) == 18
-    assert len({x["path"].casefold() for x in lock["resources"]}) == 681
+    assert len(lock["resources"]) == 682 and len(book["pages"]) == 18
+    assert len({x["path"].casefold() for x in lock["resources"]}) == 682
 
 
 @pytest.mark.parametrize(
