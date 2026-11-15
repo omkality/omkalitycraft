@@ -1,9 +1,13 @@
 import hashlib
 import io
 import json
+import os
 import sqlite3
+import subprocess
+import sys
 import tarfile
 import tomllib
+from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
@@ -158,6 +162,94 @@ def test_database_integrity_failure_never_publishes_snapshot(tmp_path):
 def test_invalid_auth_environment_is_rejected(env):
     with pytest.raises(ValueError):
         render_config(env)
+
+
+@pytest.mark.parametrize(
+    ("setting", "valid"),
+    [
+        ("OMK_AUTH_INTERNAL_PORT", "25585"),
+        ("OMK_AUTH_TOKEN_EXPIRE_SECONDS", "2592000"),
+        ("OMK_AUTH_TOKEN_STALE_SECONDS", "86400"),
+        ("OMK_AUTH_MIN_PASSWORD_LENGTH", "12"),
+    ],
+)
+@pytest.mark.parametrize(
+    "variant",
+    [
+        "underscore",
+        "sign",
+        "unicode",
+        "padding",
+        "empty",
+        "unbounded",
+        "private-marker",
+        "integer",
+        "none",
+    ],
+)
+def test_auth_numeric_environment_requires_bounded_ascii_decimal(
+    setting, valid, variant
+):
+    render_config({setting: valid})
+    raw = {
+        "underscore": valid[:-1] + "_" + valid[-1],
+        "sign": "+" + valid,
+        "unicode": valid.translate(str.maketrans("0123456789", "٠١٢٣٤٥٦٧٨٩")),
+        "padding": " " + valid + " ",
+        "empty": "",
+        "unbounded": valid.rjust(9, "0"),
+        "private-marker": "auth-config-private-marker",
+        "integer": int(valid),
+        "none": None,
+    }[variant]
+    with pytest.raises(ValueError, match="^Invalid " + setting + "$") as caught:
+        render_config({setting: raw})
+    assert caught.value.__context__ is None
+
+
+def test_bad_auth_number_never_reaches_cli_output_or_config(tmp_path):
+    marker = "auth-config-private-marker"
+    root = Path(__file__).resolve().parents[2]
+    output = tmp_path / "auth.toml"
+    environment = {
+        key: os.environ[key]
+        for key in ("SYSTEMROOT", "WINDIR", "PATH", "TEMP", "TMP")
+        if key in os.environ
+    }
+    environment.update(PYTHONPATH=str(root), OMK_AUTH_INTERNAL_PORT=marker)
+    result = subprocess.run(
+        [sys.executable, "-m", "omk", "auth", "configure", "--output", str(output)],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=20,
+        check=False,
+    )
+    assert result.returncode == 1
+    assert marker not in result.stdout + result.stderr
+    assert "Invalid OMK_AUTH_INTERNAL_PORT" in result.stderr
+    assert not output.exists()
+
+
+def test_bad_auth_number_preserves_existing_configuration(tmp_path, monkeypatch):
+    output = tmp_path / "auth.toml"
+    output.write_bytes(b"existing owner configuration\n")
+    monkeypatch.setenv("OMK_AUTH_TOKEN_EXPIRE_SECONDS", "auth-config-private-marker")
+    with pytest.raises(ValueError, match=r"^Invalid OMK_AUTH_TOKEN_EXPIRE_SECONDS$"):
+        configure(output)
+    assert output.read_bytes() == b"existing owner configuration\n"
+
+
+def test_auth_example_matches_generator_defaults_and_requires_explicit_config():
+    example = Path(__file__).resolve().parents[2] / "deploy/auth/example.env"
+    environment = dict(
+        line.split("=", 1)
+        for line in example.read_text(encoding="utf-8").splitlines()
+        if line and not line.startswith("#")
+    )
+    assert "OMK_AUTH_CONFIG" not in environment
+    assert render_config(environment) == render_config({})
 
 
 def test_generated_config_has_expiry_invites_and_no_overwrite(tmp_path, monkeypatch):

@@ -23,10 +23,16 @@ def render_config(environment=None):
         ("TOKEN_STALE_SECONDS", 86400, 1, 2592000),
         ("MIN_PASSWORD_LENGTH", 12, 12, 128),
     ):
-        value = int(env.get("OMK_AUTH_" + name, str(default)))
-        if not minimum <= value <= maximum:
+        raw = env.get("OMK_AUTH_" + name, str(default))
+        if (
+            not isinstance(raw, str)
+            or not raw.isascii()
+            or not raw.isdecimal()
+            or len(raw) > 8
+            or not minimum <= int(raw) <= maximum
+        ):
             raise ValueError("Invalid OMK_AUTH_" + name)
-        limits[name] = value
+        limits[name] = int(raw)
     if limits["TOKEN_STALE_SECONDS"] >= limits["TOKEN_EXPIRE_SECONDS"]:
         raise ValueError("Session stale interval must be below expiry")
     values = {
