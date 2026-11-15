@@ -53,7 +53,8 @@ exit code и OOM. Для auth также нужен `config_sha256`. Оба се
 2. Рассчитывает место с запасом до первой записи, затем создаёт только новый output.
 3. Копирует готовый мир, пишет и полностью перечитывает TAR компонентов, проверяет
    SQLite в отдельной временной папке, повторно сверяет source inventories.
-4. Сравнивает новые lifecycle checkpoints; после этого пишет/fsync manifest и
+4. Повторяет проверку выбранных клиентов, если передан `release_context`, затем
+   сравнивает новые lifecycle checkpoints; после этого пишет/fsync manifest и
    каталог. Незавершённая папка остаётся для осмотра, автоматически не принимается.
 
 `verify(directory, settings)` проверяет точный верхний набор, размеры и SHA,
@@ -68,12 +69,34 @@ exit code и OOM. Для auth также нужен `config_sha256`. Оба се
 `project.json`. Число файлов остаётся девять, дополнительные архивы/команды/
 writers не добавляются. Без аргумента создаётся прежняя schema 1.
 
-Владелец передаёт проверенные до вызова сведения:
+Владелец передаёт сведения о выбранном выпуске:
 
 - `source_commit`: полный 40-символьный Git commit, без изменяемого имени ветки;
 - `client_manifests`: SHA256 подписанных клиентских манифестов по платформам;
 - `declared_state_contract`: короткий идентификатор объявленного контракта
   сохранений, например `dj2-2.23.4-world-v1`.
+
+При `release_context` обязательны также `client_store` — существующий
+`ReleaseStore` с доверенными публичными ключами — и явный `client_pack_id`.
+Сборщик повторно использует `ReleaseStore.verify`: проверяет подпись каждого
+выбранного манифеста, весь набор файлов и каждый размер/SHA до создания output
+и после чтения серверных источников. Реальные platform/pack должны совпасть с
+выбором владельца, все выбранные платформы — иметь одну версию Minecraft.
+Это не определение версии серверного runtime и не доказательство совместимости
+сохранений: такие проверки принадлежат профилю и будущей игровой приёмке.
+
+Клиентское хранилище должно быть отдельно от output/game/auth/operator; вложение
+в любую сторону отказывает. Контекст, путь, policy и trust map фиксируются до
+callbacks. Неизвестный digest, подпись, другая платформа/pack, лишний файл или
+повреждение дают отказ. Поздний отказ оставляет staging без `project.json`.
+Независимый финальный lifecycle checkpoint выполняется после повторного чтения
+клиента. Контроллер по-прежнему держит общий owner lock, запрещает внешнюю запись
+в источники и хранит выбранные клиентские snapshots вместе с их trust material.
+
+Прежний вызов schema 1 без `release_context` сохраняется. Передача клиентских
+аргументов без контекста отказывает: они не игнорируются. Прежний schema-2 вызов
+с одним словарём digest теперь тоже отказывает до output; это намеренное усиление
+внутреннего producer API, без изменения девятифайлового формата или consumer API.
 
 Сборщик сам дополняет `release_identity` digest фактически остановленного
 game image и SHA256 созданных `runtime.tar`/`runtime.json`. Хеши отдельных модов,
@@ -96,10 +119,13 @@ receipt и ожидаемый signature всего экспорта также �
 поддерживающий только schema 1, откажет на schema 2; обновление читающей стороны
 требует явной проверки, автоматического понижения формата нет.
 
-Это **запись и проверка связей**, не доказательство происхождения кода:
-функция не обращается к Git, не проверяет подпись по одному digest клиента и
-не доказывает совместимость мира по строке `declared_state_contract`. Эти
-сведения проверяет вызывающий код до capture и перед будущим promotion.
+Это **запись и проверка связей**, не build attestation:
+функция не обращается к Git и не доказывает совместимость мира по строке
+`declared_state_contract`. Подпись/файлы клиентов теперь проверяются при новом
+capture, но читатель старого schema-2 экспорта не может подтвердить это задним
+числом. Исторические lab references не переписываются. Доступность выбранных
+snapshots и trust policy перед будущим promotion проверяет controller отдельно;
+проверенный export сам по себе не разрешает boot или допуск игроков.
 Полный серверный возврат, журнал/классификация изменений и native failure/boot
 приёмка остаются в #171. `ready_for_players=false` и `quarantine_required=true`
 сохраняются при успешном выборе. Auth-архив не восстанавливается автоматически;
@@ -177,3 +203,36 @@ case collision. Ошибочные исходные reports сохранены. 
 Далее #33: durable capture/lifecycle и общий бюджет в одном nightly, внешнее
 destination/retention, полноценный boot/cutover в карантине и актуальные права/
 отозванные доступы. До VPS остаётся аудит владельца; лаунчер/owned JAR не изменены.
+
+## Проверенные клиенты при capture — 15 ноября 2026
+
+209 focused Linux Docker tests и 74 Windows/135 Linux skips; 18 новых контролей.
+Отдельное исполнение прежнего producer действительно создало schema 2 с digest
+отсутствующего клиента. Новый код отказал до output; позднее повреждение клиента
+в unit fixture оставило export без seal. Проверены wrong signature/keys, extra
+files, same-size corruption, pack/platform/Minecraft, overlapping roots,
+callback mutation и lifecycle change во время финального client verifier.
+
+Свежая DJ2 2.23.4/Core0.3.8/Fix0.1.4 с постоянным Drasl: настоящий protocol actor
+прошёл strict257, получил три алмаза; normal stop игры/auth exit0/noOOM. Из этих
+закрытых sources под owner lock создан полный девятифайловый комплект. Client ref
+теперь реальный: windows-x64 2.23.4-omk.3-rc.1,
+`4ea6af7a476e1bed67d75a95e3bcdbf19ba4c35e18fb995b0fff6af762c63a31`,
+5971 файлов/759730113 байт. Оригинальный ReleaseStore подключён readonly;
+подписи/bytes проверены до/после capture, после этого независимы mount/lifecycle.
+
+33 nonroot readonly Linux checks перечитали все 9 файлов, 2320 runtime/5 auth/
+4 operator/309 world files, SQLite, Ed25519 и все client hashes. Весь мир совпал
+с отдельным cold TAR; saved inventory содержит три тестовых алмаза. Independent
+archive/signature readers не используют project_export/ReleaseStore, NBT reader
+прежний. Для reader подготовлены private Linux-копии тех же bytes с его uid;
+root-produced mode700/600 оригинала не ослаблен. Game tokens в reader не копируются.
+
+Первый game fixture ошибочно ожидал Count byte вместо фактического TAG_Int;
+id/byte/int console controls и cold NBT подтвердили исправление только теста.
+Его diagnostic stop143 не считается clean game pass. Первый nonroot-reader
+ожидаемо отказал на private source permissions. Исходные failed reports/cold data
+сохранены; свои scopes/reader cache удалены. Графическая игра не повторялась:
+JAR/клиентские bytes прежние. Production controller/ingress/совместимость мира и
+повторный контроль сохранённых клиентов перед promotion остаются #171.
+[Протокол и точные ограничения](validation/project-client-inputs-2026-11-15.json).

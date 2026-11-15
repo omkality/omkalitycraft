@@ -1,5 +1,22 @@
 # Журнал изменений
 
+## Не выпущено — проверка клиентских snapshots при серверном capture
+
+- Schema-2 producer требует существующий `ReleaseStore` и явный pack. Прежний
+  verifier проверяет подпись, полный набор файлов/размеров/SHA и выбранную
+  platform/pack до и после capture. Одного словаря digest теперь недостаточно.
+- Фиксируются trust map/source/context; клиентское хранилище отделено от
+  серверных входов и output. Позднее изменение не позволяет записать итоговый
+  manifest. Legacy capture и читатели прежних экспортов сохранены; новые
+  CLI/env/deps/форматы не добавлены. [Контракт](docs/PROJECT_EXPORT.md).
+- 209 focused Linux Docker tests; Windows 74 passed/135 Linux skips. Проверка
+  старого кода воспроизвела создание экспорта с отсутствующим client ref; новый
+  отказал до записи. Свежие Linux Docker Forge/Drasl дали clean stop и coherent
+  capture с реальным полным signed Windows client. 33 независимых readonly checks
+  подтвердили архивы/подпись/все файлы, cold world и inventory; ошибки fixtures
+  сохранены в [протоколе](docs/validation/project-client-inputs-2026-11-15.json).
+  Git/state остаются owner declaration; production lifecycle/ingress ещё не принят.
+
 ## Не выпущено — русская кнопка Forge и возврат языкового файла
 
 - Кнопка `Mod Options...` в меню паузы теперь «Моды...»: один новый RU-файл

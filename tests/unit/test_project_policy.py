@@ -19,7 +19,10 @@ from omk import (
 from omk.linux_restore_policy import LISTS, RANKS
 from omk.offsite_process import OffsiteError
 from tests.unit.test_linux_restore_policy import records
-from tests.unit.test_project_export import fixture as capture_fixture
+from tests.unit.test_project_export import (
+    clients as client_fixture,
+    fixture as capture_fixture,
+)
 
 OLD_SECRET = "old-rcon-fixture-password-123456"
 NEW_SECRET = "current-rcon-fixture-password-654321"
@@ -39,7 +42,8 @@ def properties(secret, *, current=False):
 
 @pytest.fixture
 def prepared(tmp_path, monkeypatch):
-    base = capture_fixture.__wrapped__(tmp_path)
+    clients = client_fixture.__wrapped__(tmp_path)
+    base = capture_fixture.__wrapped__(tmp_path, clients)
     game, world = base.args["game"], base.args["game"] / "lab-world"
     old = records("owner")
     for name, value in old.items():
@@ -98,9 +102,12 @@ def prepared(tmp_path, monkeypatch):
         base.out,
         release_context={
             "source_commit": "1" * 40,
-            "client_manifests": {"windows-x64": "2" * 64},
+            "client_manifests": {
+                "windows-x64": clients.snapshots["windows-x64"].release.digest
+            },
             "declared_state_contract": "fixture-v1",
         },
+        **base.client_args,
         **base.args,
     )
     target = tmp_path / "candidate"
