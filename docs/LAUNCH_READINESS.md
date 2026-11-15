@@ -60,6 +60,10 @@ loopback lab; внешний production lifecycle/ingress и несовмест�
 проверяются до и после capture. Это не build attestation и не ретроспективная
 приёмка прежних schema-2 lab references; перед promotion нужен отдельный контроль
 сохранённых snapshots, trust policy и совместимости сервера/мира/клиента.
+Последующий file-only опыт связал этот реальный client ref с raw/current-policy
+journal и новым process verify на закрытой копии: все game hashes/modes, intent,
+PvP/Hard/OP/NBT приняты. Это не новый game lifecycle, live authority или promotion;
+границы — в [PROJECT_RETURN](PROJECT_RETURN.md).
 
 Книжный #174 закрыт по последующим протоколам: 447 статей без ошибок сборки,
 4566 измеренных текстовых блоков без непустых глифов ниже реальной страницы,

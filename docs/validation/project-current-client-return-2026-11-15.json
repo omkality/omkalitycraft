@@ -1,0 +1,82 @@
+{
+  "ok": true,
+  "game_started": false,
+  "ready_for_players": false,
+  "source_kind": "verified_closed_export_file_copy_not_new_game_lifecycle",
+  "client_ref": "4ea6af7a476e1bed67d75a95e3bcdbf19ba4c35e18fb995b0fff6af762c63a31",
+  "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+  "checks": [
+    "actual_signed_client_verified_before_file_return",
+    "independently_saved_full_snapshot_selection_matches",
+    "real_selected_archives_staged_into_separate_current_file_copy",
+    "wrong_client_ref_did_not_create_journal_or_target_data",
+    "real_full_return_journal_completed_with_current_policy",
+    "new_process_verifies_receipts_without_game_or_player_permission",
+    "all_original_nine_archive_bytes_unchanged",
+    "actual_signed_full_client_verified_again_after_file_return"
+  ],
+  "owned_scopes_removed": true,
+  "schema": 1,
+  "date": "2026-11-15",
+  "scope": "File-return composition of accepted coherent snapshot and real signed Windows client; no new game lifecycle",
+  "controller_code_commit": "7952642d563f79fb7375776608537858744b01dc",
+  "selected_project_sha256": "ffe74617507279405f77f3e1859db83316aafaf821091697f58bc211a810102f",
+  "client_version": "2.23.4-omk.3-rc.1",
+  "client_files": 5971,
+  "client_bytes": 759730113,
+  "client_signature_and_all_bytes_verified_before_and_after": true,
+  "client_trust_is_private_lab_trust": true,
+  "independent": {
+    "ok": true,
+    "condition_count": 17,
+    "checks": [
+      "exact_saved_snapshot_and_real_client_identity_bound",
+      "exact_full_returned_game_file_set",
+      "all_runtime_world_hashes_and_runtime_modes_match_expected_policy",
+      "all_34_linux_case_pairs_preserved_in_tar",
+      "reserved_windows_CON_filename_preserved_without_extraction",
+      "returned_ops_empty",
+      "all_protected_runtime_values_preserved_without_echoing_credentials",
+      "pvp_and_hard_retained",
+      "saved_player_nbt_exactly_preserved",
+      "saved_test_inventory_still_three_diamonds",
+      "one_completed_return_journal",
+      "completed_journal_binds_exact_saved_selection",
+      "independent_immutable_intent_hash_matches",
+      "policy_receipt_hashes_match_saved_journal",
+      "auth_and_operator_payload_not_extracted_into_game",
+      "complete_stage_receipts_with_retained_attempt_marker",
+      "retained_attempt_marker_contains_only_reviewed_empty_directories"
+    ],
+    "runtime_files": 2320,
+    "world_files": 309,
+    "returned_game_files": 2629,
+    "policy_files": 6,
+    "case_pairs": 34,
+    "readonly_network_none": true,
+    "independent_tar_hash_mode_journal_checks": true,
+    "nbt_reader_reused": true
+  },
+  "resource_limits": {
+    "file_worker_cpu": 2,
+    "file_worker_memory_mib": 1024,
+    "independent_cpu": 1,
+    "independent_memory_mib": 256,
+    "network": "none",
+    "source_mounts": "readonly",
+    "capabilities_dropped": "ALL"
+  },
+  "new_cli": false,
+  "new_dependencies": false,
+  "observations": [
+    "First private collector attempted directory Docker cp to Windows and failed on reserved CON filename. File workers had completed; this collector report remains failed. Corrected collection is one Linux TAR in a fresh independent run; old partial host copy/raw reports retained, all old owned volumes/containers removed.",
+    "First independent reader wrongly expected no policy-writing directory after complete. Existing API deliberately retains the attempt marker. Reader now requires complete bound receipts and only the allowed empty marker directories; producer/guards were unchanged. Original failed reader and stderr retained."
+  ],
+  "limits": [
+    "Current authority here is a separately restored file copy of the same accepted closed snapshot, not a live/current production server.",
+    "Host checks real Docker ownership, immutable helper image, exact readonly/current/target mounts and absence of other volume users; no game container lifecycle is claimed.",
+    "No game/auth start, authentication rejoin, ingress promotion, version downgrade or incompatible save migration.",
+    "Prior historical/revoked-authority gameplay scope remains the earlier project-return validation; this does not repeat or broaden it.",
+    "All boot/player permissions remain false; this result is not a production deployment permit."
+  ]
+}
