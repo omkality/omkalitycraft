@@ -1,5 +1,18 @@
 # Изменения Forge-модов
 
+## DJ2Fix 0.1.7 — 16 ноября 2026
+
+- Закрывает только файловый writer GroovyScript 1.4.3 перед штатным `cleanLog()`.
+  Fallback `PrintWriter(System.out)` не принадлежит адаптеру и не закрывается.
+  Ошибка flush/close регистрируется без прерывания cleanup; formatter/setupLog
+  и текущий writer остаются штатными. Версия/SHA и применение mixin проверяются.
+- 7 native baseline условий воспроизвели четыре открытых удалённых журнала при
+  удерживаемых API writers. Кандидат: 20 условий на двух Forge Docker стартах,
+  закрытие старых writers, UTF-8/header, fallback/recovery, прежние ключи рецептов,
+  clean stop0/noOOM. Шесть JVM-контролей, 14 build safety tests, две одинаковые сборки.
+  Core/Client и 33 прежних entry Fix побайтно прежние. Активный рост CT/Groovy
+  и полный script reload остаются отдельной приёмкой.
+
 ## DJ2Fix 0.1.6 — 15 ноября 2026
 
 - FTB дополняет ровно две штатные проверки ItemBed до записи обеих частей.

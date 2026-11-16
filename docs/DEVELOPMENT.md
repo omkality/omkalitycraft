@@ -1,3 +1,28 @@
+## Закрытие файлового writer Groovy при cleanLog — 16 ноября 2026
+
+#218/#30/#33: DJ2Fix 0.1.7 закрывает предыдущий файловый writer pinned GroovyScript
+1.4.3 до штатного `cleanLog()`. Ранний mixin отмечает только успешный файловый
+конструктор; fallback `PrintWriter(System.out)` не захватывается. IOException
+при close регистрируется, текущие formatter/setupLog и script API прежние.
+Core 0.3.9 / Client 0.1.7 и 33 прежних entry Fix побайтно прежние; изменений
+инвентарей/рецептов/прав нет. Профиль требует 0.1.7, добавлен быстрый тест binding.
+
+Native baseline: 7 условий/один boot, четыре удерживаемых getWriter-ссылки после
+четырёх cleanLog продолжают держать удалённые журналы. Кандидат: два старта одного
+нового Linux Docker мира, 20 условий. Старые writers закрыты, active fd=1,
+deleted fd=0; два fallback при блокированном пути сохраняют stdout, восстановление
+пути возвращает файл. Header/UTF-8 и 13928 ключей рецептов совпали с baseline.
+Stop0/noOOM, cold exports и диагностика сохранены; свои четыре scopes удалены и
+проверены отдельно. Шесть JVM-контролей/14 build safety tests, две одинаковые сборки.
+
+Две непринятые startup-попытки сохранены: поздняя mixin registration и старый
+profile binding 0.1.6. Защита версии не ослаблялась; prelaunch ошибка пути private
+driver тоже не включена в числа. Это исправление lifecycle журнала, не ограничение
+его активного роста и не полный `/gs reload`/игровая/GUI/VPS приёмка. #30/#33/#41
+остаются открыты; scheduler/CLI/env/deps/player release прежние.
+[Описание](LOGGING.md#очистка-groovy-журнала--dj2fix-017),
+[протокол](validation/groovy-log-reload-2026-11-16.json).
+
 ## Docker logging TCP-входа через env — 16 ноября 2026
 
 Ограниченный шаг #30/#33: два валидируемых лимита существующего Docker `local`

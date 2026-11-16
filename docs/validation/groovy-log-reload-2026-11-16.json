@@ -1,0 +1,201 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "issue": 218,
+  "scope": "Immediate disposal of the owned Groovy file writer during cleanLog; not active log rotation",
+  "base_commit": "40c94442c08ed459a618dd8f7631c930dff97f11",
+  "source_sha256_lf": {
+    "mods/forge-1.12.2/patches/src/net/omkality/patches/GroovyLogReloadGuard.java": "e8745ca1b6b97ef940f37fa9756021080b96a7b9e52e401066cc9835989d8c51",
+    "mods/forge-1.12.2/patches/src/net/omkality/patches/mixin/GroovyLogReloadMixin.java": "e0624a410a1f4bf64c33920bd734ad4cddfbfcbed24a0ee835b0f4af61cfac31",
+    "mods/forge-1.12.2/packs/dj2/src/net/omkality/dj2/OmkalityEarlyMixinPlugin.java": "93c24079c2a18c790ad01fe3d450e7df0f377c9b3dcc7608db930696a684477b",
+    "mods/forge-1.12.2/packs/dj2/src/net/omkality/dj2/OmkalityDJ2Fix.java": "e66da0a8617d2508d0385cdd1c69788faf745cd60e9843e9d1075bbad71d9074",
+    "mods/forge-1.12.2/packs/dj2/resources/mixins.omkalitydj2fix.groovy.json": "29a7b3d964664eceef836a441ab6ce1d743fb87fdd7a2e5c6084c83986ca6a86",
+    "mods/forge-1.12.2/packs/dj2/resources/adapters/dj2-artifacts.properties": "b2c4b1b518ee553c24b852cad4569ceac750d810249c8f9d1b8ece93271a11ab",
+    "mods/forge-1.12.2/packs/dj2/profile.properties": "c80d44c7e4773364db68b7aedd2fb6f0a5ab5e6eb9bb25867f017d8aa7753a65",
+    "mods/forge-1.12.2/versions.json": "24d5fe77124e457765e35abdd425cc3bfead23cf3456518621beeef03bba5f2b",
+    "mods/forge-1.12.2/public-files.json": "e318cd9570bc723ed8fb4ab0f27dfa131e25578543aa3190292123e4f627302d",
+    "mods/forge-1.12.2/build.py": "f539b13e7e250bef619af332d4520d7436170236853ec33512ccca7fdf43f241",
+    "mods/forge-1.12.2/tests/test_build_safety.py": "8ef1af77b7d6aa67c25c6cf1b15077b1e90a5a35f2e288db0dc7901f22f81adc",
+    "mods/forge-1.12.2/tests/java/net/omkality/GroovyLogReloadControlsTest.java": "fd7ef888e14baf0379a959662f20e53637881b9b8fd905f1a84954bb4e736ad9",
+    "mods/forge-1.12.2/build-tools.json": "3f00c87ef8abd30a9d81f42e78b658f9429d1f465aa866e0d58be069b2db4fc4"
+  },
+  "artifacts": {
+    "core": {
+      "version": "0.3.9",
+      "file": "OmkalityCore-0.3.9.jar",
+      "sha256": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4"
+    },
+    "dj2fix": {
+      "version": "0.1.7",
+      "file": "OmkalityDJ2Fix-0.1.7.jar",
+      "sha256": "43df3f74022b23456365beee876d7613a0a50c821bc7a89a4864ba08cca69928"
+    },
+    "client": {
+      "version": "0.1.7",
+      "file": "OmkalityClient-0.1.7.jar",
+      "sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+    }
+  },
+  "upstream": {
+    "name": "GroovyScript",
+    "version": "1.4.3",
+    "jar_sha256": "07617b7ce9170a857199bd61d730a0db3af2685cf83d31734a2d4b628fda7533",
+    "source_repository": "https://github.com/CleanroomMC/GroovyScript",
+    "source_tag_commit": "6a3340814ce9527d23c2b88cdfd340b4f146b4c4"
+  },
+  "baseline": {
+    "native_conditions": 7,
+    "boots": 1,
+    "direct_clean_calls": 4,
+    "retained_getWriter_api_references": 4,
+    "old_writers_closed": 0,
+    "deleted_descriptor_growth": 4,
+    "current_file_header_and_utf8_preserved": true,
+    "probe_sha256": "0387a5ff96630d58cbd73ab55b2ab2dd0066f7314ac9ee77e54b63167cf844a4"
+  },
+  "candidate": {
+    "native_conditions": 20,
+    "boots": 2,
+    "same_new_world_volume": true,
+    "direct_pressure_clean_calls_per_boot": 4,
+    "additional_failure_recovery_clean_calls_per_boot": 3,
+    "old_file_writers_closed_per_boot": 4,
+    "active_log_descriptors": 1,
+    "deleted_log_descriptors": 0,
+    "retained_getWriter_api_references_per_boot": 4,
+    "probe_sha256": "58b8bf3e5dc09b463ed5e99009978442f7535f4cba87561d966b2206e1889c5b",
+    "failure_fixture": "Directory occupies the expected log-file path; two fallback clean calls, then file recovery",
+    "stdout_remains_open_during_repeated_fallback": true,
+    "file_logging_recovers": true,
+    "current_header_and_utf8_preserved": true,
+    "recipe_registry_key_count": 13928,
+    "recipe_registry_keys_sha256": "de7477319356f01b029998aaff9e42509c8c8826bdf5799fc0f567beca55dc7f",
+    "recipe_keys_identical_across_baseline_and_both_candidate_boots": true,
+    "clean_stops_exit_zero": true,
+    "oom": false,
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "memory_gib": 6,
+    "heap_gib": 4,
+    "cpu_limit": 4,
+    "conditions": [
+      "native_probe_completed_boot1",
+      "recipe_keys_unchanged_boot1",
+      "current_logger_header_utf8_boot1",
+      "native_log_pressure_boot1",
+      "old_writers_closed_boot1",
+      "no_deleted_descriptor_growth_boot1",
+      "one_active_log_descriptor_boot1",
+      "stdout_survives_repeated_fallback_boot1",
+      "file_logging_recovers_boot1",
+      "clean_stop_boot1",
+      "native_probe_completed_boot2",
+      "recipe_keys_unchanged_boot2",
+      "current_logger_header_utf8_boot2",
+      "native_log_pressure_boot2",
+      "old_writers_closed_boot2",
+      "no_deleted_descriptor_growth_boot2",
+      "one_active_log_descriptor_boot2",
+      "stdout_survives_repeated_fallback_boot2",
+      "file_logging_recovers_boot2",
+      "clean_stop_boot2"
+    ]
+  },
+  "build": {
+    "jvm_new_helper_conditions": 6,
+    "build_safety_tests": 14,
+    "profile_version_red_green": true,
+    "rounds": [
+      {
+        "core": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4",
+        "dj2fix": "43df3f74022b23456365beee876d7613a0a50c821bc7a89a4864ba08cca69928",
+        "client": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+      },
+      {
+        "core": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4",
+        "dj2fix": "43df3f74022b23456365beee876d7613a0a50c821bc7a89a4864ba08cca69928",
+        "client": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+      }
+    ],
+    "source_boundary_tracked_files": 167,
+    "jar_delta": {
+      "unchanged_old_entries": 33,
+      "changed": [
+        "adapters/dj2-artifacts.properties",
+        "net/omkality/dj2/OmkalityDJ2Fix$1.class",
+        "net/omkality/dj2/OmkalityDJ2Fix.class",
+        "net/omkality/dj2/OmkalityEarlyMixinPlugin.class"
+      ],
+      "added": [
+        "mixins.omkalitydj2fix.groovy.json",
+        "net/omkality/patches/GroovyLogReloadGuard$Installed.class",
+        "net/omkality/patches/GroovyLogReloadGuard.class",
+        "net/omkality/patches/mixin/GroovyLogReloadMixin.class"
+      ],
+      "removed": []
+    },
+    "core_and_client_bytes_unchanged": true,
+    "no_test_probe_or_dependency_classes_in_runtime_jars": true
+  },
+  "cleanup": {
+    "independently_verified_scopes": [
+      {
+        "accepted": true,
+        "game_container_absent": true,
+        "game_volume_absent": true,
+        "auth_project_absent": true,
+        "auth_volume_absent": true,
+        "network_absent": true
+      },
+      {
+        "accepted": false,
+        "game_container_absent": true,
+        "game_volume_absent": true,
+        "auth_project_absent": true,
+        "auth_volume_absent": true,
+        "network_absent": true
+      },
+      {
+        "accepted": true,
+        "game_container_absent": true,
+        "game_volume_absent": true,
+        "auth_project_absent": true,
+        "auth_volume_absent": true,
+        "network_absent": true
+      },
+      {
+        "accepted": false,
+        "game_container_absent": true,
+        "game_volume_absent": true,
+        "auth_project_absent": true,
+        "auth_volume_absent": true,
+        "network_absent": true
+      }
+    ],
+    "cold_exports_retained_privately": true,
+    "failed_startup_diagnostics_retained_privately": true,
+    "failed_worlds_deleted": false,
+    "excluded_attempts": [
+      "Late mixin registration refused: moved to early bootstrap",
+      "Old profile binding refused new Fix: version matched and regression test added",
+      "Private runner input path error before resource creation"
+    ]
+  },
+  "limits": {
+    "active_script_log_size_or_retention_bound": false,
+    "full_script_reload_command_test": false,
+    "real_enospc_test": false,
+    "inventory_gameplay_reacceptance": false,
+    "graphical_client_test": false,
+    "mcp_used": false,
+    "computer_use_used": false,
+    "existing_worlds_or_accounts_used": false,
+    "new_cli_env_or_dependencies": false,
+    "vps_or_player_release_changed": false,
+    "scheduler_resumed": false,
+    "issues_remaining_open": [
+      30,
+      33,
+      41
+    ]
+  }
+}

@@ -165,3 +165,32 @@ if args.target in {"all", "dj2"}:
         overlap = (set(a.namelist()) & set(b.namelist())) - {"META-INF/MANIFEST.MF"}
         if overlap:
             raise ValueError("Duplicate Core/Fix classes or resources")
+    controls = build / "groovy-log-controls"
+    controls.mkdir(exist_ok=True)
+    test_classpath = os.pathsep.join([str(fix), str(args.log4j_api)])
+    subprocess.run(
+        [
+            str(args.java.resolve()),
+            "-jar",
+            str(compiler),
+            "-1.8",
+            "-proc:none",
+            "-encoding",
+            "UTF-8",
+            "-classpath",
+            test_classpath,
+            "-d",
+            str(controls),
+            str(project / "tests/java/net/omkality/GroovyLogReloadControlsTest.java"),
+        ],
+        check=True,
+    )
+    subprocess.run(
+        [
+            str(args.java.resolve()),
+            "-cp",
+            os.pathsep.join([str(controls), test_classpath]),
+            "net.omkality.GroovyLogReloadControlsTest",
+        ],
+        check=True,
+    )
