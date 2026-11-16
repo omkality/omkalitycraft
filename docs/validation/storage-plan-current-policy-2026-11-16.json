@@ -1,0 +1,158 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "issues": [
+    30,
+    33,
+    41
+  ],
+  "base_commit": "f2c757eb6bda53bc5b61f38b8c493655207165dd",
+  "scope": "Separate current owner-facing storage budget report from the preserved schema-1 capacity snapshot used by frozen operations.",
+  "report": {
+    "removed_output": "ftb_backups_proposal",
+    "legacy_input_names": [
+      "OMK_STORAGE_BACKUP_COUNT",
+      "OMK_STORAGE_BACKUP_INTERVAL_HOURS"
+    ],
+    "legacy_values_read_or_applied": false,
+    "ignored_names_visible_only_when_present": true,
+    "managed_caps_or_calendar_rebound": false
+  },
+  "compatibility": {
+    "full_schema1_snapshot_unchanged": true,
+    "numeric_report_fields_unchanged": [
+      "ok",
+      "mode",
+      "enforced",
+      "disk_gib",
+      "budgets_gib",
+      "unallocated_gib"
+    ],
+    "full_consumer_profiles_unchanged": 4,
+    "comparison_scope": "Entire one-shot settings including embedded project plus effective env, journal/export/offsite dictionaries; default, GiB override, managed cap override and custom legacy 7/4 inputs."
+  },
+  "verification": {
+    "windows_focused": {
+      "passed": 242,
+      "skipped": 57,
+      "workers": 4,
+      "distribution": "loadfile"
+    },
+    "linux_focused": {
+      "passed": 299,
+      "exit_code": 0,
+      "oom": false,
+      "source_unchanged": true,
+      "readonly": true,
+      "network": "none",
+      "user": "65534:65534",
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4"
+    },
+    "old_public_behavior_control": {
+      "failed": 18,
+      "passed": 17,
+      "method": "Base policy implementation aliased to the new report entrypoint to reproduce the old public behavior without changing legacy policy semantics."
+    },
+    "native_cli": {
+      "passed": true,
+      "checks": 105,
+      "containers": 10,
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+      "cases": [
+        {
+          "name": "default",
+          "exit": 0,
+          "readonly": true,
+          "network": "none",
+          "user": "65534:65534",
+          "oom": false
+        },
+        {
+          "name": "project-override",
+          "exit": 0,
+          "readonly": true,
+          "network": "none",
+          "user": "65534:65534",
+          "oom": false
+        },
+        {
+          "name": "managed-count-separate",
+          "exit": 0,
+          "readonly": true,
+          "network": "none",
+          "user": "65534:65534",
+          "oom": false
+        },
+        {
+          "name": "retired-count",
+          "exit": 0,
+          "readonly": true,
+          "network": "none",
+          "user": "65534:65534",
+          "oom": false
+        },
+        {
+          "name": "retired-interval",
+          "exit": 0,
+          "readonly": true,
+          "network": "none",
+          "user": "65534:65534",
+          "oom": false
+        },
+        {
+          "name": "retired-both-marker",
+          "exit": 0,
+          "readonly": true,
+          "network": "none",
+          "user": "65534:65534",
+          "oom": false
+        },
+        {
+          "name": "budget-overflow",
+          "exit": 1,
+          "readonly": true,
+          "network": "none",
+          "user": "65534:65534",
+          "oom": false
+        },
+        {
+          "name": "staging-too-small",
+          "exit": 1,
+          "readonly": true,
+          "network": "none",
+          "user": "65534:65534",
+          "oom": false
+        },
+        {
+          "name": "active-field-marker",
+          "exit": 1,
+          "readonly": true,
+          "network": "none",
+          "user": "65534:65534",
+          "oom": false
+        },
+        {
+          "name": "consumer-compatibility",
+          "exit": 0,
+          "readonly": true,
+          "network": "none",
+          "user": "65534:65534",
+          "oom": false
+        }
+      ],
+      "isolation": "UID 65534, readonly source/root, cap_drop ALL, network none, no data volumes; bounded CPU/RAM/PIDs/tmpfs.",
+      "full_policy_profiles_compared": 4,
+      "all_owned_containers_removed": true
+    },
+    "golden_fixture": "tests/fixtures/storage-plan-schema1.json from base snapshot; exact full internal dictionary preserved."
+  },
+  "limitations": [
+    "Budget report only; no disk quota, backup writer or scheduler enabled.",
+    "Internal legacy fields remain intentionally for serialized frozen-policy comparisons; current CLI does not recommend them.",
+    "Policy/snapshot comparison is not a new full backup/restore/offsite transfer or Minecraft lifecycle acceptance.",
+    "No saved policy, store or user data loaded or rewritten by this acceptance.",
+    "No Java/JAR changes, GUI run, player release or VPS deployment.",
+    "Draft #223/#220 GUI acceptance and broader #30/#33/#41 remain open; calendar implementation stays paused."
+  ],
+  "private_evidence": "Raw baseline dictionaries, helper scripts and logs remain local outside Git."
+}
