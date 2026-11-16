@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "issue": 181,
+  "source_base_commit": "107eaa24aa62a68a2116d7d836bf02ea3dd972af",
+  "source_candidate_digest": "4865d91cfadfe39c32d487f0f10cc1f56dc948d1592727560ded38fd4e2ba9b0",
+  "platform": "Linux x86_64 / Ubuntu 24.04 WSLg",
+  "renderer": "Mesa 25.2.8 llvmpipe LLVM 20.1.2 / OpenGL 4.5 compatibility",
+  "java": {
+    "version": "Temurin 1.8.0_504-b01",
+    "image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "export_tar_sha256": "6d809fb7fdfa376676a6457bd537f280d0a1d281218a2723c26f5887487f8b15",
+    "system_java_changed": false
+  },
+  "native_metadata": {
+    "url": "https://piston-meta.mojang.com/v1/packages/832d95b9f40699d4961394dcf6cf549e65f15dc5/1.12.2.json",
+    "sha1": "832d95b9f40699d4961394dcf6cf549e65f15dc5",
+    "artifacts": [
+      {
+        "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209",
+        "file": "lwjgl-platform-2.9.4-nightly-20150209-natives-linux.jar",
+        "url": "https://libraries.minecraft.net/org/lwjgl/lwjgl/lwjgl-platform/2.9.4-nightly-20150209/lwjgl-platform-2.9.4-nightly-20150209-natives-linux.jar",
+        "sha1": "931074f46c795d2f7b30ed6395df5715cfd7675b",
+        "sha256": "d312147c3999b868fd649887f45203a4195bc10fc563cee4c4f8d22761421f94",
+        "size": 578680
+      },
+      {
+        "name": "net.java.jinput:jinput-platform:2.0.5",
+        "file": "jinput-platform-2.0.5-natives-linux.jar",
+        "url": "https://libraries.minecraft.net/net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-linux.jar",
+        "sha1": "7ff832a6eb9ab6a767f1ade2b548092d0fa64795",
+        "sha256": "1ab4d194277816b6105253d224c8c69f1b6d720690efe7c85f3ce884f0ea273d",
+        "size": 10362
+      },
+      {
+        "name": "com.mojang:text2speech:1.10.3",
+        "file": "text2speech-1.10.3-natives-linux.jar",
+        "url": "https://libraries.minecraft.net/com/mojang/text2speech/1.10.3/text2speech-1.10.3-natives-linux.jar",
+        "sha1": "ab7896aec3b3dd272b06194357f2d98f832c0cfc",
+        "sha256": "30f85b0ff695941095f73ede14cc55c0ca1f0fdc34f15c4906c95d5e1d545209",
+        "size": 7833
+      }
+    ]
+  },
+  "xrandr": {
+    "package": "x11-xserver-utils",
+    "version": "7.7+10build2",
+    "sha256": "ed933dc434b230239073640278f6eada663e6321e831f1f487743f8bf0558356",
+    "source": "https://archive.ubuntu.com/ubuntu/pool/main/x/x11-xserver-utils/x11-xserver-utils_7.7+10build2_amd64.deb",
+    "system_installation": false
+  },
+  "mode": "Изолированный singleplayer: подготовка в creative, чтение и крафт в survival; диагностическая offline identity; повторной Drasl/multiplayer приёмки нет.",
+  "copied_source_files_verified": 5785,
+  "windows_runtime_and_native_files_replaced": 186,
+  "source_mod_jars_unchanged": 226,
+  "mcp_diagnostic_overlay_sha256": "e2c3cb80c6e45a11c7e2835b46e0183bf0e5f5f15ca1c3acef5f4fe02818e182",
+  "loaded_owned_client_mod": "0.1.7",
+  "render": {
+    "items": 59,
+    "ids_meta_counts_match": 59,
+    "pixels_compared": 60416,
+    "different_pixels": 0,
+    "target_model_warnings": 0,
+    "all_models_textures_scripts_and_orphan_unchanged": true
+  },
+  "cold_59": {
+    "conditions": 126,
+    "items": 59,
+    "chest_items": 54,
+    "player_items": 5,
+    "ground_items": 0,
+    "chunks_read": 1252,
+    "archive_sha256": "895b54a4705fb5e8657aa13feb9c154d91307b6d209dfd6218aee7169e9e8d99",
+    "archive_bytes": 1406126,
+    "archive_test_passed": true,
+    "source_unchanged": true
+  },
+  "puzzle": {
+    "grid": "9x9",
+    "recipe": "contenttweaker:it5",
+    "native_mcp_calls": 287,
+    "normal_left_clicks": 60,
+    "pixels_compared": 82944,
+    "different_pixels": 0,
+    "wrong_last_piece_has_no_output": true,
+    "correct_last_piece_has_output": true,
+    "claimed_native_output": true,
+    "item_commands_after_freeze": false,
+    "cold": {
+      "conditions": 16,
+      "input_units_frozen": 82,
+      "recipe_input_units": 81,
+      "output": {
+        "contenttweaker:puzzle_tile_gbbgr": 1,
+        "contenttweaker:it5": 1
+      },
+      "matrix": {},
+      "ground": {},
+      "native_types": {
+        "contenttweaker:puzzle_tile_gbbgr": {
+          "Count": 3,
+          "Damage": 2
+        },
+        "contenttweaker:it5": {
+          "Count": 3,
+          "Damage": 2
+        }
+      },
+      "chunks_read": 1366,
+      "archive_sha256": "88cc35a8a40c4072b0e8a18eaa226fe76a3a19f035ded3785c208e426d4aa529",
+      "archive_bytes": 1208742,
+      "archive_test_passed": true,
+      "first_world_unchanged": true
+    }
+  },
+  "cleanup": {
+    "client_exit": 0,
+    "owned_linux_root_removed": true,
+    "linux_bytes_removed": 841195484,
+    "windows_bytes_removed": 131044816,
+    "verified_world_archives_retained": 2,
+    "no_orchestrator_permissions_added": true
+  },
+  "private_rehearsal_notes": [
+    "Первый старт остановился в LWJGL при отсутствии внешнего xrandr; добавлен только локальный PATH тестового процесса.",
+    "Изначальный сборщик inputs не отфильтровал macOS rule; отдельная подготовка исправлена до старта.",
+    "Осмотр WSLg-окна через Windows capture дважды завершился timeout; кадры получены штатным client_screenshot MCMCP.",
+    "Подготовки с ещё не загруженным chunk, пустым /clear и ограничением vanilla slot.container.54 не включены в приёмку; после заморозки материалов применялись только обычные GUI-клики.",
+    "Первый cold oracle ошибочно ожидал server-only Core/Fix в client-only составе; сверка ограничена фактическим подписанным клиентом, весь состав JAR проверен.",
+    "Медленное readonly-хеширование JAR через UNC остановлено до приёмки; те же SHA256 повторно проверены внутри Linux, cold NBT и архивы проверены заново."
+  ],
+  "remaining": [
+    "macOS render",
+    "BetterQuesting progression and retrieval",
+    "Linux packaged profile, Drasl and multiplayer",
+    "Hardware Linux GPU coverage"
+  ],
+  "player_manifest_changed": false,
+  "java_mod_code_changed": false,
+  "vps_deployed": false,
+  "calendar_scheduler_resumed": false
+}
