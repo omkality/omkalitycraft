@@ -40,9 +40,9 @@
 
 ### Раздельные бюджеты файловых записей
 
-Инвентаризация logging-части #30 на 13 ноября 2026. Эти лимиты принадлежат
+Инвентаризация logging-части #30, обновлена 16 ноября 2026. Эти лимиты принадлежат
 разным файлам/томам и не становятся общей квотой от наличия переменной окружения.
-В общий расчёт входят активные файлы, архивы, служебные SQLite/journal и staging.
+В общий расчёт входят активные файлы, архивы, служебные WAL/journal и staging.
 
 | Запись | Где задаётся политика | Default / оставшаяся граница |
 |---|---|---|
@@ -53,7 +53,7 @@
 | CT/Groovy отдельные файлы | Собственные Writer модов | Жёсткого online cap пока нет; см. ниже |
 | Portable Python stdout/launcher log | `omk/diagnostics.py`, launcher callers | 3 × 8 МиБ /3 × 1 МиБ, фиксированная клиентская политика |
 | Закрытые diagnostic ZIP | `deploy/diagnostics.example.env` | 5 /64 МиБ; только export, не source logs |
-| Resource-history collector | `deploy/metrics/example.env` | SQLite 64 МиБ + полный rollback journal/reserve; Docker stdout `1m × 2` |
+| Prometheus / Telegraf | `deploy/metrics/example.env` | TSDB blocks 1024 МиБ /180 дней (ранняя граница), отдельно WAL/head/compaction и reserve; Docker stdout каждого сервиса `1m × 2`. [Бюджет и scrape limits](RESOURCE_HISTORY.md) |
 | Завершённые operator journals | `deploy/nightly.example.env` | Opt-in archive, 256 МиБ /10000 файлов; pending recovery references не удаляются |
 
 `OMK_STORAGE_LOGS_GIB=4` — плановая часть общего бюджета, **не** quota или
