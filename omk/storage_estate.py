@@ -17,7 +17,7 @@ from omk.fs import regular
 from omk.profiles import PROJECT_ROOT
 from omk.storage_policy import storage_plan
 
-SHARED = {"auth", "content", "reports", "exports"}
+SHARED = {"auth", "content", "reports", "exports", "metrics"}
 
 
 def shared(config):
@@ -36,7 +36,7 @@ def shared(config):
         or type(doc["schema"]) is not int
         or doc["schema"] != 1
         or not isinstance(doc["volumes"], dict)
-        or not 1 <= len(doc["volumes"]) <= 4
+        or not 1 <= len(doc["volumes"]) <= len(SHARED)
         or "auth" not in doc["volumes"]
         or set(doc["volumes"]) - SHARED
     ):

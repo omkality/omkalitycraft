@@ -26,7 +26,8 @@ owner = "omk-auth"
 
 `auth` обязателен: аккаунты и ключ подписи нельзя молча пропустить в общем учёте.
 Дополнительные роли — `content` (CDN/launcher payload), `reports` (приватная
-диагностика) и `exports` (временные приватные выгрузки). Только named volumes;
+диагностика), `exports` (временные приватные выгрузки) и `metrics` (полный том
+Prometheus TSDB). Только named volumes;
 произвольные host paths и каталог Docker daemon в helper не передаются.
 
 Тома не создаются, не усыновляются и не получают labels ради проверки. При
@@ -41,9 +42,40 @@ Source/store и текущие reset/restore targets берутся из пре�
 показывает ненастроенные дополнительные роли. Неперечисленные старые/orphan volumes
 автоматически не сканируются и не удаляются.
 
+### Том мониторинга
+
+Для стандартного monitoring Compose с явно выбранным project `omk-metrics`
+добавляем в тот же schema-1 реестр:
+
+```toml
+[volumes.metrics]
+volume = "omk-metrics_tsdb"
+label = "com.docker.compose.project"
+owner = "omk-metrics"
+```
+
+Имя и owner должны соответствовать фактическому Compose project. Роль
+необязательна для старых реестров; без неё `missing_shared_roles` содержит
+`metrics`, а физически занятый неразобранный объём по-прежнему относится к
+`system`. Явный том показывает отдельные logical/allocated bytes и число файлов.
+Он проверяется по label/времени создания до и после обхода, как остальные общие
+тома, и не может совпадать с auth/game/store/staging volumes.
+
+Считается **всё дерево** тома: blocks/index/chunks, `wal`, `chunks_head`, временные
+и прочие файлы. Содержимое samples не читается. Лимит retention blocks не равен
+размеру тома; место WAL/head/compaction тоже входит в проектный бюджет. Это
+соответствует [устройству хранения Prometheus](https://prometheus.io/docs/prometheus/latest/storage/).
+Резерв и настройки описаны в [RESOURCE_HISTORY](RESOURCE_HISTORY.md#история-место-и-перенос).
+
+Активная запись или compaction могут изменить дерево во время обхода и вызвать
+отказ вместо частичного отчёта. Для согласованного сравнения выбираем тихое окно;
+утилита сама не останавливает Prometheus и не создаёт snapshot TSDB.
+
 ## Как считается бюджет
 
-Используется тот же [план через OMK_STORAGE_*](WORLDS_AND_STORAGE.md). Все серверы
+Используется тот же внутренний [план через OMK_STORAGE_*](WORLDS_AND_STORAGE.md).
+Его schema-1 контракт сохранён для существующих операций; актуальный CLI-отчёт
+описан [отдельно](WORLDS_AND_STORAGE.md#старые-ftb-параметры-в-отчёте). Все серверы
 делят один проектный бюджет; каждой сборке не выделяется ещё один полный диск.
 Планируемая ёмкость не подменяется огромным виртуальным диском Docker Desktop.
 Если объявленные 200 ГиБ больше измеренного filesystem, это явно отмечается.
@@ -56,12 +88,17 @@ Source/store и текущие reset/restore targets берутся из пре�
 | Предыдущие/отклонённые/частичные поколения, reset/restore targets, exports | `staging` |
 | Game logs, crash reports, reports | `logs` |
 | Shared content | `content` |
-| Runtime/прочие source-файлы, auth и неразобранный занятый объём | `system` |
+| Runtime/прочие source-файлы, auth, metrics и неразобранный занятый объём | `system` |
 
 По каждой категории возвращаются logical/allocated bytes и консервативный
 `charged_bytes`: для каждой исходной группы берётся большее из двух значений.
 Таким образом, sparse-файл не выглядит бесплатным, а служебные blocks каталогов
 не теряются. Это оценка, не filesystem quota.
+
+Явный `metrics` использует существующий `system` и не увеличивает план диска.
+Его allocated bytes вычитаются из неразобранного расхода этого filesystem;
+одни физические bytes не прибавляются дважды. Если logical size больше allocated
+(sparse-файл), разница по-прежнему учитывается консервативно.
 
 Общий Linux filesystem учитывается один раз независимо от числа mounts.
 `available_bytes` — минимум наблюдений до/после каждого обхода, `below_reserve`
@@ -110,6 +147,13 @@ Symlink/hardlink/special file, пересечение roots, превышени�
 останавливает Drasl/сервер ради результата.
 
 ## Приёмка и оставшаяся работа
+
+16 ноября добавлена отдельная приёмка роли `metrics`: настоящая Prometheus TSDB
+с blocks/WAL/head и три синтетических source/store/auth тома. В 46 условиях
+размеры/файлы сверены независимо, каждый census сохранил контрольные manifests;
+проверены отказы и чтение прежней истории после restart. Пять неудачных подготовок
+обвязки не включены в успешный прогон. Это не новый запуск Minecraft/Drasl;
+[протокол](validation/estate-metrics-2026-11-16.json).
 
 На десяти свежих Linux Docker volumes выполнена настоящая CLI: две отдельные
 копии принятых DJ2 экспортов, два backup store, reset/restore, реальный Drasl и

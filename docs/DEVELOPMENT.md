@@ -27,6 +27,95 @@ same-world restart и свежим обычным клиентом без MCP/se
 manifest, live-сервер, VPS и paused calendar scheduler не переключались.
 [Контракт](DJ2_ITEM_CUSTODY.md), [протокол](validation/dj2-disconnect-fix-2026-11-16.json).
 
+## Актуальный read-only storage plan — 16 ноября 2026
+
+#30/#33: старый CLI ещё выдавал `ftb_backups_proposal` с 2h/12/48 GB, хотя принят
+отдельный managed writer. Новый `storage_report` оформляет текущий вывод CLI:
+предложения FTB нет; старые count/interval имена перечисляются только при наличии
+в `ignored_environment`, без чтения значений. Автопереноса в managed caps/календарь
+нет. Внутренний `storage_plan` сохранён целиком: его точный schema-1 payload
+встроен в frozen journals и сравнивается при продолжении. Менять этот snapshot
+ради оформления отчёта нельзя. Проверка замороженной политики не ослаблялась.
+
+242 Windows passed /57 POSIX skipped, 299 readonly/nonroot Linux passed. Старое
+публичное поведение провалило 18 контролей, 17 прежних/compatibility прошли.
+Native CLI: 105 условий, 10 контейнеров без сети/томов данных; default/override,
+separate managed count, ignored legacy markers, budget/staging/active-marker
+отказ и readonly source. Numeric report fields совпали с baseline; полные policy
+outputs journal/export/offsite и one-shot cycle, включая project snapshot и
+effective env, совпали для четырёх профилей Windows/Linux. Отдельный golden
+schema-1 fixture защищает исторический payload; custom 7/4 не меняет managed
+count 12. Свои контейнеры удалены.
+
+Реализация календаря, live-политики/данные, Java/JAR/player release/VPS прежние;
+#30/#33/#41 открыты, #223 ждёт GUI, scheduler на паузе.
+[Контракт](WORLDS_AND_STORAGE.md#старые-ftb-параметры-в-отчёте),
+[протокол](validation/storage-plan-current-policy-2026-11-16.json).
+
+## Явный учёт TSDB в проектном storage census — 16 ноября 2026
+
+Шаг #146/#33/#30: существующий `storage estate` принимает необязательный shared
+`metrics` в schema 1. Ownership/CreatedAt/alias, readonly metadata walker и
+общий лимит обхода прежние. Весь том относится к `system`; его физический объём
+выходит из неразобранного расхода, sparse-разница учитывается консервативно.
+Новых CLI/env/deps/quota нет. Старый auth-only реестр принимается с видимым
+`metrics` в missing roles; unattended admission по-прежнему не выдаётся.
+
+54 Windows passed /32 POSIX skipped, 86 readonly/nonroot Linux passed. Старый
+controller/budget провалил 9 выбранных Windows контролей, старый Linux worker —
+четыре новых сценария при 13 прежних положительных контролях. Настоящая CLI
+на четырёх свежих named volumes: Prometheus TSDB с реальным backfilled block,
+WAL/head и синтетические source/store/auth. 46 условий вместе с cleanup;
+независимые файлы/bytes/allocated/SHA, legacy registry, foreign/alias/link/bound
+отказы, два stop0/noOOM и история после restart. По каждой census-команде полные
+контрольные manifests прежние; ожидаемый root mtime от создания/удаления test-link
+обвязки проверен отдельно. Пять непринятых подготовок/ошибок oracle сохранены,
+свои scopes очищены, в успешную приёмку они не включены.
+
+Это read-only учёт, не жёсткая общая квота/атомарный snapshot, backup integrity,
+gameplay или VPS admission. Java/версии/player release прежние, #223 ждёт GUI,
+#146/#33/#30/#41 открыты, scheduler на паузе.
+[Контракт](PROJECT_STORAGE.md#том-мониторинга),
+[протокол](validation/estate-metrics-2026-11-16.json).
+
+## Docker healthcheck мониторинга через env — 16 ноября 2026
+
+Следующий ограниченный шаг #30: timeout/retries вынесены в env, существующий
+health interval тоже проверяется в configure. Defaults `30s/5s/3` и четыре
+генерируемых файла побайтно прежние. CI smoke читает фактические Docker Inspect
+поля обоих сервисов для override `2s/1s/1`, до и после возврата источника.
+
+79 Windows и 79 readonly/nonroot Linux Docker тестов; старый renderer провалил
+30 новых случаев, старый Compose игнорировал оба новых override. Два свежих
+Docker-профиля (старт и restart каждого), 172 условия вместе с cleanup: default/override,
+два PID1 STOP/CONT с настоящими timeout failures, unhealthy → healthy без
+перезапуска, сохранность истории/clean restart, 18 отказов configure с сохранением
+четырёх файлов, stop0/noOOM. Числовые range cases проверены через Compose env;
+маркерные no-echo — через env configure после разбора Compose. Сам Docker может
+повторить некорректное значение при раннем разборе typed Compose-поля.
+
+Свои контейнеры/тома/сети удалены. Версии/зависимости/Java/игровая приёмка прежние;
+#30/#33/#41 открыты, #220/#223 ждут полной GUI-приёмки, scheduler на паузе.
+[Настройки](RESOURCE_HISTORY.md#проверка-работоспособности-контейнеров),
+[протокол](validation/monitoring-health-policy-2026-11-16.json).
+
+## Лимиты игрового scrape через env — 16 ноября 2026
+
+Ограниченный шаг #30: `OMK_METRICS_SCRAPE_SAMPLE_LIMIT` (1–100000, default 20000)
+и `OMK_METRICS_SCRAPE_BODY_MIB` (1–16, default 2) проходят существующий validator
+и Compose configure. Четыре default-файла совпали с базовым dev побайтно;
+host job/rules/exporter cfg, версии и зависимости прежние.
+
+45 Windows и 45 readonly/nonroot Linux Docker тестов; старый renderer провалил
+23 новых случая. Штатный monitoring smoke и два синтетических Docker-профиля
+(90 условий вместе с cleanup) приняли лимиты, отказ всего scrape, отсутствие
+ложного нуля, восстановление/чистый restart и восемь отказов configure без
+изменения файлов/echo маркера. Свои контейнеры/тома/сети удалены. Это приёмка
+мониторинга, не новая игровая/GUI/VPS приёмка; #30/#33/#41 остаются открытыми,
+календарный scheduler не возобновлялся.
+[Настройки](RESOURCE_HISTORY.md#лимиты-ответа-игрового-exporter),
+[протокол](validation/monitoring-scrape-limits-2026-11-16.json).
+
 ## Штатные GUI и сохранность после чистого restart — 16 ноября 2026
 
 #41/#36/#220: отдельный новый опыт на прежних Core 0.3.9 / DJ2Fix 0.1.7 /

@@ -1,0 +1,281 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "issues": [
+    30,
+    33,
+    41
+  ],
+  "base_commit": "b1ef5d165f45bb765daf43a9525a20ccb0695e73",
+  "scope": "Expose existing per-game-target Prometheus scrape limits through validated env; no Java/game changes.",
+  "settings": {
+    "OMK_METRICS_SCRAPE_SAMPLE_LIMIT": {
+      "default": 20000,
+      "min": 1,
+      "max": 100000,
+      "unit": "samples after metric relabel"
+    },
+    "OMK_METRICS_SCRAPE_BODY_MIB": {
+      "default": 2,
+      "min": 1,
+      "max": 16,
+      "unit": "MiB uncompressed body"
+    }
+  },
+  "default_configuration_sha256": {
+    "prometheus.json": "23a5266abeea203671ff11ea3163e48b801bd8e7548d43559445656c0e564f72",
+    "rules.json": "fcd3b3841f14ece2edaa765bad0c7abae14665e9f1fcc92223c1ce796c61b415",
+    "telegraf.conf": "278a5752d8b2b80e84535213ba71bdefb171d4699dd8471fd08b27e515354ce0",
+    "dj2.exporter.cfg": "95b22c71260a9598aa3f62309ef3f4ee8eb4bb7b1eac777eaa3694403f1476c2"
+  },
+  "unchanged": [
+    "host job",
+    "recording rules",
+    "Telegraf config",
+    "game exporter config",
+    "image/dependency pins",
+    "owned mod sources and JARs"
+  ],
+  "verification": {
+    "windows_unit": {
+      "passed": 45,
+      "workers": 4,
+      "distribution": "loadfile"
+    },
+    "linux_unit": {
+      "passed": 45,
+      "exit_code": 0,
+      "oom": false,
+      "source_unchanged": true,
+      "readonly": true,
+      "network": "none",
+      "user": "65534:65534",
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4"
+    },
+    "old_renderer_negative_control": {
+      "base": "b1ef5d165f45bb765daf43a9525a20ccb0695e73",
+      "failed": 23,
+      "passed": 22,
+      "exit_code": 1
+    },
+    "standard_monitoring_smoke": {
+      "passed": true,
+      "coverage": [
+        "promtool config",
+        "real PromQL rules",
+        "Telegraf test",
+        "loopback Docker isolation/start/health",
+        "host metrics",
+        "dimension relabel/drop",
+        "unreachable game is absent",
+        "history after restart",
+        "host source loss/recovery"
+      ]
+    },
+    "native_scrape_limits": {
+      "passed": true,
+      "checks_including_cleanup": 90,
+      "images": {
+        "prometheus": "prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06",
+        "telegraf_standard_smoke": "telegraf:1.40.3-alpine@sha256:10fe8c974752c8088858f012cb47b71f5bb67c5695829be56d87dfbf8e0092b8",
+        "fixture_and_configure": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925"
+      },
+      "fixture": {
+        "synthetic_players": 2,
+        "sample_case_total_samples": 2002,
+        "large_case_uncompressed_bytes": 1309508,
+        "real_game": false
+      },
+      "profiles": [
+        {
+          "settings": "defaults",
+          "cases": [
+            {
+              "mode": "small",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            },
+            {
+              "mode": "samples",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            },
+            {
+              "mode": "small",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            },
+            {
+              "mode": "large",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            },
+            {
+              "mode": "zero",
+              "up": "1",
+              "error": "",
+              "online": "0"
+            },
+            {
+              "mode": "small",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            },
+            {
+              "mode": "samples",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            },
+            {
+              "mode": "small",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            },
+            {
+              "mode": "small",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            }
+          ],
+          "invalid_configure": [
+            {
+              "key": "SCRAPE_SAMPLE_LIMIT",
+              "case": "range",
+              "rejected": true,
+              "files_intact": true
+            },
+            {
+              "key": "SCRAPE_BODY_MIB",
+              "case": "range",
+              "rejected": true,
+              "files_intact": true
+            },
+            {
+              "key": "SCRAPE_SAMPLE_LIMIT",
+              "case": "marker",
+              "rejected": true,
+              "files_intact": true
+            },
+            {
+              "key": "SCRAPE_BODY_MIB",
+              "case": "marker",
+              "rejected": true,
+              "files_intact": true
+            }
+          ],
+          "cleaned": true
+        },
+        {
+          "settings": {
+            "OMK_METRICS_SCRAPE_SAMPLE_LIMIT": "1200",
+            "OMK_METRICS_SCRAPE_BODY_MIB": "1"
+          },
+          "cases": [
+            {
+              "mode": "small",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            },
+            {
+              "mode": "samples",
+              "up": "0",
+              "error": "sample limit exceeded",
+              "online": null
+            },
+            {
+              "mode": "small",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            },
+            {
+              "mode": "large",
+              "up": "0",
+              "error": "body size limit exceeded",
+              "online": null
+            },
+            {
+              "mode": "zero",
+              "up": "1",
+              "error": "",
+              "online": "0"
+            },
+            {
+              "mode": "small",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            },
+            {
+              "mode": "samples",
+              "up": "0",
+              "error": "sample limit exceeded",
+              "online": null
+            },
+            {
+              "mode": "small",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            },
+            {
+              "mode": "small",
+              "up": "1",
+              "error": "",
+              "online": "2"
+            }
+          ],
+          "invalid_configure": [
+            {
+              "key": "SCRAPE_SAMPLE_LIMIT",
+              "case": "range",
+              "rejected": true,
+              "files_intact": true
+            },
+            {
+              "key": "SCRAPE_BODY_MIB",
+              "case": "range",
+              "rejected": true,
+              "files_intact": true
+            },
+            {
+              "key": "SCRAPE_SAMPLE_LIMIT",
+              "case": "marker",
+              "rejected": true,
+              "files_intact": true
+            },
+            {
+              "key": "SCRAPE_BODY_MIB",
+              "case": "marker",
+              "rejected": true,
+              "files_intact": true
+            }
+          ],
+          "cleaned": true
+        }
+      ],
+      "restart": "Each profile restarts Prometheus, preserves historical samples and rechecks sample limit/recovery.",
+      "invalid_configure": "Eight nonzero exits through Compose; zero/above-range/marker cases; constant rejection text; marker not echoed; hashes of all four existing files unchanged.",
+      "cleanup": "Only fresh labelled projects/fixture containers/networks and their generated config/TSDB volumes removed. No remaining owned containers/volumes/networks."
+    }
+  },
+  "limitations": [
+    "Synthetic exporter acceptance, not a new Minecraft/gameplay or GUI run.",
+    "No VPS deployment or player release.",
+    "No long-running load or RAM/TSDB quota claim.",
+    "Host/Telegraf scrape remains unchanged.",
+    "Issue #30 broader configuration and CT/Groovy active-writer limits remain open.",
+    "Draft #223/#220 GUI acceptance remains pending.",
+    "Calendar scheduler remains paused."
+  ],
+  "private_evidence": "Raw fixture code, logs and runtime identifiers stay in the private local lab, outside Git."
+}

@@ -22,6 +22,11 @@ services:
       OMK_METRICS_INTERVAL_SECONDS: "${OMK_METRICS_INTERVAL_SECONDS:-30}"
       OMK_METRICS_RETENTION_DAYS: "${OMK_METRICS_RETENTION_DAYS:-180}"
       OMK_METRICS_RETENTION_MIB: "${OMK_METRICS_RETENTION_MIB:-1024}"
+      OMK_METRICS_SCRAPE_SAMPLE_LIMIT: "${OMK_METRICS_SCRAPE_SAMPLE_LIMIT:-20000}"
+      OMK_METRICS_SCRAPE_BODY_MIB: "${OMK_METRICS_SCRAPE_BODY_MIB:-2}"
+      OMK_METRICS_HEALTH_SECONDS: "${OMK_METRICS_HEALTH_SECONDS:-30}"
+      OMK_METRICS_HEALTH_TIMEOUT_SECONDS: "${OMK_METRICS_HEALTH_TIMEOUT_SECONDS:-5}"
+      OMK_METRICS_HEALTH_RETRIES: "${OMK_METRICS_HEALTH_RETRIES:-3}"
     volumes:
       - config:/etc/omk-metrics
       - type: bind
@@ -48,8 +53,8 @@ services:
     healthcheck:
       test: [CMD, wget, -q, --spider, "http://127.0.0.1:9090/-/ready"]
       interval: ${OMK_METRICS_HEALTH_SECONDS:-30}s
-      timeout: 5s
-      retries: 3
+      timeout: ${OMK_METRICS_HEALTH_TIMEOUT_SECONDS:-5}s
+      retries: ${OMK_METRICS_HEALTH_RETRIES:-3}
     volumes: [config:/etc/omk-metrics:ro, tsdb:/prometheus]
     networks: [metrics, game, admin]
 
@@ -64,8 +69,8 @@ services:
     healthcheck:
       test: [CMD, wget, -q, --spider, "http://127.0.0.1:9273/metrics"]
       interval: ${OMK_METRICS_HEALTH_SECONDS:-30}s
-      timeout: 5s
-      retries: 3
+      timeout: ${OMK_METRICS_HEALTH_TIMEOUT_SECONDS:-5}s
+      retries: ${OMK_METRICS_HEALTH_RETRIES:-3}
     volumes:
       - config:/etc/omk-metrics:ro
       # Empty volume on Docker's data filesystem: statfs without reading project,

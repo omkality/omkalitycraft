@@ -8,7 +8,17 @@ from pathlib import Path
 
 from omk.storage_inventory import scan, stamp
 
-ROLES = {"source", "store", "reset", "restore", "auth", "content", "reports", "exports"}
+ROLES = {
+    "source",
+    "store",
+    "reset",
+    "restore",
+    "auth",
+    "content",
+    "reports",
+    "exports",
+    "metrics",
+}
 
 
 def validate(request):

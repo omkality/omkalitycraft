@@ -1,0 +1,178 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "issues": [
+    30,
+    41
+  ],
+  "base_commit": "95f7bf624653524f1253ed1254577754c60d264d",
+  "scope": "Configurable Docker health timeout/retries and validation of all three health numbers; no gameplay change.",
+  "settings": {
+    "OMK_METRICS_HEALTH_SECONDS": {
+      "default": 30,
+      "min": 1,
+      "max": 300,
+      "unit": "seconds"
+    },
+    "OMK_METRICS_HEALTH_TIMEOUT_SECONDS": {
+      "default": 5,
+      "min": 1,
+      "max": 60,
+      "unit": "seconds"
+    },
+    "OMK_METRICS_HEALTH_RETRIES": {
+      "default": 3,
+      "min": 1,
+      "max": 10,
+      "unit": "consecutive failed probes"
+    }
+  },
+  "default_configuration_sha256": {
+    "prometheus.json": "23a5266abeea203671ff11ea3163e48b801bd8e7548d43559445656c0e564f72",
+    "rules.json": "fcd3b3841f14ece2edaa765bad0c7abae14665e9f1fcc92223c1ce796c61b415",
+    "telegraf.conf": "278a5752d8b2b80e84535213ba71bdefb171d4699dd8471fd08b27e515354ce0",
+    "dj2.exporter.cfg": "95b22c71260a9598aa3f62309ef3f4ee8eb4bb7b1eac777eaa3694403f1476c2"
+  },
+  "unchanged": [
+    "Prometheus/Telegraf HTTP probe commands",
+    "default health interval/timeout/retries",
+    "all four default generated files",
+    "artifact/dependency pins",
+    "Java sources/JARs",
+    "game/client release"
+  ],
+  "verification": {
+    "windows_unit": {
+      "passed": 79,
+      "workers": 4,
+      "distribution": "loadfile"
+    },
+    "linux_unit": {
+      "passed": 79,
+      "exit_code": 0,
+      "oom": false,
+      "source_unchanged": true,
+      "readonly": true,
+      "network": "none",
+      "user": "65534:65534",
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4"
+    },
+    "old_renderer_control": {
+      "failed": 30,
+      "passed": 49,
+      "exit_code": 1
+    },
+    "compose_control": {
+      "old_compose_ignores_new_timeout_and_retries": true,
+      "new_compose_applies_both": true,
+      "compose_marker_rejected_before_configure": true,
+      "compose_error_can_echo_marker": true
+    },
+    "standard_smoke": {
+      "passed": true,
+      "inspect_policy": {
+        "interval_ns": 2000000000,
+        "timeout_ns": 1000000000,
+        "retries": 1
+      },
+      "coverage": [
+        "real promtool configuration and rules",
+        "Telegraf input test",
+        "Docker healthy startup",
+        "both loaded health configurations before/after source recovery",
+        "history restart",
+        "unknown source absent and recovered"
+      ]
+    },
+    "native": {
+      "passed": true,
+      "checks_including_cleanup": 172,
+      "profiles": [
+        {
+          "settings": "defaults",
+          "loaded_health": {
+            "Interval": 30000000000,
+            "Timeout": 5000000000,
+            "Retries": 3
+          },
+          "stalls": [],
+          "passed": true,
+          "cleaned": true,
+          "invalid_configure": {
+            "numeric_range_cases_via_compose_env": 6,
+            "marker_cases_via_configure_container_env": 3,
+            "all_rejected": true,
+            "all_four_files_preserved": true,
+            "renderer_error_static": true
+          }
+        },
+        {
+          "settings": {
+            "OMK_METRICS_HEALTH_SECONDS": "2",
+            "OMK_METRICS_HEALTH_TIMEOUT_SECONDS": "1",
+            "OMK_METRICS_HEALTH_RETRIES": "1"
+          },
+          "loaded_health": {
+            "Interval": 2000000000,
+            "Timeout": 1000000000,
+            "Retries": 1
+          },
+          "stalls": [
+            {
+              "service": "agent",
+              "unhealthy": true,
+              "recovered": true,
+              "same_process": true,
+              "history_intact": true,
+              "failed_health_exit_codes": [
+                -1
+              ]
+            },
+            {
+              "service": "prometheus",
+              "unhealthy": true,
+              "recovered": true,
+              "same_process": true,
+              "history_intact": true,
+              "failed_health_exit_codes": [
+                -1
+              ]
+            }
+          ],
+          "passed": true,
+          "cleaned": true,
+          "invalid_configure": {
+            "numeric_range_cases_via_compose_env": 6,
+            "marker_cases_via_configure_container_env": 3,
+            "all_rejected": true,
+            "all_four_files_preserved": true,
+            "renderer_error_static": true
+          }
+        }
+      ],
+      "images": {
+        "prometheus": "prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06",
+        "telegraf": "telegraf:1.40.3-alpine@sha256:10fe8c974752c8088858f012cb47b71f5bb67c5695829be56d87dfbf8e0092b8",
+        "configure_and_volume_reader": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925"
+      },
+      "clean_restarts": 2,
+      "faults": "Override profile sends SIGSTOP/SIGCONT to each owned service PID1. Docker reports real timed-out health probes, then healthy after CONT. Same container/start time/restart count; historical samples intact.",
+      "invalid": "Six numeric range cases use the actual Compose env path per profile; three marker cases set configure-container env after Compose type parsing. All 18 exits reject, preserve four files, and keep the renderer error static.",
+      "stop": "Both services stop with exit 0 and no OOM in each profile.",
+      "cleanup": "Only fresh labelled projects/networks and generated config/TSDB/probe volumes removed; no owned containers/volumes/networks remain.",
+      "stack_start_cycles_including_restarts": 4,
+      "individual_service_starts_including_restarts": 8
+    }
+  },
+  "limitations": [
+    "Health is component HTTP readiness, not proof of Minecraft tick progress or complete monitoring correctness.",
+    "No exact total failure-detection deadline or auto-restart guarantee.",
+    "Compose can echo malformed typed values before configure; no-echo claims apply to our renderer.",
+    "PID1 stalls and clean restarts only, not a long-running VPS load test or every failure mode.",
+    "No Minecraft GUI run, player release or VPS deployment.",
+    "Draft #223/#220 GUI acceptance remains pending.",
+    "Issue #30 broader audit and active CT/Groovy writer limits remain open.",
+    "Calendar scheduler remains paused."
+  ],
+  "private_evidence": "Raw lab scripts/logs/runtime identities remain local and outside Git."
+}
