@@ -1,0 +1,162 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "scope": "Reproduced DJ2 disconnect item loss, not a passed item-conservation acceptance",
+  "tested_source_commit": "064c3374c7718ee1afd0d90871628dcf819181b0",
+  "issue": 220,
+  "experiment_completed": true,
+  "item_conservation_passed": false,
+  "ready_for_players": false,
+  "runtime_changed": false,
+  "player_manifest_changed": false,
+  "vps_deployed": false,
+  "calendar_scheduler_resumed": false,
+  "artifacts": {
+    "core": {
+      "version": "0.3.9",
+      "file": "OmkalityCore-0.3.9.jar",
+      "sha256": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4"
+    },
+    "dj2fix": {
+      "version": "0.1.7",
+      "file": "OmkalityDJ2Fix-0.1.7.jar",
+      "sha256": "43df3f74022b23456365beee876d7613a0a50c821bc7a89a4864ba08cca69928"
+    },
+    "client": {
+      "version": "0.1.7",
+      "file": "OmkalityClient-0.1.7.jar",
+      "sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+    }
+  },
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "minimal_comparison": {
+    "graphical_client": false,
+    "variants": [
+      {
+        "variant": "owned",
+        "scenarios": [
+          {
+            "label": "explicit_close",
+            "initial_units": 4,
+            "offline_units": 4,
+            "rejoined_units": 4,
+            "item_conservation_passed": true,
+            "typed_nbt_equal": true
+          },
+          {
+            "label": "grid_disconnect",
+            "initial_units": 4,
+            "offline_units": 0,
+            "rejoined_units": 0,
+            "item_conservation_passed": false,
+            "typed_nbt_equal": false
+          },
+          {
+            "label": "cursor_disconnect",
+            "initial_units": 4,
+            "offline_units": 0,
+            "rejoined_units": 0,
+            "item_conservation_passed": false,
+            "typed_nbt_equal": false
+          }
+        ],
+        "native_click_confirmations": 11,
+        "world_sha256": "14d872d1d787d8a08f4497b08a4e3150a4b9331ff15a3d9ffd06f005bb15d531"
+      },
+      {
+        "variant": "upstream",
+        "scenarios": [
+          {
+            "label": "explicit_close",
+            "initial_units": 4,
+            "offline_units": 4,
+            "rejoined_units": 4,
+            "item_conservation_passed": true,
+            "typed_nbt_equal": true
+          },
+          {
+            "label": "grid_disconnect",
+            "initial_units": 4,
+            "offline_units": 0,
+            "rejoined_units": 0,
+            "item_conservation_passed": false,
+            "typed_nbt_equal": false
+          },
+          {
+            "label": "cursor_disconnect",
+            "initial_units": 4,
+            "offline_units": 0,
+            "rejoined_units": 0,
+            "item_conservation_passed": false,
+            "typed_nbt_equal": false
+          }
+        ],
+        "native_click_confirmations": 11,
+        "world_sha256": "654a6d188a3fa0b742a70b7a27151b5649868974f52b909a61472f9f77844dea"
+      }
+    ],
+    "unchanged_other_mod_jars": 207,
+    "other_mod_catalog_sha256": "67bed65031343f022a0f58de4358162359b56b28885e4efa12595dd412d22895",
+    "actor_mode": "survival without OP",
+    "owned_operator_entries": 0,
+    "upstream_operator_entries": 1,
+    "automatic_deop": false,
+    "readonly_observer_sha256": "84a3688119c75fda5bf18271325b82f581e871e8ade7ee423cfa18022a196fcf",
+    "independent_checks": 53,
+    "independent_audit_sha256": "32eff096281cadde7661ea9a935a6b12f0690189d274a9a1621ac473b0e78fbf"
+  },
+  "graphical": {
+    "accepted": false,
+    "platform": "windows-x64",
+    "signed_rc2_digest": "d20c3084a79a483e155b1b82bf5fc1acd11b025b69ef4eb00c6ec61a4627767d",
+    "signed_files": 5970,
+    "mcp_diagnostic_overlay": true,
+    "positive_transitions": [
+      "gui_split_named_stack",
+      "gui_split_placed",
+      "gui_shift_merge",
+      "gui_shift_hotbar_return",
+      "gui_drag_pickup",
+      "gui_right_drag_distribution",
+      "gui_drag_recombined"
+    ],
+    "conserved_units_per_positive_transition": 81,
+    "typed_nbt_markers": 6,
+    "whole_run_failed": true,
+    "failed_recipe_assumption": "Vanilla planks-to-crafting-table recipe is removed in DJ2",
+    "failed_dependent_step_continued": true,
+    "abrupt_client_exit_code": 1,
+    "cold_export_sha256": "415ebd1b7ea680516742869226bb64deb4ad6657fa04d9f04b8df5ce515f48f9",
+    "cold_compounds_search": {
+      "nbt_files": 160,
+      "regions": 10,
+      "chunks": 778
+    },
+    "planks_found_in_cold_nbt": 0
+  },
+  "failed_attempts": {
+    "total": 5,
+    "retained_privately": true,
+    "causes": [
+      "Pinned Java image unavailable during first server staging",
+      "Fixture chunks not yet loaded before graphical world preparation",
+      "Unsupported vanilla recipe assumption and unguarded dependent step",
+      "Private Session API attribute mismatch",
+      "Upstream PlaneFix service OP entry differs from owned baseline"
+    ]
+  },
+  "cleanup": {
+    "named_resources_verified_absent": 39,
+    "scopes_with_full_resource_manifest": 6,
+    "initial_pre_world_volume_separately_checked_absent": true,
+    "exports_and_private_diagnostics_preserved": true,
+    "owned_crash_helper_stopped": true,
+    "orchestrator_test_permissions_removed": true
+  },
+  "remaining": [
+    "Fix and accept issue #220 with positive normal-use and repeated-disconnect controls",
+    "Complete graphical containers/native crafting/rejoin/restart acceptance",
+    "Run ordinary client/server control without MCP or readonly observer",
+    "Keep full release/VPS gate and the paused calendar scheduler unchanged"
+  ]
+}
