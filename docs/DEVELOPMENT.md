@@ -1,3 +1,24 @@
+## Docker healthcheck мониторинга через env — 16 ноября 2026
+
+Следующий ограниченный шаг #30: timeout/retries вынесены в env, существующий
+health interval тоже проверяется в configure. Defaults `30s/5s/3` и четыре
+генерируемых файла побайтно прежние. CI smoke читает фактические Docker Inspect
+поля обоих сервисов для override `2s/1s/1`, до и после возврата источника.
+
+79 Windows и 79 readonly/nonroot Linux Docker тестов; старый renderer провалил
+30 новых случаев, старый Compose игнорировал оба новых override. Два свежих
+Docker-профиля (старт и restart каждого), 172 условия вместе с cleanup: default/override,
+два PID1 STOP/CONT с настоящими timeout failures, unhealthy → healthy без
+перезапуска, сохранность истории/clean restart, 18 отказов configure с сохранением
+четырёх файлов, stop0/noOOM. Числовые range cases проверены через Compose env;
+маркерные no-echo — через env configure после разбора Compose. Сам Docker может
+повторить некорректное значение при раннем разборе typed Compose-поля.
+
+Свои контейнеры/тома/сети удалены. Версии/зависимости/Java/игровая приёмка прежние;
+#30/#33/#41 открыты, #220/#223 ждут полной GUI-приёмки, scheduler на паузе.
+[Настройки](RESOURCE_HISTORY.md#проверка-работоспособности-контейнеров),
+[протокол](validation/monitoring-health-policy-2026-11-16.json).
+
 ## Лимиты игрового scrape через env — 16 ноября 2026
 
 Ограниченный шаг #30: `OMK_METRICS_SCRAPE_SAMPLE_LIMIT` (1–100000, default 20000)

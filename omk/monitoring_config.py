@@ -24,6 +24,9 @@ def render(config, environment=None):
     mib = setting(env, "RETENTION_MIB", 1024, 256, 65536)
     sample_limit = setting(env, "SCRAPE_SAMPLE_LIMIT", 20000, 1, 100000)
     body_mib = setting(env, "SCRAPE_BODY_MIB", 2, 1, 16)
+    setting(env, "HEALTH_SECONDS", 30, 1, 300)
+    setting(env, "HEALTH_TIMEOUT_SECONDS", 5, 1, 60)
+    setting(env, "HEALTH_RETRIES", 3, 1, 10)
     expiry = interval * 3
     name = r"[a-z][a-z0-9_-]{0,47}"
     if (

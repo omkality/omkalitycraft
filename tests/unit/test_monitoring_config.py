@@ -174,7 +174,13 @@ def test_explicit_default_scrape_limits_preserve_every_rendered_byte(config):
     "key,bad",
     [
         pytest.param(key, bad, id=f"{key}-{reason}")
-        for key, maximum in (("SCRAPE_SAMPLE_LIMIT", 100000), ("SCRAPE_BODY_MIB", 16))
+        for key, maximum in (
+            ("SCRAPE_SAMPLE_LIMIT", 100000),
+            ("SCRAPE_BODY_MIB", 16),
+            ("HEALTH_SECONDS", 300),
+            ("HEALTH_TIMEOUT_SECONDS", 60),
+            ("HEALTH_RETRIES", 10),
+        )
         for reason, bad in (
             ("zero", "0"),
             ("negative", "-1"),
@@ -189,7 +195,7 @@ def test_explicit_default_scrape_limits_preserve_every_rendered_byte(config):
         )
     ],
 )
-def test_bad_scrape_limits_are_rejected_without_echoing_values(config, key, bad):
+def test_bad_policy_numbers_are_rejected_without_echoing_values(config, key, bad):
     with pytest.raises(ValueError) as error:
         render(config, {"OMK_METRICS_" + key: bad})
     assert str(error.value) == "Invalid monitoring setting: " + key
@@ -207,3 +213,19 @@ def test_scrape_limit_endpoints_are_accepted(config, samples, body):
     job = json.loads(files["prometheus.json"])["scrape_configs"][1]
     assert job["sample_limit"] == samples
     assert job["body_size_limit"] == f"{body}MB"
+
+
+@pytest.mark.parametrize(
+    "interval,timeout,retries", [(1, 1, 1), (300, 60, 10), (2, 1, 1), (30, 5, 3)]
+)
+def test_health_policy_does_not_change_tool_configuration(
+    config, interval, timeout, retries
+):
+    assert render(
+        config,
+        {
+            "OMK_METRICS_HEALTH_SECONDS": str(interval),
+            "OMK_METRICS_HEALTH_TIMEOUT_SECONDS": str(timeout),
+            "OMK_METRICS_HEALTH_RETRIES": str(retries),
+        },
+    ) == render(config, {})

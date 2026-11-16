@@ -95,8 +95,20 @@ def mock_game(network, project, source):
         execute(["docker", "rm", "--force", name])
 
 
+def check_health_policy(compose):
+    containers = compose("ps", "-q", "prometheus", "agent").split()
+    assert len(containers) == 2
+    for row in json.loads(execute(["docker", "inspect", *containers])):
+        policy = row["Config"]["Healthcheck"]
+        assert policy["Interval"] == 2_000_000_000
+        assert policy["Timeout"] == 1_000_000_000
+        assert policy["Retries"] == 1
+        assert row["State"]["Health"]["Status"] == "healthy"
+
+
 def exercise_runtime(compose, query, wait, target_is, start_game):
     compose("up", "-d", "--build", "--wait", "--wait-timeout", "90")
+    check_health_policy(compose)
     print("Monitoring smoke: host metrics", flush=True)
     wait(lambda: bool(query("mem_total")))
     wait(lambda: bool(query('disk_free{path="/storage/project"}')))
@@ -132,6 +144,7 @@ def exercise_runtime(compose, query, wait, target_is, start_game):
         # Raw/recording history can survive restart before the next good scrape.
         wait(lambda: query("mem_total and on(job,instance) (up == 1)") == [])
         compose("up", "-d", "--wait", "--wait-timeout", "90")
+        check_health_policy(compose)
         print("Monitoring smoke: recovered source", flush=True)
         wait(lambda: bool(query("mem_total")))
 
@@ -150,6 +163,8 @@ def check_runtime(source):
         "OMK_METRICS_PORT": str(port),
         "OMK_METRICS_INTERVAL_SECONDS": "5",
         "OMK_METRICS_HEALTH_SECONDS": "2",
+        "OMK_METRICS_HEALTH_TIMEOUT_SECONDS": "1",
+        "OMK_METRICS_HEALTH_RETRIES": "1",
     }
     command = [
         "docker",
