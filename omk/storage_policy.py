@@ -17,6 +17,7 @@ DEFAULTS = {
 
 
 def storage_plan(environ=None):
+    """Preserve the schema-1 capacity snapshot embedded in frozen operations."""
     environment = os.environ if environ is None else environ
     values = {}
     try:
@@ -51,6 +52,7 @@ def storage_plan(environ=None):
         "disk_gib": values["disk_gib"],
         "budgets_gib": {k.removesuffix("_gib"): v for k, v in budgets.items()},
         "unallocated_gib": values["disk_gib"] - allocated,
+        # Historical schema data for frozen comparisons; not current writer policy.
         "ftb_backups_proposal": {
             "backup_timer": values["backup_interval_hours"],
             "backups_to_keep": values["backup_count"],
@@ -64,6 +66,32 @@ def storage_plan(environ=None):
             "Для применения env нужен адаптер конфигурации; готового безопасного backup apply пока нет.",
         ],
     }
+
+
+def storage_report(environ=None):
+    """Current owner-facing budget, without obsolete writer recommendations."""
+    environment = os.environ if environ is None else environ
+    ignored = [
+        name
+        for name in ("OMK_STORAGE_BACKUP_COUNT", "OMK_STORAGE_BACKUP_INTERVAL_HOURS")
+        if name in environment
+    ]
+    budgets = {
+        "OMK_STORAGE_" + key.upper(): environment["OMK_STORAGE_" + key.upper()]
+        for key in DEFAULTS
+        if key.endswith("_gib") and "OMK_STORAGE_" + key.upper() in environment
+    }
+    result = storage_plan(budgets)
+    if result["ok"]:
+        result.pop("ftb_backups_proposal")
+        result["limits"] = [
+            *result["limits"][:3],
+            "Политика managed-копий задаётся отдельно; этот расчёт её не читает и не меняет.",
+            "Периодический writer и расписание этим расчётом не выбираются и не включаются.",
+        ]
+        if ignored:
+            result["ignored_environment"] = ignored
+    return result
 
 
 def add_storage_commands(sub):

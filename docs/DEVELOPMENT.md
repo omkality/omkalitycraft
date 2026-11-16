@@ -1,3 +1,28 @@
+## Актуальный read-only storage plan — 16 ноября 2026
+
+#30/#33: старый CLI ещё выдавал `ftb_backups_proposal` с 2h/12/48 GB, хотя принят
+отдельный managed writer. Новый `storage_report` оформляет текущий вывод CLI:
+предложения FTB нет; старые count/interval имена перечисляются только при наличии
+в `ignored_environment`, без чтения значений. Автопереноса в managed caps/календарь
+нет. Внутренний `storage_plan` сохранён целиком: его точный schema-1 payload
+встроен в frozen journals и сравнивается при продолжении. Менять этот snapshot
+ради оформления отчёта нельзя. Проверка замороженной политики не ослаблялась.
+
+242 Windows passed /57 POSIX skipped, 299 readonly/nonroot Linux passed. Старое
+публичное поведение провалило 18 контролей, 17 прежних/compatibility прошли.
+Native CLI: 105 условий, 10 контейнеров без сети/томов данных; default/override,
+separate managed count, ignored legacy markers, budget/staging/active-marker
+отказ и readonly source. Numeric report fields совпали с baseline; полные policy
+outputs journal/export/offsite и one-shot cycle, включая project snapshot и
+effective env, совпали для четырёх профилей Windows/Linux. Отдельный golden
+schema-1 fixture защищает исторический payload; custom 7/4 не меняет managed
+count 12. Свои контейнеры удалены.
+
+Реализация календаря, live-политики/данные, Java/JAR/player release/VPS прежние;
+#30/#33/#41 открыты, #223 ждёт GUI, scheduler на паузе.
+[Контракт](WORLDS_AND_STORAGE.md#старые-ftb-параметры-в-отчёте),
+[протокол](validation/storage-plan-current-policy-2026-11-16.json).
+
 ## Явный учёт TSDB в проектном storage census — 16 ноября 2026
 
 Шаг #146/#33/#30: существующий `storage estate` принимает необязательный shared
