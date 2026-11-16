@@ -1,3 +1,23 @@
+## Установка при изменении регистра пути — 16 ноября 2026
+
+#229/#181/#171: очистка различает отдельное устаревшее имя и alias единственной
+текущей записи по реальной ФС. Проверяются файл, родитель и непосредственные имена;
+одного samefile недостаточно для hardlinks. Обход дерева/удаление каталогов не
+добавлены. Ошибки сохраняют incomplete/history для повторной попытки.
+
+35 Windows passed/6 filesystem skips, 41 readonly/nonroot Linux passed; на прежнем
+Linux-коде 13 failures/2 положительных контроля исходного набора. Полные 5 971 файла
+через Installer/loopback HTTP на Windows/Linux: исходная установка, 59 case-only
+путей, возврат новым signed generation, полные SHA, repair по одному файлу и повтор
+без загрузок; личные файлы побайтно прежние. Все owned временные установки и
+контейнеры удалены. Linux metadata — транспортный fixture, не новый игровой runtime.
+
+Область case-only файловой установки проверена. Linux/macOS render, задания,
+проверенный portable build с новым минимумом, player promotion и общий возврат
+серверного состояния остаются отдельными работами. Java/JAR/live/VPS прежние;
+календарный scheduler на паузе. [Контракт](SIGNED_PACK_INSTALL.md),
+[протокол](validation/installer-case-paths-2026-11-16.json).
+
 ## Адресные пути puzzle tile моделей — 16 ноября 2026
 
 #181/#49/#36/#41: все 60 model blobs, 59 PNG и два script blobs сверены с upstream
@@ -19,8 +39,8 @@ payload. Client exit0, server stop0/noOOM, independent cold NBT: 54+5 по од�
 штуке, без drops. Свои ресурсы/права/процессы закрыты. Ошибочные подготовки частной
 обвязки до старта игры не засчитаны; новый игровой код для них не добавлялся.
 
-#181 остаётся открытым: Linux/macOS render, прохождение заданий, case-only
-upgrade/return и полный player release отдельно не приняты. Java/JAR/manifest/
+#181 остаётся открытым: Linux/macOS render, прохождение заданий и полный player
+release отдельно не приняты. Case-only upgrade/return проверен шагом #229 выше. Java/JAR/manifest/
 live-сервер/VPS прежние; календарный scheduler остаётся на паузе.
 [Контракт](DJ2_RESOURCE_MODELS.md), [протокол](validation/dj2-resource-models-2026-11-16.json).
 

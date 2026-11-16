@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "issue": 229,
+  "source_base_commit": "87732e8ccc72886cc94c4ee2bf88a4d7eaedfe14",
+  "installer_sha256": "2909fed6b55fa52de4b5d9b61fc14b8f8646c9f4c2c6cdcfa3801b080d379887",
+  "focused_tests": {
+    "windows": {
+      "passed": 35,
+      "filesystem_skipped": 6
+    },
+    "linux": {
+      "passed": 41,
+      "failed": 0
+    },
+    "new_cases": 18,
+    "existing_cases": 23
+  },
+  "baseline_linux_initial_subset": {
+    "failed": 13,
+    "passed": 2,
+    "total": 15
+  },
+  "full_windows": {
+    "platform": "windows-x64",
+    "source_base_digest": "578313a4fb0a05026ebfeca0fa80d61524047cae8c5f6ecbc9f72a9a128ccf9b",
+    "source_candidate_digest": "4865d91cfadfe39c32d487f0f10cc1f56dc948d1592727560ded38fd4e2ba9b0",
+    "files": 5971,
+    "bytes": 759730113,
+    "case_paths": 59,
+    "game_executed": false,
+    "temporary_signing_key_saved": false,
+    "steps": [
+      {
+        "phase": "initial",
+        "installed": true,
+        "all_signed_hashes_match": true,
+        "one_entry_per_case_pair": true,
+        "downloads": 5971,
+        "repeat_downloads": 0,
+        "repair_downloads": 1,
+        "personal_preserved": true
+      },
+      {
+        "phase": "update",
+        "installed": true,
+        "all_signed_hashes_match": true,
+        "one_entry_per_case_pair": true,
+        "downloads": 0,
+        "repeat_downloads": 0,
+        "repair_downloads": 1,
+        "personal_preserved": true
+      },
+      {
+        "phase": "return",
+        "installed": true,
+        "all_signed_hashes_match": true,
+        "one_entry_per_case_pair": true,
+        "downloads": 0,
+        "repeat_downloads": 0,
+        "repair_downloads": 1,
+        "personal_preserved": true
+      }
+    ],
+    "owned_temporary_install_removed": true
+  },
+  "full_linux": {
+    "platform": "linux-x64",
+    "source_base_digest": "578313a4fb0a05026ebfeca0fa80d61524047cae8c5f6ecbc9f72a9a128ccf9b",
+    "source_candidate_digest": "4865d91cfadfe39c32d487f0f10cc1f56dc948d1592727560ded38fd4e2ba9b0",
+    "files": 5971,
+    "bytes": 759730113,
+    "case_paths": 59,
+    "game_executed": false,
+    "temporary_signing_key_saved": false,
+    "steps": [
+      {
+        "phase": "initial",
+        "installed": true,
+        "all_signed_hashes_match": true,
+        "one_entry_per_case_pair": true,
+        "downloads": 5971,
+        "repeat_downloads": 0,
+        "repair_downloads": 1,
+        "personal_preserved": true
+      },
+      {
+        "phase": "update",
+        "installed": true,
+        "all_signed_hashes_match": true,
+        "one_entry_per_case_pair": true,
+        "downloads": 59,
+        "repeat_downloads": 0,
+        "repair_downloads": 1,
+        "personal_preserved": true
+      },
+      {
+        "phase": "return",
+        "installed": true,
+        "all_signed_hashes_match": true,
+        "one_entry_per_case_pair": true,
+        "downloads": 59,
+        "repeat_downloads": 0,
+        "repair_downloads": 1,
+        "personal_preserved": true
+      }
+    ],
+    "owned_temporary_install_removed": true,
+    "readonly_nonroot_network_none": true,
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "exit_code": 0,
+    "oom": false,
+    "owned_container_removed": true
+  },
+  "harness_notes": [
+    "Первый полный Linux probe завершил проверки, но host wrapper пытался скопировать остановленный tmpfs. Исправлена выгрузка из stdout; принят отдельный полный повтор."
+  ],
+  "scope": {
+    "game_executed": false,
+    "linux_runtime_validated": false,
+    "macos_game_validated": false,
+    "dependencies_changed": false,
+    "java_or_mod_payload_changed": false,
+    "player_manifest_published": false,
+    "live_or_vps_changed": false,
+    "calendar_scheduler_resumed": false
+  }
+}

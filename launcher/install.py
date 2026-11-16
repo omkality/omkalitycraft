@@ -30,6 +30,23 @@ class InstallCancelled(ReleaseError):
     pass
 
 
+def _same_directory_entry(left: Path, right: Path) -> bool:
+    """Distinguish an insensitive spelling alias from separate hard/symlinks."""
+    if not left.samefile(right) or not left.parent.samefile(right.parent):
+        return False
+    if left.name == right.name:
+        return True
+    # samefile alone also accepts two distinct hardlink/symlink entries. Only
+    # inspect their immediate parent, preserving the filesystem's exact spelling.
+    names = {left.name, right.name}
+    with os.scandir(left.parent) as entries:
+        for entry in entries:
+            names.discard(entry.name)
+            if not names:
+                return False
+    return True
+
+
 def current_platform() -> str:
     operating_system = {"Windows": "windows", "Linux": "linux", "Darwin": "macos"}.get(
         platform.system()
@@ -199,12 +216,17 @@ class Installer:
                 self.cancel.set()
                 raise
         self._check_cancel()
-        retained = {file.path.casefold() for file in release.files}
+        retained = {file.path.casefold(): file.path for file in release.files}
         for previous in history.values():
             for file in previous.files:
                 path = inside(folder, file.path)
-                if file.path.casefold() not in retained and path.is_file():
-                    # Remove only files owned by the previous signed release.
+                target = retained.get(file.path.casefold())
+                if target != file.path and path.is_file():
+                    if target is not None and _same_directory_entry(
+                        path, inside(folder, target)
+                    ):
+                        continue
+                    # Remove only a separate entry owned by a previous signed release.
                     path.unlink()
         self._state(folder, release, complete=True)
         progress(Progress("Готово к игре", release.total_size, release.total_size))
