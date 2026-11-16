@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "issues": [
+    146,
+    33,
+    30,
+    41
+  ],
+  "base_commit": "e8a45d08ad14272623cfc9f8079365ecffd6fbb2",
+  "scope": "Optional explicitly owned metrics volume in existing metadata-only project storage census.",
+  "contract": {
+    "registry_schema": 1,
+    "role": "metrics",
+    "required": false,
+    "budget": "system",
+    "new_budget_or_quota": false,
+    "whole_volume": true,
+    "missing_role_visible": true,
+    "readonly_mounts": true,
+    "content_read_by_census": false,
+    "ownership_and_recreation_checks_unchanged": true,
+    "no_double_physical_charge": true,
+    "sparse_charged_conservatively": true
+  },
+  "verification": {
+    "windows_focused": {
+      "passed": 54,
+      "skipped": 32,
+      "skip_scope": "POSIX metadata/statvfs/links tests; executed in Linux below",
+      "workers": 4,
+      "distribution": "loadfile"
+    },
+    "linux_focused": {
+      "passed": 86,
+      "exit_code": 0,
+      "oom": false,
+      "source_unchanged": true,
+      "readonly": true,
+      "network": "none",
+      "user": "65534:65534",
+      "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4"
+    },
+    "old_windows_controller_and_budget_control": {
+      "failed": 9,
+      "passed": 29,
+      "skipped": 17
+    },
+    "old_linux_inventory_worker_control": {
+      "failed": 4,
+      "passed": 13
+    },
+    "native": {
+      "passed": true,
+      "checks_including_cleanup": 46,
+      "images": {
+        "prometheus": "prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06",
+        "helper": "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925"
+      },
+      "named_volumes": 4,
+      "real_prometheus": true,
+      "real_minecraft_or_drasl": false,
+      "fixture": "Real promtool-created block older than head window, live self-scraped WAL and persisted head chunk. Other three volumes contain synthetic world/store/auth files; an 8 MiB sparse test file is explicitly authored in the metrics lab volume.",
+      "metrics_observation": {
+        "files": 9,
+        "directories": 5,
+        "apparent_bytes": 9636225,
+        "allocated_bytes": 1294336
+      },
+      "independent_file_counts_logical_and_allocated_bytes": true,
+      "baseline_cli_rejects_metrics_role": true,
+      "candidate_cli_accepts_role_once": true,
+      "each_census_command_preserved_full_independent_manifests": true,
+      "negative_fixture_root_mtime_change_verified_separately": true,
+      "payload_hashes_modes_sizes_and_allocations_preserved_across_controls": true,
+      "refusals": [
+        "foreign owner",
+        "role alias",
+        "entry bound",
+        "symlink"
+      ],
+      "legacy_registry_accepted_metrics_visibly_missing": true,
+      "backfilled_and_live_history_after_restart": true,
+      "clean_stops": 2,
+      "exit_codes": [
+        0,
+        0
+      ],
+      "oom_killed": false,
+      "network": "Fresh owned internal bridge, no published endpoint; census helper network none, readonly volumes and no Docker socket.",
+      "cleanup": "Own containers, four volumes and network removed after identity checks; no existing service data used."
+    },
+    "excluded_preparations": {
+      "count": 5,
+      "all_owned_scopes_removed": true,
+      "not_counted_as_accepted": true,
+      "reasons": [
+        "OpenMetrics CRLF fixture",
+        "readonly promtool temporary directory",
+        "fixture writer UID mismatch",
+        "short fixture lacked persisted head chunk",
+        "test-link root mtime oracle"
+      ]
+    },
+    "test_harness_correction": "An assertion scope error caused two Linux control tests to fail before being corrected; final focused Linux run passes all 86."
+  },
+  "limitations": [
+    "Metadata observation, not an atomic snapshot or backup-integrity check.",
+    "Busy TSDB writes/compaction can cause safe refusal; command does not stop Prometheus.",
+    "Project budget/reserve and unknown host usage remain conservative observations, not disk enforcement or player admission.",
+    "Metrics bytes use existing system budget; this small fixture does not establish VPS capacity.",
+    "No Java/JAR changes, game GUI acceptance, player release or VPS deployment.",
+    "Draft #223/#220 GUI acceptance remains pending.",
+    "Broader #146/#33/#30/#41 remain open; calendar scheduler remains paused."
+  ],
+  "source_reference": "https://prometheus.io/docs/prometheus/latest/storage/",
+  "private_evidence": "Raw fixture programs, manifests, logs and runtime identifiers stay in the private local lab."
+}

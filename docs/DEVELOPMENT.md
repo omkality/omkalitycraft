@@ -1,3 +1,29 @@
+## Явный учёт TSDB в проектном storage census — 16 ноября 2026
+
+Шаг #146/#33/#30: существующий `storage estate` принимает необязательный shared
+`metrics` в schema 1. Ownership/CreatedAt/alias, readonly metadata walker и
+общий лимит обхода прежние. Весь том относится к `system`; его физический объём
+выходит из неразобранного расхода, sparse-разница учитывается консервативно.
+Новых CLI/env/deps/quota нет. Старый auth-only реестр принимается с видимым
+`metrics` в missing roles; unattended admission по-прежнему не выдаётся.
+
+54 Windows passed /32 POSIX skipped, 86 readonly/nonroot Linux passed. Старый
+controller/budget провалил 9 выбранных Windows контролей, старый Linux worker —
+четыре новых сценария при 13 прежних положительных контролях. Настоящая CLI
+на четырёх свежих named volumes: Prometheus TSDB с реальным backfilled block,
+WAL/head и синтетические source/store/auth. 46 условий вместе с cleanup;
+независимые файлы/bytes/allocated/SHA, legacy registry, foreign/alias/link/bound
+отказы, два stop0/noOOM и история после restart. По каждой census-команде полные
+контрольные manifests прежние; ожидаемый root mtime от создания/удаления test-link
+обвязки проверен отдельно. Пять непринятых подготовок/ошибок oracle сохранены,
+свои scopes очищены, в успешную приёмку они не включены.
+
+Это read-only учёт, не жёсткая общая квота/атомарный snapshot, backup integrity,
+gameplay или VPS admission. Java/версии/player release прежние, #223 ждёт GUI,
+#146/#33/#30/#41 открыты, scheduler на паузе.
+[Контракт](PROJECT_STORAGE.md#том-мониторинга),
+[протокол](validation/estate-metrics-2026-11-16.json).
+
 ## Docker healthcheck мониторинга через env — 16 ноября 2026
 
 Следующий ограниченный шаг #30: timeout/retries вынесены в env, существующий

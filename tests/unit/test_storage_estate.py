@@ -100,7 +100,12 @@ def test_cli_counts_all_configured_servers_and_shared_auth_once(controller, caps
     assert report["configured_servers"] == ["dj2", "second"]
     assert report["unconfigured_servers"] == ["future"]
     assert report["shared_roles"] == ["auth"]
-    assert report["missing_shared_roles"] == ["content", "exports", "reports"]
+    assert report["missing_shared_roles"] == [
+        "content",
+        "exports",
+        "metrics",
+        "reports",
+    ]
     assert len(report["resources"]) == 5
     assert report["budget"]["categories"]["worlds"]["apparent_bytes"] == 200
     assert not report["budget"]["observed_within_limits"]
@@ -191,6 +196,104 @@ def test_shared_registry_missing_is_not_silently_ignored(controller):
     (cfg.private / "storage.toml").unlink()
     with pytest.raises(AdminError, match="explicit"):
         owner.shared(cfg)
+
+
+@pytest.fixture
+def metrics_controller(controller, monkeypatch):
+    cfg, _, state, _ = controller
+    file = cfg.private / "storage.toml"
+    file.write_text(
+        file.read_text()
+        + '\n[volumes.metrics]\nvolume="metrics-volume"\nlabel="omkality.project"\nowner="owned"\n'
+    )
+
+    def docker(*args, **kw):
+        state["calls"].append((args, kw))
+        assert args[:2] == ("volume", "inspect")
+        return json.dumps(
+            [
+                {
+                    "Name": args[2],
+                    "CreatedAt": (
+                        state["generation"] if args[2] == "metrics-volume" else 1
+                    ),
+                    "Labels": {"omkality.project": "owned"},
+                }
+            ]
+        )
+
+    monkeypatch.setattr(owner.backups, "docker", docker)
+    return controller
+
+
+def test_explicit_metrics_volume_is_counted_once_in_system_budget(metrics_controller):
+    cfg, _, state, _ = metrics_controller
+    report = owner.inspect(cfg, {})
+    assert report["shared_roles"] == ["auth", "metrics"]
+    assert report["missing_shared_roles"] == ["content", "exports", "reports"]
+    metrics = [r for r in report["resources"] if r["role"] == "metrics"]
+    assert len(metrics) == 1 and metrics[0]["server"] is None
+    assert metrics[0]["categories"]["metrics"]["apparent_bytes"] == 100
+    assert report["budget"]["categories"]["system"]["apparent_bytes"] == 200
+    assert not report["budget"]["admission_approved"]
+    assert state["worker"] == 1
+
+
+def test_metrics_recreation_during_census_is_refused(metrics_controller, monkeypatch):
+    cfg, _, state, worker = metrics_controller
+
+    def changed(*args):
+        value = worker(*args)
+        state["generation"] += 1
+        return value
+
+    monkeypatch.setattr(owner, "worker", changed)
+    with pytest.raises(AdminError, match="identity"):
+        owner.inspect(cfg, {})
+
+
+def test_foreign_metrics_is_refused_before_worker(metrics_controller, monkeypatch):
+    cfg, _, state, _ = metrics_controller
+    docker = owner.backups.docker
+
+    def foreign(*args, **kwargs):
+        rows = json.loads(docker(*args, **kwargs))
+        if args[2] == "metrics-volume":
+            rows[0]["Labels"] = {}
+        return json.dumps(rows)
+
+    monkeypatch.setattr(owner.backups, "docker", foreign)
+    with pytest.raises(AdminError, match="owned"):
+        owner.inspect(cfg, {})
+    assert state["worker"] == 0
+
+
+@pytest.mark.parametrize("alias", ["auth-volume", "dj2-source", "second-store"])
+def test_metrics_cannot_alias_another_owned_role(metrics_controller, alias):
+    cfg, _, _, _ = metrics_controller
+    file = cfg.private / "storage.toml"
+    file.write_text(file.read_text().replace("metrics-volume", alias))
+    with pytest.raises(AdminError, match="alias"):
+        owner.resources(cfg)
+
+
+def test_all_five_explicit_shared_roles_fit_the_registry(controller):
+    cfg, _, _, _ = controller
+    file = cfg.private / "storage.toml"
+    file.write_text(
+        file.read_text()
+        + "".join(
+            f'\n[volumes.{role}]\nvolume="{role}-volume"\nlabel="omkality.project"\nowner="owned"\n'
+            for role in ("content", "reports", "exports", "metrics")
+        )
+    )
+    assert set(owner.shared(cfg)) == {
+        "auth",
+        "content",
+        "reports",
+        "exports",
+        "metrics",
+    }
 
 
 def test_worker_uses_readonly_owned_volumes_without_docker_socket(
