@@ -2,6 +2,7 @@
 
 import hashlib
 import io
+import json
 import os
 import stat
 import tempfile
@@ -21,6 +22,22 @@ class Response(io.BytesIO):
 
 
 class BuildSafetyTests(unittest.TestCase):
+    def test_dj2_profile_binds_the_declared_fix_version(self):
+        source = Path(__file__).resolve().parents[1]
+        version = json.loads((source / "versions.json").read_bytes())["artifacts"][
+            "dj2fix"
+        ]["version"]
+        profile = dict(
+            line.split("=", 1)
+            for line in (source / "packs/dj2/profile.properties")
+            .read_text()
+            .splitlines()
+            if line and not line.startswith("#")
+        )
+        self.assertIn(
+            "omkalitydj2fix@" + version, profile["required.extensions"].split(",")
+        )
+
     def test_archive_metadata_does_not_depend_on_host_os(self):
         self.assertEqual(entry("example.class").create_system, 0)
         self.assertEqual(entry("example.class").date_time, (2026, 1, 1, 0, 0, 0))

@@ -1,5 +1,6 @@
 package net.omkality.dj2;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ public final class OmkalityEarlyMixinPlugin implements IFMLLoadingPlugin, IEarly
     public String getAccessTransformerClass() { return null; }
     public List<String> getMixinConfigs() {
         return FMLLaunchHandler.side()==Side.SERVER
-            ? Collections.singletonList("mixins.omkalitydj2fix.vanilla.json")
+            ? Arrays.asList("mixins.omkalitydj2fix.vanilla.json", "mixins.omkalitydj2fix.groovy.json")
             : Collections.<String>emptyList();
     }
 }
