@@ -129,3 +129,60 @@ def test_ambiguous_requests_refused(census, kind):
         }[kind]
     with pytest.raises(ValueError):
         worker.execute(request, root)
+
+
+def add_metrics(census):
+    request, root, _ = census
+    request["resources"].append({"id": "metrics", "role": "metrics", "world": "world"})
+    files = {
+        "wal/00000001": b"private-metrics-canary" * 100,
+        "chunks_head/000001": b"head" * 100,
+        "block/chunks/000001": b"block" * 200,
+        "block/index": b"index" * 30,
+    }
+    for name, body in files.items():
+        path = root / "metrics" / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(body)
+    return request, root, files
+
+
+def test_full_metrics_tree_is_counted_without_opening_files(census, monkeypatch):
+    request, root, files = add_metrics(census)
+    monkeypatch.setattr(Path, "open", lambda *a, **kw: pytest.fail("Opened TSDB file"))
+    value = worker.execute(request, root)
+    metrics = [r for r in value["resources"] if r["role"] == "metrics"]
+    assert len(metrics) == 1
+    assert metrics[0]["categories"]["metrics"]["files"] == len(files)
+    assert metrics[0]["categories"]["metrics"]["apparent_bytes"] == sum(
+        map(len, files.values())
+    )
+    assert "private-metrics-canary" not in str(value)
+    assert "000001" not in str(value)
+    assert value["metadata_only"] and not value["atomic_snapshot"]
+
+
+@pytest.mark.parametrize("kind", ["link", "mutation", "bound"])
+def test_metrics_census_rejects_links_changes_and_partial_walks(
+    census, monkeypatch, kind
+):
+    request, root, _ = add_metrics(census)
+    if kind == "link":
+        (root / "metrics/foreign").symlink_to(root / "auth")
+    elif kind == "bound":
+        request["limits"]["max_entries"] = 8
+    else:
+        scan = worker.scan
+
+        def changed(*args):
+            value = scan(*args)
+            if args[1] == "metrics":
+                (root / "metrics/wal/00000001").write_bytes(b"changed")
+            return value
+
+        monkeypatch.setattr(worker, "scan", changed)
+    with pytest.raises(
+        ValueError,
+        match={"link": "Linked", "mutation": "changed", "bound": "bound"}[kind],
+    ):
+        worker.execute(request, root)

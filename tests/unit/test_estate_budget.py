@@ -141,3 +141,30 @@ def test_corrupt_accounting_cannot_be_accepted(report, kind):
         )
     with pytest.raises(ValueError):
         assess(report, storage_plan({}))
+
+
+@pytest.mark.parametrize("apparent,allocated", [(GIB, GIB), (3 * GIB, GIB)])
+def test_explicit_metrics_moves_disk_use_out_of_unknown_without_double_charge(
+    report, apparent, allocated
+):
+    before = assess(report, storage_plan({}))["categories"]["system"]
+    report["resources"].append(
+        {
+            "id": "metrics",
+            "role": "metrics",
+            "categories": {
+                "metrics": {
+                    "apparent_bytes": apparent,
+                    "allocated_bytes": allocated,
+                }
+            },
+        }
+    )
+    report["filesystems"][0]["resources"].append("metrics")
+    after = assess(report, storage_plan({}))["categories"]["system"]
+    assert after["unattributed_charge_bytes"] == (
+        before["unattributed_charge_bytes"] - allocated
+    )
+    assert after["charged_bytes"] == before["charged_bytes"] + (
+        max(apparent, allocated) - allocated
+    )

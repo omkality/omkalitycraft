@@ -14,6 +14,7 @@ BUCKET = {
     "content": "content",
     "reports": "logs",
     "exports": "staging",
+    "metrics": "system",
 }
 
 
