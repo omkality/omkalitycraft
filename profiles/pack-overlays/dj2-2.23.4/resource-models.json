@@ -1,0 +1,853 @@
+{
+  "schema": 1,
+  "pack": "dj2",
+  "version": "2.23.4",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "scripts": [
+    {
+      "path": "scripts/ContentTweaker/ContentTweakerItems.zs",
+      "size": 73466,
+      "sha256": "fbfe4649e6b83bacfb0bb1e1d2ccbe6a4f6dcb769fc85a23e3efcc2025b83508"
+    },
+    {
+      "path": "scripts/Unique/ContentTweakerBag.zs",
+      "size": 56865,
+      "sha256": "f2bbeffc66655599b5e54a2759b214d47881cfe118aedab507e614f2e87bd837"
+    }
+  ],
+  "models": [
+    {
+      "item": "contenttweaker:puzzle_tile_gbbgr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Gbbgr.json",
+        "size": 109,
+        "sha256": "e6fb980f122d5c036ecfd954f5db8982c7cddbdf52a9d9c144363e6ba1aec7cd"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_gbbgr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_gbbgr.png",
+        "size": 571,
+        "sha256": "84fb5478d7b83bf344f93b2ce2b7c6c4eca60dc6ef652b82d63a100e07507b7b"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_gbggr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Gbggr.json",
+        "size": 109,
+        "sha256": "1bf00d23d8666fcb0d674aae1c6181f298eb07fe6f3a21473078bb4baa8803ff"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_gbggr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_gbggr.png",
+        "size": 607,
+        "sha256": "39e28cf8e541c3488556c99280bcbde894a0960a08edfc4d21b8621b7f7cbd5b"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_gbgog",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Gbgog.json",
+        "size": 109,
+        "sha256": "30cdda6001b4c9290f06c1c3af319da772e1fd0762cc40adade4557a1a3feea3"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_gbgog.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_gbgog.png",
+        "size": 617,
+        "sha256": "f15d16720010ff2026078c71a50bcb4685914e91a981ee4795d0915327b44ba6"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_gggob",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Gggob.json",
+        "size": 109,
+        "sha256": "588b8cfdeca2ccc379b25a9a072006c759caa6f27ae8a66ee5867a7229867eff"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_gggob.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_gggob.png",
+        "size": 600,
+        "sha256": "d4a641c5c28123f2c793f6704eaf871e878287dfba02bd64d3b170bdb6c1c70f"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_ggror",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Ggror.json",
+        "size": 109,
+        "sha256": "a7776bc50f335a1ddc7e763c9d682d3cac3ff50c7c94d233024e15cfa6017b5f"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_ggror.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_ggror.png",
+        "size": 612,
+        "sha256": "64165270da38394e4a28d36e88bc1d8f65f54f5d1e468be92807072e67c94288"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_ggrrg",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Ggrrg.json",
+        "size": 109,
+        "sha256": "52f5cd3ca191b828dd38abc989225c67b662594c8108668c85171f57c49065c0"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_ggrrg.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_ggrrg.png",
+        "size": 592,
+        "sha256": "bd69be9bcbb46c218cc8e44f22d81b7a6fc2f8dde4f1430744b0799a9a776108"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_ggrrr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Ggrrr.json",
+        "size": 109,
+        "sha256": "d5620775bd724970930e47e668eabcf5a7fa6b8b2b1e5fde43675e17c4416735"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_ggrrr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_ggrrr.png",
+        "size": 604,
+        "sha256": "b520310088e81296f1bba6e0cde8a9ea14c553d9f9ec8a8e135ccf328ed10e67"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_grbgb",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Grbgb.json",
+        "size": 109,
+        "sha256": "d6d6fd3910c2fde3669fa83146ac7934044de442f7363971f702bc7e0a02b131"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_grbgb.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_grbgb.png",
+        "size": 624,
+        "sha256": "9699e103ec14ba5e831d39e179e18f2242587b5594e03744f94821658f530983"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_grggb",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Grggb.json",
+        "size": 109,
+        "sha256": "c9b71fa91ec1da0483086412535a3e67b465bbabd0113514934e61d956e337c0"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_grggb.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_grggb.png",
+        "size": 605,
+        "sha256": "5db55f526eeb78295ea608525d0ee942f8244667c93ec955c2c6c5e31fc905aa"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_grrrg",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Grrrg.json",
+        "size": 109,
+        "sha256": "ed45e107c290e93a45bb52f1eb492c1502c1618ed7ac2e55e6929680e492d8f4"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_grrrg.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_grrrg.png",
+        "size": 615,
+        "sha256": "6b3d26aa9ecedfdff29f1574faf85be6620a33a325a9bf939bad8e5aab3e06e8"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_kbkbk",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Kbkbk.json",
+        "size": 109,
+        "sha256": "254fb80e5282b9d2ae3fee4181c1c30f20bf32c33b0e531f4a638e9ff478358e"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_kbkbk.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_kbkbk.png",
+        "size": 611,
+        "sha256": "731cbc31b217fb62df9d2464fbeca3ffc23006b016d97b6ba0d95d29fcbb89be"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_kbkkr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Kbkkr.json",
+        "size": 109,
+        "sha256": "e475d9a86619b25ab654b06c908ebd070d1ac4a0e84c52db5529dd0e8bc7da38"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_kbkkr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_kbkkr.png",
+        "size": 605,
+        "sha256": "d1b433c6fd3c58b53329a1256db4342dcecf77889e3922d00d640370f27a337c"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_kbokk",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Kbokk.json",
+        "size": 109,
+        "sha256": "cb8e8d4b28fe97403072607f8085d24b5e338873805d261add675b62a689ae13"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_kbokk.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_kbokk.png",
+        "size": 613,
+        "sha256": "bf5d158d2b1dc224dfedb44861f3e39396343b734dd94b96059feff892b5c6bb"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_kkkbk",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Kkkbk.json",
+        "size": 109,
+        "sha256": "70bab1ecd1d545c237d86ce1d1ae25abbff2a8eba11d656382cce1232e20391f"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_kkkbk.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_kkkbk.png",
+        "size": 587,
+        "sha256": "34488a1ec3f853f56a21637e3aa654c945f6072fb0e936a3902d95af0359a0a2"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_kkkbr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Kkkbr.json",
+        "size": 109,
+        "sha256": "4fff344175ca07cfc60dd7ebcad6800bc43521cd6b66b8c8662e65d315a7c18d"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_kkkbr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_kkkbr.png",
+        "size": 598,
+        "sha256": "c838b7fc9b07aa4c09551d348fa7a125616dfb24a247f47e67e0771bf1880c4b"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_kkkrr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Kkkrr.json",
+        "size": 109,
+        "sha256": "579e3cc78ef0d4747ef3c2922a9eaa0646d68fd6b9e001d9be7c6f2c8d70734c"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_kkkrr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_kkkrr.png",
+        "size": 598,
+        "sha256": "47a07cc0cd88234aefe0839fe6c3bf3aaed0723309344bf3f7dd8e3231b69892"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_kkrbr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Kkrbr.json",
+        "size": 109,
+        "sha256": "5e1d425854cf8939ebdbc6103aaceb9230623f8945222992fa833f9dcbde11da"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_kkrbr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_kkrbr.png",
+        "size": 608,
+        "sha256": "7ebe91985b9fabbbd8a231eac50075e441192769e9ac4a79b79e429ad1e16b62"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_kkrkr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Kkrkr.json",
+        "size": 109,
+        "sha256": "0e0d19b6c46e93d214b308620fd5b5ba6090234886f4b8d8a5e02efc51a47705"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_kkrkr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_kkrkr.png",
+        "size": 596,
+        "sha256": "de09d561f2dea3ae262c206d9dad58774577be499467b2a1a70850619baae2a3"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_kkrrr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Kkrrr.json",
+        "size": 109,
+        "sha256": "28d488c24b1949614a2547899ff3970e88413593e880452c87d468e829bd1fa7"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_kkrrr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_kkrrr.png",
+        "size": 604,
+        "sha256": "5d0fffe928ce0834ff98b53c68be642bdeadc262b9ff5151106e3bbf558b73cd"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_krkbb",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Krkbb.json",
+        "size": 109,
+        "sha256": "94782cec0876908aa50ac132aa300871b81db29b8aa7aea64ab9c34222fb9fc2"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_krkbb.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_krkbb.png",
+        "size": 623,
+        "sha256": "a9a860a7f3b3670761e80285ba450cd0fa484f83e4f0090682d1b11982fb30fd"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_krkkb",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Krkkb.json",
+        "size": 109,
+        "sha256": "d02431aa11acfa68654a05f167ad609748888c4bcd73afd5caa5e33a15d02e68"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_krkkb.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_krkkb.png",
+        "size": 604,
+        "sha256": "84933b0a0768d12eb2146f8d30564ee54251b09c3ab0e99a1e52ca5dafa489ba"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_krokb",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Krokb.json",
+        "size": 109,
+        "sha256": "083c168ea0800c489bf894b1ff3d835e150e06c57ba54d5e764a6758ed5fe561"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_krokb.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_krokb.png",
+        "size": 623,
+        "sha256": "83923692875f0b24b0a99c2765684847679ced0ccaffc55ca013a9039143dfd8"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_krrbk",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Krrbk.json",
+        "size": 109,
+        "sha256": "5c44e28882f27c0435f7025548a88ce5cf4e2b0f13f2fa18b84b2df657121ead"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_krrbk.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_krrbk.png",
+        "size": 618,
+        "sha256": "010a32856cc4226a4b5038f6e49795f6a06508ddaa221be604db4b487db22430"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_krrkk",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Krrkk.json",
+        "size": 109,
+        "sha256": "a377765ec6592891f2fee36ffa7fadff51fd8b20ba8042f12719f8d31a0d0ae5"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_krrkk.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_krrkk.png",
+        "size": 607,
+        "sha256": "aecd72a6175c9570f826ddfa29b30f02c8747c5a2b6107abd4c4f3eabe3b8f73"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_krrrk",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Krrrk.json",
+        "size": 109,
+        "sha256": "845b9225d56bffd575888e865f7e9c69770c2fa1a16f51ac34abb833b5583571"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_krrrk.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_krrrk.png",
+        "size": 615,
+        "sha256": "8a61b074467e21c242c0158056fd369f1426f3009487d93b7ba7ae6e37340159"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_obgoo",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Obgoo.json",
+        "size": 109,
+        "sha256": "82535dd27e2112246f86cb7c3f62c2aea2a1c3075407a17edd582abc66f69082"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_obgoo.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_obgoo.png",
+        "size": 613,
+        "sha256": "5a9aa3bf3bda31e035a75672bc77f0f275111863936c6cae337045f3876ec736"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_obokr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Obokr.json",
+        "size": 109,
+        "sha256": "1e3c52b84df96adb5b47fb94fb13bc52dab12a6cc645f0d529e73512ac66a733"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_obokr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_obokr.png",
+        "size": 628,
+        "sha256": "cc39934a3375d51fb9eacd2fcd4c344113cd24403edf9df07018d510c62785d1"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_obooo",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Obooo.json",
+        "size": 109,
+        "sha256": "0a2a741364386baefc77657ba43f44865790620b473045935c6cdf01e3f9dce2"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_obooo.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_obooo.png",
+        "size": 593,
+        "sha256": "5991a3cc6c3b265018e77d4e166de37a8cdbf42f35d27084e7976c298c95bc8a"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_oogoo",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Oogoo.json",
+        "size": 109,
+        "sha256": "81b3183a735ff35d3bbdeb74ac392d91f5ff7d33c91f278394c0d8cf2e3cd58f"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_oogoo.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_oogoo.png",
+        "size": 585,
+        "sha256": "a9cbea867c610a047d39a572629b5708d96d6fe80344a6577e7093ebcdd2ed1e"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_oookb",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Oookb.json",
+        "size": 109,
+        "sha256": "9cbcf1043aa7d1986600014f229ded55c619cdcd0950b57a74b2d6b73e892e3a"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_oookb.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_oookb.png",
+        "size": 594,
+        "sha256": "accb86354f0c93b21474922c0ffb52f52341b8cf8ad531dff54eb8ea45064b4a"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_oooro",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Oooro.json",
+        "size": 109,
+        "sha256": "4be56519be2cfa46a14eb3f5f9e4f1a949471cebb6d3a78eabebe5d8e49dfc61"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_oooro.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_oooro.png",
+        "size": 586,
+        "sha256": "95d961218f64126b90a0fc385f22d26c9fb81b1184c6a77575dc3c062d4dd217"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_ooorr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Ooorr.json",
+        "size": 109,
+        "sha256": "85366c897fee3d2ecbabb524043129f9c2a3c48aa027d681e32a629fa3866388"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_ooorr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_ooorr.png",
+        "size": 596,
+        "sha256": "cfeb89b9c1c25c212d4a527cf62c595c9fd75fdde729796abbd502342a49abc7"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_ooroo",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Ooroo.json",
+        "size": 109,
+        "sha256": "07e4ec9331a5090de8f8649899b298d9e4661d7d380da2912aa37ef8b7dc0f03"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_ooroo.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_ooroo.png",
+        "size": 585,
+        "sha256": "36ae1539ab71c7e39d0884ce978aea94778506a5801273fa5d53c79f13b8807b"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_ooror",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Ooror.json",
+        "size": 109,
+        "sha256": "ed2fc705ef0e2c40c233230b29b37ce3b462480b545b027b8d87455ef221dc76"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_ooror.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_ooror.png",
+        "size": 595,
+        "sha256": "fc31199627142ef0378cd6e77ec69042ab16329d329a4f9a5a9d5d5fd253195a"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_orgob",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Orgob.json",
+        "size": 109,
+        "sha256": "7c0936ac412e42adb16eaee5930714d72b6f7fa91743044edd120f3c5f9efcfd"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_orgob.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_orgob.png",
+        "size": 627,
+        "sha256": "93194e469b35a08d7636d896841a5bdd2d184cefdbf2fbcd5777c32a93743fde"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_oroob",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Oroob.json",
+        "size": 109,
+        "sha256": "d21108cd4c91d05eefa726651c28d1a5b7ea0419714e6cb9f12e1a1294ae70cb"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_oroob.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_oroob.png",
+        "size": 606,
+        "sha256": "bf80743f2e202f6cf70863ee24a90afd6ab64267b9636f4e631560a92b7533ba"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_orrro",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Orrro.json",
+        "size": 109,
+        "sha256": "a4702dd08321253e597d5e6f69342d04f0aca14eeeb4f301a7df0aa8df6ba151"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_orrro.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_orrro.png",
+        "size": 620,
+        "sha256": "6176c758ca96e39aabd78f4b53f736a7de03cc44545242a84013a8712ded7619"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rgbrr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rgbrr.json",
+        "size": 109,
+        "sha256": "fd0a557d085d86af4c08173edaf54b34ed12a89cba17aac4f52caefac59e7094"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rgbrr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rgbrr.png",
+        "size": 612,
+        "sha256": "018e8896aeaa408ee3cf415fada01c406b994cb87a8b658ed42cd848d92e6de5"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rggor",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rggor.json",
+        "size": 109,
+        "sha256": "f48c7d858578daa27e6622ab6a801addc469ac05bcd2f5ff4180dd0142f8565b"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rggor.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rggor.png",
+        "size": 618,
+        "sha256": "17c06f7c7bfdde29a7dee8c6381c069bf05380874f694964dd62e93a74033858"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rgrgg",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rgrgg.json",
+        "size": 109,
+        "sha256": "7178421441bb606ce81a78f80d4175a4396f9cae7aec510253bd9ff07b13f213"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rgrgg.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rgrgg.png",
+        "size": 618,
+        "sha256": "3900bde6b96cd1b36f4d9970e8a83340f6b5ede481cb46dca8bf3651caa881c1"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rkkbr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rkkbr.json",
+        "size": 109,
+        "sha256": "204c0bd3bb4528d48eea417ce029db392c973fb7ec81a49825b810e60bdaf990"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rkkbr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rkkbr.png",
+        "size": 618,
+        "sha256": "64c41e04a9dc581ea0a27fd85db8bbd6fefefc7c64b4e97b88abc9b1242dc4f1"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rkkkk",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rkkkk.json",
+        "size": 109,
+        "sha256": "234e92c830abf4eff3f34e518cb338ebfaa2a066e067a9eef032dd37d2115867"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rkkkk.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rkkkk.png",
+        "size": 626,
+        "sha256": "8563916c60392c6656705036958509400d18b9f094a04096af93ca017c077096"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rkrbk",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rkrbk.json",
+        "size": 109,
+        "sha256": "710748fb054d70722604f8538f55b705c6c90d0673b4ce91ebe9429731b89a0b"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rkrbk.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rkrbk.png",
+        "size": 623,
+        "sha256": "f5eb69a0647bd9cb48a431b784d4a5f8f6b8e4546c91f7df8fe0713bf4c78e82"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rkrkk",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rkrkk.json",
+        "size": 109,
+        "sha256": "e3907f110173ba75afae6ab67128afa95722a708763de31a3bfa06c0390db7e7"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rkrkk.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rkrkk.png",
+        "size": 618,
+        "sha256": "1b046fe187b35dc935581a7bde723d7e47175eb9db152cbdfe1984dc250e5eb8"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rkrkr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rkrkr.json",
+        "size": 109,
+        "sha256": "9ebbc6e1d3379f51f47951d2e37599aed5e1f597e3f18ea98965a4cc8e233351"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rkrkr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rkrkr.png",
+        "size": 605,
+        "sha256": "cc18ce6c9be47044edc49b9c6a1c72bd1c4f0a9282a2dbf3cdf1ab24dbea85cd"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rkrrk",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rkrrk.json",
+        "size": 109,
+        "sha256": "b07c09ae011146d9fa11e5f3214b1ead05352bb08ad7126f535edc2386989ac1"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rkrrk.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rkrrk.png",
+        "size": 604,
+        "sha256": "b7c56cef46c52055ccdd0ded52c93083a62c146323337597b2dfabcee8c54d63"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rogro",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rogro.json",
+        "size": 109,
+        "sha256": "8281e0b8cce8b0a847eb2ccf3f79fe5a71d44f54ed08a2ca702616d4a37dce1a"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rogro.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rogro.png",
+        "size": 621,
+        "sha256": "ade933b845411d712eacec4c3b4dfb300084c5e6b499eae53d94d099e55a89ff"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rookr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rookr.json",
+        "size": 109,
+        "sha256": "408729b61e06d06b398df9c4505b0ba370c337d2aaca223fa5e6257d7db49dc2"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rookr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rookr.png",
+        "size": 618,
+        "sha256": "41898ba838c8d2ba7dcd108f7d7bccf3d998b38892b85afd74f6493f85bf96b4"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_roroo",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Roroo.json",
+        "size": 109,
+        "sha256": "55b015ef3a435a1d3153e6d0962f67282698b5a881f71e696ba58ffce4917f74"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_roroo.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_roroo.png",
+        "size": 618,
+        "sha256": "39cdb8e56552e81dd8619925307c04c233a760098745b0acea789b79037df250"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rrbgr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rrbgr.json",
+        "size": 109,
+        "sha256": "c2f9bcf91ccc6c2d2f84fb06f37f93b1f11b6a920eef1b09b3118dd45b4693af"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rrbgr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rrbgr.png",
+        "size": 600,
+        "sha256": "436e2aba492e442343c2f3e3e3e8e998689d2d72d1bfbeffc18d3572acc16970"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rrbrg",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rrbrg.json",
+        "size": 109,
+        "sha256": "a156dd7a073b877ae2a409ecf5083c7bb08e8ca13ccf1dfe3b0d61d9541f1792"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rrbrg.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rrbrg.png",
+        "size": 597,
+        "sha256": "dd5cb15699806fa313f5a8d52a6be14ad6cb2fe66b1ac885e2ed365387a31dd5"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rrgog",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rrgog.json",
+        "size": 109,
+        "sha256": "4cbd3cb42d5a4687b0bbfc24ba02aac74253d20fabdf7362b8f057362eda65ac"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rrgog.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rrgog.png",
+        "size": 612,
+        "sha256": "cfc75df0d88c1e0d8f84c3c715f01896c1bbef9d0db1189ac626172c35dcd4da"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rrgor",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rrgor.json",
+        "size": 109,
+        "sha256": "b7ae221371c3d3857572b3693d9267a73f4d5e57849d6b9d5662ab707883a95a"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rrgor.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rrgor.png",
+        "size": 600,
+        "sha256": "c7a09ee4ba26fcf082b3375cfd49e4004b8bb882e706d4831b5904c6d2a716eb"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rrkbk",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rrkbk.json",
+        "size": 109,
+        "sha256": "8c5829b30a1f0e1ff93dd9f39c439c638af079302601d2ce442f1e9ca5dd8492"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rrkbk.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rrkbk.png",
+        "size": 612,
+        "sha256": "81cd7b9ae3af57f68452b9dc03ab726a2ab9cd2b74963946c638493369c62bea"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rrokr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rrokr.json",
+        "size": 109,
+        "sha256": "9a0b3077968954cde182e6313395845fcfc368e4445bbcabb96a1c1608d15c00"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rrokr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rrokr.png",
+        "size": 600,
+        "sha256": "600b4a64bbe18a4e4e76035ccf73708113a9c9346d4c6a8a3ee00ee0ce59356e"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rrork",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rrork.json",
+        "size": 109,
+        "sha256": "3c8f5ba142be2be7998f9678d0964e007779a40fd1125f4bb3b284065048bee3"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rrork.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rrork.png",
+        "size": 597,
+        "sha256": "abba4cc7706ada7cd7179c0905a93aa7176528105897b07d4b21a10b267f7650"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rroro",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rroro.json",
+        "size": 109,
+        "sha256": "911a42a2ff1ac2096afb9e3080293304a4949ec76807dcd6ad2b4c53a1ea468e"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rroro.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rroro.png",
+        "size": 595,
+        "sha256": "9623b390077426e75680a1ec634f8c58fcb3c9eebbb7c64849c963679a10d1b2"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rrorr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rrorr.json",
+        "size": 109,
+        "sha256": "0a26a5f05116643506c99cfc708f02735a1b807c4d0a345e75526decbf7cc5a6"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rrorr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rrorr.png",
+        "size": 583,
+        "sha256": "e2b1ae581ef52c0e76d6dcb63593e8d086758ffa2c663f4084847abb492f26de"
+      }
+    },
+    {
+      "item": "contenttweaker:puzzle_tile_rrrkr",
+      "source": {
+        "path": "resources/contenttweaker/models/item/puzzle_tile_Rrrkr.json",
+        "size": 109,
+        "sha256": "0e4cec54682ea39ebff71f46b6a5e888e018f943a3fff42f810cf5be2a4f6ba4"
+      },
+      "target": "resources/contenttweaker/models/item/puzzle_tile_rrrkr.json",
+      "texture": {
+        "path": "resources/contenttweaker/textures/items/puzzle_tile_rrrkr.png",
+        "size": 586,
+        "sha256": "fa40420880a86f6531953845e66be9de31cccf6a11a2f16ae1af18a53e96fae5"
+      }
+    }
+  ],
+  "preserved_models": [
+    {
+      "path": "resources/contenttweaker/models/item/puzzle_tile_Grgrg.json",
+      "size": 109,
+      "sha256": "0341308ed31f0798f3a3bd17ee4405cd912c15db8ea50fa84b4fa47bde6389e1"
+    }
+  ]
+}

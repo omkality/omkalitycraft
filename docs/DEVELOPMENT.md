@@ -1,3 +1,29 @@
+## Адресные пути puzzle tile моделей — 16 ноября 2026
+
+#181/#49/#36/#41: все 60 model blobs, 59 PNG и два script blobs сверены с upstream
+2743c22. Зарегистрировано 59 предметов; Grgrg не имеет регистрации/текстуры и
+сохранён без изменений. Чистая функция композиции возвращает 59 точных пар
+путей по reviewed profile. Все payload, предметные ID/NBT, scripts, 226 JAR и
+signed launch прежние. Blanket lowercase, новые GUI/CLI/runtime hooks отсутствуют.
+
+72 Windows /72 readonly/nonroot Linux теста; 303 условия реальной Linux ФС:
+59 исходных lowercase misses → 59 точных моделей/PNG, collisions отсутствуют,
+обратная композиция и исходный mount побайтно прежние. Приватный signed rc.6
+имеет 5971 файл с теми же байтами; восстановление исходного поколения rc.5
+проверено полным signed manifest, prior rc.2 и принятой owned Forge-label.
+
+Windows GUI на Linux Forge/Drasl/strict258: все 59 плиток, hover ID/count/meta и
+60 416 пикселей совпали с PNG; для них ноль case-fallback warnings против 59 в
+сохранённом принятом rc.2 log. Диагностический MCP overlay явно отделён от signed
+payload. Client exit0, server stop0/noOOM, independent cold NBT: 54+5 по одной
+штуке, без drops. Свои ресурсы/права/процессы закрыты. Ошибочные подготовки частной
+обвязки до старта игры не засчитаны; новый игровой код для них не добавлялся.
+
+#181 остаётся открытым: Linux/macOS render, прохождение заданий, case-only
+upgrade/return и полный player release отдельно не приняты. Java/JAR/manifest/
+live-сервер/VPS прежние; календарный scheduler остаётся на паузе.
+[Контракт](DJ2_RESOURCE_MODELS.md), [протокол](validation/dj2-resource-models-2026-11-16.json).
+
 ## Сохранность временных предметов при disconnect/save — 16 ноября 2026
 
 #220/#41/#36: DJ2Fix 0.1.8 устраняет воспроизведённую потерю в native-матрице.

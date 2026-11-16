@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "issue": 181,
+  "source_base_commit": "d0d72afa5bc032143dd42bbdde9347e2fddee5cc",
+  "upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa",
+  "upstream": "https://github.com/Divine-Journey-2/Divine-Journey-2/tree/2743c22b177ab0479819dadb15785925cfe7d0aa/overrides",
+  "reviewed_upstream_model_blobs": 60,
+  "registered_items": 59,
+  "reviewed_upstream_texture_blobs": 59,
+  "reviewed_upstream_script_blobs": 2,
+  "preserved_unregistered_model": "puzzle_tile_Grgrg.json",
+  "blanket_lowercase": false,
+  "model_texture_script_payloads_unchanged": true,
+  "item_registry_and_recipe_data_unchanged": true,
+  "composition_writes_active_installation": false,
+  "helper_sha256": "84151e313cdfe604cf7e709f4aeed411ed255cc84d1748c3ba384bcddc3645c1",
+  "profile_sha256": "3cfb72e636ea4cf56247d49e7b5d4dcd507f6ae01c7d1755efddf08dd370539d",
+  "unit_tests": {
+    "windows": 72,
+    "linux": 72,
+    "new_contracts": 23,
+    "existing_locale_contracts": 49
+  },
+  "linux_filesystem": {
+    "ok": true,
+    "conditions": 303,
+    "baseline_lowercase_misses": 59,
+    "candidate_exact_models": 59,
+    "candidate_exact_textures": 59,
+    "orphan_preserved": true,
+    "reverse_composition_exact": true,
+    "source_unchanged": true,
+    "image": "sha256:d91d967dd2203205dd4e59d4b724606cb865a9420afc81d3ad27d421b4759be4",
+    "unit_tests": "72 passed in 1.07s",
+    "readonly_nonroot_network_none": true,
+    "exit_code": 0,
+    "oom_killed": false,
+    "owned_container_removed": true
+  },
+  "candidate": {
+    "ok": true,
+    "base_digest": "578313a4fb0a05026ebfeca0fa80d61524047cae8c5f6ecbc9f72a9a128ccf9b",
+    "candidate_digest": "4865d91cfadfe39c32d487f0f10cc1f56dc948d1592727560ded38fd4e2ba9b0",
+    "candidate_version": "2.23.4-omk.6-rc.1",
+    "files": 5971,
+    "bytes": 759730113,
+    "renamed_model_paths": 59,
+    "all_file_payloads_unchanged": true,
+    "signed_launch_unchanged": true,
+    "mod_jars": 226,
+    "private_signing_key_retained": false,
+    "published": false,
+    "ready_for_players": false
+  },
+  "graphical": {
+    "ok": true,
+    "tiles": 59,
+    "hovered_registry_ids": 59,
+    "exact_rendered_pixels": 60416,
+    "pixel_mismatches": 0,
+    "previous_accepted_rc2_fallback_warnings": 59,
+    "candidate_fallback_warnings": 0,
+    "screenshot_sha256": "e732870aa6a08bb3c8b6c2116753fd4d0bdc328d6160d3b8c07e312fe1900237",
+    "gui": "native double chest 54 + player hotbar 5",
+    "client_side_mcp_overlay": true,
+    "linux_graphical_render_tested": false,
+    "quest_progression_tested": false
+  },
+  "native": {
+    "client": "Windows x64",
+    "server": "Linux amd64 Docker Forge1.12.2-14.23.5.2860",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "core": "0.3.9",
+    "dj2fix": "0.1.8",
+    "client_component": "0.1.7",
+    "mcp_overlay_version": "2026.11.02",
+    "mcp_overlay_sha256": "e2c3cb80c6e45a11c7e2835b46e0183bf0e5f5f15ca1c3acef5f4fe02818e182",
+    "strict_mod_count": 258,
+    "signed_files_verified_before_start": 5971,
+    "verified_installation_never_started_before_final_fixture": true,
+    "client_exit": 0,
+    "server_exit": 0,
+    "oom_killed": false
+  },
+  "cold": {
+    "ok": true,
+    "conditions": 872,
+    "items": 59,
+    "chest_items": 54,
+    "player_items": 5,
+    "item_nbt": {
+      "id": "TAG_String",
+      "Count": "TAG_Int 1 (native pack serialization)",
+      "Damage": "TAG_Short 0"
+    },
+    "world_sha256": "975996476274680e93c55516da9eb7044d258fc3777f07c0113aa83a853836d7"
+  },
+  "cleanup": {
+    "ok": true,
+    "resources_absent": 5
+  },
+  "ready_for_players": false,
+  "player_manifest_changed": false,
+  "vps_deployed": false,
+  "calendar_scheduler_resumed": false,
+  "remaining": [
+    "Linux/macOS graphical rendering",
+    "Puzzle quest progression",
+    "Case-only path upgrade and return of an existing installation",
+    "Full player release and launch acceptance"
+  ],
+  "private_rehearsal_errors": [
+    "Initial signed-builder attempts used a removed historical snapshot and the wrong PackDirectory attribute; no candidate was accepted from them",
+    "One render fixture preparation rejected an overlong service nickname before Minecraft started; auth and MCP permissions were cleaned"
+  ]
+}
