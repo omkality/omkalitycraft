@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "scope": "Positive Windows GUI item movements, native crafting/furnace, clean reconnect and same-world Linux restart",
+  "tested_source_commit": "a1795d68eb0e5d74059ef3a524d6806aab0607c0",
+  "normal_route_accepted": true,
+  "disconnect_issue_220_open": true,
+  "full_item_conservation_accepted": false,
+  "ready_for_players": false,
+  "runtime_source_changed": false,
+  "artifact_pins_changed": false,
+  "player_manifest_changed": false,
+  "vps_deployed": false,
+  "calendar_scheduler_resumed": false,
+  "artifacts": {
+    "core": {
+      "version": "0.3.9",
+      "file": "OmkalityCore-0.3.9.jar",
+      "sha256": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4"
+    },
+    "dj2fix": {
+      "version": "0.1.7",
+      "file": "OmkalityDJ2Fix-0.1.7.jar",
+      "sha256": "43df3f74022b23456365beee876d7613a0a50c821bc7a89a4864ba08cca69928"
+    },
+    "client": {
+      "version": "0.1.7",
+      "file": "OmkalityClient-0.1.7.jar",
+      "sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+    }
+  },
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "native": {
+    "ok": true,
+    "conditions": 81,
+    "conservation_checkpoints": 26,
+    "baseline_checkpoints": 1,
+    "positive_state_postconditions": 25,
+    "graphical_client": "Windows x64",
+    "server": "isolated Linux amd64 Docker Forge 1.12.2-14.23.5.2860",
+    "client_exits": [
+      0,
+      0
+    ],
+    "server_boots": 2,
+    "same_world_volume": true,
+    "server_clean_exit_and_no_oom": true,
+    "initial_item_units": 77,
+    "final_item_units": 76,
+    "typed_nbt_markers": 6,
+    "normal_conversions": [
+      "4 minecraft:stone -> 4 minecraft:stonebrick",
+      "1 minecraft:iron_ore -> 1 minecraft:iron_ingot; 1 minecraft:coal consumed"
+    ],
+    "item_fixture_commands_after_baseline": false,
+    "postcondition_labels": [
+      "gui_split_named_stack",
+      "gui_split_placed",
+      "gui_shift_merge",
+      "gui_shift_hotbar_return",
+      "gui_drag_pickup",
+      "gui_right_drag_distribution",
+      "gui_drag_recombined",
+      "gui_single_chest_open",
+      "gui_single_chest_store",
+      "gui_single_chest_return",
+      "gui_double_chest_first_half",
+      "gui_double_chest_second_half",
+      "gui_double_chest_return",
+      "gui_iron_chest_store",
+      "gui_iron_chest_return",
+      "gui_ender_book_store",
+      "gui_ender_book_return",
+      "gui_ender_book_for_restart",
+      "gui_craft_inputs",
+      "gui_craft_output_stored",
+      "gui_furnace_ore_loaded",
+      "gui_furnace_smelted",
+      "gui_furnace_collected",
+      "gui_ready_for_clean_exit",
+      "gui_clean_rejoin"
+    ]
+  },
+  "first_client": {
+    "signed_rc2_digest": "d20c3084a79a483e155b1b82bf5fc1acd11b025b69ef4eb00c6ec61a4627767d",
+    "signed_file_count": 5970,
+    "mcp_overlay_version": "2026.11.02",
+    "mcp_overlay_sha256": "e2c3cb80c6e45a11c7e2835b46e0183bf0e5f5f15ca1c3acef5f4fe02818e182",
+    "server_readonly_observer_sha256": "84a3688119c75fda5bf18271325b82f581e871e8ade7ee423cfa18022a196fcf"
+  },
+  "ordinary_control": {
+    "fresh_separate_installation": true,
+    "same_signed_release_verified": true,
+    "all_5970_signed_files_verified_before_start": true,
+    "mcp_client_jar_absent": true,
+    "server_observer_jar_absent": true,
+    "saved_active_fml_observer_absent": true,
+    "strict_client_policy_mod_count": 257,
+    "native_f2_render_observed": true,
+    "native_f2_png_sha256": "0ffcf494d0da03235a58bc61c125230bfc927f9fce365899ce94b4a124ce5ad4",
+    "normal_window_close_exit": 0,
+    "lab_command_catalog_dump_remained": true
+  },
+  "independent_cold": {
+    "ok": true,
+    "conditions": 52,
+    "full_typed_nbt_counter": true,
+    "real_claims_survived": true,
+    "worlds": [
+      {
+        "label": "first",
+        "units": 76,
+        "marker_book_in_ender": 1,
+        "observer_present": true,
+        "world_sha256": "09a620a7197daeabeb400d64a59022e297adedacaadf93a5cad01e8903f94b0a"
+      },
+      {
+        "label": "normal",
+        "units": 76,
+        "marker_book_in_ender": 1,
+        "observer_present": false,
+        "world_sha256": "8e1dea10a18a9517ca0f282957732a22e7a1324f461faefa3aaff337de52675d"
+      }
+    ],
+    "audit_sha256": "0de42df03fefed34b8243e7c0960e8cd88f0486efd8b87616c5bce3ef48cd5b0"
+  },
+  "cleanup": {
+    "exact_current_scope_resources_verified_absent": 6,
+    "exports_and_diagnostics_retained_privately": true,
+    "orchestrator_permissions_removed": true,
+    "no_owned_game_or_crash_assistant_windows": true
+  },
+  "remaining": [
+    "Issue #220: cursor/personal crafting inputs at network disconnect",
+    "Arbitrary mod containers, machines and autocrafting are not accepted",
+    "Physical key binding issue #191 is not accepted by synthetic GUI Shift",
+    "Real Linux/macOS rendering and complete player-release/VPS acceptance remain separate"
+  ]
+}
