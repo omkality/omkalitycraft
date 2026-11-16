@@ -11,6 +11,12 @@ JAR. В частности, для переносимого телепортер
 `profiles/server-defaults/dj2/reset-preflight.json`, точный runtime SHA256 — также
 в `packs/dj2/resources/adapters/dj2-artifacts.properties`.
 
+Для совместимости native закрытия с `UTDisconnectDupe` используется уже установленный
+Universal Tweaks 1.20.0 из того же server pack DJ2 2.23.4. Его точный SHA256 закреплён
+в том же adapter policy. [Исходный проект](https://github.com/ACGaming/UniversalTweaks)
+не включается в наши JAR; собственный mixin пропускает только этот handler внутри
+ограниченного контекста завершения временных предметов.
+
 Log4j API 2.15.0 соответствует compile-time API в manifest закреплённого Forge;
 Log4j Core не загружается этой сборкой. Это не установка или понижение версии
 логирования работающего Minecraft-сервера.

@@ -2,13 +2,15 @@ package net.omkality.dj2;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.omkality.api.CoreServices;
 import net.omkality.api.ServerExtension;
 import net.omkality.patches.*;
 import org.apache.logging.log4j.Logger;
 
 /** Reviewed patch composition for DJ2; reusable implementations live in patches/. */
-@Mod(modid="omkalitydj2fix",name="Omkality DJ2 Fix",version="0.1.7",
+@Mod(modid="omkalitydj2fix",name="Omkality DJ2 Fix",version="0.1.8",
     acceptedMinecraftVersions="[1.12.2]",serverSideOnly=true,acceptableRemoteVersions="*",
     dependencies="required-after:omkalitycore@[0.3.2,0.4.0);required-after:mixinbooter")
 public final class OmkalityDJ2Fix {
@@ -24,6 +26,7 @@ public final class OmkalityDJ2Fix {
                 CoreServices.claims();
                 VanillaBoundaryGuard.install(log);
                 VanillaBedGuard.install(log);
+                DisconnectContainerGuard.install(log);
                 TwilightSortingGuard.install(log);
                 TwilightWorldEffectGuard.install(log);
                 TwilightBeanGuard.install(log);
@@ -37,4 +40,6 @@ public final class OmkalityDJ2Fix {
             }
         });
     }
+    @Mod.EventHandler public void stopping(FMLServerStoppingEvent event) { DisconnectContainerGuard.beforeStop(); }
+    @Mod.EventHandler public void stopped(FMLServerStoppedEvent event) { DisconnectContainerGuard.stop(); }
 }

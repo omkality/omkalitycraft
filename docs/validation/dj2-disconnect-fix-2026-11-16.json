@@ -1,0 +1,574 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "issue": 220,
+  "source_base_commit": "b1ef5d165f45bb765daf43a9525a20ccb0695e73",
+  "native_scope_passed": true,
+  "graphical_scope_passed": true,
+  "ready_for_players": false,
+  "player_manifest_changed": false,
+  "vps_deployed": false,
+  "calendar_scheduler_resumed": false,
+  "artifacts": {
+    "core": {
+      "version": "0.3.9",
+      "file": "OmkalityCore-0.3.9.jar",
+      "sha256": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4"
+    },
+    "dj2fix": {
+      "version": "0.1.8",
+      "file": "OmkalityDJ2Fix-0.1.8.jar",
+      "sha256": "ea12a4d9ab1544a689f924a49a693e66e3c0120822a81fa2647175ad84040da9"
+    },
+    "client": {
+      "version": "0.1.7",
+      "file": "OmkalityClient-0.1.7.jar",
+      "sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+    }
+  },
+  "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+  "native": {
+    "baseline_checks": 173,
+    "candidate_checks": 185,
+    "independent_checks": 379,
+    "other_mod_jars_identical": 206,
+    "baseline": {
+      "variant": "baseline",
+      "cases": [
+        {
+          "label": "empty",
+          "initial": 0,
+          "offline": 0,
+          "rejoined": 0,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "grid_explicit",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "cursor_explicit",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "grid_socket",
+          "initial": 4,
+          "offline": 0,
+          "rejoined": 0,
+          "full_typed_nbt_preserved": false
+        },
+        {
+          "label": "cursor_socket",
+          "initial": 4,
+          "offline": 0,
+          "rejoined": 0,
+          "full_typed_nbt_preserved": false
+        },
+        {
+          "label": "grid_kick",
+          "initial": 4,
+          "offline": 0,
+          "rejoined": 0,
+          "full_typed_nbt_preserved": false
+        },
+        {
+          "label": "cursor_kick",
+          "initial": 4,
+          "offline": 0,
+          "rejoined": 0,
+          "full_typed_nbt_preserved": false
+        },
+        {
+          "label": "grid_double_close",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "cursor_double_close",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "workbench_grid",
+          "initial": 4,
+          "offline": 0,
+          "rejoined": 0,
+          "full_typed_nbt_preserved": false
+        },
+        {
+          "label": "workbench_cursor",
+          "initial": 4,
+          "offline": 0,
+          "rejoined": 0,
+          "full_typed_nbt_preserved": false
+        },
+        {
+          "label": "chest_cursor",
+          "initial": 4,
+          "offline": 0,
+          "rejoined": 0,
+          "full_typed_nbt_preserved": false
+        },
+        {
+          "label": "iron_cursor",
+          "initial": 4,
+          "offline": 0,
+          "rejoined": 0,
+          "full_typed_nbt_preserved": false
+        },
+        {
+          "label": "full_grid_socket",
+          "initial": 2308,
+          "offline": 2304,
+          "rejoined": 2304,
+          "full_typed_nbt_preserved": false
+        },
+        {
+          "label": "full_cursor_socket",
+          "initial": 2308,
+          "offline": 2304,
+          "rejoined": 2304,
+          "full_typed_nbt_preserved": false
+        },
+        {
+          "label": "full_grid_explicit",
+          "initial": 2308,
+          "offline": 2308,
+          "rejoined": 2308,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "autosave_grid",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "workbench_explicit",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "stop_two_actors",
+          "initial": 13,
+          "rejoined": 0,
+          "full_typed_nbt_preserved": false
+        }
+      ],
+      "click_acknowledgments": 65,
+      "boots": [
+        {
+          "units": 0,
+          "ground_units": 0,
+          "chunks_read": 736,
+          "world_sha256": "91152b83d873a50d675c6d993ddd807dc1b983f0fa17c3579bee578309c2276d"
+        },
+        {
+          "units": 0,
+          "ground_units": 0,
+          "chunks_read": 1262,
+          "world_sha256": "14f0ae928e79e3b0be923921d11755c1acff916d17253e6357e43991870b33d5"
+        }
+      ]
+    },
+    "candidate": {
+      "variant": "candidate",
+      "cases": [
+        {
+          "label": "empty",
+          "initial": 0,
+          "offline": 0,
+          "rejoined": 0,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "grid_explicit",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "cursor_explicit",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "grid_socket",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "cursor_socket",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "grid_kick",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "cursor_kick",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "grid_double_close",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "cursor_double_close",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "workbench_grid",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "workbench_cursor",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "chest_cursor",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "iron_cursor",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "full_grid_socket",
+          "initial": 2308,
+          "offline": 2308,
+          "rejoined": 2308,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "full_cursor_socket",
+          "initial": 2308,
+          "offline": 2308,
+          "rejoined": 2308,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "full_grid_explicit",
+          "initial": 2308,
+          "offline": 2308,
+          "rejoined": 2308,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "autosave_grid",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "workbench_explicit",
+          "initial": 4,
+          "offline": 4,
+          "rejoined": 4,
+          "full_typed_nbt_preserved": true
+        },
+        {
+          "label": "stop_two_actors",
+          "initial": 13,
+          "rejoined": 13,
+          "full_typed_nbt_preserved": true
+        }
+      ],
+      "click_acknowledgments": 65,
+      "boots": [
+        {
+          "units": 13,
+          "ground_units": 5,
+          "chunks_read": 733,
+          "world_sha256": "3547991efb7cf6099dce6dfc5d34cf0d6b6723eb57ff49d0eb4c3e5759ad1935"
+        },
+        {
+          "units": 13,
+          "ground_units": 5,
+          "chunks_read": 1259,
+          "world_sha256": "5cedeef09425581099909f74d33e0acdb71653f39d27ee092fd520e26b06ba60"
+        }
+      ]
+    },
+    "probe_changes": "0.1.1 logout-only observer; 0.1.2 adds native toss observations and an in-memory cancellation control without removing stacks or spawning entities",
+    "upstream_disconnect_dupe_enabled": true
+  },
+  "implementation": {
+    "transient_sources": "Personal 2x2 inputs, exact native workbench 3x3 inputs and shared cursor; no virtual recipe output",
+    "native_methods_only": true,
+    "inventory_snapshot_rollback": false,
+    "drop_exception": "Exact actor and ItemStack identities on the native finalization thread; 14 references maximum; removed in finally; skips only pinned UTDisconnectDupe handler",
+    "unscoped_ut_handler_still_cancels": true,
+    "scope_jvm_controls": 13,
+    "ordinary_save_keeps_active_grid": true
+  },
+  "external_adapter": {
+    "mod": "universaltweaks",
+    "version": "1.20.0",
+    "sha256": "0b94bea35ce762c1f9066695ddafea0091afc7696bdc310f77b5d2fa7139a13c",
+    "source": "DJ2 2.23.4 official server pack; existing runtime artifact",
+    "upstream_source": "https://github.com/ACGaming/UniversalTweaks/blob/main/src/main/java/mod/acgaming/universaltweaks/bugfixes/entities/disconnectdupe/UTDisconnectDupe.java"
+  },
+  "unaccepted_first_candidate": {
+    "cursor_conserved": false,
+    "reason": "The native toss is cancelled by upstream UT after socket close; this artifact was not promoted"
+  },
+  "causal_diagnostic": {
+    "only_changed_option": "Universal Tweaks Disconnect Dupe disabled",
+    "scenarios": [
+      "cursor_socket",
+      "full_grid_socket",
+      "full_cursor_socket"
+    ],
+    "all_conserved": true,
+    "not_the_accepted_configuration": true
+  },
+  "build": {
+    "ok": true,
+    "rounds": [
+      {
+        "OmkalityCore-0.3.9.jar": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4",
+        "OmkalityDJ2Fix-0.1.8.jar": "ea12a4d9ab1544a689f924a49a693e66e3c0120822a81fa2647175ad84040da9"
+      },
+      {
+        "OmkalityCore-0.3.9.jar": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4",
+        "OmkalityDJ2Fix-0.1.8.jar": "ea12a4d9ab1544a689f924a49a693e66e3c0120822a81fa2647175ad84040da9"
+      }
+    ],
+    "build_image_id": "sha256:da308a3a0d438f35188c430311dcdc400dc3fd031c78a0f07be4446d985fcba6",
+    "core_unchanged": true
+  },
+  "jar_delta": {
+    "unchanged_entries": 36,
+    "changed": [
+      "adapters/dj2-artifacts.properties",
+      "mixins.omkalitydj2fix.vanilla.json",
+      "net/omkality/dj2/OmkalityDJ2Fix$1.class",
+      "net/omkality/dj2/OmkalityDJ2Fix.class",
+      "net/omkality/dj2/OmkalityMixinLoader.class"
+    ],
+    "added": [
+      "mixins.omkalitydj2fix.disconnect.json",
+      "net/omkality/patches/DisconnectContainerGuard$DropInstalled.class",
+      "net/omkality/patches/DisconnectContainerGuard$Installed.class",
+      "net/omkality/patches/DisconnectContainerGuard.class",
+      "net/omkality/patches/DisconnectDropScope.class",
+      "net/omkality/patches/mixin/UniversalDisconnectDupeMixin.class",
+      "net/omkality/patches/mixin/VanillaPlayerDisconnectMixin.class"
+    ],
+    "removed": []
+  },
+  "limits": [
+    "Custom mod machine input grids and autocrafting are not accepted by this scope",
+    "Death, hard process kill and crash recovery are separate acceptance",
+    "Linux/macOS graphical clients and complete player release are not accepted"
+  ],
+  "graphical_partial": {
+    "ok": true,
+    "full_gui_acceptance": false,
+    "checks": 47,
+    "checked_states": 27,
+    "gui_postconditions": 26,
+    "initial_units": 77,
+    "cold_units": 76,
+    "world": {
+      "units": 76,
+      "ground_units": 0,
+      "chunks_read": 745,
+      "world_sha256": "f0079512541ae368a041b71223118a4916783c622426673ef1c7107606f9ffc1"
+    },
+    "client_exit": 1,
+    "ordinary_client_without_probe_tested": false,
+    "reason": "Wrong private transform name stopped the rehearsal at furnace output; preserve as partial evidence only"
+  },
+  "remaining_acceptance": [
+    "Arbitrary custom machines and autocrafting, death and crash recovery, and Linux/macOS rendering remain outside this accepted fix",
+    "Complete launch/player release and production/VPS admission remain under issues 41 and 36"
+  ],
+  "source_build_verification": {
+    "schema": 1,
+    "ok": true,
+    "rounds": [
+      {
+        "core": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4",
+        "dj2fix": "ea12a4d9ab1544a689f924a49a693e66e3c0120822a81fa2647175ad84040da9",
+        "client": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+      },
+      {
+        "core": "24176070e591fb011c7ec423f5cafb94a6ce23550d21cf88415b48d1d19559f4",
+        "dj2fix": "ea12a4d9ab1544a689f924a49a693e66e3c0120822a81fa2647175ad84040da9",
+        "client": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1"
+      }
+    ],
+    "matches_accepted_jars": true,
+    "class_counts": {
+      "core": 52,
+      "dj2fix": 39,
+      "client": 33
+    },
+    "graphical_or_gameplay_test": false
+  },
+  "source_build_safety_tests": 14,
+  "public_mod_source_files": 173,
+  "tested_candidate_source_commit": "98ff9d6927405c067bf9bb87f1defb5cf83c0b17",
+  "graphical": {
+    "ok": true,
+    "native_conditions": 93,
+    "checkpoints": 31,
+    "positive_state_postconditions": 30,
+    "postcondition_labels": [
+      "gui_disconnect_grid_inputs",
+      "gui_disconnect_grid_rejoined",
+      "gui_disconnect_cursor_inputs",
+      "gui_disconnect_cursor_rejoined",
+      "gui_cursor_drop_collected",
+      "gui_split_named_stack",
+      "gui_split_placed",
+      "gui_shift_merge",
+      "gui_shift_hotbar_return",
+      "gui_drag_pickup",
+      "gui_right_drag_distribution",
+      "gui_drag_recombined",
+      "gui_single_chest_open",
+      "gui_single_chest_store",
+      "gui_single_chest_return",
+      "gui_double_chest_first_half",
+      "gui_double_chest_second_half",
+      "gui_double_chest_return",
+      "gui_iron_chest_store",
+      "gui_iron_chest_return",
+      "gui_ender_book_store",
+      "gui_ender_book_return",
+      "gui_ender_book_for_restart",
+      "gui_craft_inputs",
+      "gui_craft_output_stored",
+      "gui_furnace_ore_loaded",
+      "gui_furnace_smelted",
+      "gui_furnace_collected",
+      "gui_ready_for_clean_exit",
+      "gui_clean_rejoin"
+    ],
+    "initial_units": 77,
+    "final_units": 76,
+    "typed_nbt_markers": 6,
+    "item_fixture_commands_after_baseline": false,
+    "instrumented_screenshots": 23,
+    "ordinary_screenshots": 2,
+    "client_exits": [
+      0,
+      0
+    ],
+    "server_boots": 2,
+    "same_world_volume": true,
+    "server_clean_exits_no_oom": true,
+    "client_signed_digest": "d20c3084a79a483e155b1b82bf5fc1acd11b025b69ef4eb00c6ec61a4627767d",
+    "client_signed_file_count": 5970,
+    "mcp_overlay_version": "2026.11.02",
+    "mcp_overlay_sha256": "e2c3cb80c6e45a11c7e2835b46e0183bf0e5f5f15ca1c3acef5f4fe02818e182",
+    "server_readonly_observer_sha256": "3ab498db7d449196a307c24bd3cb8ea8c3bb97cbb358620de4ff56a95da2fa86",
+    "independent_typed_checkpoint_audit": {
+      "ok": true,
+      "checkpoints": 31,
+      "full_typed_nbt_counter": true,
+      "initial_units": 77,
+      "final_units": 76,
+      "closed_channel_native_toss_events": 2,
+      "toss_full_typed_nbt_preserved": true
+    },
+    "checkpoint_audit_sha256": "e72ba6efb6a408367d614f8114b33c86591366cfcc62a5067b0c1200c957fd84",
+    "ordinary_control": {
+      "fresh_separate_signed_installation": true,
+      "same_signed_release": true,
+      "all_signed_files_verified_before_start": true,
+      "mcp_jar_absent": true,
+      "server_observer_jar_absent": true,
+      "saved_active_fml_observer_absent": true,
+      "strict_mod_catalog_count": 257,
+      "native_keyboard_inventory": true,
+      "native_f2_hud_sha256": "d1e36a312b6d7350a782c3ab7bdf02d60604c2a2503072b4471f505a9c07369c",
+      "native_f2_inventory_sha256": "9fbf8e50c876cffd67c804063aa2e5657c21fbc499c75aebd8c96565c6b337a6",
+      "normal_window_close_exit": 0,
+      "lab_command_catalog_dump_remained": true
+    },
+    "independent_cold": {
+      "checks": 58,
+      "worlds": [
+        {
+          "label": "first",
+          "units": 76,
+          "marker_book_in_ender": 1,
+          "observer_present": true,
+          "world_sha256": "e13c557459936bf865b573ceefa004576c3682d2fd039fe18b17ba1fbc68cc6c"
+        },
+        {
+          "label": "normal",
+          "units": 76,
+          "marker_book_in_ender": 1,
+          "observer_present": false,
+          "world_sha256": "fe4fd01276b0ac59e586c5aece9988b400ff0b9b44a22ca19acc50661f0eced7"
+        }
+      ],
+      "full_typed_nbt_counter": true,
+      "real_claims_survived": true,
+      "audit_sha256": "a858b387ae46256753f79fbc066825a3b6a4678fd414f9528edddc8dee1eb753"
+    },
+    "cleanup": {
+      "exact_owned_docker_resources_absent": 5,
+      "diagnostic_permissions_removed": true,
+      "no_owned_game_or_crash_assistant_windows": true,
+      "exports_diagnostics_retained_privately": true
+    }
+  },
+  "unaccepted_gui_lifecycle_retry": {
+    "full_gui_acceptance": false,
+    "checked_states": 31,
+    "client_exit": 1,
+    "reason": "Private transition requested before native quit finished; forced cleanup invalidated lifecycle acceptance. Fresh final run waits for real exit0 up to 60 seconds."
+  }
+}

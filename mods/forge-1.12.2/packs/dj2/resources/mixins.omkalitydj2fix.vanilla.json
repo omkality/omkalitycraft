@@ -3,6 +3,6 @@
   "minVersion": "0.8",
   "package": "net.omkality.patches.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": ["VanillaPistonMixin", "VanillaLiquidMixin", "VanillaMixingMixin", "VanillaBedMixin"],
+  "mixins": ["VanillaPistonMixin", "VanillaLiquidMixin", "VanillaMixingMixin", "VanillaBedMixin", "VanillaPlayerDisconnectMixin"],
   "injectors": {"defaultRequire": 1}
 }

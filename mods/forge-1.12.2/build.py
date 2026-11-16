@@ -182,6 +182,7 @@ if args.target in {"all", "dj2"}:
             "-d",
             str(controls),
             str(project / "tests/java/net/omkality/GroovyLogReloadControlsTest.java"),
+            str(project / "tests/java/net/omkality/DisconnectDropControlsTest.java"),
         ],
         check=True,
     )
@@ -191,6 +192,15 @@ if args.target in {"all", "dj2"}:
             "-cp",
             os.pathsep.join([str(controls), test_classpath]),
             "net.omkality.GroovyLogReloadControlsTest",
+        ],
+        check=True,
+    )
+    subprocess.run(
+        [
+            str(args.java.resolve()),
+            "-cp",
+            os.pathsep.join([str(controls), test_classpath]),
+            "net.omkality.DisconnectDropControlsTest",
         ],
         check=True,
     )
