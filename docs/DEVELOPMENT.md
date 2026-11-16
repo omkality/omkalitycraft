@@ -1,3 +1,20 @@
+## Лимиты игрового scrape через env — 16 ноября 2026
+
+Ограниченный шаг #30: `OMK_METRICS_SCRAPE_SAMPLE_LIMIT` (1–100000, default 20000)
+и `OMK_METRICS_SCRAPE_BODY_MIB` (1–16, default 2) проходят существующий validator
+и Compose configure. Четыре default-файла совпали с базовым dev побайтно;
+host job/rules/exporter cfg, версии и зависимости прежние.
+
+45 Windows и 45 readonly/nonroot Linux Docker тестов; старый renderer провалил
+23 новых случая. Штатный monitoring smoke и два синтетических Docker-профиля
+(90 условий вместе с cleanup) приняли лимиты, отказ всего scrape, отсутствие
+ложного нуля, восстановление/чистый restart и восемь отказов configure без
+изменения файлов/echo маркера. Свои контейнеры/тома/сети удалены. Это приёмка
+мониторинга, не новая игровая/GUI/VPS приёмка; #30/#33/#41 остаются открытыми,
+календарный scheduler не возобновлялся.
+[Настройки](RESOURCE_HISTORY.md#лимиты-ответа-игрового-exporter),
+[протокол](validation/monitoring-scrape-limits-2026-11-16.json).
+
 ## Штатные GUI и сохранность после чистого restart — 16 ноября 2026
 
 #41/#36/#220: отдельный новый опыт на прежних Core 0.3.9 / DJ2Fix 0.1.7 /

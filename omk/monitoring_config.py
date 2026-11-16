@@ -22,6 +22,8 @@ def render(config, environment=None):
     interval = setting(env, "INTERVAL_SECONDS", 30, 5, 300)
     days = setting(env, "RETENTION_DAYS", 180, 1, 730)
     mib = setting(env, "RETENTION_MIB", 1024, 256, 65536)
+    sample_limit = setting(env, "SCRAPE_SAMPLE_LIMIT", 20000, 1, 100000)
+    body_mib = setting(env, "SCRAPE_BODY_MIB", 2, 1, 16)
     expiry = interval * 3
     name = r"[a-z][a-z0-9_-]{0,47}"
     if (
@@ -135,8 +137,8 @@ def render(config, environment=None):
                         }
                     ],
                     "metric_relabel_configs": relabel,
-                    "sample_limit": 20000,
-                    "body_size_limit": "2MB",
+                    "sample_limit": sample_limit,
+                    "body_size_limit": f"{body_mib}MB",
                 }
             )
         agent += [
