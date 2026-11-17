@@ -1,3 +1,34 @@
+## TUI: запуск и временная модерация — 17 ноября 2026
+
+#250, срез #146/#41: прежний exe без аргументов писал требование config/demo и
+закрывался при двойном клике. Новый запуск читает bounded non-secret sidecar с
+абсолютными repo/python/config; отсутствие файла открывает подписанное демо,
+неверный файл оставляет видимую ошибку. Явные CLI аргументы от sidecar не зависят.
+
+Формы `k`/`b`/`m` отправляют типизированный owner.moderation v1. Ник связывается с
+онлайн UUID; сервер перепроверяет цель. Срок `s/m/h/d/w`, 1s..365d, причина до 128
+символов в base64url. Отдельное «Вы уверены?» у бана, default «Нет». Открытие формы
+не теряется во время фонового чтения; перед mutation read отменяется и join-ится,
+не создавая параллельного subprocess. Потеря/неверная привязка receipt — unknown,
+без повторной отправки. В рабочей конфигурации OP не выдаются; RCON bridge
+console-only. Временный synthetic OP denial control отдельно снят; оба списка пусты.
+
+Core 0.3.10 использует native disconnect/ban list, а TTL mute сохраняет отдельно
+от ручного FTB boolean. Реальный тест выявил два дефекта native 1.12.2 ban API:
+конструктор использует expiry как created; expiry helper удаляет GameProfile из
+String-keyed map. JSON constructor и снятие только собственных конечных истёкших
+записей исправляют этот путь; постоянный отдельный бан сохранён. Нет инвентарного
+rollback, перезапуска calendar scheduler или изменений DJ2Fix/Client JAR.
+
+Локально: 2937/225 Windows и 3157/5 Linux unit suites; 35 focused moderation,
+Ruff/Black; 14 Rust/Clippy/release; два одинаковых Core build; 16 native условий,
+6 FTB и 9 PTY, без computer use. Ban/mute пережили Java restart и истекли без TUI;
+контрольный предмет/NBT сохранён. FTB `/mute` не снимается TTL, `/unmute` не
+обходит TTL. Это minimal Forge и отдельно pinned FTB, не полный DJ2/VPS benchmark.
+После тестов fixture actors ушли, дополнительные FTB JAR из beta сняты; два
+сервера/мониторинг сохранены. [Протокол](validation/tui-moderation-2026-11-17.json),
+[интерфейс и ограничения](OWNER_TUI.md). Ручная приёмка перед VPS остаётся отдельной.
+
 ## Owner: права ОС и плотная сетка TPS — 17 ноября 2026
 
 #248: административный backend требует владельческую границу ОС до чтения config

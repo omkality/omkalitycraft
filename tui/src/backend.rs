@@ -26,11 +26,13 @@ pub struct Backend {
 pub enum Request {
     Overview(Option<String>, TpsWindow),
     Console { server: String, command: String },
+    Moderation(crate::moderation::Action),
 }
 #[derive(Debug)]
 pub enum Reply {
     Overview(Overview, Option<Result<TpsHistory, String>>),
     Console(ConsoleResult),
+    Moderation(crate::moderation::Receipt),
 }
 
 struct OwnedChild(Child);
@@ -67,10 +69,10 @@ pub fn capture(
     let deadline = Instant::now() + timeout;
     let status = loop {
         if cancel.load(Ordering::Relaxed) {
-            return Err("Запрос прерван; результат сохранения неизвестен".into());
+            return Err("Запрос прерван; результат команды неизвестен".into());
         }
         if Instant::now() >= deadline {
-            return Err("CLI не ответил вовремя; результат сохранения неизвестен".into());
+            return Err("CLI не ответил вовремя; результат команды неизвестен".into());
         }
         if file_size(&output)? > MAX_OUTPUT {
             return Err("Ответ CLI превысил лимит".into());
@@ -147,6 +149,29 @@ impl Backend {
     pub fn request(&self, request: Request, cancel: Arc<AtomicBool>) -> Result<Reply, String> {
         let mut command = self.command();
         match &request {
+            Request::Moderation(a) => {
+                if !valid_server(&a.server)
+                    || !matches!(a.command.as_str(), "kick" | "ban" | "mute")
+                {
+                    return Err("Неверная команда модерации".into());
+                }
+                command.args([
+                    "moderation",
+                    "--server",
+                    &a.server,
+                    "--command",
+                    &a.command,
+                    "--player",
+                    &a.player,
+                    "--duration",
+                    &a.duration,
+                    "--reason",
+                    &a.reason,
+                ]);
+                if a.command == "ban" {
+                    command.arg("--confirm-ban");
+                }
+            }
             Request::Overview(server, _) => {
                 command.arg("overview");
                 if let Some(server) = server {
@@ -169,8 +194,18 @@ impl Backend {
                 }
             }
         }
-        let (bytes, success) = capture(command, &cancel, Duration::from_secs(15))?;
+        let timeout = if matches!(&request, Request::Moderation(_)) {
+            25
+        } else {
+            15
+        };
+        let (bytes, success) = capture(command, &cancel, Duration::from_secs(timeout))?;
         let (reply, ok) = match request {
+            Request::Moderation(a) => {
+                let value = crate::moderation::Receipt::parse(&bytes, &a)?;
+                let ok = value.ok;
+                (Reply::Moderation(value), ok)
+            }
             Request::Overview(server, window) => {
                 let value = Overview::parse(&bytes)?;
                 if value.ok && server.is_some() && server != value.selected_server {

@@ -154,6 +154,7 @@
     "src/net/omkality/MetricFile.java",
     "src/net/omkality/OmkalityCore.java",
     "src/net/omkality/OptionalIntegrations.java",
+    "src/net/omkality/OwnerModeration.java",
     "src/net/omkality/RecoveryConnections.java",
     "src/net/omkality/ServerProfile.java",
     "src/net/omkality/TickRateWindow.java",
