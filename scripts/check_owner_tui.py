@@ -9,6 +9,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def main():
+    subprocess.run(
+        [sys.executable, str(ROOT / "scripts/tui_branding.py"), "--check"],
+        check=True,
+        timeout=15,
+    )
     environment = {**os.environ, "OMK_TEST_PYTHON": sys.executable}
     for arguments in (
         ["fmt", "--check"],

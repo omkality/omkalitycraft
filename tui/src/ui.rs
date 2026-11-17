@@ -108,7 +108,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     let rows = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),
+            Constraint::Length(if area.height >= 34 { 9 } else { 3 }),
             Constraint::Length(7),
             Constraint::Min(14),
             Constraint::Length(3),
@@ -119,18 +119,42 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     } else {
         "OWNER · локальный Python backend"
     };
-    frame.render_widget(
-        Paragraph::new(Line::from(vec![
-            Span::styled(
-                " OMKALITYCRAFT ",
-                Style::default().fg(ACCENT).add_modifier(Modifier::BOLD),
+    if area.height >= 34 {
+        frame.render_widget(block(" owner terminal · 0.1 "), rows[0]);
+        crate::branding::draw(frame, Rect::new(rows[0].x + 2, rows[0].y + 1, 12, 7));
+        frame.render_widget(
+            Paragraph::new(vec![
+                Line::styled(
+                    "OMKALITYCRAFT",
+                    Style::default().fg(ACCENT).add_modifier(Modifier::BOLD),
+                ),
+                Line::raw(""),
+                Line::raw("Терминал владельца · управление сервером"),
+                Line::raw(""),
+                Line::styled(mode, Style::default().fg(WARN)),
+            ])
+            .style(Style::default().fg(TEXT).bg(PANEL)),
+            Rect::new(
+                rows[0].x + 17,
+                rows[0].y + 2,
+                rows[0].width.saturating_sub(19),
+                5,
             ),
-            Span::raw(" /  управление сервером    "),
-            Span::styled(mode, Style::default().fg(WARN)),
-        ]))
-        .block(block(" owner terminal · 0.1 ")),
-        rows[0],
-    );
+        );
+    } else {
+        frame.render_widget(
+            Paragraph::new(Line::from(vec![
+                Span::styled(
+                    " OMKALITYCRAFT ",
+                    Style::default().fg(ACCENT).add_modifier(Modifier::BOLD),
+                ),
+                Span::raw(" /  управление сервером    "),
+                Span::styled(mode, Style::default().fg(WARN)),
+            ]))
+            .block(block(" owner terminal · 0.1 ")),
+            rows[0],
+        );
+    }
     let metrics =
         Layout::horizontal([Constraint::Percentage(50), Constraint::Percentage(50)]).split(rows[1]);
     render_metrics(
