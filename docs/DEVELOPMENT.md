@@ -18,6 +18,12 @@ effect и не повторяется. По запросу владельца п
 223 skipped, Ruff/Black; Rust 6 tests с реальным Python CLI, timeout/output/exit,
 контрактами и resize, clippy и release build на Linux. Для Windows/macOS добавлены
 native CI jobs и семидневные binary artifacts; результаты CI проверяются отдельно.
+Контейнерный/PTY этап завершён: 7 native + 8 keyboard/lifecycle условий;
+после остановки exporter игровые значения missing, Forge exit0 / OOM=false.
+Native Windows CI binary прочитал настоящий backend и сохранил SVG widgets.
+5 новых миров / 108 файлов сохранены через проверенный 7-Zip; свои Docker scopes
+убраны. Удаление пяти seed-каталогов отклонено автоматической проверкой,
+379837845 bytes оставлены. [Обезличенный протокол](validation/owner-tui-2026-11-17.json).
 [Запуск и границы](OWNER_TUI.md). Maintenance controls/история/JVM/cgroup UI пока
 следующие срезы; календарный scheduler остаётся на паузе. Ручной аудит перед VPS
 не заменяется этим интерфейсом.

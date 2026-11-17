@@ -10,6 +10,9 @@
   обновление в фоне, прокрутка консольного ответа, помощь при маленьком терминале.
 - Типизированный Python обзор/console bridge, Rust subprocess limits и native CI
   для трёх ОС. [Запуск и ограничения](docs/OWNER_TUI.md). Scheduler не возобновлён.
+- Реальный minimal Forge/exporter/Prometheus/Telegraf, 8 keyboard/PTY сценариев,
+  штатная остановка и missing после выключения exporter приняты в отдельном
+  стенде. [Протокол](docs/validation/owner-tui-2026-11-17.json); это не DJ2/VPS acceptance.
 
 ## Не выпущено — BetterQuesting пазла на Linux
 

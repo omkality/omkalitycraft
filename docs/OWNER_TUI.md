@@ -125,6 +125,8 @@ Rust проверяет Python examples, строгий разбор, корре
 resize, timeout/oversize/exit и настоящий CLI с временным config. Native CI строит
 Linux/Windows/macOS binary и хранит его как семидневный workflow artifact,
 не player release. Python покрывает HTTP/redirect/fault и отсутствие автоповтора.
+Реальный minimal Forge/exporter/Prometheus/Telegraf и Linux PTY проверены в
+изолированном стенде: [протокол](validation/owner-tui-2026-11-17.json).
 
 Следующие полезные срезы: journal-backed maintenance controls; JVM/cgroup RAM/CPU,
 disk bytes и история нагрузки. Они не объявлены готовыми
