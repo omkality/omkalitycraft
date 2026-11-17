@@ -151,7 +151,7 @@ impl Backend {
         match &request {
             Request::Moderation(a) => {
                 if !valid_server(&a.server)
-                    || !matches!(a.command.as_str(), "kick" | "ban" | "mute")
+                    || !matches!(a.command.as_str(), "kick" | "ban" | "mute" | "unban")
                 {
                     return Err("Неверная команда модерации".into());
                 }

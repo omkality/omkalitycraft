@@ -37,7 +37,7 @@ pub struct App {
 
 impl App {
     pub fn new(demo: bool) -> Self {
-        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m  Кик / бан / мут игрока\n\nОтвет команды появится здесь.\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, scroll: 0, history: None, history_failed: false, about: false, branding_header: false, window_index: 0, range_picker: None }
+        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m  Кик / бан / мут игрока\nu  Разбан (можно офлайн)\n\nОтвет команды появится здесь.\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, scroll: 0, history: None, history_failed: false, about: false, branding_header: false, window_index: 0, range_picker: None }
     }
     pub fn server(&self) -> Option<&str> {
         self.overview
@@ -290,7 +290,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         Paragraph::new(app.message.as_str())
             .scroll((app.scroll, 0))
             .style(Style::default().fg(if app.failed { WARN } else { TEXT }))
-            .block(block(" Команды · 1 игроки / 2 TPS / 3 save · k/b/m "))
+            .block(block(" Команды · 1 игроки / 2 TPS / 3 save · k/b/m/u "))
             .wrap(Wrap { trim: false }),
         body[1],
     );

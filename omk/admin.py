@@ -303,7 +303,7 @@ def _add_moderation_parser(actions):
         "--command",
         dest="moderation_command",
         required=True,
-        choices=["kick", "ban", "mute"],
+        choices=["kick", "ban", "mute", "unban"],
     )
     moderation.add_argument("--player", required=True)
     moderation.add_argument("--duration", default="")

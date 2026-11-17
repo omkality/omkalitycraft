@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
+import java.security.MessageDigest;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -39,7 +40,7 @@ public final class OwnerModeration {
     private final Method schedule,mainThread,playerList,byId,profile,profileId,profileName;
     private final Method banned,getEntry,addEntry,writeChanges,disconnect,chatPlayer;
     private final Field connection,banSource;
-    private final Method banValues,banExpiry,entryValue,jsonProperty;
+    private final Method banValues,banExpiry,entryValue,jsonProperty,serializeBan,removeEntry;
     private final Constructor<?> jsonObject;
     private static final String BAN_SOURCE="Omkality owner TUI v1";
     private long sweptSecond=-1;
@@ -94,6 +95,8 @@ public final class OwnerModeration {
         entryValue=Class.forName("net.minecraft.server.management.UserListEntry").getDeclaredMethod("func_152640_f");entryValue.setAccessible(true);
         banSource=nativeBan.getDeclaredField("field_73695_e");banSource.setAccessible(true);
         banValues=userList.getDeclaredMethod("func_152688_e");banValues.setAccessible(true);
+        serializeBan=Class.forName("net.minecraft.server.management.UserListBansEntry").getDeclaredMethod("func_152641_a",json);serializeBan.setAccessible(true);
+        removeEntry=method(userList,"func_152684_c","removeEntry",Object.class);
         eventSender=CommandEvent.class.getMethod("getSender");
         eventCommand=CommandEvent.class.getMethod("getCommand");
         eventParameters=CommandEvent.class.getMethod("getParameters");
@@ -133,8 +136,7 @@ public final class OwnerModeration {
         }
         // Vanilla's expiry helper removes GameProfile keys from a String-keyed map.
         // Use removeEntry's canonical key only for this bridge's finite expired bans.
-        Method remove=method(Class.forName("net.minecraft.server.management.UserList"),"func_152684_c","removeEntry",Object.class);
-        for(Object identity:expired) remove.invoke(bans,identity);
+        for(Object identity:expired) removeEntry.invoke(bans,identity);
         if(!expired.isEmpty()) writeChanges.invoke(bans);
     }
     @SubscribeEvent
@@ -164,13 +166,54 @@ public final class OwnerModeration {
     private static String receipt(String[] a,boolean ok,String effect,Long expiry,String error) {
         return "OMK_MODERATION_V1 {\"nonce\":\""+a[2]+"\",\"uuid\":\""+a[3]+"\",\"command\":\""+a[1]+"\",\"ok\":"+ok+",\"effect\":\""+effect+"\",\"expires_at\":"+expiry+",\"error\":"+(error==null?"null":"\""+error+"\"")+"}";
     }
+    private Object findBan(UUID id,String name) throws Exception {
+        Object values=banValues.invoke(banned.invoke(playerList.invoke(server)));
+        if(!(values instanceof Map) || ((Map<?,?>)values).size()>10000) throw new IllegalStateException("ban_capacity");
+        Object found=null;
+        for(Object entry:((Map<?,?>)values).values()) {
+            Object identity=entryValue.invoke(entry);
+            if(identity==null || !name.equalsIgnoreCase((String)profileName.invoke(identity))) continue;
+            if(id!=null && !id.equals(profileId.invoke(identity))) continue;
+            if(found!=null) throw new IllegalStateException("ambiguous_ban");
+            found=entry;
+        }
+        return found;
+    }
+    private String banToken(Object entry) throws Exception {
+        Object json=jsonObject.newInstance();serializeBan.invoke(entry,json);
+        byte[] hash=MessageDigest.getInstance("SHA-256").digest(json.toString().getBytes(StandardCharsets.UTF_8));
+        StringBuilder token=new StringBuilder();
+        for(byte value:hash) token.append(String.format(Locale.ROOT,"%02x",value&255));
+        return token.toString();
+    }
+    private String lookupBan(String[] a) throws Exception {
+        if(!a[2].matches("[a-f0-9]{32}") || !a[3].matches("[A-Za-z0-9_]{1,16}")) throw new IllegalArgumentException("invalid_lookup");
+        expireBans();Object entry=findBan(null,a[3]);
+        String head="OMK_BAN_LOOKUP_V1 {\"nonce\":\""+a[2]+"\",\"player\":\"";
+        if(entry==null) return head+a[3]+"\",\"uuid\":null,\"token\":null,\"error\":\"not_banned\"}";
+        Object identity=entryValue.invoke(entry);
+        return head+profileName.invoke(identity)+"\",\"uuid\":\""+profileId.invoke(identity)+"\",\"token\":\""+banToken(entry)+"\",\"error\":null}";
+    }
+    private String unban(String[] a,UUID id) throws Exception {
+        if(!a[6].matches("[a-f0-9]{64}")) throw new IllegalArgumentException("invalid_ban_token");
+        Object entry=findBan(id,a[4]);
+        if(entry==null) return receipt(a,false,"none",null,"not_banned");
+        if(!a[6].equals(banToken(entry))) return receipt(a,false,"none",null,"changed");
+        try {
+            Object bans=banned.invoke(playerList.invoke(server));
+            removeEntry.invoke(bans,entryValue.invoke(entry));writeChanges.invoke(bans);
+            return receipt(a,true,"applied",null,null);
+        } catch(Exception failure) { log.warn("Owner unban failed ({})",failure.getClass().getSimpleName());return receipt(a,false,"unknown",null,"refused"); }
+    }
     private String run(String[] a) throws Exception {
         if(!Boolean.TRUE.equals(mainThread.invoke(server))) throw new IllegalStateException("wrong_thread");
-        if(a.length!=8 || !a[1].matches("kick|ban|mute") || !a[2].matches("[a-f0-9]{32}") || !a[3].matches("[a-f0-9-]{36}") || !a[4].matches("[A-Za-z0-9_]{1,16}") || !a[5].matches("0|[1-9][0-9]{0,7}") || !a[6].matches("[A-Za-z0-9_-]{1,684}") || !"v1".equals(a[7])) throw new IllegalArgumentException("invalid_request");
+        if(a.length==4 && "lookup-ban".equals(a[1])) return lookupBan(a);
+        if(a.length!=8 || !a[1].matches("kick|ban|mute|unban") || !a[2].matches("[a-f0-9]{32}") || !a[3].matches("[a-f0-9-]{36}") || !a[4].matches("[A-Za-z0-9_]{1,16}") || !a[5].matches("0|[1-9][0-9]{0,7}") || !a[6].matches("[A-Za-z0-9_-]{1,684}") || !"v1".equals(a[7])) throw new IllegalArgumentException("invalid_request");
         UUID id=UUID.fromString(a[3]);
         if(!id.toString().equals(a[3])) throw new IllegalArgumentException("invalid_uuid");
         long seconds=Long.parseLong(a[5]);
-        if(seconds>31536000 || ("kick".equals(a[1])?seconds!=0:seconds==0)) throw new IllegalArgumentException("invalid_duration");
+        if(seconds>31536000 || (("kick".equals(a[1])||"unban".equals(a[1]))?seconds!=0:seconds==0)) throw new IllegalArgumentException("invalid_duration");
+        if("unban".equals(a[1])) return unban(a,id);
         String reason=StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(Base64.getUrlDecoder().decode(a[6]))).toString();
         if(reason.isEmpty() || reason.codePointCount(0,reason.length())>128) throw new IllegalArgumentException("invalid_reason");
         for(int i=0;i<reason.length();) { int c=reason.codePointAt(i);int type=Character.getType(c);if(Character.isISOControl(c)||type==Character.FORMAT||c==167) throw new IllegalArgumentException("invalid_reason");i+=Character.charCount(c); }

@@ -76,7 +76,8 @@ def command(config, password, text):
     } and not any(
         re.fullmatch(pattern, text)
         for pattern in (
-            r"list omk-moderation (?:kick|ban|mute) [a-f0-9]{32} [a-f0-9-]{36} "
+            r"list omk-moderation lookup-ban [a-f0-9]{32} [A-Za-z0-9_]{1,16}",
+            r"list omk-moderation (?:kick|ban|mute|unban) [a-f0-9]{32} [a-f0-9-]{36} "
             r"[A-Za-z0-9_]{1,16} (?:0|[1-9][0-9]{0,7}) [A-Za-z0-9_-]{1,684} v1",
             r"list omk-recovery (?:inspect|drain) [a-f0-9-]{36} [A-Za-z0-9_]{3,16}",
             r"list omk-maintenance warn [a-f0-9]{32} [a-f0-9]{32} (?:[1-9][0-9]{0,2}|[12][0-9]{3}|3[0-5][0-9]{2}|3600)",
