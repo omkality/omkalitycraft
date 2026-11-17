@@ -296,6 +296,21 @@ def _add_tps_history_parser(actions):
     history.add_argument("--window", choices=("5m", "15m", "1h", "3h"), default="5m")
 
 
+def _add_moderation_parser(actions):
+    moderation = actions.add_parser("moderation", help="Owner online-player moderation")
+    moderation.add_argument("--server", required=True, type=_console_server)
+    moderation.add_argument(
+        "--command",
+        dest="moderation_command",
+        required=True,
+        choices=["kick", "ban", "mute"],
+    )
+    moderation.add_argument("--player", required=True)
+    moderation.add_argument("--duration", default="")
+    moderation.add_argument("--reason", default="")
+    moderation.add_argument("--confirm-ban", action="store_true")
+
+
 def add_admin_commands(sub):
     from omk.account_recovery import add_recovery_parser  # noqa: PLC0415
     from omk.admin_backups import add_backup_parser  # noqa: PLC0415
@@ -332,6 +347,7 @@ def add_admin_commands(sub):
         choices=["players", "tps", "save"],
     )
     console.add_argument("--confirm-save", action="store_true")
+    _add_moderation_parser(actions)
     add_recovery_parser(actions)
     add_backup_parser(actions)
     add_maintenance_parser(actions)
@@ -432,6 +448,18 @@ def _execute_admin(config, args):
 
 
 def run_admin(args):
+    if args.admin_action == "moderation" and args.result_version is None:
+        from omk.owner_moderation import run  # noqa: PLC0415
+
+        return run(
+            args.config,
+            args.server,
+            args.moderation_command,
+            args.player,
+            duration=args.duration,
+            reason=args.reason,
+            confirmed=args.confirm_ban,
+        )
     if args.admin_action == "tps-history" and args.result_version is None:
         from omk.owner_tps_history import run  # noqa: PLC0415
 

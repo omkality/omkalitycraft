@@ -1,0 +1,89 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "action": {
+      "const": "owner.moderation",
+      "default": "owner.moderation",
+      "title": "Action",
+      "type": "string"
+    },
+    "server_id": {
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,47}$",
+      "title": "Server Id",
+      "type": "string"
+    },
+    "command": {
+      "enum": [
+        "kick",
+        "ban",
+        "mute"
+      ],
+      "title": "Command",
+      "type": "string"
+    },
+    "player": {
+      "maxLength": 16,
+      "title": "Player",
+      "type": "string"
+    },
+    "ok": {
+      "title": "Ok",
+      "type": "boolean"
+    },
+    "effect": {
+      "enum": [
+        "none",
+        "applied",
+        "unknown"
+      ],
+      "title": "Effect",
+      "type": "string"
+    },
+    "expires_at": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expires At"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "enum": [
+            "invalid_request",
+            "player_offline",
+            "unavailable",
+            "already_banned",
+            "refused"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error"
+    }
+  },
+  "required": [
+    "server_id",
+    "command",
+    "player",
+    "ok",
+    "effect"
+  ],
+  "title": "ModerationResult",
+  "type": "object"
+}

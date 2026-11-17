@@ -1,6 +1,8 @@
 mod backend;
 mod branding;
+mod moderation;
 mod protocol;
+mod startup;
 mod tps_grid;
 mod ui;
 
@@ -35,9 +37,16 @@ struct Options {
 
 fn options() -> Result<Option<Options>, String> {
     let mut args = env::args_os().skip(1);
-    let mut python = OsString::from(if cfg!(windows) { "python" } else { "python3" });
-    let mut repo = env::current_dir().map_err(|_| "Не удалось определить рабочую папку")?;
-    let mut config = None;
+    let sidecar = startup::defaults()?;
+    let mut python = sidecar
+        .as_ref()
+        .map(|v| v.python.clone().into_os_string())
+        .unwrap_or_else(|| OsString::from(if cfg!(windows) { "python" } else { "python3" }));
+    let mut repo = sidecar
+        .as_ref()
+        .map(|v| v.repo.clone())
+        .unwrap_or(env::current_dir().map_err(|_| "Не удалось определить рабочую папку")?);
+    let mut config = sidecar.map(|v| v.config);
     let mut demo = false;
     let mut snapshot = None;
     let mut about = false;
@@ -47,7 +56,7 @@ fn options() -> Result<Option<Options>, String> {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / r refresh / t period / F1 project / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / r refresh / t period / F1 project / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
@@ -71,6 +80,12 @@ fn options() -> Result<Option<Options>, String> {
                 snapshot = Some(PathBuf::from(args.next().ok_or("--snapshot требует путь")?))
             }
             _ => return Err("Неизвестный аргумент; используйте --help".into()),
+        }
+    }
+    if env::args_os().len() == 1 && config.is_none() {
+        use std::io::IsTerminal;
+        if io::stdin().is_terminal() && io::stdout().is_terminal() {
+            demo = true;
         }
     }
     if demo && config.is_some() {
@@ -97,11 +112,12 @@ struct Pending {
     cancel: Arc<AtomicBool>,
     receiver: mpsc::Receiver<Result<Reply, String>>,
     handle: Option<thread::JoinHandle<()>>,
-    saving: bool,
+    mutating: bool,
 }
 impl Pending {
     fn start(backend: Backend, request: Request) -> Self {
-        let saving = matches!(&request, Request::Console { command, .. } if command == "save");
+        let mutating = matches!(&request, Request::Console { command, .. } if command == "save")
+            || matches!(&request, Request::Moderation(_));
         let cancel = Arc::new(AtomicBool::new(false));
         let c = cancel.clone();
         let (sender, receiver) = mpsc::channel();
@@ -112,7 +128,7 @@ impl Pending {
             cancel,
             receiver,
             handle: Some(handle),
-            saving,
+            mutating,
         }
     }
 }
@@ -127,7 +143,10 @@ impl Drop for Pending {
 
 fn main() {
     if let Err(error) = execute() {
-        eprintln!("omk-tui: {error}");
+        eprintln!(
+            "omk-tui: {error}\nЗапуск: Start-Live.cmd или omk-tui --demo. См. docs/OWNER_TUI.md."
+        );
+        startup::pause_on_double_click();
         std::process::exit(1);
     }
 }
@@ -145,6 +164,9 @@ fn execute() -> Result<(), String> {
             "../fixtures/demo.json"
         ))?);
         app.accept_history(Some(demo_history(app.window())));
+    }
+    if app.demo && env::args_os().len() == 1 {
+        app.message="Демо: подключение к серверу не настроено.\nДля живого режима используйте Start-Live.cmd\nили owner-tui.json рядом с exe.\nКоманды в демо отключены.".into();
     }
     if let Some(path) = options.snapshot {
         if let Some(backend) = options.backend {
@@ -166,7 +188,7 @@ fn execute() -> Result<(), String> {
     ratatui::restore();
     match result {
         Ok(true) => {
-            eprintln!("Сохранение могло выполниться: ответ не подтверждён. Автоповтора нет.");
+            eprintln!("Команда могла выполниться: ответ не подтверждён. Автоповтора нет.");
             Ok(())
         }
         Ok(false) => Ok(()),
@@ -196,6 +218,11 @@ fn interactive(
                         Ok(Reply::Overview(_, _)) => {
                             app.failed = true;
                             app.message = "Обзор недоступен. Проверьте private operator config и права.\nr — повторить чтение.".into();
+                        }
+                        Ok(Reply::Moderation(v)) => {
+                            app.failed = !v.ok;
+                            app.scroll = 0;
+                            app.message = v.message();
                         }
                         Ok(Reply::Console(v)) => {
                             app.scroll = 0;
@@ -250,7 +277,11 @@ fn interactive(
             if key.kind != KeyEventKind::Press {
                 continue;
             }
-            if key.code == KeyCode::F(1) && app.confirm.is_none() && app.range_picker.is_none() {
+            if key.code == KeyCode::F(1)
+                && app.confirm.is_none()
+                && app.range_picker.is_none()
+                && app.moderation.is_none()
+            {
                 app.about = !app.about;
                 continue;
             }
@@ -262,13 +293,32 @@ fn interactive(
                 app.range_picker = None;
                 continue;
             }
+            if app.moderation.is_some() && !key.modifiers.contains(KeyModifiers::CONTROL) {
+                if key.code == KeyCode::Esc {
+                    app.moderation = None;
+                } else if let Some(a) = app.moderation.as_mut().and_then(|f| f.key(key.code)) {
+                    if let Some(b) = &backend {
+                        drop(pending.take()); // Cancel an in-flight read before starting one mutation.
+                        app.message = format!(
+                            "Отправка: {} · {} · {}\nОжидаю подтверждения сервера. Автоповтора нет.",
+                            a.server, a.command, a.player
+                        );
+                        app.failed = false;
+                        app.scroll = 0;
+                        pending = Some(Pending::start(b.clone(), Request::Moderation(a)));
+                        next_refresh = Instant::now() + Duration::from_secs(5);
+                    }
+                    app.moderation = None;
+                }
+                continue;
+            }
             if key.code == KeyCode::Char('c') && key.modifiers.contains(KeyModifiers::CONTROL)
                 || app.confirm.is_none() && matches!(key.code, KeyCode::Char('q') | KeyCode::Esc)
             {
-                let uncertain = pending.as_ref().is_some_and(|p| p.saving);
+                let uncertain = pending.as_ref().is_some_and(|p| p.mutating);
                 drop(pending.take());
                 if uncertain {
-                    app.message = "Сохранение могло выполниться: результат неизвестен".into();
+                    app.message = "Команда могла выполниться: результат неизвестен".into();
                 }
                 return Ok(uncertain);
             }
@@ -321,6 +371,20 @@ fn interactive(
                 }
             } else {
                 match key.code {
+                    KeyCode::Char(c @ ('k' | 'b' | 'm'))
+                        if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
+                    {
+                        app.moderation = app.server().map(|s| {
+                            moderation::Form::new(
+                                s.into(),
+                                match c {
+                                    'k' => "kick",
+                                    'b' => "ban",
+                                    _ => "mute",
+                                },
+                            )
+                        });
+                    }
                     KeyCode::Up => app.move_operation(-1),
                     KeyCode::Down => app.move_operation(1),
                     KeyCode::PageUp => app.scroll = app.scroll.saturating_sub(10),
@@ -370,6 +434,7 @@ fn interactive(
         if pending.is_none()
             && app.confirm.is_none()
             && app.range_picker.is_none()
+            && app.moderation.is_none()
             && Instant::now() >= next_refresh
         {
             request = Some(Request::Overview(

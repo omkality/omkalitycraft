@@ -23,6 +23,9 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
   access or direct private journal reads in Rust. Add actions for concrete owner needs.
   Distinguish missing/stale monitoring from zero; confirm mutations and never retry them
   automatically after an uncertain response. Keep the calendar scheduler paused.
+- Keep the game OP list empty in shipped/runtime configurations. Administration belongs
+  in the owner TUI and its private backend. Temporary OP is allowed only for synthetic
+  isolated test controls; revoke it and verify an empty operator list before finishing.
 - Reserve administration for the owner's OS/SSH account. Check owner filesystem access
   before reading operator configuration or credentials, including native Windows DACLs.
   Keep RCON/monitoring loopback-only and the owner backend outside player-facing APIs.

@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "issue": 250,
+  "scope": "Owner TUI launch and timed moderation; isolated offline Forge, not production/VPS/full DJ2 acceptance",
+  "core": {
+    "version": "0.3.10",
+    "sha256": "aff7bd98a721e831f753d210a02898d29ecebf33efd34ab71e2e67433d7874e7",
+    "reproducible_rounds": 2
+  },
+  "python": {
+    "windows": {
+      "passed": 2937,
+      "skipped": 225
+    },
+    "linux": {
+      "passed": 3157,
+      "skipped": 5
+    },
+    "focused_moderation": 35,
+    "ruff": "passed",
+    "black": "passed"
+  },
+  "rust": {
+    "tests": 14,
+    "clippy_warnings_denied": true,
+    "release_linux": true
+  },
+  "native": [
+    "ordinary_chat_reaches_observer",
+    "backend_unconfirmed_ban_has_no_effect",
+    "mute_blocks_public_private_emote_but_help_works",
+    "mute_expires_with_no_tui_running",
+    "kick_disconnects_only_target",
+    "kick_reconnect_preserves_control_item_and_nbt",
+    "zero_operators_and_player_cannot_use_owner_bridge",
+    "timed_mute_survives_reconnect",
+    "separate_permanent_ban_control_created",
+    "native_ban_file_records_distinct_created_and_expiry",
+    "native_timed_ban_disconnects_and_denies_relogin",
+    "ban_and_mute_persist_across_java_restart",
+    "persisted_mute_expires_after_restart_and_control_item_preserved",
+    "native_ban_expiry_allows_rejoin_after_restart",
+    "only_expired_owner_ban_removed_permanent_ban_preserved",
+    "all_protocol_actors_left_fixture_available"
+  ],
+  "ftb": {
+    "ftbutilities": "5.4.1.131",
+    "ftblib": "5.4.7.2",
+    "checks": [
+      "ftb_ordinary_chat_control",
+      "ordinary_help_command_remains_available_with_ftb",
+      "owner_expiry_does_not_clear_later_manual_ftb_mute",
+      "manual_ftb_unmute_does_not_bypass_owner_ttl",
+      "ordinary_chat_returns_after_both_restrictions_end",
+      "ftb_fixture_has_no_operators"
+    ]
+  },
+  "pty": [
+    "invalid_duration_stays_in_form",
+    "real_mute_via_form_blocks_then_restores_chat",
+    "ban_defaults_to_no_without_dispatch",
+    "explicit_yes_applies_timed_ban_then_allows_rejoin",
+    "real_kick_via_form_and_rejoin",
+    "escape_cancels_form_without_quitting",
+    "terminal_restored_after_real_moderation",
+    "no_arguments_without_sidecar_opens_labelled_demo",
+    "no_arguments_sidecar_selects_real_backend"
+  ],
+  "regression": {
+    "native_ban_expiry": "reproduced stuck expired ban with initial native API candidate; corrected source-specific finite expiry passes restart/rejoin/permanent-control tests",
+    "inventory": "three diamonds with unique display-name NBT survive kick, rejoin and Java restart",
+    "unknown_outcome": "lost/mismatched receipt returns unknown and does not resend"
+  },
+  "boundaries": {
+    "game_operators_required": false,
+    "calendar_scheduler": "paused",
+    "worlds": "only dedicated synthetic fixture volumes",
+    "private_credentials_published": false,
+    "real_gui_test": false,
+    "windows_executable": "native artifact validation is separate; see local review provenance"
+  }
+}
