@@ -1,3 +1,24 @@
+## Windows: попытка нового Shift-сочетания и OpenAL — 17 ноября 2026
+
+#191/#163: свежий signed-клиент 0.1.7, штатная Temurin 8u472+8 и pinned MCP overlay.
+Первый выход без Options — exit0. Во втором запуске Computer Use/Windows SendInput
+отправил Shift+Home, меню/runtime/options записали HOME. Из 282 назначений только
+выбранная сумка Roots изменилась; прежние SHIFT+O/K/отключения сохранились до краша.
+Это ввод инструментом, ручная клавиатура и persistence после restart не приняты.
+
+В меню без мира/dedicated Forge произошёл native exit0xC0000005: Windows Event1000,
+OpenAL64.dll offset0x20ddd, тот же fault site, что в #163. hs_err отсутствует;
+локальный launcher incident и Crash Assistant подтверждены. Причина неизвестна;
+никаких замен JRE/LWJGL/OpenAL, отключения звука или speculative keybind fixes нет.
+Повтор остановлен, доказательства сохранены через 7-Zip с SHA256 всех 37 файлов;
+own Drasl/доступы/Crash Assistant убраны. Удаление временного клиента/session-папки/
+распакованного экспорта отклонено автоматической проверкой; они оставлены без обхода
+отказа (`blocked by policy`). Существующий контейнер
+сохранил identity/start time/healthy. Raw данные приватны, обе issues открыты.
+VPS/Release/player manifest прежние, config-аудит ручной, scheduler на паузе.
+[Проверка и ограничения](CLIENT_KEY_DEFAULTS.md#дополнительная-попытка-через-windows--17-ноября-2026),
+[протокол](validation/client-native-chord-2026-11-17.json).
+
 ## Owner result v1 на настоящем Docker — 17 ноября 2026
 
 #33/#38/#41/#235: существующий cold-backups lab дополнен v1 backup-проверками
