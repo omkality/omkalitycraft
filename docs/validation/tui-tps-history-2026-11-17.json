@@ -104,7 +104,7 @@
     "tui/src/backend.rs": "3f1432c3443d7322c39ff3053088f40c19fa5d925245ebd582531239f25e93d5",
     "tui/src/main.rs": "e5841335e57538a1f2654d462da71a2029888da4eee1f26f0c725809f9b73183",
     "tui/src/protocol.rs": "21014be86aa5d5583865465f2c9aae7ad1c5759740a0294f301ebe227f867033",
-    "tui/src/ui.rs": "b4c0c966fd17c370084da30c49beb4f47d6acbb516f853b4548a8e3e0b9c1ccb",
+    "tui/src/ui.rs": "edcc315f70b2e963eef82c630b7a82cff24c7632469679bb7629f90e1acab22d",
     "tui/src/branding.rs": "d829fdc0601b40e8d88cf3acc76a8bd3fe3a51c3517c144c770f159af5ceb0b0",
     "tui/src/ore_pixels.rs": "9409dc9461ed43bf09d96fba55d04e02cb1b462997aa8e010e4d7d8222a15ce8",
     "scripts/tui_branding.py": "b747984e42a1e0d7addd051afcdc3424fedb1a5b71b6c77abf29b2b656ae92fe"

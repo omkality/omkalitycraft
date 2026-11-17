@@ -141,7 +141,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     let top = if app.branding_header && area.height >= 34 {
         let columns =
             Layout::horizontal([Constraint::Length(20), Constraint::Min(1)]).split(rows[0]);
-        frame.render_widget(block(" Мёртвум "), columns[0]);
+        frame.render_widget(block(""), columns[0]);
         crate::branding::draw(frame, Rect::new(columns[0].x + 2, columns[0].y + 1, 16, 8));
         columns[1]
     } else {
@@ -322,13 +322,13 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         let h = 23;
         let popup = Rect::new((area.width - w) / 2, (area.height - h) / 2, w, h);
         frame.render_widget(Clear, popup);
-        frame.render_widget(block(" OMKALITYCRAFT · руда мёртвума "), popup);
+        frame.render_widget(block(" OMKALITYCRAFT "), popup);
         crate::branding::draw_large(
             frame,
             Rect::new(popup.x + (w - 32) / 2, popup.y + 2, 32, 16),
         );
         frame.render_widget(
-            Paragraph::new("Плоская текстура руды мёртвума\nF1 / Esc — вернуться к графику")
+            Paragraph::new("F1 / Esc — вернуться к графику")
                 .centered()
                 .style(Style::default().fg(TEXT).bg(PANEL)),
             Rect::new(popup.x + 1, popup.y + 19, w - 2, 2),
