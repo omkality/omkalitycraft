@@ -1,3 +1,27 @@
+## Linux: BetterQuesting пазла — 17 ноября 2026
+
+#181/#49/#41: исходное задание814 принято в свежем Linux/WSLg singleplayer.
+Подготовлены только материалы и три direct prerequisites794/807/813; само814
+не завершалось командой. Пустой ящик/неверный it4 не засчитаны. Обычный 3×3 крафт
+дал коробку с 59 стопками/81 плиткой; BQ сохранил частичный [1,0] через выход/вход.
+Из той же коробки 278 native container clicks собрали пазл: wrong last-two без
+output, correct — один it5/81 израсходованный вход. Команд предметов/прогресса
+после freeze нет. Задание завершилось [1,1], 795 доступно и не выполнено.
+
+Полный Java restart сохранил статус и предметы; оба клиента exit0. 66 проверок
+холодных сохранений/архивов, пустые поставленный ящик и матрица, нет целевых drops,
+соседние предметы/NBT прежние. 226 signed JAR/119 model-texture files неизменны;
+игровой код/quest definitions/recipes не менялись. Остановку приватного скрипта
+перед неверной занятой ячейкой не засчитывали как game bug; продолжили кликами.
+
+Три world snapshots и 1321-file evidence проверены через 7-Zip/SHA256, свой
+остановленный стенд/проверочные копии удалены: около950MiB. Это offline diagnostic
+MCP/llvmpipe/survival после synthetic setup, без нового dedicated Core/Fix,
+Drasl/multiplayer/Linux portable/macOS/full playthrough. OpenAL163/ручной Shift191
+остаются открытыми. VPS/Release/player manifest прежние, scheduler на паузе.
+[Границы и проверка](DJ2_RESOURCE_MODELS.md),
+[протокол](validation/dj2-bq-puzzle-retrieval-2026-11-17.json).
+
 ## Windows: попытка нового Shift-сочетания и OpenAL — 17 ноября 2026
 
 #191/#163: свежий signed-клиент 0.1.7, штатная Temurin 8u472+8 и pinned MCP overlay.

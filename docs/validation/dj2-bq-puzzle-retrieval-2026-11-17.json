@@ -1,0 +1,191 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "outcome": "accepted_scoped_native_retrieval",
+  "issues": [
+    181,
+    49,
+    41
+  ],
+  "scope": "Linux/WSLg singleplayer quest814 retrieval and quest795 availability; no full pack playthrough",
+  "environment": {
+    "os": "Ubuntu24.04/WSLg",
+    "renderer": "Mesa25.2.8 llvmpipe LLVM20.1.2, OpenGL4.5 compatibility",
+    "display_sizes": [
+      [
+        838,
+        714
+      ],
+      [
+        1280,
+        720
+      ]
+    ],
+    "java": "Temurin1.8.0_504-b01",
+    "java_image": "eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5",
+    "linux_native_artifacts": [
+      {
+        "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209",
+        "sha256": "d312147c3999b868fd649887f45203a4195bc10fc563cee4c4f8d22761421f94",
+        "sha1": "931074f46c795d2f7b30ed6395df5715cfd7675b",
+        "url": "https://libraries.minecraft.net/org/lwjgl/lwjgl/lwjgl-platform/2.9.4-nightly-20150209/lwjgl-platform-2.9.4-nightly-20150209-natives-linux.jar"
+      },
+      {
+        "name": "net.java.jinput:jinput-platform:2.0.5",
+        "sha256": "1ab4d194277816b6105253d224c8c69f1b6d720690efe7c85f3ce884f0ea273d",
+        "sha1": "7ff832a6eb9ab6a767f1ade2b548092d0fa64795",
+        "url": "https://libraries.minecraft.net/net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-linux.jar"
+      },
+      {
+        "name": "com.mojang:text2speech:1.10.3",
+        "sha256": "30f85b0ff695941095f73ede14cc55c0ca1f0fdc34f15c4906c95d5e1d545209",
+        "sha1": "ab7896aec3b3dd272b06194357f2d98f832c0cfc",
+        "url": "https://libraries.minecraft.net/com/mojang/text2speech/1.10.3/text2speech-1.10.3-natives-linux.jar"
+      }
+    ],
+    "master_volume_initial_config": 0.0,
+    "audio_validation": false,
+    "system_java_or_packages_changed": false,
+    "mcp": "2026.11.02",
+    "mcp_sha256": "e2c3cb80c6e45a11c7e2835b46e0183bf0e5f5f15ca1c3acef5f4fe02818e182",
+    "mcp_bind": "Linux loopback only; direct authenticated endpoint",
+    "windows_orchestrator_permissions_changed": false,
+    "auth": "synthetic offline identity; no Drasl/multiplayer acceptance"
+  },
+  "candidate": {
+    "version": "2.23.4-omk.6-rc.1",
+    "manifest_digest": "4865d91cfadfe39c32d487f0f10cc1f56dc948d1592727560ded38fd4e2ba9b0",
+    "client": "0.1.7",
+    "client_sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1",
+    "signed_files_copied_verified": 5785,
+    "windows_platform_files_replaced": 186,
+    "signed_mod_jars_unchanged": 226,
+    "model_and_texture_files_unchanged": 119,
+    "pins": {
+      "config/betterquesting/DefaultQuests.json": "ab4700ec69ca9883a06f1b6f93a4bf710e794c46363530c332f39e34b389bc77",
+      "mods/BetterQuesting-3.5.329.jar": "f7803b91d54b98eb54b3e2f12143866e68a46e3f963d51997d1a1195b8469ba7",
+      "mods/BQTweaker-1.3.5.jar": "c947f92623b22cc8baab77e82e58852710bb5b67123c85891b528b223ad4d3e5",
+      "mods/StandardExpansion-3.4.173.jar": "405211aef15d442f857f92c4f755f051396283d6e6fc2de818f4f693091e89f9",
+      "scripts/Unique/ContentTweakerBag.zs": "f2bbeffc66655599b5e54a2759b214d47881cfe118aedab507e614f2e87bd837"
+    }
+  },
+  "setup": {
+    "fresh_world": true,
+    "only_force_completed_prerequisites": [
+      794,
+      807,
+      813
+    ],
+    "quest814_or795_force_completed": false,
+    "materials_seeded_before_freeze": true,
+    "accepted_actions_mode": "survival",
+    "item_or_progress_commands_after_freeze": 0
+  },
+  "native_cases": {
+    "empty_same_type_meta_box_and_wrong_it4": "both814 requirements remain0/1 after Detect",
+    "box_recipe": "14 GUI clicks; 4 essence_of_thought +4 creative_singularity +1 empty diamond shulker ->1 original box",
+    "box_contents": {
+      "unique_stacks": 59,
+      "total_tiles": 81,
+      "matches_original_quest": true,
+      "nested_Count_and_Slot": "TAG_Byte",
+      "nested_Damage": "TAG_Short=0"
+    },
+    "box_detected": "1/1; no consumption; it5 stays0/1",
+    "partial_rejoin": "[1,0] saved and restored in native GUI",
+    "puzzle": "81 original pieces transferred in3 batches; wrong last-two arrangement gives no output; correct gives1 it5",
+    "native_container_clicks": 278,
+    "completed_814": "[1,1], native completion; box no longer in inventory",
+    "next_795": "available in native GUI after Java restart; not completed",
+    "java_restart": "new process, same profile/world/JARs; 814 completion and one it5 preserved",
+    "gui_access": "MCP bound-key hold plus Windows/WSLg Home event; native BQ panels/clicks; not a keyboard hardware acceptance"
+  },
+  "conservation": {
+    "original_puzzle_inputs_consumed": 81,
+    "it5_in_player": 1,
+    "it4_in_player": 1,
+    "cobblestone_sentinel_count": 7,
+    "sentinel_custom_nbt_preserved": true,
+    "guide_book_count": 1,
+    "placed_diamond_shulker_retained_empty": true,
+    "giant_table_empty": true,
+    "target_items_in_ground_drops": 0,
+    "level_dat_and_playerdata_inventory_match": true,
+    "source_world_unchanged_during_cold_reads": true
+  },
+  "cold_checks": {
+    "partial": {
+      "progress": [
+        1,
+        0
+      ],
+      "completed": false,
+      "checks": 19,
+      "archive_sha256": "a925d1731a2054efbf38d5d3b16d80546b9a07eed95f182d92340162be5b9108",
+      "archive_bytes": 1528491
+    },
+    "final": {
+      "progress": [
+        1,
+        1
+      ],
+      "completed": true,
+      "checks": 19,
+      "archive_sha256": "17372438a4e62c88ed37d6588d09a6584f28fff05921cc62a406a0a498ee0442",
+      "archive_bytes": 1668654
+    },
+    "restarted": {
+      "progress": [
+        1,
+        1
+      ],
+      "completed": true,
+      "checks": 21,
+      "archive_sha256": "69f8d1dd889fda571850d127aa6ddfd2fa479ce1b2f7c9ca051321acbdbd843f",
+      "archive_bytes": 1731487
+    }
+  },
+  "independent_recursive_item_recheck": {
+    "passed": true,
+    "checks": 7,
+    "target_items_in_tiles": 0,
+    "target_items_in_drops": 0,
+    "it5_in_actor": 1
+  },
+  "runtime": {
+    "both_exit0": true,
+    "target_case_warnings": 0,
+    "fatal_or_task_markers": 0,
+    "new_crash_reports": 0,
+    "new_hs_err": 0
+  },
+  "private_evidence": {
+    "files": 1321,
+    "bytes": 4121383,
+    "sha256": "6ea9c0f678ed5c790d654c1e3595c04182b5a6c51362fbbce59d9b7200a58816",
+    "seven_zip_test": true,
+    "all_member_sha256_match": true,
+    "world_snapshots": 3,
+    "raw_worlds_logs_screenshots_published": false
+  },
+  "cleanup": {
+    "own_stopped_linux_root_removed": true,
+    "only_verified_extractions_and_duplicate_inputs_removed": true,
+    "removed_bytes": 996418198,
+    "own_game_processes_or_windows_left": false,
+    "existing_services_mutated_by_this_task": false,
+    "existing_service_identity_preservation_asserted": false
+  },
+  "harness_notes": [
+    "Preparation command/field checks rejected unsupported requests; these are excluded from accepted cases.",
+    "Last-tile script assumed an empty target incorrectly; guard stopped before overwrite. Ordinary native swaps completed the negative/correct cases without item/progress commands.",
+    "Cold inventory review includes an independent recursive scan and native empty-inventory tile IDs."
+  ],
+  "limits": [
+    "Synthetic prerequisite/material setup; not an earned endgame playthrough.",
+    "No new Core/DJ2Fix dedicated-server, Drasl, multiplayer, Linux portable or macOS acceptance.",
+    "Windows OpenAL163 and human Shift191 remain separate and open.",
+    "No game code, quest definitions, recipe, item registry/NBT policy, player manifest, Release or VPS changes.",
+    "Calendar scheduler remains paused."
+  ]
+}
