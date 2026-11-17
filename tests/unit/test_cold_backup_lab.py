@@ -1,10 +1,13 @@
+import json
 import subprocess
+from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
 from pydantic import ValidationError
 
 from omk.cold_backup_lab import Lab
+from omk.owner_result import failure
 
 
 def test_invalid_child_reply_still_reaps_all_owned_processes(tmp_path, monkeypatch):
@@ -24,6 +27,25 @@ def test_invalid_child_reply_still_reaps_all_owned_processes(tmp_path, monkeypat
     second.terminate.assert_called_once()
     second.kill.assert_called_once()
     assert second.wait.call_count == 2
+
+
+@pytest.mark.parametrize(
+    "root", [r"C:\synthetic\private-owner", "/synthetic/private-owner"]
+)
+def test_contract_helper_rejects_private_paths_with_platform_json_escaping(
+    tmp_path, monkeypatch, root
+):
+    lab = Lab.__new__(Lab)
+    lab.root = Path(root)
+    lab.report = {"checks": []}
+    value = failure("backups.run", Mock(operation="a" * 32, server=None), "io_failure")
+    value["error"]["message"] = str(lab.root)
+    monkeypatch.setattr(
+        "omk.cold_backup_lab.subprocess.run",
+        Mock(return_value=Mock(returncode=1, stdout=json.dumps(value).encode())),
+    )
+    with pytest.raises(RuntimeError, match="contract_result_omits_private_root"):
+        lab.contract_cli(tmp_path / "operator.toml", "run", "a" * 32, success=False)
 
 
 def test_second_launch_failure_reaps_the_first_owned_process(tmp_path, monkeypatch):

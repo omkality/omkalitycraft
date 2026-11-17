@@ -72,7 +72,7 @@
     "source_hashes_unchanged": true,
     "minecraft_started": false
   },
-  "focused_tests_passed": 85,
+  "focused_tests_passed": 87,
   "host_child_cleanup_cases": 2,
   "old_code_second_launch_failure_control": "expected assertion failure: first child not terminated",
   "legacy_race_rotation_restart_changed_source_and_600m_streaming_preserved": true,
@@ -94,5 +94,7 @@
     "real Minecraft or inventory acceptance",
     "new native restore/maintenance acceptance",
     "VPS workload or power-loss durability"
-  ]
+  ],
+  "private_path_escaping_cases": 2,
+  "old_private_path_control_on_windows": "both path representations were missed by the old check; both now rejected"
 }

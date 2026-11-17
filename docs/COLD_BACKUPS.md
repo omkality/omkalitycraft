@@ -175,8 +175,9 @@ Legacy race, rotation, source restart, отказ изменённого мир�
 
 Все v1 ответы проходят строгий decoder, exit codes сверяются с `ok`, private root
 не попадает в envelope. При ошибке parser/второго запуска harness завершает и
-дожидается только своих host children; два unit-контроля проверяют эти пути.
-Локально приняты 43 native условия и 85 focused tests. Свои контейнеры/volumes
+дожидается только своих host children; два unit-контроля проверяют эти пути. Ещё два проверяют поиск private paths
+с JSON escaping Windows/POSIX: сравнение выполняется в одном представлении.
+Локально приняты 43 native условия и 87 focused tests. Свои контейнеры/volumes
 удалены по ownership labels, ранее работавшие контейнеры сохранили ID/start time.
 Это transport/filesystem/process proof для backup subset, не новый restore/
 maintenance/Minecraft/Rust consumer или VPS тест.

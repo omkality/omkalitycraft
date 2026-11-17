@@ -7,7 +7,7 @@
 Три source files независимо сверены по SHA256 через readonly helper mount.
 Строгий decoder и exit codes согласованы; private root в DTO не попадает.
 
-43 native условия и 85 focused tests, включая два cleanup-контроля host children.
+43 native условия и 87 focused tests, включая два cleanup-контроля host children.
 На старой функции контролируемый отказ второго Popen оставлял первый child
 неубранным; новый finally завершает/дожидается только собственных процессов.
 Native services и контракт v1 не изменены. Существующие legacy/race/rotation/

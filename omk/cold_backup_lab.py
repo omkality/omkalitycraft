@@ -211,7 +211,7 @@ class Lab:
         )
         if versioned:
             self.check(
-                str(self.root) not in json.dumps(value),
+                json.dumps(str(self.root))[1:-1] not in json.dumps(value),
                 "contract_result_omits_private_root",
             )
         return value
