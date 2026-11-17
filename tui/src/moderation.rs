@@ -235,7 +235,7 @@ impl Form {
             )
         } else if self.action.command == "unban" {
             format!(
-                "\nСервер: {}\n\n> Ник: {}\n\nРазбан работает и для офлайн-игрока.\nСнимается только найденный бан этого ника/UUID.\n\n{}\n\nEnter — снять бан · Esc — отмена",
+                "\nСервер: {}\n\n> Ник: {}\n\nРазбан работает и для офлайн-игрока.\nПосле снятия бана игрок сможет снова войти.\n\n{}\n\nEnter — снять бан · Esc — отмена",
                 self.action.server, self.action.player, self.error
             )
         } else {
