@@ -305,6 +305,10 @@ def add_admin_commands(sub):
         "overview", help="Read-only owner TUI overview (separate schema)"
     )
     overview.add_argument("--server", type=_console_server)
+    history = actions.add_parser(
+        "tps-history", help="Read-only five-minute TPS history"
+    )
+    history.add_argument("--server", required=True, type=_console_server)
     console = actions.add_parser("console", help="Fixed owner RCON commands")
     console.add_argument("--server", required=True, type=_console_server)
     console.add_argument(
@@ -414,6 +418,10 @@ def _execute_admin(config, args):
 
 
 def run_admin(args):
+    if args.admin_action == "tps-history" and args.result_version is None:
+        from omk.owner_tps_history import run  # noqa: PLC0415
+
+        return run(args.config, args.server)
     if args.admin_action == "console" and args.result_version is None:
         from omk.owner_console import run  # noqa: PLC0415
 

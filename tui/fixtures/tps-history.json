@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "action": "owner.tps-history",
+  "server_id": "dj2",
+  "ok": true,
+  "state": "available",
+  "start": 0,
+  "end": 300,
+  "step": 5,
+  "points": [
+    {
+      "timestamp": 0,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 5,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 10,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 15,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 20,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 25,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 30,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 35,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 40,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 45,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 50,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 55,
+      "tps": 19.3
+    },
+    {
+      "timestamp": 60,
+      "tps": 18.7
+    },
+    {
+      "timestamp": 65,
+      "tps": 18.1
+    },
+    {
+      "timestamp": 70,
+      "tps": 17.5
+    },
+    {
+      "timestamp": 75,
+      "tps": 16.9
+    },
+    {
+      "timestamp": 80,
+      "tps": 16.3
+    },
+    {
+      "timestamp": 85,
+      "tps": 15.7
+    },
+    {
+      "timestamp": 90,
+      "tps": 15.1
+    },
+    {
+      "timestamp": 95,
+      "tps": 14.5
+    },
+    {
+      "timestamp": 100,
+      "tps": 13.9
+    },
+    {
+      "timestamp": 105,
+      "tps": 14.5
+    },
+    {
+      "timestamp": 110,
+      "tps": 15.1
+    },
+    {
+      "timestamp": 115,
+      "tps": 15.7
+    },
+    {
+      "timestamp": 120,
+      "tps": 16.3
+    },
+    {
+      "timestamp": 125,
+      "tps": 16.9
+    },
+    {
+      "timestamp": 130,
+      "tps": 17.5
+    },
+    {
+      "timestamp": 135,
+      "tps": 18.1
+    },
+    {
+      "timestamp": 140,
+      "tps": 18.7
+    },
+    {
+      "timestamp": 145,
+      "tps": 19.3
+    },
+    {
+      "timestamp": 150,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 155,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 160,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 165,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 170,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 175,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 180,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 185,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 190,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 195,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 200,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 205,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 210,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 215,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 220,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 225,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 230,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 235,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 240,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 245,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 250,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 255,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 260,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 265,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 270,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 275,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 280,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 285,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 290,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 295,
+      "tps": 19.9
+    },
+    {
+      "timestamp": 300,
+      "tps": 19.9
+    }
+  ],
+  "error": null
+}

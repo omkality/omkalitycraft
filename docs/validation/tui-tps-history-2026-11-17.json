@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "scope": "five-minute owner TPS chart and flat Mortum header on existing local Forge fixtures",
+  "accepted": true,
+  "source_branch": "feat/tui-tps-chart",
+  "issue": 244,
+  "window_seconds": 300,
+  "step_seconds": 5,
+  "point_limit": 61,
+  "live_samples": {
+    "lab-alpha": {
+      "state": "available",
+      "point_count": 61,
+      "min_tps": 19.91238550378335,
+      "max_tps": 20.0
+    },
+    "lab-beta": {
+      "state": "available",
+      "point_count": 61,
+      "min_tps": 19.9203187250996,
+      "max_tps": 20.0
+    }
+  },
+  "pty": {
+    "ok": true,
+    "checks": [
+      "flat_ore_header_and_alpha_history_visible",
+      "real_history_window_advances",
+      "background_refresh_remains_fresh",
+      "alpha_real_players_reply",
+      "switch_rebinds_chart_to_beta",
+      "beta_real_forge_tps_reply",
+      "f1_opens_flat_ore_project_card",
+      "escape_closes_card_without_exiting",
+      "save_still_requires_confirmation_and_escape_cancels",
+      "quit_restores_terminal_modes"
+    ],
+    "history_end_advanced_seconds": 5,
+    "point_count": 61,
+    "alpha_min": 19.916351324437365
+  },
+  "containers": [
+    {
+      "service": "alpha",
+      "running": true,
+      "restart_count": 0,
+      "oom_killed": false
+    },
+    {
+      "service": "beta",
+      "running": true,
+      "restart_count": 0,
+      "oom_killed": false
+    },
+    {
+      "service": "prometheus",
+      "running": true,
+      "restart_count": 0,
+      "oom_killed": false
+    },
+    {
+      "service": "agent",
+      "running": true,
+      "restart_count": 0,
+      "oom_killed": false
+    }
+  ],
+  "left_running_by_owner_request": true,
+  "branding": {
+    "flat_texture_sha256": "d070af123948d5ef81cd5834cbde92bc41534435070340fa07762624e0915449",
+    "unchanged_launcher_png_sha256": "6feb6854bd1a67de03c2c62c3de64e2ee056ebfbde1eb4451396912dc28611cf",
+    "header_cells": [
+      16,
+      8
+    ],
+    "project_card_cells": [
+      32,
+      16
+    ],
+    "resampling": "nearest",
+    "ai_redrawn": false
+  },
+  "verification": {
+    "focused_python_passed": 107,
+    "rust_tests_passed": 8,
+    "clippy": "passed",
+    "release_linux": "passed",
+    "branding_source_check": "passed",
+    "windows_unit_passed": 2882,
+    "windows_unit_skipped": 223
+  },
+  "limitations": [
+    "minimal offline Forge fixtures, not DJ2 or a VPS benchmark",
+    "host metrics refer to Docker Desktop Linux VM",
+    "nominal five-second refresh may be delayed while a bounded request is running",
+    "missing samples remain gaps; no fabricated TPS dips",
+    "calendar scheduler remains paused"
+  ],
+  "source_sha256": {
+    "omk/owner_tps_history.py": "730d992d9a4a46586e211f5fd8ed9cdaff10f0ef17fcfe00127f7578783977d6",
+    "omk/owner_metrics.py": "6638cb4a6ab62b6c24fdc313d800a5536802ff395f22492b36b2d846bfbedfb4",
+    "omk/admin.py": "e7c25ddfef1ad1b125f478b1db2454335baf8f58e7189e8a88ca0a601fc12842",
+    "tui/src/backend.rs": "3f1432c3443d7322c39ff3053088f40c19fa5d925245ebd582531239f25e93d5",
+    "tui/src/main.rs": "e5841335e57538a1f2654d462da71a2029888da4eee1f26f0c725809f9b73183",
+    "tui/src/protocol.rs": "21014be86aa5d5583865465f2c9aae7ad1c5759740a0294f301ebe227f867033",
+    "tui/src/ui.rs": "b4c0c966fd17c370084da30c49beb4f47d6acbb516f853b4548a8e3e0b9c1ccb",
+    "tui/src/branding.rs": "d829fdc0601b40e8d88cf3acc76a8bd3fe3a51c3517c144c770f159af5ceb0b0",
+    "tui/src/ore_pixels.rs": "9409dc9461ed43bf09d96fba55d04e02cb1b462997aa8e010e4d7d8222a15ce8",
+    "scripts/tui_branding.py": "b747984e42a1e0d7addd051afcdc3424fedb1a5b71b6c77abf29b2b656ae92fe"
+  },
+  "source_hash_basis": "Git index bytes (LF)"
+}

@@ -94,6 +94,70 @@ pub const METRICS: [&str; 6] = [
 
 #[derive(Clone, Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub struct TpsPoint {
+    pub timestamp: u64,
+    #[serde(deserialize_with = "required_option")]
+    pub tps: Option<f64>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct TpsHistory {
+    pub schema_version: u32,
+    pub action: String,
+    pub server_id: String,
+    pub ok: bool,
+    pub state: String,
+    pub start: u64,
+    pub end: u64,
+    pub step: u32,
+    pub points: Vec<TpsPoint>,
+    #[serde(deserialize_with = "required_option")]
+    pub error: Option<String>,
+}
+
+impl TpsHistory {
+    pub fn parse(bytes: &[u8], server: &str) -> Result<Self, String> {
+        let v: Self = serde_json::from_slice(bytes).map_err(|_| "Неверный ответ истории TPS")?;
+        let count = v.points.iter().filter(|p| p.tps.is_some()).count();
+        let valid = v.schema_version == 1
+            && v.action == "owner.tps-history"
+            && v.server_id == server
+            && valid_server(server)
+            && v.step == 5
+            && v.end.checked_sub(v.start) == Some(300)
+            && v.start.is_multiple_of(5)
+            && if v.ok {
+                v.error.is_none()
+                    && v.points.len() == 61
+                    && v.points.iter().enumerate().all(|(i, p)| {
+                        p.timestamp == v.start + i as u64 * 5
+                            && p.tps
+                                .is_none_or(|n| n.is_finite() && (0.0..=20.0).contains(&n))
+                    })
+                    && match v.state.as_str() {
+                        "available" => count == 61,
+                        "partial" => count > 0 && count < 61,
+                        "missing" | "disabled" => count == 0,
+                        _ => false,
+                    }
+            } else {
+                v.state == "unavailable"
+                    && v.points.is_empty()
+                    && v.error.as_deref().is_some_and(|e| {
+                        matches!(e, "invalid_configuration" | "history_unavailable")
+                    })
+            };
+        if valid {
+            Ok(v)
+        } else {
+            Err("Нарушен контракт истории TPS".into())
+        }
+    }
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Overview {
     pub schema_version: u32,
     pub action: String,

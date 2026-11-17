@@ -9,6 +9,7 @@ backend daemon, HTTP API администрирования и scheduler не н
 
 - Видеть CPU/RAM Linux Docker host, занятое место файловой системы проекта.
 - Видеть TPS, среднее время tick и число игроков выбранного сервера.
+- Смотреть график TPS за последние пять минут с шагом и обновлением 5 s.
 - Запросить `list uuids` и `forge tps` через прежний loopback RCON transport.
 - Отправить `save-all flush`, введя `SAVE <server-id>` в диалоге подтверждения.
 - Выбрать allowlisted сервер и посмотреть последние live backup/maintenance/restore
@@ -93,14 +94,21 @@ samples старше 90 s, отрицательные/NaN/Inf или неодн�
 `←/→` — сервер, `↑/↓` — операция, `1` — игроки, `2` — Forge TPS, `3` — сохранение,
 `r` — чтение обзора, `q`/`Ctrl+C` — выход. Минимальное окно 84×28. Диалог save
 закрывается по `Esc`, `PgUp/PgDn` прокручивают ответ консоли. Автообновление
-обзора каждые 10 s не отправляет команды.
+обзора и графика каждые 5 s не отправляет команды. `F1` открывает карточку проекта;
+`F1`/`Esc` закрывает её и возвращает к графику.
 
-При высоте окна от 34 строк шапка показывает исходный логотип руды мёртвума
-цветными half-block cells. PNG лаунчера остаётся прежним; генератор
-`scripts/tui_branding.py` переносит его пиксели в Rust, CI проверяет соответствие.
-При меньшей высоте шапка компактная, чтобы оставить место данным и командам.
+По выбору владельца используется вариант Б: при высоте окна от 34 строк в шапке
+показывается плоская квадратная руда мёртвума, без перспективы куба. Исходная текстура
+32×32 извлечена без перерисовки из локального DivineRPG 1.7.1;
+[происхождение и SHA256](../tui/assets/provenance.json). В шапке она занимает
+16 столбцов × 8 строк half-block cells; большая карточка — 32 × 16. Физические
+пропорции зависят от шрифта терминала. PNG лаунчера прежний. Генератор
+`scripts/tui_branding.py` сохраняет пиксельный рисунок через nearest resampling,
+CI сверяет Rust cells с PNG. `--compact-header` отключает руду в шапке;
+`--about` открывает карточку сразу. На меньшей высоте шапка компактная автоматически.
 
-Rust запускает **один** дочерний Python CLI с явными argv, stdin закрыт, stderr
+Rust запускает не более **одного одновременно** дочернего Python CLI с явными argv:
+обзор, затем историю TPS выбранного сервера. stdin закрыт, stderr
 не показывается. Вызов ограничен 15 s и 256 KiB stdout; timeout/выход дожидается
 своего процесса. Tempfile вместо pipe исключает зависший reader из-за открытого
 stdout. Private stdout не сохраняется после закрытия. Неизвестная версия/поля,
@@ -126,9 +134,21 @@ unsupported actions сохранены. `--result-version 1 overview` возвр
 возвращает `owner.console` schema 1. Для save обязателен `--confirm-save`.
 Произвольных shell/RCON команд в этом интерфейсе нет.
 
+`omk admin --config <path> tps-history --server <id>` возвращает отдельный
+`owner.tps-history` schema 1; [JSON schema](contracts/owner-tps-history-v1.schema.json).
+Это чтение `query_range` существующего Prometheus, без нового sampler/БД. Диапазон
+300 s привязан к сетке 5 s; максимум 61 точка, значения 0..20. Проверяются
+server/host, порядок и точная сетка времени, конечность значений и единственность
+series. `up == 1` и свежесть проверяются в каждой исторической точке. Отсутствующие
+измерения дают `null` и разрыв линии, настоящий ноль остаётся нулём. Ошибка чтения
+не стирает уже полученную кривую того же сервера: она приглушается и помечается
+устаревшей, а правый край оси подписывается «последний ответ». При смене сервера
+чужая кривая не показывается. `--result-version 1 tps-history` отклоняется;
+прежние overview/console и 15 действий owner result v1 сохраняют свои схемы.
+
 ```console
 uv run --no-sync python scripts/check_owner_tui.py
-uv run --no-sync pytest tests/unit/test_owner_overview.py tests/unit/test_owner_metrics.py tests/unit/test_owner_console.py tests/unit/test_recovery_console.py tests/unit/test_owner_result.py -q -n 4 --dist=loadfile
+uv run --no-sync pytest tests/unit/test_owner_tps_history.py tests/unit/test_owner_overview.py tests/unit/test_owner_metrics.py tests/unit/test_owner_console.py tests/unit/test_recovery_console.py tests/unit/test_owner_result.py -q -n 4 --dist=loadfile
 ```
 
 Rust проверяет Python examples, строгий разбор, корреляцию, пустые/устаревшие данные,
@@ -137,8 +157,12 @@ Linux/Windows/macOS binary и хранит его как семидневный 
 не player release. Python покрывает HTTP/redirect/fault и отсутствие автоповтора.
 Реальный minimal Forge/exporter/Prometheus/Telegraf и Linux PTY проверены в
 изолированном стенде: [протокол](validation/owner-tui-2026-11-17.json).
+График и квадратная руда отдельно проверены на работающих alpha/beta: 107 focused
+Python, 8 Rust tests, 10 native PTY условий, включая настоящее обновление,
+переключение, console, F1 и отмену save без отправки:
+[протокол](validation/tui-tps-history-2026-11-17.json).
 
 Следующие полезные срезы: journal-backed maintenance controls; JVM/cgroup RAM/CPU,
-disk bytes и история нагрузки. Они не объявлены готовыми
+disk bytes и графики остальных показателей. Они не объявлены готовыми
 в 0.1. Произвольная консоль, права OP и публичная админка не добавлены. Календарный
 scheduler остаётся на паузе, полный ручной аудит перед VPS сохранён. Трекер: #240.

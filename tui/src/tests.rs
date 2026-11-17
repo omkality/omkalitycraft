@@ -130,6 +130,64 @@ fn python_command(script: &str) -> std::process::Command {
 }
 
 #[test]
+fn history_contract_rejects_wrong_binding_and_timestamps() {
+    let fixture: serde_json::Value =
+        serde_json::from_slice(include_bytes!("../fixtures/tps-history.json")).unwrap();
+    let parse =
+        |v: &serde_json::Value| protocol::TpsHistory::parse(&serde_json::to_vec(v).unwrap(), "dj2");
+    assert!(parse(&fixture).is_ok());
+    for (field, bad) in [
+        ("server_id", serde_json::json!("other")),
+        ("schema_version", serde_json::json!(true)),
+        ("step", serde_json::json!(10)),
+        ("state", serde_json::json!("missing")),
+        ("extra", serde_json::json!(0)),
+    ] {
+        let mut v = fixture.clone();
+        v[field] = bad;
+        assert!(parse(&v).is_err());
+    }
+    let mut v = fixture.clone();
+    v["points"][1]["timestamp"] = serde_json::json!(0);
+    assert!(parse(&v).is_err());
+    let mut v = fixture;
+    v["points"][0].as_object_mut().unwrap().remove("tps");
+    assert!(parse(&v).is_err());
+}
+
+#[test]
+fn history_gaps_split_lines_without_turning_into_zero() {
+    let mut v: serde_json::Value =
+        serde_json::from_slice(include_bytes!("../fixtures/tps-history.json")).unwrap();
+    v["points"][10]["tps"] = serde_json::Value::Null;
+    v["state"] = serde_json::json!("partial");
+    v["points"][11]["tps"] = serde_json::json!(0);
+    let history = protocol::TpsHistory::parse(&serde_json::to_vec(&v).unwrap(), "dj2").unwrap();
+    let segments = ui::tps_segments(&history);
+    assert_eq!(segments.len(), 2);
+    assert_eq!(segments[0].len(), 10);
+    assert_eq!(segments[1][0].1, 0.0);
+    let mut app = App::new(true);
+    app.accept(Overview::parse(&serde_json::to_vec(&demo()).unwrap()).unwrap());
+    app.accept_history(Some(Ok(history)));
+    for (w, h) in [(120, 38), (84, 28), (120, 34)] {
+        let mut terminal = Terminal::new(TestBackend::new(w, h)).unwrap();
+        terminal.draw(|f| ui::draw(f, &mut app)).unwrap();
+        app.about = true;
+        terminal.draw(|f| ui::draw(f, &mut app)).unwrap();
+        app.about = false;
+    }
+    app.overview
+        .as_mut()
+        .unwrap()
+        .server_ids
+        .push("other".into());
+    app.selected_server = 1;
+    app.accept_history(Some(Err("failed".into())));
+    assert!(app.history.is_none() && app.history_failed);
+}
+
+#[test]
 fn subprocess_timeout_output_limit_and_exit_are_bounded() {
     let cancel = AtomicBool::new(false);
     assert!(
@@ -202,7 +260,8 @@ fn real_python_cli_reads_an_isolated_config_without_writes() {
         .request(Request::Overview(None), Arc::new(AtomicBool::new(false)))
         .unwrap()
     {
-        Reply::Overview(v) => {
+        Reply::Overview(v, history) => {
+            assert_eq!(history.unwrap().unwrap().state, "disabled");
             assert!(v.ok);
             assert_eq!(v.server_ids, vec!["dj2"]);
             assert!(v.operations.is_empty());

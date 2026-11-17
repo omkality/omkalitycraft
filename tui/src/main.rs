@@ -27,6 +27,8 @@ use ui::App;
 struct Options {
     backend: Option<Backend>,
     snapshot: Option<PathBuf>,
+    about: bool,
+    branding_header: bool,
 }
 
 fn options() -> Result<Option<Options>, String> {
@@ -36,15 +38,20 @@ fn options() -> Result<Option<Options>, String> {
     let mut config = None;
     let mut demo = false;
     let mut snapshot = None;
+    let mut about = false;
+    let mut branding_header = true;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg]\nomk-tui --demo [--snapshot FILE.svg]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / r refresh / q quit\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--about]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--about]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / r refresh / F1 project / q quit\nTPS history: last 5 minutes, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
             Some("--demo") => demo = true,
+            Some("--about") => about = true,
+            Some("--branding-header") => branding_header = true,
+            Some("--compact-header") => branding_header = false,
             Some("--python") => python = args.next().ok_or("--python требует путь")?,
             Some("--repo") => repo = PathBuf::from(args.next().ok_or("--repo требует путь")?),
             Some("--config") => {
@@ -70,6 +77,8 @@ fn options() -> Result<Option<Options>, String> {
             })
         },
         snapshot,
+        about,
+        branding_header,
     }))
 }
 
@@ -117,15 +126,24 @@ fn execute() -> Result<(), String> {
         return Ok(());
     };
     let mut app = App::new(options.backend.is_none());
+    app.about = options.about;
+    app.branding_header = options.branding_header;
     if app.demo {
         app.accept(protocol::Overview::parse(include_bytes!(
             "../fixtures/demo.json"
         ))?);
+        app.accept_history(Some(protocol::TpsHistory::parse(
+            include_bytes!("../fixtures/tps-history.json"),
+            "dj2",
+        )));
     }
     if let Some(path) = options.snapshot {
         if let Some(backend) = options.backend {
             match backend.request(Request::Overview(None), Arc::new(AtomicBool::new(false)))? {
-                Reply::Overview(v) if v.ok => app.accept(v),
+                Reply::Overview(v, history) if v.ok => {
+                    app.accept(v);
+                    app.accept_history(history);
+                }
                 _ => return Err("Backend не вернул рабочий обзор".into()),
             }
         }
@@ -152,15 +170,18 @@ fn interactive(
     let mut pending = backend
         .as_ref()
         .map(|b| Pending::start(b.clone(), Request::Overview(None)));
-    let mut next_refresh = Instant::now() + Duration::from_secs(10);
+    let mut next_refresh = Instant::now() + Duration::from_secs(5);
     loop {
         app.loading = pending.is_some();
         if let Some(work) = &pending {
             match work.receiver.try_recv() {
                 Ok(result) => {
                     match result {
-                        Ok(Reply::Overview(v)) if v.ok => app.accept(v),
-                        Ok(Reply::Overview(_)) => {
+                        Ok(Reply::Overview(v, history)) if v.ok => {
+                            app.accept(v);
+                            app.accept_history(history);
+                        }
+                        Ok(Reply::Overview(_, _)) => {
                             app.failed = true;
                             app.message = "Обзор недоступен. Проверьте private operator config и права.\nr — повторить чтение.".into();
                         }
@@ -198,7 +219,6 @@ fn interactive(
                     }
                     pending = None;
                     app.loading = false;
-                    next_refresh = Instant::now() + Duration::from_secs(10);
                 }
                 Err(mpsc::TryRecvError::Disconnected) => {
                     app.failed = true;
@@ -218,6 +238,14 @@ fn interactive(
             if key.kind != KeyEventKind::Press {
                 continue;
             }
+            if key.code == KeyCode::F(1) && app.confirm.is_none() {
+                app.about = !app.about;
+                continue;
+            }
+            if app.about && key.code == KeyCode::Esc {
+                app.about = false;
+                continue;
+            }
             if key.code == KeyCode::Char('c') && key.modifiers.contains(KeyModifiers::CONTROL)
                 || app.confirm.is_none() && matches!(key.code, KeyCode::Char('q') | KeyCode::Esc)
             {
@@ -227,6 +255,9 @@ fn interactive(
                     app.message = "Сохранение могло выполниться: результат неизвестен".into();
                 }
                 return Ok(uncertain);
+            }
+            if app.about {
+                continue;
             }
             if let Some(input) = app.confirm.as_mut() {
                 match key.code {
@@ -295,6 +326,7 @@ fn interactive(
         if pending.is_none()
             && let (Some(b), Some(request)) = (&backend, request)
         {
+            next_refresh = Instant::now() + Duration::from_secs(5);
             pending = Some(Pending::start(b.clone(), request));
             app.loading = true;
         }
