@@ -1,5 +1,14 @@
 # Журнал изменений
 
+## Не выпущено — owner result v1 на настоящем Docker
+
+- Cold-backups CI проверяет v1 на реальных CLI/OS lock/Linux volumes: гонка,
+  аварийный exit после commit до JSON, status и явный finish без повторной копии.
+- 43 native условия и 85 focused tests; source hashes прежние, свои Docker
+  scopes удалены. Harness дожидается своих children и при ошибках ответа/старта.
+- Backup services/контракт v1/игровой код прежние; Minecraft, Qt и Computer Use
+  не запускались. Rust consumer и VPS этим не приняты. [Протокол](docs/validation/owner-result-docker-2026-11-17.json).
+
 ## Не выпущено — контракт результата для будущей Rust TUI
 
 - Опциональный `omk admin --result-version 1` даёт проверенный envelope для 15

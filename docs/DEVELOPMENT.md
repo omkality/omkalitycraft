@@ -1,3 +1,24 @@
+## Owner result v1 на настоящем Docker — 17 ноября 2026
+
+#33/#38/#41/#235: существующий cold-backups lab дополнен v1 backup-проверками
+с настоящими host CLI/OS lock/Linux volumes/helpers. Конкурентные run публикуют
+одну копию; exit73 после commit до stdout оставляет publishing, слепой run
+отказывает, явный finish завершает вторую операцию без третьей публикации.
+Три source files независимо сверены по SHA256 через readonly helper mount.
+Строгий decoder и exit codes согласованы; private root в DTO не попадает.
+
+43 native условия и 85 focused tests, включая два cleanup-контроля host children.
+На старой функции контролируемый отказ второго Popen оставлял первый child
+неубранным; новый finally завершает/дожидается только собственных процессов.
+Native services и контракт v1 не изменены. Существующие legacy/race/rotation/
+restart/changed-world/600MiB cases остаются. Все owned Docker scopes удалены,
+ранее работающие контейнеры сохранили identity/start time.
+
+Тестовые world/runtime синтетические, Minecraft/Qt/CU не запускались. Это не
+проверка Rust consumer, всех native restore/maintenance или VPS. Конфигурационный
+аудит остаётся ручным перед VPS; scheduler на паузе. [Контракт](COLD_BACKUPS.md),
+[протокол](validation/owner-result-docker-2026-11-17.json).
+
 ## Контракт owner-результата для будущей TUI — 17 ноября 2026
 
 #235/#38/#41: существующий CLI получает opt-in `--result-version 1` для 15 действий

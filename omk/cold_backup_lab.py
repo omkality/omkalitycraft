@@ -8,6 +8,7 @@ from uuid import uuid4
 
 from omk import admin_backups as owner
 from omk.admin import AdminError, load_operator_config
+from omk.owner_result import OwnerResult
 from omk.profiles import PROJECT_ROOT
 
 LABEL = "omkality.cold-backup.lab"
@@ -116,35 +117,232 @@ class Lab:
             raise RuntimeError(name)
         self.report["checks"].append(name)
 
-    def children(self, cfg, op):
-        processes = [
-            subprocess.Popen(
-                [
-                    sys.executable,
-                    "-m",
-                    "omk",
-                    "admin",
-                    "--config",
-                    str(cfg),
-                    "backups",
-                    "run",
-                    "--operation",
-                    op,
-                ],
-                env={**os.environ, **ENV},
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-            for _ in range(2)
+    def children(self, cfg, op, *, versioned=False):
+        command = [
+            sys.executable,
+            "-m",
+            "omk",
+            "admin",
+            "--config",
+            str(cfg),
+            *(["--result-version", "1"] if versioned else []),
+            "backups",
+            "run",
+            "--operation",
+            op,
         ]
+        processes = []
         values = []
-        for process in processes:
-            raw, _ = process.communicate(timeout=90)
-            values.append(json.loads(raw))
+        try:
+            for _ in range(2):
+                processes.append(
+                    subprocess.Popen(
+                        command,
+                        env={**os.environ, **ENV},
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                    )
+                )
+            for process in processes:
+                raw, _ = process.communicate(timeout=90)
+                value = (
+                    OwnerResult.model_validate_json(raw).model_dump(mode="json")
+                    if versioned
+                    else json.loads(raw)
+                )
+                self.check(
+                    process.returncode == (0 if value["ok"] else 1),
+                    "cli_exit_code_matches_result",
+                )
+                values.append(value)
+        finally:
+            for process in processes:
+                if process.poll() is None:
+                    process.terminate()
+                try:
+                    process.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait(timeout=10)
         self.check(
             sum(value["ok"] for value in values) == 1,
-            "concurrent_owner_cli_has_one_success",
+            (
+                "concurrent_owner_v1_cli_has_one_success"
+                if versioned
+                else "concurrent_owner_cli_has_one_success"
+            ),
         )
+        return values
+
+    def contract_cli(
+        self, path, action, operation=None, *, success=True, versioned=True
+    ):
+        args = (
+            ["--server", "dj2"]
+            if action in {"plan", "list"}
+            else ["--operation", operation]
+        )
+        child = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "omk",
+                "admin",
+                "--config",
+                str(path),
+                *(["--result-version", "1"] if versioned else []),
+                "backups",
+                action,
+                *args,
+            ],
+            env={**os.environ, **ENV, "PYTHONUTF8": "1"},
+            capture_output=True,
+            timeout=90,
+            check=False,
+        )
+        value = (
+            OwnerResult.model_validate_json(child.stdout).model_dump(mode="json")
+            if versioned
+            else json.loads(child.stdout)
+        )
+        self.check(
+            value["ok"] is success and child.returncode == (0 if success else 1),
+            "contract_cli_" + action + "_expected_outcome",
+        )
+        if versioned:
+            self.check(
+                str(self.root) not in json.dumps(value),
+                "contract_result_omits_private_root",
+            )
+        return value
+
+    def source_hashes(self):
+        script = (
+            "import hashlib,json; from pathlib import Path; root=Path('/srv'); "
+            "print(json.dumps({str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() "
+            "for p in sorted(root.rglob('*')) if p.is_file()}))"
+        )
+        return json.loads(
+            owner.docker(
+                "run",
+                "--rm",
+                "--pull",
+                "never",
+                "--network",
+                "none",
+                "--label",
+                LABEL + "=" + self.run,
+                "--read-only",
+                "--cap-drop",
+                "ALL",
+                "--security-opt",
+                "no-new-privileges:true",
+                "--memory",
+                "128m",
+                "--cpus",
+                "1",
+                "--pids-limit",
+                "32",
+                "--mount",
+                f"type=volume,source={self.data},target=/srv,readonly",
+                owner.IMAGE,
+                "python",
+                "-c",
+                script,
+            )
+        )
+
+    def versioned_case(self):
+        """Actual process exit and Docker publication through the new result mode."""
+        before = self.source_hashes()
+        self.check(
+            len(before) == 3 and "world/level.dat" in before,
+            "source_hash_control_observes_seeded_files",
+        )
+        config, path = self.configure("contract", self.volume("contract-store"))
+        planned = self.contract_cli(path, "plan")
+        identity = planned["operation"]["id"]
+        with owner.locked(config):
+            busy = self.contract_cli(path, "run", identity, success=False)
+        self.check(
+            busy["error"]["code"] == "owner_busy" and busy["error"]["effect"] == "none",
+            "real_os_lock_is_typed_owner_busy_before_mutation",
+        )
+        raced = self.children(path, identity, versioned=True)
+        self.check(
+            all(v["operation"]["id"] == identity for v in raced),
+            "both_race_results_reference_same_operation",
+        )
+        first = owner.read_record(config, identity)
+        self.check(
+            first["stage"] == "complete" and first["result"]["sequence"] == 1,
+            "v1_race_commits_one_snapshot",
+        )
+
+        planned = self.contract_cli(path, "plan")
+        identity = planned["operation"]["id"]
+        script = (
+            "import os,sys; from omk import admin_backups as b; from omk.cli import main; "
+            "original=b.save\ndef fail(c,r,s):\n if s=='published': os._exit(73)\n "
+            "return original(c,r,s)\nb.save=fail; "
+            "raise SystemExit(main(['admin','--config',sys.argv[1],'--result-version','1',"
+            "'backups','run','--operation',sys.argv[2]]))"
+        )
+        lost = subprocess.run(
+            [sys.executable, "-c", script, str(path), identity],
+            env={**os.environ, **ENV, "PYTHONUTF8": "1"},
+            capture_output=True,
+            timeout=90,
+            check=False,
+        )
+        self.check(
+            lost.returncode == 73 and not lost.stdout and not lost.stderr,
+            "v1_controller_exits_after_commit_without_result_json",
+        )
+        status = self.contract_cli(path, "status", identity)
+        self.check(
+            status["operation"]["phase"] == "publishing"
+            and status["operation"]["terminal"] is False,
+            "v1_status_observes_uncertain_publication",
+        )
+        rejected = self.contract_cli(path, "run", identity, success=False)
+        self.check(
+            rejected["error"]["code"] == "operation_rejected"
+            and rejected["error"]["effect"] == "unknown",
+            "v1_refuses_blind_repeat_of_uncertain_run",
+        )
+        finished = self.contract_cli(path, "finish", identity)
+        repeated = self.contract_cli(path, "status", identity)
+        self.check(
+            finished["operation"]["phase"] == "complete"
+            and finished["operation"]["terminal"] is True
+            and repeated["operation"]["phase"] == "complete",
+            "v1_finish_and_status_agree_on_terminal_phase",
+        )
+        record = owner.read_record(config, identity)
+        history = self.contract_cli(path, "list", versioned=False)
+        self.check(
+            record["result"]["sequence"] == 2 and len(history["history"]) == 2,
+            "v1_finish_does_not_republish_committed_snapshot",
+        )
+        self.check(
+            self.source_hashes() == before,
+            "v1_fault_race_recovery_preserves_every_source_file",
+        )
+        self.report["contract_v1"] = {
+            "real_docker_transport": True,
+            "real_host_processes": True,
+            "lock_code": busy["error"]["code"],
+            "lost_process_exit": lost.returncode,
+            "lost_process_result_bytes": len(lost.stdout),
+            "uncertain_phase": status["operation"]["phase"],
+            "final_phase": repeated["operation"]["phase"],
+            "snapshots": len(history["history"]),
+            "committed_sequence": record["result"]["sequence"],
+            "source_files": len(before),
+            "source_hashes_unchanged": True,
+            "minecraft_started": False,
+        }
 
     def exercise(self):
         self.seed()
@@ -200,6 +398,7 @@ class Lab:
             result["snapshot"]["sequence"] == 3 and result["snapshot"]["retired"] == 1,
             "third_snapshot_rotates_only_oldest",
         )
+        self.versioned_case()
         self.restart_case()
         self.changed_world_case()
         self.large_case()
