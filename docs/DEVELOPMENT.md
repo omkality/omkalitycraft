@@ -1,3 +1,21 @@
+## Контракт owner-результата для будущей TUI — 17 ноября 2026
+
+#235/#38/#41: существующий CLI получает opt-in `--result-version 1` для 15 действий
+backup/maintenance/restore. Envelope отделяет успех вызова от phase/terminal,
+содержит проверенные ID и стабильные error codes; journal/private config/raw
+exception и произвольные service поля не копируются. Неизвестные ответы требуют
+inspection, а не повторного run/apply. Неподдержанная action отказывает до dispatch.
+Legacy JSON и native services/locks/journals/guard semantics сохраняются.
+
+Опубликованы shape schema, semantic invariants и семь строгих decode examples.
+Реальный временный BackupStore/journal с подменённым Docker transport подтвердил
+публикацию, потерю host acknowledgement, status и finish с одной копией и прежним
+исходным деревом. Это не новая Docker/игровая проверка. Rust TUI/process client
+ещё не реализован, прочие owner области не объявлены частью v1.
+Общий config-аудит остаётся ручным перед VPS, scheduler на паузе;
+player/VPS/production keys прежние. [Контракт](OWNER_RESULT.md),
+[протокол](validation/owner-result-contract-2026-11-17.json).
+
 ## Материалы portable-выпуска — 17 ноября 2026
 
 #38/#172/#36/#41: сборщик добавляет в ZIP сведения о версии/платформе/runtime,

@@ -1,0 +1,127 @@
+{
+  "backup_incomplete": {
+    "schema_version": 1,
+    "action": "backups.status",
+    "ok": true,
+    "status": "succeeded",
+    "operation": {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "backups",
+      "server_id": "dj2",
+      "phase": "incomplete",
+      "terminal": false,
+      "backup_operation_id": null
+    },
+    "error": null
+  },
+  "maintenance_stopped": {
+    "schema_version": 1,
+    "action": "maintenance.status",
+    "ok": true,
+    "status": "succeeded",
+    "operation": {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "maintenance",
+      "server_id": "dj2",
+      "phase": "stopped",
+      "terminal": false,
+      "backup_operation_id": null
+    },
+    "error": null
+  },
+  "restore_staged": {
+    "schema_version": 1,
+    "action": "restores.status",
+    "ok": true,
+    "status": "succeeded",
+    "operation": {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "restores",
+      "server_id": "dj2",
+      "phase": "staged",
+      "terminal": true,
+      "backup_operation_id": null
+    },
+    "error": null
+  },
+  "busy": {
+    "schema_version": 1,
+    "action": "backups.run",
+    "ok": false,
+    "status": "failed",
+    "operation": {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "backups",
+      "server_id": null,
+      "phase": null,
+      "terminal": null,
+      "backup_operation_id": null
+    },
+    "error": {
+      "code": "owner_busy",
+      "message": "Another owner operation holds the lock; inspect before proceeding.",
+      "effect": "none",
+      "next_step": "wait_then_inspect"
+    }
+  },
+  "io_failure": {
+    "schema_version": 1,
+    "action": "backups.run",
+    "ok": false,
+    "status": "failed",
+    "operation": {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "backups",
+      "server_id": null,
+      "phase": null,
+      "terminal": null,
+      "backup_operation_id": null
+    },
+    "error": {
+      "code": "io_failure",
+      "message": "I/O or process communication failed; inspect the recorded operation.",
+      "effect": "unknown",
+      "next_step": "inspect_operation"
+    }
+  },
+  "invalid_result": {
+    "schema_version": 1,
+    "action": "backups.run",
+    "ok": false,
+    "status": "unknown",
+    "operation": {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "backups",
+      "server_id": null,
+      "phase": null,
+      "terminal": null,
+      "backup_operation_id": null
+    },
+    "error": {
+      "code": "invalid_service_result",
+      "message": "The service result does not match this contract; inspect before proceeding.",
+      "effect": "unknown",
+      "next_step": "inspect_operation"
+    }
+  },
+  "invalid_configuration": {
+    "schema_version": 1,
+    "action": "backups.run",
+    "ok": false,
+    "status": "failed",
+    "operation": {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "backups",
+      "server_id": null,
+      "phase": null,
+      "terminal": null,
+      "backup_operation_id": null
+    },
+    "error": {
+      "code": "invalid_configuration",
+      "message": "Check the private operator configuration and its permissions.",
+      "effect": "none",
+      "next_step": "fix_configuration"
+    }
+  }
+}
