@@ -1,0 +1,81 @@
+# Persistent local fixture only. These are deliberately small, offline test worlds.
+x-game: &game
+  image: eclipse-temurin:8-jre@sha256:377fe8e36a4b1530d9d52020069367ef44313fa891a82ae102b1016a6a3a72f5
+  restart: unless-stopped
+  working_dir: /data
+  cpus: 0.75
+  mem_limit: 768m
+  pids_limit: 128
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  networks: [lab]
+  logging: {driver: local, options: {max-size: 2m, max-file: "2"}}
+  entrypoint: [/bin/sh, /runtime/start.sh]
+
+services:
+  alpha:
+    <<: *game
+    environment: {OMK_FIXTURE_PROFILE: alpha}
+    cgroup_parent: omk-tui-alpha
+    ports: ["127.0.0.1:${OMK_TUI_ALPHA_PORT:-25610}:25565", "127.0.0.1:${OMK_TUI_ALPHA_RCON:-25611}:25575"]
+    volumes:
+      - alpha:/data
+      - ${OMK_TUI_LAB_ROOT:?Run scripts/tui_sandbox.py prepare}/runtime:/runtime:ro
+      - ${OMK_TUI_LAB_ROOT}/alpha:/seed:ro
+  beta:
+    <<: *game
+    environment: {OMK_FIXTURE_PROFILE: beta}
+    cgroup_parent: omk-tui-beta
+    ports: ["127.0.0.1:${OMK_TUI_BETA_PORT:-25620}:25565", "127.0.0.1:${OMK_TUI_BETA_RCON:-25621}:25575"]
+    volumes:
+      - beta:/data
+      - ${OMK_TUI_LAB_ROOT}/runtime:/runtime:ro
+      - ${OMK_TUI_LAB_ROOT}/beta:/seed:ro
+  prometheus:
+    image: prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06
+    restart: unless-stopped
+    user: "65534:65534"
+    read_only: true
+    cpus: 0.25
+    mem_limit: 256m
+    pids_limit: 32
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    networks: [lab]
+    ports: ["127.0.0.1:${OMK_TUI_PROM_PORT:-25690}:9090"]
+    volumes:
+      - ${OMK_TUI_LAB_ROOT}/metrics:/etc/omk-metrics:ro
+      - tsdb:/prometheus
+    command: [--config.file=/etc/omk-metrics/prometheus.json]
+    logging: {driver: local, options: {max-size: 1m, max-file: "2"}}
+  agent:
+    build: {context: ../.., dockerfile: deploy/metrics/Dockerfile.agent}
+    restart: unless-stopped
+    read_only: true
+    cpus: 0.10
+    mem_limit: 128m
+    pids_limit: 32
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    networks: [lab]
+    volumes:
+      - ${OMK_TUI_LAB_ROOT}/metrics:/etc/omk-metrics:ro
+      - probe:/storage/project:ro
+      - /sys/fs/cgroup:/cgroups:ro
+      - /sys:/host/sys:ro
+      - /proc/stat:/host/proc/stat:ro
+      - /proc/cpuinfo:/host/proc/cpuinfo:ro
+      - /proc/meminfo:/host/proc/meminfo:ro
+      - /proc/vmstat:/host/proc/vmstat:ro
+      - /proc/diskstats:/host/proc/diskstats:ro
+      - /proc/1/net/dev:/host/proc/net/dev:ro
+      - /proc/pressure:/host/proc/pressure:ro
+    logging: {driver: local, options: {max-size: 1m, max-file: "2"}}
+
+networks:
+  lab: {}
+volumes:
+  alpha: {}
+  beta: {}
+  tsdb: {}
+  probe: {}

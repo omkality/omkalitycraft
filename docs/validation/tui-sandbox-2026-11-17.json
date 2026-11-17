@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "scope": "persistent local minimal Forge fixtures for owner TUI",
+  "accepted": true,
+  "left_running_by_owner_request": true,
+  "source_branch": "feat/tui-sandbox",
+  "compose_project": "omk-tui-sandbox",
+  "sample_count": 72,
+  "servers": {
+    "alpha": {
+      "period_seconds": 75,
+      "burst_seconds": 12,
+      "observed_cycles": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "idle_cpu_min": 0.36,
+      "burst_cpu_max": 75.02,
+      "all_metrics_available_samples": 36
+    },
+    "beta": {
+      "period_seconds": 110,
+      "burst_seconds": 18,
+      "observed_cycles": [
+        1,
+        2,
+        3
+      ],
+      "idle_cpu_min": 0.38,
+      "burst_cpu_max": 75.0,
+      "all_metrics_available_samples": 36
+    }
+  },
+  "pty_checks": [
+    "original_ore_halfblocks_visible",
+    "alpha_selected",
+    "alpha_real_console_reply",
+    "arrow_switches_to_beta",
+    "beta_real_tps_reply",
+    "quit_keeps_terminal_modes"
+  ],
+  "runtime_limits": {
+    "game_cpu_each": 0.75,
+    "game_memory_each_mib": 768,
+    "heap_each_mib": [
+      128,
+      384
+    ],
+    "prometheus_cpu": 0.25,
+    "prometheus_memory_mib": 256,
+    "telegraf_cpu": 0.1,
+    "telegraf_memory_mib": 128,
+    "tsdb_retention": "4h or 256MiB",
+    "loopback_only": true
+  },
+  "branding": {
+    "original_png_sha256": "6feb6854bd1a67de03c2c62c3de64e2ee056ebfbde1eb4451396912dc28611cf",
+    "source_png_unchanged": true,
+    "ai_redrawn": false,
+    "terminal_cells": [
+      12,
+      7
+    ],
+    "resampling": "nearest",
+    "compact_header_below_rows": 34
+  },
+  "verification": {
+    "focused_python_passed": 25,
+    "rust_tests_passed": 6,
+    "clippy": "passed",
+    "release_linux": "passed",
+    "branding_source_check": "passed"
+  },
+  "limitations": [
+    "offline minimal Forge fixtures, not DJ2 or public servers",
+    "no players fabricated; online zero is measured",
+    "host metrics refer to Docker Desktop Linux VM",
+    "game tick latency need not spike at every CPU pulse",
+    "calendar scheduler remains paused"
+  ],
+  "diagnostics": [
+    "experimental RCON fill work refused unloaded chunks; removed its workers and replaced with bounded in-container CPU-only work",
+    "Prometheus runtime showed 1d from config overriding CLI; corrected config and confirmed live 4h or 256MiB after reload"
+  ],
+  "source_sha256": {
+    "deploy/tui-lab/start.sh": "ad621be5eea29087532ef233f6a2707e21f7666d8bdee9f25c0f3c9398f473be",
+    "deploy/tui-lab/compose.yaml": "d89d8f7f9a204843aa9d945c8fab7c4849c51400b22f20afbb485fa0247ab922",
+    "scripts/tui_sandbox.py": "58dad5968da7f4bef2b7b92bb2b4a043da38063bc675f743d3ee1dd2a035d818",
+    "scripts/tui_branding.py": "e36f9a5eb24cae39eca166630672fd7e0bc1eafe5542d9fe3191f1c847ce4fd4",
+    "tui/src/ui.rs": "56280cfb6eb594a0857339cd5e4f4749e242a354f1db9dada6df4977bf62b931",
+    "tui/src/branding.rs": "3f2f49a1519829cd81595ad432568c2997ffdf0270c6d979f617dab58e0eacb3",
+    "tui/src/ore_pixels.rs": "0b6e2ce7086b0671f7290bac0c8e0d35288ce844c2c7e7e46717d388e1691ca9"
+  }
+}
