@@ -209,12 +209,13 @@ impl Form {
     pub fn draw(&self, frame: &mut Frame) {
         let area = frame.area();
         let w = area.width.saturating_sub(4).min(80);
-        let h = 17.min(area.height);
+        let unban = self.action.command == "unban";
+        let h = if unban { 10 } else { 17 }.min(area.height);
         let popup = Rect::new((area.width - w) / 2, (area.height - h) / 2, w, h);
         frame.render_widget(Clear, popup);
         let title = if self.confirming {
             " Бан · Вы уверены? "
-        } else if self.action.command == "unban" {
+        } else if unban {
             " Разбан игрока "
         } else {
             " Модерация игрока "
@@ -233,9 +234,9 @@ impl Form {
                     "[ Нет, вернуться ]     Да"
                 }
             )
-        } else if self.action.command == "unban" {
+        } else if unban {
             format!(
-                "\nСервер: {}\n\n> Ник: {}\n\nРазбан работает и для офлайн-игрока.\nПосле снятия бана игрок сможет снова войти.\n\n{}\n\nEnter — снять бан · Esc — отмена",
+                "\nСервер: {}\n\n> Ник: {}\n{}\n\nEnter — снять бан · Esc — отмена",
                 self.action.server, self.action.player, self.error
             )
         } else {
