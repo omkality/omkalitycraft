@@ -164,6 +164,25 @@ restart источника между prepare/publish и sparse 600 MiB при �
 Это не запуск Minecraft. Своё состояние удаляется, report/journals остаются в
 `.local/cold-backups-<run>/`. Этот сценарий включён в Linux CI.
 
+С 17 ноября этот же lab дополнительно проверяет owner result v1 настоящими
+host-процессами и Linux Docker helpers: OS lock → `owner_busy`, конкурентные
+`run` с одной публикацией, аварийный exit 73 после commit до итогового stdout,
+`status=publishing`, отказ слепого повторного run и явный `finish=complete`.
+Две операции дают ровно две копии; finish не создаёт третью. Независимый helper
+на readonly source mount сверяет SHA256 всех трёх seeded files до/после.
+Legacy race, rotation, source restart, отказ изменённого мира и streaming
+600 MiB sparse fixture остаются в том же прогоне. Проверка не запускает Minecraft.
+
+Все v1 ответы проходят строгий decoder, exit codes сверяются с `ok`, private root
+не попадает в envelope. При ошибке parser/второго запуска harness завершает и
+дожидается только своих host children; два unit-контроля проверяют эти пути. Ещё два проверяют поиск private paths
+с JSON escaping Windows/POSIX: сравнение выполняется в одном представлении.
+Локально приняты 43 native условия и 87 focused tests. Свои контейнеры/volumes
+удалены по ownership labels, ранее работавшие контейнеры сохранили ID/start time.
+Это transport/filesystem/process proof для backup subset, не новый restore/
+maintenance/Minecraft/Rust consumer или VPS тест.
+[Протокол](validation/owner-result-docker-2026-11-17.json).
+
 `dj2-recovery` дополнительно принимает `--operator-backups` вместе с
 `--managed-backups --runtime linux-docker --edge-cases --full-backup-return
 --access-policy --rank-policy`: четыре холодных owner plan/run на настоящем Forge,

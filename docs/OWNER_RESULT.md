@@ -113,3 +113,12 @@ BackupStore и публикацию ZIP с подменённым Docker transpo
 временный журнал и вернул один JSON без Docker; исходный journal прежний.
 Это не сетевой обрыв Rust client, Linux Docker/Minecraft/VPS приёмка и не
 проверка настоящего Rust consumer. Scheduler и общий config-аудит здесь не меняются.
+
+Отдельно принят [реальный Docker/CLI прогон backup subset](COLD_BACKUPS.md):
+43 условия без подмены транспорта. Host-процесс с v1 аварийно завершён после
+публикации до выдачи JSON; новый status увидел `publishing`, повтор run отказал,
+явный finish сохранил один snapshot на операцию. Проверены настоящий OS lock,
+две конкурентные CLI, decoder/exit codes и неизменность readonly source hashes.
+Сценарий включён в существующий cold-backups CI. Это не проверка реализации
+Rust consumer, реального Minecraft или всех native maintenance/restore путей.
+[Протокол](validation/owner-result-docker-2026-11-17.json).
