@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "source_base_commit": "1043fc6b36ee72804c048336b276aadde0b7f006",
+  "issues": [
+    38,
+    229,
+    41
+  ],
+  "ok": true,
+  "old_source_commit": "87732e8ccc72886cc94c4ee2bf88a4d7eaedfe14",
+  "new_source_version": "0.3.0.dev15",
+  "local_containers_started": false,
+  "computer_use_used": false,
+  "java_or_gui_started": false,
+  "old_reader": {
+    "version": "0.3.0.dev14",
+    "blocked": [
+      "http_fetch",
+      "install",
+      "game_start"
+    ],
+    "personal_tree_unchanged": true,
+    "files_and_directories_created": 0
+  },
+  "old_reader_artifact_requests": 0,
+  "minimum_downgrade_tampering_rejected": true,
+  "cli_default_minimum": "0.3.0.dev15",
+  "minimum_is_signed": true,
+  "new_reader_downloads": 4,
+  "new_reader_repeat_downloads": 0,
+  "new_reader_state": "installed",
+  "owned_temporary_source_keys_and_installs_removed": true,
+  "focused_tests": {
+    "requirements_and_installer": {
+      "passed": 56,
+      "filesystem_skipped": 6
+    },
+    "updates_and_release_store": {
+      "passed": 101,
+      "platform_skipped": 2
+    }
+  },
+  "uv_lock_offline_check": true,
+  "external_locked_packages_unchanged": 73,
+  "ruff_black_diff_check": true,
+  "public_launcher_release_created": false,
+  "player_manifest_changed": false,
+  "game_mod_code_changed": false,
+  "vps_deployed": false,
+  "calendar_scheduler_resumed": false
+}

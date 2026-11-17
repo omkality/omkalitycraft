@@ -35,13 +35,22 @@ portable ZIP; отдельно исходники проекта туда не �
 В существующей команде подготовки обновления задаётся `--github-asset-url`:
 
 ```text
-omk release launcher --repository <локальный-TUF-репозиторий> --keys-dir <offline-ключи> --archive <проверенный-portable.zip> --version 0.3.0.dev14 --entrypoint OmkalityCraft.exe --platform windows-x64 --github-asset-url https://github.com/omkality/omkalitycraft/releases/download/launcher-v0.3.0.dev14/OmkalityCraft-0.3.0.dev14-windows-x64.zip
+omk release launcher --repository <локальный-TUF-репозиторий> --keys-dir <offline-ключи> --archive <проверенный-portable.zip> --version 0.3.0.dev15 --entrypoint OmkalityCraft.exe --platform windows-x64 --github-asset-url https://github.com/omkality/omkalitycraft/releases/download/launcher-v0.3.0.dev15/OmkalityCraft-0.3.0.dev15-windows-x64.zip
 ```
 
 Команда только подготавливает локальный репозиторий, ничего не загружает на GitHub
 или VPS. Проверенный архив заранее вручную прикрепляется к нужному Release;
 подписанные метаданные публикуются после проверки его доступности. Прежние
 принятые архивы сохраняются для восстановления. Передавать игроку PAT не нужно.
+
+Для pack-обновления, меняющего только регистр пути, и его возврата новым поколением
+нужен `minimum_launcher_version` не ниже `0.3.0.dev15`: этот идентификатор отделяет
+исправленный Installer #229 от прежних сборок dev14. Текущий `omk release pack`
+по умолчанию подписывает минимум dev15; явное переопределение оставлено для
+проверенных совместимых выпусков. Старые manifests не переписываются.
+Сначала следует выпустить и проверить соответствующий portable-лаунчер через TUF,
+затем публиковать требующий его pack manifest. Пример URL выше — шаблон подготовки,
+наличие готового публичного архива dev15 этой записью не утверждается.
 
 Допустим только публичный репозиторий `omkality/omkalitycraft`, тег
 `launcher-v<версия>` или `v<версия>` и файл
