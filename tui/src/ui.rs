@@ -1,10 +1,14 @@
-use crate::protocol::Overview;
+use crate::protocol::{Overview, TPS_WINDOWS, TpsHistory, TpsWindow};
 use ratatui::{
     Frame,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
+    symbols::Marker,
     text::{Line, Span},
-    widgets::{Block, Borders, Clear, List, ListItem, ListState, Paragraph, Wrap},
+    widgets::{
+        Axis, Block, Borders, Chart, Clear, Dataset, GraphType, List, ListItem, ListState,
+        Paragraph, Wrap,
+    },
 };
 use std::time::Instant;
 
@@ -26,11 +30,17 @@ pub struct App {
     pub demo: bool,
     pub confirm: Option<String>,
     pub scroll: u16,
+    pub history: Option<TpsHistory>,
+    pub history_failed: bool,
+    pub about: bool,
+    pub branding_header: bool,
+    pub window_index: usize,
+    pub range_picker: Option<usize>,
 }
 
 impl App {
     pub fn new(demo: bool) -> Self {
-        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\n\nОтвет команды появится здесь.\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, scroll: 0 }
+        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\n\nОтвет команды появится здесь.\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, scroll: 0, history: None, history_failed: false, about: false, branding_header: false, window_index: 0, range_picker: None }
     }
     pub fn server(&self) -> Option<&str> {
         self.overview
@@ -38,6 +48,9 @@ impl App {
             .server_ids
             .get(self.selected_server)
             .map(String::as_str)
+    }
+    pub fn window(&self) -> TpsWindow {
+        TPS_WINDOWS[self.window_index]
     }
     pub fn filtered(&self) -> Vec<&crate::protocol::Operation> {
         self.overview
@@ -85,6 +98,26 @@ impl App {
         self.refreshed = Some(Instant::now());
         self.failed = false;
     }
+
+    pub fn accept_history(&mut self, result: Option<Result<TpsHistory, String>>) {
+        if self
+            .history
+            .as_ref()
+            .is_some_and(|h| Some(h.server_id.as_str()) != self.server())
+        {
+            self.history = None;
+        }
+        match result {
+            Some(Ok(history))
+                if Some(history.server_id.as_str()) == self.server()
+                    && history.step == self.window().step =>
+            {
+                self.history = Some(history);
+                self.history_failed = false;
+            }
+            _ => self.history_failed = true,
+        }
+    }
 }
 
 fn block(title: &str) -> Block<'_> {
@@ -108,55 +141,40 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     let rows = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(if area.height >= 34 { 9 } else { 3 }),
-            Constraint::Length(7),
+            Constraint::Length(10),
             Constraint::Min(14),
             Constraint::Length(3),
         ])
         .split(area);
+    let top = if app.branding_header && area.height >= 34 {
+        let columns =
+            Layout::horizontal([Constraint::Length(20), Constraint::Min(1)]).split(rows[0]);
+        frame.render_widget(block(""), columns[0]);
+        crate::branding::draw(frame, Rect::new(columns[0].x + 2, columns[0].y + 1, 16, 8));
+        columns[1]
+    } else {
+        rows[0]
+    };
+    let top = Layout::vertical([Constraint::Length(3), Constraint::Length(7)]).split(top);
     let mode = if app.demo {
         "ДЕМО · команды отключены"
     } else {
         "OWNER · локальный Python backend"
     };
-    if area.height >= 34 {
-        frame.render_widget(block(" owner terminal · 0.1 "), rows[0]);
-        crate::branding::draw(frame, Rect::new(rows[0].x + 2, rows[0].y + 1, 12, 7));
-        frame.render_widget(
-            Paragraph::new(vec![
-                Line::styled(
-                    "OMKALITYCRAFT",
-                    Style::default().fg(ACCENT).add_modifier(Modifier::BOLD),
-                ),
-                Line::raw(""),
-                Line::raw("Терминал владельца · управление сервером"),
-                Line::raw(""),
-                Line::styled(mode, Style::default().fg(WARN)),
-            ])
-            .style(Style::default().fg(TEXT).bg(PANEL)),
-            Rect::new(
-                rows[0].x + 17,
-                rows[0].y + 2,
-                rows[0].width.saturating_sub(19),
-                5,
+    frame.render_widget(
+        Paragraph::new(Line::from(vec![
+            Span::styled(
+                " OMKALITYCRAFT ",
+                Style::default().fg(ACCENT).add_modifier(Modifier::BOLD),
             ),
-        );
-    } else {
-        frame.render_widget(
-            Paragraph::new(Line::from(vec![
-                Span::styled(
-                    " OMKALITYCRAFT ",
-                    Style::default().fg(ACCENT).add_modifier(Modifier::BOLD),
-                ),
-                Span::raw(" /  управление сервером    "),
-                Span::styled(mode, Style::default().fg(WARN)),
-            ]))
-            .block(block(" owner terminal · 0.1 ")),
-            rows[0],
-        );
-    }
+            Span::raw(" /  "),
+            Span::styled(mode, Style::default().fg(WARN)),
+        ]))
+        .block(block(" owner terminal · 0.1 ")),
+        top[0],
+    );
     let metrics =
-        Layout::horizontal([Constraint::Percentage(50), Constraint::Percentage(50)]).split(rows[1]);
+        Layout::horizontal([Constraint::Percentage(50), Constraint::Percentage(50)]).split(top[1]);
     render_metrics(
         frame,
         app,
@@ -180,11 +198,12 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         ],
     );
     let body =
-        Layout::horizontal([Constraint::Percentage(48), Constraint::Percentage(52)]).split(rows[2]);
+        Layout::horizontal([Constraint::Percentage(48), Constraint::Percentage(52)]).split(rows[1]);
     let left = Layout::vertical([
         Constraint::Length(3),
-        Constraint::Min(5),
-        Constraint::Length(5),
+        Constraint::Length(if body[0].height >= 22 { 11 } else { 9 }),
+        Constraint::Min(0),
+        Constraint::Length(if body[0].height >= 20 { 4 } else { 0 }),
     ])
     .split(body[0]);
     let servers = app
@@ -211,6 +230,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
             .block(block(" Серверы · ← → ")),
         left[0],
     );
+    render_tps(frame, app, left[1]);
     let ops = app.filtered();
     let selected = ops.get(app.operation.selected().unwrap_or(0)).copied();
     let details = selected
@@ -259,7 +279,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
             .block(block(&title))
             .highlight_symbol("› ")
             .highlight_style(Style::default().bg(Color::Rgb(31, 52, 64)).fg(ACCENT)),
-        left[1],
+        left[2],
         &mut app.operation,
     );
     frame.render_widget(
@@ -267,7 +287,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
             .style(Style::default().fg(MUTED))
             .block(block(" Выбранная операция "))
             .wrap(Wrap { trim: false }),
-        left[2],
+        left[3],
     );
     frame.render_widget(
         Paragraph::new(app.message.as_str())
@@ -293,7 +313,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     };
     frame.render_widget(
         Paragraph::new(format!(
-            " r обновить   ← → сервер   ↑ ↓ операция   q выход    |    {status}"
+            " r обновить   ← → сервер   t период   F1 проект   q выход  |  {status}"
         ))
         .style(
             Style::default().fg(if app.failed || age.is_some_and(|a| a > 20) {
@@ -302,9 +322,49 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
                 MUTED
             }),
         )
-        .block(block(" просмотр обновляется каждые 10 с ")),
-        rows[3],
+        .block(block(" просмотр обновляется каждые 5 с ")),
+        rows[2],
     );
+    if app.about {
+        let w = 58;
+        let h = 23;
+        let popup = Rect::new((area.width - w) / 2, (area.height - h) / 2, w, h);
+        frame.render_widget(Clear, popup);
+        frame.render_widget(block(" OMKALITYCRAFT "), popup);
+        crate::branding::draw_large(
+            frame,
+            Rect::new(popup.x + (w - 32) / 2, popup.y + 2, 32, 16),
+        );
+        frame.render_widget(
+            Paragraph::new("F1 / Esc — вернуться к графику")
+                .centered()
+                .style(Style::default().fg(TEXT).bg(PANEL)),
+            Rect::new(popup.x + 1, popup.y + 19, w - 2, 2),
+        );
+    }
+    if let Some(selected) = app.range_picker {
+        let popup = Rect::new((area.width - 44) / 2, (area.height - 10) / 2, 44, 10);
+        frame.render_widget(Clear, popup);
+        let mut lines = vec![Line::from(" За последнее время:"), Line::from("")];
+        for (i, window) in TPS_WINDOWS.iter().enumerate() {
+            lines.push(Line::styled(
+                format!(
+                    " {} {}",
+                    if selected == i { "›" } else { " " },
+                    window.label
+                ),
+                Style::default().fg(if selected == i { ACCENT } else { TEXT }),
+            ));
+        }
+        lines.extend([
+            Line::from(""),
+            Line::from(" ↑/↓ выбор · Enter применить · Esc отмена"),
+        ]);
+        frame.render_widget(
+            Paragraph::new(lines).block(block(" Период графика TPS ")),
+            popup,
+        );
+    }
     if let Some(input) = &app.confirm {
         let w = area.width.min(72);
         let popup = Rect::new((area.width - w) / 2, area.height / 2 - 4, w, 8);
@@ -322,6 +382,98 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
             popup,
         );
     }
+}
+
+pub fn tps_segments(history: &TpsHistory) -> Vec<Vec<(f64, f64)>> {
+    let mut segments = Vec::new();
+    let mut current = Vec::new();
+    for p in &history.points {
+        if let Some(tps) = p.tps {
+            current.push((p.timestamp as f64 - history.end as f64, tps));
+        } else if !current.is_empty() {
+            segments.push(std::mem::take(&mut current));
+        }
+    }
+    if !current.is_empty() {
+        segments.push(current);
+    }
+    segments
+}
+
+fn render_tps(frame: &mut Frame, app: &App, area: Rect) {
+    let history = app
+        .history
+        .as_ref()
+        .filter(|h| Some(h.server_id.as_str()) == app.server() && h.step == app.window().step);
+    let stale = app.history_failed
+        || app.failed
+        || app.refreshed.is_some_and(|t| t.elapsed().as_secs() > 20);
+    let title = format!(
+        " TPS · {} · за {}{} ",
+        app.server().unwrap_or("сервер"),
+        app.window().label,
+        if stale { " · устарело" } else { "" }
+    );
+    let segments = history.map(tps_segments).unwrap_or_default();
+    let datasets = segments
+        .iter()
+        .map(|segment| {
+            Dataset::default()
+                .data(segment)
+                .graph_type(if segment.len() > 1 {
+                    GraphType::Line
+                } else {
+                    GraphType::Scatter
+                })
+                .marker(Marker::HalfBlock)
+                .style(Style::default().fg(if stale { MUTED } else { ACCENT }))
+        })
+        .collect::<Vec<_>>();
+    let note = match history {
+        Some(h) if h.state == "disabled" => "Мониторинг не подключён".into(),
+        Some(h) if h.state == "missing" => "За этот период нет измерений".into(),
+        Some(h) => {
+            let values = h.points.iter().filter_map(|p| p.tps).collect::<Vec<_>>();
+            let min = values.iter().copied().fold(20.0, f64::min);
+            format!(
+                "min {min:.1} · {} / 61 точек · {} {} с",
+                values.len(),
+                if h.step == 5 { "шаг" } else { "min за" },
+                h.step
+            )
+        }
+        None => "История TPS пока недоступна".into(),
+    };
+    let rows = Layout::vertical([Constraint::Min(1), Constraint::Length(1)]).split(area);
+    frame.render_widget(
+        Chart::new(datasets)
+            .block(block(&title))
+            .x_axis(
+                Axis::default()
+                    .bounds([-(app.window().seconds as f64), 0.0])
+                    .labels([
+                        app.window().first,
+                        app.window().middle,
+                        if stale {
+                            "последний ответ"
+                        } else {
+                            "сейчас"
+                        },
+                    ])
+                    .style(Style::default().fg(MUTED)),
+            )
+            .y_axis(
+                Axis::default()
+                    .bounds([0.0, 20.0])
+                    .labels(["0", "10", "20"])
+                    .style(Style::default().fg(MUTED)),
+            ),
+        rows[0],
+    );
+    frame.render_widget(
+        Paragraph::new(note).style(Style::default().fg(if stale { WARN } else { MUTED }).bg(BG)),
+        rows[1],
+    );
 }
 
 fn render_metrics(

@@ -27,6 +27,9 @@ use ui::App;
 struct Options {
     backend: Option<Backend>,
     snapshot: Option<PathBuf>,
+    about: bool,
+    branding_header: bool,
+    window_index: usize,
 }
 
 fn options() -> Result<Option<Options>, String> {
@@ -36,15 +39,28 @@ fn options() -> Result<Option<Options>, String> {
     let mut config = None;
     let mut demo = false;
     let mut snapshot = None;
+    let mut about = false;
+    let mut branding_header = true;
+    let mut window_index = 0;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg]\nomk-tui --demo [--snapshot FILE.svg]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / r refresh / q quit\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / r refresh / t period / F1 project / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
             Some("--demo") => demo = true,
+            Some("--about") => about = true,
+            Some("--branding-header") => branding_header = true,
+            Some("--compact-header") => branding_header = false,
+            Some("--window") => {
+                let key = args.next().ok_or("--window требует 5m, 15m, 1h или 3h")?;
+                window_index = protocol::TPS_WINDOWS
+                    .iter()
+                    .position(|w| Some(w.key) == key.to_str())
+                    .ok_or("--window требует 5m, 15m, 1h или 3h")?;
+            }
             Some("--python") => python = args.next().ok_or("--python требует путь")?,
             Some("--repo") => repo = PathBuf::from(args.next().ok_or("--repo требует путь")?),
             Some("--config") => {
@@ -70,6 +86,9 @@ fn options() -> Result<Option<Options>, String> {
             })
         },
         snapshot,
+        about,
+        branding_header,
+        window_index,
     }))
 }
 
@@ -117,15 +136,25 @@ fn execute() -> Result<(), String> {
         return Ok(());
     };
     let mut app = App::new(options.backend.is_none());
+    app.about = options.about;
+    app.branding_header = options.branding_header;
+    app.window_index = options.window_index;
     if app.demo {
         app.accept(protocol::Overview::parse(include_bytes!(
             "../fixtures/demo.json"
         ))?);
+        app.accept_history(Some(demo_history(app.window())));
     }
     if let Some(path) = options.snapshot {
         if let Some(backend) = options.backend {
-            match backend.request(Request::Overview(None), Arc::new(AtomicBool::new(false)))? {
-                Reply::Overview(v) if v.ok => app.accept(v),
+            match backend.request(
+                Request::Overview(None, app.window()),
+                Arc::new(AtomicBool::new(false)),
+            )? {
+                Reply::Overview(v, history) if v.ok => {
+                    app.accept(v);
+                    app.accept_history(history);
+                }
                 _ => return Err("Backend не вернул рабочий обзор".into()),
             }
         }
@@ -151,16 +180,19 @@ fn interactive(
 ) -> io::Result<bool> {
     let mut pending = backend
         .as_ref()
-        .map(|b| Pending::start(b.clone(), Request::Overview(None)));
-    let mut next_refresh = Instant::now() + Duration::from_secs(10);
+        .map(|b| Pending::start(b.clone(), Request::Overview(None, app.window())));
+    let mut next_refresh = Instant::now() + Duration::from_secs(5);
     loop {
         app.loading = pending.is_some();
         if let Some(work) = &pending {
             match work.receiver.try_recv() {
                 Ok(result) => {
                     match result {
-                        Ok(Reply::Overview(v)) if v.ok => app.accept(v),
-                        Ok(Reply::Overview(_)) => {
+                        Ok(Reply::Overview(v, history)) if v.ok => {
+                            app.accept(v);
+                            app.accept_history(history);
+                        }
+                        Ok(Reply::Overview(_, _)) => {
                             app.failed = true;
                             app.message = "Обзор недоступен. Проверьте private operator config и права.\nr — повторить чтение.".into();
                         }
@@ -198,7 +230,6 @@ fn interactive(
                     }
                     pending = None;
                     app.loading = false;
-                    next_refresh = Instant::now() + Duration::from_secs(10);
                 }
                 Err(mpsc::TryRecvError::Disconnected) => {
                     app.failed = true;
@@ -218,6 +249,18 @@ fn interactive(
             if key.kind != KeyEventKind::Press {
                 continue;
             }
+            if key.code == KeyCode::F(1) && app.confirm.is_none() && app.range_picker.is_none() {
+                app.about = !app.about;
+                continue;
+            }
+            if app.about && key.code == KeyCode::Esc {
+                app.about = false;
+                continue;
+            }
+            if app.range_picker.is_some() && key.code == KeyCode::Esc {
+                app.range_picker = None;
+                continue;
+            }
             if key.code == KeyCode::Char('c') && key.modifiers.contains(KeyModifiers::CONTROL)
                 || app.confirm.is_none() && matches!(key.code, KeyCode::Char('q') | KeyCode::Esc)
             {
@@ -228,7 +271,32 @@ fn interactive(
                 }
                 return Ok(uncertain);
             }
-            if let Some(input) = app.confirm.as_mut() {
+            if app.about {
+                continue;
+            }
+            if let Some(selected) = app.range_picker {
+                match key.code {
+                    KeyCode::Up => app.range_picker = Some(selected.saturating_sub(1)),
+                    KeyCode::Down => {
+                        app.range_picker = Some((selected + 1).min(protocol::TPS_WINDOWS.len() - 1))
+                    }
+                    KeyCode::Enter => {
+                        app.window_index = selected;
+                        app.range_picker = None;
+                        app.history = None;
+                        app.history_failed = false;
+                        if app.demo {
+                            app.accept_history(Some(demo_history(app.window())));
+                        } else {
+                            request = Some(Request::Overview(
+                                app.server().map(str::to_owned),
+                                app.window(),
+                            ));
+                        }
+                    }
+                    _ => {}
+                }
+            } else if let Some(input) = app.confirm.as_mut() {
                 match key.code {
                     KeyCode::Esc => app.confirm = None,
                     KeyCode::Backspace => {
@@ -256,6 +324,9 @@ fn interactive(
                     KeyCode::Down => app.move_operation(1),
                     KeyCode::PageUp => app.scroll = app.scroll.saturating_sub(10),
                     KeyCode::PageDown => app.scroll = app.scroll.saturating_add(10).min(8192),
+                    KeyCode::Char('t') if pending.is_none() => {
+                        app.range_picker = Some(app.window_index);
+                    }
                     KeyCode::Left | KeyCode::Right if pending.is_none() => {
                         let len = app.overview.as_ref().map_or(0, |v| v.server_ids.len());
                         if len > 0 {
@@ -267,11 +338,17 @@ fn interactive(
                                 })
                                 % len;
                             app.operation.select(None);
-                            request = Some(Request::Overview(app.server().map(str::to_owned)));
+                            request = Some(Request::Overview(
+                                app.server().map(str::to_owned),
+                                app.window(),
+                            ));
                         }
                     }
                     KeyCode::Char('r') => {
-                        request = Some(Request::Overview(app.server().map(str::to_owned)))
+                        request = Some(Request::Overview(
+                            app.server().map(str::to_owned),
+                            app.window(),
+                        ))
                     }
                     KeyCode::Char(c @ ('1' | '2' | '3')) if pending.is_none() && !app.demo => {
                         if c == '3' {
@@ -289,16 +366,45 @@ fn interactive(
                 }
             }
         }
-        if pending.is_none() && app.confirm.is_none() && Instant::now() >= next_refresh {
-            request = Some(Request::Overview(app.server().map(str::to_owned)));
+        if pending.is_none()
+            && app.confirm.is_none()
+            && app.range_picker.is_none()
+            && Instant::now() >= next_refresh
+        {
+            request = Some(Request::Overview(
+                app.server().map(str::to_owned),
+                app.window(),
+            ));
         }
         if pending.is_none()
             && let (Some(b), Some(request)) = (&backend, request)
         {
+            next_refresh = Instant::now() + Duration::from_secs(5);
             pending = Some(Pending::start(b.clone(), request));
             app.loading = true;
         }
     }
+}
+
+fn demo_history(window: protocol::TpsWindow) -> Result<protocol::TpsHistory, String> {
+    let mut value: serde_json::Value =
+        serde_json::from_slice(include_bytes!("../fixtures/tps-history.json"))
+            .map_err(|_| "Неверные демо-данные")?;
+    value["end"] = window.seconds.into();
+    value["step"] = window.step.into();
+    for (i, point) in value["points"]
+        .as_array_mut()
+        .ok_or("Нет демо-точек")?
+        .iter_mut()
+        .enumerate()
+    {
+        point["timestamp"] = (i as u64 * u64::from(window.step)).into();
+    }
+    protocol::TpsHistory::parse(
+        &serde_json::to_vec(&value).map_err(|_| "Ошибка демо JSON")?,
+        "dj2",
+        window,
+    )
 }
 
 fn snapshot(app: &mut App, path: PathBuf) -> Result<(), String> {

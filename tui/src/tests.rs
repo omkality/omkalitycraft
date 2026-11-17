@@ -130,6 +130,112 @@ fn python_command(script: &str) -> std::process::Command {
 }
 
 #[test]
+fn history_contract_rejects_wrong_binding_and_timestamps() {
+    let fixture: serde_json::Value =
+        serde_json::from_slice(include_bytes!("../fixtures/tps-history.json")).unwrap();
+    let parse = |v: &serde_json::Value| {
+        protocol::TpsHistory::parse(
+            &serde_json::to_vec(v).unwrap(),
+            "dj2",
+            protocol::TPS_WINDOWS[0],
+        )
+    };
+    assert!(parse(&fixture).is_ok());
+    for (field, bad) in [
+        ("server_id", serde_json::json!("other")),
+        ("schema_version", serde_json::json!(true)),
+        ("step", serde_json::json!(10)),
+        ("state", serde_json::json!("missing")),
+        ("extra", serde_json::json!(0)),
+    ] {
+        let mut v = fixture.clone();
+        v[field] = bad;
+        assert!(parse(&v).is_err());
+    }
+    let mut v = fixture.clone();
+    v["points"][1]["timestamp"] = serde_json::json!(0);
+    assert!(parse(&v).is_err());
+    let mut v = fixture;
+    v["points"][0].as_object_mut().unwrap().remove("tps");
+    assert!(parse(&v).is_err());
+}
+
+#[test]
+fn history_gaps_split_lines_without_turning_into_zero() {
+    let mut v: serde_json::Value =
+        serde_json::from_slice(include_bytes!("../fixtures/tps-history.json")).unwrap();
+    v["points"][10]["tps"] = serde_json::Value::Null;
+    v["state"] = serde_json::json!("partial");
+    v["points"][11]["tps"] = serde_json::json!(0);
+    let history = protocol::TpsHistory::parse(
+        &serde_json::to_vec(&v).unwrap(),
+        "dj2",
+        protocol::TPS_WINDOWS[0],
+    )
+    .unwrap();
+    let segments = ui::tps_segments(&history);
+    assert_eq!(segments.len(), 2);
+    assert_eq!(segments[0].len(), 10);
+    assert_eq!(segments[1][0].1, 0.0);
+    let mut app = App::new(true);
+    app.accept(Overview::parse(&serde_json::to_vec(&demo()).unwrap()).unwrap());
+    app.accept_history(Some(Ok(history)));
+    for (w, h) in [(120, 38), (84, 28), (120, 34)] {
+        let mut terminal = Terminal::new(TestBackend::new(w, h)).unwrap();
+        terminal.draw(|f| ui::draw(f, &mut app)).unwrap();
+        app.about = true;
+        terminal.draw(|f| ui::draw(f, &mut app)).unwrap();
+        app.about = false;
+    }
+    app.overview
+        .as_mut()
+        .unwrap()
+        .server_ids
+        .push("other".into());
+    app.selected_server = 1;
+    app.accept_history(Some(Err("failed".into())));
+    assert!(app.history.is_none() && app.history_failed);
+}
+
+#[test]
+fn periods_require_matching_contract_and_do_not_reuse_another_curve() {
+    for (i, window) in protocol::TPS_WINDOWS.iter().enumerate() {
+        let history = crate::demo_history(*window).unwrap();
+        assert_eq!(history.end - history.start, window.seconds);
+        assert_eq!(history.points.len(), 61);
+        assert!(
+            protocol::TpsHistory::parse(
+                &serde_json::to_vec(&serde_json::json!({
+                    "schema_version":1,"action":"owner.tps-history","server_id":"dj2",
+                    "ok":true,"state":"missing","start":0,"end":window.seconds,
+                    "step":window.step,"points":[],"error":null
+                }))
+                .unwrap(),
+                "dj2",
+                *window
+            )
+            .is_err()
+        );
+        let mut app = App::new(true);
+        app.accept(Overview::parse(&serde_json::to_vec(&demo()).unwrap()).unwrap());
+        app.window_index = i;
+        app.accept_history(Some(Ok(history)));
+        assert!(!app.history_failed);
+        app.range_picker = Some(i);
+        for (w, h) in [(120, 38), (84, 28)] {
+            let mut terminal = Terminal::new(TestBackend::new(w, h)).unwrap();
+            terminal.draw(|f| ui::draw(f, &mut app)).unwrap();
+        }
+        if i > 0 {
+            app.accept_history(Some(crate::demo_history(protocol::TPS_WINDOWS[0])));
+            assert!(app.history_failed && app.history.as_ref().unwrap().step == window.step);
+        }
+    }
+    let fixture = include_bytes!("../fixtures/tps-history.json");
+    assert!(protocol::TpsHistory::parse(fixture, "dj2", protocol::TPS_WINDOWS[3]).is_err());
+}
+
+#[test]
 fn subprocess_timeout_output_limit_and_exit_are_bounded() {
     let cancel = AtomicBool::new(false);
     assert!(
@@ -199,10 +305,14 @@ fn real_python_cli_reads_an_isolated_config_without_writes() {
         config,
     };
     match b
-        .request(Request::Overview(None), Arc::new(AtomicBool::new(false)))
+        .request(
+            Request::Overview(None, protocol::TPS_WINDOWS[0]),
+            Arc::new(AtomicBool::new(false)),
+        )
         .unwrap()
     {
-        Reply::Overview(v) => {
+        Reply::Overview(v, history) => {
+            assert_eq!(history.unwrap().unwrap().state, "disabled");
             assert!(v.ok);
             assert_eq!(v.server_ids, vec!["dj2"]);
             assert!(v.operations.is_empty());

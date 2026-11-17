@@ -1,11 +1,13 @@
 # Контракт результата owner CLI, версия 1
 
 Это локальный интерфейс для Rust TUI поверх существующих Python services.
-Первый [TUI](OWNER_TUI.md) читает отдельный обзор и фиксированные console commands;
+Первый [TUI](OWNER_TUI.md) читает отдельные обзор, историю TPS и фиксированные console commands;
 15 mutation/status действий v1 пока не подключены к кнопкам. HTTP endpoint, daemon,
 очереди заданий и нового журнала операций здесь нет. Доступ определяется прежним
 private operator config и правами владельца.
 Контракт не даёт прав игроку и не входит в player launcher.
+`overview`, `console` и `tps-history` имеют собственные version 1 схемы и не входят
+в перечисленные ниже 15 действий `--result-version 1`.
 
 ## Вызов и совместимость
 

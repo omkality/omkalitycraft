@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-17",
+  "source": "Unmodified flat Mortum ore texture from the locally installed DivineRPG 1.7.1",
+  "mod_homepage": "https://www.curseforge.com/minecraft/mc-mods/official-divinerpg/",
+  "jar": "DivineRPG-1.7.1.jar",
+  "jar_sha256": "6a220de5ccde3580f44e113d3e89ade6e9196a11799fc6c3c03fbfd5a520a491",
+  "entry": "assets/divinerpg/textures/blocks/mortum_ore.png",
+  "asset_sha256": "d070af123948d5ef81cd5834cbde92bc41534435070340fa07762624e0915449",
+  "size": [
+    32,
+    32
+  ],
+  "ai_redrawn": false,
+  "owner_cube_png_unchanged": true
+}

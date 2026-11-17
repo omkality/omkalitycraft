@@ -1,5 +1,6 @@
 """Instant view of the existing private Prometheus; no sampler or new database."""
 
+import json
 import math
 import re
 import time
@@ -74,31 +75,65 @@ def project(rows, host, server, now):
     return result
 
 
+def load_settings(config):
+    path = _private_path(config.private, "tui.json")
+    if not path.exists():
+        return None
+    settings = _read_json(path, config.private)
+    if (
+        set(settings) != {"schema", "prometheus_origin", "host"}
+        or type(settings["schema"]) is not int
+        or settings["schema"] != 1
+        or not isinstance(settings["host"], str)
+        or not re.fullmatch(r"[a-z][a-z0-9_-]{0,47}", settings["host"])
+        or not isinstance(settings["prometheus_origin"], str)
+        or not re.fullmatch(
+            r"http://127\.0\.0\.1:[1-9][0-9]{0,4}", settings["prometheus_origin"]
+        )
+        or not 1024
+        <= urllib.parse.urlsplit(settings["prometheus_origin"]).port
+        <= 65535
+    ):
+        raise ValueError("Invalid private TUI monitoring configuration")
+    return settings
+
+
+def query(settings, expression, *, result_type="vector", **parameters):
+    endpoint = "query_range" if result_type == "matrix" else "query"
+    url = (
+        settings["prometheus_origin"]
+        + "/api/v1/"
+        + endpoint
+        + "?"
+        + urllib.parse.urlencode({"query": expression, "timeout": "2s", **parameters})
+    )
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
+    with opener.open(url, timeout=3) as stream:
+        raw = stream.read(65537)
+    if len(raw) > 65536:
+        raise ValueError("Prometheus response exceeds limit")
+    value = json.loads(raw)
+    if (
+        value["status"] != "success"
+        or value.get("warnings")
+        or value["data"]["resultType"] != result_type
+    ):
+        raise ValueError("Invalid Prometheus response")
+    rows = value["data"]["result"]
+    if not isinstance(rows, list) or len(rows) > 128:
+        raise ValueError("Prometheus vector exceeds limit")
+    return rows
+
+
 def sample(config, server):
     missing = [
         Metric(key=key, value=None, state="missing").model_dump(mode="json")
         for key in KEYS
     ]
     try:
-        path = _private_path(config.private, "tui.json")
-        if not path.exists():
+        settings = load_settings(config)
+        if settings is None:
             return "disabled", missing
-        settings = _read_json(path, config.private)
-        if (
-            set(settings) != {"schema", "prometheus_origin", "host"}
-            or type(settings["schema"]) is not int
-            or settings["schema"] != 1
-            or not isinstance(settings["host"], str)
-            or not re.fullmatch(r"[a-z][a-z0-9_-]{0,47}", settings["host"])
-            or not isinstance(settings["prometheus_origin"], str)
-            or not re.fullmatch(
-                r"http://127\.0\.0\.1:[1-9][0-9]{0,4}", settings["prometheus_origin"]
-            )
-            or not 1024
-            <= urllib.parse.urlsplit(settings["prometheus_origin"]).port
-            <= 65535
-        ):
-            raise ValueError("Invalid private TUI monitoring configuration")
         selector = (
             '{host="'
             + settings["host"]
@@ -106,31 +141,7 @@ def sample(config, server):
             + "|".join(SOURCES.values())
             + '"}'
         )
-        query = selector + " and on(job,instance) (up == 1)"
-        url = (
-            settings["prometheus_origin"]
-            + "/api/v1/query?"
-            + urllib.parse.urlencode({"query": query, "timeout": "2s"})
-        )
-        import json  # noqa: PLC0415
-
-        opener = urllib.request.build_opener(
-            urllib.request.ProxyHandler({}), NoRedirect()
-        )
-        with opener.open(url, timeout=3) as stream:
-            raw = stream.read(65537)
-        if len(raw) > 65536:
-            raise ValueError("Prometheus response exceeds limit")
-        value = json.loads(raw)
-        if (
-            value["status"] != "success"
-            or value.get("warnings")
-            or value["data"]["resultType"] != "vector"
-        ):
-            raise ValueError("Invalid Prometheus response")
-        rows = value["data"]["result"]
-        if not isinstance(rows, list) or len(rows) > 128:
-            raise ValueError("Prometheus vector exceeds limit")
+        rows = query(settings, selector + " and on(job,instance) (up == 1)")
         metrics = project(rows, settings["host"], server, time.time())
         return (
             "available"

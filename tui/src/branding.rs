@@ -17,10 +17,18 @@ fn blend(pixel: [u8; 4]) -> Color {
 }
 
 pub fn draw(frame: &mut Frame, area: Rect) {
-    for y in 0..area.height.min(7) {
-        for x in 0..area.width.min(12) {
-            let top = ORE[(y * 2 * 12 + x) as usize];
-            let bottom = ORE[((y * 2 + 1) * 12 + x) as usize];
+    draw_pixels(frame, area, &ORE, 16, 8);
+}
+
+pub fn draw_large(frame: &mut Frame, area: Rect) {
+    draw_pixels(frame, area, &ORE_LARGE, 32, 16);
+}
+
+fn draw_pixels(frame: &mut Frame, area: Rect, pixels: &[[u8; 4]], width: u16, height: u16) {
+    for y in 0..area.height.min(height) {
+        for x in 0..area.width.min(width) {
+            let top = pixels[(y * 2 * width + x) as usize];
+            let bottom = pixels[((y * 2 + 1) * width + x) as usize];
             frame.buffer_mut()[(area.x + x, area.y + y)]
                 .set_symbol("▀")
                 .set_style(Style::default().fg(blend(top)).bg(blend(bottom)));

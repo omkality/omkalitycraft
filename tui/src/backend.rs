@@ -1,4 +1,4 @@
-use crate::protocol::{ConsoleResult, Overview, valid_server};
+use crate::protocol::{ConsoleResult, Overview, TpsHistory, TpsWindow, valid_server};
 use std::{
     ffi::OsString,
     fs::File,
@@ -24,12 +24,12 @@ pub struct Backend {
 
 #[derive(Clone, Debug)]
 pub enum Request {
-    Overview(Option<String>),
+    Overview(Option<String>, TpsWindow),
     Console { server: String, command: String },
 }
 #[derive(Debug)]
 pub enum Reply {
-    Overview(Overview),
+    Overview(Overview, Option<Result<TpsHistory, String>>),
     Console(ConsoleResult),
 }
 
@@ -111,7 +111,7 @@ fn file_size(file: &File) -> Result<u64, String> {
 }
 
 impl Backend {
-    pub fn request(&self, request: Request, cancel: Arc<AtomicBool>) -> Result<Reply, String> {
+    fn command(&self) -> Command {
         let mut command = Command::new(&self.python);
         command
             .current_dir(&self.repo)
@@ -119,8 +119,35 @@ impl Backend {
             .env("PYTHONIOENCODING", "utf-8")
             .args(["-m", "omk", "admin", "--config"])
             .arg(&self.config);
+        command
+    }
+
+    fn history(
+        &self,
+        server: &str,
+        window: TpsWindow,
+        cancel: &AtomicBool,
+    ) -> Result<TpsHistory, String> {
+        if cancel.load(Ordering::Relaxed) {
+            return Err("Чтение истории отменено".into());
+        }
+        let mut command = self.command();
+        command.args(["tps-history", "--server", server, "--window", window.key]);
+        let (bytes, success) = capture(command, cancel, Duration::from_secs(15))?;
+        let value = TpsHistory::parse(&bytes, server, window)?;
+        if value.ok != success {
+            return Err("Exit code истории не совпадает с JSON".into());
+        }
+        if !value.ok {
+            return Err("История TPS недоступна".into());
+        }
+        Ok(value)
+    }
+
+    pub fn request(&self, request: Request, cancel: Arc<AtomicBool>) -> Result<Reply, String> {
+        let mut command = self.command();
         match &request {
-            Request::Overview(server) => {
+            Request::Overview(server, _) => {
                 command.arg("overview");
                 if let Some(server) = server {
                     if !valid_server(server) {
@@ -144,13 +171,21 @@ impl Backend {
         }
         let (bytes, success) = capture(command, &cancel, Duration::from_secs(15))?;
         let (reply, ok) = match request {
-            Request::Overview(server) => {
+            Request::Overview(server, window) => {
                 let value = Overview::parse(&bytes)?;
                 if value.ok && server.is_some() && server != value.selected_server {
                     return Err("Обзор пришёл для другого сервера".into());
                 }
                 let ok = value.ok;
-                (Reply::Overview(value), ok)
+                let history = if ok && success {
+                    value
+                        .selected_server
+                        .as_deref()
+                        .map(|id| self.history(id, window, &cancel))
+                } else {
+                    None
+                };
+                (Reply::Overview(value, history), ok)
             }
             Request::Console { server, command } => {
                 let value = ConsoleResult::parse(&bytes, &server, &command)?;

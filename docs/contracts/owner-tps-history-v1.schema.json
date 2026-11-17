@@ -1,0 +1,123 @@
+{
+  "$defs": {
+    "Point": {
+      "additionalProperties": false,
+      "properties": {
+        "timestamp": {
+          "minimum": 0,
+          "title": "Timestamp",
+          "type": "integer"
+        },
+        "tps": {
+          "anyOf": [
+            {
+              "maximum": 20,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tps"
+        }
+      },
+      "required": [
+        "timestamp",
+        "tps"
+      ],
+      "title": "Point",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "action": {
+      "const": "owner.tps-history",
+      "default": "owner.tps-history",
+      "title": "Action",
+      "type": "string"
+    },
+    "server_id": {
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,47}$",
+      "title": "Server Id",
+      "type": "string"
+    },
+    "ok": {
+      "title": "Ok",
+      "type": "boolean"
+    },
+    "state": {
+      "enum": [
+        "available",
+        "partial",
+        "missing",
+        "disabled",
+        "unavailable"
+      ],
+      "title": "State",
+      "type": "string"
+    },
+    "start": {
+      "minimum": 0,
+      "title": "Start",
+      "type": "integer"
+    },
+    "end": {
+      "minimum": 0,
+      "title": "End",
+      "type": "integer"
+    },
+    "step": {
+      "default": 5,
+      "enum": [
+        5,
+        15,
+        60,
+        180
+      ],
+      "title": "Step",
+      "type": "integer"
+    },
+    "points": {
+      "items": {
+        "$ref": "#/$defs/Point"
+      },
+      "maxItems": 61,
+      "title": "Points",
+      "type": "array"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "enum": [
+            "invalid_configuration",
+            "history_unavailable"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error"
+    }
+  },
+  "required": [
+    "server_id",
+    "ok",
+    "state",
+    "start",
+    "end",
+    "points"
+  ],
+  "title": "TpsHistory",
+  "type": "object"
+}
