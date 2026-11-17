@@ -3,12 +3,8 @@ use ratatui::{
     Frame,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
-    symbols::Marker,
     text::{Line, Span},
-    widgets::{
-        Axis, Block, Borders, Chart, Clear, Dataset, GraphType, List, ListItem, ListState,
-        Paragraph, Wrap,
-    },
+    widgets::{Block, Borders, Clear, List, ListItem, ListState, Paragraph, Wrap},
 };
 use std::time::Instant;
 
@@ -201,7 +197,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         Layout::horizontal([Constraint::Percentage(48), Constraint::Percentage(52)]).split(rows[1]);
     let left = Layout::vertical([
         Constraint::Length(3),
-        Constraint::Length(if body[0].height >= 22 { 11 } else { 9 }),
+        Constraint::Length(if body[0].height >= 22 { 14 } else { 10 }),
         Constraint::Min(0),
         Constraint::Length(if body[0].height >= 20 { 4 } else { 0 }),
     ])
@@ -384,22 +380,6 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     }
 }
 
-pub fn tps_segments(history: &TpsHistory) -> Vec<Vec<(f64, f64)>> {
-    let mut segments = Vec::new();
-    let mut current = Vec::new();
-    for p in &history.points {
-        if let Some(tps) = p.tps {
-            current.push((p.timestamp as f64 - history.end as f64, tps));
-        } else if !current.is_empty() {
-            segments.push(std::mem::take(&mut current));
-        }
-    }
-    if !current.is_empty() {
-        segments.push(current);
-    }
-    segments
-}
-
 fn render_tps(frame: &mut Frame, app: &App, area: Rect) {
     let history = app
         .history
@@ -414,21 +394,6 @@ fn render_tps(frame: &mut Frame, app: &App, area: Rect) {
         app.window().label,
         if stale { " · устарело" } else { "" }
     );
-    let segments = history.map(tps_segments).unwrap_or_default();
-    let datasets = segments
-        .iter()
-        .map(|segment| {
-            Dataset::default()
-                .data(segment)
-                .graph_type(if segment.len() > 1 {
-                    GraphType::Line
-                } else {
-                    GraphType::Scatter
-                })
-                .marker(Marker::HalfBlock)
-                .style(Style::default().fg(if stale { MUTED } else { ACCENT }))
-        })
-        .collect::<Vec<_>>();
     let note = match history {
         Some(h) if h.state == "disabled" => "Мониторинг не подключён".into(),
         Some(h) if h.state == "missing" => "За этот период нет измерений".into(),
@@ -444,35 +409,23 @@ fn render_tps(frame: &mut Frame, app: &App, area: Rect) {
         }
         None => "История TPS пока недоступна".into(),
     };
-    let rows = Layout::vertical([Constraint::Min(1), Constraint::Length(1)]).split(area);
+    let rows = Layout::vertical([
+        Constraint::Min(1),
+        Constraint::Length(1),
+        Constraint::Length(1),
+    ])
+    .split(area);
+    let border = block(&title);
+    let inner = border.inner(rows[0]);
+    frame.render_widget(border, rows[0]);
+    crate::tps_grid::draw(frame, history, inner, app.window(), stale);
     frame.render_widget(
-        Chart::new(datasets)
-            .block(block(&title))
-            .x_axis(
-                Axis::default()
-                    .bounds([-(app.window().seconds as f64), 0.0])
-                    .labels([
-                        app.window().first,
-                        app.window().middle,
-                        if stale {
-                            "последний ответ"
-                        } else {
-                            "сейчас"
-                        },
-                    ])
-                    .style(Style::default().fg(MUTED)),
-            )
-            .y_axis(
-                Axis::default()
-                    .bounds([0.0, 20.0])
-                    .labels(["0", "10", "20"])
-                    .style(Style::default().fg(MUTED)),
-            ),
-        rows[0],
+        Paragraph::new(crate::tps_grid::legend(stale)).style(Style::default().bg(BG)),
+        rows[1],
     );
     frame.render_widget(
         Paragraph::new(note).style(Style::default().fg(if stale { WARN } else { MUTED }).bg(BG)),
-        rows[1],
+        rows[2],
     );
 }
 

@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "issue": 246,
+  "scope": "square color-coded TPS grid in owner TUI",
+  "accepted": true,
+  "palette": [
+    {
+      "min_inclusive": 19,
+      "color": "#70d69c"
+    },
+    {
+      "min_inclusive": 15,
+      "max_exclusive": 19,
+      "color": "#f0cd6c"
+    },
+    {
+      "min_inclusive": 10,
+      "max_exclusive": 15,
+      "color": "#ec9e5b"
+    },
+    {
+      "min_inclusive": 0,
+      "max_exclusive": 10,
+      "color": "#e76e79"
+    }
+  ],
+  "cell_geometry": {
+    "terminal_columns": 1,
+    "terminal_rows": 0.5,
+    "horizontal_stride_columns": 2,
+    "vertical_stride_rows": 1,
+    "font_assumption": "1:2 cell aspect ratio"
+  },
+  "compression": "minimum per visible column; any missing sample leaves that column without value",
+  "zero": "bright red bottom cell",
+  "stale": "muted grid values and legend",
+  "verification": {
+    "rust_tests_passed": 10,
+    "clippy": "passed",
+    "release_linux": "passed",
+    "pty": {
+      "ok": true,
+      "checks": [
+        "flat_ore_header_and_alpha_history_visible",
+        "real_square_grid_and_colored_tps_legend",
+        "real_history_window_advances",
+        "background_refresh_remains_fresh",
+        "alpha_real_players_reply",
+        "switch_rebinds_chart_to_beta",
+        "beta_real_forge_tps_reply",
+        "f1_opens_flat_ore_project_card",
+        "escape_closes_card_without_exiting",
+        "save_still_requires_confirmation_and_escape_cancels",
+        "range_picker_escape_preserves_period",
+        "period_5m_real_history",
+        "period_15m_real_history",
+        "period_1h_real_history",
+        "period_3h_real_history",
+        "period_preserved_when_switching_server",
+        "quit_restores_terminal_modes"
+      ],
+      "history_end_advanced_seconds": 5,
+      "point_count": 61,
+      "alpha_min": 19.958296097706288
+    }
+  },
+  "synthetic_previews": [
+    "stable_20",
+    "drop_and_recovery",
+    "sustained_degraded",
+    "missing_samples"
+  ],
+  "containers": [
+    {
+      "service": "alpha",
+      "running": true,
+      "restart_count": 0,
+      "oom_killed": false
+    },
+    {
+      "service": "beta",
+      "running": true,
+      "restart_count": 0,
+      "oom_killed": false
+    },
+    {
+      "service": "prometheus",
+      "running": true,
+      "restart_count": 0,
+      "oom_killed": false
+    },
+    {
+      "service": "agent",
+      "running": true,
+      "restart_count": 0,
+      "oom_killed": false
+    }
+  ],
+  "left_running_by_owner_request": true,
+  "limitations": [
+    "cell aspect ratio depends on terminal font",
+    "the grid quantizes height to the available rows",
+    "visual compression prioritizes missing data over a partially observed column",
+    "local Forge fixture validation, not full DJ2 or VPS acceptance",
+    "calendar scheduler remains paused"
+  ],
+  "source_hash_basis": "Git index bytes (LF)",
+  "source_sha256": {
+    "tui/src/main.rs": "a826afdc04ddb90c917f38440d519ccba6b92134ad4df850f9dc7295834209ee",
+    "tui/src/tests.rs": "82711e6d91bcdc51014d0264c350b56d23dbf9173af04f850e733c5a73dc2963",
+    "tui/src/ui.rs": "308f0f2642eed768a3b5890778a10aa3082b38792e53daef23d403d52993dd4f",
+    "tui/src/tps_grid.rs": "c57fbaf46a7d0ebfbfd447d52a74fd305f3377d72ade0594351a0850291b142d"
+  }
+}

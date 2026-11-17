@@ -1,6 +1,7 @@
 mod backend;
 mod branding;
 mod protocol;
+mod tps_grid;
 mod ui;
 
 use backend::{Backend, Reply, Request};

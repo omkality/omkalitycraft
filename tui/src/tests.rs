@@ -161,7 +161,7 @@ fn history_contract_rejects_wrong_binding_and_timestamps() {
 }
 
 #[test]
-fn history_gaps_split_lines_without_turning_into_zero() {
+fn history_gaps_remain_blank_and_zero_stays_visible() {
     let mut v: serde_json::Value =
         serde_json::from_slice(include_bytes!("../fixtures/tps-history.json")).unwrap();
     v["points"][10]["tps"] = serde_json::Value::Null;
@@ -173,10 +173,9 @@ fn history_gaps_split_lines_without_turning_into_zero() {
         protocol::TPS_WINDOWS[0],
     )
     .unwrap();
-    let segments = ui::tps_segments(&history);
-    assert_eq!(segments.len(), 2);
-    assert_eq!(segments[0].len(), 10);
-    assert_eq!(segments[1][0].1, 0.0);
+    let columns = crate::tps_grid::column_values(&history, 61);
+    assert_eq!(columns[10], None);
+    assert_eq!(columns[11], Some(0.0));
     let mut app = App::new(true);
     app.accept(Overview::parse(&serde_json::to_vec(&demo()).unwrap()).unwrap());
     app.accept_history(Some(Ok(history)));
@@ -233,6 +232,69 @@ fn periods_require_matching_contract_and_do_not_reuse_another_curve() {
     }
     let fixture = include_bytes!("../fixtures/tps-history.json");
     assert!(protocol::TpsHistory::parse(fixture, "dj2", protocol::TPS_WINDOWS[3]).is_err());
+}
+
+#[test]
+fn tps_grid_keeps_dips_gaps_zero_and_stale_colors_distinct() {
+    use crate::tps_grid::{color, column_values};
+    use ratatui::{layout::Rect, style::Color};
+    assert_eq!(color(19.0), Color::Rgb(112, 214, 156));
+    assert_eq!(color(0.0), Color::Rgb(231, 110, 121));
+    assert_eq!(color(18.99), color(15.0));
+    assert_eq!(color(14.99), color(10.0));
+    assert_eq!(color(9.99), color(0.0));
+    assert_ne!(color(15.0), color(10.0));
+    let mut history = crate::demo_history(protocol::TPS_WINDOWS[0]).unwrap();
+    for point in &mut history.points {
+        point.tps = Some(20.0);
+    }
+    history.points[5].tps = None;
+    history.points[40].tps = Some(0.0);
+    assert_eq!(column_values(&history, 2), vec![None, Some(0.0)]);
+    assert!(column_values(&history, 0).is_empty());
+    for point in &mut history.points {
+        point.tps = Some(20.0);
+    }
+    for (i, value) in [None, Some(0.0), Some(12.0), Some(16.0), Some(20.0)]
+        .into_iter()
+        .enumerate()
+    {
+        history.points[i].tps = value;
+    }
+    let mut terminal = Terminal::new(TestBackend::new(126, 10)).unwrap();
+    terminal
+        .draw(|f| {
+            crate::tps_grid::draw(
+                f,
+                Some(&history),
+                Rect::new(0, 0, 126, 10),
+                protocol::TPS_WINDOWS[0],
+                false,
+            )
+        })
+        .unwrap();
+    let buffer = terminal.backend().buffer();
+    assert_eq!(buffer[(4, 8)].fg, Color::Rgb(38, 48, 60));
+    for (x, y, value) in [(6, 8, 0.0), (8, 3, 12.0), (10, 2, 16.0), (12, 0, 20.0)] {
+        assert_eq!(buffer[(x, y)].symbol(), "▀");
+        assert_eq!(buffer[(x, y)].fg, color(value));
+        assert_ne!(buffer[(x + 1, y)].symbol(), "▀");
+    }
+    terminal
+        .draw(|f| {
+            crate::tps_grid::draw(
+                f,
+                Some(&history),
+                Rect::new(0, 0, 126, 10),
+                protocol::TPS_WINDOWS[0],
+                true,
+            )
+        })
+        .unwrap();
+    assert_eq!(
+        terminal.backend().buffer()[(12, 0)].fg,
+        Color::Rgb(139, 155, 172)
+    );
 }
 
 #[test]
