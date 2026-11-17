@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "source_base_commit": "416da831ae62cdaa2e561238876734ecb06cde90",
+  "issues": [
+    235,
+    38,
+    41
+  ],
+  "contract_version": 1,
+  "opt_in": "omk admin --result-version 1",
+  "supported_actions": 15,
+  "local_verification": {
+    "focused_tests_passed": 268,
+    "new_contract_cases": 45,
+    "legacy_dispatch_ast_identical": true,
+    "native_backup_restore_maintenance_source_unchanged": true,
+    "legacy_result_and_error_shapes_preserved": true,
+    "all_fifteen_routes_dispatch_service_once": true,
+    "no_automatic_mutation_repeat": true,
+    "strict_version_schema_examples_and_semantic_checks": true,
+    "published_examples": 7,
+    "malformed_or_wrong_operation_reply_is_unknown": true,
+    "raw_exception_private_payload_and_synthetic_secret_not_disclosed": true,
+    "unsupported_action_never_loads_config_prompts_or_dispatches": true,
+    "real_cli_subprocess": {
+      "input": "temporary operator config and backup journal",
+      "stdout": "one strict v1 JSON",
+      "phase": "incomplete",
+      "journal_bytes_unchanged": true,
+      "docker_used": false
+    },
+    "backup_fault_fixture": {
+      "transport": "Docker calls replaced by existing filesystem worker fixture",
+      "backup_store_and_journal": "real temporary files",
+      "fault": "OSError while saving host publication acknowledgement, after backup publication",
+      "error_effect": "unknown",
+      "subsequent_status_phase": "publishing",
+      "explicit_finish_phase": "complete",
+      "final_snapshots": 1,
+      "source_tree_bytes_unchanged": true
+    },
+    "ruff_black_diff_check": true
+  },
+  "schema_scope": "JSON shape plus documented and tested semantic invariants; Rust consumer must enforce both",
+  "local_containers_started": false,
+  "computer_use_used": false,
+  "local_java_or_qt_started": false,
+  "rust_tui_or_process_client_implemented": false,
+  "new_http_api_daemon_or_operation_journal": false,
+  "public_release_or_player_manifest_changed": false,
+  "game_mod_code_changed": false,
+  "vps_deployed": false,
+  "calendar_scheduler_resumed": false,
+  "general_configuration_audit": "manual immediately before VPS",
+  "remote_ci": "exact PR head check-runs; separate from local fixture proof",
+  "not_proven": [
+    "real Rust client transport loss",
+    "new native Docker or game acceptance",
+    "VPS readiness"
+  ]
+}

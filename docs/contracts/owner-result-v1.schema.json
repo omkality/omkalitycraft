@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:omkalitycraft:owner-result:1",
+  "x-supported-actions": [
+    "backups.cancel",
+    "backups.finish",
+    "backups.plan",
+    "backups.run",
+    "backups.status",
+    "maintenance.cancel",
+    "maintenance.plan",
+    "maintenance.reconcile",
+    "maintenance.start",
+    "maintenance.status",
+    "maintenance.stop",
+    "restores.apply",
+    "restores.plan",
+    "restores.status",
+    "restores.verify"
+  ],
+  "$comment": "Shape schema; consumers also enforce the phase/terminal and ok/status/error invariants documented in OWNER_RESULT.md.",
+  "x-phases-by-kind": {
+    "backups": [
+      "acknowledging",
+      "cancelled",
+      "complete",
+      "incomplete",
+      "planned",
+      "preparing",
+      "published",
+      "publishing"
+    ],
+    "maintenance": [
+      "cancelled",
+      "complete",
+      "planned",
+      "start-requested",
+      "stop-requested",
+      "stopped"
+    ],
+    "restores": [
+      "applying",
+      "incomplete",
+      "planned",
+      "staged"
+    ]
+  },
+  "x-terminal-phases-by-kind": {
+    "backups": [
+      "cancelled",
+      "complete"
+    ],
+    "maintenance": [
+      "cancelled",
+      "complete"
+    ],
+    "restores": [
+      "staged"
+    ]
+  },
+  "$defs": {
+    "Failure": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "enum": [
+            "invalid_configuration",
+            "owner_busy",
+            "operation_rejected",
+            "io_failure",
+            "operation_failed",
+            "invalid_service_result",
+            "unsupported_action"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "maxLength": 256,
+          "title": "Message",
+          "type": "string"
+        },
+        "effect": {
+          "enum": [
+            "none",
+            "unknown"
+          ],
+          "title": "Effect",
+          "type": "string"
+        },
+        "next_step": {
+          "enum": [
+            "fix_configuration",
+            "wait_then_inspect",
+            "inspect_operation",
+            "none"
+          ],
+          "title": "Next Step",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "effect",
+        "next_step"
+      ],
+      "title": "Failure",
+      "type": "object"
+    },
+    "OperationView": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-f0-9]{32}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "backups",
+            "maintenance",
+            "restores"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "server_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9_-]{0,47}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Server Id"
+        },
+        "phase": {
+          "anyOf": [
+            {
+              "enum": [
+                "planned",
+                "preparing",
+                "publishing",
+                "published",
+                "acknowledging",
+                "incomplete",
+                "complete",
+                "cancelled",
+                "stop-requested",
+                "stopped",
+                "start-requested",
+                "applying",
+                "staged"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Phase"
+        },
+        "terminal": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Terminal"
+        },
+        "backup_operation_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Backup Operation Id"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "server_id",
+        "phase",
+        "terminal"
+      ],
+      "title": "OperationView",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "action": {
+      "pattern": "^[a-z][a-z0-9.\\-]{0,79}$",
+      "title": "Action",
+      "type": "string"
+    },
+    "ok": {
+      "title": "Ok",
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "succeeded",
+        "failed",
+        "unknown"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "operation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/OperationView"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "error": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Failure"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "action",
+    "ok",
+    "status",
+    "operation",
+    "error"
+  ],
+  "title": "OwnerResult",
+  "type": "object"
+}

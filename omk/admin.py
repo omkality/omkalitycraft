@@ -288,6 +288,12 @@ def add_admin_commands(sub):
         "admin", help="Local operator tools; not part of the player launcher"
     )
     admin.add_argument("--config", type=Path, required=True)
+    admin.add_argument(
+        "--result-version",
+        type=int,
+        choices=[1],
+        help="Opt into the versioned backup/restore/maintenance result contract",
+    )
     actions = admin.add_subparsers(dest="admin_action", required=True)
     add_recovery_parser(actions)
     add_backup_parser(actions)
@@ -344,6 +350,50 @@ def run_admission(config, args):
     }[args.admin_action](config, args)
 
 
+def _execute_admin(config, args):
+    if args.admin_action == "login":
+        result = operator_login(
+            config, args.username, getpass.getpass("Drasl administrator password: ")
+        )
+    elif args.admin_action in {"diagnostics", "playtime"}:
+        from omk.player_time import saved_playtime  # noqa: PLC0415
+
+        result = {
+            "diagnostics": lambda: server_diagnostics(config, args.server),
+            "playtime": lambda: saved_playtime(config, args.server, args.player),
+        }[args.admin_action]()
+    elif args.admin_action == "reports":
+        result = client_reports(config, args)
+    elif args.admin_action == "recover-account":
+        from omk.account_recovery import run_recovery  # noqa: PLC0415
+
+        result = run_recovery(config, args)
+    elif args.admin_action == "resource-resets":
+        from omk.admin_resource_reset import run_resource_reset  # noqa: PLC0415
+
+        result = run_resource_reset(config, args)
+    elif args.admin_action == "maintenance":
+        from omk.admin_maintenance import run_maintenance  # noqa: PLC0415
+
+        result = run_maintenance(config, args)
+    elif args.admin_action in {"ingress", "world-cutovers", "storage", "nightly"}:
+        result = run_admission(config, args)
+    elif args.admin_action in {"backups", "restores"}:
+        from omk.admin_backups import run_backups  # noqa: PLC0415
+        from omk.admin_restores import run_restores  # noqa: PLC0415
+
+        result = {"backups": run_backups, "restores": run_restores}[args.admin_action](
+            config, args
+        )
+    else:
+        result = {
+            "invite": lambda: create_invite(config),
+            "invites": lambda: list_invites(config),
+            "revoke-invite": lambda: revoke_invite(config, args.invitation_file),
+        }[args.access_action]()
+    return result
+
+
 def run_admin(args):
     config = None
     operation = args.admin_action
@@ -362,49 +412,19 @@ def run_admin(args):
     }.get(args.admin_action)
     if suffix:
         operation += ":" + getattr(args, suffix)
+    versioned = getattr(args, "result_version", None) == 1
+    if versioned:
+        from omk import owner_result  # noqa: PLC0415
+
+        action = operation.replace(":", ".")
+        if action not in owner_result.SUPPORTED:
+            return owner_result.failure(action, args, "unsupported_action")
+    caught_error = None
     try:
         config = load_operator_config(args.config)
-        if args.admin_action == "login":
-            result = operator_login(
-                config, args.username, getpass.getpass("Drasl administrator password: ")
-            )
-        elif args.admin_action in {"diagnostics", "playtime"}:
-            from omk.player_time import saved_playtime  # noqa: PLC0415
-
-            result = {
-                "diagnostics": lambda: server_diagnostics(config, args.server),
-                "playtime": lambda: saved_playtime(config, args.server, args.player),
-            }[args.admin_action]()
-        elif args.admin_action == "reports":
-            result = client_reports(config, args)
-        elif args.admin_action == "recover-account":
-            from omk.account_recovery import run_recovery  # noqa: PLC0415
-
-            result = run_recovery(config, args)
-        elif args.admin_action == "resource-resets":
-            from omk.admin_resource_reset import run_resource_reset  # noqa: PLC0415
-
-            result = run_resource_reset(config, args)
-        elif args.admin_action == "maintenance":
-            from omk.admin_maintenance import run_maintenance  # noqa: PLC0415
-
-            result = run_maintenance(config, args)
-        elif args.admin_action in {"ingress", "world-cutovers", "storage", "nightly"}:
-            result = run_admission(config, args)
-        elif args.admin_action in {"backups", "restores"}:
-            from omk.admin_backups import run_backups  # noqa: PLC0415
-            from omk.admin_restores import run_restores  # noqa: PLC0415
-
-            result = {"backups": run_backups, "restores": run_restores}[
-                args.admin_action
-            ](config, args)
-        else:
-            result = {
-                "invite": lambda: create_invite(config),
-                "invites": lambda: list_invites(config),
-                "revoke-invite": lambda: revoke_invite(config, args.invitation_file),
-            }[args.access_action]()
+        result = _execute_admin(config, args)
     except Exception as error:
+        caught_error = error
         result = {
             "ok": False,
             "error": (
@@ -414,6 +434,10 @@ def run_admin(args):
             ),
             "error_type": type(error).__name__,
         }
+    if versioned:
+        result = owner_result.project(
+            action, args, result, error=caught_error, configuring=config is None
+        )
     if config is not None:
         with contextlib.suppress(OSError):
             BoundedLog(config.private / "audit.jsonl", limit=1024**2).write(
