@@ -273,6 +273,12 @@ def client_reports(config, args):
     return {"ok": True, "report_file": str(path)}
 
 
+def _console_server(value):
+    if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,47}", value):
+        raise ValueError("Invalid server identifier")
+    return value
+
+
 def add_admin_commands(sub):
     from omk.account_recovery import add_recovery_parser  # noqa: PLC0415
     from omk.admin_backups import add_backup_parser  # noqa: PLC0415
@@ -295,6 +301,19 @@ def add_admin_commands(sub):
         help="Opt into the versioned backup/restore/maintenance result contract",
     )
     actions = admin.add_subparsers(dest="admin_action", required=True)
+    overview = actions.add_parser(
+        "overview", help="Read-only owner TUI overview (separate schema)"
+    )
+    overview.add_argument("--server", type=_console_server)
+    console = actions.add_parser("console", help="Fixed owner RCON commands")
+    console.add_argument("--server", required=True, type=_console_server)
+    console.add_argument(
+        "--command",
+        dest="console_command",
+        required=True,
+        choices=["players", "tps", "save"],
+    )
+    console.add_argument("--confirm-save", action="store_true")
     add_recovery_parser(actions)
     add_backup_parser(actions)
     add_maintenance_parser(actions)
@@ -395,6 +414,16 @@ def _execute_admin(config, args):
 
 
 def run_admin(args):
+    if args.admin_action == "console" and args.result_version is None:
+        from omk.owner_console import run  # noqa: PLC0415
+
+        return run(
+            args.config, args.server, args.console_command, confirmed=args.confirm_save
+        )
+    if args.admin_action == "overview" and args.result_version is None:
+        from omk.owner_overview import run  # noqa: PLC0415
+
+        return run(args.config, args.server)
     config = None
     operation = args.admin_action
     suffix = {

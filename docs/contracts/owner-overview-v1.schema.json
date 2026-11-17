@@ -1,0 +1,240 @@
+{
+  "$defs": {
+    "Metric": {
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "enum": [
+            "host_cpu",
+            "host_ram",
+            "host_disk",
+            "game_tps",
+            "game_mspt",
+            "game_players"
+          ],
+          "title": "Key",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        },
+        "state": {
+          "enum": [
+            "fresh",
+            "missing",
+            "stale",
+            "invalid"
+          ],
+          "title": "State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "value",
+        "state"
+      ],
+      "title": "Metric",
+      "type": "object"
+    },
+    "OperationView": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-f0-9]{32}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "backups",
+            "maintenance",
+            "restores"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "server_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9_-]{0,47}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Server Id"
+        },
+        "phase": {
+          "anyOf": [
+            {
+              "enum": [
+                "planned",
+                "preparing",
+                "publishing",
+                "published",
+                "acknowledging",
+                "incomplete",
+                "complete",
+                "cancelled",
+                "stop-requested",
+                "stopped",
+                "start-requested",
+                "applying",
+                "staged"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Phase"
+        },
+        "terminal": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Terminal"
+        },
+        "backup_operation_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Backup Operation Id"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "server_id",
+        "phase",
+        "terminal"
+      ],
+      "title": "OperationView",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "action": {
+      "const": "owner.overview",
+      "default": "owner.overview",
+      "title": "Action",
+      "type": "string"
+    },
+    "ok": {
+      "title": "Ok",
+      "type": "boolean"
+    },
+    "server_ids": {
+      "items": {
+        "pattern": "^[a-z0-9][a-z0-9_-]{0,47}$",
+        "type": "string"
+      },
+      "maxItems": 100,
+      "title": "Server Ids",
+      "type": "array"
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/OperationView"
+      },
+      "maxItems": 128,
+      "title": "Operations",
+      "type": "array"
+    },
+    "skipped": {
+      "default": 0,
+      "maximum": 128,
+      "minimum": 0,
+      "title": "Skipped",
+      "type": "integer"
+    },
+    "truncated": {
+      "default": false,
+      "title": "Truncated",
+      "type": "boolean"
+    },
+    "selected_server": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,47}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Selected Server"
+    },
+    "metrics_status": {
+      "default": "disabled",
+      "enum": [
+        "disabled",
+        "available",
+        "partial",
+        "unavailable"
+      ],
+      "title": "Metrics Status",
+      "type": "string"
+    },
+    "metrics": {
+      "items": {
+        "$ref": "#/$defs/Metric"
+      },
+      "maxItems": 6,
+      "title": "Metrics",
+      "type": "array"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "enum": [
+            "invalid_configuration",
+            "overview_unavailable"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error"
+    }
+  },
+  "required": [
+    "ok"
+  ],
+  "title": "Overview",
+  "type": "object"
+}

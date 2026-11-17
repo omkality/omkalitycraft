@@ -15,6 +15,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  owner_tui:
+    name: Owner TUI (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2025, ubuntu-24.04, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
+        with:
+          version: "0.11.12"
+      - run: uv sync --locked --no-default-groups --group shared --group dev
+      - run: rustup toolchain install 1.93.1 --profile minimal --component clippy --component rustfmt
+      - run: uv run --no-sync python scripts/check_owner_tui.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: owner-tui-${{ matrix.os }}
+          path: |
+            tui/target/release/omk-tui
+            tui/target/release/omk-tui.exe
+          if-no-files-found: error
+          retention-days: 7
+
   python:
     name: Python tests and lint
     runs-on: ubuntu-24.04

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "action": "owner.overview",
+  "ok": true,
+  "server_ids": [
+    "dj2"
+  ],
+  "operations": [
+    {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "backups",
+      "server_id": "dj2",
+      "phase": "incomplete",
+      "terminal": false,
+      "backup_operation_id": null
+    },
+    {
+      "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "kind": "maintenance",
+      "server_id": "dj2",
+      "phase": "stopped",
+      "terminal": false,
+      "backup_operation_id": null
+    },
+    {
+      "id": "cccccccccccccccccccccccccccccccc",
+      "kind": "restores",
+      "server_id": "dj2",
+      "phase": "staged",
+      "terminal": true,
+      "backup_operation_id": null
+    }
+  ],
+  "skipped": 0,
+  "truncated": false,
+  "selected_server": "dj2",
+  "metrics_status": "available",
+  "metrics": [
+    {
+      "key": "host_cpu",
+      "value": 12.5,
+      "state": "fresh"
+    },
+    {
+      "key": "host_ram",
+      "value": 61.2,
+      "state": "fresh"
+    },
+    {
+      "key": "host_disk",
+      "value": 47.8,
+      "state": "fresh"
+    },
+    {
+      "key": "game_tps",
+      "value": 19.9,
+      "state": "fresh"
+    },
+    {
+      "key": "game_mspt",
+      "value": 8.3,
+      "state": "fresh"
+    },
+    {
+      "key": "game_players",
+      "value": 3.0,
+      "state": "fresh"
+    }
+  ],
+  "error": null
+}

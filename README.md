@@ -4,6 +4,7 @@
 
 [![Python 3.14](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](pyproject.toml)
 [![Qt 6 · PySide6](https://img.shields.io/badge/Qt_6-PySide6-41CD52?logo=qt&logoColor=white)](launcher/)
+[![Rust · Ratatui](https://img.shields.io/badge/Owner_TUI-Rust_·_Ratatui-DEA584?logo=rust&logoColor=white)](docs/OWNER_TUI.md)
 [![Litestar](https://img.shields.io/badge/API-Litestar-5561D9)](api/)
 [![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](deploy/)
 [![Forge · Minecraft 1.12.2](https://img.shields.io/badge/Forge-Minecraft_1.12.2-6F7E91)](mods/README.md)

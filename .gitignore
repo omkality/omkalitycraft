@@ -54,3 +54,4 @@ omkalitycore/
 userdata/
 .local/
 .omk-admin/
+tui/target/
