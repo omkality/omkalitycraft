@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "issue": 248,
+  "scope": "owner filesystem access checks and dense TPS cells",
+  "accepted": true,
+  "access": {
+    "current_live_owner_directory_and_files": "native NTFS check passed",
+    "isolated_shared_fixture": "accepted before guard, rejected after guard",
+    "native_negative_controls": [
+      "shared_directory",
+      "shared_config",
+      "shared_credential",
+      "shared_destination"
+    ],
+    "refusal_before_transport": true,
+    "posix_controls": [
+      "same_uid",
+      "mode_700_root",
+      "mode_600_secrets",
+      "existing_internal_journals_red_green"
+    ],
+    "privileged_boundary": [
+      "processes under owner OS account",
+      "root",
+      "SYSTEM",
+      "Administrators"
+    ],
+    "remote_vps_ssh_configured": false,
+    "automatic_acl_changes": false
+  },
+  "grid": {
+    "cell_terminal_columns": 1,
+    "cell_terminal_rows": 0.5,
+    "horizontal_stride_columns": 1,
+    "vertical_stride_rows": 0.5,
+    "gutters": 0,
+    "separation": "alternating shades",
+    "minimum_and_gaps_preserved": true,
+    "snapshot_blocks": "exact SVG rectangle geometry",
+    "synthetic_preview": true
+  },
+  "verification": {
+    "windows_unit_passed": 2902,
+    "windows_unit_skipped": 225,
+    "linux_unit_passed": 3122,
+    "linux_unit_skipped": 5,
+    "rust_tests_passed": 10,
+    "clippy": "passed",
+    "release_linux": "passed",
+    "pty": {
+      "ok": true,
+      "checks": [
+        "flat_ore_header_and_alpha_history_visible",
+        "real_square_grid_and_colored_tps_legend",
+        "real_history_window_advances",
+        "background_refresh_remains_fresh",
+        "alpha_real_players_reply",
+        "switch_rebinds_chart_to_beta",
+        "beta_real_forge_tps_reply",
+        "f1_opens_flat_ore_project_card",
+        "escape_closes_card_without_exiting",
+        "save_still_requires_confirmation_and_escape_cancels",
+        "range_picker_escape_preserves_period",
+        "period_5m_real_history",
+        "period_15m_real_history",
+        "period_1h_real_history",
+        "period_3h_real_history",
+        "period_preserved_when_switching_server",
+        "quit_restores_terminal_modes"
+      ],
+      "history_end_advanced_seconds": 5,
+      "point_count": 61,
+      "alpha_min": 19.928613920285546
+    }
+  },
+  "running_services": [
+    {
+      "service": "alpha",
+      "running": true,
+      "restarts": 0,
+      "oom_killed": false
+    },
+    {
+      "service": "beta",
+      "running": true,
+      "restarts": 0,
+      "oom_killed": false
+    },
+    {
+      "service": "prometheus",
+      "running": true,
+      "restarts": 0,
+      "oom_killed": false
+    },
+    {
+      "service": "agent",
+      "running": true,
+      "restarts": 0,
+      "oom_killed": false
+    }
+  ],
+  "limitations": [
+    "OS administrators and same-account processes remain privileged",
+    "remote SSH deployment remains part of the pre-VPS audit",
+    "terminal font geometry assumes a conventional 1:2 cell",
+    "calendar scheduler remains paused"
+  ],
+  "source_hash_basis": "Git index bytes (LF)",
+  "source_sha256": {
+    "omk/admin.py": "7fb76765954dfe2592139c6c4cab7214a747242d6f66217ba5f899df326c6e5e",
+    "omk/owner_access.py": "e7681c5bb5e661fd73ccd02d4ed43f48cc1a7a69399f941e7c6f80ac646acacb",
+    "tests/unit/test_owner_access.py": "d63b3b123ff69d49de4686ee3b820ce31121a2a439907695a3fce729c05d789e",
+    "tui/src/main.rs": "aab222c842659a979a588b3059d076689d71bc74afd7e61cc8658cd640321b26",
+    "tui/src/tps_grid.rs": "76f2ccbb6aa92c4f0f7eca80ac080fcbb08cd0287e36a4d426545c99f35b3f68",
+    "tui/src/tests.rs": "3415bc62c5c4c6a8dceac4ee8e9a441c6b85235c0fba6f51c38ab517aa30ccba"
+  }
+}

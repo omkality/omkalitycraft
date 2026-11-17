@@ -1,3 +1,29 @@
+## Owner: права ОС и плотная сетка TPS — 17 ноября 2026
+
+#248: административный backend требует владельческую границу ОС до чтения config
+и ключей. На Unix — текущий UID, mode 700 приватного корня и mode 600 секретов;
+на Windows — чтение native DACL/owner SID без shell/subprocess и отказ для чужих
+или неизвестных grants. SYSTEM/Administrators и owner rights/наследуемый creator
+owner учитываются явно. Read-path не меняет права. Запись в Windows shared child
+отклоняется до создания временного файла. Положительный Unix-контроль сохраняет
+действующие journals в подпапках закрытого корня с их прежними modes.
+
+Негативные native Windows контроли: общая папка, config, credential и destination;
+команда не доходит до credentials/transport. Настоящий owner config и RCON отвечают.
+Unix проверяет UID и обычный journal workflow. Полные unit suites: Windows
+2902 passed / 225 skipped; Linux с pinned API dependencies 3122 / 5; Ruff/Black.
+Ранний полный Linux проход выявил чрезмерную строгость к внутренним папкам;
+исправление подтверждено отдельным red/green контролем и полным повтором.
+
+По уточнению владельца ячейки графика без широких промежутков: один символ
+содержит две квадратные клетки, соседние клетки различаются оттенками. Сжатие
+сохраняет minimum/gap/zero. SVG preview рисует half-block геометрически, чтобы
+шрифт не добавлял ложных швов. 10 Rust tests/Clippy/release, 17 native PTY условий.
+Доступ привязан к ОС/SSH, не к игровому OP; root/SYSTEM/администраторы и процессы
+в owner account остаются привилегированными. VPS/sshd ещё требуют отдельной
+ручной приёмки; календарный scheduler на паузе, работающие fixtures сохранены.
+[Протокол](validation/owner-access-dense-grid-2026-11-17.json), [доступ](OWNER_TUI.md).
+
 ## TUI: цветная квадратная сетка TPS — 17 ноября 2026
 
 #246, срез #146/#41: по уточнению владельца вместо прежней кривой используется

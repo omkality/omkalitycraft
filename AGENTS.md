@@ -23,6 +23,10 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
   access or direct private journal reads in Rust. Add actions for concrete owner needs.
   Distinguish missing/stale monitoring from zero; confirm mutations and never retry them
   automatically after an uncertain response. Keep the calendar scheduler paused.
+- Reserve administration for the owner's OS/SSH account. Check owner filesystem access
+  before reading operator configuration or credentials, including native Windows DACLs.
+  Keep RCON/monitoring loopback-only and the owner backend outside player-facing APIs.
+  OS root/SYSTEM/Administrators and processes under the owner's account remain trusted.
 - Never commit `.env`, session tokens, keys, account databases, worlds or modpack payloads.
   The user authorized owned mod sources under `mods/`. The old `../omkalitycore` Git history,
   native security lab and raw validation stay private; do not import that directory wholesale.
