@@ -1,4 +1,4 @@
-"""Five-minute TPS history from existing Prometheus; missing points remain gaps."""
+"""Bounded TPS history from existing Prometheus; missing points remain gaps."""
 
 import math
 import time
@@ -10,8 +10,8 @@ from omk.admin import load_operator_config
 from omk.owner_metrics import load_settings, query
 from omk.owner_result import ServerId
 
-WINDOW = 300
 STEP = 5
+WINDOWS = {"5m": (300, 5), "15m": (900, 15), "1h": (3600, 60), "3h": (10800, 180)}
 
 
 class Point(BaseModel):
@@ -29,13 +29,13 @@ class TpsHistory(BaseModel):
     state: Literal["available", "partial", "missing", "disabled", "unavailable"]
     start: int = Field(ge=0)
     end: int = Field(ge=0)
-    step: Literal[5] = STEP
+    step: Literal[5, 15, 60, 180] = STEP
     points: list[Point] = Field(max_length=61)
     error: Literal["invalid_configuration", "history_unavailable"] | None = None
 
 
-def project(rows, settings, server, start, end):
-    values = dict.fromkeys(range(start, end + 1, STEP))
+def project(rows, settings, server, start, end, step=STEP):
+    values = dict.fromkeys(range(start, end + 1, step))
     if len(rows) > 1:
         raise ValueError("Ambiguous TPS history")
     if rows:
@@ -72,10 +72,11 @@ def project(rows, settings, server, start, end):
     return [Point(timestamp=stamp, tps=number) for stamp, number in values.items()]
 
 
-def run(path, server):
+def run(path, server, window="5m"):
+    duration, step = WINDOWS[window]
     end = int(time.time()) // STEP * STEP
-    start = end - WINDOW
-    base = {"server_id": server, "start": start, "end": end}
+    start = end - duration
+    base = {"server_id": server, "start": start, "end": end, "step": step}
     try:
         config = load_operator_config(path)
         if server not in config.servers:
@@ -94,22 +95,24 @@ def run(path, server):
             **base,
             ok=True,
             state="disabled",
-            points=project([], {}, server, start, end),
+            points=project([], {}, server, start, end, step),
         ).model_dump(mode="json")
     try:
         selector = (
             'omk_game_tps{host="' + settings["host"] + '",service="' + server + '"}'
         )
+        # Preserve short drops between the coarse points of a longer window.
+        series = selector if step == 5 else f"min_over_time({selector}[{step}s])"
         expression = (
-            selector
+            series
             + " and (time() - timestamp("
             + selector
             + ") <= 90) and on(job,instance) (up == 1)"
         )
         rows = query(
-            settings, expression, result_type="matrix", start=start, end=end, step=STEP
+            settings, expression, result_type="matrix", start=start, end=end, step=step
         )
-        points = project(rows, settings, server, start, end)
+        points = project(rows, settings, server, start, end, step)
         count = sum(point.tps is not None for point in points)
         state = "available" if count == 61 else "partial" if count else "missing"
         return TpsHistory(**base, ok=True, state=state, points=points).model_dump(

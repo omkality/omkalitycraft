@@ -117,6 +117,45 @@ def test_empty_matrix_is_an_explicit_missing_history(tmp_path):
     assert len(value["points"]) == 61 and all(p["tps"] is None for p in value["points"])
 
 
+@pytest.mark.parametrize("window", ["5m", "15m", "1h", "3h"])
+def test_all_periods_are_bounded_and_long_periods_preserve_interval_minima(
+    tmp_path, monkeypatch, window
+):
+    settings, path = config(tmp_path)
+    monkeypatch.setattr(history.time, "time", lambda: 12002)
+    duration, step = history.WINDOWS[window]
+    start, end = 12000 - duration, 12000
+    payload = json.dumps(
+        {
+            "status": "success",
+            "data": {
+                "resultType": "matrix",
+                "result": [series([[start, "20"], [start + step, "7"], [end, "19"]])],
+            },
+        }
+    ).encode()
+    with endpoint(payload) as (origin, requests):
+        _write_private(
+            settings.private / "tui.json",
+            settings.private,
+            {"schema": 1, "host": "test", "prometheus_origin": origin},
+        )
+        value = history.run(path, "dj2", window)
+    assert value["ok"] and value["state"] == "partial"
+    assert len(value["points"]) == 61 and value["step"] == step
+    assert value["end"] == end and value["end"] - value["start"] == duration
+    assert value["points"][1]["tps"] == 7 and value["points"][2]["tps"] is None
+    params = parse_qs(urlsplit(requests[0]).query)
+    assert params["step"] == [str(step)]
+    if step > 5:
+        assert (
+            "min_over_time(" in params["query"][0]
+            and f"[{step}s]" in params["query"][0]
+        )
+    else:
+        assert "min_over_time(" not in params["query"][0]
+
+
 def test_cli_is_read_only_and_keeps_older_result_contract(tmp_path, capsys):
     _, path = config(tmp_path)
     before = {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}

@@ -1,4 +1,4 @@
-use crate::protocol::{Overview, TpsHistory};
+use crate::protocol::{Overview, TPS_WINDOWS, TpsHistory, TpsWindow};
 use ratatui::{
     Frame,
     layout::{Constraint, Direction, Layout, Rect},
@@ -34,11 +34,13 @@ pub struct App {
     pub history_failed: bool,
     pub about: bool,
     pub branding_header: bool,
+    pub window_index: usize,
+    pub range_picker: Option<usize>,
 }
 
 impl App {
     pub fn new(demo: bool) -> Self {
-        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\n\nОтвет команды появится здесь.\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, scroll: 0, history: None, history_failed: false, about: false, branding_header: false }
+        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\n\nОтвет команды появится здесь.\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, scroll: 0, history: None, history_failed: false, about: false, branding_header: false, window_index: 0, range_picker: None }
     }
     pub fn server(&self) -> Option<&str> {
         self.overview
@@ -46,6 +48,9 @@ impl App {
             .server_ids
             .get(self.selected_server)
             .map(String::as_str)
+    }
+    pub fn window(&self) -> TpsWindow {
+        TPS_WINDOWS[self.window_index]
     }
     pub fn filtered(&self) -> Vec<&crate::protocol::Operation> {
         self.overview
@@ -103,7 +108,10 @@ impl App {
             self.history = None;
         }
         match result {
-            Some(Ok(history)) if Some(history.server_id.as_str()) == self.server() => {
+            Some(Ok(history))
+                if Some(history.server_id.as_str()) == self.server()
+                    && history.step == self.window().step =>
+            {
                 self.history = Some(history);
                 self.history_failed = false;
             }
@@ -305,7 +313,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     };
     frame.render_widget(
         Paragraph::new(format!(
-            " r обновить   ← → сервер   ↑ ↓ операция   F1 проект   q выход  |  {status}"
+            " r обновить   ← → сервер   t период   F1 проект   q выход  |  {status}"
         ))
         .style(
             Style::default().fg(if app.failed || age.is_some_and(|a| a > 20) {
@@ -332,6 +340,29 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
                 .centered()
                 .style(Style::default().fg(TEXT).bg(PANEL)),
             Rect::new(popup.x + 1, popup.y + 19, w - 2, 2),
+        );
+    }
+    if let Some(selected) = app.range_picker {
+        let popup = Rect::new((area.width - 44) / 2, (area.height - 10) / 2, 44, 10);
+        frame.render_widget(Clear, popup);
+        let mut lines = vec![Line::from(" За последнее время:"), Line::from("")];
+        for (i, window) in TPS_WINDOWS.iter().enumerate() {
+            lines.push(Line::styled(
+                format!(
+                    " {} {}",
+                    if selected == i { "›" } else { " " },
+                    window.label
+                ),
+                Style::default().fg(if selected == i { ACCENT } else { TEXT }),
+            ));
+        }
+        lines.extend([
+            Line::from(""),
+            Line::from(" ↑/↓ выбор · Enter применить · Esc отмена"),
+        ]);
+        frame.render_widget(
+            Paragraph::new(lines).block(block(" Период графика TPS ")),
+            popup,
         );
     }
     if let Some(input) = &app.confirm {
@@ -373,13 +404,14 @@ fn render_tps(frame: &mut Frame, app: &App, area: Rect) {
     let history = app
         .history
         .as_ref()
-        .filter(|h| Some(h.server_id.as_str()) == app.server());
+        .filter(|h| Some(h.server_id.as_str()) == app.server() && h.step == app.window().step);
     let stale = app.history_failed
         || app.failed
         || app.refreshed.is_some_and(|t| t.elapsed().as_secs() > 20);
     let title = format!(
-        " TPS · {} · последние 5 минут{} ",
+        " TPS · {} · за {}{} ",
         app.server().unwrap_or("сервер"),
+        app.window().label,
         if stale { " · устарело" } else { "" }
     );
     let segments = history.map(tps_segments).unwrap_or_default();
@@ -403,7 +435,12 @@ fn render_tps(frame: &mut Frame, app: &App, area: Rect) {
         Some(h) => {
             let values = h.points.iter().filter_map(|p| p.tps).collect::<Vec<_>>();
             let min = values.iter().copied().fold(20.0, f64::min);
-            format!("min {min:.1} · {} / 61 точек · шаг 5 с", values.len())
+            format!(
+                "min {min:.1} · {} / 61 точек · {} {} с",
+                values.len(),
+                if h.step == 5 { "шаг" } else { "min за" },
+                h.step
+            )
         }
         None => "История TPS пока недоступна".into(),
     };
@@ -413,10 +450,10 @@ fn render_tps(frame: &mut Frame, app: &App, area: Rect) {
             .block(block(&title))
             .x_axis(
                 Axis::default()
-                    .bounds([-300.0, 0.0])
+                    .bounds([-(app.window().seconds as f64), 0.0])
                     .labels([
-                        "−5 мин",
-                        "−2:30",
+                        app.window().first,
+                        app.window().middle,
                         if stale {
                             "последний ответ"
                         } else {

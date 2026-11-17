@@ -100,6 +100,51 @@ pub struct TpsPoint {
     pub tps: Option<f64>,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct TpsWindow {
+    pub key: &'static str,
+    pub seconds: u64,
+    pub step: u32,
+    pub label: &'static str,
+    pub first: &'static str,
+    pub middle: &'static str,
+}
+
+pub const TPS_WINDOWS: [TpsWindow; 4] = [
+    TpsWindow {
+        key: "5m",
+        seconds: 300,
+        step: 5,
+        label: "5 минут",
+        first: "−5 мин",
+        middle: "−2:30",
+    },
+    TpsWindow {
+        key: "15m",
+        seconds: 900,
+        step: 15,
+        label: "15 минут",
+        first: "−15 мин",
+        middle: "−7:30",
+    },
+    TpsWindow {
+        key: "1h",
+        seconds: 3600,
+        step: 60,
+        label: "1 час",
+        first: "−1 ч",
+        middle: "−30 мин",
+    },
+    TpsWindow {
+        key: "3h",
+        seconds: 10800,
+        step: 180,
+        label: "3 часа",
+        first: "−3 ч",
+        middle: "−1:30 ч",
+    },
+];
+
 #[derive(Clone, Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct TpsHistory {
@@ -117,21 +162,22 @@ pub struct TpsHistory {
 }
 
 impl TpsHistory {
-    pub fn parse(bytes: &[u8], server: &str) -> Result<Self, String> {
+    pub fn parse(bytes: &[u8], server: &str, window: TpsWindow) -> Result<Self, String> {
         let v: Self = serde_json::from_slice(bytes).map_err(|_| "Неверный ответ истории TPS")?;
         let count = v.points.iter().filter(|p| p.tps.is_some()).count();
         let valid = v.schema_version == 1
             && v.action == "owner.tps-history"
             && v.server_id == server
             && valid_server(server)
-            && v.step == 5
-            && v.end.checked_sub(v.start) == Some(300)
+            && TPS_WINDOWS.contains(&window)
+            && v.step == window.step
+            && v.end.checked_sub(v.start) == Some(window.seconds)
             && v.start.is_multiple_of(5)
             && if v.ok {
                 v.error.is_none()
                     && v.points.len() == 61
                     && v.points.iter().enumerate().all(|(i, p)| {
-                        p.timestamp == v.start + i as u64 * 5
+                        p.timestamp == v.start + i as u64 * u64::from(window.step)
                             && p.tps
                                 .is_none_or(|n| n.is_finite() && (0.0..=20.0).contains(&n))
                     })

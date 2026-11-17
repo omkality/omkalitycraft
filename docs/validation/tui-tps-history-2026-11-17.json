@@ -1,12 +1,22 @@
 {
   "schema": 1,
   "date": "2026-11-17",
-  "scope": "five-minute owner TPS chart and flat Mortum header on existing local Forge fixtures",
+  "scope": "bounded owner TPS chart with selectable periods and unlabeled flat ore header on local Forge fixtures",
   "accepted": true,
   "source_branch": "feat/tui-tps-chart",
   "issue": 244,
-  "window_seconds": 300,
-  "step_seconds": 5,
+  "window_seconds": [
+    300,
+    900,
+    3600,
+    10800
+  ],
+  "step_seconds": [
+    5,
+    15,
+    60,
+    180
+  ],
   "point_limit": 61,
   "live_samples": {
     "lab-alpha": {
@@ -34,11 +44,17 @@
       "f1_opens_flat_ore_project_card",
       "escape_closes_card_without_exiting",
       "save_still_requires_confirmation_and_escape_cancels",
+      "range_picker_escape_preserves_period",
+      "period_5m_real_history",
+      "period_15m_real_history",
+      "period_1h_real_history",
+      "period_3h_real_history",
+      "period_preserved_when_switching_server",
       "quit_restores_terminal_modes"
     ],
-    "history_end_advanced_seconds": 5,
+    "history_end_advanced_seconds": 10,
     "point_count": 61,
-    "alpha_min": 19.916351324437365
+    "alpha_min": 19.97019374068554
   },
   "containers": [
     {
@@ -82,12 +98,12 @@
     "ai_redrawn": false
   },
   "verification": {
-    "focused_python_passed": 107,
-    "rust_tests_passed": 8,
+    "focused_python_passed": 111,
+    "rust_tests_passed": 9,
     "clippy": "passed",
     "release_linux": "passed",
     "branding_source_check": "passed",
-    "windows_unit_passed": 2882,
+    "windows_unit_passed": 2886,
     "windows_unit_skipped": 223
   },
   "limitations": [
@@ -98,16 +114,57 @@
     "calendar scheduler remains paused"
   ],
   "source_sha256": {
-    "omk/owner_tps_history.py": "730d992d9a4a46586e211f5fd8ed9cdaff10f0ef17fcfe00127f7578783977d6",
+    "omk/owner_tps_history.py": "628a95ffbe4e2fb5322ad708d7355ebec2f1d80e2a151013617dd03666990c0f",
     "omk/owner_metrics.py": "6638cb4a6ab62b6c24fdc313d800a5536802ff395f22492b36b2d846bfbedfb4",
-    "omk/admin.py": "e7c25ddfef1ad1b125f478b1db2454335baf8f58e7189e8a88ca0a601fc12842",
-    "tui/src/backend.rs": "3f1432c3443d7322c39ff3053088f40c19fa5d925245ebd582531239f25e93d5",
-    "tui/src/main.rs": "e5841335e57538a1f2654d462da71a2029888da4eee1f26f0c725809f9b73183",
-    "tui/src/protocol.rs": "21014be86aa5d5583865465f2c9aae7ad1c5759740a0294f301ebe227f867033",
-    "tui/src/ui.rs": "edcc315f70b2e963eef82c630b7a82cff24c7632469679bb7629f90e1acab22d",
+    "omk/admin.py": "2d2a1ab4aa18e25f554fcc94991a289ddec2aa4d47a78e9939aba75b10568860",
+    "tui/src/backend.rs": "3827a9c7f05d21701065d5223296f2c4d97c829cd4629e77218cabccd5885a52",
+    "tui/src/main.rs": "dbb447bf03eb635d2758ed446e298b91b66d02b1bec49c7f016ad3c2094179d7",
+    "tui/src/protocol.rs": "5407c521579b6fc24f3e2b386e280e74fb36bb331fe2d64a7e5f0d3925bd3c6f",
+    "tui/src/ui.rs": "f0de931f70c6e09eff6ca278e56ecee78a6d4590e1d5d4793879a39f8a16d959",
     "tui/src/branding.rs": "d829fdc0601b40e8d88cf3acc76a8bd3fe3a51c3517c144c770f159af5ceb0b0",
     "tui/src/ore_pixels.rs": "9409dc9461ed43bf09d96fba55d04e02cb1b462997aa8e010e4d7d8222a15ce8",
     "scripts/tui_branding.py": "b747984e42a1e0d7addd051afcdc3424fedb1a5b71b6c77abf29b2b656ae92fe"
   },
-  "source_hash_basis": "Git index bytes (LF)"
+  "source_hash_basis": "Git index bytes (LF)",
+  "periods": {
+    "5m": {
+      "seconds": 300,
+      "step_seconds": 5,
+      "live_state": "available",
+      "live_present_points": 61,
+      "aggregation": "instant"
+    },
+    "15m": {
+      "seconds": 900,
+      "step_seconds": 15,
+      "live_state": "available",
+      "live_present_points": 61,
+      "aggregation": "interval_minimum"
+    },
+    "1h": {
+      "seconds": 3600,
+      "step_seconds": 60,
+      "live_state": "available",
+      "live_present_points": 61,
+      "aggregation": "interval_minimum"
+    },
+    "3h": {
+      "seconds": 10800,
+      "step_seconds": 180,
+      "live_state": "partial",
+      "live_present_points": 30,
+      "aggregation": "interval_minimum"
+    }
+  },
+  "scenario_previews": {
+    "synthetic": true,
+    "renderer": "same Ratatui widgets in isolated local source copy",
+    "scenarios": [
+      "stable_20",
+      "drop_to_6.5_and_recovery",
+      "sustained_8_to_10",
+      "missing_samples_gap"
+    ],
+    "server_workload_changed": false
+  }
 }

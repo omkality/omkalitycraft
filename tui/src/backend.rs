@@ -1,4 +1,4 @@
-use crate::protocol::{ConsoleResult, Overview, TpsHistory, valid_server};
+use crate::protocol::{ConsoleResult, Overview, TpsHistory, TpsWindow, valid_server};
 use std::{
     ffi::OsString,
     fs::File,
@@ -24,7 +24,7 @@ pub struct Backend {
 
 #[derive(Clone, Debug)]
 pub enum Request {
-    Overview(Option<String>),
+    Overview(Option<String>, TpsWindow),
     Console { server: String, command: String },
 }
 #[derive(Debug)]
@@ -122,14 +122,19 @@ impl Backend {
         command
     }
 
-    fn history(&self, server: &str, cancel: &AtomicBool) -> Result<TpsHistory, String> {
+    fn history(
+        &self,
+        server: &str,
+        window: TpsWindow,
+        cancel: &AtomicBool,
+    ) -> Result<TpsHistory, String> {
         if cancel.load(Ordering::Relaxed) {
             return Err("Чтение истории отменено".into());
         }
         let mut command = self.command();
-        command.args(["tps-history", "--server", server]);
+        command.args(["tps-history", "--server", server, "--window", window.key]);
         let (bytes, success) = capture(command, cancel, Duration::from_secs(15))?;
-        let value = TpsHistory::parse(&bytes, server)?;
+        let value = TpsHistory::parse(&bytes, server, window)?;
         if value.ok != success {
             return Err("Exit code истории не совпадает с JSON".into());
         }
@@ -142,7 +147,7 @@ impl Backend {
     pub fn request(&self, request: Request, cancel: Arc<AtomicBool>) -> Result<Reply, String> {
         let mut command = self.command();
         match &request {
-            Request::Overview(server) => {
+            Request::Overview(server, _) => {
                 command.arg("overview");
                 if let Some(server) = server {
                     if !valid_server(server) {
@@ -166,7 +171,7 @@ impl Backend {
         }
         let (bytes, success) = capture(command, &cancel, Duration::from_secs(15))?;
         let (reply, ok) = match request {
-            Request::Overview(server) => {
+            Request::Overview(server, window) => {
                 let value = Overview::parse(&bytes)?;
                 if value.ok && server.is_some() && server != value.selected_server {
                     return Err("Обзор пришёл для другого сервера".into());
@@ -176,7 +181,7 @@ impl Backend {
                     value
                         .selected_server
                         .as_deref()
-                        .map(|id| self.history(id, &cancel))
+                        .map(|id| self.history(id, window, &cancel))
                 } else {
                     None
                 };
