@@ -16,23 +16,42 @@ from omk.logging_runtime import stage_logging_runtime
 from omk.monitoring_config import render
 from omk.owner_console import run as console
 from omk.owner_overview import run as overview
+from omk.project_moderation import initialize
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = "omk-tui-sandbox"
 
 
-def prepare(root, source):
-    root = root.resolve()
-    if root.exists():
-        raise ValueError(
-            "Use the existing fixture config; prepare never overwrites a fixture"
-        )
+def stage_core(runtime, artifact):
+    core = json.loads((ROOT / "mods/forge-1.12.2/versions.json").read_bytes())[
+        "artifacts"
+    ]["core"]
+    if hashlib.sha256(artifact.read_bytes()).hexdigest() != core["sha256"]:
+        raise ValueError("Core artifact differs from the repository pin")
+    shutil.copy2(artifact, runtime / "mods" / core["file"])
+    (runtime / ".omk/core-mods.properties").write_text(
+        "minecraft=1.12.2\nmcp=9.42\nFML=8.0.99.99\nforge=14.23.5.2860\n",
+        encoding="utf-8",
+    )
+
+
+def forge_source(source):
     source = source.resolve(strict=True)
     pin = json.loads((ROOT / "profiles/runtime/forge112-server.json").read_bytes())[
         "forge"
     ]
     if hashlib.sha256((source / pin["path"]).read_bytes()).hexdigest() != pin["sha256"]:
         raise ValueError("Forge source differs from the pinned server runtime")
+    return source, pin
+
+
+def prepare(root, source, core=None):
+    root = root.resolve()
+    if root.exists():
+        raise ValueError(
+            "Use the existing fixture config; prepare never overwrites a fixture"
+        )
+    source, pin = forge_source(source)
     root.mkdir(parents=True, mode=0o700)
     runtime = root / "runtime"
     runtime.mkdir()
@@ -60,6 +79,8 @@ def prepare(root, source):
     ):
         raise ValueError("Exporter pin mismatch")
     (runtime / "mods" / exporter["filename"]).write_bytes(payload)
+    if core is not None:
+        stage_core(runtime, core)
     shutil.copy2(ROOT / "deploy/tui-lab/start.sh", runtime / "start.sh")
     generated = root / "metrics"
     generated.mkdir()
@@ -90,6 +111,7 @@ def prepare(root, source):
         (generated / name).write_text(value, encoding="utf-8", newline="\n")
     private = root / ".omk-admin"
     private.mkdir(mode=0o700)
+    initialize(private)
     entries = ["schema=1"]
     for name, port in (("alpha", 25611), ("beta", 25621)):
         seed = root / name
@@ -170,12 +192,13 @@ def main():
     parser.add_argument("action", choices=["prepare", "up", "status", "stop"])
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--server-source", type=Path)
+    parser.add_argument("--core", type=Path, help="Pinned OmkalityCore JAR for prepare")
     args = parser.parse_args()
     root = args.root.resolve()
     if args.action == "prepare":
         if args.server_source is None:
             parser.error("prepare requires --server-source")
-        prepare(root, args.server_source)
+        prepare(root, args.server_source, args.core)
     elif args.action == "up":
         compose(root, "up", "-d", "--build")
     elif args.action == "status":

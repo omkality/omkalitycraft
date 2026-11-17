@@ -15,22 +15,36 @@ x-game: &game
 services:
   alpha:
     <<: *game
-    environment: {OMK_FIXTURE_PROFILE: alpha}
+    environment:
+      OMK_FIXTURE_PROFILE: alpha
+      OMK_PROJECT_MODERATION_FILE: /project-moderation/restrictions.tsv
     cgroup_parent: omk-tui-alpha
     ports: ["127.0.0.1:${OMK_TUI_ALPHA_PORT:-25610}:25565", "127.0.0.1:${OMK_TUI_ALPHA_RCON:-25611}:25575"]
     volumes:
       - alpha:/data
       - ${OMK_TUI_LAB_ROOT:?Run scripts/tui_sandbox.py prepare}/runtime:/runtime:ro
       - ${OMK_TUI_LAB_ROOT}/alpha:/seed:ro
+      - type: bind
+        source: ${OMK_TUI_LAB_ROOT}/.omk-admin/project-moderation
+        target: /project-moderation
+        read_only: true
+        bind: {create_host_path: false}
   beta:
     <<: *game
-    environment: {OMK_FIXTURE_PROFILE: beta}
+    environment:
+      OMK_FIXTURE_PROFILE: beta
+      OMK_PROJECT_MODERATION_FILE: /project-moderation/restrictions.tsv
     cgroup_parent: omk-tui-beta
     ports: ["127.0.0.1:${OMK_TUI_BETA_PORT:-25620}:25565", "127.0.0.1:${OMK_TUI_BETA_RCON:-25621}:25575"]
     volumes:
       - beta:/data
       - ${OMK_TUI_LAB_ROOT}/runtime:/runtime:ro
       - ${OMK_TUI_LAB_ROOT}/beta:/seed:ro
+      - type: bind
+        source: ${OMK_TUI_LAB_ROOT}/.omk-admin/project-moderation
+        target: /project-moderation
+        read_only: true
+        bind: {create_host_path: false}
   prometheus:
     image: prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06
     restart: unless-stopped

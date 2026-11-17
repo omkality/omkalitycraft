@@ -119,6 +119,12 @@ def _read_json(path: Path, root: Path):
 
 
 def _write_private(path: Path, root: Path, value: dict):
+    _write_private_text(
+        path, root, json.dumps(value, ensure_ascii=False, indent=2) + "\n"
+    )
+
+
+def _write_private_text(path: Path, root: Path, value: str, *, newline=None):
     _private_path(root, str(path.relative_to(root)))
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     _require_private(root, directory=True)
@@ -129,8 +135,8 @@ def _write_private(path: Path, root: Path, value: dict):
     fd, name = tempfile.mkstemp(prefix=".operator-", suffix=".tmp", dir=path.parent)
     temporary = Path(name)
     try:
-        with os.fdopen(fd, "w", encoding="utf-8") as file:
-            file.write(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+        with os.fdopen(fd, "w", encoding="utf-8", newline=newline) as file:
+            file.write(value)
             file.flush()
             os.fsync(file.fileno())
         os.replace(temporary, path)
@@ -309,6 +315,17 @@ def _add_moderation_parser(actions):
     moderation.add_argument("--duration", default="")
     moderation.add_argument("--reason", default="")
     moderation.add_argument("--confirm-ban", action="store_true")
+    project = actions.add_parser("project-moderation", help="Project-wide moderation")
+    project.add_argument(
+        "--command",
+        required=True,
+        dest="moderation_command",
+        choices=["init", "ban", "mute", "unban"],
+    )
+    project.add_argument("--player", default="")
+    project.add_argument("--duration", default="")
+    project.add_argument("--reason", default="")
+    project.add_argument("--confirm-ban", action="store_true")
 
 
 def add_admin_commands(sub):
@@ -448,6 +465,17 @@ def _execute_admin(config, args):
 
 
 def run_admin(args):
+    if args.admin_action == "project-moderation" and args.result_version is None:
+        from omk.project_moderation import run  # noqa: PLC0415
+
+        return run(
+            args.config,
+            args.moderation_command,
+            args.player,
+            duration=args.duration,
+            reason=args.reason,
+            confirmed=args.confirm_ban,
+        )
     if args.admin_action == "moderation" and args.result_version is None:
         from omk.owner_moderation import run  # noqa: PLC0415
 

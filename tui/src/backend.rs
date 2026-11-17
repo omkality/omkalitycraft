@@ -155,10 +155,12 @@ impl Backend {
                 {
                     return Err("Неверная команда модерации".into());
                 }
+                if a.project() {
+                    command.arg("project-moderation");
+                } else {
+                    command.args(["moderation", "--server", &a.server]);
+                }
                 command.args([
-                    "moderation",
-                    "--server",
-                    &a.server,
                     "--command",
                     &a.command,
                     "--player",

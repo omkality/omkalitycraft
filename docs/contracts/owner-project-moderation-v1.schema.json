@@ -1,0 +1,95 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "action": {
+      "const": "owner.project-moderation",
+      "default": "owner.project-moderation",
+      "title": "Action",
+      "type": "string"
+    },
+    "command": {
+      "enum": [
+        "init",
+        "ban",
+        "mute",
+        "unban"
+      ],
+      "title": "Command",
+      "type": "string"
+    },
+    "player": {
+      "maxLength": 16,
+      "title": "Player",
+      "type": "string"
+    },
+    "ok": {
+      "default": false,
+      "title": "Ok",
+      "type": "boolean"
+    },
+    "effect": {
+      "default": "none",
+      "enum": [
+        "none",
+        "applied",
+        "unknown"
+      ],
+      "title": "Effect",
+      "type": "string"
+    },
+    "expires_at": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expires At"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "enum": [
+            "invalid_request",
+            "unavailable",
+            "player_offline",
+            "ambiguous",
+            "not_banned",
+            "already_banned",
+            "inconsistent_servers",
+            "profile_not_found"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error"
+    },
+    "unreachable": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 100,
+      "title": "Unreachable",
+      "type": "array"
+    }
+  },
+  "required": [
+    "command",
+    "player"
+  ],
+  "title": "Result",
+  "type": "object"
+}

@@ -36,7 +36,7 @@ TSDB хранит до 4 h / 256 MB, Docker logs ограничены 2×2 MiB �
 Из checkout с Python environment проекта:
 
 ```console
-uv run --no-sync python scripts/tui_sandbox.py prepare --root /absolute/path/to/.local/tui-sandbox --server-source /absolute/path/to/existing/forge112-server
+uv run --no-sync python scripts/tui_sandbox.py prepare --root /absolute/path/to/.local/tui-sandbox --server-source /absolute/path/to/existing/forge112-server --core /absolute/path/to/OmkalityCore-0.3.12.jar
 uv run --no-sync python scripts/tui_sandbox.py up --root /absolute/path/to/.local/tui-sandbox
 uv run --no-sync python scripts/tui_sandbox.py status --root /absolute/path/to/.local/tui-sandbox
 ```
@@ -45,6 +45,10 @@ uv run --no-sync python scripts/tui_sandbox.py status --root /absolute/path/to/.
 оттуда не копируются. Forge, logging runtime и exporter проверяются по pins.
 Один общий readonly runtime используется двумя играми. `prepare` отказывается
 перезаписывать существующий root и не меняет старые credentials или миры.
+Параметр `--core` подключает модерацию и проверяет JAR по `versions.json`.
+Для уже подготовленного стенда нужно обновить JAR в локальном runtime,
+инициализировать список через `omk admin --config <root>/.omk-admin/operator.toml
+project-moderation --command init` и перезапустить игровые контейнеры с текущим Compose.
 
 TUI подключаем с `--config <root>/.omk-admin/operator.toml`. Секреты RCON остаются
 в этой private папке и seed server.properties. Исходные файлы в Git не содержат

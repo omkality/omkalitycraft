@@ -16,12 +16,27 @@ pub struct Action {
     pub reason: String,
 }
 
+impl Action {
+    pub fn project(&self) -> bool {
+        self.command != "kick"
+    }
+
+    pub fn scope(&self) -> &str {
+        if self.project() {
+            "Весь проект"
+        } else {
+            &self.server
+        }
+    }
+}
+
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct Receipt {
     schema_version: u32,
     action: String,
-    pub server_id: String,
+    server_id: Option<String>,
+    unreachable: Option<Vec<String>>,
     pub command: String,
     pub player: String,
     pub ok: bool,
@@ -32,9 +47,20 @@ pub struct Receipt {
 impl Receipt {
     pub fn parse(bytes: &[u8], request: &Action) -> Result<Self, String> {
         let v: Self = serde_json::from_slice(bytes).map_err(|_| "Неверный ответ модерации")?;
+        let bound = if request.project() {
+            v.action == "owner.project-moderation"
+                && v.server_id.is_none()
+                && v.unreachable.as_ref().is_some_and(|servers| {
+                    servers.len() <= 100
+                        && servers.iter().all(|id| crate::protocol::valid_server(id))
+                })
+        } else {
+            v.action == "owner.moderation"
+                && v.server_id.as_deref() == Some(request.server.as_str())
+                && v.unreachable.is_none()
+        };
         if v.schema_version != 1
-            || v.action != "owner.moderation"
-            || v.server_id != request.server
+            || !bound
             || v.command != request.command
             || v.player != request.player
             || !matches!(v.effect.as_str(), "none" | "applied" | "unknown")
@@ -51,6 +77,9 @@ impl Receipt {
                         | "refused"
                         | "not_banned"
                         | "changed"
+                        | "ambiguous"
+                        | "inconsistent_servers"
+                        | "profile_not_found"
                 )
             })
         {
@@ -60,11 +89,13 @@ impl Receipt {
     }
     pub fn message(&self) -> String {
         format!(
-            "Сервер: {}\nИгрок: {}\nДействие: {}\n\n{}{}",
-            self.server_id,
+            "Область: {}\nИгрок: {}\nДействие: {}\n\n{}{}{}",
+            self.server_id.as_deref().unwrap_or("Весь проект"),
             self.player,
             self.command,
-            if self.ok {
+            if self.ok && self.server_id.is_none() {
+                "Записано в общий список проекта."
+            } else if self.ok {
                 "Сервер подтвердил выполнение."
             } else if self.effect == "unknown" {
                 "Результат неизвестен. Команда могла выполниться. Автоповтора нет."
@@ -77,15 +108,26 @@ impl Receipt {
                     "\nПричина: {}",
                     match e.as_str() {
                         "invalid_request" => "проверьте ник, срок и подтверждение",
-                        "player_offline" => "игрок уже не в сети",
+                        "player_offline" => "игрок не найден среди подключённых",
+                        "ambiguous" => "этот ник соответствует нескольким UUID",
+                        "profile_not_found" => "профиль с таким ником не найден в Drasl",
+                        "inconsistent_servers" =>
+                            "серверы используют разные списки проекта или нуждаются в обновлении",
                         "not_banned" => "у игрока нет бана",
                         "changed" => "бан изменился; проверьте его заново",
                         "already_banned" => "уже есть бан; он сохранён",
-                        "unavailable" => "сервер/Core/RCON недоступен",
+                        "unavailable" => "проверьте общий список и подключение серверов",
                         _ => "сервер отказал",
                     }
                 ))
-                .unwrap_or_default()
+                .unwrap_or_default(),
+            self.unreachable
+                .as_ref()
+                .filter(|ids| !ids.is_empty())
+                .map(|ids| {
+                    format!("\nНе удалось проверить соединение с: {}", ids.join(", "))
+                })
+                .unwrap_or_default(),
         )
     }
 }
@@ -223,8 +265,8 @@ impl Form {
         let cursor = |field| if self.field == field { ">" } else { " " };
         let body = if self.confirming {
             format!(
-                "\nСервер: {}\nИгрок: {}\nБан на: {}\nПричина: {}\n\nВы уверены? Игрок будет отключён.\n\n{}\n\n← → / Tab — выбор · Enter — принять · Esc — отмена",
-                self.action.server,
+                "\nОбласть: {}\nИгрок: {}\nБан на: {}\nПричина: {}\n\n{}\n\n← → / Tab — выбор · Enter — принять · Esc — отмена",
+                self.action.scope(),
                 self.action.player,
                 self.action.duration,
                 self.action.reason,
@@ -236,13 +278,15 @@ impl Form {
             )
         } else if unban {
             format!(
-                "\nСервер: {}\n\n> Ник: {}\n{}\n\nEnter — снять бан · Esc — отмена",
-                self.action.server, self.action.player, self.error
+                "\nОбласть: {}\n\n> Ник: {}\n{}\n\nEnter — снять бан · Esc — отмена",
+                self.action.scope(),
+                self.action.player,
+                self.error
             )
         } else {
             format!(
-                "\n{} · {} (игрок должен быть в сети)\n\n{} Ник: {}\n{}{} Причина: {}\n\n{}\n\nTab / ↑ ↓ — поле · Enter — {} · Esc — отмена",
-                self.action.server,
+                "\n{} · {}\n\n{} Ник: {}\n{}{} Причина: {}\n\n{}\n\nTab / ↑ ↓ — поле · Enter — {} · Esc — отмена",
+                self.action.scope(),
                 self.action.command,
                 cursor(0),
                 self.action.player,
@@ -312,7 +356,7 @@ mod tests {
     fn receipt_is_bound_and_modal_survives_resize() {
         let mut form = Form::new("alpha".into(), "ban");
         form.action.player = "TestPlayer".into();
-        let good = serde_json::json!({"schema_version":1,"action":"owner.moderation","server_id":"alpha","command":"ban","player":"TestPlayer","ok":true,"effect":"applied","expires_at":2000000000_u64,"error":null});
+        let good = serde_json::json!({"schema_version":1,"action":"owner.project-moderation","unreachable":[],"command":"ban","player":"TestPlayer","ok":true,"effect":"applied","expires_at":2000000000_u64,"error":null});
         assert!(Receipt::parse(&serde_json::to_vec(&good).unwrap(), &form.action).is_ok());
         for (key, value) in [
             ("server_id", serde_json::json!("beta")),

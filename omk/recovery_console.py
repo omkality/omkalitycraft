@@ -73,6 +73,7 @@ def command(config, password, text):
         "list omk-recovery version",
         "list omk-maintenance probe",
         "list omk-maintenance operators",
+        "list omk-moderation project",
     } and not any(
         re.fullmatch(pattern, text)
         for pattern in (
