@@ -22,7 +22,8 @@
       "enum": [
         "kick",
         "ban",
-        "mute"
+        "mute",
+        "unban"
       ],
       "title": "Command",
       "type": "string"
@@ -65,7 +66,9 @@
             "player_offline",
             "unavailable",
             "already_banned",
-            "refused"
+            "refused",
+            "not_banned",
+            "changed"
           ],
           "type": "string"
         },

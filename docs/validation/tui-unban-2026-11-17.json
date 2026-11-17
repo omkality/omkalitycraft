@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "issue": 252,
+  "scope": "Offline unban from owner TUI on isolated minimal Forge; not full DJ2/VPS acceptance",
+  "core": {
+    "version": "0.3.11",
+    "sha256": "79ce6bb262cc5e4a2fce7b88ab467b5111d1a117dcac03bfe49ad2ce783064dd",
+    "identical_builds": 2
+  },
+  "python": {
+    "windows": {
+      "passed": 2951,
+      "skipped": 225
+    },
+    "linux": {
+      "passed": 3171,
+      "skipped": 5
+    },
+    "unban_unit_tests": 14,
+    "moderation_unit_tests": 35,
+    "ruff": "passed",
+    "black": "passed"
+  },
+  "rust": {
+    "tests": 15,
+    "clippy_warnings_denied": true,
+    "release_linux": true
+  },
+  "native": [
+    "core_0311_ordinary_chat_and_timed_mute_control",
+    "ban_denies_login_before_early_unban",
+    "offline_case_insensitive_unban_allows_rejoin_before_expiry",
+    "ban_survives_restart_before_unban",
+    "unban_and_control_item_nbt_persist_across_restart",
+    "changed_ban_fingerprint_refuses_stale_unban",
+    "explicit_unban_also_removes_selected_permanent_native_ban",
+    "core_0311_kick_and_normal_rejoin_control",
+    "missing_ban_returns_read_only_not_banned",
+    "all_actors_left_and_game_operator_list_empty"
+  ],
+  "pty": [
+    "unban_form_escape_preserves_ban",
+    "offline_unban_via_u_form_allows_real_protocol_rejoin",
+    "missing_ban_has_clear_refusal_in_tui",
+    "terminal_restored_after_unban"
+  ],
+  "computer_use": false,
+  "mutation_policy": {
+    "local_ban_list_only": true,
+    "online_target_required_for_unban": false,
+    "binding": "UUID, nickname and SHA-256 of the exact native ban entry",
+    "changed_entry": "none/changed; never resend automatically",
+    "lost_lookup": "none/unavailable",
+    "lost_mutation_receipt": "unknown/unavailable; never resend automatically"
+  },
+  "boundaries": {
+    "game_operators": 0,
+    "scheduler": "paused",
+    "item_control": "three diamonds and display-name NBT persist across ban, unban, kick and Java restart",
+    "ordinary_controls": [
+      "chat",
+      "3-second mute expiry",
+      "kick and reconnect"
+    ],
+    "not_tested": [
+      "full DJ2 client/server profile",
+      "production VPS",
+      "graphical Windows keyboard flow for this follow-up"
+    ]
+  }
+}

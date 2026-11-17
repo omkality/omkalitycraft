@@ -40,7 +40,7 @@ impl Receipt {
             || !matches!(v.effect.as_str(), "none" | "applied" | "unknown")
             || v.ok != (v.effect == "applied")
             || v.ok != v.error.is_none()
-            || v.ok && ((v.command == "kick") != v.expires_at.is_none())
+            || v.ok && (matches!(v.command.as_str(), "kick" | "unban") != v.expires_at.is_none())
             || v.error.as_deref().is_some_and(|s| {
                 !matches!(
                     s,
@@ -49,6 +49,8 @@ impl Receipt {
                         | "unavailable"
                         | "already_banned"
                         | "refused"
+                        | "not_banned"
+                        | "changed"
                 )
             })
         {
@@ -76,6 +78,8 @@ impl Receipt {
                     match e.as_str() {
                         "invalid_request" => "проверьте ник, срок и подтверждение",
                         "player_offline" => "игрок уже не в сети",
+                        "not_banned" => "у игрока нет бана",
+                        "changed" => "бан изменился; проверьте его заново",
                         "already_banned" => "уже есть бан; он сохранён",
                         "unavailable" => "сервер/Core/RCON недоступен",
                         _ => "сервер отказал",
@@ -123,7 +127,7 @@ impl Form {
                 server,
                 command: command.into(),
                 player: String::new(),
-                duration: if command == "kick" {
+                duration: if matches!(command, "kick" | "unban") {
                     String::new()
                 } else {
                     "10m".into()
@@ -149,7 +153,11 @@ impl Form {
             }
             return None;
         }
-        let fields = if self.action.command == "kick" { 2 } else { 3 };
+        let fields = match self.action.command.as_str() {
+            "unban" => 1,
+            "kick" => 2,
+            _ => 3,
+        };
         match key {
             KeyCode::Tab | KeyCode::Down => self.field = (self.field + 1) % fields,
             KeyCode::BackTab | KeyCode::Up => self.field = (self.field + fields - 1) % fields,
@@ -163,7 +171,8 @@ impl Form {
                         .all(|b| b.is_ascii_alphanumeric() || b == b'_')
                 {
                     self.error = "Ник: 1–16 латинских букв, цифр или _".into();
-                } else if self.action.command != "kick" && seconds(&self.action.duration).is_none()
+                } else if matches!(self.action.command.as_str(), "ban" | "mute")
+                    && seconds(&self.action.duration).is_none()
                 {
                     self.error = "Срок: 10m, 20h, 1d; от 1s до 365d".into();
                 } else if self.action.command == "ban" {
@@ -191,7 +200,9 @@ impl Form {
     fn input(&mut self) -> &mut String {
         match self.field {
             0 => &mut self.action.player,
-            1 if self.action.command != "kick" => &mut self.action.duration,
+            1 if matches!(self.action.command.as_str(), "ban" | "mute") => {
+                &mut self.action.duration
+            }
             _ => &mut self.action.reason,
         }
     }
@@ -203,6 +214,8 @@ impl Form {
         frame.render_widget(Clear, popup);
         let title = if self.confirming {
             " Бан · Вы уверены? "
+        } else if self.action.command == "unban" {
+            " Разбан игрока "
         } else {
             " Модерация игрока "
         };
@@ -219,6 +232,11 @@ impl Form {
                 } else {
                     "[ Нет, вернуться ]     Да"
                 }
+            )
+        } else if self.action.command == "unban" {
+            format!(
+                "\nСервер: {}\n\n> Ник: {}\n\nРазбан работает и для офлайн-игрока.\nПосле снятия бана игрок сможет снова войти.\n\n{}\n\nEnter — снять бан · Esc — отмена",
+                self.action.server, self.action.player, self.error
             )
         } else {
             format!(
@@ -314,5 +332,18 @@ mod tests {
                 terminal.draw(|frame| form.draw(frame)).unwrap();
             }
         }
+    }
+    #[test]
+    fn unban_needs_only_a_name_and_no_duration_or_ban_confirmation() {
+        let mut form = Form::new("alpha".into(), "unban");
+        assert!(form.action.duration.is_empty());
+        assert!(form.key(KeyCode::Enter).is_none());
+        form.action.player = "OfflinePlayer".into();
+        form.key(KeyCode::Tab);
+        assert_eq!(form.field, 0);
+        let request = form.key(KeyCode::Enter).unwrap();
+        assert_eq!(request.command, "unban");
+        assert!(request.duration.is_empty());
+        assert!(!form.confirming);
     }
 }

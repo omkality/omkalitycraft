@@ -56,7 +56,7 @@ fn options() -> Result<Option<Options>, String> {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / r refresh / t period / F1 project / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / u unban / r refresh / t period / F1 project / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
@@ -371,7 +371,7 @@ fn interactive(
                 }
             } else {
                 match key.code {
-                    KeyCode::Char(c @ ('k' | 'b' | 'm'))
+                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'u'))
                         if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
                     {
                         app.moderation = app.server().map(|s| {
@@ -380,6 +380,7 @@ fn interactive(
                                 match c {
                                     'k' => "kick",
                                     'b' => "ban",
+                                    'u' => "unban",
                                     _ => "mute",
                                 },
                             )
