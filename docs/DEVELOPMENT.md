@@ -1,3 +1,21 @@
+## Материалы portable-выпуска — 17 ноября 2026
+
+#38/#172/#36/#41: сборщик добавляет в ZIP сведения о версии/платформе/runtime,
+инвентарь фактически выбранных Python distributions, исходные wheel notices,
+основные GPL/LGPL тексты и лицензию CPython с pinned source/hash. Рядом создаются
+`.zip.sha256` и `.release.json` с полным файловым инвентарём. Проверка в portable CI
+сверяет сами байты ZIP, затем выполняется прежний настоящий TUF/health smoke.
+Служебные пути и backend/operator/test модули отклоняются; зависимости не берутся
+из всего окружения сборщика, внутренние пути в отчёт не попадают.
+
+Нативные библиотеки без wheel ownership отмечаются для ручной license review;
+материалы не объявлены полной лицензионной приёмкой Qt/всех vendored native частей.
+Публичный Release, production keys, player manifest и сервер этим не меняются.
+По решению владельца общий config-аудит остаётся ручным непосредственно перед VPS;
+TUI не начинается, календарный scheduler на паузе. Локальные тесты используют
+synthetic ZIP/metadata; настоящий bundle проверяется на GitHub в трёх ОС.
+[Контракт](RELEASES.md), [локальный протокол](validation/launcher-release-materials-2026-11-17.json).
+
 ## Portable ZIP через штатный TUF updater — 17 ноября 2026
 
 #38/#172/#36/#41: portable CI на Windows/Linux/macOS проверяет ZIP, созданный
