@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "source_base_commit": "88866a542f3a755ad5fe0d6f7271b287bb13fa8d",
+  "issues": [
+    38,
+    172,
+    36,
+    41
+  ],
+  "launcher_version": "0.3.0.dev15",
+  "local_verification": {
+    "focused_tests_passed": 101,
+    "new_release_material_cases": 21,
+    "ruff_black_diff_check": true,
+    "real_zip_inventory_and_checksum": true,
+    "archive_version_platform_checksum_and_file_hash_mismatch_rejected": true,
+    "missing_license_and_non_player_paths_rejected": true,
+    "embedded_backend_operator_test_modules_rejected_by_analysis": true,
+    "unused_installed_distribution_excluded": true,
+    "unknown_site_package_dependency_rejected": true,
+    "pinned_license_bytes_verified": true,
+    "checksum_is_utf8_lf_on_all_builders": true,
+    "real_installed_metadata_probe": {
+      "selected_source_paths": 12,
+      "matching_record_owners": 14,
+      "notice_references": 35,
+      "all_package_contents_claimed_included": false,
+      "absolute_build_path_disclosed": false,
+      "owned_temporary_files_removed": true
+    }
+  },
+  "materials": [
+    "portable ZIP with release-info/components/notices/licenses",
+    "ZIP.sha256",
+    "basename.release.json"
+  ],
+  "selection": "actual locked PyInstaller Analysis inputs matched to installed wheel RECORD; overlapping owners retained",
+  "license_review_required_before_public_release": true,
+  "native_license_ownership": "unmatched binary destination names are listed for review; ownership not invented",
+  "primary_text_provenance": "scripts/release_licenses/sources.json",
+  "remote_ci": "exact PR head checks; real portable builds/material verification/TUF health startup on Windows, Linux and macOS",
+  "local_containers_started": false,
+  "computer_use_used": false,
+  "local_java_or_qt_started": false,
+  "public_release_created": false,
+  "player_manifest_or_production_keys_changed": false,
+  "game_mod_code_changed": false,
+  "vps_deployed": false,
+  "general_configuration_audit": "deferred to manual owner review immediately before VPS",
+  "calendar_scheduler_resumed": false,
+  "not_proven": [
+    "complete redistribution license acceptance",
+    "public GitHub/CDN availability",
+    "production trust root",
+    "real game/player network acceptance"
+  ]
+}

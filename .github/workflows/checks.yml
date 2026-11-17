@@ -138,4 +138,5 @@ jobs:
       - run: uv sync --locked --all-groups
       - run: uv run --no-sync python scripts/smoke_bundle.py --prepare
       - run: uv run --no-sync python scripts/build_launcher.py --output .local/portable-ci --root-metadata .local/packaging-fixture/repository/metadata/1.root.json --auth-url http://127.0.0.1:9 --api-url http://127.0.0.1:9
+      - run: uv run --no-sync python scripts/release_materials.py --archive .local/portable-ci
       - run: uv run --no-sync python scripts/smoke_bundle.py --archive .local/portable-ci

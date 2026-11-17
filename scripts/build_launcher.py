@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import sys
 import zipfile
+from importlib.metadata import version as installed_version
 from pathlib import Path
 from uuid import uuid4
 
@@ -18,6 +19,13 @@ from launcher.install import current_platform
 from launcher.version import VERSION
 from omk.drasl import DraslClient
 from omk.profiles import PROJECT_ROOT
+from scripts.release_materials import (
+    analysis_entries,
+    json_file,
+    prepare_notices,
+    verify_materials,
+    write_materials,
+)
 
 
 def packaging_icon(source: Path, stage: Path) -> Path:
@@ -152,6 +160,18 @@ def build(
         check=True,
     )
     bundle = output / "OmkalityCraft"
+    entries = analysis_entries(stage / "work/OmkalityCraft/Analysis-00.toc")
+    prepare_notices(bundle, entries)
+    json_file(
+        bundle / "release-info.json",
+        {
+            "schema": 1,
+            "version": version,
+            "platform": current_platform(),
+            "python": "3.14.2",
+            "pyinstaller": installed_version("pyinstaller"),
+        },
+    )
     archive = output / f"OmkalityCraft-{version}-{current_platform()}.zip"
     with zipfile.ZipFile(
         archive, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6
@@ -159,6 +179,8 @@ def build(
         for path in sorted(bundle.rglob("*")):
             if path.is_file():
                 target.write(path, path.relative_to(bundle).as_posix())
+    write_materials(archive, version, current_platform())
+    verify_materials(archive, version, current_platform())
     return archive
 
 
