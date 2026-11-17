@@ -423,6 +423,11 @@ fn snapshot(app: &mut App, path: PathBuf) -> Result<(), String> {
             let cell = &buffer[(x, y)];
             let bg = color(cell.bg, "#0c1015");
             let fg = color(cell.fg, "#dae2eb");
+            if cell.symbol() == "▀" {
+                // Block cells have exact half-row geometry; text fonts can add seams.
+                svg.push_str(&format!("<rect x=\"{}\" y=\"{}\" width=\"12\" height=\"24\" fill=\"{}\"/><rect data-cell=\"upper-half\" x=\"{}\" y=\"{}\" width=\"12\" height=\"12\" fill=\"{}\"/>", x*12, y*24, bg, x*12, y*24, fg));
+                continue;
+            }
             let text = cell
                 .symbol()
                 .replace('&', "&amp;")

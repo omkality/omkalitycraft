@@ -16,6 +16,7 @@ from omk.diagnostic_export import export_bundle
 from omk.diagnostics import BoundedLog, regular
 from omk.drasl import DraslClient, DraslError
 from omk.fs import resolved
+from omk.owner_access import require_private
 from omk.recovery_console import ConsoleConfig
 from omk.report_store import ReportStore
 
@@ -50,8 +51,8 @@ def load_operator_config(path: Path) -> OperatorConfig:
     if path.parent.name != ".omk-admin" or not regular(path, path.parent):
         raise AdminError("Use an explicit configuration file inside .omk-admin")
     private = resolved(path.parent)
-    if os.name != "nt" and private.stat().st_mode & 0o077:
-        raise AdminError("The private operator directory requires mode 700")
+    _require_private(private, directory=True)
+    _require_private(path)
     with path.open("rb") as file:
         raw = file.read(65537)
     if len(raw) > 65536:
@@ -95,13 +96,18 @@ def load_operator_config(path: Path) -> OperatorConfig:
     )
 
 
+def _require_private(path, **options):
+    try:
+        require_private(path, **options)
+    except OSError as error:
+        raise AdminError(str(error)) from None
+
+
 def _read_json(path: Path, root: Path):
     if not regular(path, root):
         raise AdminError("Private operator file is missing or linked")
-    if os.name != "nt" and path.stat().st_mode & 0o077:
-        raise AdminError(
-            "Operator credentials must be readable only by their owner (mode 600)"
-        )
+    _require_private(root, directory=True)
+    _require_private(path, secret=True)
     with path.open("rb") as file:
         data = file.read(65537)
     if len(data) > 65536:
@@ -115,6 +121,11 @@ def _read_json(path: Path, root: Path):
 def _write_private(path: Path, root: Path, value: dict):
     _private_path(root, str(path.relative_to(root)))
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    _require_private(root, directory=True)
+    # A POSIX mode-700 root protects the existing internal journal hierarchy.
+    # NTFS traverse bypass means new files also need a private inheritable DACL.
+    if os.name == "nt" and path.parent != root:
+        _require_private(path.parent, directory=True)
     fd, name = tempfile.mkstemp(prefix=".operator-", suffix=".tmp", dir=path.parent)
     temporary = Path(name)
     try:
