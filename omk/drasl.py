@@ -2,11 +2,13 @@
 
 import base64
 import json
+import re
 import secrets
 from typing import Any
 from urllib.error import HTTPError
 from urllib.parse import urlsplit, urlunsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
+from uuid import UUID
 
 
 class DraslError(RuntimeError):
@@ -113,6 +115,26 @@ class DraslClient:
                 "requestUser": True,
             },
         )
+
+    def game_profile(self, name: str) -> tuple[str, str] | None:
+        """Resolve the registered game profile UUID without a Minecraft connection."""
+        if not re.fullmatch(r"[A-Za-z0-9_]{1,16}", name):
+            raise ValueError("Invalid Minecraft profile name")
+        try:
+            profile = self.request("GET", f"/account/users/profiles/minecraft/{name}")
+        except DraslError as error:
+            if error.status == 404:
+                return None
+            raise
+        if (
+            not isinstance(profile, dict)
+            or not isinstance(profile.get("id"), str)
+            or not re.fullmatch(r"[a-fA-F0-9]{32}", profile["id"])
+            or not isinstance(profile.get("name"), str)
+            or profile["name"].lower() != name.lower()
+        ):
+            raise DraslError(502)
+        return str(UUID(profile["id"])), profile["name"]
 
     def login(self, username: str, password: str) -> dict[str, Any]:
         return self.request(

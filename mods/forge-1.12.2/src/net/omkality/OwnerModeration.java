@@ -13,6 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.omkality.api.CoreServices;
@@ -39,6 +41,10 @@ public final class OwnerModeration {
     private final Method eventSender,eventCommand,eventParameters,commandName,sendMessage;
     private final Method schedule,mainThread,playerList,byId,profile,profileId,profileName;
     private final Method banned,getEntry,addEntry,writeChanges,disconnect,chatPlayer;
+    private final Method players;
+    private final Field eventPlayer;
+    private final ProjectModeration project;
+    private boolean projectReadFailed;
     private final Field connection,banSource;
     private final Method banValues,banExpiry,entryValue,jsonProperty,serializeBan,removeEntry;
     private final Constructor<?> jsonObject;
@@ -55,6 +61,7 @@ public final class OwnerModeration {
         bridge.expireBans();
         MinecraftForge.EVENT_BUS.register(bridge);
         CoreServices.report("core.moderation","enabled");
+        CoreServices.report("core.project_moderation",bridge.project==null?"disabled":"enabled");
     }
     private static Method method(Class<?> type,String srg,String mcp,Class<?>... args) throws Exception {
         try { return type.getMethod(srg,args); }
@@ -62,6 +69,7 @@ public final class OwnerModeration {
     }
     private OwnerModeration(Path config,Logger logger) throws Exception {
         log=logger;
+        project=ProjectModeration.configured();
         store=config.resolve("omkality-owner-mutes.properties");
         server=FMLCommonHandler.class.getMethod("getMinecraftServerInstance").invoke(FMLCommonHandler.instance());
         Class<?> mc=Class.forName("net.minecraft.server.MinecraftServer");
@@ -76,6 +84,8 @@ public final class OwnerModeration {
         mainThread=method(mc,"func_152345_ab","isCallingFromMinecraftThread");
         playerList=method(mc,"func_184103_al","getPlayerList");
         byId=method(list,"func_177451_a","getPlayerByUUID",UUID.class);
+        players=method(list,"func_181057_v","getPlayers");
+        eventPlayer=PlayerEvent.class.getField("player");
         banned=method(list,"func_152608_h","getBannedPlayers");
         getEntry=method(userList,"func_152683_b","getEntry",Object.class);
         addEntry=method(userList,"func_152687_a","addEntry",Class.forName("net.minecraft.server.management.UserListEntry"));
@@ -141,12 +151,48 @@ public final class OwnerModeration {
     }
     @SubscribeEvent
     public void tick(TickEvent.ServerTickEvent event) {
-        if(event.phase!=TickEvent.Phase.END) return;
+        if(event.phase!=TickEvent.Phase.START) return;
         long now=System.currentTimeMillis()/1000;
         if(sweptSecond==now) return;
         sweptSecond=now;
         try { expireBans();sweepFailed=false; }
         catch(Exception error) { if(!sweepFailed) log.error("Owner ban expiry check failed",error);sweepFailed=true; }
+        if(project!=null) refreshProjectPlayers(now);
+    }
+    private void refreshProjectPlayers(long now) {
+        try {
+            project.refresh();
+            projectReadFailed=false;
+        } catch(Exception error) {
+            if(!projectReadFailed) log.error("Project moderation state cannot be refreshed",error);
+            projectReadFailed=true;
+        }
+        try {
+            List<?> online=(List<?>)players.invoke(playerList.invoke(server));
+            for(Object actor:new ArrayList<>(online)) disconnectProjectBan(actor,now);
+        } catch(Exception error) {
+            log.error("Project moderation could not check connected players",error);
+        }
+    }
+    @SubscribeEvent(priority=EventPriority.HIGHEST)
+    public void login(PlayerEvent.PlayerLoggedInEvent event) throws Exception {
+        if(project==null) return;
+        Object actor=eventPlayer.get(event);
+        if(!player.isInstance(actor)) return;
+        try {
+            project.refresh();
+        } catch(Exception error) {
+            disconnect.invoke(connection.get(actor),text.newInstance("[OmkalityCraft] Проверка ограничений недоступна. Попробуйте позже."));
+            return;
+        }
+        disconnectProjectBan(actor,System.currentTimeMillis()/1000);
+    }
+    private UUID identity(Object actor) throws Exception {
+        return (UUID)profileId.invoke(profile.invoke(actor));
+    }
+    private void disconnectProjectBan(Object actor,long now) throws Exception {
+        String reason=project.banReason(identity(actor),now);
+        if(reason!=null) disconnect.invoke(connection.get(actor),text.newInstance("[OmkalityCraft] Бан на проекте: "+reason));
     }
     private void mute(UUID id,long until) throws Exception {
         Map<UUID,Long> next=new HashMap<UUID,Long>(); long now=System.currentTimeMillis()/1000;
@@ -207,6 +253,9 @@ public final class OwnerModeration {
     }
     private String run(String[] a) throws Exception {
         if(!Boolean.TRUE.equals(mainThread.invoke(server))) throw new IllegalStateException("wrong_thread");
+        if(a.length==2 && "project".equals(a[1])) {
+            return project==null?"OMK_PROJECT_MODERATION_DISABLED":"OMK_PROJECT_MODERATION_V1 "+project.refresh();
+        }
         if(a.length==4 && "lookup-ban".equals(a[1])) return lookupBan(a);
         if(a.length!=8 || !a[1].matches("kick|ban|mute|unban") || !a[2].matches("[a-f0-9]{32}") || !a[3].matches("[a-f0-9-]{36}") || !a[4].matches("[A-Za-z0-9_]{1,16}") || !a[5].matches("0|[1-9][0-9]{0,7}") || !a[6].matches("[A-Za-z0-9_-]{1,684}") || !"v1".equals(a[7])) throw new IllegalArgumentException("invalid_request");
         UUID id=UUID.fromString(a[3]);
@@ -265,8 +314,10 @@ public final class OwnerModeration {
         }
     }
     private boolean muted(Object actor) throws Exception {
-        Long until=mutes.get((UUID)profileId.invoke(profile.invoke(actor)));
-        return until!=null && until>System.currentTimeMillis()/1000;
+        UUID id=identity(actor);
+        long now=System.currentTimeMillis()/1000;
+        Long until=mutes.get(id);
+        return (until!=null && until>now) || (project!=null && project.muted(id,now));
     }
     private void feedback(Object actor) throws Exception { sendMessage.invoke(actor,text.newInstance("[OmkalityCraft] Временный мут ещё действует.")); }
     @SubscribeEvent(priority=EventPriority.HIGHEST)

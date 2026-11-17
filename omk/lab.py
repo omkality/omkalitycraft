@@ -76,6 +76,10 @@ def _registration_checks(
     if user["user"]["isAdmin"]:
         raise RuntimeError("A player account received admin privileges")
     passed("player_registration")
+    player = user["user"]["players"][0]
+    if client.game_profile(name) != (player["uuid"], player["name"]):
+        raise RuntimeError("Drasl did not return the registered UUID before game login")
+    passed("registered_profile_resolves_before_first_game_login")
     _expect_denied(
         lambda: client.register("omk_other", secrets.token_urlsafe(24), invite),
         {400, 403},

@@ -299,10 +299,8 @@ fn interactive(
                 } else if let Some(a) = app.moderation.as_mut().and_then(|f| f.key(key.code)) {
                     if let Some(b) = &backend {
                         drop(pending.take()); // Cancel an in-flight read before starting one mutation.
-                        app.message = format!(
-                            "Отправка: {} · {} · {}\nОжидаю подтверждения сервера. Автоповтора нет.",
-                            a.server, a.command, a.player
-                        );
+                        app.message =
+                            format!("Отправка: {} · {} · {}", a.scope(), a.command, a.player);
                         app.failed = false;
                         app.scroll = 0;
                         pending = Some(Pending::start(b.clone(), Request::Moderation(a)));

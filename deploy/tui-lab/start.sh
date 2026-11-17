@@ -4,6 +4,9 @@ set -eu
 mkdir -p mods config .java .fixture
 cp /runtime/mods/*.jar mods/
 cp /seed/exporter.cfg config/prometheus_exporter.cfg
+if [ -f /runtime/.omk/core-mods.properties ] && [ ! -f config/omkalitycore-mods.properties ]; then
+  cp /runtime/.omk/core-mods.properties config/omkalitycore-mods.properties
+fi
 if [ ! -f server.properties ]; then cp /seed/server.properties server.properties; fi
 printf 'eula=true\n' > eula.txt
 
