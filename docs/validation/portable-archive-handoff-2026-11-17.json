@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "source_base_commit": "a8552485bfa2c545d4d1363b757c3ba94912bd59",
+  "issues": [
+    38,
+    172,
+    36,
+    41
+  ],
+  "launcher_version": "0.3.0.dev15",
+  "local_verification": {
+    "focused_tests_passed": 79,
+    "focused_tests_skipped": 0,
+    "new_archive_cases": 8,
+    "real_tuf_signatures_http_download_and_extraction": true,
+    "real_updater_health_and_activation_logic": true,
+    "child_process_startup": "synthetic Popen callback; no local executable or Qt startup",
+    "directory_only_control_accepts_incomplete_zip": true,
+    "archive_control_rejects_missing_runtime": true,
+    "corrupt_zip_and_missing_entrypoint_rejected_before_child": true,
+    "early_exit_and_wrong_nonce_rejected": true,
+    "owned_child_terminated_and_reaped_including_timeout": true,
+    "source_archive_build_and_fixture_bytes_preserved": true,
+    "owned_temporary_portable_roots_removed": true,
+    "ruff_black_diff_check": true
+  },
+  "remote_ci": {
+    "workflow": ".github/workflows/checks.yml",
+    "platforms": [
+      "windows-2025",
+      "ubuntu-24.04",
+      "macos-15"
+    ],
+    "check": "actual built ZIP through loopback TUF and real packaged offscreen Qt health-handoff",
+    "result_reference": "exact PR head check-runs, separate from this local proof"
+  },
+  "local_containers_started": false,
+  "computer_use_used": false,
+  "local_java_or_gui_started": false,
+  "public_launcher_release_created": false,
+  "production_trust_or_player_manifest_changed": false,
+  "game_mod_code_changed": false,
+  "vps_deployed": false,
+  "calendar_scheduler_resumed": false,
+  "not_proven": [
+    "public GitHub/CDN availability",
+    "production trust root",
+    "OS code signing",
+    "real game or player-network acceptance"
+  ]
+}
