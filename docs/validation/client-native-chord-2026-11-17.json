@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "outcome": "not_accepted_native_crash",
+  "issues": [191, 163],
+  "scope": "Isolated Windows client controls; no loaded world or dedicated Forge server",
+  "candidate": {
+    "version": "2.23.4-omk.6-rc.1",
+    "manifest_digest": "4865d91cfadfe39c32d487f0f10cc1f56dc948d1592727560ded38fd4e2ba9b0",
+    "signed_files_verified_before_first_start": 5971,
+    "signed_mod_jars": 226,
+    "immutable_files_verified_after_crash": 586,
+    "immutable_prefixes": ["mods/", "runtime/", "agent/", "libraries/", "scripts/"],
+    "immutable_hashes_unchanged": true,
+    "client_version": "0.1.7",
+    "client_sha256": "dad554d3f466841a6e1fbcf69007f408115c5958a891dcdaefea92ba1c59a7b1",
+    "diagnostic_overlay": "MCMCP 2026.11.02",
+    "overlay_sha256": "e2c3cb80c6e45a11c7e2835b46e0183bf0e5f5f15ca1c3acef5f4fe02818e182",
+    "java": "Eclipse Temurin JRE 1.8.0_472-b08, Windows amd64",
+    "java_exe_sha256": "026ad62d9425698ba813a2ce18947165e068047deacf52bccf988f44583441dc",
+    "openal64_sha256": "9261b66010a845ddef9f61d5e4266fe2f08a53f3605da002e9e8f8d202bdbc5e"
+  },
+  "execution": {
+    "first_start_fresh_profile": true,
+    "first_start_exit_without_options": 0,
+    "second_start_same_profile": true,
+    "real_temporary_drasl": true,
+    "authentication_origin": "loopback, ephemeral account",
+    "multiplayer_connection_tested": false,
+    "loaded_world": false,
+    "saves_entries": 0,
+    "input_lock": false,
+    "sound_disabled": false,
+    "physical_human_keyboard_tested": false,
+    "cu_window_capture": "timed out; fresh window selection retry also timed out",
+    "cu_window_accessibility": "available without screenshot",
+    "screen_observation": "MCP game screenshots",
+    "input": "Computer Use sky.press_key Shift_L+Home through Windows SendInput",
+    "raw_modifier_hold_attempt": "MCP refused at main menu before state change; requires a loaded world"
+  },
+  "keybindings": {
+    "baseline_snapshot": "native GameSettings save through MCP show_subtitles false to true, before binding edit",
+    "baseline_count": 282,
+    "after_input_count": 282,
+    "only_changed_entry": {
+      "id": "roots.keybinds.pouch",
+      "before": "0",
+      "after": "199",
+      "screen_and_runtime": "HOME"
+    },
+    "unchanged_entries": 281,
+    "roots_library": "24:SHIFT",
+    "betterquesting": "37",
+    "original_disabled_bindings_unchanged": true,
+    "new_shift_chord_created": false,
+    "new_shift_chord_restart_persistence_accepted": false
+  },
+  "native_exit": {
+    "exit_code_decimal": 3221225477,
+    "exit_code_hex": "0xC0000005",
+    "windows_event": 1000,
+    "time_utc": "2026-11-17T03:03:46Z",
+    "fault_module": "OpenAL64.dll",
+    "offset": "0x20ddd",
+    "matches_historical_issue_163_fault_site": true,
+    "root_cause_known": false,
+    "hs_err_present": false,
+    "local_launcher_incident": true,
+    "crash_assistant_observed": true
+  },
+  "harness_limitations": [
+    "First private driver incorrectly compared mutable configs/resources against installation hashes on restart; recorded as a failed harness condition, then scoped to immutable runtime. No product code changed.",
+    "The second client crashed before a repeat launch; this is not a passing modifier/persistence acceptance.",
+    "Diagnostic MCP overlay and automated Windows input do not replace human hardware or ordinary multiplayer controls."
+  ],
+  "preservation": {
+    "private_zip_files": 37,
+    "private_zip_bytes": 654361,
+    "private_zip_sha256": "670c5a3dd66a0caf3b4016f84bc2756d8be9eae820bca31510e088083849339f",
+    "seven_zip_test_passed": true,
+    "all_member_sha256_match": true,
+    "public_raw_logs_screenshots_sessions": false
+  },
+  "cleanup": {
+    "temporary_drasl_removed": true,
+    "temporary_mcp_permissions_removed": true,
+    "owned_crash_assistant_closed": true,
+    "no_owned_game_windows_or_java_left": true,
+    "existing_service_identity_start_time_health_unchanged": true,
+    "temporary_client_session_export_removed": false,
+    "filesystem_cleanup_rejected": "blocked by policy",
+    "rejected_cleanup_retried": false
+  },
+  "gameplay_or_runtime_code_changed": false,
+  "release_player_manifest_vps_changed": false,
+  "scheduler_remains_paused": true,
+  "remaining": [
+    "Physical keyboard creation of a new Shift combination and saved mapping after restart (#191)",
+    "Root cause and isolated comparison for native OpenAL crash (#163)"
+  ]
+}
