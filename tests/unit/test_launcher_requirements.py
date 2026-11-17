@@ -63,6 +63,8 @@ def requirements(tmp_path):
         ("0.3.0.dev9", "0.3.0.dev9", True),
         ("0.3.0.dev9", "0.3.0.dev10", True),
         ("0.3.0.dev10", "0.3.0.dev9", False),
+        ("0.3.0.dev15", "0.3.0.dev14", False),
+        ("0.3.0.dev15", "0.3.0.dev15", True),
         ("0.3.0", "0.3.0.dev10", False),
         ("0.3.0rc1", "0.3.0", True),
     ],

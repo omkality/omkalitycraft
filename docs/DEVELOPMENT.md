@@ -1,3 +1,20 @@
+## Минимальная версия для исправленного Installer — 17 ноября 2026
+
+#38/#229/#41: версия исходников/упаковки/lock согласована как `0.3.0.dev15`.
+Существующий pack CLI теперь по умолчанию подписывает minimum dev15; для case-only
+путей и возврата указан этот floor. Старые signed manifests, явный override для
+совместимых выпусков и доверенные ключи прежние. Новых runtime/GUI веток нет.
+Сначала требуется проверенный portable/TUF выпуск, затем pack promotion.
+56 focused requirements/Installer passed и 101 updates/ReleaseStore passed на
+Windows; восемь platform/FS skips. Offline lock check подтвердил прежние 73 внешних
+пакета, Ruff/Black/diff check прошли. Настоящий CLI подписал минимум dev15;
+изолированный код dev14 из 87732e8 отказал в HTTP/install/game-start до artifacts
+и изменения личного дерева. Новый reader установил четыре synthetic файла,
+повтор не скачивал; подмена floor отвергнута. Java/GUI/контейнеры не запускались,
+временные keys/source/install folders удалены. [Протокол](validation/launcher-dev15-floor-2026-11-17.json).
+Публичный Release/live/VPS не переключены, календарный scheduler на паузе.
+[Порядок публикации](RELEASES.md).
+
 ## Linux/WSLg: модели плиток и рецепт пазла — 17 ноября 2026
 
 #181/#49/#41: реальный Linux-клиент с отдельными pinned Java 8/native libraries
