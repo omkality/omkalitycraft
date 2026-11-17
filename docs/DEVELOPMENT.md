@@ -1,3 +1,33 @@
+## Rust TUI: первый срез владельца — 17 ноября 2026
+
+По новому запросу владельца начинаем TUI (#240); прежние записи «позже» ниже
+описывают решение на их дату. Реализация в `tui/`: Ratatui/Crossterm, явные
+ограниченные subprocess argv в Python, без второго execution backend.
+Приоритет владельца — базовые команды и нагрузка игры/хоста. Из существующего
+Prometheus читаем CPU/RAM/диск Linux Docker host, TPS/mean tick/онлайн сервера;
+missing/stale/duplicate/NaN не превращаются в ноль. CLI обзор не читает миры и
+ограничивает scan/live records; фаза workflow не объявляется готовностью игры.
+
+`list uuids`, `forge tps`, подтверждённый `save-all flush` используют прежний
+loopback RCON transport с фиксированным allowlist. Lost reply save имеет unknown
+effect и не повторяется. По запросу владельца поднят отдельный minimal Forge
+1.12.2/exporter и реальный Prometheus/Telegraf; это UI/transport fixture, не
+приёмка DJ2/Drasl. На локальном Docker Desktop host metrics относятся к Linux VM.
+
+Локально: 92 focused Python tests, полный Windows unit suite 2865 passed /
+223 skipped, Ruff/Black; Rust 6 tests с реальным Python CLI, timeout/output/exit,
+контрактами и resize, clippy и release build на Linux. Для Windows/macOS добавлены
+native CI jobs и семидневные binary artifacts; результаты CI проверяются отдельно.
+Контейнерный/PTY этап завершён: 7 native + 8 keyboard/lifecycle условий;
+после остановки exporter игровые значения missing, Forge exit0 / OOM=false.
+Native Windows CI binary прочитал настоящий backend и сохранил SVG widgets.
+5 новых миров / 108 файлов сохранены через проверенный 7-Zip; свои Docker scopes
+убраны. Удаление пяти seed-каталогов отклонено автоматической проверкой,
+379837845 bytes оставлены. [Обезличенный протокол](validation/owner-tui-2026-11-17.json).
+[Запуск и границы](OWNER_TUI.md). Maintenance controls/история/JVM/cgroup UI пока
+следующие срезы; календарный scheduler остаётся на паузе. Ручной аудит перед VPS
+не заменяется этим интерфейсом.
+
 ## Linux: BetterQuesting пазла — 17 ноября 2026
 
 #181/#49/#41: исходное задание814 принято в свежем Linux/WSLg singleplayer.

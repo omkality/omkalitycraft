@@ -1,5 +1,19 @@
 # Журнал изменений
 
+## Не выпущено — первый Rust TUI владельца
+
+- Обзор нагрузки Linux Docker host и Minecraft через существующий Prometheus:
+  CPU/RAM/диск, TPS/средний tick/игроки; отсутствующие/устаревшие данные подписаны.
+- Клавиши для списка игроков, Forge TPS и save-all flush с явным подтверждением;
+  нет автоматического повтора команды после timeout/неизвестного ответа.
+- Выбор allowlisted сервера, последние live backup/maintenance/restore операции,
+  обновление в фоне, прокрутка консольного ответа, помощь при маленьком терминале.
+- Типизированный Python обзор/console bridge, Rust subprocess limits и native CI
+  для трёх ОС. [Запуск и ограничения](docs/OWNER_TUI.md). Scheduler не возобновлён.
+- Реальный minimal Forge/exporter/Prometheus/Telegraf, 8 keyboard/PTY сценариев,
+  штатная остановка и missing после выключения exporter приняты в отдельном
+  стенде. [Протокол](docs/validation/owner-tui-2026-11-17.json); это не DJ2/VPS acceptance.
+
 ## Не выпущено — BetterQuesting пазла на Linux
 
 - Нативно проверено задание814: пустой ящик не засчитывается, коробка из обычного

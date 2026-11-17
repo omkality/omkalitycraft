@@ -18,8 +18,11 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
   Do not claim that portable files are encrypted or protected from the user's own processes.
 - Python owns launcher/API/operations; version-specific Forge integration uses adapters and Java as needed.
   Use FTB/ServerUtilities for claims and available commands. Keep pack logic outside GUI code.
-- Keep the owner CLI small. Reuse typed internal services for automation and the future Rust TUI;
-  add CLI actions only for concrete operator or recovery needs. The TUI itself is later work.
+- Keep the owner CLI small. Rust TUI is a client of typed Python services, not a second
+  execution backend. Use bounded explicit argv subprocesses; no shell strings, Docker
+  access or direct private journal reads in Rust. Add actions for concrete owner needs.
+  Distinguish missing/stale monitoring from zero; confirm mutations and never retry them
+  automatically after an uncertain response. Keep the calendar scheduler paused.
 - Never commit `.env`, session tokens, keys, account databases, worlds or modpack payloads.
   The user authorized owned mod sources under `mods/`. The old `../omkalitycore` Git history,
   native security lab and raw validation stay private; do not import that directory wholesale.

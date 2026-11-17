@@ -1,0 +1,136 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "source_head": "9f663b56715ecc509afa3a704dfb95defc9695d1",
+  "scope": "first Rust owner TUI over Python services; isolated minimal Forge 1.12.2 and real pinned monitoring",
+  "accepted": true,
+  "gameplay_code_changed": false,
+  "scheduler_resumed": false,
+  "docker_checks": [
+    "real_forge_started_with_pinned_exporter",
+    "real_rcon_players_response",
+    "real_rcon_tps_response",
+    "real_rcon_save_response",
+    "six_fresh_real_game_and_linux_vm_metrics",
+    "clean_forge_shutdown_without_oom",
+    "stopped_exporter_is_missing_not_zero"
+  ],
+  "pty_checks": [
+    "native_pty_opens_real_backend",
+    "players_key_reaches_real_forge",
+    "tps_key_responds",
+    "wrong_confirmation_does_not_save",
+    "escape_cancels_dialog_without_exiting",
+    "confirmed_save_reaches_real_forge_once",
+    "automatic_refresh_does_not_repeat_save",
+    "quit_restores_terminal_modes"
+  ],
+  "game_exit_code": 0,
+  "game_oom_killed": false,
+  "initial_fresh_metrics": [
+    {
+      "key": "host_cpu",
+      "value": 0.22881658924917758,
+      "state": "fresh"
+    },
+    {
+      "key": "host_ram",
+      "value": 7.593489169383137,
+      "state": "fresh"
+    },
+    {
+      "key": "host_disk",
+      "value": 12.092212545851924,
+      "state": "fresh"
+    },
+    {
+      "key": "game_tps",
+      "value": 12.964,
+      "state": "fresh"
+    },
+    {
+      "key": "game_mspt",
+      "value": 0.24902565999999987,
+      "state": "fresh"
+    },
+    {
+      "key": "game_players",
+      "value": 0.0,
+      "state": "fresh"
+    }
+  ],
+  "stopped_exporter_metrics": [
+    {
+      "key": "host_cpu",
+      "value": 0.799543118297521,
+      "state": "fresh"
+    },
+    {
+      "key": "host_ram",
+      "value": 5.723253783227387,
+      "state": "fresh"
+    },
+    {
+      "key": "host_disk",
+      "value": 12.092204562293233,
+      "state": "fresh"
+    },
+    {
+      "key": "game_tps",
+      "value": null,
+      "state": "missing"
+    },
+    {
+      "key": "game_mspt",
+      "value": null,
+      "state": "missing"
+    },
+    {
+      "key": "game_players",
+      "value": null,
+      "state": "missing"
+    }
+  ],
+  "local_verification": {
+    "windows_python_unit_passed": 2865,
+    "windows_python_unit_skipped": 223,
+    "focused_python_passed": 92,
+    "linux_rust_tests_passed": 6,
+    "rust_clippy": "passed",
+    "rust_release": "passed",
+    "ruff_black": "passed",
+    "windows_native_exe_real_cli_snapshot": "passed",
+    "windows_exe_sha256": "fd59b13d20cdf88e3cf18f041f66d9731441c734c8369528bdaca0c91561e813"
+  },
+  "limits": [
+    "minimal Forge fixture is not DJ2/Drasl/multiplayer/VPS acceptance",
+    "host metrics are Docker Desktop Linux VM, not physical Windows",
+    "initial rate window and local VM scheduling are not a server performance benchmark",
+    "Windows native binary checked with real backend and TestBackend SVG; native interactive terminal tested on Linux PTY",
+    "maintenance buttons, JVM/cgroup cards and history remain future work"
+  ],
+  "lab_diagnostics": [
+    "initial internal-only network refused published loopback RCON; diagnostic network corrected",
+    "raw Telegraf fixture lacked correct filesystem probe; switched to repository agent image and restricted proc mounts",
+    "SIGTERM cleanup gave exit143; final fresh run uses existing maintenance stop and confirmed exit0"
+  ],
+  "cleanup": {
+    "owned_containers_networks_volumes_removed": true,
+    "preexisting_vegas_container_still_healthy": true,
+    "world_files_preserved": 108,
+    "world_archive_bytes": 580832,
+    "world_archive_sha256": "3bea891b5539f2f66da5c9d83aa75a6317c181766984492cca43690eb2754306",
+    "seed_cleanup": "automatic approval review rejected recursive deletion: blocked by policy",
+    "seed_bytes_retained": 379837845
+  },
+  "source_sha256": {
+    "tui/src/main.rs": "eb1c3806458855e69804fd71c7e69e74eed86bafb8d8ba1bd6fee29cc73635ae",
+    "tui/src/backend.rs": "44d882e39850abd85b923f9e45cf98da2b77e08afe05e40d23343ef1c79f1a14",
+    "tui/src/protocol.rs": "9238b889da6b237c4572417afb2d3b4521268ffd80c212f3539918630e72da52",
+    "tui/src/ui.rs": "01be31473f31c4e2e00870f1b40ce1808e6a4d4609c7abb4c1bebfe9a586f21f",
+    "tui/Cargo.lock": "a7d6f5b971a7a6052d390a8e5e10bea8d8e92f577ce54166840bc9dc9342a6a9",
+    "omk/owner_overview.py": "e0d2d37d7f67f5bf770ce64ccb133ae5a5a6b305d5e1032f9b1de36e48b94d07",
+    "omk/owner_console.py": "e0a4ffeb73aa3d3f3af3d940167c5c44aec1c76c4d2d38950954ad0585e58571",
+    "omk/owner_metrics.py": "5035c5fd40b0c314d4ec8afad8fdeea9a0b554ca063c0c77082cd3024f994376"
+  }
+}

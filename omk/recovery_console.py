@@ -68,6 +68,8 @@ def command(config, password, text):
     # Fixed owner operations only; no arbitrary RCON text or player message.
     if text not in {
         "list uuids",
+        "forge tps",
+        "save-all flush",
         "list omk-recovery version",
         "list omk-maintenance probe",
         "list omk-maintenance operators",
