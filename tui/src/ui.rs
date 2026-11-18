@@ -26,6 +26,7 @@ pub struct App {
     pub demo: bool,
     pub confirm: Option<String>,
     pub moderation: Option<crate::moderation::Form>,
+    pub world_reset: Option<crate::world_reset::Form>,
     pub scroll: u16,
     pub history: Option<TpsHistory>,
     pub history_failed: bool,
@@ -37,7 +38,7 @@ pub struct App {
 
 impl App {
     pub fn new(demo: bool) -> Self {
-        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m  Кик / бан / мут игрока\nu  Разбан (можно офлайн)\n\nОтвет команды появится здесь.\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, scroll: 0, history: None, history_failed: false, about: false, branding_header: false, window_index: 0, range_picker: None }
+        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\nw  Вайп ресурсного мира\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, about: false, branding_header: false, window_index: 0, range_picker: None }
     }
     pub fn server(&self) -> Option<&str> {
         self.overview
@@ -290,7 +291,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         Paragraph::new(app.message.as_str())
             .scroll((app.scroll, 0))
             .style(Style::default().fg(if app.failed { WARN } else { TEXT }))
-            .block(block(" Команды · 1 игроки / 2 TPS / 3 save · k/b/m/u "))
+            .block(block(" Команды · 1/2/3 · k/b/m/u · w вайп "))
             .wrap(Wrap { trim: false }),
         body[1],
     );
@@ -363,6 +364,9 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         );
     }
     if let Some(form) = &app.moderation {
+        form.draw(frame);
+    }
+    if let Some(form) = &app.world_reset {
         form.draw(frame);
     }
     if let Some(input) = &app.confirm {

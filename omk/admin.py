@@ -302,7 +302,7 @@ def _add_tps_history_parser(actions):
     history.add_argument("--window", choices=("5m", "15m", "1h", "3h"), default="5m")
 
 
-def _add_moderation_parser(actions):
+def _add_tui_operation_parsers(actions):
     moderation = actions.add_parser("moderation", help="Owner online-player moderation")
     moderation.add_argument("--server", required=True, type=_console_server)
     moderation.add_argument(
@@ -326,6 +326,17 @@ def _add_moderation_parser(actions):
     project.add_argument("--duration", default="")
     project.add_argument("--reason", default="")
     project.add_argument("--confirm-ban", action="store_true")
+    world_reset = actions.add_parser(
+        "world-reset", help="Manual staged resource-world reset for the owner TUI"
+    )
+    world_reset.add_argument("--server", type=_console_server, required=True)
+    world_reset.add_argument(
+        "--command",
+        dest="world_reset_command",
+        choices=("inspect", "prepare", "apply", "start"),
+        required=True,
+    )
+    world_reset.add_argument("--confirm", default="")
 
 
 def add_admin_commands(sub):
@@ -364,7 +375,7 @@ def add_admin_commands(sub):
         choices=["players", "tps", "save"],
     )
     console.add_argument("--confirm-save", action="store_true")
-    _add_moderation_parser(actions)
+    _add_tui_operation_parsers(actions)
     add_recovery_parser(actions)
     add_backup_parser(actions)
     add_maintenance_parser(actions)
@@ -465,6 +476,10 @@ def _execute_admin(config, args):
 
 
 def run_admin(args):
+    if args.admin_action == "world-reset" and args.result_version is None:
+        from omk.owner_world_reset import run  # noqa: PLC0415
+
+        return run(args.config, args.server, args.world_reset_command, args.confirm)
     if args.admin_action == "project-moderation" and args.result_version is None:
         from omk.project_moderation import run  # noqa: PLC0415
 

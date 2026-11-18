@@ -5,6 +5,7 @@ mod protocol;
 mod startup;
 mod tps_grid;
 mod ui;
+mod world_reset;
 
 use backend::{Backend, Reply, Request};
 use ratatui::{
@@ -113,10 +114,13 @@ struct Pending {
     receiver: mpsc::Receiver<Result<Reply, String>>,
     handle: Option<thread::JoinHandle<()>>,
     mutating: bool,
+    resetting: bool,
 }
 impl Pending {
     fn start(backend: Backend, request: Request) -> Self {
-        let mutating = matches!(&request, Request::Console { command, .. } if command == "save")
+        let resetting = matches!(&request, Request::WorldReset(_));
+        let mutating = matches!(&request, Request::WorldReset(a) if a.mutating())
+            || matches!(&request, Request::Console { command, .. } if command == "save")
             || matches!(&request, Request::Moderation(_));
         let cancel = Arc::new(AtomicBool::new(false));
         let c = cancel.clone();
@@ -129,6 +133,7 @@ impl Pending {
             receiver,
             handle: Some(handle),
             mutating,
+            resetting,
         }
     }
 }
@@ -224,6 +229,11 @@ fn interactive(
                             app.scroll = 0;
                             app.message = v.message();
                         }
+                        Ok(Reply::WorldReset(v)) => {
+                            app.failed = !v.ok;
+                            app.message = "w — состояние ресурсного мира".into();
+                            app.world_reset = Some(world_reset::Form::new(v));
+                        }
                         Ok(Reply::Console(v)) => {
                             app.scroll = 0;
                             app.failed = !v.ok;
@@ -275,6 +285,29 @@ fn interactive(
             && let Event::Key(key) = event::read()?
         {
             if key.kind != KeyEventKind::Press {
+                continue;
+            }
+            if pending.as_ref().is_some_and(|work| work.resetting) {
+                continue;
+            }
+            if let Some(form) = &mut app.world_reset {
+                if key.code == KeyCode::Esc {
+                    app.world_reset = None;
+                } else if let Some(action) = form.key(key.code) {
+                    app.message = if action.mutating() {
+                        "Выполняется этап вайпа. Терминал покажет результат после завершения."
+                            .into()
+                    } else {
+                        "Читается состояние ресурсного мира…".into()
+                    };
+                    app.world_reset = None;
+                    request = Some(Request::WorldReset(action));
+                }
+                if let (Some(b), Some(request)) = (&backend, request) {
+                    drop(pending.take());
+                    pending = Some(Pending::start(b.clone(), request));
+                    next_refresh = Instant::now() + Duration::from_secs(5);
+                }
                 continue;
             }
             if key.code == KeyCode::F(1)
@@ -369,6 +402,20 @@ fn interactive(
                 }
             } else {
                 match key.code {
+                    KeyCode::Char('w')
+                        if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
+                    {
+                        if let (Some(b), Some(server)) = (&backend, app.server()) {
+                            drop(pending.take());
+                            pending = Some(Pending::start(
+                                b.clone(),
+                                Request::WorldReset(world_reset::Request::inspect(
+                                    server.to_owned(),
+                                )),
+                            ));
+                            next_refresh = Instant::now() + Duration::from_secs(5);
+                        }
+                    }
                     KeyCode::Char(c @ ('k' | 'b' | 'm' | 'u'))
                         if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
                     {
@@ -434,6 +481,7 @@ fn interactive(
             && app.confirm.is_none()
             && app.range_picker.is_none()
             && app.moderation.is_none()
+            && app.world_reset.is_none()
             && Instant::now() >= next_refresh
         {
             request = Some(Request::Overview(

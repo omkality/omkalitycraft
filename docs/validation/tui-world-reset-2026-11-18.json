@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "date": "2026-11-18",
+  "profile": {
+    "pack": "DJ2 2.23.4",
+    "forge": "14.23.5.2860",
+    "core": "0.3.12",
+    "dj2fix": "0.1.8",
+    "drasl": "4.0.0",
+    "docker": "local isolated Linux",
+    "actors": 2
+  },
+  "artifacts": {
+    "core_sha256": "99961bfdf0a8a4f712c69304993d34bd11459bd06de061440c450423b0517588",
+    "dj2fix_sha256": "ea12a4d9ab1544a689f924a49a693e66e3c0120822a81fa2647175ad84040da9"
+  },
+  "checks": {
+    "setup": [
+      "initial_no_human_or_unknown_operators",
+      "initial",
+      "ingress_starts_closed_and_blocks_backend_connection",
+      "online_pilot_in_resource_other_player_in_overworld",
+      "wipe_identifies_configured_resource_world",
+      "open_ingress_refuses_confirmed_prepare_before_any_stop"
+    ],
+    "terminal": [
+      "confirmation_defaults_to_no_and_writes_no_maintenance_intent",
+      "keyboard_confirm_prepares_verified_backup_and_candidate",
+      "install_cancellation_writes_no_cutover_intent",
+      "keyboard_confirm_installs_only_the_sealed_candidate",
+      "separate_keyboard_confirmation_restarts_same_server_with_gate_closed",
+      "terminal_restored"
+    ],
+    "verification_after_restart": [
+      "existing_cutover_confirmed_backup_completed_before_installation",
+      "original_forge_container_booted_again",
+      "ingress_remained_closed_and_empty_until_explicit_test_open",
+      "prior_world_kept_with_original_resource_directory",
+      "actor_1_full_inventory_and_xp_preserved_in_expected_dimension",
+      "actor_2_full_inventory_and_xp_preserved_in_expected_dimension",
+      "both_existing_accounts_sign_in_to_overworld",
+      "ordinary_resource_command_enters_regenerated_world",
+      "zero_loaded_operators_and_empty_ops_file",
+      "disposable_server_saved_and_stopped_cleanly",
+      "owned_auxiliary_services_stopped_saved_volumes_retained"
+    ]
+  },
+  "test_runs": {
+    "windows_unit": {
+      "passed": 2966,
+      "skipped": 225
+    },
+    "linux_focused": 126,
+    "rust": 17
+  },
+  "scope": {
+    "resource_dimension": -18000,
+    "full_dj2_server": true,
+    "graphical_minecraft_client": false,
+    "production_vps": false,
+    "calendar_schedule": false
+  }
+}

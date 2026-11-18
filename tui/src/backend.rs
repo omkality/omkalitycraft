@@ -27,12 +27,14 @@ pub enum Request {
     Overview(Option<String>, TpsWindow),
     Console { server: String, command: String },
     Moderation(crate::moderation::Action),
+    WorldReset(crate::world_reset::Request),
 }
 #[derive(Debug)]
 pub enum Reply {
     Overview(Overview, Option<Result<TpsHistory, String>>),
     Console(ConsoleResult),
     Moderation(crate::moderation::Receipt),
+    WorldReset(crate::world_reset::Receipt),
 }
 
 struct OwnedChild(Child);
@@ -149,6 +151,21 @@ impl Backend {
     pub fn request(&self, request: Request, cancel: Arc<AtomicBool>) -> Result<Reply, String> {
         let mut command = self.command();
         match &request {
+            Request::WorldReset(action) => {
+                if !action.valid() {
+                    return Err("Неверный запрос вайпа".into());
+                }
+                command.args([
+                    "world-reset",
+                    "--server",
+                    &action.server,
+                    "--command",
+                    action.command,
+                ]);
+                if let Some(confirmation) = &action.confirmation {
+                    command.args(["--confirm", confirmation]);
+                }
+            }
             Request::Moderation(a) => {
                 if !valid_server(&a.server)
                     || !matches!(a.command.as_str(), "kick" | "ban" | "mute" | "unban")
@@ -196,13 +213,18 @@ impl Backend {
                 }
             }
         }
-        let timeout = if matches!(&request, Request::Moderation(_)) {
-            25
-        } else {
-            15
+        let timeout = match &request {
+            Request::WorldReset(a) if a.mutating() => 24 * 60 * 60,
+            Request::Moderation(_) => 25,
+            _ => 15,
         };
         let (bytes, success) = capture(command, &cancel, Duration::from_secs(timeout))?;
         let (reply, ok) = match request {
+            Request::WorldReset(action) => {
+                let value = crate::world_reset::Receipt::parse(&bytes, &action)?;
+                let ok = value.ok;
+                (Reply::WorldReset(value), ok)
+            }
             Request::Moderation(a) => {
                 let value = crate::moderation::Receipt::parse(&bytes, &a)?;
                 let ok = value.ok;
