@@ -78,6 +78,26 @@ def plan(controller):
     return owner.plan(cfg, "dj2", -18000, window, backup["operation"], {})["operation"]
 
 
+def test_consumed_candidate_allows_fresh_target_only(controller, monkeypatch):
+    from omk import world_cutover  # noqa: PLC0415
+
+    cfg, _, _, _, state, _ = controller
+    prior = plan(controller)
+    saved = owner.read_record(cfg, prior)
+    owner.save(cfg, saved, "installed")
+    monkeypatch.setattr(
+        world_cutover, "consumed", lambda _, record: record["operation"] == prior
+    )
+    with pytest.raises(AdminError, match="existing resource"):
+        plan(controller)
+    state["target"]["data_volume"] = "new-candidate"
+    state["destination"]["volume"] = "new-candidate"
+    current = plan(controller)
+    assert current != prior
+    assert owner.read_record(cfg, prior)["stage"] == "installed"
+    assert owner.read_record(cfg, current)["target"]["data_volume"] == "new-candidate"
+
+
 def test_recorded_plan_blocks_resume_and_cancel_until_explicit_abandon(controller):
     cfg, flow, window, backup, state, _ = controller
     op = plan(controller)

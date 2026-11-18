@@ -347,6 +347,8 @@ def worker(record, action, *, allowed_container=None):
 def plan(
     config, server, dimension, maintenance_operation, backup_operation, environment=None
 ):
+    from omk.world_cutover import consumed  # noqa: PLC0415
+
     with backups.locked(config):
         backups.local_engine()
         source = backups.target_for(config, server)
@@ -369,8 +371,8 @@ def plan(
         if any(
             r["stage"] != "abandoned"
             and (
-                r["server"] == server
-                or r["target"]["data_volume"] == target["data_volume"]
+                r["target"]["data_volume"] == target["data_volume"]
+                or (r["server"] == server and not consumed(config, r))
             )
             for r in previous
         ):
