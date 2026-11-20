@@ -14,10 +14,15 @@ pub struct Defaults {
     pub python: PathBuf,
     pub config: PathBuf,
 }
+/// Load build-time or adjacent defaults for a launch without arguments.
 pub fn defaults() -> Result<Option<Defaults>, String> {
-    // Explicit command lines never depend on a sidecar file.
     if env::args_os().len() > 1 {
         return Ok(None);
+    }
+    if let Some(encoded) = option_env!("OMK_TUI_EMBEDDED_DEFAULTS") {
+        return parse(encoded.as_bytes())
+            .map(Some)
+            .map_err(|_| "Неверная встроенная конфигурация TUI".into());
     }
     let path = env::current_exe()
         .map_err(|_| "Не удалось определить папку программы")?
