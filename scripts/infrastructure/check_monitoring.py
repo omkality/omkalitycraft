@@ -205,7 +205,8 @@ def check_runtime(source, subnets):
     def compose(*args):
         nonlocal origin
         output = execute([*command, *args], env=environment)
-        if args[0] == "up":
+        # Restart can reassign a dynamically published port.
+        if args[0] in {"up", "restart"}:
             bound = execute(
                 [*command, "port", "prometheus", "9090"], env=environment
             ).strip()
