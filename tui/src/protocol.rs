@@ -319,3 +319,57 @@ impl ConsoleResult {
         Ok(v)
     }
 }
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct InvitationResult {
+    pub ok: bool,
+    invitation_file: Option<String>,
+    single_use: Option<bool>,
+    error: Option<String>,
+    error_type: Option<String>,
+}
+
+impl InvitationResult {
+    pub fn parse(bytes: &[u8]) -> Result<Self, String> {
+        let value: Self =
+            serde_json::from_slice(bytes).map_err(|_| "Неверный ответ выдачи приглашения")?;
+        let valid = if value.ok {
+            value.error.is_none()
+                && value.error_type.is_none()
+                && value.single_use == Some(true)
+                && value.invitation_file.as_deref().is_some_and(|file| {
+                    use std::path::Path;
+                    let path = Path::new(file);
+                    path.is_absolute()
+                        && path.extension().is_some_and(|ext| ext == "json")
+                        && path.parent().and_then(Path::file_name).is_some_and(|dir| dir == "invitations")
+                        && !file.chars().any(|c| c.is_control() || matches!(c, '\u{200b}'..='\u{200f}' | '\u{202a}'..='\u{202e}' | '\u{2060}'..='\u{206f}'))
+                })
+        } else {
+            value.invitation_file.is_none()
+                && value.single_use.is_none()
+                && value.error.is_some()
+                && value.error_type.is_some()
+        };
+        if !valid {
+            return Err("Нарушен формат ответа выдачи приглашения".into());
+        }
+        Ok(value)
+    }
+
+    pub fn message(&self) -> String {
+        if let Some(path) = &self.invitation_file {
+            format!(
+                "Одноразовый ключ создан.\n\nФайл:\n{path}\n\nПередайте игроку только значение code."
+            )
+        } else if matches!(
+            self.error.as_deref(),
+            Some("Authentication origin is not configured")
+        ) {
+            "Для выдачи ключа настройте Drasl в operator.toml и выполните вход владельца.".into()
+        } else {
+            "Выдача ключа не подтверждена.\nПроверьте доступ к Drasl и список access invites перед повтором.".into()
+        }
+    }
+}

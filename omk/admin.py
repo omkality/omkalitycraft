@@ -208,7 +208,7 @@ def create_invite(config: OperatorConfig):
         _write_private(
             path, config.private, {"schema": 1, "origin": client.base_url, **invite}
         )
-    except OSError:
+    except OSError, AdminError:
         try:
             client.request(
                 "DELETE", "/drasl/api/v3/invites/" + invite["code"], token=token
