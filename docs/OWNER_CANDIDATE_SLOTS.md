@@ -14,7 +14,7 @@
 контейнера только его полный immutable ID разрешается как ссылка на target;
 чужой контейнер или helper блокирует дальнейшие действия.
 
-Скопируйте [`deploy/candidate-slots.example.toml`](../deploy/candidate-slots.example.toml)
+Скопируйте [`deploy/owner/candidate-slots.example.toml`](../deploy/owner/candidate-slots.example.toml)
 в `.omk-admin/candidate-slots.toml`, задайте приватные права `600` на Unix.
 Настройте уникальное имя контейнера, существующий owned bridge и его label,
 раздельные loopback-порты, внутренние порты из текущего `server.properties`,
@@ -37,7 +37,7 @@ Helper работает read-only, без сети и Docker socket.
 
 ## Ресурсы и Docker-журнал
 
-Пример окружения owner process: [`deploy/candidate-slots.example.env`](../deploy/candidate-slots.example.env).
+Пример окружения owner process: [`deploy/owner/candidate-slots.example.env`](../deploy/owner/candidate-slots.example.env).
 Значения читаются при plan; автоматически `.env` не загружается.
 
 | Переменная | Default | Диапазон |

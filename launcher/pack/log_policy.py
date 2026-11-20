@@ -7,6 +7,8 @@ from string import Template
 from omk.diagnostics import prune_native_archives, prune_reports
 from omk.fs import resolved
 
+ASSETS = Path(__file__).resolve().parents[1] / "assets"
+
 
 def forge_log_settings(environment=None) -> dict[str, int]:
     env = os.environ if environment is None else environment
@@ -26,26 +28,7 @@ def forge_log_settings(environment=None) -> dict[str, int]:
     return settings
 
 
-_FORGE_112 = Template("""<?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
-  <Appenders>
-    <Console name="SysOut" target="SYSTEM_OUT">
-      <PatternLayout charset="UTF-8" pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t/%level] [%logger]: %msg{nolookups}%n"/>
-    </Console>
-    <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/latest-%i.log.gz">
-      <PatternLayout charset="UTF-8" pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t/%level] [%logger]: %msg{nolookups}%n"/>
-      <Policies><OnStartupTriggeringPolicy/><SizeBasedTriggeringPolicy size="${mib}MB"/></Policies>
-      <DefaultRolloverStrategy max="$files" fileIndex="min"/>
-    </RollingRandomAccessFile>
-  </Appenders>
-  <Loggers>
-    <Root level="info">
-      <Filters><MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL"/></Filters>
-      <AppenderRef ref="SysOut"/><AppenderRef ref="File"/>
-    </Root>
-  </Loggers>
-</Configuration>
-""")
+_FORGE_112 = Template((ASSETS / "forge-1.12.2-log4j2.xml").read_text(encoding="utf-8"))
 
 FORGE_112 = _FORGE_112.substitute(forge_log_settings({}))
 

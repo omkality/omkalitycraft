@@ -5,8 +5,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QPushButton
 
 from launcher.memory import MemorySnapshot
-from launcher.requirements_dialog import RequirementsDialog
-from launcher.theme import STYLE, install_font
+from launcher.ui.requirements_dialog import RequirementsDialog
+from launcher.ui.theme import STYLE, install_font
 from launcher.widgets import PackCard
 from omk.profiles import load_profiles
 

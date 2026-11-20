@@ -14,7 +14,7 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import QLabel, QLineEdit, QStyle, QStyleOption, QToolTip
 
 from launcher.accounts import USERNAME_PATTERN
-from launcher.theme import TOOLTIP_STYLE
+from launcher.ui.theme import TOOLTIP_STYLE
 
 
 class _NicknameNotice(QLabel):

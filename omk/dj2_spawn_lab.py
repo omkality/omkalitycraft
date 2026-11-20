@@ -28,8 +28,8 @@ def add_spawn_lab(parser):
 def check_boundary(actor, console, expect, x, z, protected, label):
     # Console creates fixture; ordinary non-OP creative actor actually edits it.
     _place(actor, FIRST, (x + 0.5, 241, z + 2.5), console)
-    console(f"fill {x-2} 240 {z-2} {x+2} 240 {z+2} minecraft:bedrock")
-    console(f"fill {x-2} 241 {z-2} {x+2} 244 {z+2} minecraft:air")
+    console(f"fill {x - 2} 240 {z - 2} {x + 2} 240 {z + 2} minecraft:bedrock")
+    console(f"fill {x - 2} 241 {z - 2} {x + 2} 244 {z + 2} minecraft:air")
     expect(_block(console, x, 240, z, "bedrock"), label + "_platform_exists")
     # Underground Biomes replaces vanilla stone even at these high lab positions.
     console(f"setblock {x} 241 {z} minecraft:wool")

@@ -202,7 +202,7 @@ def worker(record, action, backup=None):
         "--mount",
         f"type=volume,source={target['data_volume']},target=/server,readonly",
         "--mount",
-        f"type=bind,source={PROJECT_ROOT/'omk'},target=/src/omk,readonly",
+        f"type=bind,source={PROJECT_ROOT / 'omk'},target=/src/omk,readonly",
         "--workdir",
         "/src",
         "--env",

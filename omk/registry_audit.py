@@ -6,8 +6,8 @@ import io
 import zlib
 from pathlib import Path
 
-from launcher.nbt import MAX_BYTES, read_nbt
 from omk.backup_archive import regular_file
+from omk.nbt import MAX_BYTES, read_nbt
 
 CRITICAL = frozenset(
     {"minecraft:blocks", "minecraft:items", "minecraft:entities", "minecraft:biomes"}

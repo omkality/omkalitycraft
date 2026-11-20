@@ -118,8 +118,8 @@ def _prepare_teleports(first, console):
         console("gamemode 1 " + name)
         console(
             "fill "
-            + f"{int(point[0])-3} 240 {int(point[2])-3} "
-            + f"{int(point[0])+3} 240 {int(point[2])+3} minecraft:stone"
+            + f"{int(point[0]) - 3} 240 {int(point[2]) - 3} "
+            + f"{int(point[0]) + 3} 240 {int(point[2]) + 3} minecraft:stone"
         )
     console("gamerule naturalRegeneration false")
     console("gamerule doMobSpawning false")

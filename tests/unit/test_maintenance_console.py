@@ -36,8 +36,10 @@ def client(monkeypatch, response, calls=None):
     monkeypatch.setattr(
         module,
         "command",
-        lambda _c, _p, text: (calls.append(text) if calls is not None else None)
-        or "OMK_MAINTENANCE_V1 " + json.dumps(response),
+        lambda _c, _p, text: (
+            (calls.append(text) if calls is not None else None)
+            or "OMK_MAINTENANCE_V1 " + json.dumps(response)
+        ),
     )
     return module.MaintenanceConsole(
         rcon.ConsoleConfig(25577, "credential.json"), "fixture-password-12345"

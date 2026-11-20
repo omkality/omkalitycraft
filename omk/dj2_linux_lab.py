@@ -11,7 +11,7 @@ from uuid import UUID, uuid4
 
 from launcher.game import GameRunner
 from launcher.install import current_platform
-from launcher.log_policy import prepare_logging
+from launcher.pack.log_policy import prepare_logging
 from launcher.releases import inside, read_release
 from launcher.skin_defaults import SKIN_ASSETS
 from omk.diagnostics import BoundedLog, PipeLog

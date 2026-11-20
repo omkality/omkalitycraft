@@ -168,7 +168,7 @@ storage policy. Оценка учитывает TAR/manifest overhead и вре�
 Суммарные ready export, restore staging, transport scratch и история ещё должны
 быть связаны с общим allocator/retention существующего nightly. Одного per-export
 лимита для бюджета VPS недостаточно. Автоматическое расписание экспорта этим
-изменением не включается. [Переменные транспорта](../deploy/offsite.example.env).
+изменением не включается. [Переменные транспорта](../deploy/offsite/offsite.example.env).
 
 ## Проверено 13 ноября 2026
 

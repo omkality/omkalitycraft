@@ -46,7 +46,12 @@ def add_release_commands(subparsers) -> None:
     pack.add_argument(
         "--minimum-launcher-version",
         default=VERSION,
-        help="Signed schema-2 minimum launcher requirement",
+        help="Signed minimum launcher requirement",
+    )
+    pack.add_argument(
+        "--generation",
+        type=int,
+        help="Increasing signed generation for this pack and platform",
     )
     for command in [launcher, pack]:
         command.add_argument("--version", required=True)
@@ -80,6 +85,7 @@ def prepare_release(args: argparse.Namespace) -> dict:
         launch=json.loads(args.launch_profile.read_text(encoding="utf-8")),
         key=key,
         minimum_launcher_version=getattr(args, "minimum_launcher_version", None),
+        generation=getattr(args, "generation", None),
     )
     snapshot = _snapshot(args, envelope, snapshot_root)
     _write_manifest(args.output, envelope)

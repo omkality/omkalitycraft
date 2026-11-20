@@ -19,7 +19,6 @@ def test_lab_agent_does_not_enter_the_default_game_command(tmp_path):
         lab / "client",
         fixture=agent,
         marker=lab / "request-client-crash",
-        reports_url=None,
     )
     controlled = runner.command(release, folder, session)
     assert all("test-agent.jar" not in arg for arg in normal)
@@ -35,7 +34,6 @@ def test_lab_runner_rejects_fixture_outside_its_isolated_run(tmp_path):
             lab,
             fixture=tmp_path / "outside.jar",
             marker=lab / "request-client-crash",
-            reports_url=None,
         )
 
 

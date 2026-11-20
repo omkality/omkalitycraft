@@ -64,7 +64,7 @@ def decode(artifact, raw):
 def install(output):
     if output.resolve() != output.absolute() or output.exists() or output.is_symlink():
         raise ValueError("Offsite tool output must be a new unlinked directory")
-    pins = json.loads((ROOT / "deploy/offsite-tools.json").read_bytes())
+    pins = json.loads((ROOT / "deploy/offsite/offsite-tools.json").read_bytes())
     if (
         pins["schema"] != 1
         or pins["platform"] != "linux/amd64"

@@ -72,12 +72,12 @@ def worker(record, action):
         f"type=volume,source={target['data_volume']},target=/restore"
         + ("" if action == "apply" else ",readonly"),
         "--mount",
-        f"type=bind,source={PROJECT_ROOT/'omk'},target=/src/omk,readonly",
+        f"type=bind,source={PROJECT_ROOT / 'omk'},target=/src/omk,readonly",
     ]
     for filename in ("__init__.py", "nbt.py"):
         args += [
             "--mount",
-            f"type=bind,source={PROJECT_ROOT/'launcher'/filename},target=/src/launcher/{filename},readonly",
+            f"type=bind,source={PROJECT_ROOT / 'launcher' / filename},target=/src/launcher/{filename},readonly",
         ]
     text = backups.docker(
         *args,

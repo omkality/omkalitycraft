@@ -3,10 +3,11 @@
 import json
 import os
 import platform
+import re
 import shutil
 import threading
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
@@ -14,14 +15,18 @@ from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.request import Request
 
+from launcher.files import atomic_write, local_file
+from launcher.pack.mod_policy import clean_extra_mods
 from launcher.releases import (
     MAX_MANIFEST_BYTES,
     Artifact,
     Release,
     ReleaseError,
+    generation_floors,
     inside,
     read_release,
     sha256_file,
+    valid_generation,
 )
 from omk.drasl import DraslClient
 
@@ -75,9 +80,16 @@ class Progress:
 
 
 class ReleaseClient:
-    def __init__(self, origin: str, trusted_keys: dict[str, str]) -> None:
+    def __init__(
+        self,
+        origin: str,
+        trusted_keys: dict[str, str],
+        *,
+        minimum_generations: dict[str, int] | None = None,
+    ) -> None:
         self.transport = DraslClient(origin, timeout=20)
         self.trusted_keys = trusted_keys
+        self.minimum_generations = generation_floors(minimum_generations or {})
 
     def fetch(self, pack_id: str, target: str | None = None) -> Release:
         target = target or current_platform()
@@ -106,7 +118,14 @@ class ReleaseClient:
         if release.pack_id != pack_id or release.platform != target:
             raise ReleaseError("Сервер вернул описание другой сборки или платформы.")
         release.require_launcher()
+        self.check_generation(release)
         return release
+
+    def check_generation(self, release: Release) -> None:
+        """Enforce the minimum distributed with the trusted launcher."""
+        floor = self.minimum_generations.get(release.pack_id, 0)
+        if (release.generation or 0) < floor:
+            raise ReleaseError("Сервер вернул устаревшее поколение сборки.")
 
 
 class Installer:
@@ -116,6 +135,7 @@ class Installer:
         self.workers = max(1, min(4, workers))
         self.cancel = threading.Event()
         self._lock = threading.Lock()
+        self._install_lock = threading.Lock()
         self._bytes: dict[str, int] = {}
         self._hash_locks: dict[str, threading.Lock] = {}
         self._last_progress = 0.0
@@ -157,12 +177,45 @@ class Installer:
         except OSError, ValueError, KeyError, TypeError, ReleaseError:
             return {"state": "missing"}
 
-    def install(self, release: Release, progress: Callable[[Progress], None]) -> Path:
+    def install(
+        self,
+        release: Release,
+        progress: Callable[[Progress], None],
+        *,
+        clean_mods: bool = False,
+    ) -> Path:
+        """Verify and install files for this portable instance."""
+        # The launcher holds the instance lock for the lifetime of this root.
+        with self._install_lock:
+            return self._install(release, progress, clean_mods=clean_mods)
+
+    def _install(
+        self,
+        release: Release,
+        progress: Callable[[Progress], None],
+        *,
+        clean_mods: bool,
+    ) -> Path:
         release.require_launcher()
         if release.platform != current_platform():
             raise ReleaseError("Эта сборка подготовлена для другой платформы.")
         folder = self.directory(release.pack_id)
         folder.mkdir(parents=True, exist_ok=True)
+        local = self.local_state(release.pack_id)
+        floor_path = self._check_local_generation(folder, release, local)
+        history = {
+            value.digest: value
+            for value in [
+                *local.get("history", []),
+                *([local["release"]] if "release" in local else []),
+            ]
+            if value.digest != release.digest
+        }
+        if len(history) > 16:
+            raise ReleaseError("Сначала завершите предыдущее обновление сборки.")
+        if clean_mods:
+            self._begin_install(folder, release, floor_path, list(history.values()))
+            clean_extra_mods(release, folder)
         self._bytes = {}
         self._hash_locks = {file.sha256: threading.Lock() for file in release.files}
         progress(Progress("Проверяем файлы", 0, release.total_size))
@@ -192,18 +245,8 @@ class Installer:
             < sum(file.size for file in missing) + 256 * 1024**2
         ):
             raise ReleaseError("Недостаточно свободного места для сборки.")
-        local = self.local_state(release.pack_id)
-        history = {
-            value.digest: value
-            for value in [
-                *local.get("history", []),
-                *([local["release"]] if "release" in local else []),
-            ]
-            if value.digest != release.digest
-        }
-        if len(history) > 16:
-            raise ReleaseError("Сначала завершите предыдущее обновление сборки.")
-        self._state(folder, release, complete=False, history=list(history.values()))
+        if not clean_mods:
+            self._begin_install(folder, release, floor_path, list(history.values()))
         with ThreadPoolExecutor(max_workers=self.workers) as pool:
             futures = [
                 pool.submit(self._download, release, file, folder, progress)
@@ -216,8 +259,17 @@ class Installer:
                 self.cancel.set()
                 raise
         self._check_cancel()
+        self._remove_obsolete(folder, release, history.values())
+        self._state(folder, release, complete=True)
+        progress(Progress("Готово к игре", release.total_size, release.total_size))
+        return folder
+
+    @staticmethod
+    def _remove_obsolete(
+        folder: Path, release: Release, history: Iterable[Release]
+    ) -> None:
         retained = {file.path.casefold(): file.path for file in release.files}
-        for previous in history.values():
+        for previous in history:
             for file in previous.files:
                 path = inside(folder, file.path)
                 target = retained.get(file.path.casefold())
@@ -228,9 +280,51 @@ class Installer:
                         continue
                     # Remove only a separate entry owned by a previous signed release.
                     path.unlink()
-        self._state(folder, release, complete=True)
-        progress(Progress("Готово к игре", release.total_size, release.total_size))
-        return folder
+
+    def _begin_install(
+        self, folder: Path, release: Release, floor_path: Path, history: list[Release]
+    ) -> None:
+        self._check_cancel()
+        if release.generation is not None:
+            atomic_write(
+                floor_path,
+                json.dumps(
+                    {"generation": release.generation, "digest": release.digest}
+                ).encode(),
+            )
+        self._state(folder, release, complete=False, history=history)
+
+    def _check_local_generation(
+        self, folder: Path, release: Release, local: dict
+    ) -> Path:
+        self.client.check_generation(release)
+        try:
+            path = local_file(folder, f".omk-generation-{release.platform}.json")
+            try:
+                with path.open("rb") as source:
+                    data = json.loads(source.read(1025))
+                generation = data["generation"]
+                digest = data["digest"]
+                if not valid_generation(generation) or not re.fullmatch(
+                    r"[a-f0-9]{64}", digest
+                ):
+                    raise ValueError("Invalid stored generation")
+            except FileNotFoundError:
+                generation, digest = 0, ""
+        except OSError, ValueError, TypeError, KeyError:
+            raise ReleaseError(
+                "Не удалось прочитать принятое поколение сборки."
+            ) from None
+        for previous in [*local.get("history", []), local.get("release")]:
+            if previous is not None and (previous.generation or 0) > generation:
+                generation, digest = previous.generation, previous.digest
+        if (release.generation or 0) < generation or (
+            generation and release.generation == generation and release.digest != digest
+        ):
+            raise ReleaseError(
+                "Сервер вернул устаревшее или конфликтующее поколение сборки."
+            )
+        return path
 
     def _state(
         self,
@@ -240,19 +334,16 @@ class Installer:
         complete: bool,
         history: list[Release] | None = None,
     ) -> None:
-        path = folder / ".omk-install.json"
-        temporary = folder / ".omk-install.tmp"
-        temporary.write_text(
+        atomic_write(
+            local_file(folder, ".omk-install.json"),
             json.dumps(
                 {
                     "release": release.envelope,
                     "complete": complete,
                     "history": [value.envelope for value in (history or [])],
                 }
-            ),
-            encoding="utf-8",
+            ).encode(),
         )
-        os.replace(temporary, path)
 
     def _check_cancel(self) -> None:
         if self.cancel.is_set():

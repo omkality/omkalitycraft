@@ -8,7 +8,7 @@ from PyInstaller.building.build_main import Analysis
 from launcher.install import current_platform
 from launcher.releases import ReleaseError
 from launcher.version import VERSION
-from scripts import release_materials as materials
+from scripts.release import release_materials as materials
 
 
 def distribution(site, name, *, legal=True):
@@ -209,7 +209,7 @@ def test_locked_analysis_format_preserves_expected_runtime_modules(tmp_path):
         values[fields.index(name)] = []
     entries = [
         (name, "/synthetic/source.py", "PYMODULE")
-        for name in ["launcher.app", "omk.drasl", "api.core.content_policy"]
+        for name in ["launcher.app", "omk.drasl", "omk.content_policy"]
     ]
     values[fields.index("pure")] = entries
     path = tmp_path / "Analysis-00.toc"

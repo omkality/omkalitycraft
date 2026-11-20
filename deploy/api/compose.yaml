@@ -1,8 +1,9 @@
-# Development CDN only. Drasl has a separate disposable lab configuration.
+# Loopback CDN API. Authentication and game services are separate stacks.
+name: omkalitycraft-api
 services:
   api:
     build:
-      context: .
+      context: ../..
       dockerfile: Dockerfile.api
     ports:
       - "127.0.0.1:${API_PORT:-8000}:${API_PORT:-8000}"
@@ -17,6 +18,9 @@ services:
       OMK_API_MEMORY_MIB: "${OMK_API_MEMORY_MIB:-1024}"
       OMK_API_LOG_MIB: "${OMK_API_LOG_MIB:-10}"
       OMK_API_LOG_FILES: "${OMK_API_LOG_FILES:-3}"
+      SERVER_STATUS_TARGETS: "${SERVER_STATUS_TARGETS:-}"
+      SERVER_STATUS_CACHE_SECONDS: "${SERVER_STATUS_CACHE_SECONDS:-15}"
+      SERVER_STATUS_TIMEOUT_SECONDS: "${SERVER_STATUS_TIMEOUT_SECONDS:-2}"
       CONTENT_ROOT: /data/content
     cpus: "${OMK_API_CPUS:-1.0}"
     mem_limit: "${OMK_API_MEMORY_MIB:-1024}m"
@@ -31,7 +35,7 @@ services:
         max-file: "${OMK_API_LOG_FILES:-3}"
     volumes:
       - type: bind
-        source: ${OMK_API_CONTENT_SOURCE:-./data/content}
+        source: ${OMK_API_CONTENT_SOURCE:?Set the existing host CDN content directory}
         target: /data/content
         read_only: true
         bind:

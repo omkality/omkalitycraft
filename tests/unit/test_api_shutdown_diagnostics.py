@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts import diagnose_api_shutdown as probe
+from scripts.diagnostics import diagnose_api_shutdown as probe
 
 
 @pytest.mark.parametrize("labels", [None, {}, {probe.LABEL: "another-run"}])
@@ -73,7 +73,7 @@ def test_stack_collection_preserves_docker_kill_failure_and_stop_budget(monkeypa
     assert result["stacks_requested"] is True
     assert len(calls) == 1
     assert calls[0][:3] == ("exec", "fixture", ".venv/bin/python")
-    assert "SIGUSR1" in calls[0][-1]
+    assert calls[0][-1] == "/probe/signal_workers.py"
 
 
 def test_stacks_are_separate_and_bounded_with_visible_truncation(tmp_path):

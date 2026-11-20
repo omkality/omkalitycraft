@@ -12,11 +12,10 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from uuid import uuid4
 
-from launcher.client_defaults import prepare_client_defaults
-from launcher.client_policy import ClientDefaults
 from launcher.install import Installer, ReleaseClient, current_platform
-from launcher.mod_policy import clean_extra_mods, verify_mods
-from launcher.nbt import Tag, read_nbt, write_nbt
+from launcher.pack.client_defaults import prepare_client_defaults
+from launcher.pack.client_policy import ClientDefaults
+from launcher.pack.mod_policy import clean_extra_mods, verify_mods
 from launcher.releases import (
     MAX_MANIFEST_BYTES,
     ReleaseError,
@@ -24,6 +23,7 @@ from launcher.releases import (
     read_release,
     sha256_file,
 )
+from omk.nbt import Tag, read_nbt, write_nbt
 from omk.profiles import PROJECT_ROOT
 
 

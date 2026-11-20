@@ -9,12 +9,12 @@ import json
 import re
 from pathlib import Path
 
-from launcher.nbt import Tag
 from omk import (
     enderutilities_reset as ender,
     forge112_regions as anvil,
 )
 from omk.ftb_restore_authority import nbt
+from omk.nbt import Tag
 from omk.resource_reset_inventory import _read
 from omk.resource_reset_landing import world_path
 

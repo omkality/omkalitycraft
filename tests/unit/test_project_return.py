@@ -273,9 +273,9 @@ def test_process_death_releases_lock_but_never_repeats_uncertain_write(
         timeout=30,
         check=False,
     )
-    assert result.returncode == (
-        24 if "partial" in fault else 23
-    ), result.stderr.decode()
+    assert result.returncode == (24 if "partial" in fault else 23), (
+        result.stderr.decode()
+    )
     with pytest.raises(AdminError):
         run(p)
     if "partial" in fault:

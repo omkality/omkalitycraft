@@ -25,7 +25,7 @@ def main():
     )
     if actual != expected:
         raise ValueError(
-            f"Public mod boundary differs: missing={sorted(expected-actual)}, extra={sorted(actual-expected)}"
+            f"Public mod boundary differs: missing={sorted(expected - actual)}, extra={sorted(actual - expected)}"
         )
     for name in sorted(actual):
         path = Path(name)

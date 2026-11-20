@@ -225,7 +225,9 @@ def test_clock_rollback_does_not_evict_just_published_export(tmp_path):
 
 
 def test_environment_example_matches_real_defaults():
-    text = (PROJECT_ROOT / "deploy/diagnostics.example.env").read_text(encoding="utf-8")
+    text = (PROJECT_ROOT / "deploy/owner/diagnostics.example.env").read_text(
+        encoding="utf-8"
+    )
     values = dict(
         line.split("=", 1)
         for line in text.splitlines()

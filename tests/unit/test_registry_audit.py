@@ -115,22 +115,30 @@ def test_legacy_biome_spaces_are_preserved_exactly(tmp_path):
         lambda g: g.pop("minecraft:blocks"),
         lambda g: g.update({"bad\nname:ids": g["minecraft:items"]}),
         lambda g: g["minecraft:items"].value.update({"ids": Tag(9, (8, []))}),
-        lambda g: g["minecraft:items"]
-        .value["ids"]
-        .value[1]
-        .append(Tag(10, {"K": Tag(8, "test:kept"), "V": Tag(3, 2)})),
-        lambda g: g["minecraft:items"]
-        .value["ids"]
-        .value[1]
-        .append(Tag(10, {"K": Tag(8, "test:other"), "V": Tag(3, 1)})),
-        lambda g: g["minecraft:items"]
-        .value["ids"]
-        .value[1][0]
-        .value.update({"V": Tag(3, -1)}),
-        lambda g: g["minecraft:items"]
-        .value["ids"]
-        .value[1][0]
-        .value.update({"V": Tag(8, "1")}),
+        lambda g: (
+            g["minecraft:items"]
+            .value["ids"]
+            .value[1]
+            .append(Tag(10, {"K": Tag(8, "test:kept"), "V": Tag(3, 2)}))
+        ),
+        lambda g: (
+            g["minecraft:items"]
+            .value["ids"]
+            .value[1]
+            .append(Tag(10, {"K": Tag(8, "test:other"), "V": Tag(3, 1)}))
+        ),
+        lambda g: (
+            g["minecraft:items"]
+            .value["ids"]
+            .value[1][0]
+            .value.update({"V": Tag(3, -1)})
+        ),
+        lambda g: (
+            g["minecraft:items"]
+            .value["ids"]
+            .value[1][0]
+            .value.update({"V": Tag(8, "1")})
+        ),
     ],
 )
 def test_malformed_registry_is_not_a_clean_diff(tmp_path, mutation):

@@ -207,7 +207,8 @@ def test_auth_numeric_environment_requires_bounded_ascii_decimal(
     assert caught.value.__context__ is None
 
 
-def test_bad_auth_number_never_reaches_cli_output_or_config(tmp_path):
+@pytest.mark.parametrize("existing", [False, True])
+def test_bad_auth_number_never_reaches_cli_output_or_config(tmp_path, existing):
     marker = "auth-config-private-marker"
     root = Path(__file__).resolve().parents[2]
     output = tmp_path / "auth.toml"
@@ -216,20 +217,28 @@ def test_bad_auth_number_never_reaches_cli_output_or_config(tmp_path):
         for key in ("SYSTEMROOT", "WINDIR", "PATH", "TEMP", "TMP")
         if key in os.environ
     }
-    environment.update(PYTHONPATH=str(root), OMK_AUTH_INTERNAL_PORT=marker)
+    previous = b"existing owner configuration\n"
+    if existing:
+        output.write_bytes(previous)
+    environment.update(
+        PYTHONPATH=str(root), PYTHONIOENCODING="utf-8", OMK_AUTH_INTERNAL_PORT=marker
+    )
     result = subprocess.run(
         [sys.executable, "-m", "omk", "auth", "configure", "--output", str(output)],
         cwd=tmp_path,
         env=environment,
         capture_output=True,
-        text=True,
+        encoding="utf-8",
         timeout=20,
         check=False,
     )
     assert result.returncode == 1
     assert marker not in result.stdout + result.stderr
     assert "Invalid OMK_AUTH_INTERNAL_PORT" in result.stderr
-    assert not output.exists()
+    if existing:
+        assert output.read_bytes() == previous
+    else:
+        assert not output.exists()
 
 
 def test_bad_auth_number_preserves_existing_configuration(tmp_path, monkeypatch):

@@ -13,9 +13,9 @@ import zlib
 from pathlib import Path
 from uuid import UUID
 
-from launcher.nbt import MAX_BYTES, Tag, read_nbt
 from omk.fs import regular
-from omk.recovery_full_lab import _entries
+from omk.nbt import MAX_BYTES, Tag, read_nbt
+from omk.world_archive import world_archive_entries
 
 PREFIX = "lab-world/data/ftb_lib/"
 MAX_TOTAL = 32 * 1024**2
@@ -56,7 +56,7 @@ def read_zip(
 ):
     result, total = {}, 0
     with zipfile.ZipFile(path) as archive:
-        entries, _ = _entries(
+        entries, _ = world_archive_entries(
             archive,
             world_name=world_name,
             path_policy=path_policy,

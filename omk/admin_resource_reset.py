@@ -100,7 +100,7 @@ def worker(target, dimension, settings, *, preflight_options=None):
     for module in ("omk", "launcher", "profiles"):
         args += [
             "--mount",
-            f"type=bind,source={PROJECT_ROOT/module},target=/src/{module},readonly",
+            f"type=bind,source={PROJECT_ROOT / module},target=/src/{module},readonly",
         ]
     request = {
         "schema": 1,

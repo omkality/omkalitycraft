@@ -10,7 +10,14 @@ from typing import Any
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-from launcher.releases import ReleaseError, safe_path, sha256_file, sign_release
+from launcher.releases import (
+    ReleaseError,
+    safe_path,
+    sha256_file,
+    sign_release,
+    valid_generation,
+)
+from launcher.version import VERSION
 
 
 def signing_key(path: Path, public_keys_path: Path) -> Ed25519PrivateKey:
@@ -50,7 +57,13 @@ def build_release(
     launch: dict[str, Any],
     key: Ed25519PrivateKey,
     minimum_launcher_version: str | None = None,
+    generation: int | None = None,
 ) -> dict[str, Any]:
+    if generation is not None:
+        if not valid_generation(generation):
+            raise ValueError("Invalid release generation")
+        minimum_launcher_version = minimum_launcher_version or VERSION
+    schema = 3 if generation is not None else 2 if minimum_launcher_version else 1
     files = []
     for path in sorted(files_root.rglob("*")):
         if not path.is_file():
@@ -72,7 +85,8 @@ def build_release(
         )
     return sign_release(
         {
-            "schema": 1 if minimum_launcher_version is None else 2,
+            "schema": schema,
+            **({"generation": generation} if generation is not None else {}),
             **(
                 {"minimum_launcher_version": minimum_launcher_version}
                 if minimum_launcher_version is not None

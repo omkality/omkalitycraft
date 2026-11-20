@@ -18,9 +18,9 @@ from PySide6.QtWidgets import (
 
 from launcher.install import Progress
 from launcher.memory import MemorySnapshot
-from launcher.memory_widget import MemoryControl
-from launcher.requirements_dialog import RequirementsDialog
-from launcher.theme import ASSETS, ICE, MUTED, SUCCESS, WARNING
+from launcher.ui.memory_widget import MemoryControl
+from launcher.ui.requirements_dialog import RequirementsDialog
+from launcher.ui.theme import ASSETS, ICE, MUTED, SUCCESS, WARNING
 from omk.profiles import ServerProfile
 
 

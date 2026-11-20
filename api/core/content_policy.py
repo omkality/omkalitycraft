@@ -1,30 +1,5 @@
-"""Runtime account data is never a publishable launcher/modpack artifact."""
+"""Compatibility entry point for the shared content boundary."""
 
-import re
-from pathlib import PurePosixPath
+from omk.content_policy import is_private_path
 
-
-def is_private_path(path: str) -> bool:
-    parts = [part.casefold() for part in PurePosixPath(path.replace("\\", "/")).parts]
-    return any(
-        part
-        in {
-            "userdata",
-            ".local",
-            ".git",
-            "auth_token.json",
-            "session.json",
-            ".env",
-            ".omk-admin",
-            "logs",
-            "crash-reports",
-            "diagnostics",
-            "server.properties",
-            "client-reports.sqlite3",
-            "client-reports.sqlite3-wal",
-            "client-reports.sqlite3-shm",
-        }
-        or part.startswith(".env.")
-        or re.fullmatch(r"hs_err_pid\d+\.log|java_pid\d+\.hprof", part) is not None
-        for part in parts
-    )
+__all__ = ["is_private_path"]

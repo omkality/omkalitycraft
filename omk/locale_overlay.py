@@ -242,7 +242,9 @@ def render_lang(
                 ending = (
                     "\r\n"
                     if line.endswith("\r\n")
-                    else "\n" if line.endswith("\n") else ""
+                    else "\n"
+                    if line.endswith("\n")
+                    else ""
                 )
                 output_line = key + "=" + updates[key] + ending
         result.append(output_line)

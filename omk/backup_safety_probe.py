@@ -149,13 +149,16 @@ def _kill_probe(base, phase):
                 child.wait(timeout=5)
             child.stderr.close()
         copies = _verified_copies(store.root)
-        assert copies == (
-            {
-                "copy": [1, 2],
-                "committed": [1, 2, 3],
-                "retiring": [2, 3],
-                "retired-data-deleted": [2, 3],
-            }[phase]
+        assert (
+            copies
+            == (
+                {
+                    "copy": [1, 2],
+                    "committed": [1, 2, 3],
+                    "retiring": [2, 3],
+                    "retired-data-deleted": [2, 3],
+                }[phase]
+            )
         )
         if phase == "copy":
             assert _unchanged(store.root, before)

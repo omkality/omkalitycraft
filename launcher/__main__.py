@@ -18,7 +18,7 @@ from launcher.game import GameRunner
 from launcher.install import Installer, ReleaseClient
 from launcher.paths import default_data_dir
 from launcher.storage import FileSessionStore
-from launcher.theme import ASSETS, STYLE, install_font
+from launcher.ui.theme import ASSETS, STYLE, install_font
 from launcher.updater import LauncherUpdater, acknowledge_health
 from launcher.version import VERSION
 from omk.diagnostics import event, failure
@@ -140,11 +140,19 @@ def main() -> int:
             DraslClient(config["auth_url"]),
             FileSessionStore(root / "userdata/session.json"),
         )
-        installer = Installer(root, ReleaseClient(config["api_url"], keys))
+        installer = Installer(
+            root,
+            ReleaseClient(
+                config["api_url"],
+                keys,
+                minimum_generations=config.get("minimum_pack_generations"),
+            ),
+        )
         window = LauncherWindow(
             service,
             installer=installer,
-            runner=GameRunner(root, reports_url=config["api_url"]),
+            runner=GameRunner(root),
+            status_origin=config["api_url"],
             update_warning=update_warning,
         )
         window.setWindowTitle(f"OmkalityCraft · {VERSION}")

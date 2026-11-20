@@ -207,13 +207,13 @@ def prepare_resource_bundle(
         )
         + "\njed_config_sha256="
         + hashlib.sha256((jed / "dimensions.json").read_bytes()).hexdigest()
-        + f'\nspawn_x=0\nspawn_z=0\nsearch_radius={plan["search_radius"]}\n'
-        + f'search_step=8\nchunk_loads={plan["chunk_loads"]}\n',
+        + f"\nspawn_x=0\nspawn_z=0\nsearch_radius={plan['search_radius']}\n"
+        + f"search_step=8\nchunk_loads={plan['chunk_loads']}\n",
         encoding="ascii",
     )
     a, b = plan["main_spawn_radius"], plan["spawn_radius"]
     (config / "omkalitycore-spawn.properties").write_text(
-        f'version=1\nzones=0:{-a}:{a}:{-a}:{a};{plan["dimension"]}:{-b}:{b}:{-b}:{b}\n',
+        f"version=1\nzones=0:{-a}:{a}:{-a}:{a};{plan['dimension']}:{-b}:{b}:{-b}:{b}\n",
         encoding="ascii",
     )
     profiles = output / "profiles"

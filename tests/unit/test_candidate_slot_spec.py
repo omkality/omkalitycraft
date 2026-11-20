@@ -158,7 +158,7 @@ def test_partial_or_malformed_stored_log_policy_is_refused(policy):
 
 
 def test_candidate_env_example_matches_consumed_defaults():
-    text = (spec.PROJECT_ROOT / "deploy/candidate-slots.example.env").read_text(
+    text = (spec.PROJECT_ROOT / "deploy/owner/candidate-slots.example.env").read_text(
         encoding="utf-8"
     )
     values = dict(

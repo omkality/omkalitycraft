@@ -76,14 +76,14 @@ def render(spec, policy, backend):
     # The backend name is validated by the controller, never arbitrary HAProxy text.
     route = f"server source {backend}:{spec['backend_port']} check inter 1s"
     return f"""global
-    maxconn {policy['max_connections']}
+    maxconn {policy["max_connections"]}
     nbthread 1
     stats socket {SOCKET} mode 600 level admin
 defaults
     mode tcp
-    timeout connect {policy['connect_seconds']}s
-    timeout client {policy['idle_seconds']}s
-    timeout server {policy['idle_seconds']}s
+    timeout connect {policy["connect_seconds"]}s
+    timeout client {policy["idle_seconds"]}s
+    timeout server {policy["idle_seconds"]}s
 resolvers docker
     nameserver dns 127.0.0.11:53
     hold valid 1s
@@ -91,7 +91,7 @@ resolvers docker
     timeout resolve 1s
     timeout retry 1s
 frontend game
-    bind 0.0.0.0:{spec['container_port']}
+    bind 0.0.0.0:{spec["container_port"]}
     default_backend minecraft
 backend minecraft
     {route} resolvers docker resolve-prefer ipv4 init-addr none disabled

@@ -23,8 +23,8 @@ Off-host copy переносит проверенные снимки; это н�
 ## Предварительные условия
 
 - Локальный Linux Docker engine, приватный `.omk-admin/operator.toml`,
-  [backups.toml](../deploy/backups.example.toml) и
-  [restores.toml](../deploy/restores.example.toml), mode 700/600 на Linux.
+  [backups.toml](../deploy/owner/backups.example.toml) и
+  [restores.toml](../deploy/owner/restores.example.toml), mode 700/600 на Linux.
 - Явно остановленный источник: pinned image, свой container/volume по labels,
   exit 0, OOM=false, выключенный restart policy, корректный журнал остановки,
   ограниченные Docker local logs. Источник и store сохраняются.

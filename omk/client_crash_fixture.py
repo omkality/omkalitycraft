@@ -62,8 +62,8 @@ def build_crash_agent(java, compiler, lab):
 
 
 class CrashLabRunner(GameRunner):
-    def __init__(self, root, *, fixture, marker, reports_url):
-        super().__init__(root, reports_url=reports_url)
+    def __init__(self, root, *, fixture, marker):
+        super().__init__(root)
         if (
             not marker.parent.name.startswith("client-crash-lab-")
             or marker.name != "request-client-crash"

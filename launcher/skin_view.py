@@ -79,12 +79,14 @@ class SkinView(QWidget):
     def _project(self, point: tuple[float, float, float]) -> tuple[QPointF, float]:
         x, y, z = point
         angle, pitch = math.radians(self._angle), math.radians(self._pitch)
-        rx, rz = x * math.cos(angle) + z * math.sin(angle), -x * math.sin(
-            angle
-        ) + z * math.cos(angle)
-        ry, depth = (y - 16) * math.cos(pitch) - rz * math.sin(pitch), (
-            y - 16
-        ) * math.sin(pitch) + rz * math.cos(pitch)
+        rx, rz = (
+            x * math.cos(angle) + z * math.sin(angle),
+            -x * math.sin(angle) + z * math.cos(angle),
+        )
+        ry, depth = (
+            (y - 16) * math.cos(pitch) - rz * math.sin(pitch),
+            (y - 16) * math.sin(pitch) + rz * math.cos(pitch),
+        )
         scale = min(self.width() / 25, self.height() / 38)
         return (
             QPointF(self.width() / 2 + rx * scale, self.height() / 2 + ry * scale),

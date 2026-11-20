@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 import pytest
 
-from launcher.log_policy import FORGE_112, forge_log_settings, prepare_logging
+from launcher.pack.log_policy import FORGE_112, forge_log_settings, prepare_logging
 from omk.profiles import PROJECT_ROOT
 
 
@@ -114,7 +114,7 @@ def test_linked_logging_folder_is_rejected(tmp_path):
 
 
 def test_env_example_matches_the_consumed_defaults():
-    text = (PROJECT_ROOT / "deploy/forge-logging.example.env").read_text(
+    text = (PROJECT_ROOT / "deploy/game/forge-logging.example.env").read_text(
         encoding="utf-8"
     )
     values = dict(

@@ -19,7 +19,7 @@ generic transport по-прежнему сам не доказывает про�
 ## Инструменты и сборка
 
 Версии, официальные release URLs, хеши загрузок и распакованных Linux/amd64
-бинарников закреплены в [manifest](../deploy/offsite-tools.json). Python base
+бинарников закреплены в [manifest](../deploy/offsite/offsite-tools.json). Python base
 закреплён digest. Инструменты не скачиваются при запуске лаунчера.
 
 ```console
@@ -71,7 +71,7 @@ HTTP authentication хранятся отдельно от клиентских 
 Перед staging restore сохраняется общий project reserve из storage policy.
 Это preflight, не жёсткая quota файловой системы. Временные/ошибочные restore
 каталоги сохраняются внутри workspace; их дальнейший общий бюджет/retention
-принадлежит будущему owner workflow. [Пример env](../deploy/offsite.example.env).
+принадлежит будущему owner workflow. [Пример env](../deploy/offsite/offsite.example.env).
 
 ## Внутренний интерфейс
 

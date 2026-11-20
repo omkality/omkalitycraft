@@ -10,10 +10,10 @@ import hashlib
 import json
 import os
 
-from launcher.nbt import Tag, write_nbt
 from omk import ftb_restore_authority as gate
 from omk.backup_store import _json_write, _sync_directory
 from omk.fs import regular
+from omk.nbt import Tag, write_nbt
 
 TEAM_FIELDS = (
     "Owner",

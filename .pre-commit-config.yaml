@@ -2,19 +2,27 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
+      # Preserve patch context and pinned upstream license bytes.
       - id: trailing-whitespace
+        exclude: ^(deploy/drasl/(one-use-invites|session-revocation)\.patch|launcher/assets/fonts/OFL\.txt|profiles/client-addons/forge-1\.12\.2/notices/FullscreenWindowed-LICENSE\.txt)$
       - id: end-of-file-fixer
+        exclude: ^deploy/drasl/one-use-invites\.patch$
       - id: check-yaml
       - id: check-toml
       - id: check-added-large-files
         args: ["--maxkb=2048"]
       - id: check-merge-conflict
       - id: detect-private-key
-  - repo: https://github.com/psf/black
-    rev: '26.3.1'
-    hooks:
-      - id: black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.12
+    rev: v0.15.11
     hooks:
-      - id: ruff
+      - id: ruff-check
+      - id: ruff-format
+  - repo: local
+    hooks:
+      - id: mypy-runtime
+        name: mypy runtime contracts
+        language: system
+        entry: uv run --locked --no-sync python -m mypy api/settings/config.py api/__main__.py launcher/session.py launcher/files.py launcher/releases.py launcher/install.py
+        pass_filenames: false
+        types: [python]

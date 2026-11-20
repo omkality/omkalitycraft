@@ -1,5 +1,6 @@
 import threading
 from pathlib import Path
+from uuid import uuid4
 
 import pytest
 from PySide6.QtCore import Qt, QTimer
@@ -27,8 +28,10 @@ from launcher.skin_dialog import SkinDialog
 from launcher.skin_view import default_skin
 from launcher.skins import decode_skin
 from launcher.storage import FileSessionStore
+from omk.incidents import capture_incident
 from omk.lab import skin_fixture
 from tests.fakes import FakeDrasl
+from tests.unit.test_game_runner import fixture as game_fixture
 
 
 def test_player_launcher_has_no_diagnostic_or_administration_menu(qtbot, tmp_path):
@@ -40,6 +43,50 @@ def test_player_launcher_has_no_diagnostic_or_administration_menu(qtbot, tmp_pat
     assert window.menuBar().actions() == []
     assert not service.store.path.exists()
     assert service.client.calls == []
+
+
+@pytest.mark.parametrize("success", [True, False])
+def test_existing_incident_stays_local_when_status_cdn_is_used(
+    qtbot, tmp_path, monkeypatch, success
+):
+    service = AccountService(
+        FakeDrasl(), FileSessionStore(tmp_path / "userdata/session.json")
+    )
+    origin = "http://127.0.0.1:18000"
+    seen = []
+
+    def request(client, method, path, body=None, token=None):
+        seen.append((client.base_url, method, path, body, token))
+        if not success:
+            raise OSError("test CDN unavailable")
+        return {"servers": {}}
+
+    monkeypatch.setattr("launcher.server_status.DraslClient.request", request)
+    auth = service.login("test_player", "test-password")
+    folder, release, _ = game_fixture(tmp_path)
+    pending = capture_incident(
+        tmp_path,
+        folder,
+        release,
+        auth.session,
+        run_id=uuid4().hex,
+        started_at=0,
+        exit_code=1,
+        memory_mb=6144,
+        launcher="test",
+    )
+    assert pending is not None
+    saved = pending.read_bytes()
+    window = LauncherWindow(
+        service, runner=GameRunner(tmp_path), status_origin=origin, auto_restore=False
+    )
+    qtbot.addWidget(window)
+    window.show()
+    with qtbot.waitSignal(window.server_status.updated, timeout=5000):
+        window._authenticated(auth)
+    assert window.server_status.pool.waitForDone(5000)
+    assert seen == [(origin, "GET", "/servers/status", None, None)]
+    assert pending.read_bytes() == saved
 
 
 @pytest.fixture

@@ -20,7 +20,7 @@ FTB защищает чанки 16×16 по всей высоте, а не пр�
 | `OMK_DJ2_CLAIMS_PER_PLAYER` | 50 | 1–30000 |
 | `OMK_DJ2_HOMES_PER_PLAYER` | 3 | 1–1000 |
 
-Пример — [deploy/dj2-player-limits.example.env](../deploy/dj2-player-limits.example.env).
+Пример — [deploy/game/dj2-player-limits.example.env](../deploy/game/dj2-player-limits.example.env).
 Python готовит rank-файл; сам Forge не читает эти env. Неправильное значение или
 неизвестная структура файла отклоняются до записи. Другие ранги сохраняются.
 

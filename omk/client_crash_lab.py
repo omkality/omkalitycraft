@@ -20,6 +20,7 @@ from omk.client_crash_fixture import (
 from omk.dj2_commands_lab import FIRST
 from omk.dj2_lab import _accounts, _copy_server, _stop_game, _wait_server, approved_mods
 from omk.dj2_linux_lab import LinuxServer, clone_client
+from omk.incident_delivery import submit_pending
 from omk.mod_components import add_pack_inputs
 from omk.operator_lab import _cleanup, _denied, _start_api, _stop_api
 from omk.profiles import PROJECT_ROOT
@@ -132,7 +133,6 @@ class ClientCrashLab:
             self.root,
             fixture=self.fixture,
             marker=self.marker,
-            reports_url=self.report_url,
         )
         mark = self.server.log.stat().st_size
         self.session = self.service.renew_for_game()
@@ -238,9 +238,11 @@ class ClientCrashLab:
             "real_client_closes_cleanly_after_recoverable_crash", self.game.poll() == 0
         )
         self.checked(
-            "game_runner_completed_exit_diagnostics_and_retry",
+            "game_runner_completed_exit_diagnostics",
             self.game.diagnostics_done.wait(30),
         )
+        self.checked("launcher_kept_the_report_local", self.pending.exists())
+        submit_pending(self.root, self.report_url, self.session)
         self.checked(
             "queued_report_removed_only_after_real_http_ack", not self.pending.exists()
         )
@@ -251,7 +253,7 @@ class ClientCrashLab:
             saved["verified_name"] == self.session.player_name,
         )
         self.verify_report(saved, "received")
-        self.runner.send_reports(self.session, background=False)
+        submit_pending(self.root, self.report_url, self.session)
         self.checked(
             "repeated_delivery_does_not_duplicate_report", len(store.list()) == 1
         )

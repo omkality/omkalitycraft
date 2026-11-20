@@ -5,9 +5,9 @@ from pathlib import Path
 
 import pytest
 
-from launcher.client_defaults import prepare_client_defaults
-from launcher.client_policy import ClientDefaults
 from launcher.nbt import Tag, read_nbt, write_nbt
+from launcher.pack.client_defaults import prepare_client_defaults
+from launcher.pack.client_policy import ClientDefaults
 from launcher.releases import Release, ReleaseError
 from tests.unit.test_game_runner import fixture
 

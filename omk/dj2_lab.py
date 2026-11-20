@@ -17,7 +17,7 @@ from uuid import uuid4
 
 from launcher.accounts import AccountService
 from launcher.game import GameRunner
-from launcher.log_policy import prepare_logging
+from launcher.pack.log_policy import prepare_logging
 from launcher.releases import read_release
 from launcher.storage import FileSessionStore
 from omk.diagnostics import BoundedLog, PipeLog
@@ -251,8 +251,8 @@ def _start_server(args, lab, dest, client):
             "-Xms1G",
             "-Xmx4G",
             "-Dfile.encoding=UTF-8",
-            f'-Djava.io.tmpdir={lab / "tmp"}',
-            f'-Duser.home={lab / "java-home"}',
+            f"-Djava.io.tmpdir={lab / 'tmp'}",
+            f"-Duser.home={lab / 'java-home'}",
             f"-javaagent:{agent}={client.base_url}/authlib-injector",
             "-Dauthlibinjector.side=server",
             "-Domkality.lab.commandCatalog=true",

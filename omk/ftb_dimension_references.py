@@ -7,7 +7,7 @@ GTNH/other storage versions require their own verified adapters.
 
 import copy
 
-from launcher.nbt import Tag
+from omk.nbt import Tag
 
 
 def _tag(root, key, kind):

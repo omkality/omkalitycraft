@@ -28,7 +28,7 @@ from tuf.ngclient.fetcher import FetcherInterface
 
 from launcher.install import current_platform
 from launcher.releases import ReleaseError, inside, safe_path
-from launcher.update_sources import github_asset_redirect, github_asset_url
+from launcher.update.update_sources import github_asset_redirect, github_asset_url
 from omk.drasl import DraslClient
 from omk.fs import resolved
 

@@ -30,7 +30,9 @@ def inspect_trace(path):
     mode = (
         "console"
         if "trace-mode=console" in text
-        else "exclusions" if "trace-mode=exclusions" in text else "full"
+        else "exclusions"
+        if "trace-mode=exclusions" in text
+        else "full"
     )
     hooks = {"console": ("console",), "exclusions": ("mixin-service",), "full": HOOKS}[
         mode

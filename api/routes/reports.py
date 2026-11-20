@@ -23,8 +23,9 @@ from omk.report_store import ReportConflict, ReportLimit, ReportStore
     middleware=[
         RateLimitConfig(
             rate_limit=("minute", 20),
-            identifier_for_request=lambda request: "client-reports:"
-            + get_remote_address(request),
+            identifier_for_request=lambda request: (
+                "client-reports:" + get_remote_address(request)
+            ),
         ).middleware
     ],
 )

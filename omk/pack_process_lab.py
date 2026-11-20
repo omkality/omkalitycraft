@@ -10,8 +10,8 @@ from pathlib import Path
 from urllib.parse import urlsplit
 from uuid import uuid4
 
-from launcher.client_defaults import prepare_client_defaults
 from launcher.install import Installer, ReleaseClient, current_platform
+from launcher.pack.client_defaults import prepare_client_defaults
 from launcher.releases import MAX_MANIFEST_BYTES, ReleaseError, sha256_file
 from omk.pack_install_lab import (
     PackDirectory,

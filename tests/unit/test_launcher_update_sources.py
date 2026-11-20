@@ -15,7 +15,7 @@ from tuf.api import exceptions
 from tuf.api.metadata import Metadata
 
 from launcher.install import current_platform
-from launcher.update_sources import github_asset_redirect, github_asset_url
+from launcher.update.update_sources import github_asset_redirect, github_asset_url
 from launcher.updater import LauncherUpdater, PortableFetcher, UpdateError
 from omk.drasl import DraslClient
 from omk.release_cli import add_release_commands, prepare_release

@@ -8,8 +8,8 @@ import pytest
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-from launcher.client_defaults import prepare_client_defaults
 from launcher.install import current_platform
+from launcher.pack.client_defaults import prepare_client_defaults
 from launcher.version import VERSION
 from omk.pack_install_lab import PackDirectory, _options_preserved, run_pack_install_lab
 from omk.pack_process_lab import run_pack_process_lab
