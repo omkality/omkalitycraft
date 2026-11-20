@@ -42,33 +42,58 @@ CPU/RAM/ротация валидируются Settings, но native-проце
 [LOGGING.md](LOGGING.md) и [SERVER_STATUS.md](SERVER_STATUS.md).
 Постоянные данные Drasl/HTTPS/закрытый inbox не подключены к CDN-only Compose.
 
-## Development Compose
+## Compose API
 
-`docker-compose.yml` читает env через Compose, затем передаёт явные значения процессу.
-Окружение оболочки выше выбранного `--env-file`; без `--env-file` Compose использует
-свою стандартную `.env`. Settings внутри образа читает переданное окружение, рабочая
-`.env` в образ не копируется. Явные env защищают от случайного наследования host-путей.
-
-- Публикация строго на `127.0.0.1`, с одинаковым `API_PORT` внутри/снаружи.
-- Внутри контейнера `API_HOST=0.0.0.0` — сетевой инвариант, а не открытие host-интерфейса.
-- `CONTENT_ROOT=/data/content` — внутренний путь read-only mount.
-- `OMK_API_CONTENT_SOURCE` задаёт исходную папку, default `./data/content` относительно
-  Compose-файла. Папка должна существовать: автоматическое создание опечатанного пути отключено.
-- CPU/RAM и Docker local logs берутся из env. Ротация приблизительно ограничивает
-  объём файлов `OMK_API_LOG_MIB × OMK_API_LOG_FILES`; служебные данные Docker учитываются отдельно.
-- Granian 2.8.6 закреплён в lockfile. Для нескольких Linux workers нужен kernel ≥5.14
-  и `net.ipv4.tcp_migrate_req=1`. Compose включает эту сетевую инварианту только внутри
-  namespace контейнера, не меняя host sysctl; произвольного переключателя отключения нет.
-  Native Linux с несколькими workers требует соответствующей настройки администратора;
-  Windows/macOS native не используют этот Linux sysctl.
-- Контекст сборки исключает `.env`, `.git`, `.local`, `.omk-admin`, runtime/data и сессии.
-  Образ, Java и моды не заменяются произвольными клиентскими env.
-
-Проверка примера без изменения рабочей `.env`:
+Из корня репозитория проверьте модель на примере:
 
 ```powershell
-docker compose --env-file .env.example config --quiet
+docker compose --env-file deploy/api/example.env -f deploy/api/compose.yaml config --quiet
 ```
+
+Для закрытого запуска используйте свой env-файл с абсолютным существующим
+`OMK_API_CONTENT_SOURCE`. Для запуска из другого cwd указывайте абсолютные
+пути сразу к `--env-file` и `-f`. Имя Compose-проекта по умолчанию
+`omkalitycraft-api`. Перед переходом остановите прежний экземпляр API его
+штатной командой. Прежний `docker compose up` из корня заменяется так:
+
+```powershell
+docker compose --env-file <api.env> -f deploy/api/compose.yaml up -d --build
+```
+
+- Публикация на `127.0.0.1`. Внутри контейнера `API_HOST=0.0.0.0` и
+  `CONTENT_ROOT=/data/content`. Bind доступен на чтение. Compose отклоняет
+  пустой или отсутствующий источник и не создаёт каталоги автоматически.
+- Относительный bind source считается от `deploy/api/`. Значение
+  `./data/content` из старого Compose замените абсолютным путём или
+  `../../data/content`. Исходный каталог и его содержимое переносить не требуется.
+- CPU, RAM и ротация Docker задаются env-файлом API. Настройка
+  `net.ipv4.tcp_migrate_req=1` применяется к network namespace контейнера.
+  Для нескольких Linux workers требуется ядро ≥5.14.
+- Перед сборкой Docker применяет `Dockerfile.api.dockerignore`. В образ
+  входят исходники API, используемые общие модули и зависимости shared/api
+  из lock. Пример env и рабочие каталоги владельца находятся вне контекста.
+
+### Источники настроек
+
+| Потребитель | Настройки и порядок |
+| --- | --- |
+| Native API | `.env.example` служит примером для `python -m api`. Окружение процесса выше текущего `.env`. Config проверяет `API_*`, `WORKERS_NUM`, `CONTENT_ROOT`, `OMK_API_*`, `CLIENT_REPORTS_*` и `SERVER_STATUS_*`. |
+| Compose API | `deploy/api/example.env`. Переменные оболочки имеют приоритет над указанным `--env-file`. Compose читает путь bind и сервисные лимиты. В контейнер передаются ключи, явно перечисленные в `services.api.environment`. |
+| Статус игры | `SERVER_STATUS_TARGETS`, `SERVER_STATUS_CACHE_SECONDS`, `SERVER_STATUS_TIMEOUT_SECONDS` передаются API. Пропущенный или пустой список означает пустую карту. Непустой список — JSON-объект из [примера](../deploy/api/server-status.example.env). TTL 1…300 с, таймаут 0,1…5 с. |
+| Drasl | Env стека в [deploy/auth/example.env](../deploy/auth/example.env) задаёт параметры Compose. Приватный TOML монтируется отдельно по `OMK_AUTH_CONFIG`. |
+| Операторский CLI | Для команд, читающих параметры из окружения, используйте `uv run --env-file <file> omk …` или заранее заданное окружение. Приватный `operator.toml` передаётся явно в командах администратора. |
+
+| Имя из прежнего env | Текущий потребитель | Действие |
+| --- | --- | --- |
+| `HOST_CONTENT_ROOT` | Bind API задаёт `OMK_API_CONTENT_SOURCE` | Укажите ожидаемый каталог в env-файле Compose. |
+| `CONTENT_ROOT` | Native API | Сохраните значение для native запуска. В Compose путь внутри контейнера задан манифестом. |
+| `API_HOST` | Native API | Для Compose публикацию задаёт loopback bind в манифесте. |
+| `POSTGRES_*`, `DATABASE_URL`, `REDIS_*` | Прежний стек | Сохраните архив env у владельца. Drasl в текущем стеке использует собственный SQLite volume. |
+| `TELEGRAM_BOT_*`, `JWT_*`, `REGISTRATION_SESSION_TTL_SECONDS`, `RESET_SESSION_TTL_SECONDS`, `SSE_*` | Прежняя авторизация и рассылка | Сроки и настройки новой авторизации передавайте через приватную конфигурацию Drasl, сверившись с [runbook](AUTH_STORAGE.md). |
+
+Перед стартом можно проверить пути и план без вывода значений командой
+`config --quiet`. Развёрнутую модель смотрите локально у оператора.
+Для передачи диагностики указывайте имена полей и ошибки, убрав значения.
 
 ## Реальная проверка Linux
 

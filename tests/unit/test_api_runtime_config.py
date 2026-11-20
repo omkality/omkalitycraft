@@ -51,6 +51,24 @@ def test_environment_overrides_dotenv_then_defaults(
     ]
 
 
+@pytest.mark.parametrize("value", [None, "", "{}"])
+def test_no_status_targets_is_empty(value, monkeypatch, clean_settings_env):
+    if value is not None:
+        monkeypatch.setenv("SERVER_STATUS_TARGETS", value)
+    assert Settings(_env_file=None).server_status_targets == {}
+
+
+def test_status_targets_and_timing_follow_environment(monkeypatch, clean_settings_env):
+    monkeypatch.setenv("SERVER_STATUS_TARGETS", '{"dj2":{"host":"minecraft","port":25575}}')
+    monkeypatch.setenv("SERVER_STATUS_CACHE_SECONDS", "37")
+    monkeypatch.setenv("SERVER_STATUS_TIMEOUT_SECONDS", "3")
+    settings = Settings(_env_file=None)
+    assert settings.server_status_targets["dj2"].model_dump() == {
+        "host": "minecraft", "port": 25575,
+    }
+    assert (settings.server_status_cache_seconds, settings.server_status_timeout_seconds) == (37, 3)
+
+
 @pytest.mark.parametrize(
     "key,value",
     [
@@ -70,6 +88,13 @@ def test_environment_overrides_dotenv_then_defaults(
         ("omk_api_log_mib", 0),
         ("omk_api_log_files", 0),
         ("omk_api_log_files", 31),
+        ("server_status_cache_seconds", 0),
+        ("server_status_cache_seconds", 301),
+        ("server_status_timeout_seconds", 0.09),
+        ("server_status_timeout_seconds", 5.01),
+        ("server_status_targets", "[]"),
+        ("server_status_targets", "null"),
+        ("server_status_targets", '{"dj2":{"host":"minecraft","port":0}}'),
     ],
 )
 def test_invalid_settings_are_rejected(key, value, clean_settings_env):

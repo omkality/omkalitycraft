@@ -1,0 +1,16 @@
+# The root build context is for Dockerfile.api.
+**
+!pyproject.toml
+!uv.lock
+!api/**/*.py
+!api/settings/instances/divinejourney2/instance_config.json
+!api/settings/instances/divinejourney2/launch_profile.json
+!api/settings/instances/divinejourney2/manifest.json
+!api/settings/launcher/manifest.json
+!omk/__init__.py
+!omk/diagnostics.py
+!omk/drasl.py
+!omk/fs.py
+!omk/incidents.py
+!omk/minecraft_status.py
+!omk/report_store.py

@@ -1,10 +1,12 @@
 """Exercise the actual API image and Compose with fresh, loopback-only lab data."""
 
+import argparse
 import json
 import os
-import socket
+import shutil
 import subprocess
 import time
+from ipaddress import IPv4Network
 from pathlib import Path
 from urllib.error import URLError
 from urllib.request import ProxyHandler, build_opener
@@ -13,7 +15,31 @@ from uuid import uuid4
 ROOT = Path(__file__).resolve().parents[1]
 
 
+class DockerFailure(RuntimeError):
+    def __init__(self, phase: str, exit_code: int, stderr: str):
+        self.phase = phase
+        self.exit_code = exit_code
+        self.category = docker_failure_category(stderr)
+        super().__init__(f"{phase}: {self.category} (exit {exit_code})")
+
+
+def docker_failure_category(stderr: str) -> str:
+    message = stderr.lower()
+    if "all predefined address pools have been fully subnetted" in message:
+        return "network_pool_exhausted"
+    if "port is already allocated" in message or "address already in use" in message:
+        return "address_in_use"
+    if "cannot connect to the docker daemon" in message:
+        return "daemon_unavailable"
+    return "docker_error"
+
+
 def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned cleanup path
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--subnet", type=IPv4Network, help="Explicit free subnet for this lab only"
+    )
+    args = parser.parse_args()
     run = uuid4().hex[:12]
     lab = ROOT / ".local" / ("api-runtime-" + run)
     lab.mkdir(parents=True)
@@ -22,8 +48,21 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
     project = "omk-api-" + run
     image = project + ":lab"
     default_container = project + "-default"
-    env_file, overlay = lab / "compose.env", lab / "image.json"
-    overlay.write_text(json.dumps({"services": {"api": {"image": image}}}))
+    env_file, overlay = lab / "compose.env", lab / "compose.override.yaml"
+    internal_port = 8107
+    overlay.write_text(
+        f"services:\n  api:\n    image: {image}\n    ports: !override\n"
+        f"      - target: {internal_port}\n        host_ip: 127.0.0.1\n        protocol: tcp\n"
+        + (
+            f"networks:\n  default:\n    ipam:\n      config:\n        - subnet: {args.subnet}\n"
+            if args.subnet
+            else ""
+        ),
+        encoding="utf-8",
+    )
+    probe_source = (ROOT / "tests/fixtures/api_image_probe.py").read_text(
+        encoding="utf-8"
+    )
     environment = {
         key: value
         for key, value in os.environ.items()
@@ -34,7 +73,7 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
             "API_REQUESTS_PER_SECOND",
             "CLIENT_REPORTS_PRUNE_INTERVAL_SECONDS",
         }
-        and not key.startswith("OMK_API_")
+        and not key.startswith(("OMK_API_", "SERVER_STATUS_", "COMPOSE_"))
     }
     compose = [
         "docker",
@@ -44,7 +83,7 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
         "--env-file",
         str(env_file),
         "-f",
-        str(ROOT / "docker-compose.yml"),
+        str(ROOT / "deploy/api/compose.yaml"),
         "-f",
         str(overlay),
     ]
@@ -55,19 +94,23 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
         "scope": "Disposable API image/Compose, not game readiness",
     }
 
-    def call(args, *, check=True, timeout=60):
+    def call(args, *, check=True, timeout=60, phase=None, stdin=None):
         result = subprocess.run(
             args,
             cwd=ROOT,
             env=environment,
-            text=True,
+            input=stdin,
+            encoding="utf-8",
+            errors="replace",
             capture_output=True,
             timeout=timeout,
             check=False,
         )
         if check and result.returncode:
             # Never echo supplied environment or arbitrary Docker diagnostics.
-            raise RuntimeError("API container lab command failed")
+            raise DockerFailure(
+                phase or f"docker {args[1]}", result.returncode, result.stderr
+            )
         return result
 
     def expect(condition, name):
@@ -87,9 +130,11 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
             time.sleep(0.5)
         raise TimeoutError("API lab startup timeout")
 
-    def container_json(name, expression):
+    def container_json(name, mode):
         result = call(
-            ["docker", "exec", name, ".venv/bin/python", "-c", expression], check=False
+            ["docker", "exec", "-i", name, ".venv/bin/python", "-", mode],
+            check=False,
+            stdin=probe_source,
         )
         return json.loads(result.stdout) if result.returncode == 0 else None
 
@@ -109,8 +154,36 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
         return state
 
     try:
+        context = lab / "context"
+        context.mkdir()
+        for name in ("Dockerfile.api.dockerignore", "Dockerfile.api", "pyproject.toml", "uv.lock"):
+            shutil.copyfile(ROOT / name, context / name)
+        for package in ("api", "omk"):
+            shutil.copytree(
+                ROOT / package,
+                context / package,
+                ignore=shutil.ignore_patterns("__pycache__"),
+            )
+        for folder in (context, context / "api/settings"):
+            for suffix in ("key", "pem", "db", "json"):
+                (folder / f"test-marker.{suffix}").write_text(
+                    "fixture marker", encoding="utf-8"
+                )
+        (context / ".env").write_text("API_PORT=9\n", encoding="utf-8")
+        (context / ".omk-admin").mkdir()
+        (context / ".omk-admin/fixture.txt").write_text(
+            "fixture marker", encoding="utf-8"
+        )
         built = call(
-            ["docker", "build", "-f", "Dockerfile.api", "-t", image, "."],
+            [
+                "docker",
+                "build",
+                "-f",
+                str(context / "Dockerfile.api"),
+                "-t",
+                image,
+                str(context),
+            ],
             timeout=600,
             check=False,
         )
@@ -135,21 +208,12 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
                 image,
             ]
         )
-        health = until(
-            lambda: container_json(
-                default_container,
-                "import json,urllib.request; print(urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=2).read().decode())",
-            )
-        )
+        health = until(lambda: container_json(default_container, "health"))
         expect(
             health["api_host"] == "127.0.0.1" and health["api_port"] == 8000,
             "native_defaults_serve_inside_unpublished_linux_container",
         )
-        native = container_json(
-            default_container,
-            "import json,pathlib; "
-            "print(json.dumps(pathlib.Path('/proc/1/cmdline').read_bytes().decode().split(chr(0))))",
-        )
+        native = container_json(default_container, "pid1")
         expect(
             native[native.index("--workers") + 1] == "1", "default_worker_count_is_used"
         )
@@ -161,15 +225,13 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
             "default_pid1_handles_clean_stop_without_oom",
         )
 
-        # Ask the OS for a free loopback port, then release it for Compose.
-        with socket.socket() as probe:
-            probe.bind(("127.0.0.1", 0))
-            port = probe.getsockname()[1]
         env_file.write_text(
-            f"API_PORT={port}\nWORKERS_NUM=2\nAPI_REQUESTS_PER_SECOND=17\n"
+            f"API_PORT={internal_port}\nWORKERS_NUM=2\nAPI_REQUESTS_PER_SECOND=17\n"
             "CLIENT_REPORTS_PRUNE_INTERVAL_SECONDS=120\nOMK_API_CPUS=0.75\n"
             "OMK_API_MEMORY_MIB=512\nOMK_API_LOG_MIB=4\nOMK_API_LOG_FILES=2\n"
-            f"OMK_API_CONTENT_SOURCE={content.as_posix()}\n",
+            'SERVER_STATUS_TARGETS=\'{"synthetic":{"host":"fixture.invalid","port":25578}}\'\n'
+            "SERVER_STATUS_CACHE_SECONDS=37\nSERVER_STATUS_TIMEOUT_SECONDS=3\n"
+            f'OMK_API_CONTENT_SOURCE="{content.as_posix()}"\n',
             encoding="utf-8",
         )
         config = json.loads(call([*compose, "config", "--format", "json"]).stdout)[
@@ -177,11 +239,20 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
         ]["api"]
         expect(
             config["ports"][0]["host_ip"] == "127.0.0.1"
-            and config["ports"][0]["target"] == port
-            and int(config["ports"][0]["published"]) == port,
+            and config["ports"][0]["target"] == internal_port
+            and config["ports"][0].get("published") is None,
             "compose_port_override_stays_loopback",
         )
-        call([*compose, "up", "-d", "--no-build"])
+        call([*compose, "up", "-d", "--no-build"], phase="compose up")
+        host, _, port = (
+            call([*compose, "port", "api", str(internal_port)])
+            .stdout.strip()
+            .rpartition(":")
+        )
+        expect(
+            host == "127.0.0.1" and 0 < int(port) <= 65535,
+            "docker_assigned_loopback_port",
+        )
         cid = call([*compose, "ps", "-q", "api"]).stdout.strip()
         opener = build_opener(ProxyHandler({}))
 
@@ -192,7 +263,7 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
         health = until(external_health)
         expect(
             health["api_host"] == "0.0.0.0"
-            and health["api_port"] == port
+            and health["api_port"] == internal_port
             and health["instances_count"] == 1,
             "compose_override_serves_only_fixture_content",
         )
@@ -223,14 +294,10 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
             ),
             "fixture_content_mount_is_read_only",
         )
-        values = container_json(
-            cid,
-            "import json; from api.settings.config import settings as s; "
-            "print(json.dumps([s.workers_num,s.api_requests_per_second,s.client_reports_prune_interval_seconds]))",
-        )
+        values = container_json(cid, "settings")
         expect(
-            values == [2, 17, 120],
-            "container_reads_worker_rate_and_retention_overrides",
+            values == [2, 17, 120, 37, 3, 25578],
+            "container_reads_worker_rate_retention_and_status_overrides",
         )
         log_result = call(["docker", "logs", cid])
         logs = log_result.stdout + log_result.stderr
@@ -239,12 +306,10 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
             "Started worker-1" in logs and "Started worker-2" in logs,
             "two_real_granian_workers_started",
         )
-        absent = container_json(
-            cid,
-            "import json,pathlib; print(json.dumps([not pathlib.Path(p).exists() for p in "
-            "['/backend/.env','/backend/.omk-admin','/backend/.local','/backend/.git']]))",
+        expect(
+            container_json(cid, "private") is True,
+            "image_excludes_private_markers_and_gui_test_dependencies",
         )
-        expect(absent == [True] * 4, "private_host_paths_are_not_in_image")
         for key in ["WORKERS_NUM", "SERVER_STATUS_TARGETS", "OMK_API_CPUS"]:
             sentinel = "fixture-invalid-value-must-not-be-logged"
             invalid = call(
@@ -285,6 +350,12 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
         subprocess.SubprocessError,
     ) as error:
         report["error_type"] = type(error).__name__
+        if isinstance(error, DockerFailure):
+            report["docker_failure"] = {
+                "phase": error.phase,
+                "exit_code": error.exit_code,
+                "category": error.category,
+            }
         if isinstance(error, AssertionError):
             report["failed_check"] = str(error)
             if str(error).endswith("_pid1_handles_clean_stop_without_oom"):

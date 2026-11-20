@@ -1,8 +1,9 @@
+import json
 from ipaddress import ip_address
 from typing import Annotated
 
 from pydantic import BaseModel, Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class ServerStatusTarget(BaseModel):
@@ -28,9 +29,27 @@ class Settings(BaseSettings):
     client_reports_auth_url: str | None = None
     server_status_cache_seconds: int = Field(default=15, ge=1, le=300)
     server_status_timeout_seconds: float = Field(default=2, ge=0.1, le=5)
-    server_status_targets: dict[
-        Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9_-]{0,47}$")], ServerStatusTarget
+    server_status_targets: Annotated[
+        dict[
+            Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9_-]{0,47}$")],
+            ServerStatusTarget,
+        ],
+        NoDecode,
     ] = Field(default_factory=dict, max_length=8)
+
+    @field_validator("server_status_targets", mode="before")
+    @classmethod
+    def parse_status_targets(cls, value: object) -> object:
+        """Treat an omitted or empty Compose status target value as an empty map."""
+        if not isinstance(value, str):
+            return value
+        if not value:
+            return {}
+        try:
+            result: object = json.loads(value)
+        except json.JSONDecodeError:
+            raise ValueError("Invalid server status target JSON") from None
+        return result
 
     @field_validator("api_host")
     @classmethod
