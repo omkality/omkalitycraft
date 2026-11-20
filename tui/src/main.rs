@@ -145,7 +145,7 @@ impl Drop for Pending {
 fn main() {
     if let Err(error) = execute() {
         eprintln!(
-            "omk-tui: {error}\nЗапуск: Start-Live.cmd или omk-tui --demo. См. docs/OWNER_TUI.md."
+            "omk-tui: {error}\nЗапуск: omk-tui --demo или omk-tui --repo PATH --python EXE --config PATH."
         );
         startup::pause_on_double_click();
         std::process::exit(1);
@@ -166,7 +166,7 @@ fn execute() -> Result<(), String> {
         app.accept_history(Some(demo_history(app.window())));
     }
     if app.demo && env::args_os().len() == 1 {
-        app.message="Демо: подключение к серверу не настроено.\nДля живого режима используйте Start-Live.cmd\nили owner-tui.json рядом с exe.\nКоманды в демо отключены.".into();
+        app.message="Демо: подключение к серверу не настроено.\nДля подключения укажите --repo, --python и --config.\nКоманды в демо отключены.".into();
     }
     if let Some(path) = options.snapshot {
         if let Some(backend) = options.backend {

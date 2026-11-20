@@ -354,12 +354,6 @@ class LauncherWindow(QMainWindow):
         QTimer.singleShot(0, self, self._align_form_labels)
         tabs.addTab(login, "Уже есть аккаунт")
         tabs.addTab(signup, "Первый вход")
-        layout.addWidget(
-            label(
-                "Запомненный вход хранится в папке лаунчера. Не передавайте папку userdata другим людям.",
-                muted=True,
-            )
-        )
         return page
 
     def _home_page(self) -> Dashboard:
