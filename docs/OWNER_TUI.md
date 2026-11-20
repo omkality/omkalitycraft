@@ -101,6 +101,10 @@ cargo +1.93.1 run --manifest-path tui/Cargo.toml --locked -- --demo
 
 ## Запуск exe без аргументов
 
+Windows-сборка включает значок Руды Эдема из [исходного изображения](../tui/assets/eden-ore.png).
+Для компиляции значка нужен Windows SDK с `rc.exe` при сборке MSVC
+или `windres` из MinGW при сборке GNU.
+
 Для живого режима нужны checkout проекта, Python и закрытый конфиг владельца.
 Чтобы собрать EXE для двойного клика на конкретном ПК, передайте **только пути**
 через `OMK_TUI_EMBEDDED_DEFAULTS` при сборке из корня проекта.
