@@ -8,9 +8,13 @@ from uuid import UUID, uuid4
 from launcher.session import Session, SessionStore, SessionStoreError
 from launcher.skin_defaults import DEFAULT_SKIN_MODEL, default_skin_bytes
 from launcher.skins import SkinError, decode_skin
+from omk.accounts import MAX_REGISTRATION_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH
 from omk.accounts.drasl import DraslClient, DraslError
 
 USERNAME_PATTERN = r"[A-Za-z0-9_]{3,16}"
+PASSWORD_RANGE = (
+    f"от {MIN_PASSWORD_LENGTH} до {MAX_REGISTRATION_PASSWORD_LENGTH} символов"
+)
 
 
 class AccountError(RuntimeError):
@@ -67,8 +71,13 @@ class AccountService:
             )
         if not invitation:
             raise AccountError("Введите код приглашения.")
-        if not isinstance(password, str) or not 12 <= len(password) <= 128:
-            raise AccountError("Пароль: от 12 до 128 символов.")
+        if (
+            not isinstance(password, str)
+            or not MIN_PASSWORD_LENGTH
+            <= len(password)
+            <= MAX_REGISTRATION_PASSWORD_LENGTH
+        ):
+            raise AccountError(f"Пароль должен содержать {PASSWORD_RANGE}.")
         return Registration(username, password, invitation)
 
     def register(self, registration: Registration) -> AuthResult:
@@ -211,8 +220,10 @@ class AccountService:
 
     def change_password(self, old_password: str, new_password: str) -> AuthResult:
         """Change the account password and report whether the game session was renewed."""
-        if len(new_password) < 12:
-            raise AccountError("Новый пароль должен содержать хотя бы 12 символов.")
+        if len(new_password) < MIN_PASSWORD_LENGTH:
+            raise AccountError(
+                f"Новый пароль должен содержать хотя бы {MIN_PASSWORD_LENGTH} символов."
+            )
         if old_password == new_password:
             raise AccountError("Новый пароль должен отличаться от прежнего.")
         session, api_token = self._confirm_password(old_password)

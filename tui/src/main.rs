@@ -26,12 +26,11 @@ use std::{
     thread,
     time::{Duration, Instant},
 };
-use ui::App;
+use ui::{App, Confirmation};
 
 struct Options {
     backend: Option<Backend>,
     snapshot: Option<PathBuf>,
-    about: bool,
     branding_header: bool,
     window_index: usize,
 }
@@ -50,19 +49,17 @@ fn options() -> Result<Option<Options>, String> {
     let mut config = sidecar.map(|v| v.config);
     let mut demo = false;
     let mut snapshot = None;
-    let mut about = false;
     let mut branding_header = true;
     let mut window_index = 0;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / u unban / r refresh / t period / F1 project / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / u unban / i invite / r refresh / t period / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
             Some("--demo") => demo = true,
-            Some("--about") => about = true,
             Some("--branding-header") => branding_header = true,
             Some("--compact-header") => branding_header = false,
             Some("--window") => {
@@ -103,7 +100,6 @@ fn options() -> Result<Option<Options>, String> {
             })
         },
         snapshot,
-        about,
         branding_header,
         window_index,
     }))
@@ -121,7 +117,7 @@ impl Pending {
         let resetting = matches!(&request, Request::WorldReset(_));
         let mutating = matches!(&request, Request::WorldReset(a) if a.mutating())
             || matches!(&request, Request::Console { command, .. } if command == "save")
-            || matches!(&request, Request::Moderation(_));
+            || matches!(&request, Request::Moderation(_) | Request::Invite);
         let cancel = Arc::new(AtomicBool::new(false));
         let c = cancel.clone();
         let (sender, receiver) = mpsc::channel();
@@ -161,7 +157,6 @@ fn execute() -> Result<(), String> {
         return Ok(());
     };
     let mut app = App::new(options.backend.is_none());
-    app.about = options.about;
     app.branding_header = options.branding_header;
     app.window_index = options.window_index;
     if app.demo {
@@ -201,6 +196,38 @@ fn execute() -> Result<(), String> {
     }
 }
 
+const COPY_FAILED: &str = "Не удалось скопировать. Код можно выделить вручную.";
+
+#[cfg(windows)]
+const COPY_PENDING: &str = "Копирование в буфер…";
+
+#[cfg(windows)]
+struct ClipboardCopy {
+    receiver: mpsc::Receiver<bool>,
+    deadline: Instant,
+}
+
+#[cfg(windows)]
+impl ClipboardCopy {
+    fn start(code: String) -> Self {
+        let (sender, receiver) = mpsc::channel();
+        let deadline = Instant::now() + Duration::from_secs(2);
+        let _ = thread::Builder::new().spawn(move || {
+            let copied = backend::copy_clipboard(&code, deadline).unwrap_or(false);
+            let _ = sender.send(copied);
+        });
+        Self { receiver, deadline }
+    }
+
+    fn status(&self) -> Option<&'static str> {
+        match self.receiver.try_recv() {
+            Ok(true) => Some("Скопировано в буфер обмена."),
+            Err(mpsc::TryRecvError::Empty) if Instant::now() < self.deadline => None,
+            _ => Some(COPY_FAILED),
+        }
+    }
+}
+
 fn interactive(
     terminal: &mut ratatui::DefaultTerminal,
     app: &mut App,
@@ -210,7 +237,14 @@ fn interactive(
         .as_ref()
         .map(|b| Pending::start(b.clone(), Request::Overview(None, app.window())));
     let mut next_refresh = Instant::now() + Duration::from_secs(5);
+    #[cfg(windows)]
+    let mut clipboard_copy: Option<ClipboardCopy> = None;
     loop {
+        #[cfg(windows)]
+        if let Some(status) = clipboard_copy.as_ref().and_then(ClipboardCopy::status) {
+            app.message = app.message.replacen(COPY_PENDING, status, 1);
+            clipboard_copy = None;
+        }
         app.loading = pending.is_some();
         if let Some(work) = &pending {
             match work.receiver.try_recv() {
@@ -228,6 +262,21 @@ fn interactive(
                             app.failed = !v.ok;
                             app.scroll = 0;
                             app.message = v.message();
+                        }
+                        Ok(Reply::Invitation(v)) => {
+                            app.failed = !v.ok;
+                            app.scroll = 0;
+                            #[cfg(windows)]
+                            {
+                                app.message = v.message(v.code().map(|_| COPY_PENDING));
+                                clipboard_copy =
+                                    v.code().map(|code| ClipboardCopy::start(code.to_owned()));
+                            }
+                            #[cfg(not(windows))]
+                            {
+                                let status = v.code().map(clipboard_status);
+                                app.message = v.message(status);
+                            }
                         }
                         Ok(Reply::WorldReset(v)) => {
                             app.failed = !v.ok;
@@ -310,18 +359,6 @@ fn interactive(
                 }
                 continue;
             }
-            if key.code == KeyCode::F(1)
-                && app.confirm.is_none()
-                && app.range_picker.is_none()
-                && app.moderation.is_none()
-            {
-                app.about = !app.about;
-                continue;
-            }
-            if app.about && key.code == KeyCode::Esc {
-                app.about = false;
-                continue;
-            }
             if app.range_picker.is_some() && key.code == KeyCode::Esc {
                 app.range_picker = None;
                 continue;
@@ -353,9 +390,6 @@ fn interactive(
                 }
                 return Ok(uncertain);
             }
-            if app.about {
-                continue;
-            }
             if let Some(selected) = app.range_picker {
                 match key.code {
                     KeyCode::Up => app.range_picker = Some(selected.saturating_sub(1)),
@@ -378,7 +412,25 @@ fn interactive(
                     }
                     _ => {}
                 }
-            } else if let Some(input) = app.confirm.as_mut() {
+            } else if let Some(Confirmation::Invitation { approved }) = app.confirm.as_mut() {
+                match key.code {
+                    KeyCode::Esc => app.confirm = None,
+                    KeyCode::Left => *approved = false,
+                    KeyCode::Right => *approved = true,
+                    KeyCode::Tab => *approved = !*approved,
+                    KeyCode::Enter => {
+                        if *approved {
+                            drop(pending.take());
+                            app.message = "Создаётся приглашение…".into();
+                            app.failed = false;
+                            app.scroll = 0;
+                            request = Some(Request::Invite);
+                        }
+                        app.confirm = None;
+                    }
+                    _ => {}
+                }
+            } else if let Some(Confirmation::Save(input)) = app.confirm.as_mut() {
                 match key.code {
                     KeyCode::Esc => app.confirm = None,
                     KeyCode::Backspace => {
@@ -388,9 +440,8 @@ fn interactive(
                         input.push(c)
                     }
                     KeyCode::Enter => {
-                        if app.confirm.as_deref()
-                            == app.server().map(|s| format!("SAVE {s}")).as_deref()
-                        {
+                        let input = input.clone();
+                        if app.server().is_some_and(|s| input == format!("SAVE {s}")) {
                             request = app.server().map(|s| Request::Console {
                                 server: s.into(),
                                 command: "save".into(),
@@ -401,7 +452,18 @@ fn interactive(
                     _ => {}
                 }
             } else {
+                #[cfg(windows)]
+                let clipboard_idle = clipboard_copy.is_none();
+                #[cfg(not(windows))]
+                let clipboard_idle = true;
                 match key.code {
+                    KeyCode::Char('i')
+                        if clipboard_idle
+                            && pending.as_ref().is_none_or(|work| !work.mutating)
+                            && !app.demo =>
+                    {
+                        app.confirm = Some(Confirmation::Invitation { approved: false });
+                    }
                     KeyCode::Char('w')
                         if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
                     {
@@ -464,7 +526,7 @@ fn interactive(
                     KeyCode::Char(c @ ('1' | '2' | '3')) if pending.is_none() && !app.demo => {
                         if c == '3' {
                             if app.server().is_some() {
-                                app.confirm = Some(String::new());
+                                app.confirm = Some(Confirmation::Save(String::new()));
                             }
                         } else {
                             request = app.server().map(|s| Request::Console {
@@ -497,6 +559,19 @@ fn interactive(
             app.loading = true;
         }
     }
+}
+
+#[cfg(not(windows))]
+fn clipboard_status(code: &str) -> &'static str {
+    if crossterm::execute!(
+        io::stdout(),
+        crossterm::clipboard::CopyToClipboard::to_clipboard_from(code),
+    )
+    .is_ok()
+    {
+        return "Запрос копирования отправлен терминалу.";
+    }
+    COPY_FAILED
 }
 
 fn demo_history(window: protocol::TpsWindow) -> Result<protocol::TpsHistory, String> {

@@ -15,6 +15,11 @@ const MUTED: Color = Color::Rgb(139, 155, 172);
 const ACCENT: Color = Color::Rgb(114, 205, 220);
 const WARN: Color = Color::Rgb(237, 184, 104);
 
+pub enum Confirmation {
+    Save(String),
+    Invitation { approved: bool },
+}
+
 pub struct App {
     pub overview: Option<Overview>,
     pub selected_server: usize,
@@ -24,13 +29,12 @@ pub struct App {
     pub failed: bool,
     pub refreshed: Option<Instant>,
     pub demo: bool,
-    pub confirm: Option<String>,
+    pub confirm: Option<Confirmation>,
     pub moderation: Option<crate::moderation::Form>,
     pub world_reset: Option<crate::world_reset::Form>,
     pub scroll: u16,
     pub history: Option<TpsHistory>,
     pub history_failed: bool,
-    pub about: bool,
     pub branding_header: bool,
     pub window_index: usize,
     pub range_picker: Option<usize>,
@@ -38,7 +42,7 @@ pub struct App {
 
 impl App {
     pub fn new(demo: bool) -> Self {
-        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\nw  Вайп ресурсного мира\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, about: false, branding_header: false, window_index: 0, range_picker: None }
+        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\nw  Вайп ресурсного мира\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, branding_header: false, window_index: 0, range_picker: None }
     }
     pub fn server(&self) -> Option<&str> {
         self.overview
@@ -311,7 +315,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     };
     frame.render_widget(
         Paragraph::new(format!(
-            " r обновить   ← → сервер   t период   F1 проект   q выход  |  {status}"
+            " r обновить   ← → сервер   t период   i ключ   q выход  |  {status}"
         ))
         .style(
             Style::default().fg(if app.failed || age.is_some_and(|a| a > 20) {
@@ -323,23 +327,6 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         .block(block(" просмотр обновляется каждые 5 с ")),
         rows[2],
     );
-    if app.about {
-        let w = 58;
-        let h = 23;
-        let popup = Rect::new((area.width - w) / 2, (area.height - h) / 2, w, h);
-        frame.render_widget(Clear, popup);
-        frame.render_widget(block(" OMKALITYCRAFT "), popup);
-        crate::branding::draw_large(
-            frame,
-            Rect::new(popup.x + (w - 32) / 2, popup.y + 2, 32, 16),
-        );
-        frame.render_widget(
-            Paragraph::new("F1 / Esc — вернуться к графику")
-                .centered()
-                .style(Style::default().fg(TEXT).bg(PANEL)),
-            Rect::new(popup.x + 1, popup.y + 19, w - 2, 2),
-        );
-    }
     if let Some(selected) = app.range_picker {
         let popup = Rect::new((area.width - 44) / 2, (area.height - 10) / 2, 44, 10);
         frame.render_widget(Clear, popup);
@@ -369,20 +356,36 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     if let Some(form) = &app.world_reset {
         form.draw(frame);
     }
-    if let Some(input) = &app.confirm {
+    if let Some(confirmation) = &app.confirm {
         let w = area.width.min(72);
         let popup = Rect::new((area.width - w) / 2, area.height / 2 - 4, w, 8);
         frame.render_widget(Clear, popup);
-        let text = format!(
-            "Команда: save-all flush\nСервер: {}\nДля отправки введите SAVE {} и нажмите Enter.\nEsc — отмена. Повторной отправки автоматически нет.\n\n> {}",
-            app.server().unwrap_or("?"),
-            app.server().unwrap_or("?"),
-            input
-        );
+        let (title, text) = match confirmation {
+            Confirmation::Save(input) => {
+                let server = app.server().unwrap_or("?");
+                (
+                    " Сохранение мира ",
+                    format!(
+                        "Команда: save-all flush\nСервер: {server}\nДля отправки введите SAVE {server} и нажмите Enter.\nEsc — отмена. Повторной отправки автоматически нет.\n\n> {input}"
+                    ),
+                )
+            }
+            Confirmation::Invitation { approved } => (
+                " Приглашение в проект ",
+                format!(
+                    "Создать один одноразовый ключ регистрации?\n\n{}\n\n←/→ выбор · Enter подтвердить · Esc отменить",
+                    if *approved {
+                        "  Нет      › Да"
+                    } else {
+                        "› Нет        Да"
+                    },
+                ),
+            ),
+        };
         frame.render_widget(
             Paragraph::new(text)
                 .style(Style::default().fg(WARN))
-                .block(block(" Сохранение мира ")),
+                .block(block(title)),
             popup,
         );
     }

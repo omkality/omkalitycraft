@@ -1,4 +1,6 @@
-use crate::protocol::{ConsoleResult, Overview, TpsHistory, TpsWindow, valid_server};
+use crate::protocol::{
+    ConsoleResult, InvitationResult, Overview, TpsHistory, TpsWindow, valid_server,
+};
 use std::{
     ffi::OsString,
     fs::File,
@@ -27,13 +29,14 @@ pub enum Request {
     Overview(Option<String>, TpsWindow),
     Console { server: String, command: String },
     Moderation(crate::moderation::Action),
+    Invite,
     WorldReset(crate::world_reset::Request),
 }
-#[derive(Debug)]
 pub enum Reply {
     Overview(Overview, Option<Result<TpsHistory, String>>),
     Console(ConsoleResult),
     Moderation(crate::moderation::Receipt),
+    Invitation(InvitationResult),
     WorldReset(crate::world_reset::Receipt),
 }
 
@@ -42,6 +45,42 @@ impl Drop for OwnedChild {
     fn drop(&mut self) {
         let _ = self.0.kill();
         let _ = self.0.wait();
+    }
+}
+
+#[cfg(windows)]
+pub fn copy_clipboard(code: &str, deadline: Instant) -> std::io::Result<bool> {
+    use std::{io::Write, os::windows::process::CommandExt};
+
+    let system = std::env::var_os("SystemRoot")
+        .map(PathBuf::from)
+        .filter(|path| path.is_absolute())
+        .ok_or_else(|| std::io::Error::other("Windows system path unavailable"))?;
+    let mut child = OwnedChild(
+        Command::new(system.join("System32/clip.exe"))
+            .creation_flags(0x08000000)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()?,
+    );
+    if Instant::now() >= deadline {
+        return Ok(false);
+    }
+    child
+        .0
+        .stdin
+        .take()
+        .ok_or_else(|| std::io::Error::other("Clipboard input unavailable"))?
+        .write_all(code.as_bytes())?;
+    loop {
+        if let Some(status) = child.0.try_wait()? {
+            return Ok(status.success());
+        }
+        if Instant::now() >= deadline {
+            return Ok(false);
+        }
+        thread::sleep(Duration::from_millis(20));
     }
 }
 
@@ -151,6 +190,9 @@ impl Backend {
     pub fn request(&self, request: Request, cancel: Arc<AtomicBool>) -> Result<Reply, String> {
         let mut command = self.command();
         match &request {
+            Request::Invite => {
+                command.args(["access", "invite", "--show-code"]);
+            }
             Request::WorldReset(action) => {
                 if !action.valid() {
                     return Err("Неверный запрос вайпа".into());
@@ -220,6 +262,11 @@ impl Backend {
         };
         let (bytes, success) = capture(command, &cancel, Duration::from_secs(timeout))?;
         let (reply, ok) = match request {
+            Request::Invite => {
+                let value = InvitationResult::parse(&bytes)?;
+                let ok = value.ok;
+                (Reply::Invitation(value), ok)
+            }
             Request::WorldReset(action) => {
                 let value = crate::world_reset::Receipt::parse(&bytes, &action)?;
                 let ok = value.ok;

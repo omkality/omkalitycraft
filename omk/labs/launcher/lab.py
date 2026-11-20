@@ -20,6 +20,7 @@ from launcher.accounts import AccountService, Registration
 from launcher.skin_defaults import DEFAULT_SKIN_MODEL, default_skin_bytes
 from launcher.skins import decode_skin
 from launcher.storage import FileSessionStore
+from omk.accounts import MIN_PASSWORD_LENGTH
 from omk.accounts.drasl import DraslClient, DraslError
 from omk.shared.profiles import PROJECT_ROOT
 
@@ -64,13 +65,14 @@ def _registration_checks(
     if not admin["user"]["isAdmin"]:
         raise RuntimeError("Bootstrap account did not become the lab administrator")
     passed("bootstrap_registration")
-    name, password = "omk_test_player", secrets.token_urlsafe(24)
+    name = "omk_test_player"
+    password = secrets.token_urlsafe(MIN_PASSWORD_LENGTH)[:MIN_PASSWORD_LENGTH]
     _expect_denied(lambda: client.register(name, password, ""), {400, 403})
     passed("registration_requires_invitation")
     invite = client.request("POST", "/drasl/api/v3/invites", {}, admin["apiToken"])[
         "code"
     ]
-    _expect_denied(lambda: client.register(name, "x" * 11, invite), {400, 403})
+    _expect_denied(lambda: client.register(name, password[:-1], invite), {400, 403})
     passed("server_rejects_short_registration_password_without_consuming_invite")
     user = client.register(name, password, invite)
     if user["user"]["isAdmin"]:

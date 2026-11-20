@@ -67,7 +67,7 @@ uv run omk admin --config .omk-admin/operator.toml access invites
 uv run omk admin --config .omk-admin/operator.toml access revoke-invite --invitation-file PATH_FROM_INVITE_COMMAND
 ```
 
-Результат содержит **путь к закрытому JSON**, а не код/управляющий токен в stdout.
+Стандартный ответ CLI содержит **путь к закрытому JSON**. TUI показывает код и копирует его в буфер обмена.
 В созданном файле находится `code`: его владелец самостоятельно передаёт игроку.
 Автоматических сообщений/оплат/сайта нет. В лаунчере игрок задаёт ник и свой пароль,
 повторяет пароль и вводит код. После регистрации вход запоминается.

@@ -202,7 +202,7 @@ def _invite(value):
     return {"code": value["code"], "created_at": str(value.get("createdAt", ""))[:100]}
 
 
-def create_invite(config: OperatorConfig):
+def create_invite(config: OperatorConfig, *, show_code=False):
     client, token = _client(config), _credential(config)
     invite = _invite(client.request("POST", "/drasl/api/v3/invites", {}, token))
     path = config.private / "invitations" / ("invite-" + uuid4().hex + ".json")
@@ -210,7 +210,7 @@ def create_invite(config: OperatorConfig):
         _write_private(
             path, config.private, {"schema": 1, "origin": client.base_url, **invite}
         )
-    except OSError:
+    except OSError, AdminError:
         try:
             client.request(
                 "DELETE", "/drasl/api/v3/invites/" + invite["code"], token=token
@@ -222,7 +222,10 @@ def create_invite(config: OperatorConfig):
         raise AdminError(
             "Invitation save failed; the new invitation was revoked"
         ) from None
-    return {"ok": True, "invitation_file": str(path), "single_use": True}
+    result = {"ok": True, "invitation_file": str(path), "single_use": True}
+    if show_code:
+        result["code"] = invite["code"]
+    return result
 
 
 def list_invites(config: OperatorConfig):
@@ -421,7 +424,11 @@ def add_admin_commands(sub):
         "access", help="Registration invitations, not Minecraft OP"
     )
     invites = access.add_subparsers(dest="access_action", required=True)
-    invites.add_parser("invite")
+    invites.add_parser("invite").add_argument(
+        "--show-code",
+        action="store_true",
+        help="Include the code in the private owner client response",
+    )
     invites.add_parser("invites")
     revoke = invites.add_parser("revoke-invite")
     revoke.add_argument("--invitation-file", type=Path, required=True)
@@ -478,7 +485,7 @@ def _execute_admin(config, args):
         )
     else:
         result = {
-            "invite": lambda: create_invite(config),
+            "invite": lambda: create_invite(config, show_code=args.show_code),
             "invites": lambda: list_invites(config),
             "revoke-invite": lambda: revoke_invite(config, args.invitation_file),
         }[args.access_action]()

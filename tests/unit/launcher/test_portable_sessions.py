@@ -54,16 +54,14 @@ def test_portable_file_contains_only_game_session(account: AccountService) -> No
         assert stat.S_IMODE(account.store.path.stat().st_mode) == 0o600
 
 
-@pytest.mark.parametrize("password", [None, 12, "", "short", "x" * 129])
+@pytest.mark.parametrize("password", [None, 12, "", "x" * 7, "x" * 129])
 def test_chosen_registration_password_is_validated_without_network(account, password):
-    with pytest.raises(AccountError, match="от 12 до 128"):
+    with pytest.raises(AccountError, match="от 8 до 128"):
         account.prepare_registration("test_player", "test-invitation", password)
     assert account.client.calls == []
 
 
-@pytest.mark.parametrize(
-    "password", ["x" * 12, "y" * 128, "  passphrase with spaces  "]
-)
+@pytest.mark.parametrize("password", ["x" * 8, "y" * 128, "  passphrase with spaces  "])
 def test_chosen_password_boundaries_and_spaces_are_preserved(account, password):
     result = account.prepare_registration("test_player", "test-invitation", password)
     assert result.password == password

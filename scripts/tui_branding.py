@@ -17,16 +17,11 @@ def generated():
         "// SHA256: " + hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
     ]
     with Image.open(SOURCE) as image:
-        for name, width, height in (("ORE", 16, 16), ("ORE_LARGE", 32, 32)):
-            pixels = image.convert("RGBA").resize(
-                (width, height), Image.Resampling.NEAREST
-            )
-            rows.append(f"pub const {name}: [[u8; 4]; {width * height}] = [")
-            for y in range(height):
-                for x in range(width):
-                    r, g, b, a = pixels.getpixel((x, y))
-                    rows.append(f"    [{r}, {g}, {b}, {a}],")
-            rows.append("];")
+        pixels = image.convert("RGBA").resize((16, 16), Image.Resampling.NEAREST)
+        rows.append("pub const ORE: [[u8; 4]; 256] = [")
+        for r, g, b, a in pixels.get_flattened_data():
+            rows.append(f"    [{r}, {g}, {b}, {a}],")
+        rows.append("];")
     return "\n".join([*rows, ""])
 
 

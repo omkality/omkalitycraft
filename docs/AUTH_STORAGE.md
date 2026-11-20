@@ -66,7 +66,7 @@ stale 1–2592000 секунд и строго меньше expire, минима
 | `OMK_AUTH_HTTP_PORT` / `OMK_AUTH_INTERNAL_PORT` | `25586` / `25585` |
 | `OMK_AUTH_TOKEN_EXPIRE_SECONDS` | 2592000, 30 суток |
 | `OMK_AUTH_TOKEN_STALE_SECONDS` | 86400, сутки до обновления токена |
-| `OMK_AUTH_MIN_PASSWORD_LENGTH` | 12 |
+| `OMK_AUTH_MIN_PASSWORD_LENGTH` | 8 |
 | `OMK_AUTH_CPUS` / `OMK_AUTH_MEMORY` / `OMK_AUTH_PIDS` | 1 / 384m / 128 |
 | `OMK_AUTH_GO_MEMORY` | 300MiB, мягкая цель Go GC, не лимит процесса |
 | `OMK_AUTH_TMP_SIZE` | 32m |

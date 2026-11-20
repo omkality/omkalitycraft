@@ -61,8 +61,9 @@ def test_non_admin_login_never_saves_management_credentials(tmp_path, monkeypatc
     assert not settings.auth_file.exists()
 
 
-def test_cli_outputs_only_private_invitation_path_not_code_token_or_password(
-    tmp_path, monkeypatch, capsys
+@pytest.mark.parametrize("show_code", [False, True])
+def test_cli_only_includes_invitation_code_when_requested(
+    tmp_path, monkeypatch, capsys, show_code
 ):
     settings, path = config(tmp_path)
     login = {"user": {"isAdmin": True}, "apiToken": "fixture_admin_token_1234"}
@@ -71,6 +72,7 @@ def test_cli_outputs_only_private_invitation_path_not_code_token_or_password(
         "omk.owner.admin.getpass.getpass", lambda *a: "fixture-operator-password"
     )
     assert main(["admin", "--config", str(path), "login", "--username", "admin"]) == 0
+    login_output = capsys.readouterr().out
     request = Mock(
         return_value={
             "code": "secret-invite-code",
@@ -79,15 +81,20 @@ def test_cli_outputs_only_private_invitation_path_not_code_token_or_password(
         }
     )
     monkeypatch.setattr("omk.owner.admin.DraslClient.request", request)
-    assert main(["admin", "--config", str(path), "access", "invite"]) == 0
+    command = ["admin", "--config", str(path), "access", "invite"]
+    if show_code:
+        command.append("--show-code")
+    assert main(command) == 0
     output = capsys.readouterr().out
     audit = (settings.private / "audit.jsonl").read_text()
-    for secret in [
-        login["apiToken"],
-        "fixture-operator-password",
-        "secret-invite-code",
-    ]:
-        assert secret not in output and secret not in audit
+    expected_code = "secret-invite-code" if show_code else None
+    assert json.loads(output).get("code") == expected_code
+    assert ("secret-invite-code" in output) is show_code
+    assert "secret-invite-code" not in audit
+    for secret in [login["apiToken"], "fixture-operator-password"]:
+        assert (
+            secret not in login_output and secret not in output and secret not in audit
+        )
     assert (
         "secret-invite-code"
         in next((settings.private / "invitations").glob("invite-*.json")).read_text()
@@ -95,16 +102,17 @@ def test_cli_outputs_only_private_invitation_path_not_code_token_or_password(
     assert "fixture-operator-password" not in settings.auth_file.read_text()
 
 
-def test_failed_invitation_save_revokes_only_the_new_invitation(tmp_path, monkeypatch):
+@pytest.mark.parametrize("error", [OSError("disk full"), AdminError("unsafe ACL")])
+def test_failed_invitation_save_revokes_only_the_new_invitation(
+    tmp_path, monkeypatch, error
+):
     settings, _ = config(tmp_path)
     monkeypatch.setattr(
         "omk.owner.admin._credential", lambda _: "fixture_admin_token_1234"
     )
     request = Mock(return_value={"code": "new-unused-invite"})
     monkeypatch.setattr("omk.owner.admin.DraslClient.request", request)
-    monkeypatch.setattr(
-        "omk.owner.admin._write_private", Mock(side_effect=OSError("disk full"))
-    )
+    monkeypatch.setattr("omk.owner.admin._write_private", Mock(side_effect=error))
     with pytest.raises(AdminError, match="revoked"):
         create_invite(settings)
     assert request.call_args.args[:2] == (
