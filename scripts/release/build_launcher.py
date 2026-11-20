@@ -91,7 +91,6 @@ def build(
         "fonts/Monocraft-LICENSE.txt",
         "fonts/provenance.json",
         "dj2.svg",
-        "gtnh.svg",
         "external-link.svg",
         "checkmark.svg",
         "forge-1.12.2-log4j2.xml",

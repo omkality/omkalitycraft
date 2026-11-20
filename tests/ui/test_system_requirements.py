@@ -65,17 +65,19 @@ def test_small_dialog_scrolls_and_plain_text_cannot_create_links(qtbot, card):
     assert dialog.scroll.horizontalScrollBar().maximum() == 0
 
 
-def test_pending_pack_and_missing_requirements_do_not_advertise_readiness(qtbot, card):
-    gtnh = PackCard(load_profiles()[1], MemorySnapshot(16384, 12000))
-    qtbot.addWidget(gtnh)
-    gtnh.show()
-    qtbot.mouseClick(gtnh.requirements_button, Qt.MouseButton.LeftButton)
-    assert not gtnh.action.isEnabled() and not gtnh.memory.slider.isEnabled()
+def test_pending_pack_and_missing_requirements_do_not_advertise_readiness(
+    qtbot, card, planned_profile
+):
+    planned = PackCard(planned_profile, MemorySnapshot(16384, 12000))
+    qtbot.addWidget(planned)
+    planned.show()
+    qtbot.mouseClick(planned.requirements_button, Qt.MouseButton.LeftButton)
+    assert not planned.action.isEnabled() and not planned.memory.slider.isEnabled()
     assert (
-        gtnh._requirements_dialog.findChild(QLabel, "requirementsState").text()
+        planned._requirements_dialog.findChild(QLabel, "requirementsState").text()
         == "СБОРКА ГОТОВИТСЯ"
     )
-    assert gtnh._requirements_dialog.findChild(QLabel, "recommended_ram") is None
+    assert planned._requirements_dialog.findChild(QLabel, "recommended_ram") is None
     dialog = RequirementsDialog(replace(card.profile, requirements=None), card)
     qtbot.addWidget(dialog)
     assert "Требования для этой сборки пока не подготовлены." in [

@@ -327,11 +327,8 @@ def test_repeated_login_clicks_do_not_duplicate_requests(
         wait_idle(qtbot, window)
 
 
-def test_pack_download_progress_and_planned_profile(
-    qtbot: QtBot, window: LauncherWindow
-) -> None:
+def test_dj2_download_progress(qtbot: QtBot, window: LauncherWindow) -> None:
     cards = window.home_page.cards
-    assert not cards["gtnh"].action.isEnabled()
     cards["dj2"].update_progress(Progress("Скачиваем сборку", 50, 100))
     assert cards["dj2"].progress.value() == 50
     assert cards["dj2"].action._busy
@@ -370,12 +367,12 @@ def test_bootstrap_lock_protects_gap_during_handoff(tmp_path: Path, qtbot: QtBot
         bootstrap.unlock()
 
 
-def test_heap_slider_saves_profiles_independently(qtbot: QtBot, tmp_path: Path):
+def test_dj2_heap_slider_preserves_existing_preferences(qtbot: QtBot, tmp_path: Path):
     preferences = Preferences(tmp_path / "preferences.json")
+    preferences.save_memory("gtnh", 7168)
     panel = Dashboard(preferences, MemorySnapshot(16384, 12000))
     qtbot.addWidget(panel)
     panel.cards["dj2"].memory.slider.setValue(20)
-    panel.cards["gtnh"].memory.slider.setValue(28)
     assert Preferences(preferences.path).memory == {"dj2": 5120, "gtnh": 7168}
     assert panel.cards["dj2"].memory.selected_mb == 5120
 
@@ -394,8 +391,9 @@ def test_default_skin_is_exact_owner_asset(qtbot: QtBot):
     assert image == QImage.fromData(default_skin_bytes(), "PNG")
 
 
-def test_social_footer_and_clear_planned_version(window: LauncherWindow):
-    assert "ещё не подготовлена" in window.home_page.cards["gtnh"].version_link.text()
+def test_dashboard_shows_only_dj2_and_social_footer(window: LauncherWindow):
+    assert list(window.home_page.cards) == ["dj2"]
+    assert window.home_page.cards["dj2"].profile.name == "Divine Journey 2 RU"
     assert "https://kick.com/omkality" in window.findChild(QLabel, "social_kick").text()
     assert window.home_page.findChildren(QComboBox) == []
 

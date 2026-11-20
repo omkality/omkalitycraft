@@ -18,11 +18,11 @@ def test_content_settings_survive_api_directory_move() -> None:
     assert get_launcher_manifest_settings()
 
 
-def test_pack_profiles_preserve_different_utilities() -> None:
-    profiles = {profile.id: profile for profile in load_profiles()}
-    assert profiles["dj2"].status == "legacy"
-    assert profiles["gtnh"].status == "planned"
-    assert profiles["dj2"].utilities_adapter != profiles["gtnh"].utilities_adapter
+def test_shipped_profile_catalog_has_only_dj2() -> None:
+    (dj2,) = load_profiles()
+    assert dj2.id == "dj2"
+    assert dj2.status == "legacy"
+    assert dj2.utilities_adapter == "ftbutilities_112"
 
 
 def test_duplicate_server_id_is_rejected(tmp_path: Path) -> None:

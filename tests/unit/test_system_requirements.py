@@ -25,14 +25,11 @@ def test_profile_requirements_are_optional_for_existing_profiles(tmp_path):
 
 
 def test_recommendations_are_serializable_and_do_not_claim_untested_minima():
-    profiles = {profile.id: profile for profile in load_profiles()}
-    dj2, gtnh = profiles["dj2"], profiles["gtnh"]
+    (dj2,) = load_profiles()
     assert dj2.requirements.state == "preliminary"
     assert dj2.requirements.minimum is None
     assert dj2.requirements.recommended.ram_gb == 16
     assert dj2.memory_default_mb == 6144
-    assert gtnh.requirements.state == "pending"
-    assert gtnh.requirements.minimum is gtnh.requirements.recommended is None
     assert (
         json.loads(json.dumps(dj2.as_dict()))["requirements"]["recommended"]["ram_gb"]
         == 16
