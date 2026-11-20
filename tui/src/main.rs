@@ -196,6 +196,38 @@ fn execute() -> Result<(), String> {
     }
 }
 
+const COPY_FAILED: &str = "Не удалось скопировать. Код можно выделить вручную.";
+
+#[cfg(windows)]
+const COPY_PENDING: &str = "Копирование в буфер…";
+
+#[cfg(windows)]
+struct ClipboardCopy {
+    receiver: mpsc::Receiver<bool>,
+    deadline: Instant,
+}
+
+#[cfg(windows)]
+impl ClipboardCopy {
+    fn start(code: String) -> Self {
+        let (sender, receiver) = mpsc::channel();
+        let deadline = Instant::now() + Duration::from_secs(2);
+        let _ = thread::Builder::new().spawn(move || {
+            let copied = backend::copy_clipboard(&code, deadline).unwrap_or(false);
+            let _ = sender.send(copied);
+        });
+        Self { receiver, deadline }
+    }
+
+    fn status(&self) -> Option<&'static str> {
+        match self.receiver.try_recv() {
+            Ok(true) => Some("Скопировано в буфер обмена."),
+            Err(mpsc::TryRecvError::Empty) if Instant::now() < self.deadline => None,
+            _ => Some(COPY_FAILED),
+        }
+    }
+}
+
 fn interactive(
     terminal: &mut ratatui::DefaultTerminal,
     app: &mut App,
@@ -205,7 +237,14 @@ fn interactive(
         .as_ref()
         .map(|b| Pending::start(b.clone(), Request::Overview(None, app.window())));
     let mut next_refresh = Instant::now() + Duration::from_secs(5);
+    #[cfg(windows)]
+    let mut clipboard_copy: Option<ClipboardCopy> = None;
     loop {
+        #[cfg(windows)]
+        if let Some(status) = clipboard_copy.as_ref().and_then(ClipboardCopy::status) {
+            app.message = app.message.replacen(COPY_PENDING, status, 1);
+            clipboard_copy = None;
+        }
         app.loading = pending.is_some();
         if let Some(work) = &pending {
             match work.receiver.try_recv() {
@@ -227,8 +266,17 @@ fn interactive(
                         Ok(Reply::Invitation(v)) => {
                             app.failed = !v.ok;
                             app.scroll = 0;
-                            let clipboard = v.code().map(clipboard_status);
-                            app.message = v.message(clipboard);
+                            #[cfg(windows)]
+                            {
+                                app.message = v.message(v.code().map(|_| COPY_PENDING));
+                                clipboard_copy =
+                                    v.code().map(|code| ClipboardCopy::start(code.to_owned()));
+                            }
+                            #[cfg(not(windows))]
+                            {
+                                let status = v.code().map(clipboard_status);
+                                app.message = v.message(status);
+                            }
                         }
                         Ok(Reply::WorldReset(v)) => {
                             app.failed = !v.ok;
@@ -404,9 +452,15 @@ fn interactive(
                     _ => {}
                 }
             } else {
+                #[cfg(windows)]
+                let clipboard_idle = clipboard_copy.is_none();
+                #[cfg(not(windows))]
+                let clipboard_idle = true;
                 match key.code {
                     KeyCode::Char('i')
-                        if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
+                        if clipboard_idle
+                            && pending.as_ref().is_none_or(|work| !work.mutating)
+                            && !app.demo =>
                     {
                         app.confirm = Some(Confirmation::Invitation { approved: false });
                     }
@@ -507,12 +561,8 @@ fn interactive(
     }
 }
 
+#[cfg(not(windows))]
 fn clipboard_status(code: &str) -> &'static str {
-    #[cfg(windows)]
-    if backend::copy_clipboard(code).unwrap_or(false) {
-        return "Скопировано в буфер обмена.";
-    }
-    #[cfg(not(windows))]
     if crossterm::execute!(
         io::stdout(),
         crossterm::clipboard::CopyToClipboard::to_clipboard_from(code),
@@ -521,7 +571,7 @@ fn clipboard_status(code: &str) -> &'static str {
     {
         return "Запрос копирования отправлен терминалу.";
     }
-    "Не удалось скопировать. Код можно выделить вручную."
+    COPY_FAILED
 }
 
 fn demo_history(window: protocol::TpsWindow) -> Result<protocol::TpsHistory, String> {

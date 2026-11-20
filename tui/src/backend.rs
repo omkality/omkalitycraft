@@ -49,7 +49,7 @@ impl Drop for OwnedChild {
 }
 
 #[cfg(windows)]
-pub fn copy_clipboard(code: &str) -> std::io::Result<bool> {
+pub fn copy_clipboard(code: &str, deadline: Instant) -> std::io::Result<bool> {
     use std::{io::Write, os::windows::process::CommandExt};
 
     let system = std::env::var_os("SystemRoot")
@@ -64,13 +64,15 @@ pub fn copy_clipboard(code: &str) -> std::io::Result<bool> {
             .stderr(Stdio::null())
             .spawn()?,
     );
+    if Instant::now() >= deadline {
+        return Ok(false);
+    }
     child
         .0
         .stdin
         .take()
         .ok_or_else(|| std::io::Error::other("Clipboard input unavailable"))?
         .write_all(code.as_bytes())?;
-    let deadline = Instant::now() + Duration::from_secs(2);
     loop {
         if let Some(status) = child.0.try_wait()? {
             return Ok(status.success());
