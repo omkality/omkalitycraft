@@ -31,6 +31,7 @@ from PySide6.QtWidgets import (
 )
 
 from launcher.accounts import (
+    PASSWORD_RANGE,
     AccountError,
     AccountService,
     AuthResult,
@@ -53,6 +54,7 @@ from launcher.ui.nickname import NicknameField
 from launcher.ui.social import SocialFooter
 from launcher.ui.theme import ASSETS, STYLE, install_font
 from launcher.widgets import BusyButton
+from omk.accounts import MIN_PASSWORD_LENGTH
 from omk.accounts.drasl import DraslClient, DraslError
 from omk.observability.diagnostics import event, failure
 
@@ -138,7 +140,9 @@ class PasswordDialog(QDialog):
             Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
         )
         self.old = field("oldPassword", password=True)
-        self.new = field("newPassword", "Хотя бы 12 символов", password=True)
+        self.new = field(
+            "newPassword", f"Хотя бы {MIN_PASSWORD_LENGTH} символов", password=True
+        )
         self.repeat = field("repeatPassword", password=True)
         form.addRow("Текущий пароль", self.old)
         form.addRow("Новый пароль", self.new)
@@ -172,9 +176,9 @@ class PasswordDialog(QDialog):
     def _validate(self) -> None:
         if self.new.text() != self.repeat.text():
             self.error.setText("Новые пароли не совпадают.")
-        elif not self.old.text() or len(self.new.text()) < 12:
+        elif not self.old.text() or len(self.new.text()) < MIN_PASSWORD_LENGTH:
             self.error.setText(
-                "Введите текущий пароль и новый пароль из 12 или более символов."
+                f"Введите текущий пароль и новый пароль из {MIN_PASSWORD_LENGTH} или более символов."
             )
         else:
             self.accept()
@@ -297,7 +301,7 @@ class LauncherWindow(QMainWindow):
             form.setVerticalSpacing(12)
         self.signup_name = nickname_field("signupName")
         self.signup_password = field(
-            "signupPassword", "От 12 до 128 символов", password=True
+            "signupPassword", PASSWORD_RANGE.capitalize(), password=True
         )
         self.signup_repeat = field(
             "signupPasswordRepeat", "Введите пароль ещё раз", password=True

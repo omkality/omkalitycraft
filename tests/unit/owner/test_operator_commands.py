@@ -112,9 +112,7 @@ def test_failed_invitation_save_revokes_only_the_new_invitation(
     )
     request = Mock(return_value={"code": "new-unused-invite"})
     monkeypatch.setattr("omk.owner.admin.DraslClient.request", request)
-    monkeypatch.setattr(
-        "omk.owner.admin._write_private", Mock(side_effect=error)
-    )
+    monkeypatch.setattr("omk.owner.admin._write_private", Mock(side_effect=error))
     with pytest.raises(AdminError, match="revoked"):
         create_invite(settings)
     assert request.call_args.args[:2] == (

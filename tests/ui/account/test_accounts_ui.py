@@ -105,7 +105,7 @@ def test_registration_accepts_chosen_confirmed_password_and_clears_it_after_logi
 ) -> None:
     window.signup_name.setText("test_player")
     window.invitation.setText("test-invitation")
-    chosen = "player-chosen-fixture-password"
+    chosen = "abcdefgh"
     window.signup_password.setText(chosen)
     window.signup_repeat.setText(chosen)
     window.auth_page.findChild(QTabWidget).setCurrentIndex(1)
@@ -164,8 +164,8 @@ def test_network_error_keeps_chosen_password_for_login_after_uncertain_registrat
     ("password", "confirmation", "message"),
     [
         ("chosen-password", "other-password", "не совпадают"),
-        ("short", "short", "от 12 до 128"),
-        ("x" * 129, "x" * 129, "от 12 до 128"),
+        ("abcdefg", "abcdefg", "от 8 до 128"),
+        ("x" * 129, "x" * 129, "от 8 до 128"),
     ],
 )
 def test_invalid_registration_password_never_reaches_backend(

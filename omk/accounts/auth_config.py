@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from omk.accounts import MAX_REGISTRATION_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH
 from omk.accounts.drasl import DraslClient
 
 
@@ -21,7 +22,12 @@ def render_config(environment=None):
         ("INTERNAL_PORT", 25585, 1024, 65535),
         ("TOKEN_EXPIRE_SECONDS", 2592000, 3600, 31536000),
         ("TOKEN_STALE_SECONDS", 86400, 1, 2592000),
-        ("MIN_PASSWORD_LENGTH", 12, 12, 128),
+        (
+            "MIN_PASSWORD_LENGTH",
+            MIN_PASSWORD_LENGTH,
+            MIN_PASSWORD_LENGTH,
+            MAX_REGISTRATION_PASSWORD_LENGTH,
+        ),
     ):
         raw = env.get("OMK_AUTH_" + name, str(default))
         if (

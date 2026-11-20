@@ -155,6 +155,7 @@ def test_database_integrity_failure_never_publishes_snapshot(tmp_path):
         {"OMK_AUTH_URL": "https://owner:secret@example.org"},
         {"OMK_AUTH_ADMIN": "bad admin"},
         {"OMK_AUTH_INTERNAL_PORT": "80"},
+        {"OMK_AUTH_MIN_PASSWORD_LENGTH": "7"},
         {"OMK_AUTH_TOKEN_EXPIRE_SECONDS": "0"},
         {"OMK_AUTH_TOKEN_STALE_SECONDS": "2592000"},
     ],
@@ -170,7 +171,7 @@ def test_invalid_auth_environment_is_rejected(env):
         ("OMK_AUTH_INTERNAL_PORT", "25585"),
         ("OMK_AUTH_TOKEN_EXPIRE_SECONDS", "2592000"),
         ("OMK_AUTH_TOKEN_STALE_SECONDS", "86400"),
-        ("OMK_AUTH_MIN_PASSWORD_LENGTH", "12"),
+        ("OMK_AUTH_MIN_PASSWORD_LENGTH", "8"),
     ],
 )
 @pytest.mark.parametrize(
