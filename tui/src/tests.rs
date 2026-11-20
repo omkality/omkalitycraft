@@ -182,9 +182,6 @@ fn history_gaps_remain_blank_and_zero_stays_visible() {
     for (w, h) in [(120, 38), (84, 28), (120, 34)] {
         let mut terminal = Terminal::new(TestBackend::new(w, h)).unwrap();
         terminal.draw(|f| ui::draw(f, &mut app)).unwrap();
-        app.about = true;
-        terminal.draw(|f| ui::draw(f, &mut app)).unwrap();
-        app.about = false;
     }
     app.overview
         .as_mut()
@@ -385,26 +382,31 @@ fn real_python_cli_reads_an_isolated_config_without_writes() {
 }
 
 #[test]
-fn invitation_result_only_renders_confirmed_private_file() {
+fn invitation_result_renders_only_a_valid_code_and_private_file() {
     use crate::protocol::InvitationResult;
     let path = env::temp_dir().join(".omk-admin/invitations/invite-test.json");
     let mut value = serde_json::json!({
         "ok": true,
         "single_use": true,
         "invitation_file": path,
+        "code": "test-code_123",
     });
     let parse =
         |value: &serde_json::Value| InvitationResult::parse(&serde_json::to_vec(value).unwrap());
-    assert!(
-        parse(&value)
-            .unwrap()
-            .message()
-            .contains(path.to_str().unwrap())
-    );
+    let receipt = parse(&value).unwrap();
+    assert_eq!(receipt.code(), Some("test-code_123"));
+    let message = receipt.message(Some("clipboard feedback"));
+    for part in [
+        "test-code_123",
+        "clipboard feedback",
+        path.to_str().unwrap(),
+    ] {
+        assert!(message.contains(part));
+    }
     value["single_use"] = false.into();
     assert!(parse(&value).is_err());
     value["single_use"] = true.into();
-    value["code"] = "unexpected-secret".into();
+    value["code"] = "bad\ncode".into();
     assert!(parse(&value).is_err());
     let failure = serde_json::json!({
         "ok": false,
@@ -413,9 +415,10 @@ fn invitation_result_only_renders_confirmed_private_file() {
     });
     let failure = parse(&failure).unwrap();
     assert!(!failure.ok);
+    assert_eq!(failure.code(), None);
     assert!(
         !failure
-            .message()
+            .message(None)
             .contains("upstream-detail-not-for-display")
     );
 }

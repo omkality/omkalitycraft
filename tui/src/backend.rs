@@ -32,7 +32,6 @@ pub enum Request {
     Invite,
     WorldReset(crate::world_reset::Request),
 }
-#[derive(Debug)]
 pub enum Reply {
     Overview(Overview, Option<Result<TpsHistory, String>>),
     Console(ConsoleResult),
@@ -46,6 +45,40 @@ impl Drop for OwnedChild {
     fn drop(&mut self) {
         let _ = self.0.kill();
         let _ = self.0.wait();
+    }
+}
+
+#[cfg(windows)]
+pub fn copy_clipboard(code: &str) -> std::io::Result<bool> {
+    use std::{io::Write, os::windows::process::CommandExt};
+
+    let system = std::env::var_os("SystemRoot")
+        .map(PathBuf::from)
+        .filter(|path| path.is_absolute())
+        .ok_or_else(|| std::io::Error::other("Windows system path unavailable"))?;
+    let mut child = OwnedChild(
+        Command::new(system.join("System32/clip.exe"))
+            .creation_flags(0x08000000)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()?,
+    );
+    child
+        .0
+        .stdin
+        .take()
+        .ok_or_else(|| std::io::Error::other("Clipboard input unavailable"))?
+        .write_all(code.as_bytes())?;
+    let deadline = Instant::now() + Duration::from_secs(2);
+    loop {
+        if let Some(status) = child.0.try_wait()? {
+            return Ok(status.success());
+        }
+        if Instant::now() >= deadline {
+            return Ok(false);
+        }
+        thread::sleep(Duration::from_millis(20));
     }
 }
 
@@ -156,7 +189,7 @@ impl Backend {
         let mut command = self.command();
         match &request {
             Request::Invite => {
-                command.args(["access", "invite"]);
+                command.args(["access", "invite", "--show-code"]);
             }
             Request::WorldReset(action) => {
                 if !action.valid() {

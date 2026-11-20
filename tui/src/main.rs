@@ -31,7 +31,6 @@ use ui::{App, Confirmation};
 struct Options {
     backend: Option<Backend>,
     snapshot: Option<PathBuf>,
-    about: bool,
     branding_header: bool,
     window_index: usize,
 }
@@ -50,19 +49,17 @@ fn options() -> Result<Option<Options>, String> {
     let mut config = sidecar.map(|v| v.config);
     let mut demo = false;
     let mut snapshot = None;
-    let mut about = false;
     let mut branding_header = true;
     let mut window_index = 0;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / u unban / i invite / r refresh / t period / F1 project / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / u unban / i invite / r refresh / t period / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
             Some("--demo") => demo = true,
-            Some("--about") => about = true,
             Some("--branding-header") => branding_header = true,
             Some("--compact-header") => branding_header = false,
             Some("--window") => {
@@ -103,7 +100,6 @@ fn options() -> Result<Option<Options>, String> {
             })
         },
         snapshot,
-        about,
         branding_header,
         window_index,
     }))
@@ -161,7 +157,6 @@ fn execute() -> Result<(), String> {
         return Ok(());
     };
     let mut app = App::new(options.backend.is_none());
-    app.about = options.about;
     app.branding_header = options.branding_header;
     app.window_index = options.window_index;
     if app.demo {
@@ -232,7 +227,8 @@ fn interactive(
                         Ok(Reply::Invitation(v)) => {
                             app.failed = !v.ok;
                             app.scroll = 0;
-                            app.message = v.message();
+                            let clipboard = v.code().map(clipboard_status);
+                            app.message = v.message(clipboard);
                         }
                         Ok(Reply::WorldReset(v)) => {
                             app.failed = !v.ok;
@@ -315,18 +311,6 @@ fn interactive(
                 }
                 continue;
             }
-            if key.code == KeyCode::F(1)
-                && app.confirm.is_none()
-                && app.range_picker.is_none()
-                && app.moderation.is_none()
-            {
-                app.about = !app.about;
-                continue;
-            }
-            if app.about && key.code == KeyCode::Esc {
-                app.about = false;
-                continue;
-            }
             if app.range_picker.is_some() && key.code == KeyCode::Esc {
                 app.range_picker = None;
                 continue;
@@ -357,9 +341,6 @@ fn interactive(
                     app.message = "Команда могла выполниться: результат неизвестен".into();
                 }
                 return Ok(uncertain);
-            }
-            if app.about {
-                continue;
             }
             if let Some(selected) = app.range_picker {
                 match key.code {
@@ -524,6 +505,23 @@ fn interactive(
             app.loading = true;
         }
     }
+}
+
+fn clipboard_status(code: &str) -> &'static str {
+    #[cfg(windows)]
+    if backend::copy_clipboard(code).unwrap_or(false) {
+        return "Скопировано в буфер обмена.";
+    }
+    #[cfg(not(windows))]
+    if crossterm::execute!(
+        io::stdout(),
+        crossterm::clipboard::CopyToClipboard::to_clipboard_from(code),
+    )
+    .is_ok()
+    {
+        return "Запрос копирования отправлен терминалу.";
+    }
+    "Не удалось скопировать. Код можно выделить вручную."
 }
 
 fn demo_history(window: protocol::TpsWindow) -> Result<protocol::TpsHistory, String> {
