@@ -33,30 +33,3 @@ cpu = "Современный Intel / AMD: от 4 ядер, высокая ск�
 ram_gb = 16
 graphics = "Современная встроенная или дискретная графика, без шейдеров"
 storage_gb = 20
-
-[[servers]]
-id = "gtnh"
-name = "GregTech: New Horizons RU"
-minecraft = "1.7.10"
-pack_version = "unselected"
-loader = "forge"
-utilities_adapter = "serverutilities_1710"
-status = "planned"
-description = "Новые эпохи, сложные производственные цепочки и общие открытия."
-project_url = "https://www.curseforge.com/minecraft/modpacks/gt-new-horizons"
-version_url = "https://www.curseforge.com/minecraft/modpacks/gt-new-horizons/files"
-author = "Команда GT New Horizons"
-translation_label = "Русский перевод · GTNH Translations"
-translation_url = "https://github.com/GTNewHorizons/GTNH-Translations"
-artwork = "gtnh.svg"
-memory_default_mb = 6144
-memory_recommended_mb = 6144
-memory_max_mb = 16384
-
-[servers.requirements]
-state = "pending"
-scope = "Сборка планируется. Требования уточним после выбора версии и игровых тестов."
-minimum_note = "Пока не подтверждены."
-platforms = "Целевые системы: Windows, Linux и macOS. Готовность игрового клиента ещё не подтверждена."
-macos = "Поддержку Intel и Apple Silicon проверим на выбранной версии сборки."
-note = "Память и место на диске зависят от версии GTNH. До её подготовки загрузка и настройка памяти недоступны."

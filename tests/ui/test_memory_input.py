@@ -67,7 +67,9 @@ def test_wheel_never_changes_memory_or_persisted_choice(
 def test_vertical_wheel_over_focused_slider_scrolls_pack_list(panel):
     slider = panel.cards["dj2"].memory.slider
     scroll = panel.findChild(QScrollArea)
-    scroll.ensureWidgetVisible(slider)
+    scroll.setFixedHeight(180)
+    QApplication.processEvents()
+    scroll.ensureWidgetVisible(slider, 0, 8)
     slider.setFocus()
     QApplication.processEvents()
     bar = scroll.verticalScrollBar()

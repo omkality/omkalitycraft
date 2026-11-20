@@ -9,6 +9,7 @@ from launcher.app import LauncherWindow
 from launcher.dashboard import Dashboard
 from launcher.memory import MemorySnapshot, Preferences
 from launcher.storage import FileSessionStore
+from omk.profiles import load_profiles
 from tests.fakes import FakeDrasl
 
 
@@ -22,16 +23,22 @@ def window(qtbot, tmp_path):
 
 
 def test_planned_profile_ignores_mouse_keyboard_and_wheel_without_saving(
-    qtbot, tmp_path
+    qtbot, tmp_path, monkeypatch, planned_profile
 ):
+    monkeypatch.setattr(
+        "launcher.dashboard.load_profiles", lambda: [*load_profiles(), planned_profile]
+    )
     preferences = Preferences(tmp_path / "preferences.json")
     panel = Dashboard(preferences=preferences, machine=MemorySnapshot(32768, 24000))
     qtbot.addWidget(panel)
     panel.show()
-    slider = panel.cards["gtnh"].memory.slider
-    changed = QSignalSpy(panel.cards["gtnh"].memory.changed)
+    slider = panel.cards[planned_profile.id].memory.slider
+    changed = QSignalSpy(panel.cards[planned_profile.id].memory.changed)
     before = slider.value()
-    assert not slider.isEnabled() and not panel.cards["gtnh"].memory.value.isEnabled()
+    assert (
+        not slider.isEnabled()
+        and not panel.cards[planned_profile.id].memory.value.isEnabled()
+    )
     qtbot.mouseClick(slider, Qt.MouseButton.LeftButton, pos=slider.rect().topRight())
     qtbot.keyClick(slider, Qt.Key.Key_End)
     event = QWheelEvent(

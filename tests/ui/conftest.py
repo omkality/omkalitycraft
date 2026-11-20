@@ -1,7 +1,10 @@
 import gc
 import os
+from dataclasses import replace
 
 import pytest
+
+from omk.profiles import load_profiles
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
@@ -33,3 +36,15 @@ def cyclic_gc_stress():
         yield
     finally:
         gc.set_threshold(*previous)
+
+
+@pytest.fixture
+def planned_profile():
+    (dj2,) = load_profiles()
+    return replace(
+        dj2,
+        id="planned",
+        name="Тестовая сборка",
+        status="planned",
+        requirements=replace(dj2.requirements, state="pending", recommended=None),
+    )

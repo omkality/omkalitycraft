@@ -35,7 +35,7 @@ class Dashboard(QWidget):
         content = QWidget()
         packs = QVBoxLayout(content)
         packs.setContentsMargins(0, 0, 8, 0)
-        heading = QLabel("Ваши сборки")
+        heading = QLabel("Ваша сборка")
         heading.setStyleSheet("font-size:23px;margin-bottom:6px")
         packs.addWidget(heading)
         self.cards: dict[str, PackCard] = {}
