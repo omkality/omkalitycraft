@@ -174,7 +174,7 @@ PROCESS = """
 import json, os, sys
 from pathlib import Path
 from types import SimpleNamespace
-from omk import project_return as j
+from omk.owner.storage import project_return as j
 config=SimpleNamespace(private=Path(sys.argv[1]), servers={'dj2':Path(sys.argv[2])})
 operation, fault=sys.argv[3:5]
 fence={'source':'stopped-owned-source','target':'empty-owned-target'}
