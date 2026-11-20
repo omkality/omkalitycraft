@@ -183,6 +183,8 @@ fn execute() -> Result<(), String> {
         }
         return snapshot(&mut app, path);
     }
+    #[cfg(windows)]
+    startup::widen_standalone_console();
     let mut terminal = ratatui::init();
     let result = interactive(&mut terminal, &mut app, options.backend);
     ratatui::restore();
