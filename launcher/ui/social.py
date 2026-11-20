@@ -14,6 +14,8 @@ CHANNELS = (
 
 
 class SocialFooter(QWidget):
+    """Display the project's external community links."""
+
     def __init__(self, update_notice: str = "") -> None:
         super().__init__()
         self.setObjectName("socialFooter")

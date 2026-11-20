@@ -56,7 +56,7 @@ docker pull python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6
 uv run python -m omk lab backup-safety
 ```
 
-Это официальный Python 3.14.2 slim по тому же digest, что в `Dockerfile.api`.
+Это официальный Python 3.14.2 slim по тому же digest, что в `deploy/api/Dockerfile`.
 В контейнер монтируются read-only **четыре файла исходников** из временной папки,
 не весь проект. Миры, `.env`, пароли, исходные бэкапы и Docker socket не подключаются.
 Нет сети, портов и дополнительных capabilities; rootfs read-only. Данные только в

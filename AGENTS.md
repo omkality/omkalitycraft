@@ -45,6 +45,10 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
 - Keep launcher/API in this monorepo. Put all player/runtime/update data below the portable root.
 - Launcher updates use TUF and separate version folders with health-checked handoff; never overwrite
   the running executable or extract an update over userdata/instances. Private signing keys stay offline.
+- Keep pytest fixture definitions and shared test setup under tests/fixtures.
+  Import the fixture names into each suite that needs them.
+- Document public classes and methods with their contracts or side effects.
+  Type context-manager generators as Generator or AsyncGenerator.
 - Run the relevant tests and Ruff. CI covers CDN, transport, profiles and a disposable Drasl smoke test.
 - Use bounded `-n 4 --dist=loadfile` for `tests/unit`; keep Qt/GC tests (`-n 0`) and real game lifecycle labs sequential. Do not enable global parallel pytest defaults or `-n auto` on a shared host.
 - Keep CHANGELOG.md and owner/player documentation in Russian; commit subjects and AGENTS.md remain English.

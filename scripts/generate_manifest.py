@@ -18,7 +18,7 @@ from api.settings.content import (  # noqa: E402
     get_launcher_manifest_settings,
     resolve_project_path,
 )
-from omk.content_policy import is_private_path  # noqa: E402
+from omk.shared.content_policy import is_private_path  # noqa: E402
 
 
 def sha256_of_file(path: Path) -> str:

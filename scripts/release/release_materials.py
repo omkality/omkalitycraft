@@ -18,13 +18,16 @@ from launcher.version import VERSION
 
 FIRST_PARTY = {
     "omk",
-    "omk.drasl",
-    "omk.profiles",
-    "omk.fs",
-    "omk.diagnostics",
-    "omk.incidents",
-    "omk.content_policy",
-    "omk.nbt",
+    "omk.accounts",
+    "omk.observability",
+    "omk.shared",
+    "omk.accounts.drasl",
+    "omk.shared.profiles",
+    "omk.shared.fs",
+    "omk.observability.diagnostics",
+    "omk.observability.incidents",
+    "omk.shared.content_policy",
+    "omk.shared.nbt",
 }
 FORBIDDEN_PACKAGES = {
     "litestar",

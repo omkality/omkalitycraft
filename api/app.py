@@ -19,7 +19,7 @@ from api.routes.reports import upload_client_report
 from api.routes.server_status import server_status
 from api.routes.updates import update_metadata, update_target
 from api.settings.config import settings
-from omk.minecraft_status import ServerStatusCache
+from omk.game.minecraft_status import ServerStatusCache
 
 project_info = get_project_info()
 

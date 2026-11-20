@@ -11,7 +11,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from omk.mcmcp_client import McpClient, McpError, owned_connection  # noqa: E402
+from omk.labs.mcp.mcmcp_client import (  # noqa: E402
+    McpClient,
+    McpError,
+    owned_connection,
+)
 
 
 def main():

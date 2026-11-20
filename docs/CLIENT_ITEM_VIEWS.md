@@ -43,7 +43,7 @@ DJ2 2.23.4. Исходные ItemStack, NBT, сетевые данные, кра
 
 Собственные 13 исправлений `dj2.book_of_logic.desc0..12` находятся в
 [item-view-review.json](../profiles/locale-overlays/dj2-2.23.4/item-view-review.json).
-Они применены существующим `omk.locale_overlay.render_lang` с пинами исходного
+Они применены существующим `omk.localization.locale_overlay.render_lang` с пинами исходного
 файла, прежнего перевода и отдельных значений. Все девять условий задачи и
 числа сохранены; исправлен лишний буквальный `r` вместо кода цвета.
 GUI повторно использует эти языковые ключи. Команда `/dj2 book_of_logic`

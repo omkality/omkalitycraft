@@ -4,8 +4,8 @@ import os
 from pathlib import Path
 from string import Template
 
-from omk.diagnostics import prune_native_archives, prune_reports
-from omk.fs import resolved
+from omk.observability.diagnostics import prune_native_archives, prune_reports
+from omk.shared.fs import resolved
 
 ASSETS = Path(__file__).resolve().parents[1] / "assets"
 

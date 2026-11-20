@@ -37,6 +37,8 @@ def default_skin() -> QImage:
 
 
 class SkinView(QWidget):
+    """Render the player skin with an automatic rotation and manual drag."""
+
     def __init__(self) -> None:
         super().__init__()
         self.image = default_skin()
@@ -57,15 +59,18 @@ class SkinView(QWidget):
         self.animation.setEasingCurve(QEasingCurve.Type.Linear)
 
     def get_angle(self) -> float:
+        """Return the current preview rotation in degrees."""
         return self._angle
 
     def set_angle(self, value: float) -> None:
+        """Update the preview rotation and repaint the character."""
         self._angle = value
         self.update()
 
     angle = Property(float, get_angle, set_angle)
 
     def set_skin(self, png: bytes, model: str) -> None:
+        """Load the texture and geometry used for the preview."""
         image = QImage.fromData(png, "PNG")
         if image.isNull() or image.width() != 64 or image.height() not in {32, 64}:
             return
@@ -73,6 +78,7 @@ class SkinView(QWidget):
         self.update()
 
     def reset_skin(self) -> None:
+        """Replace the preview texture with the launcher default."""
         self.image, self.model = default_skin(), DEFAULT_SKIN_MODEL
         self.update()
 
@@ -168,6 +174,7 @@ class SkinView(QWidget):
 
     @override
     def paintEvent(self, event) -> None:
+        """Render the preview for the current rotation and widget size."""
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setPen(Qt.PenStyle.NoPen)
@@ -207,6 +214,7 @@ class SkinView(QWidget):
 
     @override
     def showEvent(self, event: QShowEvent) -> None:
+        """Start preview animation when the widget becomes visible."""
         super().showEvent(event)
         self._hovered = self.underMouse()
         if not self._hovered:
@@ -214,6 +222,7 @@ class SkinView(QWidget):
 
     @override
     def hideEvent(self, event: QHideEvent) -> None:
+        """Stop preview animation while the widget is hidden."""
         self._pause_rotation()
         self._drag_position = None
         self._hovered = False
@@ -235,12 +244,14 @@ class SkinView(QWidget):
 
     @override
     def enterEvent(self, event: QEnterEvent) -> None:
+        """Pause the preview rotation when the pointer enters."""
         self._hovered = True
         self._pause_rotation()
         super().enterEvent(event)
 
     @override
     def leaveEvent(self, event: QEvent) -> None:
+        """Resume automatic rotation after pointer interaction ends."""
         self._hovered = False
         if self._drag_position is None and self.isVisible():
             self._resume_rotation()
@@ -248,6 +259,7 @@ class SkinView(QWidget):
 
     @override
     def mousePressEvent(self, event: QMouseEvent) -> None:
+        """Begin manual rotation with a supported mouse press."""
         if event.button() != Qt.MouseButton.LeftButton:
             super().mousePressEvent(event)
             return
@@ -258,6 +270,7 @@ class SkinView(QWidget):
 
     @override
     def mouseMoveEvent(self, event: QMouseEvent) -> None:
+        """Update the character orientation during a drag."""
         if self._drag_position is None:
             super().mouseMoveEvent(event)
             return
@@ -269,6 +282,7 @@ class SkinView(QWidget):
 
     @override
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:
+        """End the drag and release the manual rotation state."""
         if event.button() != Qt.MouseButton.LeftButton or self._drag_position is None:
             super().mouseReleaseEvent(event)
             return

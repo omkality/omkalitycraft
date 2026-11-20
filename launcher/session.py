@@ -8,6 +8,8 @@ from uuid import UUID
 
 @dataclass(frozen=True)
 class Session:
+    """Represent a revocable Drasl game session bound to its authentication origin."""
+
     origin: str
     username: str
     player_uuid: str
@@ -22,10 +24,12 @@ class Session:
         UUID(self.player_uuid)
 
     def serialize(self) -> str:
+        """Encode the game session for the portable store."""
         return json.dumps({"schema": 1, **asdict(self)})
 
     @classmethod
     def deserialize(cls, value: str) -> Session:
+        """Decode a persisted session and validate the expected schema."""
         if len(value) > 32768:
             raise ValueError("Invalid session size")
         data = json.loads(value)
@@ -39,6 +43,16 @@ class SessionStoreError(RuntimeError):
 
 
 class SessionStore(Protocol):
-    def load(self) -> Session | None: ...
-    def save(self, session: Session) -> None: ...
-    def clear(self) -> None: ...
+    """Define the operations used to retain or forget a game session."""
+
+    def load(self) -> Session | None:
+        """Read the remembered session, returning no session when it is absent."""
+        ...
+
+    def save(self, session: Session) -> None:
+        """Persist the session as the current remembered credentials."""
+        ...
+
+    def clear(self) -> None:
+        """Forget the stored session."""
+        ...

@@ -25,7 +25,7 @@
 
 ## Подготовка и защита от случайной правки
 
-`omk.book_layout.paginate_patchouli_entry` — чистое преобразование байтов,
+`omk.localization.book_layout.paginate_patchouli_entry` — чистое преобразование байтов,
 которое не устанавливает ресурс и не обращается к игровому серверу. План в
 `profiles/locale-overlays/dj2-2.23.4/book-layout-review.json` закрепляет SHA256
 входного русского JSON, исходного английского JSON и ожидаемого результата.

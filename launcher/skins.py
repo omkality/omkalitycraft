@@ -11,11 +11,15 @@ MAX_SKIN_BYTES = 256 * 1024
 
 
 class SkinError(ValueError):
+    """Report a skin texture that cannot be decoded or uploaded."""
+
     pass
 
 
 @dataclass(frozen=True)
 class Skin:
+    """Represent a decoded texture and its supported skin layout."""
+
     png: bytes
     width: int
     height: int
@@ -23,6 +27,7 @@ class Skin:
 
     @property
     def legacy(self) -> bool:
+        """Report whether the texture uses Minecraft's legacy skin dimensions."""
         return self.height == 32
 
 

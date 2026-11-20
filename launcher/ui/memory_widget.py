@@ -7,7 +7,7 @@ from PySide6.QtGui import QWheelEvent
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QSlider, QVBoxLayout, QWidget
 
 from launcher.memory import MIN_MB, STEP_MB, MemorySnapshot, choose_memory
-from omk.profiles import ServerProfile
+from omk.shared.profiles import ServerProfile
 
 
 class _MemorySlider(QSlider):
@@ -18,6 +18,8 @@ class _MemorySlider(QSlider):
 
 
 class MemoryControl(QWidget):
+    """Present and validate the heap choices available for one pack."""
+
     changed = Signal(int)
 
     def __init__(
@@ -60,6 +62,7 @@ class MemoryControl(QWidget):
 
     @property
     def selected_mb(self) -> int:
+        """Return the current Java heap selection in MiB."""
         return choose_memory(
             self.profile, self.machine, self.slider.value() * STEP_MB
         ).selected_mb

@@ -2,6 +2,7 @@
   "$defs": {
     "Point": {
       "additionalProperties": false,
+      "description": "Carry one timestamped observation from a TPS history query.",
       "properties": {
         "timestamp": {
           "minimum": 0,
@@ -31,6 +32,7 @@
     }
   },
   "additionalProperties": false,
+  "description": "Describe the sampled TPS series and its query range.",
   "properties": {
     "schema_version": {
       "const": 1,

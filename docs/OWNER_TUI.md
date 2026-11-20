@@ -308,7 +308,7 @@ series. `up == 1` и свежесть проверяются в каждой и�
 
 ```console
 uv run --no-sync python scripts/check_owner_tui.py
-uv run --no-sync pytest tests/unit/test_owner_tps_history.py tests/unit/test_owner_overview.py tests/unit/test_owner_metrics.py tests/unit/test_owner_console.py tests/unit/test_recovery_console.py tests/unit/test_owner_result.py -q -n 4 --dist=loadfile
+uv run --no-sync pytest tests/unit/observability/test_owner_tps_history.py tests/unit/owner/test_owner_overview.py tests/unit/observability/test_owner_metrics.py tests/unit/owner/test_owner_console.py tests/unit/worlds/test_recovery_console.py tests/unit/owner/test_owner_result.py -q -n 4 --dist=loadfile
 ```
 
 Rust проверяет Python examples, строгий разбор, корреляцию, пустые/устаревшие данные,

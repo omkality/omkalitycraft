@@ -1,0 +1,158 @@
+import os
+from copy import deepcopy
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+
+from omk.owner.storage import estate_inventory as worker
+from tests.fixtures.unit.storage.estate_inventory import census
+
+__all__ = ["census"]
+
+pytestmark = pytest.mark.skipif(
+    not hasattr(os, "statvfs"), reason="Linux Docker volume accounting"
+)
+
+
+def test_multiple_worlds_and_shared_auth_are_counted_without_reading_secrets(
+    census, monkeypatch
+):
+    request, root, files = census
+    monkeypatch.setattr(
+        Path, "read_bytes", lambda *a: pytest.fail("Census read file contents")
+    )
+    value = worker.execute(request, root)
+    assert sum(
+        v["files"] for r in value["resources"] for v in r["categories"].values()
+    ) == len(files)
+    assert sum(
+        v["apparent_bytes"]
+        for r in value["resources"]
+        for v in r["categories"].values()
+    ) == sum(map(len, files.values()))
+    assert value["resources"][0]["categories"]["active_world"]["apparent_bytes"] == 10
+    assert value["resources"][2]["categories"]["active_world"]["apparent_bytes"] == 20
+    assert len(value["filesystems"]) == 1
+    assert value["filesystems"][0]["resources"] == [
+        r["id"] for r in request["resources"]
+    ]
+    assert "private-key-canary" not in str(value) and "drasl.db" not in str(value)
+    assert not value["atomic_snapshot"] and not value["backup_integrity_verified"]
+
+
+@pytest.mark.parametrize("kind", ["entries", "depth", "link", "mutation"])
+def test_partial_or_changing_census_does_not_return_success(census, monkeypatch, kind):
+    request, root, _ = census
+    if kind == "entries":
+        request["limits"]["max_entries"] = 4
+    elif kind == "depth":
+        request["limits"]["max_depth"] = 1
+    elif kind == "link":
+        (root / "auth/link").symlink_to(root / "game-a")
+    else:
+        scan = worker.scan
+
+        def changed(*args):
+            value = scan(*args)
+            if args[1] == "auth":
+                (root / "game-a/first/level.dat").write_bytes(b"changed")
+            return value
+
+        monkeypatch.setattr(worker, "scan", changed)
+    with pytest.raises(ValueError):
+        worker.execute(request, root)
+
+
+def test_every_mount_contributes_to_minimum_available_space(census, monkeypatch):
+    request, root, _ = census
+    free = iter([100, 100, 5, 50, 100, 100, 100, 100, 100, 100])
+    monkeypatch.setattr(
+        worker.os,
+        "statvfs",
+        lambda _: SimpleNamespace(f_bavail=next(free), f_frsize=4096, f_blocks=1000),
+    )
+    assert (
+        worker.execute(request, root)["filesystems"][0]["available_bytes"] == 5 * 4096
+    )
+
+
+@pytest.mark.parametrize(
+    "kind", ["id", "duplicate", "role", "world", "schema", "auth", "bound"]
+)
+def test_ambiguous_requests_refused(census, kind):
+    request, root, _ = census
+    request = deepcopy(request)
+    if kind == "schema":
+        request["schema"] = True
+    elif kind == "auth":
+        request["resources"] = [r for r in request["resources"] if r["role"] != "auth"]
+    elif kind == "bound":
+        request["limits"]["max_entries"] = 1000001
+    elif kind == "duplicate":
+        request["resources"].append(dict(request["resources"][0]))
+    else:
+        request["resources"][0][kind] = {
+            "id": "../escape",
+            "role": "unknown",
+            "world": "../data",
+        }[kind]
+    with pytest.raises(ValueError):
+        worker.execute(request, root)
+
+
+def add_metrics(census):
+    request, root, _ = census
+    request["resources"].append({"id": "metrics", "role": "metrics", "world": "world"})
+    files = {
+        "wal/00000001": b"private-metrics-canary" * 100,
+        "chunks_head/000001": b"head" * 100,
+        "block/chunks/000001": b"block" * 200,
+        "block/index": b"index" * 30,
+    }
+    for name, body in files.items():
+        path = root / "metrics" / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(body)
+    return request, root, files
+
+
+def test_full_metrics_tree_is_counted_without_opening_files(census, monkeypatch):
+    request, root, files = add_metrics(census)
+    monkeypatch.setattr(Path, "open", lambda *a, **kw: pytest.fail("Opened TSDB file"))
+    value = worker.execute(request, root)
+    metrics = [r for r in value["resources"] if r["role"] == "metrics"]
+    assert len(metrics) == 1
+    assert metrics[0]["categories"]["metrics"]["files"] == len(files)
+    assert metrics[0]["categories"]["metrics"]["apparent_bytes"] == sum(
+        map(len, files.values())
+    )
+    assert "private-metrics-canary" not in str(value)
+    assert "000001" not in str(value)
+    assert value["metadata_only"] and not value["atomic_snapshot"]
+
+
+@pytest.mark.parametrize("kind", ["link", "mutation", "bound"])
+def test_metrics_census_rejects_links_changes_and_partial_walks(
+    census, monkeypatch, kind
+):
+    request, root, _ = add_metrics(census)
+    if kind == "link":
+        (root / "metrics/foreign").symlink_to(root / "auth")
+    elif kind == "bound":
+        request["limits"]["max_entries"] = 8
+    else:
+        scan = worker.scan
+
+        def changed(*args):
+            value = scan(*args)
+            if args[1] == "metrics":
+                (root / "metrics/wal/00000001").write_bytes(b"changed")
+            return value
+
+        monkeypatch.setattr(worker, "scan", changed)
+    with pytest.raises(
+        ValueError,
+        match={"link": "Linked", "mutation": "changed", "bound": "bound"}[kind],
+    ):
+        worker.execute(request, root)

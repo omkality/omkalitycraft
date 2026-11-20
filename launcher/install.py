@@ -28,10 +28,12 @@ from launcher.releases import (
     sha256_file,
     valid_generation,
 )
-from omk.drasl import DraslClient
+from omk.accounts.drasl import DraslClient
 
 
 class InstallCancelled(ReleaseError):
+    """Indicate that an installation stopped at a cancellation checkpoint."""
+
     pass
 
 
@@ -69,6 +71,8 @@ def current_platform() -> str:
 
 @dataclass(frozen=True)
 class Progress:
+    """Describe work completed and remaining for a pack installation stage."""
+
     stage: str
     done: int
     total: int
@@ -76,10 +80,13 @@ class Progress:
 
     @property
     def percent(self) -> int:
+        """Return the display percentage bounded by one hundred."""
         return min(100, int(self.done * 100 / max(1, self.total)))
 
 
 class ReleaseClient:
+    """Read and authenticate signed pack manifests from the configured CDN."""
+
     def __init__(
         self,
         origin: str,
@@ -92,6 +99,7 @@ class ReleaseClient:
         self.minimum_generations = generation_floors(minimum_generations or {})
 
     def fetch(self, pack_id: str, target: str | None = None) -> Release:
+        """Fetch a manifest and check pack identity, platform and generation."""
         target = target or current_platform()
         request = Request(
             f"{self.transport.base_url}/releases/{quote(pack_id, safe='')}/{target}/manifest"
@@ -129,6 +137,8 @@ class ReleaseClient:
 
 
 class Installer:
+    """Install and repair the signed files under a portable launcher root."""
+
     def __init__(self, root: Path, client: ReleaseClient, *, workers: int = 4) -> None:
         self.root = root.resolve()
         self.client = client
@@ -141,9 +151,11 @@ class Installer:
         self._last_progress = 0.0
 
     def directory(self, pack_id: str) -> Path:
+        """Resolve the instance path within the portable installation root."""
         return inside(self.root, f"instances/{pack_id}")
 
     def local_state(self, pack_id: str) -> dict:
+        """Report the installed or incomplete state backed by a signed manifest."""
         try:
             state = self.directory(pack_id) / ".omk-install.json"
             with state.open("rb") as file:

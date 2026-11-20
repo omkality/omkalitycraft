@@ -15,23 +15,25 @@ from launcher.pack.mod_policy import clean_extra_mods, verify_mods
 from launcher.releases import Release, ReleaseError, inside
 from launcher.session import Session
 from launcher.version import VERSION
-from omk.diagnostics import (
+from omk.observability.diagnostics import (
     BoundedLog,
     collect_output,
     environment_snapshot,
     event,
     failure,
 )
-from omk.fs import resolved
-from omk.incidents import (
+from omk.observability.incidents import (
     RunningCrashWatcher,
     capture_incident,
     crash_fingerprints,
 )
+from omk.shared.fs import resolved
 
 
 @dataclass
 class GameProcess:
+    """Track the child process and the completion of its diagnostic capture."""
+
     process: subprocess.Popen = field(repr=False)
     log_path: Path
     folder: Path
@@ -41,10 +43,13 @@ class GameProcess:
     logging_failed: threading.Event = field(default_factory=threading.Event, repr=False)
 
     def poll(self) -> int | None:
+        """Return the Java exit code when the child has stopped."""
         return self.process.poll()
 
 
 class GameRunner:
+    """Prepare a verified game instance and supervise its Java process."""
+
     def __init__(self, root: Path, *, memory_mb: int = 6144) -> None:
         if not 1024 <= memory_mb <= 16384:
             raise ValueError("Invalid memory setting")
@@ -59,6 +64,7 @@ class GameRunner:
         *,
         memory_mb: int | None = None,
     ) -> list[str]:
+        """Build the Java arguments for the selected release and session."""
         release.require_launcher()
         memory_mb = self.memory_mb if memory_mb is None else memory_mb
         if type(memory_mb) is not int or not 1024 <= memory_mb <= 16384:
@@ -128,6 +134,7 @@ class GameRunner:
         server: tuple[str, int] | None = None,
         memory_mb: int | None = None,
     ) -> GameProcess:
+        """Prepare writable instance settings, launch Java and collect game output."""
         command = self.command(release, folder, session, memory_mb=memory_mb)
         clean_extra_mods(release, folder)
         verify_mods(release, folder)

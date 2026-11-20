@@ -1,0 +1,929 @@
+"""WorldEdit snapshot experiment. Only newly created, loopback DJ2 labs are touched."""
+
+import hashlib
+import json
+import shutil
+import time
+import traceback
+import zipfile
+from uuid import uuid4
+
+from omk.game.mod_components import add_pack_inputs
+from omk.labs.dj2.dj2_commands_lab import FIRST, SECOND, _place, _response
+from omk.labs.dj2.dj2_lab import (
+    _accounts,
+    _cleanup,
+    _console_sender,
+    _copy_server,
+    _start_server,
+    _stop_server,
+    _wait_server,
+    approved_mods,
+)
+from omk.labs.dj2.forge_player import LabPlayer
+from omk.labs.recovery import recovery_mod_systems_lab as mod_systems
+from omk.labs.recovery.recovery_edges_lab import (
+    characterize_entities,
+    check_partial_snapshot,
+    damage_edges,
+    seed_edges,
+)
+from omk.labs.recovery.recovery_preflight_lab import preflight
+from omk.labs.recovery.recovery_snapshot_lab import prepare_overworld_snapshot
+from omk.shared.profiles import PROJECT_ROOT
+
+WORLDEDIT_SHA256 = "cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75"
+WORLDEDIT_SOURCE = (
+    "https://www.curseforge.com/minecraft/mc-mods/worldedit/files/2941712"
+)
+ITEM = '{Slot:0b,id:"minecraft:diamond",Count:3,Damage:0s,tag:{display:{Name:"Recovery fixture"}}}'
+MACHINE = '{Energy:20000,Facing:5b,Inventory:[{Slot:1,id:"minecraft:iron_ingot",Count:7,Damage:0s}]}'
+
+
+def _sha256(path):
+    with path.open("rb") as file:
+        return hashlib.file_digest(file, "sha256").hexdigest()
+
+
+def add_recovery_lab(parser):
+    add_pack_inputs(parser)
+    from pathlib import Path  # noqa: PLC0415
+
+    for flag in ["server-source", "agent", "core", "mods-json", "worldedit"]:
+        parser.add_argument("--" + flag, type=Path, required=True)
+    parser.add_argument("--java", type=Path, help="Required for the native runtime")
+    parser.add_argument(
+        "--runtime", choices=("native", "linux-docker"), default="native"
+    )
+    parser.add_argument(
+        "--edge-cases",
+        action="store_true",
+        help="Characterize entities and a deliberately incomplete snapshot in the new lab",
+    )
+    parser.add_argument(
+        "--full-backup-return",
+        action="store_true",
+        help="With --edge-cases, start a full backup in a new empty replacement lab",
+    )
+    parser.add_argument(
+        "--mod-systems",
+        action="store_true",
+        help="Experimental Linux AE2/EnderIO functional recovery suite; separate from other suites",
+    )
+    parser.add_argument(
+        "--access-policy",
+        action="store_true",
+        help="With Linux full return, preserve and exercise current vanilla access lists",
+    )
+    parser.add_argument(
+        "--rank-policy",
+        action="store_true",
+        help="With --access-policy, preserve current FTB rank definitions and test home quotas",
+    )
+    parser.add_argument(
+        "--managed-backups",
+        action="store_true",
+        help="With Linux full return/access/ranks, use a managed Linux backup volume and test retention",
+    )
+    parser.add_argument(
+        "--operator-backups",
+        action="store_true",
+        help="Use the owner cold-backup plan/run on stopped lab containers",
+    )
+    parser.add_argument(
+        "--ftb-authority-policy",
+        action="store_true",
+        help="With Linux full return/ranks, refuse historical FTB authority changes",
+    )
+    parser.add_argument(
+        "--ftb-authority-conflict",
+        action="store_true",
+        help="With authority policy, seed a revoked historical ally and expect start refusal",
+    )
+    parser.add_argument(
+        "--reconcile-ftb-authority",
+        action="store_true",
+        help="With authority policy, explicitly transfer reviewed current FTB permissions",
+    )
+
+
+def _snapshot(server, dest, target):
+    if (
+        server.poll() != 0
+        or dest.name != "server"
+        or not dest.parent.name.startswith("recovery-lab-")
+    ):
+        raise ValueError("Snapshot requires a cleanly stopped owned recovery lab")
+    world = dest / "lab-world"
+    if not (world / "level.dat").is_file() or target.exists():
+        raise ValueError("Missing fresh world or snapshot already exists")
+    # Streaming ZIP, no region replacement or extraction, no files from old servers.
+    size = count = 0
+    with zipfile.ZipFile(target, "x", zipfile.ZIP_DEFLATED, compresslevel=1) as archive:
+        for path in sorted(world.rglob("*")):
+            if path.is_symlink():
+                raise ValueError("Linked lab snapshot input")
+            if not path.is_file():
+                continue
+            size += path.stat().st_size
+            count += 1
+            if size > 512 * 1024**2 or count > 20000:
+                raise ValueError("Lab snapshot limit exceeded")
+            archive.write(path, path.relative_to(dest).as_posix())
+    return {
+        "files": count,
+        "uncompressed_bytes": size,
+        "bytes": target.stat().st_size,
+        "sha256": _sha256(target),
+    }
+
+
+def _found(console, xyz, block, nbt="{}", *, data=-1):
+    return "Successfully found" in console(f"testforblock {xyz} {block} {data} {nbt}")
+
+
+def _fixture(console):
+    console("fill 128 240 128 143 240 143 minecraft:bedrock")
+    console("fill 128 241 128 143 245 143 minecraft:air")
+    console(f"setblock 130 241 130 minecraft:chest 2 replace {{Items:[{ITEM}]}}")
+    console(f"setblock 132 241 130 ironchest:iron_chest 0 replace {{Items:[{ITEM}]}}")
+    console("setblock 134 241 130 thermalexpansion:machine")
+    # CoFH's placement callback initializes its tile after setblock NBT. Merge
+    # the fixture into the initialized tile, retaining its complete schema.
+    console(f"blockdata 134 241 130 {MACHINE}")
+    console("setblock 136 241 130 minecraft:chest 2 replace {Items:[]}")
+    console("setblock 130 244 130 minecraft:gold_block")
+    console("setblock 129 241 130 minecraft:gold_block")
+    console("setblock 130 241 129 minecraft:gold_block")
+
+
+def _damage(console):
+    console("setblock 130 241 130 minecraft:air")
+    console("setblock 132 241 130 ironchest:iron_chest 0 replace {Items:[]}")
+    console("blockdata 132 241 130 {Items:[]}")
+    console("blockdata 134 241 130 {Energy:0,Inventory:[],Facing:2b}")
+    console("setblock 131 242 131 minecraft:obsidian")
+    console(f"blockdata 136 241 130 {{Items:[{ITEM}]}}")
+    console("setblock 130 244 130 minecraft:diamond_block")
+    console("setblock 129 241 130 minecraft:diamond_block")
+    console("setblock 130 241 129 minecraft:diamond_block")
+    console("setblock 130 240 130 minecraft:diamond_block")
+
+
+def _restored(console, expect, prefix):
+    for label, xyz, block, nbt in [
+        (
+            "vanilla_chest_named_inventory",
+            "130 241 130",
+            "minecraft:chest",
+            f"{{Items:[{ITEM}]}}",
+        ),
+        (
+            "same_type_iron_chest_inventory",
+            "132 241 130",
+            "ironchest:iron_chest",
+            f"{{Items:[{ITEM}]}}",
+        ),
+        (
+            "machine_energy_orientation_inventory",
+            "134 241 130",
+            "thermalexpansion:machine",
+            MACHINE,
+        ),
+        ("griefer_block_removed", "131 242 131", "minecraft:air", "{}"),
+        (
+            "neighbor_chest_same_chunk_unchanged",
+            "136 241 130",
+            "minecraft:chest",
+            f"{{Items:[{ITEM}]}}",
+        ),
+        (
+            "above_selection_same_chunk_unchanged",
+            "130 244 130",
+            "minecraft:diamond_block",
+            "{}",
+        ),
+        ("west_of_selection_unchanged", "129 241 130", "minecraft:diamond_block", "{}"),
+        (
+            "north_of_selection_unchanged",
+            "130 241 129",
+            "minecraft:diamond_block",
+            "{}",
+        ),
+        ("below_selection_unchanged", "130 240 130", "minecraft:diamond_block", "{}"),
+    ]:
+        data = 2 if block == "minecraft:chest" else -1
+        expect(_found(console, xyz, block, nbt, data=data), prefix + label)
+    expect(
+        _found(console, "134 241 130", "thermalexpansion:machine", data=0),
+        prefix + "machine_block_metadata_unchanged",
+    )
+
+
+def _smelt(console, expect, label):
+    console(
+        'blockdata 134 241 130 {Inventory:[{Slot:0,id:"minecraft:cobblestone",Count:1,Damage:0s}]}'
+    )
+    deadline = time.monotonic() + 45
+    while time.monotonic() < deadline:
+        if _found(
+            console,
+            "134 241 130",
+            "thermalexpansion:machine",
+            '{Inventory:[{Slot:1,id:"minecraft:stone",Count:1}]}',
+        ):
+            expect(True, label)
+            return
+        time.sleep(0.5)
+    raise RuntimeError(label + ": " + console("blockdata 134 241 130 {}")[-2000:])
+
+
+def _restore(actor, command="//restore"):
+    _response(actor, command, "Restored; 0 missing chunks and 0 other errors.")
+
+
+def _restore_checks(actor, console, expect, report, snapshots, edge_cases):
+    _response(actor, "//restore before-grief.zip", "not permitted")
+    expect(
+        _found(console, "130 241 130", "minecraft:air"),
+        "normal_player_cannot_restore",
+    )
+    console("op " + FIRST)  # Only this new lab, not the player's real rank.
+    _response(actor, "//pos1 130,241,130", "First position set")
+    _response(actor, "//pos2 135,243,134", "Second position set")
+    _response(actor, "/snap list", "before-grief.zip")
+    expect(True, "operator_lists_actual_zip_snapshots")
+    _response(actor, "/snap use before-grief.zip", "Snapshot set")
+    if edge_cases:
+        expect(
+            preflight(snapshots / "before-grief.zip", (130, 241, 130), (135, 243, 134))[
+                "blocks"
+            ]
+            == 90,
+            "primary_restore_selection_passes_readonly_preflight",
+        )
+    _restore(actor)
+    report["restore_response"] = list(actor.messages)
+    _restored(console, expect, "first_restore_")
+    if edge_cases:
+        characterize_entities(console, expect, report, "after_restore_")
+    _response(actor, "//undo", "Undo successful")
+    expect(_found(console, "130 241 130", "minecraft:air"), "undo_restores_damaged_air")
+    expect(
+        _found(console, "134 241 130", "thermalexpansion:machine", "{Energy:0}"),
+        "undo_restores_damaged_machine",
+    )
+    _response(actor, "//redo", "Redo successful")
+    _restored(console, expect, "redo_")
+    _restore(actor)
+    _restored(console, expect, "repeat_restore_")
+    _response(actor, "//restore nonexistent.zip", "does not exist")
+    _restored(console, expect, "missing_snapshot_")
+    if edge_cases:
+        check_partial_snapshot(actor, console, snapshots, expect, report)
+    console("deop " + FIRST)
+
+
+def _exercise(
+    client,
+    session,
+    mods,
+    start,
+    backup,
+    expect,
+    report,
+    *,
+    snapshots,
+    edge_cases,
+    authority_session=None,
+):
+    console = start()
+    with LabPlayer(client, session, 25576, mods) as actor:
+        _place(actor, FIRST, (128.5, 241, 128.5), console)
+        _fixture(console)
+        if report.get("full_backup_return"):
+            from omk.labs.recovery.recovery_full_probe_lab import (  # noqa: PLC0415
+                seed_full_return,
+            )
+
+            seed_full_return(actor, console, expect)
+            if authority_session is not None:
+                with LabPlayer(client, authority_session, 25576, mods) as other:
+                    _response(
+                        actor,
+                        "/team status " + SECOND + " ally",
+                        "commands.team.status.set",
+                    )
+                    if report.get("reconcile_ftb_authority"):
+                        from omk.labs.recovery.recovery_full_probe_lab import (  # noqa: PLC0415
+                            ally_positive_control,
+                        )
+
+                        ally_positive_control(other, console, expect)
+                expect(True, "historical_ftb_ally_seeded_before_backup")
+        if edge_cases:
+            seed_edges(console, expect)
+        _smelt(console, expect, "machine_smelt_positive_control_before_snapshot")
+        console(f"blockdata 134 241 130 {MACHINE}")
+        report["machine_fixture_nbt"] = console("blockdata 134 241 130 {}")[-3500:]
+        expect(
+            _found(console, "134 241 130", "thermalexpansion:machine", MACHINE),
+            "idle_machine_fixture_has_seeded_state",
+        )
+        expect(
+            _found(
+                console,
+                "132 241 130",
+                "ironchest:iron_chest",
+                f"{{Items:[{ITEM}]}}",
+            ),
+            "iron_chest_fixture_has_named_items",
+        )
+    backup("before-grief")
+    console = start()
+    with LabPlayer(client, session, 25576, mods) as actor:
+        _place(actor, FIRST, (128.5, 241, 128.5), console)
+        _damage(console)
+        if report.get("full_backup_return"):
+            from omk.labs.recovery.recovery_full_probe_lab import (  # noqa: PLC0415
+                damage_full_return,
+            )
+
+            damage_full_return(actor, console, expect)
+            if authority_session is not None:
+                _response(
+                    actor,
+                    "/team status " + SECOND + " none",
+                    "commands.team.status.set",
+                )
+                expect(True, "historical_ftb_ally_revoked_in_current_world")
+        if edge_cases:
+            damage_edges(console, expect)
+        expect(_found(console, "130 241 130", "minecraft:air"), "base_really_damaged")
+        expect(
+            _found(console, "134 241 130", "thermalexpansion:machine", "{Energy:0}"),
+            "machine_state_really_damaged",
+        )
+    backup("before-restore")
+    console = start()
+    with LabPlayer(client, session, 25576, mods) as actor:
+        _place(actor, FIRST, (128.5, 241, 128.5), console)
+        _restore_checks(actor, console, expect, report, snapshots, edge_cases)
+    backup("after-restore")
+    console = start()
+    with LabPlayer(client, session, 25576, mods) as actor:
+        _place(actor, FIRST, (128.5, 241, 128.5), console)
+        _restored(console, expect, "after_restart_")
+        if edge_cases:
+            characterize_entities(console, expect, report, "after_restart_")
+        _smelt(console, expect, "restored_machine_smelt_after_full_restart")
+
+
+def _validate_authority_flags(args):
+    if getattr(args, "reconcile_ftb_authority", False) and not getattr(
+        args, "ftb_authority_policy", False
+    ):
+        raise ValueError("FTB authority transfer requires --ftb-authority-policy")
+    if getattr(args, "ftb_authority_conflict", False) and not getattr(
+        args, "ftb_authority_policy", False
+    ):
+        raise ValueError("FTB authority conflict requires --ftb-authority-policy")
+    if getattr(args, "ftb_authority_policy", False) and not getattr(
+        args, "rank_policy", False
+    ):
+        raise ValueError("FTB authority policy requires --rank-policy")
+
+
+def _validate_inputs(args):
+    _validate_authority_flags(args)
+    if getattr(args, "operator_backups", False) and not getattr(
+        args, "managed_backups", False
+    ):
+        raise ValueError("Operator backups require managed Linux full return")
+    if getattr(args, "managed_backups", False) and (
+        getattr(args, "runtime", "native") != "linux-docker"
+        or not args.full_backup_return
+        or not args.edge_cases
+        or not getattr(args, "rank_policy", False)
+    ):
+        raise ValueError(
+            "Managed backup lab requires Linux full return, edge cases, access and ranks"
+        )
+    if getattr(args, "rank_policy", False) and not getattr(
+        args, "access_policy", False
+    ):
+        raise ValueError("Rank policy requires --access-policy")
+    if getattr(args, "access_policy", False) and (
+        getattr(args, "runtime", "native") != "linux-docker"
+        or not args.full_backup_return
+        or not args.edge_cases
+        or getattr(args, "mod_systems", False)
+    ):
+        raise ValueError(
+            "Access policy requires Linux full backup return with edge cases"
+        )
+    if getattr(args, "mod_systems", False):
+        mod_systems.validate_mod_systems(args)
+    paths = [args.agent, args.core, args.mods_json, args.worldedit]
+    if getattr(args, "runtime", "native") == "native":
+        paths.append(args.java)
+    for path in paths:
+        if path is None or not path.is_file():
+            raise ValueError("Required recovery lab input missing")
+    approved_mods(args.mods_json)
+    if _sha256(args.worldedit) != WORLDEDIT_SHA256:
+        raise ValueError("Expected pinned official WorldEdit file 2941712")
+    if args.full_backup_return and not args.edge_cases:
+        raise ValueError("Full backup return requires --edge-cases")
+
+
+def _backup(server, stream, lab, dest, name, report):
+    _stop_server(server)
+    stream.close()
+    source = lab / "backups" / (name + ".zip")
+    info = _snapshot(server, dest, source)
+    _prepare_backup(lab, name, info, report)
+
+
+def _prepare_backup(lab, name, info, report):
+    source = lab / "backups" / (name + ".zip")
+    target = lab / "snapshots" / (name + ".zip")
+    report.setdefault("backups", {})[name] = info
+    prepared = prepare_overworld_snapshot(source, target)
+    prepared["sha256"] = _sha256(target)
+    report.setdefault("snapshots", {})[name] = prepared
+    if name == "before-restore":
+        (lab / "recovery-plan.json").write_text(
+            json.dumps(
+                {
+                    "schema": 1,
+                    "lab_only": True,
+                    "allowlisted_dimensions": [0],
+                    "selection": report["scope"],
+                    "restore_source": "before-grief.zip",
+                    "backup_before_apply": "backups/before-restore.zip",
+                    "snapshots": report["snapshots"],
+                    "artifacts": report["artifacts"],
+                    "native_partial_probe": (
+                        {
+                            "lab_only": True,
+                            "guard_bypassed_for_characterization": True,
+                            "min": [143, 241, 132],
+                            "max": [144, 241, 132],
+                        }
+                        if report.get("edge_cases")
+                        else None
+                    ),
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+
+
+def _prepare_recovery_server(args, lab, report):
+    dest, mods = _copy_server(args, lab)
+    shutil.copy2(args.worldedit, dest / "mods/WorldEdit.jar")
+    config = dest / "config/worldedit"
+    config.mkdir(exist_ok=True)
+    snapshots, backups = lab / "snapshots", lab / "backups"
+    snapshots.mkdir()
+    backups.mkdir()
+    snapshot_path = (
+        "/snapshots" if args.runtime == "linux-docker" else snapshots.as_posix()
+    )
+    (config / "worldedit.properties").write_text(
+        "snapshots-dir=" + snapshot_path + "\nmax-changed-blocks=4096\n"
+        "default-max-changed-blocks=4096\nuse-in-creative=false\ncheat-mode=false\n"
+        "log-commands=false\n",
+        encoding="ascii",
+    )
+    report["private_core_sha256"] = _sha256(args.core)
+    report["artifacts"] = {
+        p.name: _sha256(p)
+        for p in [
+            dest / "forge-1.12.2-14.23.5.2860.jar",
+            dest / "mods/ironchest-1.12.2-7.0.72.847.jar",
+            dest / "mods/ThermalExpansion-1.12.2-5.5.7.1-universal.jar",
+        ]
+    }
+    return dest, mods, snapshots
+
+
+class RecoveryRuntime:
+    """Coordinate native recovery checks across the owned game runtimes."""
+
+    def __init__(self, args, lab, dest, client, report, state, expect):
+        self.args, self.lab, self.dest, self.client = args, lab, dest, client
+        self.report, self.state, self.expect = report, state, expect
+        self.linux = self.server = self.stream = None
+        self.source_linux = None
+        self.access_verified = False
+        self.managed = None
+
+    def prepare_linux(self, network, snapshots):
+        """Stage the replacement Linux server for the recovery scenario."""
+        if self.args.runtime != "linux-docker":
+            return
+        from omk.labs.recovery.recovery_linux_lab import LinuxRecovery  # noqa: PLC0415
+
+        self.linux = LinuxRecovery(self.lab, network, snapshots)
+        self.report["linux_java_runtime"] = self.linux.prepare(
+            self.dest, self.args, self.client
+        )
+        self.expect(True, "linux_named_volume_case_sensitive_filesystem")
+        if getattr(self.args, "managed_backups", False):
+            from omk.labs.backup import (  # noqa: PLC0415
+                managed_world_backup_lab as managed,
+            )
+
+            self.managed = managed.ManagedWorldBackups(self.lab)
+            if getattr(self.args, "operator_backups", False):
+                self.managed.enable_operator(self.linux)
+
+    def start(self, replacement=None):
+        """Start the selected owned recovery runtime."""
+        if self.linux is not None:
+            if replacement is not None:
+                if (
+                    self.source_linux is not None
+                    or replacement != self.lab / "recovery-lab-return/server"
+                    or not (self.lab / "full-return-staged.json").is_file()
+                    or (
+                        getattr(self.args, "access_policy", False)
+                        and not (self.lab / "current-access-staged.json").is_file()
+                    )
+                    or (
+                        getattr(self.args, "rank_policy", False)
+                        and not (self.lab / "current-ranks-staged.json").is_file()
+                    )
+                    or self.server.poll() != 0
+                ):
+                    raise ValueError(
+                        "Expected a staged empty Linux replacement after stop"
+                    )
+                from omk.labs.recovery.recovery_linux_lab import (  # noqa: PLC0415
+                    LinuxRecovery,
+                )
+
+                if getattr(self.args, "ftb_authority_policy", False):
+                    from omk.backups.ftb_restore_authority import (  # noqa: PLC0415
+                        verify_gate,
+                    )
+
+                    if getattr(self.args, "reconcile_ftb_authority", False):
+                        from omk.backups.ftb_restore_reconcile import (  # noqa: PLC0415
+                            verify_transfer,
+                        )
+
+                        verify_transfer(
+                            self.lab / "backups/before-full-return.zip",
+                            replacement,
+                            lab=self.lab,
+                        )
+                    verify_gate(
+                        self.lab / "backups/before-full-return.zip",
+                        replacement,
+                        lab=self.lab,
+                    )
+                self.source_linux = self.linux
+                self.linux = LinuxRecovery(
+                    replacement.parent,
+                    self.source_linux.server.network,
+                    self.lab / "snapshots",
+                )
+                self.linux.prepare(replacement, self.args, self.client)
+            self.server, log, self.stream = self.linux.start()
+        else:
+            self.server, log, self.stream = _start_server(
+                self.args, self.lab, replacement or self.dest, self.client
+            )
+        _wait_server(self.server, log, self.state)
+        return _console_sender(self.server, log)
+
+    def original_world_digest(self):
+        """Fingerprint the initial game files for later preservation checks."""
+        return (self.source_linux or self.linux).world_digest()
+
+    def export_current_access(self, label):
+        """Export the access state observed on the running server."""
+        from omk.labs.dj2.dj2_linux_lab import inspect_owned  # noqa: PLC0415
+        from omk.labs.recovery.recovery_access_lab import (  # noqa: PLC0415
+            FILES,
+            read_access,
+        )
+
+        if label not in {"before", "after"}:
+            raise ValueError("Invalid access checkpoint")
+        source = self.source_linux or self.linux
+        if source.checkpoint_export is None or source.server.process.poll() != 0:
+            raise ValueError("Current access requires a stopped checkpoint")
+        if inspect_owned("volume", source.server.volume, source.server.run_id) is None:
+            raise ValueError("Current access source volume missing")
+        export = self.lab / ("current-access-" + label)
+        export.mkdir()
+        source.server.helper(
+            "test ! -e /export/access.tar && tar -C /srv -cf /export/access.tar "
+            + " ".join(FILES),
+            export=export,
+            readonly_volume=True,
+        )
+        archive = export / "access.tar"
+        _, _, manifest = read_access(archive)
+        return archive, manifest
+
+    def stage_current_access(self, destination):
+        """Prepare the selected access state for the recovery target."""
+        from omk.labs.recovery.recovery_access_lab import stage_access  # noqa: PLC0415
+
+        archive, _ = self.export_current_access("before")
+        result = stage_access(archive, destination, lab=self.lab)
+        if getattr(self.args, "rank_policy", False):
+            from omk.labs.recovery.recovery_ranks_lab import (  # noqa: PLC0415
+                stage_ranks,
+            )
+
+            archive, _ = self.export_current_ranks("before")
+            self.report["current_ranks"] = stage_ranks(
+                archive, destination, lab=self.lab
+            )
+        return result
+
+    def export_current_ranks(self, label):
+        """Extract the current rank policy from the owned game server."""
+        from omk.labs.dj2.dj2_linux_lab import inspect_owned  # noqa: PLC0415
+        from omk.labs.recovery.recovery_ranks_lab import (  # noqa: PLC0415
+            RANKS,
+            read_ranks,
+        )
+
+        if label not in {"before", "after"}:
+            raise ValueError("Invalid rank checkpoint")
+        source = self.source_linux or self.linux
+        if source.checkpoint_export is None or source.server.process.poll() != 0:
+            raise ValueError("Current ranks require a stopped checkpoint")
+        if inspect_owned("volume", source.server.volume, source.server.run_id) is None:
+            raise ValueError("Current ranks source volume missing")
+        export = self.lab / ("current-ranks-" + label)
+        export.mkdir()
+        source.server.helper(
+            "test ! -e /export/ranks.tar && tar -C /srv -cf /export/ranks.tar " + RANKS,
+            export=export,
+            readonly_volume=True,
+        )
+        archive = export / "ranks.tar"
+        _, digest = read_ranks(archive)
+        return archive, digest
+
+    def verify_current_access_source(self):
+        """Verify that the access export still matches its source."""
+        if getattr(self.args, "rank_policy", False):
+            _, digest = self.export_current_ranks("after")
+            self.expect(
+                digest == self.report["current_ranks"]["source_sha256"],
+                "current_rank_source_file_unchanged",
+            )
+        if getattr(self.args, "access_policy", False):
+            _, manifest = self.export_current_access("after")
+            same = manifest == self.report["current_access"]["source_file_sha256"]
+            self.expect(
+                same,
+                "current_access_source_files_unchanged",
+            )
+            self.access_verified = same
+
+    def backup(self, name):
+        """Create a fixture checkpoint for the recovery cases."""
+        self.state("stopping_owned_lab_for_" + name)
+        if self.linux is not None:
+            info = (
+                self.linux.backup(name, keep_container=True)
+                if getattr(self.args, "operator_backups", False)
+                else self.linux.backup(name)
+            )
+            _prepare_backup(self.lab, name, info, self.report)
+            if self.managed is not None:
+                result = self.managed.publish(self.linux, name)
+                self.report.setdefault("managed_backups", {})[name] = result
+                self.expect(
+                    result["verified"],
+                    name + "_managed_snapshot_matches_independent_world_inventory",
+                )
+                if getattr(self.args, "operator_backups", False):
+                    from omk.labs.dj2.dj2_linux_lab import (  # noqa: PLC0415
+                        docker,
+                        inspect_owned,
+                    )
+
+                    source = self.linux.server
+                    if inspect_owned("container", source.name, source.run_id) is None:
+                        raise ValueError(
+                            "Owned stopped source container missing after owner backup"
+                        )
+                    docker("rm", source.name)
+                    self.expect(
+                        result["operator_stage"] == "complete",
+                        name + "_owner_journal_complete",
+                    )
+        else:
+            _backup(self.server, self.stream, self.lab, self.dest, name, self.report)
+        self.expect(True, name + "_snapshot_after_clean_stop")
+
+    def managed_source(self):
+        """Identify the valid managed backup source for the scenario."""
+        result = self.managed.restore_source(self.source_linux or self.linux)
+        self.expect(True, "full_return_source_exported_from_verified_managed_store")
+        return result
+
+    def finish_managed(self):
+        """Finish the managed backup checks and collect the results."""
+        if self.managed is not None:
+            result = self.managed.finish(self.source_linux or self.linux)
+            self.report["managed_backup_final"] = result
+            self.expect(
+                result["quota_refused_without_history_change"],
+                "managed_quota_failure_preserves_history",
+            )
+            self.expect(
+                result["new_verified_before_retirement"],
+                "managed_new_copy_verified_before_retirement",
+            )
+            self.expect(
+                result["host_export_verified"],
+                "managed_store_export_independently_verified",
+            )
+
+    def close(self, compose):
+        """Stop the owned server and close the related recovery resources."""
+        if self.linux is not None:
+            retain_source = (
+                getattr(self.args, "access_policy", False) and not self.access_verified
+            )
+            if retain_source:
+                self.report["ok"] = False
+                self.report["access_policy_validation_incomplete"] = True
+            if retain_source and self.source_linux is None:
+                self.linux.close(self.report, preserve_volume=True)
+            else:
+                self.linux.close(self.report)
+            if self.source_linux is not None:
+                original = self.report.setdefault("linux_original", {"ok": True})
+                if retain_source:
+                    self.source_linux.close(original, preserve_volume=True)
+                else:
+                    self.source_linux.close(original)
+                self.report["ok"] = (
+                    self.report["ok"]
+                    and original.get("owned_game_clean_exit", False)
+                    and original["ok"]
+                )
+            _cleanup(None, None, compose, self.report)
+            self.report["ok"] = self.report["ok"] and self.report.get(
+                "owned_game_clean_exit", False
+            )
+        else:
+            _cleanup(self.server, self.stream, compose, self.report)
+        if self.managed is not None:
+            self.managed.close(self.report)
+
+
+def run_recovery_lab(args):
+    _validate_inputs(args)
+    lab = PROJECT_ROOT / ".local" / ("recovery-lab-" + uuid4().hex[:8])
+    lab.mkdir(parents=True)
+    report = {
+        "ok": False,
+        "checks": [],
+        "edge_cases": args.edge_cases,
+        "mod_systems": getattr(args, "mod_systems", False),
+        "full_backup_return": args.full_backup_return,
+        "reconcile_ftb_authority": getattr(args, "reconcile_ftb_authority", False),
+        "runtime": args.runtime,
+        "lab_folder": str(lab.relative_to(PROJECT_ROOT)),
+        "candidate": {
+            "source": WORLDEDIT_SOURCE,
+            "sha256": WORLDEDIT_SHA256,
+            "version": "6.1.10",
+            "mcmod_metadata": "6.1.10-SNAPSHOT;e6b38e8",
+        },
+        "scope": {
+            "dimension": 0,
+            "min": [130, 241, 130],
+            "max": [135, 243, 134],
+            "blocks": 90,
+        },
+    }
+    compose = [
+        "docker",
+        "compose",
+        "--project-name",
+        "omk-recovery-" + uuid4().hex[:8],
+        "-f",
+        str(PROJECT_ROOT / "deploy/auth-lab/compose.yaml"),
+    ]
+    runtime = None
+    if report["mod_systems"]:
+        report["scope"] = {
+            "dimension": 0,
+            "min": list(mod_systems.MINIMUM),
+            "max": list(mod_systems.MAXIMUM),
+            "blocks": 180,
+        }
+        report["mod_system_artifacts_sha256"] = mod_systems.PINS
+
+    def state(phase):
+        (PROJECT_ROOT / ".local/recovery-status.json").write_text(
+            json.dumps({"phase": phase, "report": report}), encoding="utf-8"
+        )
+
+    def expect(condition, label):
+        if not condition:
+            raise RuntimeError(label)
+        report["checks"].append(label)
+        state(label)
+
+    try:
+        state("preparing_fresh_recovery_lab")
+        dest, mods, snapshots = _prepare_recovery_server(args, lab, report)
+        client, _, session, session2 = _accounts(compose, lab)
+        runtime = RecoveryRuntime(args, lab, dest, client, report, state, expect)
+        runtime.prepare_linux(compose[3] + "_default", snapshots)
+
+        if report["mod_systems"]:
+            mod_systems.exercise(
+                client,
+                session,
+                mods,
+                runtime.start,
+                runtime.backup,
+                expect,
+                report,
+                snapshots,
+            )
+            mod_systems.verify_saved(snapshots, expect)
+        else:
+            _exercise(
+                client,
+                session,
+                mods,
+                runtime.start,
+                runtime.backup,
+                expect,
+                report,
+                snapshots=snapshots,
+                edge_cases=args.edge_cases,
+                authority_session=(
+                    session2 if getattr(args, "ftb_authority_conflict", False) else None
+                ),
+            )
+        from omk.labs.recovery.recovery_nbt_lab import (  # noqa: PLC0415
+            verify_snapshot_tiles,
+        )
+
+        if not report["mod_systems"]:
+            verify_snapshot_tiles(snapshots, expect)
+        if args.full_backup_return:
+            from omk.labs.recovery.recovery_full_probe_lab import (  # noqa: PLC0415
+                exercise_full_return,
+            )
+
+            exercise_full_return(
+                args,
+                lab,
+                runtime.server,
+                client,
+                (session, session2),
+                mods,
+                report,
+                expect,
+                runtime.start,
+                runtime.backup,
+                original_world_digest=(
+                    runtime.original_world_digest if runtime.linux is not None else None
+                ),
+                current_access_stage=(
+                    runtime.stage_current_access
+                    if getattr(args, "access_policy", False)
+                    else None
+                ),
+                restore_source=(
+                    runtime.managed_source if runtime.managed is not None else None
+                ),
+            )
+            runtime.verify_current_access_source()
+            runtime.finish_managed()
+        report["ok"] = True
+    except Exception as error:
+        report["error"] = type(error).__name__ + ": " + str(error)[:1800]
+        report["trace"] = [
+            {"function": f.name, "line": f.lineno}
+            for f in traceback.extract_tb(error.__traceback__)
+        ]
+    finally:
+        if runtime is not None:
+            runtime.close(compose)
+        else:
+            _cleanup(None, None, compose, report)
+        (lab / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+        state("complete" if report["ok"] else "failed")
+    return report

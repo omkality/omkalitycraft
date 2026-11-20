@@ -16,6 +16,8 @@ from launcher.skins import Skin
 
 
 class SkinResetDialog(QDialog):
+    """Ask for confirmation before replacing the current skin."""
+
     def __init__(self, parent: QWidget) -> None:
         super().__init__(parent)
         self.setObjectName("resetSkinDialog")
@@ -44,6 +46,8 @@ class SkinResetDialog(QDialog):
 
 
 class SkinDialog(QDialog):
+    """Preview a skin and select its compatible player model."""
+
     def __init__(self, skin: Skin, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setObjectName("skinUploadDialog")
@@ -88,6 +92,7 @@ class SkinDialog(QDialog):
 
     @property
     def model(self) -> str:
+        """Return the selected model for the skin upload."""
         return str(self.model_choice.currentData())
 
     def _adjust_model(self) -> None:

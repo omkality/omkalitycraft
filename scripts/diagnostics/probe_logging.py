@@ -9,9 +9,9 @@ from pathlib import Path
 from uuid import uuid4
 
 from launcher.pack.log_policy import prepare_logging
-from omk.diagnostics import BoundedLog, collect_output
-from omk.logging_runtime import logging_pins, stage_logging_runtime
-from omk.profiles import PROJECT_ROOT
+from omk.observability.diagnostics import BoundedLog, collect_output
+from omk.observability.logging_runtime import logging_pins, stage_logging_runtime
+from omk.shared.profiles import PROJECT_ROOT
 
 
 def main():

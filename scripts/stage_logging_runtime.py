@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from omk.logging_runtime import logging_classpath, stage_logging_runtime
+from omk.observability.logging_runtime import logging_classpath, stage_logging_runtime
 
 
 def main():

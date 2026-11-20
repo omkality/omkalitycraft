@@ -21,7 +21,7 @@ Core 0.3.8 ещё содержит прежний opt-in JSON producer для с
   `oom_kill`; ограничение доступа к kernel log не превращается в ложный ноль.
 - cpburnz экспортирует JVM heap/GC, server tick histogram, игроков и измерения.
   Устанавливается только на сервер, клиентский manifest не меняется.
-- `omk/monitoring_config.py` только проверяет частную конфигурацию и создаёт JSON/TOML
+- `omk/observability/monitoring_config.py` только проверяет частную конфигурацию и создаёт JSON/TOML
   для готовых программ. Сборщика, БД и собственного HTTP exporter в нём нет.
 
 Фоновых сервисов два; `configure` — короткий одноразовый контейнер. У агента нет

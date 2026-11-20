@@ -26,7 +26,7 @@ ZIP/manifest Linux-хранилища можно читать и сверять 
 
 ## Восстановление в Linux
 
-`omk.linux_world_restore` — закрытый data worker для Docker, не команда переключения
+`omk.worlds.linux_world_restore` — закрытый data worker для Docker, не команда переключения
 рабочего сервера. Владелец монтирует проверенный store readonly и отдельный новый
 остановленный Linux-том с подготовленным runtime. Helper без сети/Docker socket;
 в тесте 1 CPU/512 МиБ, root read-only. Host проверяет ownership labels, разные тома

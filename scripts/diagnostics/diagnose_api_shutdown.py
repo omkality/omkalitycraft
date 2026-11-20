@@ -58,7 +58,7 @@ def prepare(lab, image, run):
         "--label",
         LABEL + "=" + run,
         "-f",
-        "Dockerfile.api",
+        "deploy/api/Dockerfile",
         "-t",
         image,
         ".",

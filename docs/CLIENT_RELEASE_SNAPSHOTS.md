@@ -17,6 +17,8 @@
 uv run omk release pack --files <подготовленные-client-files> --launch-profile <launch.json> --private-key <offline.pem> --public-keys <public.json> --output <manifest.json> --pack-id dj2 --version <новая-версия> --minecraft 1.12.2 --platform windows-x64 --snapshot-root <private-client-releases>
 ```
 
+Пример для запуска с сохранением файлов в отдельное хранилище находится в
+[release-snapshots.example.env](../deploy/owner/release-snapshots.example.env).
 Путь можно передать переменной **окружения процесса** `OMK_RELEASE_SNAPSHOT_ROOT`.
 Явный аргумент имеет приоритет. Без аргумента и переменной сохранение выключено.
 Команда не загружает `.env` автоматически; для отдельного файла конфигурации

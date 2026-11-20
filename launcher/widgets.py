@@ -21,7 +21,7 @@ from launcher.memory import MemorySnapshot
 from launcher.ui.memory_widget import MemoryControl
 from launcher.ui.requirements_dialog import RequirementsDialog
 from launcher.ui.theme import ASSETS, ICE, MUTED, SUCCESS, WARNING
-from omk.profiles import ServerProfile
+from omk.shared.profiles import ServerProfile
 
 
 def open_link(url: str) -> None:
@@ -55,6 +55,8 @@ def external_label(text: str, url: str, *, icon_name: str | None = None) -> QLab
 
 
 class BusyButton(QPushButton):
+    """Show that a Qt button's asynchronous operation is in progress."""
+
     def __init__(self, text: str, parent=None) -> None:
         super().__init__(text, parent)
         self._busy = False
@@ -69,6 +71,7 @@ class BusyButton(QPushButton):
         self.update()
 
     def set_busy(self, busy: bool, message: str = "") -> None:
+        """Update the busy flag and associated button animation."""
         if busy and not self._busy:
             self._normal_text = self.text()
         self._busy = busy
@@ -79,6 +82,7 @@ class BusyButton(QPushButton):
 
     @override
     def paintEvent(self, event) -> None:
+        """Draw the button and its progress indicator when busy."""
         super().paintEvent(event)
         if self._busy:
             painter = QPainter(self)
@@ -99,6 +103,8 @@ def artwork(name: str, width: int, height: int) -> QPixmap:
 
 
 class PackCard(QFrame):
+    """Show release metadata, status and controls for a single pack."""
+
     def __init__(
         self,
         profile: ServerProfile,
@@ -200,6 +206,7 @@ class PackCard(QFrame):
         self._requirements_dialog.activateWindow()
 
     def set_server_status(self, value):
+        """Display the current server state and player counts."""
         if value is None:
             text = "Онлайн недоступен"
         elif not isinstance(value, dict):
@@ -248,6 +255,7 @@ class PackCard(QFrame):
         return header
 
     def set_local_state(self, state: dict) -> None:
+        """Update installation controls from the verified local pack state."""
         self.state_label.setWordWrap(False)
         self.state_label.setStyleSheet(f"color:{MUTED};background:transparent")
         self.installed = state.get("state") == "installed"
@@ -260,6 +268,7 @@ class PackCard(QFrame):
             self.action.setText("Продолжить загрузку")
 
     def update_progress(self, progress: Progress) -> None:
+        """Show the current stage and completion percentage."""
         self.state_label.setWordWrap(False)
         self.state_label.setStyleSheet(f"color:{MUTED};background:transparent")
         self.progress.show()
@@ -277,6 +286,7 @@ class PackCard(QFrame):
             self.state_label.setText(progress.stage)
 
     def finished(self, *, success: bool, message: str = "") -> None:
+        """Restore the card's controls after an installation attempt."""
         self.action.set_busy(False)
         self.progress.hide()
         self.cancel.hide()

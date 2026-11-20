@@ -29,6 +29,7 @@ def server_command(settings: Settings) -> list[str]:
 
 
 def main() -> int:
+    """Validate the API settings and replace the process with the ASGI server."""
     try:
         # Import here so a bad .env is rejected before the ASGI app starts and
         # without echoing supplied values or a settings traceback into logs.

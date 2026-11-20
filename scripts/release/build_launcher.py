@@ -18,8 +18,8 @@ from tuf.api.metadata import Metadata, Root
 from launcher.install import current_platform
 from launcher.releases import generation_floors
 from launcher.version import VERSION
-from omk.drasl import DraslClient
-from omk.profiles import PROJECT_ROOT
+from omk.accounts.drasl import DraslClient
+from omk.shared.profiles import PROJECT_ROOT
 from scripts.release.release_materials import (
     analysis_entries,
     json_file,
@@ -70,13 +70,16 @@ def build(
         ],
         "omk": [
             "__init__.py",
-            "drasl.py",
-            "profiles.py",
-            "fs.py",
-            "diagnostics.py",
-            "incidents.py",
-            "content_policy.py",
-            "nbt.py",
+            "accounts/__init__.py",
+            "accounts/drasl.py",
+            "observability/__init__.py",
+            "observability/diagnostics.py",
+            "observability/incidents.py",
+            "shared/__init__.py",
+            "shared/content_policy.py",
+            "shared/fs.py",
+            "shared/nbt.py",
+            "shared/profiles.py",
         ],
     }.items():
         for name in names:

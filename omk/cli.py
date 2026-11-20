@@ -10,17 +10,17 @@ from typing import Any
 
 from api.settings.content import get_instance_config, get_launcher_manifest_settings
 from launcher.paths import default_data_dir
-from omk.admin import add_admin_commands, run_admin
-from omk.client_crash_lab import add_client_crash_lab
-from omk.dj2_lab import add_dj2_lab, run_dj2_lab
-from omk.dj2_linux_lab import add_linux_skin_lab, run_linux_skin_lab
-from omk.lab import auth_smoke
-from omk.locale_cli import add_locale_commands, audit_locale_files
-from omk.policy_cli import add_policy_commands, run_policy
-from omk.profiles import PROJECT_ROOT, load_profiles
-from omk.registry_audit import add_upgrade_commands, audit_registry_files
-from omk.release_cli import add_release_commands, prepare_release
-from omk.storage_policy import add_storage_commands, storage_report
+from omk.distribution.release_cli import add_release_commands, prepare_release
+from omk.game.policy_cli import add_policy_commands, run_policy
+from omk.game.registry_audit import add_upgrade_commands, audit_registry_files
+from omk.labs.dj2.dj2_lab import add_dj2_lab, run_dj2_lab
+from omk.labs.dj2.dj2_linux_lab import add_linux_skin_lab, run_linux_skin_lab
+from omk.labs.launcher.client_crash_lab import add_client_crash_lab
+from omk.labs.launcher.lab import auth_smoke
+from omk.localization.locale_cli import add_locale_commands, audit_locale_files
+from omk.owner.admin import add_admin_commands, run_admin
+from omk.owner.storage.storage_policy import add_storage_commands, storage_report
+from omk.shared.profiles import PROJECT_ROOT, load_profiles
 
 
 def doctor() -> dict[str, Any]:
@@ -82,6 +82,7 @@ def _add_launcher_parser(sub):
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Parse the OmkalityCraft command and execute its selected handler."""
     parser = argparse.ArgumentParser(
         prog="omk", description="OmkalityCraft development and operations tools"
     )
@@ -92,23 +93,37 @@ def main(argv: list[str] | None = None) -> int:
     add_policy_commands(sub)
     add_locale_commands(sub)
     add_upgrade_commands(sub)
-    from omk.auth_config import add_auth_commands  # noqa: PLC0415
+    from omk.accounts.auth_config import add_auth_commands  # noqa: PLC0415
 
     add_auth_commands(sub)
     sub.add_parser("doctor", help="Check local development prerequisites (read-only)")
     _add_launcher_parser(sub)
     server = sub.add_parser("server", help="Inspect configured server profiles")
     server.add_subparsers(dest="action", required=True).add_parser("list")
+    _add_labs(sub)
+    args = parser.parse_args(argv)
+    if args.command == "launcher":
+        from launcher.app import run_launcher  # noqa: PLC0415 - optional Qt dependency
+
+        return run_launcher(
+            args.auth_url, args.data_dir, api_url=args.api_url, root=args.root
+        )
+    report = _report(args)
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0 if report["ok"] else 1
+
+
+def _add_labs(sub):
     lab = sub.add_parser("lab", help="Disposable integration tests")
     lab_areas = lab.add_subparsers(dest="area", required=True)
-    from omk.mcmcp_lab import add_mcmcp_lab  # noqa: PLC0415
+    from omk.labs.mcp.mcmcp_lab import add_mcmcp_lab  # noqa: PLC0415
 
     add_mcmcp_lab(
         lab_areas.add_parser(
             "dj2-mcp", help="Owned real Windows client / Linux server MCP lab"
         )
     )
-    from omk.pack_install_lab import add_pack_install_lab  # noqa: PLC0415
+    from omk.labs.launcher.pack_install_lab import add_pack_install_lab  # noqa: PLC0415
 
     add_pack_install_lab(
         lab_areas.add_parser(
@@ -120,21 +135,21 @@ def main(argv: list[str] | None = None) -> int:
         "backup-safety",
         help="Disposable Linux archive rotation, ENOSPC and SIGKILL probes",
     )
-    from omk.startup_trace_lab import add_startup_trace_lab  # noqa: PLC0415
+    from omk.labs.dj2.startup_trace_lab import add_startup_trace_lab  # noqa: PLC0415
 
     add_startup_trace_lab(
         lab_areas.add_parser(
             "dj2-startup", help="Observe startup transformers on an owned Linux lab"
         )
     )
-    from omk.recovery_lab import add_recovery_lab  # noqa: PLC0415
+    from omk.labs.recovery.recovery_lab import add_recovery_lab  # noqa: PLC0415
 
     add_recovery_lab(
         lab_areas.add_parser(
             "dj2-recovery", help="Fresh Forge WorldEdit snapshot experiment"
         )
     )
-    from omk.linux_paths_lab import add_linux_paths_lab  # noqa: PLC0415
+    from omk.labs.backup.linux_paths_lab import add_linux_paths_lab  # noqa: PLC0415
 
     for name, help_text in (
         (
@@ -165,21 +180,25 @@ def main(argv: list[str] | None = None) -> int:
             "dj2-linux", help="Disposable Linux Docker Forge and desktop skin check"
         )
     )
-    from omk.dj2_spawn_lab import add_spawn_lab  # noqa: PLC0415
+    from omk.labs.dj2.dj2_spawn_lab import add_spawn_lab  # noqa: PLC0415
 
     add_spawn_lab(
         lab_areas.add_parser(
             "dj2-spawn", help="Fresh Linux FTB spawn boundary and grave recovery checks"
         )
     )
-    from omk.dj2_claim_regression_lab import add_claim_regression_lab  # noqa: PLC0415
+    from omk.labs.dj2.dj2_claim_regression_lab import (  # noqa: PLC0415
+        add_claim_regression_lab,
+    )
 
     add_claim_regression_lab(
         lab_areas.add_parser(
             "dj2-claims", help="Existing FTB claim/TNT regressions in a fresh Linux lab"
         )
     )
-    from omk.dj2_account_recovery_lab import add_account_recovery_lab  # noqa: PLC0415
+    from omk.labs.dj2.dj2_account_recovery_lab import (  # noqa: PLC0415
+        add_account_recovery_lab,
+    )
 
     add_account_recovery_lab(
         lab_areas.add_parser(
@@ -187,14 +206,14 @@ def main(argv: list[str] | None = None) -> int:
             help="Fresh Drasl reset/lock and live Forge connection checks",
         )
     )
-    from omk.dj2_rtp_lab import add_rtp_lab  # noqa: PLC0415
+    from omk.labs.dj2.dj2_rtp_lab import add_rtp_lab  # noqa: PLC0415
 
     add_rtp_lab(
         lab_areas.add_parser(
             "dj2-rtp", help="Fresh Linux dimension-aware FTB RTP checks"
         )
     )
-    from omk.dj2_wrcbe_lab import add_wrcbe_lab  # noqa: PLC0415
+    from omk.labs.dj2.dj2_wrcbe_lab import add_wrcbe_lab  # noqa: PLC0415
 
     add_wrcbe_lab(
         lab_areas.add_parser(
@@ -212,16 +231,6 @@ def main(argv: list[str] | None = None) -> int:
         "launcher", help="Real Qt UI with disposable Drasl accounts"
     )
     lab_launcher.add_subparsers(dest="action", required=True).add_parser("smoke")
-    args = parser.parse_args(argv)
-    if args.command == "launcher":
-        from launcher.app import run_launcher  # noqa: PLC0415 - optional Qt dependency
-
-        return run_launcher(
-            args.auth_url, args.data_dir, api_url=args.api_url, root=args.root
-        )
-    report = _report(args)
-    print(json.dumps(report, ensure_ascii=False, indent=2))
-    return 0 if report["ok"] else 1
 
 
 def _add_auth_labs(lab_areas):
@@ -240,7 +249,7 @@ def _add_auth_labs(lab_areas):
 
 def _report(args):
     if args.command == "auth":
-        from omk.auth_config import configure  # noqa: PLC0415
+        from omk.accounts.auth_config import configure  # noqa: PLC0415
 
         return configure(args.output)
     if args.command == "upgrade":
@@ -266,7 +275,9 @@ def _report(args):
 
 def _lab_report(args):
     if args.area == "pack-install":
-        from omk.pack_install_lab import run_pack_install_args  # noqa: PLC0415
+        from omk.labs.launcher.pack_install_lab import (  # noqa: PLC0415
+            run_pack_install_args,
+        )
 
         return run_pack_install_args(args)
     if args.area in {
@@ -275,10 +286,14 @@ def _lab_report(args):
         "dj2-owner-restore",
         "dj2-recovery",
     }:
-        from omk.linux_paths_lab import run_linux_paths_lab  # noqa: PLC0415
-        from omk.linux_policy_lab import run_linux_policy_lab  # noqa: PLC0415
-        from omk.owner_restore_lab import run_owner_restore_lab  # noqa: PLC0415
-        from omk.recovery_lab import run_recovery_lab  # noqa: PLC0415
+        from omk.labs.backup.linux_paths_lab import run_linux_paths_lab  # noqa: PLC0415
+        from omk.labs.backup.linux_policy_lab import (  # noqa: PLC0415
+            run_linux_policy_lab,
+        )
+        from omk.labs.backup.owner_restore_lab import (  # noqa: PLC0415
+            run_owner_restore_lab,
+        )
+        from omk.labs.recovery.recovery_lab import run_recovery_lab  # noqa: PLC0415
 
         report = {
             "dj2-linux-paths": run_linux_paths_lab,
@@ -287,27 +302,31 @@ def _lab_report(args):
             "dj2-recovery": run_recovery_lab,
         }[args.area](args)
     elif args.area == "backup-safety":
-        from omk.backup_safety_lab import run_backup_safety_lab  # noqa: PLC0415
+        from omk.labs.backup.backup_safety_lab import (  # noqa: PLC0415
+            run_backup_safety_lab,
+        )
 
         report = run_backup_safety_lab()
     elif args.area == "dj2-startup":
-        from omk.startup_trace_lab import run_startup_trace_lab  # noqa: PLC0415
+        from omk.labs.dj2.startup_trace_lab import (  # noqa: PLC0415
+            run_startup_trace_lab,
+        )
 
         report = run_startup_trace_lab(args)
     elif args.area in {"dj2-mcp", "dj2-linux"}:
-        from omk.mcmcp_lab import run_mcmcp_lab  # noqa: PLC0415
+        from omk.labs.mcp.mcmcp_lab import run_mcmcp_lab  # noqa: PLC0415
 
         report = {"dj2-mcp": run_mcmcp_lab, "dj2-linux": run_linux_skin_lab}[args.area](
             args
         )
     elif args.area in {"dj2-spawn", "dj2-claims", "dj2-account-recovery"}:
-        from omk.dj2_account_recovery_lab import (  # noqa: PLC0415
+        from omk.labs.dj2.dj2_account_recovery_lab import (  # noqa: PLC0415
             run_account_recovery_lab,
         )
-        from omk.dj2_claim_regression_lab import (  # noqa: PLC0415
+        from omk.labs.dj2.dj2_claim_regression_lab import (  # noqa: PLC0415
             run_claim_regression_lab,
         )
-        from omk.dj2_spawn_lab import run_spawn_lab  # noqa: PLC0415
+        from omk.labs.dj2.dj2_spawn_lab import run_spawn_lab  # noqa: PLC0415
 
         report = {
             "dj2-spawn": run_spawn_lab,
@@ -315,23 +334,27 @@ def _lab_report(args):
             "dj2-account-recovery": run_account_recovery_lab,
         }[args.area](args)
     elif args.area == "dj2-rtp":
-        from omk.dj2_rtp_lab import run_rtp_lab  # noqa: PLC0415
+        from omk.labs.dj2.dj2_rtp_lab import run_rtp_lab  # noqa: PLC0415
 
         report = run_rtp_lab(args)
     elif args.area == "dj2-wrcbe":
-        from omk.dj2_wrcbe_lab import run_wrcbe_lab  # noqa: PLC0415
+        from omk.labs.dj2.dj2_wrcbe_lab import run_wrcbe_lab  # noqa: PLC0415
 
         report = run_wrcbe_lab(args)
     elif args.area == "client-crash":
-        from omk.client_crash_lab import run_client_crash_lab  # noqa: PLC0415
+        from omk.labs.launcher.client_crash_lab import (  # noqa: PLC0415
+            run_client_crash_lab,
+        )
 
         report = run_client_crash_lab(args)
     elif args.area == "dj2":
         report = run_dj2_lab(args)
     elif args.area in {"admin", "auth-storage", "cold-backups"}:
-        from omk.auth_storage_lab import run_auth_storage_lab  # noqa: PLC0415
-        from omk.cold_backup_lab import run_cold_backup_lab  # noqa: PLC0415
-        from omk.operator_lab import operator_smoke  # noqa: PLC0415
+        from omk.labs.accounts.auth_storage_lab import (  # noqa: PLC0415
+            run_auth_storage_lab,
+        )
+        from omk.labs.accounts.operator_lab import operator_smoke  # noqa: PLC0415
+        from omk.labs.backup.cold_backup_lab import run_cold_backup_lab  # noqa: PLC0415
 
         report = {
             "admin": operator_smoke,

@@ -21,8 +21,8 @@ from launcher.storage import FileSessionStore
 from launcher.ui.theme import ASSETS, STYLE, install_font
 from launcher.updater import LauncherUpdater, acknowledge_health
 from launcher.version import VERSION
-from omk.diagnostics import event, failure
-from omk.drasl import DraslClient
+from omk.accounts.drasl import DraslClient
+from omk.observability.diagnostics import event, failure
 
 
 def _startup(app: QApplication, operation):

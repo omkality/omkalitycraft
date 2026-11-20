@@ -8,6 +8,8 @@ ContentKind = Literal["launcher", "instance"]
 
 
 class ManifestSettings(TypedDict):
+    """Describe the content included in a generated manifest."""
+
     content_id: str
     kind: ContentKind
     source_root: str

@@ -18,8 +18,8 @@ from packaging.version import Version
 
 from launcher.pack.client_policy import ClientDefaults
 from launcher.version import VERSION
-from omk.content_policy import is_private_path
-from omk.fs import resolved
+from omk.shared.content_policy import is_private_path
+from omk.shared.fs import resolved
 
 MAX_MANIFEST_BYTES = 8 * 1024 * 1024
 MAX_GENERATION = 2**63 - 1
@@ -27,6 +27,8 @@ PLATFORMS = {"windows-x64", "linux-x64", "linux-arm64", "macos-x64", "macos-arm6
 
 
 class ReleaseError(RuntimeError):
+    """Report an invalid, unavailable or unsupported game release."""
+
     pass
 
 
@@ -96,6 +98,8 @@ def sha256_file(path: Path) -> str:
 
 @dataclass(frozen=True)
 class Artifact:
+    """Describe one signed file, including its size, hash and executable bit."""
+
     path: str
     sha256: str
     size: int
@@ -179,6 +183,8 @@ def _require_default_capabilities(defaults: dict, minimum: str | None) -> None:
 
 @dataclass(frozen=True)
 class Release:
+    """Represent a verified pack manifest for a specific platform."""
+
     pack_id: str
     version: str
     minecraft: str
@@ -191,6 +197,7 @@ class Release:
     generation: int | None = None
 
     def require_launcher(self, running_version: str = VERSION) -> None:
+        """Reject a release that needs a newer launcher."""
         if self.minimum_launcher_version is not None and Version(
             running_version
         ) < Version(self.minimum_launcher_version):
@@ -200,10 +207,12 @@ class Release:
 
     @property
     def total_size(self) -> int:
+        """Return the total signed size of the release's files."""
         return sum(file.size for file in self.files)
 
     @classmethod
     def parse(cls, payload: dict[str, Any], envelope: dict[str, Any]) -> Release:
+        """Decode and validate the manifest payload and its launch fields."""
         try:
             minimum = _minimum_launcher(payload)
             generation = _pack_generation(payload)

@@ -61,6 +61,7 @@
   "$defs": {
     "Failure": {
       "additionalProperties": false,
+      "description": "Describe a failed owner action with a safe message and diagnostic code.",
       "properties": {
         "code": {
           "enum": [
@@ -110,6 +111,7 @@
     },
     "OperationView": {
       "additionalProperties": false,
+      "description": "Represent the current phase and state of an owner operation.",
       "properties": {
         "id": {
           "pattern": "^[a-f0-9]{32}$",
@@ -200,6 +202,7 @@
     }
   },
   "additionalProperties": false,
+  "description": "Envelope an owner CLI result for the terminal interface.",
   "properties": {
     "schema_version": {
       "const": 1,

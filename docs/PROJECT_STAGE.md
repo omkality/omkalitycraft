@@ -1,6 +1,6 @@
 # Подготовка файлов выбранного серверного выпуска
 
-`omk.project_stage` продолжает [закрытый project export](PROJECT_EXPORT.md).
+`omk.owner.storage.project_stage` продолжает [закрытый project export](PROJECT_EXPORT.md).
 Внутренний Linux API подготавливает **полный runtime и мир** в новом приватном
 каталоге. Он использует существующие проверки TAR/ZIP и копирование файлов
 `linux_world_restore`; новых CLI, зависимостей, фоновых служб и расписания нет.

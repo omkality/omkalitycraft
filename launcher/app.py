@@ -53,8 +53,8 @@ from launcher.ui.nickname import NicknameField
 from launcher.ui.social import SocialFooter
 from launcher.ui.theme import ASSETS, STYLE, install_font
 from launcher.widgets import BusyButton
-from omk.diagnostics import event, failure
-from omk.drasl import DraslClient, DraslError
+from omk.accounts.drasl import DraslClient, DraslError
+from omk.observability.diagnostics import event, failure
 
 
 def label(text: str, *, muted: bool = False) -> QLabel:
@@ -118,6 +118,8 @@ def button(
 
 
 class PasswordDialog(QDialog):
+    """Collect and confirm new account credentials in a modal dialog."""
+
     def __init__(self, parent: QWidget) -> None:
         super().__init__(parent)
         self.setWindowTitle("Сменить пароль")
@@ -179,6 +181,8 @@ class PasswordDialog(QDialog):
 
 
 class LauncherWindow(QMainWindow):
+    """Own account, pack installation and running-game UI state."""
+
     def __init__(
         self,
         service: AccountService,
@@ -365,6 +369,7 @@ class LauncherWindow(QMainWindow):
         return page
 
     def status_message(self, message: str) -> None:
+        """Show an operation result or error in the main window."""
         self.status.setText(message)
 
     def _local_states(self, states: dict) -> None:
@@ -710,6 +715,7 @@ class LauncherWindow(QMainWindow):
 
     @override
     def closeEvent(self, event: QCloseEvent) -> None:
+        """Delay closure while the launcher still owns active work."""
         if self.installation is not None and self.installation.busy:
             self._close_after_install = True
             self.installation.cancel()

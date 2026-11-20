@@ -310,7 +310,7 @@ Java не доказывает применение его значений в �
 ## Внутренняя связь с работающим сервером
 
 Core 0.3.6 предоставляет ограниченный owner bridge; Python использует
-`MaintenanceConsole` в существующем `omk/maintenance_console.py`. Новых действий
+`MaintenanceConsole` в существующем `omk/owner/maintenance/maintenance_console.py`. Новых действий
 CLI он не добавляет. Этот интерфейс нужен будущему координатору и может
 использоваться будущей TUI. Саму Rust TUI на этапе запуска DJ2 не разрабатываем.
 

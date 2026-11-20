@@ -1,0 +1,21 @@
+# The API build uses the repository root as its context.
+**
+!pyproject.toml
+!uv.lock
+!api/**/*.py
+!api/settings/instances/divinejourney2/instance_config.json
+!api/settings/instances/divinejourney2/launch_profile.json
+!api/settings/instances/divinejourney2/manifest.json
+!api/settings/launcher/manifest.json
+!omk/__init__.py
+!omk/accounts/__init__.py
+!omk/accounts/drasl.py
+!omk/game/__init__.py
+!omk/game/minecraft_status.py
+!omk/observability/__init__.py
+!omk/observability/diagnostics.py
+!omk/observability/incidents.py
+!omk/observability/report_store.py
+!omk/shared/__init__.py
+!omk/shared/content_policy.py
+!omk/shared/fs.py

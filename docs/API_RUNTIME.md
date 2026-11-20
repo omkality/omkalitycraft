@@ -38,9 +38,10 @@ CPU/RAM/ротация валидируются Settings, но native-проце
 Необходимость нескольких workers выбирается по нагрузке; default остаётся 1.
 Интервал очистки inbox не меняет сроки/квоты самих отчётов и не включает их приём.
 
-Необязательные параметры inbox и онлайна перечислены в [.env.example](../.env.example),
-[LOGGING.md](LOGGING.md) и [SERVER_STATUS.md](SERVER_STATUS.md).
-Постоянные данные Drasl/HTTPS/закрытый inbox не подключены к CDN-only Compose.
+В [.env.example](../.env.example) заданы значения для запуска API локально.
+Пустая карта целей явно отключает опрос Minecraft. Для настройки опроса
+используйте [пример DJ2](../deploy/api/server-status.example.env). Закрытый
+приём отчётов настраивается отдельно по [LOGGING.md](LOGGING.md).
 
 ## Compose API
 
@@ -69,7 +70,7 @@ docker compose --env-file <api.env> -f deploy/api/compose.yaml up -d --build
 - CPU, RAM и ротация Docker задаются env-файлом API. Настройка
   `net.ipv4.tcp_migrate_req=1` применяется к network namespace контейнера.
   Для нескольких Linux workers требуется ядро ≥5.14.
-- Перед сборкой Docker применяет `Dockerfile.api.dockerignore`. В образ
+- Перед сборкой Docker применяет `deploy/api/Dockerfile.dockerignore`. В образ
   входят исходники API, используемые общие модули и зависимости shared/api
   из lock. Пример env и рабочие каталоги владельца находятся вне контекста.
 
@@ -101,7 +102,7 @@ docker compose --env-file <api.env> -f deploy/api/compose.yaml up -d --build
 uv run python scripts/smoke_api_container.py
 ```
 
-Стенд собирает закреплённый `Dockerfile.api`. Проверяет default в контейнере без
+Стенд собирает закреплённый `deploy/api/Dockerfile`. Проверяет default в контейнере без
 публикации порта, затем настоящий Compose с новым loopback-портом, двумя workers,
 fixture-контентом read-only, 0.75 CPU / 512 МиБ и ротацией 4 МиБ × 2. Проверяются
 ошибки настроек без эха значения, отсутствие приватных host-папок в образе и

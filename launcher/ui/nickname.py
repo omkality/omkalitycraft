@@ -31,6 +31,8 @@ class _NicknameNotice(QLabel):
 
 
 class NicknameField(QLineEdit):
+    """Edit a Minecraft nickname and show inline validation feedback."""
+
     def __init__(self, name: str) -> None:
         super().__init__()
         self.setObjectName(name)
@@ -98,10 +100,12 @@ class NicknameField(QLineEdit):
 
     @override
     def focusOutEvent(self, event: QFocusEvent) -> None:
+        """Refresh nickname feedback when editing loses focus."""
         self._hide_notice()
         super().focusOutEvent(event)
 
     @override
     def hideEvent(self, event: QHideEvent) -> None:
+        """Clear feedback that should only appear while the field is visible."""
         self._hide_notice()
         super().hideEvent(event)

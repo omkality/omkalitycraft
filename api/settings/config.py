@@ -7,6 +7,8 @@ from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class ServerStatusTarget(BaseModel):
+    """Describe the host and port to probe for Java server-list status."""
+
     host: str = Field(min_length=1, max_length=253, pattern=r"^[A-Za-z0-9.:-]+$")
     port: int = Field(default=25565, ge=1, le=65535, strict=True)
 
@@ -54,6 +56,7 @@ class Settings(BaseSettings):
     @field_validator("api_host")
     @classmethod
     def valid_bind_address(cls, value: str) -> str:
+        """Normalize the IP address used for the native API listener."""
         return str(ip_address(value))
 
     model_config = SettingsConfigDict(

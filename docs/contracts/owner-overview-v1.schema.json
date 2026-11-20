@@ -2,6 +2,7 @@
   "$defs": {
     "Metric": {
       "additionalProperties": false,
+      "description": "Describe the observed value and availability of a monitoring metric.",
       "properties": {
         "key": {
           "enum": [
@@ -47,6 +48,7 @@
     },
     "OperationView": {
       "additionalProperties": false,
+      "description": "Represent the current phase and state of an owner operation.",
       "properties": {
         "id": {
           "pattern": "^[a-f0-9]{32}$",
@@ -137,6 +139,7 @@
     }
   },
   "additionalProperties": false,
+  "description": "Aggregate configured server status for the owner dashboard.",
   "properties": {
     "schema_version": {
       "const": 1,
