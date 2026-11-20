@@ -317,7 +317,8 @@ def verify_materials(archive: Path, version: str, platform: str) -> dict:
     }
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Verify the archive and its pinned release materials from the command line."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--archive", type=Path, required=True)
     args = parser.parse_args()
@@ -325,3 +326,7 @@ if __name__ == "__main__":
     if archive.is_dir():
         archive /= f"OmkalityCraft-{VERSION}-{current_platform()}.zip"
     print(json.dumps(verify_materials(archive, VERSION, current_platform())))
+
+
+if __name__ == "__main__":
+    main()
