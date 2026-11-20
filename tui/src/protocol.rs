@@ -320,11 +320,12 @@ impl ConsoleResult {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct InvitationResult {
     pub ok: bool,
     invitation_file: Option<String>,
+    code: Option<String>,
     single_use: Option<bool>,
     error: Option<String>,
     error_type: Option<String>,
@@ -338,6 +339,10 @@ impl InvitationResult {
             value.error.is_none()
                 && value.error_type.is_none()
                 && value.single_use == Some(true)
+                && value.code.as_deref().is_some_and(|code| {
+                    (1..=128).contains(&code.len())
+                        && code.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
+                })
                 && value.invitation_file.as_deref().is_some_and(|file| {
                     use std::path::Path;
                     let path = Path::new(file);
@@ -348,6 +353,7 @@ impl InvitationResult {
                 })
         } else {
             value.invitation_file.is_none()
+                && value.code.is_none()
                 && value.single_use.is_none()
                 && value.error.is_some()
                 && value.error_type.is_some()
@@ -358,11 +364,14 @@ impl InvitationResult {
         Ok(value)
     }
 
-    pub fn message(&self) -> String {
-        if let Some(path) = &self.invitation_file {
-            format!(
-                "Одноразовый ключ создан.\n\nФайл:\n{path}\n\nПередайте игроку только значение code."
-            )
+    pub fn code(&self) -> Option<&str> {
+        self.code.as_deref()
+    }
+
+    pub fn message(&self, clipboard_status: Option<&str>) -> String {
+        if let (Some(code), Some(path)) = (&self.code, &self.invitation_file) {
+            let clipboard = clipboard_status.unwrap_or_default();
+            format!("Одноразовый ключ создан.\n\n{code}\n{clipboard}\n\nФайл:\n{path}")
         } else if matches!(
             self.error.as_deref(),
             Some("Authentication origin is not configured")

@@ -35,7 +35,6 @@ pub struct App {
     pub scroll: u16,
     pub history: Option<TpsHistory>,
     pub history_failed: bool,
-    pub about: bool,
     pub branding_header: bool,
     pub window_index: usize,
     pub range_picker: Option<usize>,
@@ -43,7 +42,7 @@ pub struct App {
 
 impl App {
     pub fn new(demo: bool) -> Self {
-        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\nw  Вайп ресурсного мира\ni  Выдать приглашение\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, about: false, branding_header: false, window_index: 0, range_picker: None }
+        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\nw  Вайп ресурсного мира\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, branding_header: false, window_index: 0, range_picker: None }
     }
     pub fn server(&self) -> Option<&str> {
         self.overview
@@ -296,7 +295,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         Paragraph::new(app.message.as_str())
             .scroll((app.scroll, 0))
             .style(Style::default().fg(if app.failed { WARN } else { TEXT }))
-            .block(block(" Команды · 1/2/3 · k/b/m/u · w вайп · i ключ "))
+            .block(block(" Команды · 1/2/3 · k/b/m/u · w вайп "))
             .wrap(Wrap { trim: false }),
         body[1],
     );
@@ -316,7 +315,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     };
     frame.render_widget(
         Paragraph::new(format!(
-            " r обновить   ← → сервер   t период   F1 проект   q выход  |  {status}"
+            " r обновить   ← → сервер   t период   i ключ   q выход  |  {status}"
         ))
         .style(
             Style::default().fg(if app.failed || age.is_some_and(|a| a > 20) {
@@ -328,23 +327,6 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         .block(block(" просмотр обновляется каждые 5 с ")),
         rows[2],
     );
-    if app.about {
-        let w = 58;
-        let h = 23;
-        let popup = Rect::new((area.width - w) / 2, (area.height - h) / 2, w, h);
-        frame.render_widget(Clear, popup);
-        frame.render_widget(block(" OMKALITYCRAFT "), popup);
-        crate::branding::draw_large(
-            frame,
-            Rect::new(popup.x + (w - 32) / 2, popup.y + 2, 32, 16),
-        );
-        frame.render_widget(
-            Paragraph::new("F1 / Esc — вернуться к графику")
-                .centered()
-                .style(Style::default().fg(TEXT).bg(PANEL)),
-            Rect::new(popup.x + 1, popup.y + 19, w - 2, 2),
-        );
-    }
     if let Some(selected) = app.range_picker {
         let popup = Rect::new((area.width - 44) / 2, (area.height - 10) / 2, 44, 10);
         frame.render_widget(Clear, popup);
