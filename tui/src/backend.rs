@@ -199,11 +199,15 @@ impl Backend {
                 }
                 command.args([
                     "world-reset",
+                    "--catalog",
                     "--server",
                     &action.server,
                     "--command",
                     action.command,
                 ]);
+                if let Some(world) = action.world {
+                    command.args(["--world", &world.to_string()]);
+                }
                 if let Some(confirmation) = &action.confirmation {
                     command.args(["--confirm", confirmation]);
                 }

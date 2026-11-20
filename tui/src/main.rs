@@ -349,7 +349,7 @@ fn interactive(
                         "Выполняется этап вайпа. Терминал покажет результат после завершения."
                             .into()
                     } else {
-                        "Читается состояние ресурсного мира…".into()
+                        "Читается состояние мира…".into()
                     };
                     app.world_reset = None;
                     request = Some(Request::WorldReset(action));
