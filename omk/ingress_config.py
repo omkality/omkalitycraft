@@ -167,8 +167,9 @@ def proxy_snapshot(data, spec, target, policy, image, network, control, folder):
     c, h, s = data["Config"], data["HostConfig"], data["State"]
     mounts = data.get("Mounts", [])
     entries = {m.get("Destination"): m for m in mounts}
-    cfg, ctl = entries.get("/usr/local/etc/haproxy", {}), entries.get(
-        "/run/omk-ingress", {}
+    cfg, ctl = (
+        entries.get("/usr/local/etc/haproxy", {}),
+        entries.get("/run/omk-ingress", {}),
     )
     if (
         data["Name"] != "/" + spec["container"]
@@ -194,8 +195,9 @@ def proxy_snapshot(data, spec, target, policy, image, network, control, folder):
         != network["id"]
         or h.get("PortBindings")
         != {
-            str(spec["container_port"])
-            + "/tcp": [{"HostIp": "127.0.0.1", "HostPort": str(spec["host_port"])}]
+            str(spec["container_port"]) + "/tcp": [
+                {"HostIp": "127.0.0.1", "HostPort": str(spec["host_port"])}
+            ]
         }
         or data["NetworkSettings"]
         .get("Ports", {})

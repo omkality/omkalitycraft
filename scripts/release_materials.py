@@ -15,7 +15,14 @@ from scripts.release.release_materials import (
     write_materials,
 )
 
-__all__ = ['analysis_entries', 'json_file', 'main', 'prepare_notices', 'verify_materials', 'write_materials']
+__all__ = [
+    "analysis_entries",
+    "json_file",
+    "main",
+    "prepare_notices",
+    "verify_materials",
+    "write_materials",
+]
 
 if __name__ == "__main__":
     main()

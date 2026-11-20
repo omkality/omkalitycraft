@@ -30,7 +30,7 @@ def serve(folder: Path) -> Iterator[tuple[str, list]]:
             self.send_header("Content-Length", str(len(data) - offset))
             if offset:
                 self.send_header(
-                    "Content-Range", f"bytes {offset}-{len(data)-1}/{len(data)}"
+                    "Content-Range", f"bytes {offset}-{len(data) - 1}/{len(data)}"
                 )
             self.end_headers()
             self.wfile.write(data[offset:])

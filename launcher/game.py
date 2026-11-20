@@ -45,9 +45,7 @@ class GameProcess:
 
 
 class GameRunner:
-    def __init__(
-        self, root: Path, *, memory_mb: int = 6144
-    ) -> None:
+    def __init__(self, root: Path, *, memory_mb: int = 6144) -> None:
         if not 1024 <= memory_mb <= 16384:
             raise ValueError("Invalid memory setting")
         self.root = resolved(root)

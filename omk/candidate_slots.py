@@ -179,8 +179,9 @@ def snapshot(r, p, *, lookup=None):
     spec, policy = r["spec"], r["policy"]
     c, h, s = data["Config"], data["HostConfig"], data["State"]
     expected_ports = {
-        str(spec[k + "_container_port"])
-        + "/tcp": [{"HostIp": "127.0.0.1", "HostPort": str(spec[k + "_host_port"])}]
+        str(spec[k + "_container_port"]) + "/tcp": [
+            {"HostIp": "127.0.0.1", "HostPort": str(spec[k + "_host_port"])}
+        ]
         for k in ["game", "rcon"]
     }
     mount = data.get("Mounts", [])
@@ -327,7 +328,7 @@ def runtime_proof(config, r, p, container=None):
     for name in ["omk", "launcher", "profiles"]:
         args += [
             "--mount",
-            f"type=bind,source={PROJECT_ROOT/name},target=/src/{name},readonly",
+            f"type=bind,source={PROJECT_ROOT / name},target=/src/{name},readonly",
         ]
     raw = backups.docker(
         *args,
@@ -455,7 +456,7 @@ def creation(config, r, p):
     for k in ["game", "rcon"]:
         args += [
             "--publish",
-            f"127.0.0.1:{spec[k+'_host_port']}:{spec[k+'_container_port']}",
+            f"127.0.0.1:{spec[k + '_host_port']}:{spec[k + '_container_port']}",
         ]
     return backups.docker(
         *args,
@@ -506,9 +507,7 @@ def wait_started(config, r):
             s["started"].replace("Z", "+00:00")
         ) <= datetime.fromisoformat(
             p["checkpoint"]["finished"].replace("Z", "+00:00")
-        ) or (
-            boot and s != boot
-        ):
+        ) or (boot and s != boot):
             raise AdminError("Candidate lifecycle changed during readiness")
         boot = s
         logs = backups.docker(

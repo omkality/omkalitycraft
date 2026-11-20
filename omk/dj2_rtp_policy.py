@@ -90,7 +90,7 @@ def write_rtp_policy(config_directory: Path, environ=None):
     if not folder.is_dir() or any(p.is_symlink() for p in (folder, *folder.parents)):
         raise ValueError("A real offline config directory is required")
     worlds = ";".join(
-        f'{r["id"]}:{r["mode"]}:{r["min_y"]}:{r["max_y"]}' for r in plan["worlds"]
+        f"{r['id']}:{r['mode']}:{r['min_y']}:{r['max_y']}" for r in plan["worlds"]
     )
     with (folder / POLICY_FILE).open("x", encoding="ascii", newline="\n") as file:
         file.write(

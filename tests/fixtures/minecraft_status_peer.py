@@ -33,17 +33,25 @@ class StatusHandler(StreamRequestHandler):
         self.connection.settimeout(2)
         try:
             handshake = read_frame(self.rfile)
-            if handshake[0] != 0 or handshake[-1] != 1 or read_frame(self.rfile) != b"\0":
+            if (
+                handshake[0] != 0
+                or handshake[-1] != 1
+                or read_frame(self.rfile) != b"\0"
+            ):
                 return
-        except (EOFError, OSError, ValueError, IndexError):
+        except EOFError, OSError, ValueError, IndexError:
             return
-        payload = json.dumps({
-            "version": {"name": "fixture", "protocol": 340},
-            "players": {
-                "online": 3, "max": 15, "sample": [{"name": "SyntheticPlayer"}],
-            },
-            "description": {"text": "Internal host status-peer"},
-        }).encode()
+        payload = json.dumps(
+            {
+                "version": {"name": "fixture", "protocol": 340},
+                "players": {
+                    "online": 3,
+                    "max": 15,
+                    "sample": [{"name": "SyntheticPlayer"}],
+                },
+                "description": {"text": "Internal host status-peer"},
+            }
+        ).encode()
         packet = b"\0" + varint(len(payload)) + payload
         self.wfile.write(varint(len(packet)) + packet)
 

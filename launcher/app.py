@@ -242,8 +242,9 @@ class LauncherWindow(QMainWindow):
         self.server_status = ServerStatusController(
             self,
             origin=origin,
-            active=lambda: self.isVisible()
-            and self.pages.currentWidget() == self.home_page,
+            active=lambda: (
+                self.isVisible() and self.pages.currentWidget() == self.home_page
+            ),
         )
         self.server_status.updated.connect(self._server_status_updated)
 

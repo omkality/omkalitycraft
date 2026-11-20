@@ -344,8 +344,9 @@ def prepare(config, server, environment=None, *, _operation=None, _schedule=None
             )
         ingress.source_ready(config, server, gate)
         preflight = admin_nightly.inspect(config, server, env)
-        target, endpoint = backups.target_for(config, server), maintenance.binding(
-            config, server
+        target, endpoint = (
+            backups.target_for(config, server),
+            maintenance.binding(config, server),
         )
         initial = maintenance.snapshot(target, endpoint)
         if not initial["running"]:

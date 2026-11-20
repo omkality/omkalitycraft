@@ -21,11 +21,19 @@ COMPOSE = ROOT / "deploy/api/compose.yaml"
 def docker(*args: str, env=None, timeout: int = 30, check: bool = True) -> str:
     """Run Docker for an owned fixture and report only its synthetic diagnostics."""
     result = subprocess.run(
-        ["docker", *args], text=True, encoding="utf-8", errors="replace",
-        capture_output=True, env=env, timeout=timeout, check=False,
+        ["docker", *args],
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        env=env,
+        timeout=timeout,
+        check=False,
     )
     if check and result.returncode:
-        raise RuntimeError(f"Docker {args[0]} exited {result.returncode}: {result.stderr}")
+        raise RuntimeError(
+            f"Docker {args[0]} exited {result.returncode}: {result.stderr}"
+        )
     return result.stdout.strip()
 
 
@@ -35,8 +43,15 @@ def api_image(tmp_path_factory):
     lab = tmp_path_factory.mktemp("omk-compose-integration")
     reference = "omkalitycraft-api-integration:" + uuid4().hex[:12]
     try:
-        docker("build", "-f", str(ROOT / "Dockerfile.api"), "-t", reference,
-               str(ROOT), timeout=300)
+        docker(
+            "build",
+            "-f",
+            str(ROOT / "Dockerfile.api"),
+            "-t",
+            reference,
+            str(ROOT),
+            timeout=300,
+        )
         yield lab, reference
     finally:
         docker("image", "rm", reference, check=False)
@@ -62,25 +77,39 @@ def service(api_image, *, target: str | None, network: str | None = None):
     subnet = os.environ.get("OMK_TEST_DOCKER_SUBNET")
     network_config = ""
     if network is not None:
-        network_config = f"networks:\n  default:\n    name: {network}\n    external: true\n"
+        network_config = (
+            f"networks:\n  default:\n    name: {network}\n    external: true\n"
+        )
     elif subnet:
         network_config = f"networks:\n  default:\n    ipam:\n      config:\n        - subnet: {subnet}\n"
     override.write_text(
         "services:\n  api:\n"
         f"    image: {reference}\n"
-        "    ports: !override\n      - '127.0.0.1::8000'\n"
-        + network_config,
+        "    ports: !override\n      - '127.0.0.1::8000'\n" + network_config,
         encoding="utf-8",
     )
     command = (
-        "compose", "-p", project, "--env-file", str(env_file),
-        "-f", str(COMPOSE), "-f", str(override),
+        "compose",
+        "-p",
+        project,
+        "--env-file",
+        str(env_file),
+        "-f",
+        str(COMPOSE),
+        "-f",
+        str(override),
     )
     fixture_env = {
-        key: value for key, value in os.environ.items()
+        key: value
+        for key, value in os.environ.items()
         if not key.startswith(("SERVER_STATUS_", "OMK_API_", "COMPOSE_"))
-        and key not in {"API_PORT", "WORKERS_NUM", "API_REQUESTS_PER_SECOND",
-                        "CLIENT_REPORTS_PRUNE_INTERVAL_SECONDS"}
+        and key
+        not in {
+            "API_PORT",
+            "WORKERS_NUM",
+            "API_REQUESTS_PER_SECOND",
+            "CLIENT_REPORTS_PRUNE_INTERVAL_SECONDS",
+        }
     }
     try:
         docker(*command, "config", "--quiet", env=fixture_env)
@@ -118,7 +147,8 @@ def test_configured_minecraft_status_and_expiry(api_image, monkeypatch):
     subnet = os.environ.get("OMK_TEST_DOCKER_SUBNET")
     docker("network", "create", *(["--subnet", subnet] if subnet else []), network)
     image = next(
-        line.split()[1] for line in (ROOT / "Dockerfile.api").read_text(encoding="utf-8").splitlines()
+        line.split()[1]
+        for line in (ROOT / "Dockerfile.api").read_text(encoding="utf-8").splitlines()
         if line.startswith("FROM python:")
     )
     peer_name = network + "-peer"
@@ -126,11 +156,13 @@ def test_configured_minecraft_status_and_expiry(api_image, monkeypatch):
     try:
         with service(api_image, target=targets, network=network) as origin:
             container = (
-                DockerContainer(image, name=peer_name).with_kwargs(network=network)
+                DockerContainer(image, name=peer_name)
+                .with_kwargs(network=network)
                 .with_volume_mapping(str(PEER), "/fixture.py", mode="ro")
                 .with_command(["python", "/fixture.py"])
             )
             with container:
+
                 def online():
                     snapshot = request(origin, "/servers/status")
                     value = snapshot["servers"].get("dj2", {})
@@ -140,6 +172,7 @@ def test_configured_minecraft_status_and_expiry(api_image, monkeypatch):
                 assert set(value) == {"state", "online", "max", "checked_at"}
                 assert (value["online"], value["max"]) == (3, 15)
             started = time.monotonic()
+
             def offline():
                 value = request(origin, "/servers/status")["servers"]["dj2"]
                 return value if value["state"] == "offline" else None

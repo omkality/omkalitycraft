@@ -8,7 +8,7 @@ if not __package__:
 
 from scripts.release.build_launcher import main, packaging_icon
 
-__all__ = ['main', 'packaging_icon']
+__all__ = ["main", "packaging_icon"]
 
 if __name__ == "__main__":
     main()

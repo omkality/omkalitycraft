@@ -286,7 +286,7 @@ def worker(target, request):
         f"type=volume,source={target['store_volume']},target=/backup"
         + (",readonly" if request["action"] in {"list", "inspect"} else ""),
         "--mount",
-        f"type=bind,source={PROJECT_ROOT/'omk'},target=/src/omk,readonly",
+        f"type=bind,source={PROJECT_ROOT / 'omk'},target=/src/omk,readonly",
         "--workdir",
         "/src",
         "--env",

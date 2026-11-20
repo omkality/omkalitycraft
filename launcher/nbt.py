@@ -2,4 +2,12 @@
 
 from omk.nbt import FORMATS, MAX_BYTES, Reader, Tag, read_nbt, utf_encode, write_nbt
 
-__all__ = ["FORMATS", "MAX_BYTES", "Reader", "Tag", "read_nbt", "utf_encode", "write_nbt"]
+__all__ = [
+    "FORMATS",
+    "MAX_BYTES",
+    "Reader",
+    "Tag",
+    "read_nbt",
+    "utf_encode",
+    "write_nbt",
+]

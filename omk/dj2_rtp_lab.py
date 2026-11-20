@@ -76,7 +76,9 @@ class RtpScenario:
         for dx, dz in ((-17, -17), (-17, 17), (17, -17), (17, 17)):
             deadline = time.monotonic() + 35
             while time.monotonic() < deadline:
-                result = self.at(name, f"testforblock {x+dx} 1 {z+dz} minecraft:air")
+                result = self.at(
+                    name, f"testforblock {x + dx} 1 {z + dz} minecraft:air"
+                )
                 if "Successfully found" in result or "The block at" in result:
                     break
                 time.sleep(0.1)
@@ -96,10 +98,17 @@ class RtpScenario:
     def surface(self, actor, name, x=0, z=0, material="wool"):
         _place(actor, name, (x + 0.5, 241, z + 0.5), self.console)
         self.wait_loaded(name, x, z)
-        self.at(name, f"fill {x-17} 244 {z-17} {x+17} 244 {z+17} minecraft:bedrock")
-        self.at(name, f"fill {x-17} 245 {z-17} {x+17} 245 {z+17} minecraft:glass")
-        self.at(name, f"fill {x-16} 245 {z-16} {x+16} 245 {z+16} minecraft:{material}")
-        self.at(name, f"fill {x-16} 246 {z-16} {x+16} 253 {z+16} minecraft:air")
+        self.at(
+            name, f"fill {x - 17} 244 {z - 17} {x + 17} 244 {z + 17} minecraft:bedrock"
+        )
+        self.at(
+            name, f"fill {x - 17} 245 {z - 17} {x + 17} 245 {z + 17} minecraft:glass"
+        )
+        self.at(
+            name,
+            f"fill {x - 16} 245 {z - 16} {x + 16} 245 {z + 16} minecraft:{material}",
+        )
+        self.at(name, f"fill {x - 16} 246 {z - 16} {x + 16} 253 {z + 16} minecraft:air")
         # Fluid updates can switch source water between its two vanilla block IDs.
         # Prove the actual fluid, rather than comparing its shared display name.
         variants = {

@@ -12,7 +12,7 @@ from scripts.infrastructure.smoke_api_container import (
     main,
 )
 
-__all__ = ['DockerFailure', 'docker_failure_category', 'main']
+__all__ = ["DockerFailure", "docker_failure_category", "main"]
 
 if __name__ == "__main__":
     main()

@@ -35,7 +35,7 @@ def seed_edges(console, expect):
 
 
 def damage_edges(console, expect):
-    console(f'kill @e[type=armor_stand,tag={TAGS["original"]}]')
+    console(f"kill @e[type=armor_stand,tag={TAGS['original']}]")
     console(
         "summon minecraft:armor_stand 132.5 241 133.5 "
         f'{{Tags:["{TAGS["new"]}"],NoGravity:1b,Invulnerable:1b}}'

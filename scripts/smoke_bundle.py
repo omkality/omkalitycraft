@@ -13,7 +13,7 @@ from scripts.release.smoke_bundle import (
     smoke_archive,
 )
 
-__all__ = ['main', 'prepare', 'smoke', 'smoke_archive']
+__all__ = ["main", "prepare", "smoke", "smoke_archive"]
 
 if __name__ == "__main__":
     main()

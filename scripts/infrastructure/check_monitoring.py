@@ -16,7 +16,9 @@ from uuid import uuid4
 from omk.monitoring_config import render
 
 ROOT = Path(__file__).resolve().parents[2]
-IMAGES = json.loads((ROOT / "deploy/metrics/artifacts.json").read_text(encoding="utf-8"))["images"]
+IMAGES = json.loads(
+    (ROOT / "deploy/metrics/artifacts.json").read_text(encoding="utf-8")
+)["images"]
 PROMETHEUS = IMAGES["prometheus"]["image"]
 TELEGRAF = IMAGES["telegraf"]["image"]
 PYTHON = next(
@@ -24,7 +26,6 @@ PYTHON = next(
     for line in (ROOT / "Dockerfile.api").read_text(encoding="utf-8").splitlines()
     if line.startswith("FROM python:")
 )
-
 
 
 def execute(args, **kwargs):
@@ -118,8 +119,9 @@ def exercise_runtime(compose, query, wait, target_is, start_game):
         assert unknown and "dimension" not in unknown[0]["metric"]
         assert query("mc_dimension_chunks_loaded") == []
         wait(
-            lambda: bool(rows := query("omk_game_online"))
-            and rows[0]["value"][1] == "2"
+            lambda: (
+                bool(rows := query("omk_game_online")) and rows[0]["value"][1] == "2"
+            )
         )
         at = time.time()
         before = query("mem_total", at)
@@ -147,7 +149,8 @@ def runtime_overlay(folder, metrics_subnet, admin_subnet):
             "networks:\n"
             f"  metrics:\n    ipam:\n      config:\n        - subnet: {metrics_subnet}\n"
             f"  admin:\n    ipam:\n      config:\n        - subnet: {admin_subnet}\n"
-            if metrics_subnet and admin_subnet else ""
+            if metrics_subnet and admin_subnet
+            else ""
         ),
         encoding="utf-8",
     )
@@ -161,8 +164,10 @@ def runtime_error(error, compose, opener, origin):
             with opener.open(f"{origin}/api/v1/targets", timeout=5) as response:
                 targets = json.load(response)["data"]["activeTargets"]
                 diagnostics += json.dumps(
-                    [{"job": target["labels"]["job"], "error": target["lastError"]}
-                     for target in targets]
+                    [
+                        {"job": target["labels"]["job"], "error": target["lastError"]}
+                        for target in targets
+                    ]
                 )
         except OSError:
             pass
@@ -201,7 +206,9 @@ def check_runtime(source, subnets):
         nonlocal origin
         output = execute([*command, *args], env=environment)
         if args[0] == "up":
-            bound = execute([*command, "port", "prometheus", "9090"], env=environment).strip()
+            bound = execute(
+                [*command, "port", "prometheus", "9090"], env=environment
+            ).strip()
             if not bound.startswith("127.0.0.1:"):
                 raise RuntimeError("Unexpected monitoring smoke loopback bind")
             origin = "http://" + bound
@@ -261,7 +268,10 @@ def main():
     """Run pinned monitoring binaries and confirm scrape/retention via loopback."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--subnets", nargs=3, type=IPv4Network, metavar=("GAME", "METRICS", "ADMIN"),
+        "--subnets",
+        nargs=3,
+        type=IPv4Network,
+        metavar=("GAME", "METRICS", "ADMIN"),
         help="Free IPv4 subnets for the three isolated smoke-test bridges",
     )
     args = parser.parse_args()
@@ -279,8 +289,12 @@ def main():
         source.write_text(json.dumps(config), encoding="utf-8")
         source.chmod(0o644)
         metrics = ROOT / "deploy/metrics"
-        assert (metrics / "Dockerfile.agent").read_text(encoding="utf-8").split()[1] == TELEGRAF
-        assert (metrics / "Dockerfile.configure").read_text(encoding="utf-8").split()[1] == PYTHON
+        assert (metrics / "Dockerfile.agent").read_text(encoding="utf-8").split()[
+            1
+        ] == TELEGRAF
+        assert (metrics / "Dockerfile.configure").read_text(encoding="utf-8").split()[
+            1
+        ] == PYTHON
         compose = json.loads(
             execute(
                 [
@@ -317,9 +331,7 @@ def main():
             assert service["read_only"] and service["cap_drop"] == ["ALL"]
             assert not service.get("privileged") and not service.get("pid")
             assert compose["services"]["prometheus"]["image"] == PROMETHEUS
-        assert all(
-                "docker.sock" not in v.get("source", "") for v in service["volumes"]
-            )
+        assert all("docker.sock" not in v.get("source", "") for v in service["volumes"])
         assert all(
             port["host_ip"] == "127.0.0.1"
             for service in compose["services"].values()

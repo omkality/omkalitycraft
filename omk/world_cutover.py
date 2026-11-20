@@ -208,7 +208,7 @@ def worker(config, r, p, action):
     for name in ("omk", "launcher", "profiles"):
         args += [
             "--mount",
-            f"type=bind,source={PROJECT_ROOT/name},target=/src/{name},readonly",
+            f"type=bind,source={PROJECT_ROOT / name},target=/src/{name},readonly",
         ]
     control = cutover_lease.directory(config, r["operation"])
     if action == "plan":

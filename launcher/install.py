@@ -81,7 +81,10 @@ class Progress:
 
 class ReleaseClient:
     def __init__(
-        self, origin: str, trusted_keys: dict[str, str], *,
+        self,
+        origin: str,
+        trusted_keys: dict[str, str],
+        *,
         minimum_generations: dict[str, int] | None = None,
     ) -> None:
         self.transport = DraslClient(origin, timeout=20)
@@ -117,7 +120,6 @@ class ReleaseClient:
         release.require_launcher()
         self.check_generation(release)
         return release
-
 
     def check_generation(self, release: Release) -> None:
         """Enforce the minimum distributed with the trusted launcher."""
@@ -176,7 +178,11 @@ class Installer:
             return {"state": "missing"}
 
     def install(
-        self, release: Release, progress: Callable[[Progress], None], *, clean_mods: bool = False
+        self,
+        release: Release,
+        progress: Callable[[Progress], None],
+        *,
+        clean_mods: bool = False,
     ) -> Path:
         """Verify and install files for this portable instance."""
         # The launcher holds the instance lock for the lifetime of this root.
@@ -184,7 +190,11 @@ class Installer:
             return self._install(release, progress, clean_mods=clean_mods)
 
     def _install(
-        self, release: Release, progress: Callable[[Progress], None], *, clean_mods: bool
+        self,
+        release: Release,
+        progress: Callable[[Progress], None],
+        *,
+        clean_mods: bool,
     ) -> Path:
         release.require_launcher()
         if release.platform != current_platform():
@@ -255,7 +265,9 @@ class Installer:
         return folder
 
     @staticmethod
-    def _remove_obsolete(folder: Path, release: Release, history: Iterable[Release]) -> None:
+    def _remove_obsolete(
+        folder: Path, release: Release, history: Iterable[Release]
+    ) -> None:
         retained = {file.path.casefold(): file.path for file in release.files}
         for previous in history:
             for file in previous.files:
@@ -276,11 +288,15 @@ class Installer:
         if release.generation is not None:
             atomic_write(
                 floor_path,
-                json.dumps({"generation": release.generation, "digest": release.digest}).encode(),
+                json.dumps(
+                    {"generation": release.generation, "digest": release.digest}
+                ).encode(),
             )
         self._state(folder, release, complete=False, history=history)
 
-    def _check_local_generation(self, folder: Path, release: Release, local: dict) -> Path:
+    def _check_local_generation(
+        self, folder: Path, release: Release, local: dict
+    ) -> Path:
         self.client.check_generation(release)
         try:
             path = local_file(folder, f".omk-generation-{release.platform}.json")
@@ -289,19 +305,25 @@ class Installer:
                     data = json.loads(source.read(1025))
                 generation = data["generation"]
                 digest = data["digest"]
-                if not valid_generation(generation) or not re.fullmatch(r"[a-f0-9]{64}", digest):
+                if not valid_generation(generation) or not re.fullmatch(
+                    r"[a-f0-9]{64}", digest
+                ):
                     raise ValueError("Invalid stored generation")
             except FileNotFoundError:
                 generation, digest = 0, ""
-        except (OSError, ValueError, TypeError, KeyError):
-            raise ReleaseError("Не удалось прочитать принятое поколение сборки.") from None
+        except OSError, ValueError, TypeError, KeyError:
+            raise ReleaseError(
+                "Не удалось прочитать принятое поколение сборки."
+            ) from None
         for previous in [*local.get("history", []), local.get("release")]:
             if previous is not None and (previous.generation or 0) > generation:
                 generation, digest = previous.generation, previous.digest
         if (release.generation or 0) < generation or (
             generation and release.generation == generation and release.digest != digest
         ):
-            raise ReleaseError("Сервер вернул устаревшее или конфликтующее поколение сборки.")
+            raise ReleaseError(
+                "Сервер вернул устаревшее или конфликтующее поколение сборки."
+            )
         return path
 
     def _state(

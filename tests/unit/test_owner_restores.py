@@ -383,6 +383,8 @@ def test_large_non_ftb_entry_limit_is_explicit_and_does_not_allocate_payload():
     with pytest.raises(ValueError):
         world_archive_entries(Archive(), world_name="world")
     assert (
-        world_archive_entries(Archive(), world_name="world", max_expanded_bytes=1024**3)[1]
+        world_archive_entries(
+            Archive(), world_name="world", max_expanded_bytes=1024**3
+        )[1]
         == 600 * 1024**2
     )

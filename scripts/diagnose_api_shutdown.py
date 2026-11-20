@@ -8,7 +8,7 @@ if not __package__:
 
 from scripts.diagnostics.diagnose_api_shutdown import main
 
-__all__ = ['main']
+__all__ = ["main"]
 
 if __name__ == "__main__":
     main()

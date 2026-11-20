@@ -35,8 +35,9 @@ def title_header() -> QHBoxLayout:
     header.addWidget(logo_label())
     heading = QVBoxLayout()
     heading.setSpacing(4)
-    title, subtitle = QLabel("OMKALITYCRAFT"), QLabel(
-        "Играть вместе. Без лишних шагов."
+    title, subtitle = (
+        QLabel("OMKALITYCRAFT"),
+        QLabel("Играть вместе. Без лишних шагов."),
     )
     for item in (title, subtitle):
         item.setTextFormat(Qt.TextFormat.PlainText)

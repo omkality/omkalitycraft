@@ -59,14 +59,20 @@ def test_no_status_targets_is_empty(value, monkeypatch, clean_settings_env):
 
 
 def test_status_targets_and_timing_follow_environment(monkeypatch, clean_settings_env):
-    monkeypatch.setenv("SERVER_STATUS_TARGETS", '{"dj2":{"host":"minecraft","port":25575}}')
+    monkeypatch.setenv(
+        "SERVER_STATUS_TARGETS", '{"dj2":{"host":"minecraft","port":25575}}'
+    )
     monkeypatch.setenv("SERVER_STATUS_CACHE_SECONDS", "37")
     monkeypatch.setenv("SERVER_STATUS_TIMEOUT_SECONDS", "3")
     settings = Settings(_env_file=None)
     assert settings.server_status_targets["dj2"].model_dump() == {
-        "host": "minecraft", "port": 25575,
+        "host": "minecraft",
+        "port": 25575,
     }
-    assert (settings.server_status_cache_seconds, settings.server_status_timeout_seconds) == (37, 3)
+    assert (
+        settings.server_status_cache_seconds,
+        settings.server_status_timeout_seconds,
+    ) == (37, 3)
 
 
 @pytest.mark.parametrize(

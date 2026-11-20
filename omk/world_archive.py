@@ -13,9 +13,11 @@ MAX_FILE = 128 * 1024**2
 RESERVED = re.compile(r"^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.|$)", re.I)
 
 
-
 def world_archive_entries(
-    archive: ZipFile, *, world_name: str = "lab-world", path_policy: str = "portable",
+    archive: ZipFile,
+    *,
+    world_name: str = "lab-world",
+    path_policy: str = "portable",
     max_expanded_bytes: int | None = None,
 ) -> tuple[list[ZipInfo], int]:
     """Return regular entries and bounded expanded size for one owned world root."""

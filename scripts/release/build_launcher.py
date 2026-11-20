@@ -42,8 +42,13 @@ def packaging_icon(source: Path, stage: Path) -> Path:
 
 
 def build(
-    output: Path, root_metadata: Path, auth_url: str, api_url: str, version: str,
-    *, minimum_pack_generations: dict[str, int] | None = None,
+    output: Path,
+    root_metadata: Path,
+    auth_url: str,
+    api_url: str,
+    version: str,
+    *,
+    minimum_pack_generations: dict[str, int] | None = None,
 ) -> Path:
     Version(version)
     floors = generation_floors(minimum_pack_generations or {})
@@ -58,7 +63,9 @@ def build(
             for path in (PROJECT_ROOT / "launcher").rglob("*.py")
             if all(
                 part.isidentifier() and not part.startswith(".")
-                for part in path.relative_to(PROJECT_ROOT / "launcher").with_suffix("").parts
+                for part in path.relative_to(PROJECT_ROOT / "launcher")
+                .with_suffix("")
+                .parts
             )
         ],
         "omk": [
@@ -107,11 +114,14 @@ def build(
     shutil.copyfile(root_metadata, assets / "tuf-root.json")
     icon = packaging_icon(assets / "branding/icon.png", stage)
     (assets / "deployment.json").write_text(
-        json.dumps({
-            "auth_url": auth_url, "api_url": api_url,
-            "minimum_pack_generations": floors,
-        }),
-        encoding="utf-8"
+        json.dumps(
+            {
+                "auth_url": auth_url,
+                "api_url": api_url,
+                "minimum_pack_generations": floors,
+            }
+        ),
+        encoding="utf-8",
     )
     (stage / "launcher/version.py").write_text(
         f"VERSION = {version!r}\n", encoding="utf-8"
@@ -209,13 +219,19 @@ def main() -> None:
     parser.add_argument("--api-url", required=True)
     parser.add_argument("--version", default=VERSION)
     parser.add_argument(
-        "--minimum-pack-generations", type=json.loads, default={},
+        "--minimum-pack-generations",
+        type=json.loads,
+        default={},
         help='Trusted minimum generations in JSON, for example {"dj2":1}',
     )
     args = parser.parse_args()
     print(
         build(
-            args.output, args.root_metadata, args.auth_url, args.api_url, args.version,
+            args.output,
+            args.root_metadata,
+            args.auth_url,
+            args.api_url,
+            args.version,
             minimum_pack_generations=args.minimum_pack_generations,
         )
     )

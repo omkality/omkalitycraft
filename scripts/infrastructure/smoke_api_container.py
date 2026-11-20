@@ -156,7 +156,12 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
     try:
         context = lab / "context"
         context.mkdir()
-        for name in ("Dockerfile.api.dockerignore", "Dockerfile.api", "pyproject.toml", "uv.lock"):
+        for name in (
+            "Dockerfile.api.dockerignore",
+            "Dockerfile.api",
+            "pyproject.toml",
+            "uv.lock",
+        ):
             shutil.copyfile(ROOT / name, context / name)
         for package in ("api", "omk"):
             shutil.copytree(

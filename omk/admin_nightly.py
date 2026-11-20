@@ -98,8 +98,9 @@ def inspect(config, server, environment=None, *, now=None):
     calendar = next_window(policy, now)
     with backups.locked(config):
         expected_adapter = adapter(config, server)
-        target, binding = backups.target_for(config, server), maintenance.binding(
-            config, server
+        target, binding = (
+            backups.target_for(config, server),
+            maintenance.binding(config, server),
         )
         backups.local_engine()
         before = maintenance.snapshot(target, binding)

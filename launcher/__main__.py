@@ -143,7 +143,8 @@ def main() -> int:
         installer = Installer(
             root,
             ReleaseClient(
-                config["api_url"], keys,
+                config["api_url"],
+                keys,
                 minimum_generations=config.get("minimum_pack_generations"),
             ),
         )

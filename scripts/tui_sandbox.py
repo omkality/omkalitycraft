@@ -85,8 +85,7 @@ def prepare(root, source, core=None):
     generated = root / "metrics"
     generated.mkdir()
     services = {
-        "lab-"
-        + name: {
+        "lab-" + name: {
             "cgroup": "omk-tui-" + name,
             "target": name + ":19565",
             "release": "synthetic-work-forge112",

@@ -214,7 +214,9 @@ class Restic:
             or not 1 <= ca.stat().st_size <= 65536
         ):
             raise OffsiteError("Offsite TLS trust file is missing or too large")
-        pins = json.loads((PROJECT_ROOT / "deploy/offsite/offsite-tools.json").read_bytes())
+        pins = json.loads(
+            (PROJECT_ROOT / "deploy/offsite/offsite-tools.json").read_bytes()
+        )
         expected = next(
             a["binary_sha256"] for a in pins["artifacts"] if a["name"] == "restic"
         )

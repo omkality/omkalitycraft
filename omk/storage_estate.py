@@ -132,7 +132,7 @@ def worker(values, limits, policy):
         ]
     args += [
         "--mount",
-        f"type=bind,source={PROJECT_ROOT/'omk'},target=/src/omk,readonly",
+        f"type=bind,source={PROJECT_ROOT / 'omk'},target=/src/omk,readonly",
         "--workdir",
         "/src",
         "--env",

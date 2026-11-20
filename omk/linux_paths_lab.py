@@ -135,7 +135,7 @@ class Lab:
             for filename in ("__init__.py", "nbt.py"):
                 mounts += [
                     "--mount",
-                    f"type=bind,source={PROJECT_ROOT/'launcher'/filename},target=/src/launcher/{filename},readonly",
+                    f"type=bind,source={PROJECT_ROOT / 'launcher' / filename},target=/src/launcher/{filename},readonly",
                 ]
         command = [
             "docker",
@@ -166,7 +166,7 @@ class Lab:
             "--mount",
             f"type=volume,source={self.target.volume},target=/restore",
             "--mount",
-            f"type=bind,source={PROJECT_ROOT/'omk'},target=/src/omk,readonly",
+            f"type=bind,source={PROJECT_ROOT / 'omk'},target=/src/omk,readonly",
             *mounts,
             "--workdir",
             "/src",

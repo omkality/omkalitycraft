@@ -277,8 +277,9 @@ def launcher_checks(
             window.show()
             _wait(
                 app,
-                lambda: window.pages.currentWidget() == window.home_page
-                and not window.busy,
+                lambda: (
+                    window.pages.currentWidget() == window.home_page and not window.busy
+                ),
             )
             passed("real_gui_restart_auto_login")
 

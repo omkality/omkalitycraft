@@ -18,8 +18,8 @@ def _items(console, name):
 
 
 def _one_grave(owner, outsider, console, expect, x, z, label):
-    console(f"fill {x-3} 240 {z-3} {x+3} 240 {z+3} minecraft:bedrock")
-    console(f"fill {x-3} 241 {z-3} {x+3} 245 {z+3} minecraft:air")
+    console(f"fill {x - 3} 240 {z - 3} {x + 3} 240 {z + 3} minecraft:bedrock")
+    console(f"fill {x - 3} 241 {z - 3} {x + 3} 245 {z + 3} minecraft:air")
     _place(outsider, FIRST, (x + 3.5, 241, z + 3.5), console)
     owner.sneak(False)
     console("gamemode 0 " + SECOND)

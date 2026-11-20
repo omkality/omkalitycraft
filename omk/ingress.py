@@ -62,7 +62,7 @@ def worker(config, value, action="status", *, source_required=False, operation=N
     for name in ("omk", "launcher"):
         args += [
             "--mount",
-            f"type=bind,source={PROJECT_ROOT/name},target=/src/{name},readonly",
+            f"type=bind,source={PROJECT_ROOT / name},target=/src/{name},readonly",
         ]
     request = {
         "schema": 1,

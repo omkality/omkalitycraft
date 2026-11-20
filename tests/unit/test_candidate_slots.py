@@ -139,8 +139,9 @@ def lab(tmp_path, monkeypatch):
     def creation(config, r, parent):
         state["commands"].append("create")
         ports = {
-            str(spec[k + "_container_port"])
-            + "/tcp": [{"HostIp": "127.0.0.1", "HostPort": str(spec[k + "_host_port"])}]
+            str(spec[k + "_container_port"]) + "/tcp": [
+                {"HostIp": "127.0.0.1", "HostPort": str(spec[k + "_host_port"])}
+            ]
             for k in ["game", "rcon"]
         }
         state["candidate"] = {

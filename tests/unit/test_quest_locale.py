@@ -167,9 +167,9 @@ def test_cannot_use_task_label_rule_to_change_item_nbt(inputs):
 def test_checks_location_type_even_after_source_is_explicitly_repinned(inputs):
     database, en, ru, profile = inputs
     data = json.loads(database)
-    data["questDatabase:9"]["0:10"]["tasks:9"]["0:10"][
-        "taskID:8"
-    ] = "bq_standard:retrieval"
+    data["questDatabase:9"]["0:10"]["tasks:9"]["0:10"]["taskID:8"] = (
+        "bq_standard:retrieval"
+    )
     database = json.dumps(data).encode()
     profile["source_database_sha256"] = sha(database)
     with pytest.raises(ValueError, match="literal task label"):
