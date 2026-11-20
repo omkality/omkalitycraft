@@ -94,6 +94,30 @@ redirect завершают попытку с ошибкой. Оба источ�
 настроенных публичных auth/API/CDN, рабочих ключей и проверки установки/входа/обновления.
 Предпросмотры с loopback-адресами остаются локальными тестовыми артефактами.
 
+## Нумерованные поколения игровых сборок
+
+Для каждого профиля и платформы подписывайте очередной manifest командой
+`omk release pack` с `--generation N` и новой версией. Храните монотонный
+счётчик у издателя. Схема 3 включает поколение в подпись. Снимки одного
+профиля и платформы проверяются последовательно в локальном release store.
+Для возврата опубликуйте прежние файлы с новой версией и поколением выше
+текущего.
+
+При сборке публичного ZIP передайте доверенный минимум для запускаемых
+профилей через `--minimum-pack-generations '{"dj2":N}'`. Он берётся из
+зафиксированного подписанного комплекта и сохраняется в portable. Сверьте
+поколение каждой опубликованной платформы с этим минимумом. При первом
+запуске чистый portable принимает поколение не ниже встроенного минимума.
+Старые тестовые ZIP без этого поля принимают первый подписанный manifest
+как исходную точку. Встроенный минимум не удостоверяет, что у издателя
+с тех пор не появилось более нового поколения.
+
+Повторная установка также проверяет последнее принятое поколение и digest
+в служебном файле `.omk-generation-<platform>.json`. Запись выполняется атомарно
+до записи файлов игры. Повтор с тем же digest разрешён, а незавершённую
+установку можно продолжить. Поддерживаемый запуск проверяет manifest по сети.
+При недоступности CDN лаунчер оставляет локальные файлы и предлагает повторить.
+
 ## Структура переносимой папки
 
 ```text
@@ -147,7 +171,7 @@ RECORD нескольких колёс может заявлять общий ф
 metadata owners и число выбранных inputs, без утверждения о включении всего колеса.
 Исходные license/notice files выбранных колёс копируются без изменения байтов.
 Добавлены основные LGPL/GPL тексты для PySide/shiboken и лицензия CPython 3.14.2;
-их официальные источники и SHA256 закреплены в `scripts/release_licenses/sources.json`.
+их официальные источники и SHA256 закреплены в `scripts/release/release_licenses/sources.json`.
 Шрифтовые лицензии и provenance сохраняются среди ресурсов приложения.
 
 Проверка отказывает при отсутствующих материалах, несовпадении ZIP/хешей/версии/
@@ -195,7 +219,7 @@ SHA256, распаковывает в отдельный `app_versions`, вып�
 После создания корня:
 
 ```powershell
-uv run python scripts/build_launcher.py --output .local/portable-build --root-metadata .local/update-repository/metadata/1.root.json --auth-url https://AUTH-ORIGIN --api-url https://CDN-ORIGIN
+uv run python scripts/build_launcher.py --output .local/portable-build --root-metadata .local/update-repository/metadata/1.root.json --auth-url https://AUTH-ORIGIN --api-url https://CDN-ORIGIN --minimum-pack-generations '{"dj2":N}'
 uv run python scripts/smoke_bundle.py --bundle .local/portable-build/OmkalityCraft
 uv run omk release launcher --repository .local/update-repository --keys-dir .local/update-keys --archive .local/portable-build/OmkalityCraft-0.3.0.dev1-windows-x64.zip --version 0.3.0.dev1 --entrypoint OmkalityCraft.exe --platform windows-x64
 ```

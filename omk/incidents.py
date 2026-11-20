@@ -10,7 +10,6 @@ from pathlib import Path
 from uuid import UUID, uuid4
 
 from omk.diagnostics import _excerpt, _files, event, redact, regular
-from omk.drasl import DraslClient
 from omk.fs import resolved
 
 MAX_REPORT_BYTES = 96 * 1024
@@ -289,7 +288,7 @@ class RunningCrashWatcher:
         run_id,
         memory_mb,
         launcher,
-        notify,
+        notify=None,
     ):
         self.root, self.folder, self.release, self.session = (
             root,
@@ -332,7 +331,8 @@ class RunningCrashWatcher:
         )
         if path is not None:
             self.baseline[selected] = current[selected]
-            self.notify()
+            if self.notify is not None:
+                self.notify()
         return path
 
     def start(self):
@@ -363,40 +363,3 @@ class RunningCrashWatcher:
             if self.thread.is_alive():
                 raise OSError("Client crash watcher did not stop")
         return dict(self.baseline)
-
-
-def submit_pending(root: Path, origin: str | None, session):
-    """One request per attempt, idempotent report ID; never renew or save account tokens here."""
-    if origin is None:
-        return
-    try:
-        folder = _queue(root)
-        _prune(root, folder)
-        client = DraslClient(origin, timeout=3)
-        files = _files(
-            folder, root, lambda n: bool(re.fullmatch(r"[a-f0-9]{32}\.json", n))
-        )
-        for path in files:
-            with path.open("rb") as file:
-                raw = file.read(MAX_REPORT_BYTES + 1)
-            if len(raw) > MAX_REPORT_BYTES:
-                continue
-            with contextlib.suppress(ValueError, TypeError):
-                report = validate_report(json.loads(raw))
-                if report["player"] != UUID(session.player_uuid).hex:
-                    continue
-                response = client.request(
-                    "POST", "/reports/client", report, session.access_token
-                )
-                if (
-                    isinstance(response, dict)
-                    and response.get("id") == report["id"]
-                    and response.get("ok") is True
-                ):
-                    path.unlink()
-                    event(root, "client_incident_delivered", report_id=report["id"])
-                return
-    except Exception as error:
-        event(
-            root, "client_incident_delivery_deferred", error_type=type(error).__name__
-        )

@@ -10,7 +10,7 @@ import subprocess
 import urllib.request
 from pathlib import Path
 
-from launcher.log_policy import prepare_logging
+from launcher.pack.log_policy import prepare_logging
 from omk.admin import _write_private
 from omk.logging_runtime import stage_logging_runtime
 from omk.monitoring_config import render

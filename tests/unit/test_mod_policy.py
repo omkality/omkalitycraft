@@ -7,7 +7,7 @@ from unittest.mock import patch
 import pytest
 
 from launcher.game import GameRunner
-from launcher.mod_policy import clean_extra_mods, verify_mods
+from launcher.pack.mod_policy import clean_extra_mods, verify_mods
 from launcher.releases import Artifact, ReleaseError
 from tests.unit.test_game_runner import fixture
 

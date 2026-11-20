@@ -2,7 +2,7 @@
 launcher/assets/fonts/*.ttf -text
 launcher/assets/fonts/*.txt text eol=lf
 # Keep downloaded primary license texts byte-for-byte on every builder.
-scripts/release_licenses/*.txt -text whitespace=-blank-at-eol,-blank-at-eof
+scripts/release/release_licenses/*.txt -text whitespace=-blank-at-eol,-blank-at-eof
 deploy/drasl/*.patch text eol=lf whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
 profiles/client-addons/forge-1.12.2/notices/FullscreenWindowed-LICENSE.txt text eol=lf whitespace=-blank-at-eol
 # The server guide profile must match the pinned client resource byte for byte.

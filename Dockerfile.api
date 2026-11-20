@@ -5,5 +5,5 @@ COPY --from=uv /uv /bin/uv
 COPY pyproject.toml uv.lock ./
 RUN uv sync --locked --no-cache --no-install-project --no-default-groups --group shared --group api
 COPY api/ api/
-COPY omk/__init__.py omk/diagnostics.py omk/drasl.py omk/fs.py omk/incidents.py omk/minecraft_status.py omk/report_store.py omk/
+COPY omk/__init__.py omk/content_policy.py omk/diagnostics.py omk/drasl.py omk/fs.py omk/incidents.py omk/minecraft_status.py omk/report_store.py omk/
 CMD [".venv/bin/python", "-m", "api"]

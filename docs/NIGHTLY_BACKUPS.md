@@ -278,7 +278,7 @@ uv run python -m omk admin --config .omk-admin/operator.toml nightly inspect --s
 
 `inspect` дополнительно требует приватный `.omk-admin/nightly.toml` (Linux mode
 600), существующие `backups.toml`/`maintenance.toml` и настроенный maintenance
-binding. [Пример allowlist](../deploy/nightly.example.toml):
+binding. [Пример allowlist](../deploy/owner/nightly.example.toml):
 
 ```toml
 schema = 1

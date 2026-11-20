@@ -26,7 +26,7 @@ Linux worker использует `linux-server` path policy и новый owner
    разные серверы также требуют отдельных container/source/store имён. Общий
    backup volume для нескольких серверов отвергается конфигурацией.
 2. Добавить сервер в `.omk-admin/operator.toml`, а параметры контейнера/томов — в
-   отдельный `.omk-admin/backups.toml` по [шаблону](../deploy/backups.example.toml).
+   отдельный `.omk-admin/backups.toml` по [шаблону](../deploy/owner/backups.example.toml).
    Каталог mode 700, файлы mode 600 на Linux/macOS. Конфиги/журналы/копии вне CDN и Git.
 3. Запускать CLI на том же хосте, что локальный Linux Docker engine: Unix socket
    на VPS/Linux, Docker Desktop named pipe на Windows. Для VPS сначала подключиться

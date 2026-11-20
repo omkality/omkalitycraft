@@ -181,12 +181,17 @@ class ReleaseStore:
             for snapshot in snapshots:
                 if snapshot.release.digest == release.digest:
                     return snapshot
-                if (
-                    snapshot.release.pack_id,
-                    snapshot.release.platform,
-                    snapshot.release.version,
-                ) == (release.pack_id, release.platform, release.version):
+                previous = snapshot.release
+                if (previous.pack_id, previous.platform) != (
+                    release.pack_id, release.platform
+                ):
+                    continue
+                if previous.version == release.version:
                     raise ValueError("Changed release content requires a new version")
+                if previous.generation is not None and (
+                    release.generation is None or release.generation <= previous.generation
+                ):
+                    raise ValueError("Published pack generations must increase")
             if len(snapshots) >= self.policy.max_count:
                 raise ValueError(
                     "Release snapshot count budget exceeded; no copies removed"

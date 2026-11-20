@@ -4,7 +4,7 @@ import struct
 import zipfile
 import zlib
 
-from launcher.nbt import MAX_BYTES, read_nbt
+from omk.nbt import MAX_BYTES, read_nbt
 
 
 def chunk_level(snapshot, chunk_x, chunk_z):

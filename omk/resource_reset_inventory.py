@@ -6,9 +6,9 @@ import re
 from pathlib import Path
 from uuid import UUID
 
-from launcher.nbt import Tag
 from omk import ftb_restore_authority as ftb
 from omk.fs import regular
+from omk.nbt import Tag
 from omk.profiles import PROJECT_ROOT
 from omk.stopped_world_backup import inventory
 

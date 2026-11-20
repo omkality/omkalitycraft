@@ -16,12 +16,13 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 )
 from packaging.version import Version
 
-from api.core.content_policy import is_private_path
-from launcher.client_policy import ClientDefaults
+from launcher.pack.client_policy import ClientDefaults
 from launcher.version import VERSION
+from omk.content_policy import is_private_path
 from omk.fs import resolved
 
 MAX_MANIFEST_BYTES = 8 * 1024 * 1024
+MAX_GENERATION = 2**63 - 1
 PLATFORMS = {"windows-x64", "linux-x64", "linux-arm64", "macos-x64", "macos-arm64"}
 
 
@@ -121,11 +122,38 @@ def _validate_artifacts(files: tuple[Artifact, ...]) -> set[str]:
     return names
 
 
+def valid_generation(value: object) -> bool:
+    """Validate a positive signed generation or deployment floor."""
+    return type(value) is int and 1 <= value <= MAX_GENERATION
+
+
+def generation_floors(value: object) -> dict[str, int]:
+    """Read build-time pack floors shared across the packaged platforms."""
+    if not isinstance(value, dict) or any(
+        not isinstance(pack, str)
+        or not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,47}", pack)
+        or not valid_generation(generation)
+        for pack, generation in value.items()
+    ):
+        raise ValueError("Invalid minimum pack generations")
+    return dict(value)
+
+
+def _pack_generation(payload: dict[str, Any]) -> int | None:
+    generation = payload.get("generation")
+    if payload["schema"] == 3:
+        if not valid_generation(generation):
+            raise ValueError("Invalid release generation")
+    elif "generation" in payload:
+        raise ValueError("Release generations need schema 3")
+    return generation
+
+
 def _minimum_launcher(payload: dict[str, Any]) -> str | None:
     schema = payload["schema"]
-    if type(schema) is not int or schema not in {1, 2}:
+    if type(schema) is not int or schema not in {1, 2, 3}:
         raise ValueError("Unsupported release schema")
-    if schema == 2:
+    if schema in {2, 3}:
         minimum = payload.get("minimum_launcher_version")
         if not isinstance(minimum, str) or not re.fullmatch(
             r"[0-9][A-Za-z0-9.!+_-]{0,79}", minimum
@@ -160,6 +188,7 @@ class Release:
     digest: str
     envelope: dict[str, Any]
     minimum_launcher_version: str | None = None
+    generation: int | None = None
 
     def require_launcher(self, running_version: str = VERSION) -> None:
         if self.minimum_launcher_version is not None and Version(
@@ -177,6 +206,7 @@ class Release:
     def parse(cls, payload: dict[str, Any], envelope: dict[str, Any]) -> Release:
         try:
             minimum = _minimum_launcher(payload)
+            generation = _pack_generation(payload)
             if payload["loader"] != "forge" or payload["platform"] not in PLATFORMS:
                 raise ValueError
             if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,47}", payload["pack_id"]):
@@ -225,6 +255,7 @@ class Release:
                 hashlib.sha256(canonical(payload)).hexdigest(),
                 envelope,
                 minimum,
+                generation,
             )
         except KeyError, TypeError, ValueError:
             raise ReleaseError(

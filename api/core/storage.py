@@ -7,8 +7,8 @@ from typing import Any
 
 from litestar.exceptions import HTTPException
 
-from api.core.content_policy import is_private_path
 from api.settings.config import settings
+from omk.content_policy import is_private_path
 from omk.fs import resolved
 
 

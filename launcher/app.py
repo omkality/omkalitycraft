@@ -42,16 +42,16 @@ from launcher.dashboard import Dashboard
 from launcher.game import GameProcess, GameRunner
 from launcher.install import Installer, ReleaseClient
 from launcher.memory import MIN_MB, Preferences
-from launcher.nickname import NicknameField
 from launcher.releases import ReleaseError
 from launcher.server_status import ServerStatusController
 from launcher.session import SessionStoreError
 from launcher.skin_dialog import SkinDialog, SkinResetDialog
 from launcher.skins import MAX_SKIN_BYTES, SkinError, decode_skin
-from launcher.social import SocialFooter
 from launcher.storage import FileSessionStore
 from launcher.tasks import Task
-from launcher.theme import ASSETS, STYLE, install_font
+from launcher.ui.nickname import NicknameField
+from launcher.ui.social import SocialFooter
+from launcher.ui.theme import ASSETS, STYLE, install_font
 from launcher.widgets import BusyButton
 from omk.diagnostics import event, failure
 from omk.drasl import DraslClient, DraslError
@@ -187,10 +187,10 @@ class LauncherWindow(QMainWindow):
         installer: Installer | None = None,
         runner: GameRunner | None = None,
         update_warning: str = "",
+        status_origin: str | None = None,
     ) -> None:
         super().__init__()
         self.service = service
-        self.report_runner = runner
         self.diagnostic_root = runner.root if runner is not None else None
         store_path = getattr(service.store, "path", None)
         self.preferences = Preferences(
@@ -233,15 +233,15 @@ class LauncherWindow(QMainWindow):
         layout.addWidget(self.progress)
         layout.addWidget(SocialFooter(update_warning))
         self.setCentralWidget(root)
-        self._setup_server_status(runner)
+        self._setup_server_status(status_origin)
         self._setup_installation(installer, runner)
         if auto_restore:
             QTimer.singleShot(0, self._restore)
 
-    def _setup_server_status(self, runner):
+    def _setup_server_status(self, origin: str | None) -> None:
         self.server_status = ServerStatusController(
             self,
-            origin=runner.reports_url if runner is not None else None,
+            origin=origin,
             active=lambda: self.isVisible()
             and self.pages.currentWidget() == self.home_page,
         )
@@ -515,8 +515,6 @@ class LauncherWindow(QMainWindow):
             self.auth_tabs.setCurrentIndex(1)
 
     def _authenticated(self, result: AuthResult) -> None:
-        if self.report_runner is not None:
-            self.report_runner.send_reports(result.session)
         self.signup_password.clear()
         self.signup_repeat.clear()
         self.show_signup_password.setChecked(False)
@@ -763,7 +761,7 @@ def run_launcher(
         keys = json.loads((ASSETS / "release-keys.json").read_text(encoding="utf-8"))
         installer = Installer(root, ReleaseClient(api_url, keys))
     window = LauncherWindow(
-        service, installer=installer, runner=GameRunner(root, reports_url=api_url)
+        service, installer=installer, runner=GameRunner(root), status_origin=api_url
     )
     window.show()
     try:

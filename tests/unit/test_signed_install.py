@@ -4,13 +4,13 @@ from pathlib import Path
 
 import pytest
 
-from launcher.client_defaults import prepare_client_defaults
 from launcher.install import (
     InstallCancelled,
     Installer,
     ReleaseClient,
     current_platform,
 )
+from launcher.pack.client_defaults import prepare_client_defaults
 from launcher.releases import ReleaseError, read_release, safe_path, sha256_file
 from launcher.version import VERSION
 from omk.publish import build_release, signing_key
@@ -404,3 +404,75 @@ def test_return_to_retained_client_removes_only_added_language_file(
         assert session.read_bytes() == b"revocable game session fixture"
         assert installer.local_state("dj2")["state"] == "installed"
         assert retained.verify(snapshot.release.digest).release.version == "1.0"
+
+
+def test_numbered_generations_preserve_files_and_allow_operator_restore(
+    repository, tmp_path, monkeypatch
+):
+    root, files, envelope, keys, key = repository
+    manifest = files.parent / "manifest.json"
+    launch = envelope["manifest"]["launch"]
+
+    def publish(version, generation, content):
+        (files / "forge.jar").write_bytes(content)
+        published = build_release(
+            files,
+            pack_id="dj2",
+            version=version,
+            minecraft="1.12.2",
+            platform=current_platform(),
+            launch=launch,
+            key=key,
+            generation=generation,
+        )
+        manifest.write_text(json.dumps(published), encoding="utf-8")
+        return read_release(manifest.read_bytes(), keys)
+
+    legacy = read_release(manifest.read_bytes(), keys)
+    with serve(root) as (url, requests):
+        client = ReleaseClient(url, keys, minimum_generations={"dj2": 2})
+        installer = Installer(tmp_path / "portable", client)
+        with pytest.raises(ReleaseError):
+            client.fetch("dj2")
+        with pytest.raises(ReleaseError):
+            installer.install(legacy, lambda _: None)
+
+        current = publish("2.0", 2, b"current content")
+        assert client.fetch("dj2") == current
+        folder = installer.install(current, lambda _: None, clean_mods=True)
+        requests.clear()
+        installer.install(current, lambda _: None, clean_mods=True)
+        assert requests == []
+
+        newer = publish("3.0", 3, b"new content")
+        marker = folder / ".omk-install.json"
+        accepted = marker.read_bytes()
+        keep = folder / "mods/local.jar"
+        keep.write_bytes(b"cleanup must wait until acceptance")
+
+        def cannot_write(*_args):
+            raise OSError("owned test storage unavailable")
+
+        with monkeypatch.context() as patch:
+            patch.setattr("launcher.install.atomic_write", cannot_write)
+            with pytest.raises(OSError):
+                installer.install(newer, lambda _: None, clean_mods=True)
+        assert marker.read_bytes() == accepted
+        assert keep.exists()
+        assert (folder / "forge.jar").read_bytes() == b"current content"
+
+        installer.install(newer, lambda _: None, clean_mods=True)
+        reopened = Installer(installer.root, ReleaseClient(url, keys))
+        requests.clear()
+        with pytest.raises(ReleaseError):
+            reopened.install(current, lambda _: None, clean_mods=True)
+        conflict = publish("3.1", 3, b"different content")
+        with pytest.raises(ReleaseError):
+            reopened.install(conflict, lambda _: None, clean_mods=True)
+        assert requests == []
+        assert (folder / "forge.jar").read_bytes() == b"new content"
+
+        restored = publish("4.0", 4, b"current content")
+        reopened.install(restored, lambda _: None)
+        assert reopened.local_state("dj2")["release"] == restored
+        assert (folder / "forge.jar").read_bytes() == b"current content"

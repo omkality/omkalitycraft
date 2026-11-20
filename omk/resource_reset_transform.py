@@ -9,12 +9,12 @@ import gzip
 import hashlib
 import re
 
-from launcher.nbt import Tag, read_nbt, write_nbt
 from omk import (
     enderutilities_reset as ender,
     resource_reset_inventory as audit,
 )
 from omk.ftb_dimension_references import ftb_record
+from omk.nbt import Tag, read_nbt, write_nbt
 
 
 def landing(value):

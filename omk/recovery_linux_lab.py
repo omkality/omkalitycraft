@@ -15,7 +15,13 @@ from omk.dj2_linux_lab import (
     forge_log_crashed,
     inspect_owned,
 )
-from omk.recovery_full_lab import MAX_FILE, MAX_FILES, MAX_TOTAL, RESERVED, _entries
+from omk.world_archive import (
+    MAX_FILE,
+    MAX_FILES,
+    MAX_TOTAL,
+    RESERVED,
+    world_archive_entries,
+)
 
 
 def _safe_export_path(name):
@@ -58,7 +64,7 @@ def world_tar_to_zip(source, target):
             ):
                 shutil.copyfileobj(data, output, length=1024**2)
     with zipfile.ZipFile(target) as archive:
-        _entries(
+        world_archive_entries(
             archive
         )  # Same paths/casing/collision/level marker policy as full return.
         if archive.testzip() is not None:
@@ -147,7 +153,7 @@ class LinuxRecovery:
         archive = export / "world.zip"
         world_tar_to_zip(export / "world.tar", archive)
         with zipfile.ZipFile(archive) as incoming:
-            entries, _ = _entries(incoming)
+            entries, _ = world_archive_entries(incoming)
             hashes = {}
             for entry in entries:
                 with incoming.open(entry) as file:

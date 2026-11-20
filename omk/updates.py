@@ -23,7 +23,7 @@ from tuf.api.metadata import (
 
 from launcher.install import current_platform
 from launcher.releases import PLATFORMS, safe_path, sha256_file
-from launcher.update_sources import github_asset_url as validate_github_asset_url
+from launcher.update.update_sources import github_asset_url as validate_github_asset_url
 from launcher.updater import MAX_ARCHIVE, LauncherUpdater
 
 

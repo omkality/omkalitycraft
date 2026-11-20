@@ -11,7 +11,7 @@ uv run omk admin --config .omk-admin/operator.toml storage estate
 
 ## Явный реестр общих томов
 
-Скопируйте [образец](../deploy/storage-volumes.example.toml) в
+Скопируйте [образец](../deploy/owner/storage-volumes.example.toml) в
 `.omk-admin/storage.toml` с правами `600` на Linux/macOS. Родительская папка
 остаётся `700`. Запишите точные существующие Docker volume name, ownership label
 и его значение. Для стандартного auth Compose с project `omk-auth` пример:

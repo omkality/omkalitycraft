@@ -44,7 +44,7 @@ uv run omk policy dj2-territories --config-directory PATH_TO_STAGING/config
 Команда создаёт `omkalitycore-territories.properties` исключительно как новый файл.
 Существующий файл не перезаписывается, ссылки на каталоги отклоняются. Она не
 останавливает сервер, не переносит и не изменяет мир. Неправильные env отклоняются
-до записи. Пример: [deploy/dj2-territories.example.env](../deploy/dj2-territories.example.env).
+до записи. Пример: [deploy/game/dj2-territories.example.env](../deploy/game/dj2-territories.example.env).
 
 | Переменная | Default | Диапазон |
 | --- | ---: | --- |

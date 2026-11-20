@@ -31,8 +31,8 @@ def setup(tmp_path, monkeypatch):
     (source / "world.zip").write_bytes(b"closed archive fixture")
     binary = tmp_path / "restic"
     binary.write_bytes(b"fixture binary")
-    (tmp_path / "deploy").mkdir()
-    (tmp_path / "deploy/offsite-tools.json").write_text(
+    (tmp_path / "deploy/offsite").mkdir(parents=True)
+    (tmp_path / "deploy/offsite/offsite-tools.json").write_text(
         json.dumps(
             {
                 "artifacts": [

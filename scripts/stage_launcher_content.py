@@ -10,7 +10,6 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from api.core.content_policy import is_private_path  # noqa: E402
 from api.settings.content import (  # noqa: E402
     get_instance_config,
     get_instance_manifest_settings,
@@ -18,6 +17,7 @@ from api.settings.content import (  # noqa: E402
     get_launcher_manifest_settings,
     resolve_project_path,
 )
+from omk.content_policy import is_private_path  # noqa: E402
 from scripts.generate_manifest import write_manifest  # noqa: E402
 
 

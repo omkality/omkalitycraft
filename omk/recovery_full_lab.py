@@ -2,17 +2,9 @@
 
 import hashlib
 import json
-import re
-import stat
 import zipfile
-from pathlib import PurePosixPath
 
-from omk.backup_archive import validate_path_policy
-
-MAX_FILES = 20000
-MAX_TOTAL = 512 * 1024**2
-MAX_FILE = 128 * 1024**2
-RESERVED = re.compile(r"^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.|$)", re.I)
+from omk.world_archive import world_archive_entries
 
 
 def _destination(server, backup, destination, lab):
@@ -30,59 +22,6 @@ def _destination(server, backup, destination, lab):
     for path in (destination.parent, destination.parent.parent):
         if path.is_symlink() or not path.resolve().is_relative_to(lab.resolve()):
             raise ValueError("Linked replacement runtime is forbidden")
-
-
-def _entries(
-    archive, *, world_name="lab-world", path_policy="portable", max_expanded_bytes=None
-):
-    validate_path_policy(path_policy)
-    if max_expanded_bytes is not None and (
-        type(max_expanded_bytes) is not int or not 1 <= max_expanded_bytes <= 1024**4
-    ):
-        raise ValueError("Invalid archive expanded limit")
-    total_limit = MAX_TOTAL if max_expanded_bytes is None else max_expanded_bytes
-    file_limit = MAX_FILE if max_expanded_bytes is None else max_expanded_bytes
-    if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", world_name):
-        raise ValueError("Invalid archive world root")
-    entries = archive.infolist()
-    if not 1 <= len(entries) <= MAX_FILES:
-        raise ValueError("Invalid lab backup file count")
-    names, prefixes, size = set(), {}, 0
-    for info in entries:
-        parts = info.filename.split("/")
-        if (
-            len(parts) < 2
-            or parts[0] != world_name
-            or info.orig_filename != info.filename
-            or info.is_dir()
-            or "\\" in info.filename
-            or any(
-                part in ("", ".", "..")
-                or any(ord(c) < 32 or c in ':*?"<>|' for c in part)
-                or part.endswith((".", " "))
-                or (path_policy == "portable" and RESERVED.match(part))
-                for part in parts
-            )
-            or stat.S_IFMT(info.external_attr >> 16) not in (0, stat.S_IFREG)
-            or info.flag_bits & 1
-        ):
-            raise ValueError("Unsafe lab backup entry")
-        name = info.filename.casefold()
-        if name in names or not 0 <= info.file_size <= file_limit:
-            raise ValueError("Duplicate or oversized lab backup entry")
-        names.add(name)
-        for length in range(1, len(parts) + 1):
-            prefix = "/".join(parts[:length])
-            if prefixes.setdefault(prefix.casefold(), prefix) != prefix:
-                raise ValueError("Ambiguous path casing in lab backup")
-        size += info.file_size
-    if world_name + "/level.dat" not in archive.namelist() or size > total_limit:
-        raise ValueError("Missing level or oversized lab backup")
-    # Reject file/directory collisions before creating anything.
-    for name in names:
-        if any(str(parent) in names for parent in PurePosixPath(name).parents):
-            raise ValueError("Conflicting lab backup paths")
-    return entries, size
 
 
 def _copy_entry(archive, info, destination):
@@ -112,7 +51,7 @@ def stage_full_world(server, backup, expected_sha256, destination, *, lab):
             raise ValueError("Lab backup hash mismatch")
         source.seek(0)
         with zipfile.ZipFile(source) as archive:
-            entries, size = _entries(archive)
+            entries, size = world_archive_entries(archive)
             plan = {
                 "schema": 1,
                 "lab_only": True,

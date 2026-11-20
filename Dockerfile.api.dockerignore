@@ -8,6 +8,7 @@
 !api/settings/instances/divinejourney2/manifest.json
 !api/settings/launcher/manifest.json
 !omk/__init__.py
+!omk/content_policy.py
 !omk/diagnostics.py
 !omk/drasl.py
 !omk/fs.py

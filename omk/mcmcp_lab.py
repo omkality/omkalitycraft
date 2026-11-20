@@ -297,7 +297,7 @@ def run_mcmcp_lab(  # noqa: PLR0912, PLR0915 -- one ordered ownership and cleanu
             ),
         )
         if args.client_defaults:
-            from launcher.client_policy import ClientDefaults  # noqa: PLC0415
+            from launcher.pack.client_policy import ClientDefaults  # noqa: PLC0415
 
             defaults = json.loads(args.client_defaults.read_text(encoding="utf-8"))
             ClientDefaults.parse(defaults)

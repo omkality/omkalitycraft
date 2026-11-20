@@ -58,7 +58,7 @@ readonly mounts; общий owner lock; cleanup удаляет только со
 
 ## Лимиты
 
-[Пример окружения](../deploy/player-time.example.env) задаётся процессу владельца;
+[Пример окружения](../deploy/owner/player-time.example.env) задаётся процессу владельца;
 CLI не подгружает env-файл автоматически. Неверное значение отклоняется без echo.
 
 | Переменная | Default | Допустимо |

@@ -5,8 +5,8 @@ import struct
 import zlib
 from pathlib import Path
 
-from launcher.nbt import MAX_BYTES, Tag, read_nbt
 from omk.ftb_restore_authority import regular
+from omk.nbt import MAX_BYTES, Tag, read_nbt
 
 
 def value(root, key, kind):

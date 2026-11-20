@@ -154,7 +154,7 @@ def test_invalid_owner_settings_do_not_echo_values(env):
 
 
 def test_example_environment_matches_defaults():
-    example = owner.PROJECT_ROOT / "deploy/player-time.example.env"
+    example = owner.PROJECT_ROOT / "deploy/owner/player-time.example.env"
     env = dict(
         line.split("=", 1)
         for line in example.read_text(encoding="utf-8").splitlines()

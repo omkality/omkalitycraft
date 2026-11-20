@@ -42,6 +42,39 @@ def test_player_launcher_has_no_diagnostic_or_administration_menu(qtbot, tmp_pat
     assert service.client.calls == []
 
 
+@pytest.mark.parametrize("success", [True, False])
+def test_existing_incident_stays_local_when_status_cdn_is_used(
+    qtbot, tmp_path, monkeypatch, success
+):
+    service = AccountService(
+        FakeDrasl(), FileSessionStore(tmp_path / "userdata/session.json")
+    )
+    origin = "http://127.0.0.1:18000"
+    seen = []
+
+    def request(client, method, path, body=None, token=None):
+        seen.append((client.base_url, method, path, body, token))
+        if not success:
+            raise OSError("test CDN unavailable")
+        return {"servers": {}}
+
+    monkeypatch.setattr("launcher.server_status.DraslClient.request", request)
+    queue = tmp_path / "userdata/client-incidents"
+    queue.mkdir(parents=True)
+    pending = queue / ("0" * 32 + ".json")
+    pending.write_text('{"schema":2}', encoding="utf-8")
+    window = LauncherWindow(
+        service, runner=GameRunner(tmp_path), status_origin=origin, auto_restore=False
+    )
+    qtbot.addWidget(window)
+    window.show()
+    with qtbot.waitSignal(window.server_status.updated, timeout=5000):
+        window._authenticated(service.login("test_player", "test-password"))
+    assert window.server_status.pool.waitForDone(5000)
+    assert seen == [(origin, "GET", "/servers/status", None, None)]
+    assert pending.read_text(encoding="utf-8") == '{"schema":2}'
+
+
 @pytest.fixture
 def window(qtbot: QtBot, tmp_path: Path) -> LauncherWindow:
     service = AccountService(

@@ -7,7 +7,8 @@ from uuid import uuid4
 import pytest
 
 from launcher.session import Session
-from omk.incidents import _prune, capture_incident, submit_pending, validate_report
+from omk.incident_delivery import submit_pending
+from omk.incidents import _prune, capture_incident, validate_report
 from tests.unit.test_game_runner import fixture
 
 
@@ -154,7 +155,7 @@ def test_queue_retries_without_ui_and_deletes_only_acknowledged_report(
         )
     )
     request = Mock(side_effect=OSError("private-token-should-not-be-logged"))
-    monkeypatch.setattr("omk.incidents.DraslClient.request", request)
+    monkeypatch.setattr("omk.incident_delivery.DraslClient.request", request)
     submit_pending(tmp_path, "http://127.0.0.1:1", session)
     assert path.exists()
     assert (
@@ -210,6 +211,6 @@ def test_another_players_pending_report_is_never_sent(tmp_path, monkeypatch):
         "fixture-client-token",
     )
     request = Mock()
-    monkeypatch.setattr("omk.incidents.DraslClient.request", request)
+    monkeypatch.setattr("omk.incident_delivery.DraslClient.request", request)
     submit_pending(tmp_path, "http://127.0.0.1:1", session)
     assert path.exists() and not request.called

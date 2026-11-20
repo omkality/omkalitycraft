@@ -13,7 +13,7 @@ operator-config или управляющие токены Drasl. Доступ �
 
 ## Настройка
 
-Скопировать [шаблон](../deploy/operator.example.toml) в `.omk-admin/operator.toml`.
+Скопировать [шаблон](../deploy/owner/operator.example.toml) в `.omk-admin/operator.toml`.
 На Linux/macOS каталог должен иметь mode `700`, управляющая сессия — `600`.
 Новые credential/invitation/export-файлы создаются приватно. На Windows используются
 права выбранной папки; это не шифрование и не защита от процессов того же пользователя.

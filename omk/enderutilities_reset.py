@@ -7,7 +7,7 @@ Other storage/tier/serializer paths remain findings in the general preflight.
 import copy
 import math
 
-from launcher.nbt import Tag
+from omk.nbt import Tag
 
 ARTIFACT = "enderutilities-1.12.2-0.7.15.jar"
 SHA256 = "c0a604aac57853f76f16e21958b02f4d6adbc543c20dda67eb1088ca91ba618c"

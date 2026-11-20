@@ -366,7 +366,7 @@ def test_planning_worker_uses_readonly_inputs_without_session_directory(
 
 
 def test_large_non_ftb_entry_limit_is_explicit_and_does_not_allocate_payload():
-    from omk.recovery_full_lab import _entries  # noqa: PLC0415
+    from omk.world_archive import world_archive_entries  # noqa: PLC0415
 
     class Archive:
         def infolist(self):
@@ -381,8 +381,8 @@ def test_large_non_ftb_entry_limit_is_explicit_and_does_not_allocate_payload():
             return [p.filename for p in self.infolist()]
 
     with pytest.raises(ValueError):
-        _entries(Archive(), world_name="world")
+        world_archive_entries(Archive(), world_name="world")
     assert (
-        _entries(Archive(), world_name="world", max_expanded_bytes=1024**3)[1]
+        world_archive_entries(Archive(), world_name="world", max_expanded_bytes=1024**3)[1]
         == 600 * 1024**2
     )

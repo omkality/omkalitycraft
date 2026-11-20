@@ -16,7 +16,7 @@
 
 Нужны приватные [operator/maintenance](OWNER_MAINTENANCE.md) и
 [backup](COLD_BACKUPS.md) настройки. Скопируйте
-[`deploy/resource-resets.example.toml`](../deploy/resource-resets.example.toml)
+[`deploy/owner/resource-resets.example.toml`](../deploy/owner/resource-resets.example.toml)
 в `.omk-admin/resource-resets.toml`, mode 600:
 
 ```toml

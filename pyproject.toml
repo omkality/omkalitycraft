@@ -1,6 +1,6 @@
 [project]
 name = "omkalitycraft-api"
-version = "0.3.0.dev15"
+version = "0.3.0.dev16"
 description = "OmkalityCraft CDN and development tools; Drasl authentication"
 readme = "README.md"
 requires-python = "==3.14.2"
@@ -27,16 +27,16 @@ launcher = [
     "pyside6>=6.10.0",
 ]
 dev = [
-    "black>=26.1.0",
     "mypy>=1.19.1",
     "pre-commit>=4.5.1",
     "pyinstaller>=6.22.3",
     "pytest>=9.0.2",
     "pytest-xdist==3.8.0",
-    "ruff>=0.14.14",
+    "ruff==0.15.11",
 ]
 
 gui-test = ["pytest-qt>=4.5.0"]
+integration = ["testcontainers==4.15.0"]
 
 [build-system]
 requires = ["hatchling"]

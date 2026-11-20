@@ -191,3 +191,19 @@ uv run python scripts/diagnose_api_shutdown.py --race --cycles 3
 После обновления локально прошли [17 условий настоящего API/Compose](validation/api-runtime-granian-2.8.6-2026-11-03.json),
 [три цикла публичного race-стенда](validation/granian-shutdown-race-regression-2026-11-03.json),
 586 unit/UI tests (3 известных Windows symlink skips), Ruff и Black.
+
+## Интеграция API с Minecraft status
+
+Из корня checkout установите закреплённые группы и запустите набор при доступном
+Linux Docker. Тест строит API и проверяет канонический Compose через HTTP.
+Отдельный peer отвечает по Java status в тестовой Docker-сети.
+
+```powershell
+uv sync --locked --no-default-groups --group shared --group api --group dev --group integration
+uv run --no-sync pytest tests/integration -q -n 0
+```
+
+Если локальный Docker исчерпал автоматический пул сетей, переменная
+`OMK_TEST_DOCKER_SUBNET` задаёт свободную тестовую IPv4-подсеть. Проверьте её
+по локальным маршрутам и существующим Docker-сетям перед запуском.
+Её читает только тестовый набор.

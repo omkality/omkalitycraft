@@ -63,7 +63,7 @@ heap, CPU и Console-agent SHA256 оставались одинаковыми. �
 Рабочая папка сервера не обновляется и публичный сервер этим действием не развёртывается.
 
 Операторский override — `OMK_DJ2_OPTIMIZE_FML_REMAPPER=false` (default), только точные
-`true` / `false`. Пример: [deploy/dj2-startup.example.env](../deploy/dj2-startup.example.env).
+`true` / `false`. Пример: [deploy/game/dj2-startup.example.env](../deploy/game/dj2-startup.example.env).
 `true` оставлен для контрольных экспериментов; он возвращает проблемную оптимизацию.
 Forge не читает эту env сам: переменная используется Python при подготовке копии.
 Без production Compose это ещё не готовый адаптер развёртывания VPS.

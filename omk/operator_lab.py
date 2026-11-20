@@ -21,7 +21,8 @@ from launcher.storage import FileSessionStore
 from omk.admin import AdminError, load_operator_config, operator_login
 from omk.diagnostics import BoundedLog, PipeLog
 from omk.drasl import DraslClient, DraslError
-from omk.incidents import capture_incident, submit_pending
+from omk.incident_delivery import submit_pending
+from omk.incidents import capture_incident
 from omk.profiles import PROJECT_ROOT
 from omk.report_store import ReportStore
 

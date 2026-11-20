@@ -17,7 +17,7 @@ from uuid import uuid4
 
 from launcher.accounts import AccountService
 from launcher.game import GameRunner
-from launcher.log_policy import prepare_logging
+from launcher.pack.log_policy import prepare_logging
 from launcher.releases import read_release
 from launcher.storage import FileSessionStore
 from omk.diagnostics import BoundedLog, PipeLog

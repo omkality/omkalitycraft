@@ -9,9 +9,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from uuid import UUID, uuid4
 
-from launcher.client_defaults import prepare_client_defaults
-from launcher.log_policy import prepare_logging, prune_game_logs
-from launcher.mod_policy import clean_extra_mods, verify_mods
+from launcher.pack.client_defaults import prepare_client_defaults
+from launcher.pack.log_policy import prepare_logging, prune_game_logs
+from launcher.pack.mod_policy import clean_extra_mods, verify_mods
 from launcher.releases import Release, ReleaseError, inside
 from launcher.session import Session
 from launcher.version import VERSION
@@ -27,7 +27,6 @@ from omk.incidents import (
     RunningCrashWatcher,
     capture_incident,
     crash_fingerprints,
-    submit_pending,
 )
 
 
@@ -47,29 +46,12 @@ class GameProcess:
 
 class GameRunner:
     def __init__(
-        self, root: Path, *, memory_mb: int = 6144, reports_url: str | None = None
+        self, root: Path, *, memory_mb: int = 6144
     ) -> None:
         if not 1024 <= memory_mb <= 16384:
             raise ValueError("Invalid memory setting")
         self.root = resolved(root)
         self.memory_mb = memory_mb
-        self.reports_url = reports_url
-        self._report_lock = threading.Lock()
-
-    def send_reports(self, session, *, background=True):
-        def send():
-            if self._report_lock.acquire(blocking=False):
-                try:
-                    submit_pending(self.root, self.reports_url, session)
-                finally:
-                    self._report_lock.release()
-
-        if background:
-            threading.Thread(
-                target=send, daemon=True, name="client-incident-send"
-            ).start()
-        else:
-            send()
 
     def command(
         self,
@@ -192,7 +174,6 @@ class GameRunner:
             run_id=run_id,
             memory_mb=self.memory_mb if memory_mb is None else memory_mb,
             launcher=VERSION,
-            notify=lambda: self.send_reports(session),
         )
         watcher.start()
         event(
@@ -249,7 +230,6 @@ class GameRunner:
                     )
                 except (ValueError, TypeError) as error:
                     failure(self.root, "incident_capture", error)
-                self.send_reports(session, background=False)
                 prune_game_logs(self.root, folder)
             except OSError as error:
                 result.logging_failed.set()

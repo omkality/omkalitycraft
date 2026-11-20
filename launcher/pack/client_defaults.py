@@ -5,9 +5,9 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
-from launcher.client_policy import ClientDefaults
 from launcher.files import atomic_write, local_file
 from launcher.nbt import MAX_BYTES, Tag, read_nbt, write_nbt
+from launcher.pack.client_policy import ClientDefaults
 from launcher.releases import Release, ReleaseError, inside
 
 

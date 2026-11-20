@@ -13,7 +13,7 @@ from launcher.install import current_platform
 from launcher.releases import sha256_file
 from launcher.updater import acknowledge_health
 from launcher.version import VERSION
-from scripts import smoke_bundle
+from scripts.release import smoke_bundle
 
 ENTRYPOINT = "OmkalityCraft.exe" if sys.platform == "win32" else "OmkalityCraft"
 

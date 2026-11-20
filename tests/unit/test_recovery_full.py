@@ -139,7 +139,7 @@ def test_disk_failure_preserves_original_and_has_no_completed_marker(
 @pytest.mark.parametrize("limit", ["MAX_FILES", "MAX_TOTAL", "MAX_FILE"])
 def test_resource_limits_refused_before_any_output(tmp_path, monkeypatch, limit):
     lab, archive, dest, digest = fixture(tmp_path)
-    monkeypatch.setattr("omk.recovery_full_lab." + limit, 1)
+    monkeypatch.setattr("omk.world_archive." + limit, 1)
     with pytest.raises(ValueError):
         stage_full_world(Mock(poll=lambda: 0), archive, digest, dest, lab=lab)
     assert not dest.exists() and not (lab / "full-return-plan.json").exists()

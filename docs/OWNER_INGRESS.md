@@ -30,14 +30,14 @@ reset-кандидат этот интерфейс направлять игро
 Drasl и существующие игровые данные здесь не создаются и не мигрируют.
 
 Для **открытия** нужен также существующий allowlist адаптера из
-[nightly.example.toml](../deploy/nightly.example.toml): приватный
+[nightly.example.toml](../deploy/owner/nightly.example.toml): приватный
 `.omk-admin/nightly.toml`, на Unix `600`. Он выбирает проверенную политику
 FTB Backups; сам файл не включает календарь и не устанавливает host timer.
 Закрытие, просмотр состояния и отмена закрытого плана доступны без этого файла.
 Текущий сервер должен отвечать через maintenance bridge Core 0.3.9.
 Старый bridge без запроса загруженных OP не подтверждает готовность открытия.
 
-1. Скопируйте [ingress.example.toml](../deploy/ingress.example.toml) в приватный
+1. Скопируйте [ingress.example.toml](../deploy/ingress/ingress.example.toml) в приватный
    `.omk-admin/ingress.toml`. На Unix права файла `600`.
 2. Задайте уникальные имена/ownership для proxy container и control volume,
    существующий project bridge и его label. Control volume не может совпадать
