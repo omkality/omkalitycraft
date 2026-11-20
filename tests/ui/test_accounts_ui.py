@@ -1,5 +1,6 @@
 import threading
 from pathlib import Path
+from uuid import uuid4
 
 import pytest
 from PySide6.QtCore import Qt, QTimer
@@ -27,8 +28,10 @@ from launcher.skin_dialog import SkinDialog
 from launcher.skin_view import default_skin
 from launcher.skins import decode_skin
 from launcher.storage import FileSessionStore
+from omk.incidents import capture_incident
 from omk.lab import skin_fixture
 from tests.fakes import FakeDrasl
+from tests.unit.test_game_runner import fixture as game_fixture
 
 
 def test_player_launcher_has_no_diagnostic_or_administration_menu(qtbot, tmp_path):
@@ -59,20 +62,31 @@ def test_existing_incident_stays_local_when_status_cdn_is_used(
         return {"servers": {}}
 
     monkeypatch.setattr("launcher.server_status.DraslClient.request", request)
-    queue = tmp_path / "userdata/client-incidents"
-    queue.mkdir(parents=True)
-    pending = queue / ("0" * 32 + ".json")
-    pending.write_text('{"schema":2}', encoding="utf-8")
+    auth = service.login("test_player", "test-password")
+    folder, release, _ = game_fixture(tmp_path)
+    pending = capture_incident(
+        tmp_path,
+        folder,
+        release,
+        auth.session,
+        run_id=uuid4().hex,
+        started_at=0,
+        exit_code=1,
+        memory_mb=6144,
+        launcher="test",
+    )
+    assert pending is not None
+    saved = pending.read_bytes()
     window = LauncherWindow(
         service, runner=GameRunner(tmp_path), status_origin=origin, auto_restore=False
     )
     qtbot.addWidget(window)
     window.show()
     with qtbot.waitSignal(window.server_status.updated, timeout=5000):
-        window._authenticated(service.login("test_player", "test-password"))
+        window._authenticated(auth)
     assert window.server_status.pool.waitForDone(5000)
     assert seen == [(origin, "GET", "/servers/status", None, None)]
-    assert pending.read_text(encoding="utf-8") == '{"schema":2}'
+    assert pending.read_bytes() == saved
 
 
 @pytest.fixture

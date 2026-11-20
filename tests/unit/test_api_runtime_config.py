@@ -12,6 +12,7 @@ from api import lifecycle
 from api.__main__ import server_command
 from api.app import create_app
 from api.settings.config import Settings, settings
+from scripts.infrastructure.smoke_api_container import DockerFailure
 
 
 @pytest.fixture
@@ -161,3 +162,14 @@ def test_report_retention_uses_configured_interval(tmp_path, monkeypatch):
 
     asyncio.run(run())
     assert delays == [90]
+
+
+def test_docker_network_exhaustion_error_is_scoped_and_sanitized():
+    error = DockerFailure(
+        "compose up",
+        1,
+        "fixture-only-path: all predefined address pools have been fully subnetted",
+    )
+    assert error.category == "network_pool_exhausted"
+    assert error.exit_code == 1
+    assert str(error) == "compose up: network_pool_exhausted (exit 1)"

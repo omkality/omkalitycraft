@@ -2,8 +2,11 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
+      # Preserve patch context and pinned upstream license bytes.
       - id: trailing-whitespace
+        exclude: ^(deploy/drasl/(one-use-invites|session-revocation)\.patch|launcher/assets/fonts/OFL\.txt|profiles/client-addons/forge-1\.12\.2/notices/FullscreenWindowed-LICENSE\.txt)$
       - id: end-of-file-fixer
+        exclude: ^deploy/drasl/one-use-invites\.patch$
       - id: check-yaml
       - id: check-toml
       - id: check-added-large-files

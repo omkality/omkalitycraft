@@ -33,7 +33,9 @@ def world_archive_entries(
     entries = archive.infolist()
     if not 1 <= len(entries) <= MAX_FILES:
         raise ValueError("Invalid world backup file count")
-    names, prefixes, size = set(), {}, 0
+    names: set[str] = set()
+    prefixes: dict[str, str] = {}
+    size = 0
     for info in entries:
         parts = info.filename.split("/")
         if (

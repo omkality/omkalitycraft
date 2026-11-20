@@ -6,12 +6,13 @@ import re
 from pathlib import Path
 from uuid import UUID
 
+from launcher.session import Session
 from omk.diagnostics import _files, event
 from omk.drasl import DraslClient
 from omk.incidents import MAX_REPORT_BYTES, _prune, _queue, validate_report
 
 
-def submit_pending(root: Path, origin: str | None, session):
+def submit_pending(root: Path, origin: str | None, session: Session) -> None:
     """One request per attempt, idempotent report ID; never renew or save account tokens here."""
     if origin is None:
         return
