@@ -97,7 +97,7 @@ fn renders_resizes_and_keeps_unknown_distinct_from_zero() {
     assert_eq!(app.operation.selected(), Some(app.filtered().len() - 1));
     app.move_operation(-500);
     assert_eq!(app.operation.selected(), Some(0));
-    app.confirm = Some("SAVE dj2".into());
+    app.confirm = Some(Confirmation::Save("SAVE dj2".into()));
     let mut terminal = Terminal::new(TestBackend::new(120, 38)).unwrap();
     terminal.draw(|f| ui::draw(f, &mut app)).unwrap();
     let mut v = demo();
@@ -382,4 +382,40 @@ fn real_python_cli_reads_an_isolated_config_without_writes() {
         _ => panic!("Wrong reply"),
     }
     assert_eq!(std::fs::read_dir(private).unwrap().count(), 1);
+}
+
+#[test]
+fn invitation_result_only_renders_confirmed_private_file() {
+    use crate::protocol::InvitationResult;
+    let path = env::temp_dir().join(".omk-admin/invitations/invite-test.json");
+    let mut value = serde_json::json!({
+        "ok": true,
+        "single_use": true,
+        "invitation_file": path,
+    });
+    let parse =
+        |value: &serde_json::Value| InvitationResult::parse(&serde_json::to_vec(value).unwrap());
+    assert!(
+        parse(&value)
+            .unwrap()
+            .message()
+            .contains(path.to_str().unwrap())
+    );
+    value["single_use"] = false.into();
+    assert!(parse(&value).is_err());
+    value["single_use"] = true.into();
+    value["code"] = "unexpected-secret".into();
+    assert!(parse(&value).is_err());
+    let failure = serde_json::json!({
+        "ok": false,
+        "error": "upstream-detail-not-for-display",
+        "error_type": "DraslError",
+    });
+    let failure = parse(&failure).unwrap();
+    assert!(!failure.ok);
+    assert!(
+        !failure
+            .message()
+            .contains("upstream-detail-not-for-display")
+    );
 }

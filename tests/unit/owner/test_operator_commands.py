@@ -95,7 +95,10 @@ def test_cli_outputs_only_private_invitation_path_not_code_token_or_password(
     assert "fixture-operator-password" not in settings.auth_file.read_text()
 
 
-def test_failed_invitation_save_revokes_only_the_new_invitation(tmp_path, monkeypatch):
+@pytest.mark.parametrize("error", [OSError("disk full"), AdminError("unsafe ACL")])
+def test_failed_invitation_save_revokes_only_the_new_invitation(
+    tmp_path, monkeypatch, error
+):
     settings, _ = config(tmp_path)
     monkeypatch.setattr(
         "omk.owner.admin._credential", lambda _: "fixture_admin_token_1234"
@@ -103,7 +106,7 @@ def test_failed_invitation_save_revokes_only_the_new_invitation(tmp_path, monkey
     request = Mock(return_value={"code": "new-unused-invite"})
     monkeypatch.setattr("omk.owner.admin.DraslClient.request", request)
     monkeypatch.setattr(
-        "omk.owner.admin._write_private", Mock(side_effect=OSError("disk full"))
+        "omk.owner.admin._write_private", Mock(side_effect=error)
     )
     with pytest.raises(AdminError, match="revoked"):
         create_invite(settings)

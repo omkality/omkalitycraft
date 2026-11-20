@@ -1,4 +1,6 @@
-use crate::protocol::{ConsoleResult, Overview, TpsHistory, TpsWindow, valid_server};
+use crate::protocol::{
+    ConsoleResult, InvitationResult, Overview, TpsHistory, TpsWindow, valid_server,
+};
 use std::{
     ffi::OsString,
     fs::File,
@@ -27,6 +29,7 @@ pub enum Request {
     Overview(Option<String>, TpsWindow),
     Console { server: String, command: String },
     Moderation(crate::moderation::Action),
+    Invite,
     WorldReset(crate::world_reset::Request),
 }
 #[derive(Debug)]
@@ -34,6 +37,7 @@ pub enum Reply {
     Overview(Overview, Option<Result<TpsHistory, String>>),
     Console(ConsoleResult),
     Moderation(crate::moderation::Receipt),
+    Invitation(InvitationResult),
     WorldReset(crate::world_reset::Receipt),
 }
 
@@ -151,6 +155,9 @@ impl Backend {
     pub fn request(&self, request: Request, cancel: Arc<AtomicBool>) -> Result<Reply, String> {
         let mut command = self.command();
         match &request {
+            Request::Invite => {
+                command.args(["access", "invite"]);
+            }
             Request::WorldReset(action) => {
                 if !action.valid() {
                     return Err("Неверный запрос вайпа".into());
@@ -220,6 +227,11 @@ impl Backend {
         };
         let (bytes, success) = capture(command, &cancel, Duration::from_secs(timeout))?;
         let (reply, ok) = match request {
+            Request::Invite => {
+                let value = InvitationResult::parse(&bytes)?;
+                let ok = value.ok;
+                (Reply::Invitation(value), ok)
+            }
             Request::WorldReset(action) => {
                 let value = crate::world_reset::Receipt::parse(&bytes, &action)?;
                 let ok = value.ok;

@@ -26,7 +26,7 @@ use std::{
     thread,
     time::{Duration, Instant},
 };
-use ui::App;
+use ui::{App, Confirmation};
 
 struct Options {
     backend: Option<Backend>,
@@ -57,7 +57,7 @@ fn options() -> Result<Option<Options>, String> {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / u unban / r refresh / t period / F1 project / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--about] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / u unban / i invite / r refresh / t period / F1 project / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
@@ -121,7 +121,7 @@ impl Pending {
         let resetting = matches!(&request, Request::WorldReset(_));
         let mutating = matches!(&request, Request::WorldReset(a) if a.mutating())
             || matches!(&request, Request::Console { command, .. } if command == "save")
-            || matches!(&request, Request::Moderation(_));
+            || matches!(&request, Request::Moderation(_) | Request::Invite);
         let cancel = Arc::new(AtomicBool::new(false));
         let c = cancel.clone();
         let (sender, receiver) = mpsc::channel();
@@ -225,6 +225,11 @@ fn interactive(
                             app.message = "Обзор недоступен. Проверьте private operator config и права.\nr — повторить чтение.".into();
                         }
                         Ok(Reply::Moderation(v)) => {
+                            app.failed = !v.ok;
+                            app.scroll = 0;
+                            app.message = v.message();
+                        }
+                        Ok(Reply::Invitation(v)) => {
                             app.failed = !v.ok;
                             app.scroll = 0;
                             app.message = v.message();
@@ -378,7 +383,25 @@ fn interactive(
                     }
                     _ => {}
                 }
-            } else if let Some(input) = app.confirm.as_mut() {
+            } else if let Some(Confirmation::Invitation { approved }) = app.confirm.as_mut() {
+                match key.code {
+                    KeyCode::Esc => app.confirm = None,
+                    KeyCode::Left => *approved = false,
+                    KeyCode::Right => *approved = true,
+                    KeyCode::Tab => *approved = !*approved,
+                    KeyCode::Enter => {
+                        if *approved {
+                            drop(pending.take());
+                            app.message = "Создаётся приглашение…".into();
+                            app.failed = false;
+                            app.scroll = 0;
+                            request = Some(Request::Invite);
+                        }
+                        app.confirm = None;
+                    }
+                    _ => {}
+                }
+            } else if let Some(Confirmation::Save(input)) = app.confirm.as_mut() {
                 match key.code {
                     KeyCode::Esc => app.confirm = None,
                     KeyCode::Backspace => {
@@ -388,9 +411,8 @@ fn interactive(
                         input.push(c)
                     }
                     KeyCode::Enter => {
-                        if app.confirm.as_deref()
-                            == app.server().map(|s| format!("SAVE {s}")).as_deref()
-                        {
+                        let input = input.clone();
+                        if app.server().is_some_and(|s| input == format!("SAVE {s}")) {
                             request = app.server().map(|s| Request::Console {
                                 server: s.into(),
                                 command: "save".into(),
@@ -402,6 +424,11 @@ fn interactive(
                 }
             } else {
                 match key.code {
+                    KeyCode::Char('i')
+                        if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
+                    {
+                        app.confirm = Some(Confirmation::Invitation { approved: false });
+                    }
                     KeyCode::Char('w')
                         if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
                     {
@@ -464,7 +491,7 @@ fn interactive(
                     KeyCode::Char(c @ ('1' | '2' | '3')) if pending.is_none() && !app.demo => {
                         if c == '3' {
                             if app.server().is_some() {
-                                app.confirm = Some(String::new());
+                                app.confirm = Some(Confirmation::Save(String::new()));
                             }
                         } else {
                             request = app.server().map(|s| Request::Console {
