@@ -157,12 +157,14 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
         context = lab / "context"
         context.mkdir()
         for name in (
-            "Dockerfile.api.dockerignore",
-            "Dockerfile.api",
+            "deploy/api/Dockerfile.dockerignore",
+            "deploy/api/Dockerfile",
             "pyproject.toml",
             "uv.lock",
         ):
-            shutil.copyfile(ROOT / name, context / name)
+            target = context / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, target)
         for package in ("api", "omk"):
             shutil.copytree(
                 ROOT / package,
@@ -184,7 +186,7 @@ def main():  # noqa: PLR0915 -- ordered real-container scenario with one owned c
                 "docker",
                 "build",
                 "-f",
-                str(context / "Dockerfile.api"),
+                str(context / "deploy/api/Dockerfile"),
                 "-t",
                 image,
                 str(context),

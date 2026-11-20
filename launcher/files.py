@@ -5,7 +5,7 @@ import os
 import tempfile
 from pathlib import Path
 
-from omk.fs import resolved
+from omk.shared.fs import resolved
 
 
 def local_file(folder: Path, name: str) -> Path:

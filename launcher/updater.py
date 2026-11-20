@@ -11,10 +11,11 @@ import subprocess
 import tempfile
 import time
 import zipfile
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Generator, Iterator
 from dataclasses import dataclass
 from pathlib import Path
 from secrets import token_hex
+from typing import BinaryIO
 from urllib.error import HTTPError
 from urllib.parse import urljoin
 from urllib.request import Request
@@ -29,14 +30,16 @@ from tuf.ngclient.fetcher import FetcherInterface
 from launcher.install import current_platform
 from launcher.releases import ReleaseError, inside, safe_path
 from launcher.update.update_sources import github_asset_redirect, github_asset_url
-from omk.drasl import DraslClient
-from omk.fs import resolved
+from omk.accounts.drasl import DraslClient
+from omk.shared.fs import resolved
 
 MAX_ARCHIVE = 512 * 1024**2
 MAX_EXPANDED = 2 * 1024**3
 
 
 class UpdateError(ReleaseError):
+    """Report a launcher update that cannot be prepared or activated safely."""
+
     pass
 
 
@@ -135,7 +138,8 @@ class PortableFetcher(FetcherInterface):
             raise GitHubAssetUnavailable("GitHub asset unavailable") from None
 
     @contextlib.contextmanager
-    def download_file(self, url: str, max_length: int):
+    def download_file(self, url: str, max_length: int) -> Generator[BinaryIO]:
+        """Yield a seekable temporary download after enforcing the signed length limit."""
         with tempfile.TemporaryFile(dir=self.temporary) as output:
             count = 0
             for chunk in self.fetch(url):
@@ -151,6 +155,8 @@ class PortableFetcher(FetcherInterface):
 
 @dataclass(frozen=True)
 class PreparedUpdate:
+    """Identify the verified launcher version and executable ready for handoff."""
+
     version: str
     folder: Path
     entrypoint: Path
@@ -165,6 +171,8 @@ def atomic_json(path: Path, document: dict) -> None:
 
 
 class LauncherUpdater:
+    """Verify, extract and activate TUF updates within the portable root."""
+
     def __init__(self, root: Path, origin: str, bootstrap: bytes, version: str) -> None:
         self.root, self.origin, self.bootstrap = (
             resolved(root),
@@ -200,6 +208,7 @@ class LauncherUpdater:
             return None
 
     def prepare(self, progress: Callable[[str], None]) -> PreparedUpdate | None:
+        """Prepare the verified target in a separate version directory."""
         progress("Проверяем обновления лаунчера…")
         metadata = self.cache / "metadata"
         targets = self.cache / "downloads"

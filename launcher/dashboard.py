@@ -13,10 +13,12 @@ from PySide6.QtWidgets import (
 from launcher.memory import MemorySnapshot, Preferences
 from launcher.skin_view import SkinView
 from launcher.widgets import BusyButton, PackCard
-from omk.profiles import load_profiles
+from omk.shared.profiles import load_profiles
 
 
 class Dashboard(QWidget):
+    """Display pack controls alongside the signed-in account panel."""
+
     install_requested = Signal(str)
     cancel_requested = Signal()
     message = Signal(str)

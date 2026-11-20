@@ -1,12 +1,12 @@
 # Копия данных для сброса ресурсного мира
 
 Следующий слой после [read-only inspection](RESOURCE_RESET_INSPECTION.md) —
-внутренний Linux worker `omk.resource_reset_stage`. Он строит **новую копию данных**
+внутренний Linux worker `omk.worlds.reset.resource_reset_stage`. Он строит **новую копию данных**
 из свежего проверенного backup, не меняет источник и не запускает сервер.
 Owner CLI связывает worker с остановкой, completed backup и отдельным пустым
 volume через `plan/stage/verify`; рабочего wipe и переключения томов ещё нет.
 [Порядок, барьер запуска и восстановление](OWNER_RESOURCE_STAGING.md).
-После data stage отдельный `omk.resource_reset_runtime` может подготовить точные
+После data stage отдельный `omk.worlds.reset.resource_reset_runtime` может подготовить точные
 известные runtime/access-файлы вокруг кандидата; data worker сам этого не делает.
 Он не получает новых lifecycle-команд или разрешения на запуск.
 
@@ -46,7 +46,7 @@ Python image. Owner controller проверяет ownership/lifecycle и дер�
 права и ранги сохраняются. Также очищаются известные death/back ссылки, чтобы
 возврат не вёл в прежнее состояние мира.
 
-FTB 5.4 фильтрация вынесена в общий `omk.ftb_dimension_references`: он работает
+FTB 5.4 фильтрация вынесена в общий `omk.worlds.ftb_dimension_references`: он работает
 по переданному dimension ID, включая 0, положительные сюжетные и динамические ID.
 Трёхэлементные legacy позиции относятся к основному миру. Политика допустимости
 самого вайпа остаётся отдельно: data staging сейчас разрешает только проверенный

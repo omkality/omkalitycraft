@@ -9,10 +9,13 @@ from launcher.session import Session, SessionStoreError
 
 
 class FileSessionStore:
+    """Store one portable game session in a locally protected file."""
+
     def __init__(self, path: Path) -> None:
         self.path = path
 
     def load(self) -> Session | None:
+        """Read and decode the current portable session."""
         try:
             if not self.path.exists():
                 return None
@@ -25,6 +28,7 @@ class FileSessionStore:
             ) from None
 
     def save(self, session: Session) -> None:
+        """Replace the stored session with the supplied credentials."""
         temporary: Path | None = None
         try:
             self.path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -47,6 +51,7 @@ class FileSessionStore:
                     temporary.unlink(missing_ok=True)
 
     def clear(self) -> None:
+        """Remove the portable session file when present."""
         try:
             self.path.unlink(missing_ok=True)
         except OSError:

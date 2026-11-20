@@ -14,12 +14,16 @@ from launcher.tasks import Task
 
 @dataclass(frozen=True)
 class InstallationResult:
+    """Report the installed release, instance directory and optional game process."""
+
     release: Release
     folder: Path
     game: GameProcess | None = None
 
 
 class InstallController(QObject):
+    """Run at most one pack operation and relay its state to Qt."""
+
     started = Signal(str)
     progress = Signal(str, object)
     completed = Signal(str, object)
@@ -43,6 +47,7 @@ class InstallController(QObject):
         self._state_task: Task | None = None
 
     def inspect(self, pack_ids: list[str]) -> None:
+        """Read installed state for the requested pack IDs."""
         task = Task(
             lambda: {
                 pack_id: self.installer.local_state(pack_id) for pack_id in pack_ids
@@ -53,6 +58,7 @@ class InstallController(QObject):
         self.pool.start(task)
 
     def start(self, pack_id: str, *, play: bool, memory_mb: int | None = None) -> None:
+        """Schedule verification, installation and the requested game launch."""
         if self.busy:
             return
         self.busy, self.active_pack = True, pack_id
@@ -95,4 +101,5 @@ class InstallController(QObject):
         self.failed.emit(pack_id, error)
 
     def cancel(self) -> None:
+        """Ask the current installation to stop at a safe checkpoint."""
         self.installer.cancel.set()

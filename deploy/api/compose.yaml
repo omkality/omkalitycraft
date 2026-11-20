@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: ../..
-      dockerfile: Dockerfile.api
+      dockerfile: deploy/api/Dockerfile
     ports:
       - "127.0.0.1:${API_PORT:-8000}:${API_PORT:-8000}"
     environment:

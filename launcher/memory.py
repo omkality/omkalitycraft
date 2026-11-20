@@ -7,7 +7,7 @@ from pathlib import Path
 import psutil
 
 from launcher.files import atomic_write
-from omk.profiles import ServerProfile
+from omk.shared.profiles import ServerProfile
 
 STEP_MB = 256
 MIN_MB = 1024
@@ -15,17 +15,22 @@ MIN_MB = 1024
 
 @dataclass(frozen=True)
 class MemorySnapshot:
+    """Capture total and available physical memory for heap selection."""
+
     total_mb: int
     available_mb: int
 
     @classmethod
     def read(cls):
+        """Measure the host's memory at the point of configuration."""
         memory = psutil.virtual_memory()
         return cls(memory.total // 1024**2, memory.available // 1024**2)
 
 
 @dataclass(frozen=True)
 class MemoryChoice:
+    """Describe the selected heap, its limit and any memory warning."""
+
     selected_mb: int
     maximum_mb: int
     recommended_mb: int
@@ -57,6 +62,8 @@ def choose_memory(
 
 
 class Preferences:
+    """Load and persist per-pack launcher settings beside the portable session."""
+
     def __init__(self, path: Path | None = None) -> None:
         self.path = path
         self.memory: dict[str, int] = {}
@@ -78,6 +85,7 @@ class Preferences:
                 pass
 
     def save_memory(self, pack_id: str, value: int) -> None:
+        """Persist one pack's heap setting while retaining all existing choices."""
         if type(value) is not int or not MIN_MB <= value <= 16384:
             raise ValueError("Invalid heap setting")
         updated = {**self.memory, pack_id: value}

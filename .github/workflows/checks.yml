@@ -54,8 +54,8 @@ jobs:
         with:
           version: "0.11.12"
       - run: uv sync --locked --no-default-groups --group shared --group api --group dev
-      - run: uv run --no-sync ruff check api omk launcher scripts tests mods app.py
-      - run: uv run --no-sync ruff format --check api omk launcher scripts tests mods app.py
+      - run: uv run --no-sync ruff check api omk launcher scripts tests mods
+      - run: uv run --no-sync ruff format --check api omk launcher scripts tests mods
       - run: uv run --locked --no-sync python -m mypy api/settings/config.py api/__main__.py launcher/session.py launcher/files.py launcher/releases.py launcher/install.py
       - run: uv run --no-sync pytest tests/unit -q -n 4 --dist=loadfile
       - name: Standard monitoring configuration and real PromQL rules

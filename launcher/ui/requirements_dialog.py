@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from omk.profiles import HardwareTier, ServerProfile
+from omk.shared.profiles import HardwareTier, ServerProfile
 
 
 def _text(text: str, name: str = "", *, muted: bool = False) -> QLabel:
@@ -25,6 +25,8 @@ def _text(text: str, name: str = "", *, muted: bool = False) -> QLabel:
 
 
 class RequirementsDialog(QDialog):
+    """Display the pack's published system requirements and memory guidance."""
+
     def __init__(self, profile: ServerProfile, parent: QWidget) -> None:
         super().__init__(parent)
         self.setObjectName("requirements_" + profile.id)

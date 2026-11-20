@@ -4,11 +4,12 @@ import asyncio
 import contextlib
 import logging
 import sqlite3
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 from api.settings.config import settings
-from omk.report_store import ReportStore
+from omk.observability.report_store import ReportStore
 
 
 def prune_reports():
@@ -26,7 +27,7 @@ def prune_reports():
 
 
 @asynccontextmanager
-async def report_retention(_app):
+async def report_retention(_app) -> AsyncGenerator[None]:
     if not settings.client_reports_root or not settings.client_reports_auth_url:
         yield
         return

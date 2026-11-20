@@ -1,6 +1,6 @@
 # Актуальные права на выбранной копии серверного выпуска
 
-`omk.project_policy` продолжает [подготовку runtime + мира](PROJECT_STAGE.md).
+`omk.game.project_policy` продолжает [подготовку runtime + мира](PROJECT_STAGE.md).
 Он использует прежний FTB adapter и общий writer из `linux_restore_policy`.
 Новых CLI, env, зависимостей, writers резервного копирования и таймеров нет.
 

@@ -8,7 +8,7 @@ from uuid import UUID, uuid4
 from launcher.session import Session, SessionStore, SessionStoreError
 from launcher.skin_defaults import DEFAULT_SKIN_MODEL, default_skin_bytes
 from launcher.skins import SkinError, decode_skin
-from omk.drasl import DraslClient, DraslError
+from omk.accounts.drasl import DraslClient, DraslError
 
 USERNAME_PATTERN = r"[A-Za-z0-9_]{3,16}"
 
@@ -23,6 +23,8 @@ class PasswordChanged(AccountError):
 
 @dataclass(frozen=True)
 class Registration:
+    """Carry validated registration input until the account request completes."""
+
     username: str
     password: str = field(repr=False)
     invitation: str = field(repr=False)
@@ -30,6 +32,8 @@ class Registration:
 
 @dataclass(frozen=True)
 class AuthResult:
+    """Carry the active session and profile information needed by the launcher."""
+
     session: Session
     remembered: bool
     skin_png: bytes | None = field(default=None, repr=False)
@@ -44,6 +48,8 @@ def validate_skin(png: bytes) -> None:
 
 
 class AccountService:
+    """Coordinate Drasl requests with the launcher's portable session store."""
+
     def __init__(self, client: DraslClient, store: SessionStore) -> None:
         self.client = client
         self.store = store
@@ -53,6 +59,7 @@ class AccountService:
     def prepare_registration(
         username: str, invitation: str, password: str
     ) -> Registration:
+        """Validate the invitation, nickname and password fields for registration."""
         username, invitation = username.strip(), invitation.strip()
         if not re.fullmatch(USERNAME_PATTERN, username):
             raise AccountError(
@@ -65,6 +72,7 @@ class AccountService:
         return Registration(username, password, invitation)
 
     def register(self, registration: Registration) -> AuthResult:
+        """Redeem an invitation and establish the account's game session."""
         response = self.client.register(
             registration.username,
             registration.password,
@@ -77,6 +85,7 @@ class AccountService:
         )
 
     def login(self, username: str, password: str) -> AuthResult:
+        """Authenticate with Drasl and save the resulting game session."""
         if not username.strip() or not password:
             raise AccountError("Введите ник и пароль.")
         return self._authenticate(username.strip(), password)
@@ -128,6 +137,7 @@ class AccountService:
         return AuthResult(session, remembered=True)
 
     def restore(self) -> AuthResult | None:
+        """Load and validate the remembered session at startup."""
         saved = self.store.load()
         if saved is None:
             return None
@@ -158,6 +168,7 @@ class AccountService:
         return self.current
 
     def renew_for_game(self) -> Session:
+        """Refresh game credentials before starting the client."""
         saved = self._require_session()
         try:
             game = self.client.refresh(saved.access_token, saved.client_token)
@@ -175,6 +186,7 @@ class AccountService:
         return self._remember(session).session
 
     def upload_skin(self, png: bytes, model: str) -> None:
+        """Upload the selected skin for the authenticated game profile."""
         session = self._require_session()
         try:
             png = decode_skin(png, model).png
@@ -185,6 +197,7 @@ class AccountService:
         )
 
     def reset_skin(self) -> None:
+        """Restore the default skin for the authenticated game profile."""
         self.upload_skin(default_skin_bytes(), DEFAULT_SKIN_MODEL)
 
     def _confirm_password(self, password: str) -> tuple[Session, str]:
@@ -197,6 +210,7 @@ class AccountService:
         return session, response["apiToken"]
 
     def change_password(self, old_password: str, new_password: str) -> AuthResult:
+        """Change the account password and report whether the game session was renewed."""
         if len(new_password) < 12:
             raise AccountError("Новый пароль должен содержать хотя бы 12 символов.")
         if old_password == new_password:
@@ -218,6 +232,7 @@ class AccountService:
             raise PasswordChanged("Пароль изменён. Войдите с новым паролем.") from None
 
     def revoke_all(self, password: str) -> None:
+        """Revoke the account's sessions through Drasl and clear the local session."""
         session, api_token = self._confirm_password(password)
         self.client.signout(session.username, password)
         self.client.update_user(
@@ -227,5 +242,6 @@ class AccountService:
         self.store.clear()
 
     def forget(self) -> None:
+        """Remove the remembered session from the portable data directory."""
         self.store.clear()
         self.current = None

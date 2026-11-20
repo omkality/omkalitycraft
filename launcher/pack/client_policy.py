@@ -8,6 +8,8 @@ from urllib.parse import urlsplit
 
 @dataclass(frozen=True)
 class DefaultServer:
+    """Describe a server entry installed into a new client profile."""
+
     id: str
     name: str
     address: str
@@ -15,6 +17,8 @@ class DefaultServer:
 
 @dataclass(frozen=True)
 class InitialConfig:
+    """Describe a signed config file used to initialize a writable game setting."""
+
     path: str
     content: dict
 
@@ -71,6 +75,8 @@ def _initial_configs(raw: list) -> tuple[InitialConfig, ...]:
 
 @dataclass(frozen=True)
 class ClientDefaults:
+    """Hold the optional initial settings carried by a signed pack manifest."""
+
     resourcepacks: tuple[str, ...] = ()
     language: str | None = None
     unicode_font: bool | None = None
@@ -81,6 +87,7 @@ class ClientDefaults:
 
     @classmethod
     def parse(cls, value: dict):
+        """Validate and decode the initial settings before they reach the instance."""
         if not isinstance(value, dict) or set(value) - {
             "required_resourcepacks",
             "language",

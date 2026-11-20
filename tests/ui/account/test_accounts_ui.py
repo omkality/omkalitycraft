@@ -1,0 +1,416 @@
+import threading
+from pathlib import Path
+from uuid import uuid4
+
+import pytest
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QImage
+from PySide6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QFileDialog,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QTabWidget,
+)
+from pytestqt.qtbot import QtBot
+
+from launcher.__main__ import _bootstrap_lock
+from launcher.accounts import AccountService
+from launcher.app import LauncherWindow, instance_lock
+from launcher.dashboard import Dashboard
+from launcher.game import GameRunner
+from launcher.install import Progress
+from launcher.memory import MemorySnapshot, Preferences
+from launcher.skin_defaults import SKIN_ASSETS, default_skin_bytes
+from launcher.skin_dialog import SkinDialog
+from launcher.skin_view import default_skin
+from launcher.skins import decode_skin
+from launcher.storage import FileSessionStore
+from omk.labs.launcher.lab import skin_fixture
+from omk.observability.incidents import capture_incident
+from tests.fixtures.fakes import FakeDrasl
+from tests.fixtures.ui.account.accounts_ui import window
+from tests.fixtures.unit.launcher.game_runner import fixture as game_fixture
+
+__all__ = ["window"]
+
+
+def test_player_launcher_has_no_diagnostic_or_administration_menu(qtbot, tmp_path):
+    service = AccountService(
+        FakeDrasl(), FileSessionStore(tmp_path / "userdata/session.json")
+    )
+    window = LauncherWindow(service, runner=GameRunner(tmp_path), auto_restore=False)
+    qtbot.addWidget(window)
+    assert window.menuBar().actions() == []
+    assert not service.store.path.exists()
+    assert service.client.calls == []
+
+
+@pytest.mark.parametrize("success", [True, False])
+def test_existing_incident_stays_local_when_status_cdn_is_used(
+    qtbot, tmp_path, monkeypatch, success
+):
+    service = AccountService(
+        FakeDrasl(), FileSessionStore(tmp_path / "userdata/session.json")
+    )
+    origin = "http://127.0.0.1:18000"
+    seen = []
+
+    def request(client, method, path, body=None, token=None):
+        seen.append((client.base_url, method, path, body, token))
+        if not success:
+            raise OSError("test CDN unavailable")
+        return {"servers": {}}
+
+    monkeypatch.setattr("launcher.server_status.DraslClient.request", request)
+    auth = service.login("test_player", "test-password")
+    folder, release, _ = game_fixture(tmp_path)
+    pending = capture_incident(
+        tmp_path,
+        folder,
+        release,
+        auth.session,
+        run_id=uuid4().hex,
+        started_at=0,
+        exit_code=1,
+        memory_mb=6144,
+        launcher="test",
+    )
+    assert pending is not None
+    saved = pending.read_bytes()
+    window = LauncherWindow(
+        service, runner=GameRunner(tmp_path), status_origin=origin, auto_restore=False
+    )
+    qtbot.addWidget(window)
+    window.show()
+    with qtbot.waitSignal(window.server_status.updated, timeout=5000):
+        window._authenticated(auth)
+    assert window.server_status.pool.waitForDone(5000)
+    assert seen == [(origin, "GET", "/servers/status", None, None)]
+    assert pending.read_bytes() == saved
+
+
+def click(qtbot: QtBot, window: LauncherWindow, name: str) -> None:
+    qtbot.mouseClick(window.findChild(QPushButton, name), Qt.MouseButton.LeftButton)
+
+
+def wait_idle(qtbot: QtBot, window: LauncherWindow) -> None:
+    qtbot.waitUntil(lambda: not window.busy, timeout=4000)
+
+
+def test_registration_accepts_chosen_confirmed_password_and_clears_it_after_login(
+    qtbot: QtBot, window: LauncherWindow
+) -> None:
+    window.signup_name.setText("test_player")
+    window.invitation.setText("test-invitation")
+    chosen = "player-chosen-fixture-password"
+    window.signup_password.setText(chosen)
+    window.signup_repeat.setText(chosen)
+    window.auth_page.findChild(QTabWidget).setCurrentIndex(1)
+    assert window.service.client.calls == []
+    click(qtbot, window, "registerButton")
+    wait_idle(qtbot, window)
+    assert window.pages.currentWidget() == window.home_page
+    assert chosen not in window.service.store.path.read_text(encoding="utf-8")
+    assert window.signup_password.text() == window.signup_repeat.text() == ""
+    assert window.findChild(QPushButton, "copyPassword") is None
+    assert window.pages.count() == 2
+
+
+def test_login_and_new_window_auto_login(qtbot: QtBot, window: LauncherWindow) -> None:
+    window.login_name.setText("test_player")
+    window.login_password.setText("test-password")
+    click(qtbot, window, "loginButton")
+    wait_idle(qtbot, window)
+    assert window.login_password.text() == ""
+    assert window.pages.currentWidget() == window.home_page
+    service = AccountService(window.service.client, window.service.store)
+    restored = LauncherWindow(service)
+    qtbot.addWidget(restored)
+    restored.show()
+    qtbot.waitUntil(
+        lambda: restored.pages.currentWidget() == restored.home_page, timeout=4000
+    )
+
+
+def test_network_error_keeps_chosen_password_for_login_after_uncertain_registration(
+    qtbot: QtBot, window: LauncherWindow, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    window.signup_name.setText("test_player")
+    window.invitation.setText("test-invitation")
+    chosen = "player-chosen-fixture-password"
+    window.signup_password.setText(chosen)
+    window.signup_repeat.setText(chosen)
+    window.auth_page.findChild(QTabWidget).setCurrentIndex(1)
+
+    def lost_response(*args: object, **kwargs: object) -> None:
+        raise TimeoutError("sensitive server details must not appear")
+
+    monkeypatch.setattr(window.service.client, "register", lost_response)
+    click(qtbot, window, "registerButton")
+    wait_idle(qtbot, window)
+    assert window.pages.currentWidget() == window.auth_page
+    assert window.signup_password.text() == window.signup_repeat.text() == chosen
+    assert window.retry_login.isVisible()
+    assert "sensitive server details" not in window.status.text()
+    click(qtbot, window, "retryRegistrationLogin")
+    wait_idle(qtbot, window)
+    assert window.pages.currentWidget() == window.home_page
+
+
+@pytest.mark.parametrize(
+    ("password", "confirmation", "message"),
+    [
+        ("chosen-password", "other-password", "не совпадают"),
+        ("short", "short", "от 12 до 128"),
+        ("x" * 129, "x" * 129, "от 12 до 128"),
+    ],
+)
+def test_invalid_registration_password_never_reaches_backend(
+    qtbot, window, password, confirmation, message
+):
+    window.signup_name.setText("test_player")
+    window.invitation.setText("test-invitation")
+    window.signup_password.setText(password)
+    window.signup_repeat.setText(confirmation)
+    window.auth_page.findChild(QTabWidget).setCurrentIndex(1)
+    click(qtbot, window, "registerButton")
+    assert message in window.status.text()
+    assert window.service.client.calls == [] and not window.busy
+    assert not window.service.store.path.exists()
+
+
+def test_registration_password_can_be_shown_and_hidden_without_changing_it(
+    qtbot, window
+):
+    window.auth_page.findChild(QTabWidget).setCurrentIndex(1)
+    window.signup_password.setText("chosen-fixture-password")
+    window.signup_repeat.setText("chosen-fixture-password")
+    assert window.signup_password.echoMode() == QLineEdit.EchoMode.Password
+    qtbot.keyClick(window.show_signup_password, Qt.Key.Key_Space)
+    assert all(
+        edit.echoMode() == QLineEdit.EchoMode.Normal
+        for edit in (window.signup_password, window.signup_repeat)
+    )
+    qtbot.keyClick(window.show_signup_password, Qt.Key.Key_Space)
+    assert window.signup_repeat.echoMode() == QLineEdit.EchoMode.Password
+    assert window.signup_password.text() == "chosen-fixture-password"
+
+
+def test_fresh_launcher_opens_registration_without_network(qtbot, tmp_path):
+    client = FakeDrasl()
+    service = AccountService(client, FileSessionStore(tmp_path / "session.json"))
+    window = LauncherWindow(service)
+    qtbot.addWidget(window)
+    window.show()
+    qtbot.waitUntil(lambda: not window.busy and window.auth_tabs.currentIndex() == 1)
+    assert window.pages.currentWidget() == window.auth_page and client.calls == []
+
+
+def test_repeated_registration_clicks_issue_only_one_request(
+    qtbot, window, monkeypatch
+):
+    window.auth_tabs.setCurrentIndex(1)
+    window.signup_name.setText("test_player")
+    window.invitation.setText("test-invitation")
+    window.signup_password.setText("chosen-fixture-password")
+    window.signup_repeat.setText("chosen-fixture-password")
+    release = threading.Event()
+    calls = []
+    original = window.service.client.register
+
+    def held(*args, **kwargs):
+        calls.append(True)
+        release.wait(3)
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(window.service.client, "register", held)
+    try:
+        click(qtbot, window, "registerButton")
+        qtbot.waitUntil(lambda: len(calls) == 1)
+        window._register()
+        assert not window.pages.isEnabled() and len(calls) == 1
+    finally:
+        release.set()
+    wait_idle(qtbot, window)
+    assert window.pages.currentWidget() == window.home_page
+
+
+def test_single_skin_upload_has_preview_and_optional_model_correction(
+    qtbot: QtBot,
+    window: LauncherWindow,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    window._authenticated(window.service.login("test_player", "test-password"))
+    png = tmp_path / "skin.png"
+    png.write_bytes(skin_fixture())
+    monkeypatch.setattr(QFileDialog, "getOpenFileName", lambda *args: (str(png), "PNG"))
+
+    def confirm():
+        dialog = QApplication.activeModalWidget()
+        assert isinstance(dialog, SkinDialog)
+        assert dialog.model == "classic"
+        assert not dialog.model_choice.isVisible()
+        qtbot.mouseClick(dialog.adjust, Qt.MouseButton.LeftButton)
+        assert dialog.model_choice.isVisible()
+        dialog.model_choice.setCurrentIndex(1)
+        assert dialog.preview.model == "slim"
+        qtbot.mouseClick(dialog.upload, Qt.MouseButton.LeftButton)
+
+    QTimer.singleShot(0, confirm)
+    click(qtbot, window, "uploadSkin")
+    wait_idle(qtbot, window)
+    assert ("upload_skin", "slim") in window.service.client.calls
+    assert "Скин загружен" in window.status.text()
+
+
+def test_home_has_no_session_management_clutter(
+    qtbot: QtBot, window: LauncherWindow
+) -> None:
+    window._authenticated(window.service.login("test_player", "test-password"))
+    assert window.findChild(QPushButton, "forgetDevice") is None
+    assert window.findChild(QPushButton, "revokeAll") is None
+    assert window.status.text() == ""
+    assert window.font().family() == "Rubik"
+
+
+def test_second_instance_cannot_use_same_token_file(
+    tmp_path: Path, qtbot: QtBot
+) -> None:
+    first = instance_lock(tmp_path)
+    assert first is not None
+    try:
+        assert instance_lock(tmp_path) is None
+    finally:
+        first.unlock()
+    second = instance_lock(tmp_path)
+    assert second is not None
+    second.unlock()
+
+
+def test_repeated_login_clicks_do_not_duplicate_requests(
+    qtbot: QtBot, window: LauncherWindow, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    entered, release = threading.Event(), threading.Event()
+    login = window.service.login
+    calls = []
+
+    def slow_login(name, password):
+        calls.append(name)
+        entered.set()
+        release.wait(timeout=3)
+        return login(name, password)
+
+    monkeypatch.setattr(window.service, "login", slow_login)
+    window.login_name.setText("test_player")
+    window.login_password.setText("test-password")
+    try:
+        click(qtbot, window, "loginButton")
+        qtbot.waitUntil(entered.is_set)
+        assert window.findChild(QPushButton, "loginButton")._busy
+        for _ in range(20):
+            window._login()
+        assert calls == ["test_player"]
+    finally:
+        release.set()
+        wait_idle(qtbot, window)
+
+
+def test_dj2_download_progress(qtbot: QtBot, window: LauncherWindow) -> None:
+    cards = window.home_page.cards
+    cards["dj2"].update_progress(Progress("Скачиваем сборку", 50, 100))
+    assert cards["dj2"].progress.value() == 50
+    assert cards["dj2"].action._busy
+    assert "50%" in cards["dj2"].state_label.text()
+    cards["dj2"].finished(success=True)
+    assert cards["dj2"].action.text() == "Играть"
+
+
+def test_missing_or_malformed_texture_does_not_block_login(
+    qtbot: QtBot, window: LauncherWindow, monkeypatch: pytest.MonkeyPatch
+):
+    def malformed(_player_id):
+        raise TypeError("invalid public texture payload")
+
+    monkeypatch.setattr(window.service.client, "skin_profile", malformed)
+    window.login_name.setText("test_player")
+    window.login_password.setText("test-password")
+    click(qtbot, window, "loginButton")
+    wait_idle(qtbot, window)
+    assert window.pages.currentWidget() == window.home_page
+    assert window.status.text() == ""
+
+
+def test_bootstrap_lock_protects_gap_during_handoff(tmp_path: Path, qtbot: QtBot):
+    bootstrap = _bootstrap_lock(tmp_path, False)
+    session = instance_lock(tmp_path / "userdata")
+    session.unlock()
+    try:
+        with pytest.raises(OSError):
+            _bootstrap_lock(tmp_path, False)
+        assert _bootstrap_lock(tmp_path, True) is None
+        child = instance_lock(tmp_path / "userdata")
+        assert child is not None
+        child.unlock()
+    finally:
+        bootstrap.unlock()
+
+
+def test_dj2_heap_slider_preserves_existing_preferences(qtbot: QtBot, tmp_path: Path):
+    preferences = Preferences(tmp_path / "preferences.json")
+    preferences.save_memory("gtnh", 7168)
+    panel = Dashboard(preferences, MemorySnapshot(16384, 12000))
+    qtbot.addWidget(panel)
+    panel.cards["dj2"].memory.slider.setValue(20)
+    assert Preferences(preferences.path).memory == {"dj2": 5120, "gtnh": 7168}
+    assert panel.cards["dj2"].memory.selected_mb == 5120
+
+
+def test_weak_machine_caps_slider_and_shows_warning(qtbot: QtBot):
+    panel = Dashboard(machine=MemorySnapshot(4096, 3000))
+    qtbot.addWidget(panel)
+    memory = panel.cards["dj2"].memory
+    assert memory.selected_mb == 2048
+    assert memory.slider.maximum() == 8
+    assert "не запуститься" in memory.warning.text()
+
+
+def test_default_skin_is_exact_owner_asset(qtbot: QtBot):
+    image = default_skin()
+    assert image == QImage.fromData(default_skin_bytes(), "PNG")
+
+
+def test_dashboard_shows_only_dj2_and_social_footer(window: LauncherWindow):
+    assert list(window.home_page.cards) == ["dj2"]
+    assert window.home_page.cards["dj2"].profile.name == "Divine Journey 2 RU"
+    assert "https://kick.com/omkality" in window.findChild(QLabel, "social_kick").text()
+    assert window.home_page.findChildren(QComboBox) == []
+
+
+def test_skin_preview_cancel_does_not_upload(qtbot, window, tmp_path, monkeypatch):
+    window._authenticated(window.service.login("test_player", "test-password"))
+    png = tmp_path / "skin.png"
+    png.write_bytes(default_skin_bytes())
+    monkeypatch.setattr(QFileDialog, "getOpenFileName", lambda *args: (str(png), "PNG"))
+    QTimer.singleShot(0, lambda: QApplication.activeModalWidget().reject())
+    click(qtbot, window, "uploadSkin")
+    assert not any(call[0] == "upload_skin" for call in window.service.client.calls)
+
+
+def test_old_skin_preview_cannot_select_slim(qtbot):
+    dialog = SkinDialog(decode_skin((SKIN_ASSETS / "default-legacy.png").read_bytes()))
+    qtbot.addWidget(dialog)
+    dialog.show()
+    assert dialog.model == "classic"
+    assert not dialog.adjust.isVisible()
+    assert not dialog.model_choice.isEnabled()
+
+
+def test_missing_skin_on_new_login_resets_previous_account_preview(window):
+    window.skin_preview.set_skin(skin_fixture(), "classic")
+    window._authenticated(window.service.login("test_player", "test-password"))
+    assert window.skin_preview.model == "slim"
+    assert window.skin_preview.image == default_skin()

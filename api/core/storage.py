@@ -8,8 +8,8 @@ from typing import Any
 from litestar.exceptions import HTTPException
 
 from api.settings.config import settings
-from omk.content_policy import is_private_path
-from omk.fs import resolved
+from omk.shared.content_policy import is_private_path
+from omk.shared.fs import resolved
 
 
 def content_root() -> Path:

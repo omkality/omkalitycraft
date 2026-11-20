@@ -1,0 +1,304 @@
+import copy
+import json
+from pathlib import Path
+
+import pytest
+
+from launcher.releases import ReleaseError
+from omk.localization.dj2_locale_bundle import (
+    compose_locale_bundle,
+    render_initial_book,
+)
+from omk.localization.locale_overlay import render_lang
+from tests.fixtures.unit.localization.dj2_locale_bundle import inputs, sha
+
+__all__ = ["inputs", "sha"]
+
+
+def test_literal_book_and_complete_generation_match_review(inputs):
+    data, expected = inputs
+    before = copy.deepcopy(data)
+    result = compose_locale_bundle(**data)
+    assert result["scripts/ModSpecific/InitialInventory.zs"] == expected
+    assert len(result) == 4
+    assert data == before
+    assert b"recipes.keep();" in expected and b'"Bag"' in expected
+
+
+def test_default_key_compatibility_keeps_the_old_bundle_contract(inputs):
+    data, _ = inputs
+    old = compose_locale_bundle(**data)
+    data["lock"]["jvm_args_required"].append(
+        "-Domkality.defaults.persist.forge112=true"
+    )
+    assert compose_locale_bundle(**data) == old
+
+
+@pytest.mark.parametrize(
+    "flag",
+    [
+        "-Domkality.defaults.persist.forge112=false",
+        "-Dunreviewed.behavior=true",
+        "-javaagent:unreviewed.jar",
+    ],
+)
+def test_bundle_does_not_accept_arbitrary_launch_extensions(inputs, flag):
+    data, _ = inputs
+    data["lock"]["jvm_args_required"].append(flag)
+    with pytest.raises(ValueError):
+        compose_locale_bundle(**data)
+
+
+def test_item_views_keep_the_existing_bundle_files_and_shared_script(inputs):
+    data, _ = inputs
+    previous = compose_locale_bundle(**data)
+    data["lock"]["jvm_args_required"].extend(
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.locale.forge112=true",
+            "-Domkality.itemviews.profile=dj2-2.23.4",
+        ]
+    )
+    assert compose_locale_bundle(**data) == previous
+
+
+@pytest.mark.parametrize(
+    "extensions",
+    [
+        ["-Domkality.itemviews.locale.forge112=true"],
+        ["-Domkality.itemviews.profile=dj2-2.23.4"],
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.locale.forge112=true",
+        ],
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.profile=dj2-2.23.4",
+        ],
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.locale.forge112=false",
+            "-Domkality.itemviews.profile=dj2-2.23.4",
+        ],
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.locale.forge112=true",
+            "-Domkality.itemviews.profile=dj2-2.21.3",
+        ],
+        [
+            "-Domkality.defaults.persist.forge112=true",
+            "-Domkality.itemviews.locale.forge112=true",
+            "-Domkality.itemviews.profile=../../other",
+        ],
+    ],
+)
+def test_item_views_require_the_complete_matching_launch_profile(inputs, extensions):
+    data, _ = inputs
+    data["lock"]["jvm_args_required"].extend(extensions)
+    with pytest.raises(ValueError, match="launch contract"):
+        compose_locale_bundle(**data)
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "source",
+        "target",
+        "author",
+        "recipe",
+        "missing_literal",
+        "duplicate_literal",
+        "title",
+        "pages",
+        "lore",
+        "schema",
+        "unknown",
+    ],
+)
+def test_book_refuses_drift_before_returning_any_installation(inputs, fault):
+    data, _ = inputs
+    source, review = data["script"], data["book_review"]
+    if fault == "source":
+        source += b" "
+    elif fault == "target":
+        review["result_sha256"] = "0" * 64
+    elif fault in {"author", "recipe", "missing_literal", "duplicate_literal"}:
+        old, new = {
+            "author": (b"Atricos", b"Other"),
+            "recipe": (b"recipes.keep();", b"recipes.removeAll();"),
+            "missing_literal": (b"val dj2introductionpaperdesc0", b"val other"),
+            "duplicate_literal": (
+                b'val dj2introductionpaperdesc0 = "A";',
+                b'val dj2introductionpaperdesc0 = "A";val dj2introductionpaperdesc0 = "A";',
+            ),
+        }[fault]
+        source = source.replace(old, new)
+        # Even a new source pin cannot silently reuse an old accepted output.
+        review["source_sha256"] = sha(source)
+    elif fault == "title":
+        review["book_title"] = "x" * 33
+    elif fault == "pages":
+        review["pages"] = []
+    elif fault == "lore":
+        review["paper_lore"] = ["one"]
+    elif fault == "schema":
+        review["schema"] = 2
+    else:
+        review["exec"] = "not supported"
+    with pytest.raises(ValueError):
+        render_initial_book(source, review)
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "missing",
+        "extra",
+        "corrupt",
+        "length",
+        "duplicate",
+        "case",
+        "escape",
+        "personal",
+        "script_path",
+        "client",
+        "client_size",
+        "shared_script",
+        "flags",
+        "schema",
+    ],
+)
+def test_generation_rejects_mixed_or_unsafe_inputs(inputs, fault):
+    data, _ = inputs
+    lock = data["lock"]
+    row = lock["resources"][0]
+    if fault == "missing":
+        data["resources"].pop(row["path"])
+    elif fault == "extra":
+        data["resources"]["resources/personal.txt"] = b"private"
+    elif fault == "corrupt":
+        data["resources"][row["path"]] += b"drift"
+    elif fault == "length":
+        row["size"] += 1
+    elif fault == "duplicate":
+        lock["resources"].append(dict(row))
+    elif fault == "case":
+        lock["resources"].append(dict(row, path=row["path"].upper()))
+    elif fault in {"escape", "personal", "script_path"}:
+        path = {
+            "escape": "resources/../outside",
+            "personal": "options.txt",
+            "script_path": "scripts/Other.zs",
+        }[fault]
+        data["resources"][path] = data["resources"].pop(row["path"])
+        row["path"] = path
+    elif fault == "client":
+        data["client"] += b"corrupt"
+    elif fault == "client_size":
+        lock["client"]["size"] += 1
+    elif fault == "shared_script":
+        lock["initial_inventory"]["result_sha256"] = "0" * 64
+    elif fault == "flags":
+        lock["jvm_args_required"] = []
+    else:
+        lock["schema"] = 2
+    with pytest.raises((ValueError, ReleaseError)):
+        compose_locale_bundle(**data)
+
+
+def test_checked_in_generation_agrees_with_component_and_book_pins():
+    root = Path(__file__).resolve().parents[3]
+    profile = root / "profiles/locale-overlays/dj2-2.23.4"
+    lock = json.loads((profile / "bundle-lock.json").read_bytes())
+    book = json.loads((profile / "initial-book-review.json").read_bytes())
+    client = json.loads((root / "mods/forge-1.12.2/versions.json").read_bytes())[
+        "artifacts"
+    ]["client"]
+    assert lock["client"]["sha256"] == client["sha256"]
+    assert lock["client"]["version"] == client["version"]
+    assert lock["initial_inventory"]["result_sha256"] == book["result_sha256"]
+    assert len(lock["resources"]) == 683 and len(book["pages"]) == 18
+    assert len({x["path"].casefold() for x in lock["resources"]}) == 683
+    menu = json.loads((profile / "forge-menu-review.json").read_bytes())
+    entry = menu["entries"][0]
+    label = render_lang(
+        b"",
+        b"fml.menu.modoptions=Mod Options...\n",
+        additions={entry["key"]: entry["ru"]},
+        expected_source_sha256={entry["key"]: entry["source_sha256"]},
+    )
+    assert sha(label) == menu["result_sha256"]
+    assert len(label) == menu["result_bytes"]
+    assert {
+        "path": menu["target_path"],
+        "sha256": sha(label),
+        "size": len(label),
+    } in lock["resources"]
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "book_bool",
+        "lock_bool",
+        "archive",
+        "pack",
+        "version",
+        "mod_version",
+        "resource_limit",
+        "total_limit",
+    ],
+)
+def test_generation_contract_and_memory_limits(inputs, fault, monkeypatch):
+    data, _ = inputs
+    if fault == "book_bool":
+        data["book_review"]["schema"] = True
+    elif fault == "lock_bool":
+        data["lock"]["schema"] = True
+    elif fault == "archive":
+        data["lock"]["locale_archive_sha256"] = "wrong"
+    elif fault == "pack":
+        data["lock"]["pack"] = "gtnh"
+    elif fault == "version":
+        data["lock"]["version"] = False
+    elif fault == "mod_version":
+        data["lock"]["client"]["version"] = "../../unknown"
+    else:
+        monkeypatch.setattr(
+            "omk.localization.dj2_locale_bundle."
+            + (
+                "MAX_RESOURCE_BYTES"
+                if fault == "resource_limit"
+                else "MAX_BUNDLE_BYTES"
+            ),
+            1,
+        )
+    with pytest.raises(ValueError):
+        compose_locale_bundle(**data)
+
+
+@pytest.mark.parametrize(
+    "page", ['Кавычки: "пример"; C:\\test\nё %s', '"; recipes.removeAll(); //']
+)
+def test_book_page_stays_a_string_not_script_code(inputs, page):
+    data, expected = inputs
+    review = data["book_review"]
+    old = json.dumps(
+        json.dumps(
+            {"text": "Русский текст"}, ensure_ascii=False, separators=(",", ":")
+        ),
+        ensure_ascii=False,
+    )
+    new = json.dumps(
+        json.dumps({"text": page}, ensure_ascii=False, separators=(",", ":")),
+        ensure_ascii=False,
+    )
+    expected = expected.replace(old.encode(), new.encode())
+    review["pages"] = [page]
+    review["result_sha256"] = sha(expected)
+    result = render_initial_book(data["script"], review)
+    assert result == expected
+    literal = result.decode().split("pages: [\n", 1)[1].lstrip()
+    decoded, _ = json.JSONDecoder().raw_decode(literal)
+    assert json.loads(decoded) == {"text": page}
+    assert result.endswith(b"add(<minecraft:paper>);\nrecipes.keep();\n")

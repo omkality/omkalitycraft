@@ -11,12 +11,12 @@ import urllib.request
 from pathlib import Path
 
 from launcher.pack.log_policy import prepare_logging
-from omk.admin import _write_private
-from omk.logging_runtime import stage_logging_runtime
-from omk.monitoring_config import render
-from omk.owner_console import run as console
-from omk.owner_overview import run as overview
-from omk.project_moderation import initialize
+from omk.game.project_moderation import initialize
+from omk.observability.logging_runtime import stage_logging_runtime
+from omk.observability.monitoring_config import render
+from omk.owner.admin import _write_private
+from omk.owner.panels.owner_console import run as console
+from omk.owner.panels.owner_overview import run as overview
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = "omk-tui-sandbox"

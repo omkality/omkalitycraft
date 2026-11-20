@@ -1,6 +1,6 @@
 # Журнал файлового возврата полного выпуска
 
-`omk.project_return` связывает [raw stage](PROJECT_STAGE.md) и
+`omk.owner.storage.project_return` связывает [raw stage](PROJECT_STAGE.md) и
 [актуальную политику доступа](PROJECT_POLICY.md) одной owner-операцией. Повторно
 используются общий lock резервных операций, приватные JSON/fsync и оба прежних
 file workers. Новых CLI/env/deps/таймеров и второго backup writer нет.

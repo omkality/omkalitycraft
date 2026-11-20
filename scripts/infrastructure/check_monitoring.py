@@ -8,12 +8,13 @@ import tempfile
 import time
 import urllib.parse
 import urllib.request
+from collections.abc import Generator
 from contextlib import contextmanager
 from ipaddress import IPv4Network
 from pathlib import Path
 from uuid import uuid4
 
-from omk.monitoring_config import render
+from omk.observability.monitoring_config import render
 
 ROOT = Path(__file__).resolve().parents[2]
 IMAGES = json.loads(
@@ -23,7 +24,9 @@ PROMETHEUS = IMAGES["prometheus"]["image"]
 TELEGRAF = IMAGES["telegraf"]["image"]
 PYTHON = next(
     line.split()[1]
-    for line in (ROOT / "Dockerfile.api").read_text(encoding="utf-8").splitlines()
+    for line in (ROOT / "deploy/api/Dockerfile")
+    .read_text(encoding="utf-8")
+    .splitlines()
     if line.startswith("FROM python:")
 )
 
@@ -38,7 +41,7 @@ def execute(args, **kwargs):
 
 
 @contextmanager
-def mock_game(network, project):
+def mock_game(network, project) -> Generator[None]:
     """Synthetic HTTP metrics, not a Minecraft/gameplay acceptance."""
     fixture = ROOT / "tests/fixtures/monitoring_exporter.py"
     name = project + "-fake-game"

@@ -16,9 +16,9 @@ from launcher.install import current_platform
 from launcher.releases import sha256_file
 from launcher.updater import LauncherUpdater, PreparedUpdate
 from launcher.version import VERSION
-from omk.profiles import PROJECT_ROOT
-from omk.updates import publish_update
-from tests.http_fixture import serve
+from omk.distribution.updates import publish_update
+from omk.shared.profiles import PROJECT_ROOT
+from tests.fixtures.http import serve
 
 
 def prepare() -> None:

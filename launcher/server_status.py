@@ -3,10 +3,12 @@
 from PySide6.QtCore import QObject, QThreadPool, QTimer, Signal
 
 from launcher.tasks import Task
-from omk.drasl import DraslClient
+from omk.accounts.drasl import DraslClient
 
 
 class ServerStatusController(QObject):
+    """Poll the public status API and deliver snapshots to the Qt thread."""
+
     updated = Signal(object)
 
     def __init__(self, parent, *, origin=None, active=lambda: True):
@@ -26,6 +28,7 @@ class ServerStatusController(QObject):
         self.timer.start()
 
     def refresh(self):
+        """Schedule a status request while the dashboard is visible and idle."""
         if self.busy or self.fetcher is None or not self.active():
             return
         self.busy = True

@@ -1,5 +1,6 @@
 {
   "additionalProperties": false,
+  "description": "Report an owner moderation action and its observed outcome.",
   "properties": {
     "schema_version": {
       "const": 1,

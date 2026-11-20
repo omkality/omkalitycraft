@@ -50,7 +50,7 @@
 | Проверочный game container stdout | `candidate_slot_spec.py`, `OMK_SLOT_DOCKER_LOG_MIB/FILES` | `10m × 3`; frozen в плане, проверяется Inspect |
 | Forge `logs/latest.log` | `launcher/log_policy.py`, `OMK_FORGE_LOG_MIB/FILES` | 8 МиБ + 3 gzip; порог событий, не жёсткий cap одной записи |
 | CT/Groovy отдельные файлы | Собственные Writer модов | Жёсткого online cap пока нет; см. ниже |
-| Portable Python stdout/launcher log | `omk/diagnostics.py`, launcher callers | 3 × 8 МиБ /3 × 1 МиБ, фиксированная клиентская политика |
+| Portable Python stdout/launcher log | `omk/observability/diagnostics.py`, launcher callers | 3 × 8 МиБ /3 × 1 МиБ, фиксированная клиентская политика |
 | Закрытые diagnostic ZIP | `deploy/owner/diagnostics.example.env` | 5 /64 МиБ; только export, не source logs |
 | Prometheus / Telegraf | `deploy/metrics/example.env` | TSDB blocks 1024 МиБ /180 дней (ранняя граница), отдельно WAL/head/compaction и reserve; Docker stdout каждого сервиса `1m × 2`. [Бюджет и scrape limits](RESOURCE_HISTORY.md) |
 | Завершённые operator journals | `deploy/owner/nightly.example.env` | Opt-in archive, 256 МиБ /10000 файлов; pending recovery references не удаляются |
