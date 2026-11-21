@@ -66,10 +66,12 @@ def _loading_logo() -> Image.Image:
     image = Image.new("RGBA", (512, 512))
     icon = Image.open(ASSETS / "branding/icon.png").convert("RGBA")
     icon.thumbnail((100, 100), Image.Resampling.NEAREST)
-    image.alpha_composite(icon, ((512 - icon.width) // 2, 112))
+    # In Forge's fixed-size splash, this centers the artwork between the two bars.
+    vertical_offset = 15
+    image.alpha_composite(icon, ((512 - icon.width) // 2, 112 + vertical_offset))
     font = ImageFont.truetype(str(ASSETS / "fonts/Rubik.ttf"), 32)
     ImageDraw.Draw(image).text(
-        (256, 248), "OMKALITYCRAFT", font=font, fill=ICE, anchor="mm"
+        (256, 248 + vertical_offset), "OMKALITYCRAFT", font=font, fill=ICE, anchor="mm"
     )
     return image
 

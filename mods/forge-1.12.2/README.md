@@ -1,6 +1,6 @@
 # OmkalityCraft · Forge 1.12.2
 
-Текущие исходники: Core 0.3.12, DJ2Fix 0.1.8 и Client 0.1.7.
+Текущие исходники: Core 0.3.12, DJ2Fix 0.1.8 и Client 0.1.8.
 
 DJ2Fix 0.1.8 завершает временные слоты перед disconnect/save. Приняты native-матрица,
 полный Windows GUI-маршрут, чистый restart того же Linux-мира и обычный клиент
