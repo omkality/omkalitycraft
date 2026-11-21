@@ -15,6 +15,7 @@ pub struct Action {
     pub player: String,
     pub duration: String,
     pub reason: String,
+    pub profile: Option<String>,
 }
 
 impl Action {
@@ -74,8 +75,10 @@ impl Receipt {
             || !v.ok && v.effect == "applied"
             || v.ok != v.error.is_none()
             || v.ok
-                && ((matches!(v.command.as_str(), "kick" | "unban" | "revoke-invite")
-                    || request.permanent_ban())
+                && ((matches!(
+                    v.command.as_str(),
+                    "kick" | "unban" | "unmute" | "revoke-invite"
+                ) || request.permanent_ban())
                     != v.expires_at.is_none())
             || v.expires_at == Some(0)
             || v.error.as_deref().is_some_and(|s| {
@@ -87,6 +90,7 @@ impl Receipt {
                         | "already_banned"
                         | "refused"
                         | "not_banned"
+                        | "not_muted"
                         | "changed"
                         | "ambiguous"
                         | "inconsistent_servers"
@@ -118,6 +122,10 @@ impl Receipt {
             self.command,
             if permanent_ban {
                 "Бессрочный бан применён. Вход на проект закрыт."
+            } else if self.ok && self.command == "unban" {
+                "Бан снят на всём проекте."
+            } else if self.ok && self.command == "unmute" {
+                "Мут снят на всём проекте."
             } else if self.ok && self.server_id.is_none() {
                 "Записано в общий список проекта."
             } else if self.ok {
@@ -139,6 +147,7 @@ impl Receipt {
                         "inconsistent_servers" =>
                             "серверы используют разные списки проекта или нуждаются в обновлении",
                         "not_banned" => "у игрока нет бана",
+                        "not_muted" => "у игрока нет мута",
                         "changed" => "бан изменился; проверьте его заново",
                         "already_banned" => "уже есть бан; он сохранён",
                         "account_locked" => "у аккаунта другая блокировка или незавершённый разбан",
@@ -219,6 +228,7 @@ impl Form {
                     String::new()
                 },
                 reason: String::new(),
+                profile: None,
             },
             field: 0,
             confirming: false,
@@ -227,6 +237,13 @@ impl Form {
             names: PlayerNames::Unavailable,
             completion_prefix: None,
         }
+    }
+
+    pub fn for_profile(server: String, command: &str, player: String, profile: String) -> Self {
+        let mut form = Self::new(server, command);
+        form.action.player = player;
+        form.action.profile = Some(profile);
+        form
     }
 
     pub fn start_name_lookup(&mut self) {
@@ -262,6 +279,7 @@ impl Form {
         if self.field != 0
             || self.action.command == "revoke-invite"
             || self.action.player.is_empty()
+            || self.action.profile.is_some()
         {
             return false;
         }
@@ -324,7 +342,7 @@ impl Form {
             return None;
         }
         let fields = match self.action.command.as_str() {
-            "unban" | "revoke-invite" | "stats" => 1,
+            "unban" | "unmute" | "revoke-invite" | "stats" => 1,
             "kick" => 2,
             _ => 3,
         };
@@ -373,13 +391,16 @@ impl Form {
                     return Some(self.action.clone());
                 }
             }
-            KeyCode::Backspace => {
+            KeyCode::Backspace if self.action.profile.is_none() => {
                 self.reset_completion();
                 self.input().pop();
                 self.error.clear();
             }
             KeyCode::Char(c)
-                if !c.is_control() && c != '§' && self.input().chars().count() < 128 =>
+                if self.action.profile.is_none()
+                    && !c.is_control()
+                    && c != '§'
+                    && self.input().chars().count() < 128 =>
             {
                 self.reset_completion();
                 self.input().push(c);
@@ -402,9 +423,15 @@ impl Form {
         let area = frame.area();
         let w = area.width.saturating_sub(4).min(80);
         let unban = self.action.command == "unban";
+        let unmute = self.action.command == "unmute";
         let invite = self.action.command == "revoke-invite";
         let stats = self.action.command == "stats";
-        let h = if unban || invite || stats { 10 } else { 17 }.min(area.height);
+        let h = if unban || unmute || invite || stats {
+            10
+        } else {
+            17
+        }
+        .min(area.height);
         let popup = Rect::new((area.width - w) / 2, (area.height - h) / 2, w, h);
         frame.render_widget(Clear, popup);
         let title = if stats {
@@ -417,6 +444,8 @@ impl Form {
             " Бан · Вы уверены? "
         } else if unban {
             " Разбан игрока "
+        } else if unmute {
+            " Снять мут "
         } else {
             " Модерация игрока "
         };
@@ -455,9 +484,15 @@ impl Form {
                     "[ Нет, вернуться ]     Да"
                 }
             )
-        } else if unban {
+        } else if unban || unmute {
+            let label = if unban { "бан" } else { "мут" };
+            let autocomplete = if self.action.profile.is_none() {
+                "Tab — дополнить ник · "
+            } else {
+                ""
+            };
             format!(
-                "\nОбласть: {}\n\n> Ник: {}\n{}\n\nTab — дополнить ник · Enter — снять бан · Esc — отмена",
+                "\nОбласть: {}\n\n> Ник: {}\n{}\n\n{autocomplete}Enter — снять {label} · Esc — отмена",
                 self.action.scope(),
                 self.action.player,
                 self.error
@@ -535,7 +570,7 @@ mod tests {
 
     #[test]
     fn tab_completes_all_nickname_forms_and_cycles_without_submitting() {
-        for command in ["kick", "ban", "mute", "unban", "stats"] {
+        for command in ["kick", "ban", "mute", "unban", "unmute", "stats"] {
             let mut form = Form::new("dj2".into(), command);
             form.finish_name_lookup(Some(vec!["ProbeAlpha".into(), "ProbeBeta".into()]));
             form.action.player = "pRO".into();

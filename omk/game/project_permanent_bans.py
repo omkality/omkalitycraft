@@ -124,7 +124,9 @@ def _disconnect(config, ban):
         ]
 
 
-def _ban(config, result, history, path, ban, entries, reason, client, token, caller):
+def _ban(
+    config, result, history, path, ban, discard_temporary, reason, client, token, caller
+):
     if ban is None:
         account, profile, name, locked = _lookup(client, token, result.player)
         if str(account) == caller:
@@ -132,13 +134,6 @@ def _ban(config, result, history, path, ban, entries, reason, client, token, cal
         if locked:
             raise Refused("account_locked")
         now = int(time.time())
-        existing = entries.get(("ban", str(profile)))
-        if (
-            existing is not None
-            and existing.expires is not None
-            and existing.expires > now
-        ):
-            raise Refused("already_banned")
         if len(history.bans) == 1024:
             raise ValueError("Project ban store is full")
         ban = PermanentBan(
@@ -170,13 +165,17 @@ def _ban(config, result, history, path, ban, entries, reason, client, token, cal
         _save(config, path, history, event)
     elif not locked:
         raise Refused("account_locked")
+    discard_temporary(ban.uuid)
     result.unreachable.extend(_disconnect(config, ban))
 
 
-def _unban(config, result, history, path, ban, client, token, caller):
+def _unban(
+    config, result, history, path, ban, discard_temporary, client, token, caller
+):
     if str(ban.account) == caller:
         raise Refused("operator_account")
     locked = _locked(client, token, ban)
+    discard_temporary(ban.uuid)
     if ban.stage != "unlocking" and (locked or ban.stage == "active"):
         ban.stage = "unlocking"
         _save(config, path, history)
@@ -194,12 +193,13 @@ def _unban(config, result, history, path, ban, client, token, caller):
     _save(config, path, history, event)
 
 
-def update(config, result, history, path, entries, reason):
+def update(config, result, history, path, discard_temporary, reason, profile=None):
     """Apply or remove a lock while holding the moderation and recovery locks."""
     matching = [
         ban
         for ban in history.bans.values()
         if ban.player.casefold() == result.player.casefold()
+        and (profile is None or str(ban.uuid) == profile)
     ]
     if len(matching) > 1:
         raise Refused("ambiguous")
@@ -208,6 +208,19 @@ def update(config, result, history, path, entries, reason):
     if result.command == "unban":
         if ban is None:
             raise Refused("not_banned")
-        _unban(config, result, history, path, ban, client, token, caller)
+        _unban(
+            config, result, history, path, ban, discard_temporary, client, token, caller
+        )
     else:
-        _ban(config, result, history, path, ban, entries, reason, client, token, caller)
+        _ban(
+            config,
+            result,
+            history,
+            path,
+            ban,
+            discard_temporary,
+            reason,
+            client,
+            token,
+            caller,
+        )

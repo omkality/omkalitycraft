@@ -6,6 +6,7 @@ import pytest
 
 from omk.accounts.drasl import DraslClient, DraslError
 from omk.game import project_moderation as moderation
+from omk.owner.panels import owner_restrictions
 from tests.fixtures.unit.game.project_moderation import UUID, project
 
 __all__ = ["UUID", "project"]
@@ -56,6 +57,26 @@ def test_mute_keeps_longer_expiry_and_does_not_need_stopped_server(project):
     assert first["unreachable"] == ["beta"]
     _, recent = moderation.player_moderation(project.root, UUID)
     assert [entry.kind for entry in recent] == ["mute"]
+
+
+def test_bound_unmute_is_offline_and_does_not_remove_the_ban(project):
+    assert moderation.run(
+        project.path, "ban", "FirstJoin", duration="1d", confirmed=True
+    )["ok"]
+    assert moderation.run(project.path, "mute", "FirstJoin", duration="1h")["ok"]
+    project.online.clear()
+    (row,) = owner_restrictions.run(project.path)["profiles"]
+    assert row["ban_until"] and row["mute_until"]
+    assert (
+        moderation.run(project.path, "unmute", "FirstJoin", profile=OTHER)["error"]
+        == "not_muted"
+    )
+    result = moderation.run(project.path, "unmute", "FirstJoin", profile=UUID)
+    assert result["ok"] and result["effect"] == "applied"
+    (row,) = owner_restrictions.run(project.path)["profiles"]
+    assert row["ban_until"] and row["mute_until"] is None
+    _, recent = moderation.player_moderation(project.root, UUID)
+    assert [entry.kind for entry in recent] == ["unmute", "mute", "ban"]
 
 
 def test_interrupted_moderation_does_not_create_phantom_history(project, monkeypatch):

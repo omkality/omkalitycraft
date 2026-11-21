@@ -27,7 +27,7 @@ internal static class OwnerTerminal
                 ssh = nativeSsh;
 
             var start = Child(ssh, "-F " + Quote(config) +
-                " -o ClearAllForwardings=yes -o ForwardAgent=no -tt omkalitycraft-vps .local/bin/omk-tui-vps-wipe-report", socket);
+                " -o ClearAllForwardings=yes -o ForwardAgent=no -tt omkalitycraft-vps .local/bin/omk-tui-vps-restrictions", socket);
             start.EnvironmentVariables["TERM"] = "xterm-256color";
             var reports = Child(ssh, "-F " + Quote(config) +
                 " -o ClearAllForwardings=yes -o ForwardAgent=no -o BatchMode=yes" +
