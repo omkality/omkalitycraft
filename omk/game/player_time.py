@@ -104,6 +104,7 @@ def _worker(target, player, policy, resources):
     }
     args = [
         "run",
+        "--rm",
         "--pull",
         "never",
         "-i",

@@ -346,6 +346,11 @@ def _add_tps_history_parser(actions):
 
 
 def _add_tui_operation_parsers(actions):
+    stats = actions.add_parser(
+        "player-stats", help="Read a private player card by nickname"
+    )
+    stats.add_argument("--server", required=True, type=_console_server)
+    stats.add_argument("--player", required=True)
     moderation = actions.add_parser("moderation", help="Owner online-player moderation")
     moderation.add_argument("--server", required=True, type=_console_server)
     moderation.add_argument(
@@ -532,8 +537,12 @@ def _execute_admin(config, args):
     return result
 
 
-def run_admin(args):
-    if args.admin_action == "world-reset" and args.result_version is None:
+def _run_tui_action(args):
+    if args.admin_action == "player-stats":
+        from omk.owner.panels.owner_player_stats import run  # noqa: PLC0415
+
+        return run(args.config, args.server, args.player)
+    if args.admin_action == "world-reset":
         from omk.owner.panels.owner_world_reset import run  # noqa: PLC0415
 
         return run(
@@ -544,7 +553,7 @@ def run_admin(args):
             catalog=args.catalog,
             dimension=args.world,
         )
-    if args.admin_action == "project-moderation" and args.result_version is None:
+    if args.admin_action == "project-moderation":
         from omk.game.project_moderation import run  # noqa: PLC0415
 
         return run(
@@ -555,7 +564,7 @@ def run_admin(args):
             reason=args.reason,
             confirmed=args.confirm_ban,
         )
-    if args.admin_action == "moderation" and args.result_version is None:
+    if args.admin_action == "moderation":
         from omk.owner.panels.owner_moderation import run  # noqa: PLC0415
 
         return run(
@@ -567,20 +576,30 @@ def run_admin(args):
             reason=args.reason,
             confirmed=args.confirm_ban,
         )
-    if args.admin_action == "tps-history" and args.result_version is None:
+    if args.admin_action == "tps-history":
         from omk.owner.panels.owner_tps_history import run  # noqa: PLC0415
 
         return run(args.config, args.server, args.window)
-    if args.admin_action == "console" and args.result_version is None:
+    if args.admin_action == "console":
         from omk.owner.panels.owner_console import run  # noqa: PLC0415
 
         return run(
             args.config, args.server, args.console_command, confirmed=args.confirm_save
         )
-    if args.admin_action == "overview" and args.result_version is None:
+    if args.admin_action == "overview":
         from omk.owner.panels.owner_overview import run  # noqa: PLC0415
 
         return run(args.config, args.server)
+    return None
+
+
+def run_admin(args):
+    """Execute a private owner command and return its result contract."""
+    if (
+        getattr(args, "result_version", None) is None
+        and (result := _run_tui_action(args)) is not None
+    ):
+        return result
     config = None
     operation = args.admin_action
     suffix = {

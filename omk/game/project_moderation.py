@@ -8,10 +8,12 @@ from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import astuple, dataclass
+from hashlib import sha256
+from pathlib import Path
 from typing import Literal
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from omk.labs.recovery.recovery_console import ConsoleError, command, online_players
 from omk.owner.admin import (
@@ -27,6 +29,9 @@ from omk.owner.panels.owner_moderation import duration_seconds
 
 DIRECTORY = "project-moderation"
 STATE = "restrictions.tsv"
+HISTORY = "moderation-history.json"
+HISTORY_LIMIT = 1024
+RECENT_LIMIT = 12
 HEADER = "omk-project-moderation-v1"
 MAX_BYTES = 65536
 MAX_SECONDS = 31536000
@@ -44,6 +49,42 @@ class Restriction:
     created: int
     expires: int
     reason: str
+
+
+class HistoryEntry(BaseModel):
+    """Record an applied change to one player's project restrictions."""
+
+    model_config = ConfigDict(extra="forbid", strict=True)
+    uuid: UUID
+    kind: Literal["ban", "mute", "unban"]
+    time: int = Field(gt=0, le=253402300799)
+    expires: int | None = Field(default=None, gt=0, le=253402300799)
+    reason: str = ""
+
+    @field_validator("reason")
+    @classmethod
+    def safe_reason(cls, value: str) -> str:
+        """Reject control sequences and oversized history reasons."""
+        if value and not _valid_reason(value):
+            raise ValueError("Invalid moderation reason")
+        return value
+
+
+class PendingEntry(BaseModel):
+    """Expose the staged event only when its corresponding restrictions are installed."""
+
+    model_config = ConfigDict(extra="forbid", strict=True)
+    restrictions_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    event: HistoryEntry
+
+
+class History(BaseModel):
+    """Bounded owner-only journal outside the directory mounted by Minecraft."""
+
+    model_config = ConfigDict(extra="forbid", strict=True)
+    schema_version: Literal[1] = 1
+    entries: list[HistoryEntry] = Field(default_factory=list, max_length=HISTORY_LIMIT)
+    pending: PendingEntry | None = None
 
 
 class Result(BaseModel):
@@ -153,6 +194,43 @@ def _snapshot(store, entries):
     return value
 
 
+def _history_entries(path: Path, snapshot: str) -> list[HistoryEntry]:
+    if not path.exists():
+        return []
+    _require_private(path, secret=True)
+    limit = 1024**2
+    with path.open("rb") as file:
+        raw = file.read(limit + 1)
+    if len(raw) > limit:
+        raise ValueError("Moderation history exceeds its size limit")
+    history = History.model_validate_json(raw)
+    if (
+        history.pending is not None
+        and history.pending.restrictions_sha256 == sha256(snapshot.encode()).hexdigest()
+    ):
+        return [*history.entries, history.pending.event][-HISTORY_LIMIT:]
+    return history.entries
+
+
+def player_moderation(
+    root: Path, uid: str
+) -> tuple[list[Restriction], list[HistoryEntry]]:
+    """Read active restrictions and recent applied events for an authenticated UUID."""
+    profile = UUID(uid)
+    with _lock(root):
+        store, entries = _read(root)
+        history_path = _private_path(root, HISTORY)
+        history = _history_entries(history_path, _snapshot(store, entries))
+    now = int(time.time())
+    active = [
+        entry for entry in entries.values() if entry.uuid == uid and entry.expires > now
+    ]
+    recent = [entry for entry in reversed(history) if entry.uuid == profile][
+        :RECENT_LIMIT
+    ]
+    return active, recent
+
+
 def initialize(root):
     """Create the shared store once. Validate and keep any existing restrictions."""
     _require_private(root, directory=True)
@@ -222,6 +300,7 @@ def _update(config, result, seconds, reason):
         ]
         if len(keys) != 1:
             raise Refused("ambiguous" if keys else "not_banned")
+        _, uid = keys[0]
         del active[keys[0]]
         expires = None
     else:
@@ -229,11 +308,32 @@ def _update(config, result, seconds, reason):
         previous = active.get(key)
         if previous and action == "ban":
             raise Refused("already_banned")
-        if not previous or previous.expires < now + seconds:
-            active[key] = Restriction(action, uid, name, now, now + seconds, reason)
+        if previous and previous.expires >= now + seconds:
+            result.expires_at = previous.expires
+            return
+        active[key] = Restriction(action, uid, name, now, now + seconds, reason)
         expires = active[key].expires
     value = _snapshot(store, active)
     path = _private_path(config.private, f"{DIRECTORY}/{STATE}")
+    history_path = _private_path(config.private, HISTORY)
+    history = History(
+        entries=_history_entries(history_path, _snapshot(store, entries))[
+            -(HISTORY_LIMIT - 1) :
+        ],
+        pending=PendingEntry(
+            restrictions_sha256=sha256(value.encode()).hexdigest(),
+            event=HistoryEntry(
+                uuid=UUID(uid),
+                kind=action,
+                time=now,
+                expires=expires,
+                reason=reason if action != "unban" else "",
+            ),
+        ),
+    )
+    # Stage the event before replacing the live file. Its hash distinguishes a
+    # completed update from a failed or interrupted write across process restarts.
+    _write_private_text(history_path, config.private, history.model_dump_json())
     result.effect = "unknown"
     _write_private_text(path, config.private, value, newline="\n")
     result.expires_at = expires

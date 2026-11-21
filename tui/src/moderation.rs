@@ -168,6 +168,13 @@ pub fn seconds(value: &str) -> Option<u64> {
         .filter(|n| *n > 0 && *n <= 31536000)
 }
 
+pub fn valid_player(player: &str) -> bool {
+    (1..=16).contains(&player.len())
+        && player
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || byte == b'_')
+}
+
 pub struct Form {
     pub action: Action,
     field: usize,
@@ -182,10 +189,10 @@ impl Form {
                 server,
                 command: command.into(),
                 player: String::new(),
-                duration: if matches!(command, "kick" | "unban" | "revoke-invite") {
-                    String::new()
-                } else {
+                duration: if matches!(command, "ban" | "mute") {
                     "10m".into()
+                } else {
+                    String::new()
                 },
                 reason: String::new(),
             },
@@ -209,7 +216,7 @@ impl Form {
             return None;
         }
         let fields = match self.action.command.as_str() {
-            "unban" | "revoke-invite" => 1,
+            "unban" | "revoke-invite" | "stats" => 1,
             "kick" => 2,
             _ => 3,
         };
@@ -226,14 +233,7 @@ impl Form {
                             .all(|byte| byte.is_ascii_hexdigit()))
                 {
                     self.error = "Введите 12 символов из списка приглашений (l).".into();
-                } else if self.action.player.is_empty()
-                    || self.action.player.len() > 16
-                    || !self
-                        .action
-                        .player
-                        .bytes()
-                        .all(|b| b.is_ascii_alphanumeric() || b == b'_')
-                {
+                } else if !valid_player(&self.action.player) {
                     self.error = "Ник: 1–16 латинских букв, цифр или _".into();
                 } else if matches!(self.action.command.as_str(), "ban" | "mute")
                     && seconds(&self.action.duration).is_none()
@@ -278,10 +278,13 @@ impl Form {
         let w = area.width.saturating_sub(4).min(80);
         let unban = self.action.command == "unban";
         let invite = self.action.command == "revoke-invite";
-        let h = if unban || invite { 10 } else { 17 }.min(area.height);
+        let stats = self.action.command == "stats";
+        let h = if unban || invite || stats { 10 } else { 17 }.min(area.height);
         let popup = Rect::new((area.width - w) / 2, (area.height - h) / 2, w, h);
         frame.render_widget(Clear, popup);
-        let title = if invite && self.confirming {
+        let title = if stats {
+            " Статистика игрока "
+        } else if invite && self.confirming {
             " Отозвать приглашение? "
         } else if invite {
             " Отзыв приглашения "
@@ -293,7 +296,12 @@ impl Form {
             " Модерация игрока "
         };
         let cursor = |field| if self.field == field { ">" } else { " " };
-        let body = if invite {
+        let body = if stats {
+            format!(
+                "\n> Ник: {}\n{}\n\nEnter — посмотреть · Esc — отмена",
+                self.action.player, self.error
+            )
+        } else if invite {
             let instruction = if !self.confirming {
                 "Введите номер из списка приглашений (l). Enter — продолжить."
             } else if self.yes {

@@ -265,6 +265,11 @@ fn interactive(
                             app.scroll = 0;
                             app.message = v.message();
                         }
+                        Ok(Reply::PlayerStats(v)) => {
+                            app.failed = !v.ok;
+                            app.scroll = 0;
+                            app.message = v.message();
+                        }
                         Ok(Reply::Invitation(v)) => {
                             app.failed = !v.ok;
                             app.scroll = 0;
@@ -373,12 +378,21 @@ fn interactive(
                     app.moderation = None;
                 } else if let Some(a) = app.moderation.as_mut().and_then(|f| f.key(key.code)) {
                     if let Some(b) = &backend {
-                        drop(pending.take()); // Cancel an in-flight read before starting one mutation.
-                        app.message =
-                            format!("Отправка: {} · {} · {}", a.scope(), a.command, a.player);
+                        drop(pending.take());
                         app.failed = false;
                         app.scroll = 0;
-                        pending = Some(Pending::start(b.clone(), Request::Moderation(a)));
+                        let request = if a.command == "stats" {
+                            app.message = format!("Загружается статистика {}…", a.player);
+                            Request::PlayerStats {
+                                server: a.server,
+                                player: a.player,
+                            }
+                        } else {
+                            app.message =
+                                format!("Отправка: {} · {} · {}", a.scope(), a.command, a.player);
+                            Request::Moderation(a)
+                        };
+                        pending = Some(Pending::start(b.clone(), request));
                         next_refresh = Instant::now() + Duration::from_secs(5);
                     }
                     app.moderation = None;
@@ -484,7 +498,7 @@ fn interactive(
                             next_refresh = Instant::now() + Duration::from_secs(5);
                         }
                     }
-                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'u' | 'o'))
+                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'u' | 'o' | 's'))
                         if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
                     {
                         app.moderation = app.server().map(|s| {
@@ -495,6 +509,7 @@ fn interactive(
                                     'b' => "ban",
                                     'u' => "unban",
                                     'o' => "revoke-invite",
+                                    's' => "stats",
                                     _ => "mute",
                                 },
                             )
@@ -625,6 +640,7 @@ fn shortcut_key(code: KeyCode) -> KeyCode {
         'д' => 'l',
         'щ' => 'o',
         'с' => 'c',
+        'ы' => 's',
         _ => character,
     };
     KeyCode::Char(mapped)

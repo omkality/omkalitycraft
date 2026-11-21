@@ -1,5 +1,6 @@
 use crate::protocol::{
-    ConsoleResult, InvitationResult, Overview, TpsHistory, TpsWindow, valid_server,
+    ConsoleResult, InvitationResult, Overview, PlayerStatsResult, TpsHistory, TpsWindow,
+    valid_server,
 };
 use std::{
     ffi::OsString,
@@ -28,6 +29,7 @@ pub struct Backend {
 pub enum Request {
     Overview(Option<String>, TpsWindow),
     Console { server: String, command: String },
+    PlayerStats { server: String, player: String },
     Moderation(crate::moderation::Action),
     Invite,
     WorldReset(crate::world_reset::Request),
@@ -35,6 +37,7 @@ pub enum Request {
 pub enum Reply {
     Overview(Overview, Option<Result<TpsHistory, String>>),
     Console(ConsoleResult),
+    PlayerStats(PlayerStatsResult),
     Moderation(crate::moderation::Receipt),
     Invitation(InvitationResult),
     WorldReset(crate::world_reset::Receipt),
@@ -212,6 +215,12 @@ impl Backend {
                     command.args(["--confirm", confirmation]);
                 }
             }
+            Request::PlayerStats { server, player } => {
+                if !valid_server(server) || !crate::moderation::valid_player(player) {
+                    return Err("Неверный запрос статистики игрока".into());
+                }
+                command.args(["player-stats", "--server", server, "--player", player]);
+            }
             Request::Moderation(a) => {
                 if !valid_server(&a.server)
                     || !matches!(
@@ -270,6 +279,7 @@ impl Backend {
         let timeout = match &request {
             Request::WorldReset(a) if a.mutating() => 24 * 60 * 60,
             Request::Moderation(_) => 25,
+            Request::PlayerStats { .. } => 300,
             _ => 15,
         };
         let (bytes, success) = capture(command, &cancel, Duration::from_secs(timeout))?;
@@ -288,6 +298,11 @@ impl Backend {
                 let value = crate::moderation::Receipt::parse(&bytes, &a)?;
                 let ok = value.ok;
                 (Reply::Moderation(value), ok)
+            }
+            Request::PlayerStats { server, player } => {
+                let value = PlayerStatsResult::parse(&bytes, &server, &player)?;
+                let ok = value.ok;
+                (Reply::PlayerStats(value), ok)
             }
             Request::Overview(server, window) => {
                 let value = Overview::parse(&bytes)?;

@@ -75,6 +75,37 @@ fn console_requires_correlation_and_safe_text() {
 }
 
 #[test]
+fn player_stats_uses_nickname_only_and_rejects_unbound_output() {
+    assert_eq!(shortcut_key(KeyCode::Char('ы')), KeyCode::Char('s'));
+    let mut form = moderation::Form::new("dj2".into(), "stats");
+    assert!(form.key(KeyCode::Enter).is_none());
+    for c in "FirstJoin".chars() {
+        assert!(form.key(KeyCode::Char(c)).is_none());
+    }
+    let action = form.key(KeyCode::Enter).unwrap();
+    assert_eq!(action.player, "FirstJoin");
+    assert_eq!(action.command, "stats");
+    assert!(action.duration.is_empty() && action.reason.is_empty());
+    assert!(!form.confirming);
+
+    let base = serde_json::json!({
+        "schema_version": 1, "action": "owner.player-stats", "server_id": "dj2",
+        "player": "FirstJoin", "ok": true, "output": "Наиграно · 1 ч", "error": null,
+    });
+    let parse = |value: &serde_json::Value, player| {
+        protocol::PlayerStatsResult::parse(&serde_json::to_vec(value).unwrap(), "dj2", player)
+    };
+    assert_eq!(
+        parse(&base, "FirstJoin").unwrap().message(),
+        "Наиграно · 1 ч"
+    );
+    assert!(parse(&base, "Other").is_err());
+    let mut unsafe_output = base;
+    unsafe_output["output"] = serde_json::json!("\u{1b}[2J");
+    assert!(parse(&unsafe_output, "FirstJoin").is_err());
+}
+
+#[test]
 fn renders_resizes_and_keeps_unknown_distinct_from_zero() {
     let mut app = App::new(true);
     app.accept(Overview::parse(&serde_json::to_vec(&demo()).unwrap()).unwrap());
@@ -373,6 +404,22 @@ fn real_python_cli_reads_an_isolated_config_without_writes() {
             assert_eq!(v.metrics_status, "disabled");
         }
         _ => panic!("Wrong reply"),
+    }
+    match b
+        .request(
+            Request::PlayerStats {
+                server: "dj2".into(),
+                player: "FirstJoin".into(),
+            },
+            Arc::new(AtomicBool::new(false)),
+        )
+        .unwrap()
+    {
+        Reply::PlayerStats(v) => {
+            assert!(!v.ok);
+            assert_eq!(v.message(), "Не удалось проверить профиль игрока.");
+        }
+        _ => panic!("Wrong player stats reply"),
     }
     assert_eq!(std::fs::read_dir(private).unwrap().count(), 1);
 }
