@@ -96,10 +96,8 @@ def run(path, server, action, *, confirmed=False):
     effect = "none"
     try:
         config = load_operator_config(path)
-        if (
-            server not in config.servers
-            or (action not in COMMANDS
-            and action not in VIEWS)
+        if server not in config.servers or (
+            action not in COMMANDS and action not in VIEWS
         ):
             raise ValueError("Unknown console action or server")
         if action == "save" and not confirmed:
