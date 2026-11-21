@@ -2,7 +2,10 @@ from omk.game import (
     project_moderation as moderation,
     project_permanent_bans as permanent,
 )
-from omk.owner.panels import owner_console as console
+from omk.owner.panels import (
+    owner_console as console,
+    owner_restrictions,
+)
 from tests.fixtures.unit.game.project_moderation import UUID, project
 from tests.fixtures.unit.game.project_permanent_bans import ACCOUNT, drasl
 
@@ -74,7 +77,8 @@ def test_lost_drasl_reply_keeps_ownership_and_only_records_confirmed_changes(dra
     assert len(history) == 1 and history[0].kind == "ban"
 
 
-def test_perm_is_for_bans_and_keeps_existing_temporary_restrictions(drasl):
+def test_perm_replaces_a_temporary_ban_and_preserves_a_mute(drasl):
+    path = drasl.project.path
     assert (
         moderation.run(drasl.project.path, "mute", "FirstJoin", duration="perm")[
             "error"
@@ -82,14 +86,37 @@ def test_perm_is_for_bans_and_keeps_existing_temporary_restrictions(drasl):
         == "invalid_request"
     )
     assert moderation.run(
-        drasl.project.path,
+        path,
         "ban",
         "FirstJoin",
         duration="10m",
         confirmed=True,
     )["ok"]
-    assert _ban(drasl)["error"] == "already_banned"
-    assert not drasl.calls
+    assert moderation.run(path, "mute", "FirstJoin", duration="1h")["ok"]
+    assert _ban(drasl)["ok"]
+    active, recent = moderation.player_moderation(drasl.project.root, UUID)
+    assert [(entry.kind, entry.expires) for entry in active] == [
+        ("ban", None),
+        ("mute", 1_800_003_600),
+    ]
+    assert sum(entry.kind == "ban" for entry in recent) == 2
+    snapshot = owner_restrictions.run(path)
+    assert snapshot["ok"] and snapshot["profiles"] == [
+        {
+            "profile": UUID,
+            "player": "FirstJoin",
+            "ban_until": None,
+            "permanent": True,
+            "lock_pending": False,
+            "mute_until": 1_800_003_600,
+        }
+    ]
+    assert moderation.run(path, "unban", "FirstJoin", profile=UUID)["ok"]
+    assert not drasl.user["isLocked"]
+    _, stored = moderation._read(drasl.project.root)
+    assert set(stored) == {("mute", UUID)}
+    assert moderation.run(path, "unmute", "FirstJoin", profile=UUID)["ok"]
+    assert owner_restrictions.run(path)["profiles"] == []
 
 
 def test_project_roster_excludes_banned_profile_even_if_reported_online(

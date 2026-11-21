@@ -16,7 +16,7 @@ const ACCENT: Color = Color::Rgb(114, 205, 220);
 const WARN: Color = Color::Rgb(237, 184, 104);
 const ERROR: Color = Color::Rgb(235, 114, 119);
 const STATS_ERROR_DURATION: Duration = Duration::from_secs(5);
-const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\n4  Бессрочные баны\nk / b / m / u  Модерация игроков\ns  Статистика игрока\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
+const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\n4  Ограничения игроков\nk / b / m / u / n  Модерация игроков\ns  Статистика игрока\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
 
 pub enum Confirmation {
     Save(String),
@@ -52,6 +52,7 @@ pub struct App {
     pub demo: bool,
     pub confirm: Option<Confirmation>,
     pub moderation: Option<crate::moderation::Form>,
+    pub restrictions: Option<crate::restrictions::Panel>,
     pub world_reset: Option<crate::world_reset::Form>,
     pub resetting: Option<&'static str>,
     animation_start: Instant,
@@ -77,6 +78,7 @@ impl App {
             demo,
             confirm: None,
             moderation: None,
+            restrictions: None,
             world_reset: None,
             resetting: None,
             animation_start: Instant::now(),
@@ -95,8 +97,24 @@ impl App {
 
     pub fn show_section(&mut self, command: String, message: String) {
         self.section = Some((command, CommandPage::new(message)));
+        self.restrictions = None;
         self.detail = None;
         self.clear_stats_error();
+    }
+
+    pub fn show_restrictions(&mut self, snapshot: Option<crate::restrictions::Snapshot>) {
+        self.section = None;
+        self.detail = None;
+        self.clear_stats_error();
+        self.restrictions.get_or_insert_default().update(snapshot);
+    }
+
+    pub fn restrictions_panel(&mut self) -> Option<&mut crate::restrictions::Panel> {
+        if self.detail.is_some() {
+            None
+        } else {
+            self.restrictions.as_mut()
+        }
     }
 
     pub fn show_forge_tps(&mut self, server: &str, output: &str) {
@@ -158,18 +176,26 @@ impl App {
             }
             return true;
         }
-        self.confirm.take().is_some() || self.range_picker.take().is_some()
+        self.confirm.take().is_some()
+            || self.range_picker.take().is_some()
+            || self
+                .restrictions_panel()
+                .is_some_and(crate::restrictions::Panel::cancel_search)
     }
 
     pub fn back_or_confirm_exit(&mut self) {
         self.clear_stats_error();
-        if self.detail.take().is_none() && self.section.take().is_none() {
+        if self.detail.take().is_none()
+            && self.section.take().is_none()
+            && self.restrictions.take().is_none()
+        {
             self.confirm = Some(Confirmation::Exit { approved: false });
         }
     }
 
     fn at_menu(&self) -> bool {
         self.section.is_none()
+            && self.restrictions.is_none()
             && self.detail.is_none()
             && self.confirm.is_none()
             && self.range_picker.is_none()
@@ -463,9 +489,15 @@ fn exit_prompt(approved: bool) -> String {
 }
 
 fn render_commands(frame: &mut Frame, area: Rect, app: &mut App) {
-    let panel = block(" Команды · 1/2/3/4 · k/b/m/u/s · w вайп ");
+    let panel = block(" Команды · 1/2/3/4 · k/b/m/u/n/s · w вайп ");
     let mut content = panel.inner(area);
     frame.render_widget(panel, area);
+    if app.resetting.is_none()
+        && let Some(restrictions) = app.restrictions_panel()
+    {
+        restrictions.draw(frame, content);
+        return;
+    }
     if let Some(error) = app.stats_error(Instant::now()) {
         let rows = Layout::vertical([Constraint::Min(1), Constraint::Length(2)]).split(content);
         content = rows[0];

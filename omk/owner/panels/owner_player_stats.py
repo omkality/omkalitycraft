@@ -13,7 +13,7 @@ from omk.owner.admin import _client, load_operator_config
 from omk.owner.admin_maintenance import credential
 from omk.owner.owner_result import ServerId
 
-_OPERATIONS = {"ban": "Бан", "mute": "Мут", "unban": "Разбан"}
+_OPERATIONS = {"ban": "Бан", "mute": "Мут", "unban": "Разбан", "unmute": "Размут"}
 _EPOCH = datetime(1970, 1, 1, tzinfo=UTC)
 
 

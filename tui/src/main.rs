@@ -2,13 +2,14 @@ mod backend;
 mod branding;
 mod moderation;
 mod protocol;
+mod restrictions;
 mod startup;
 mod tps_grid;
 mod ui;
 mod wipe_report;
 mod world_reset;
 
-use backend::{Backend, Reply, Request};
+use backend::{Backend, ModerationRefresh, Reply, Request};
 use ratatui::{
     Terminal,
     backend::TestBackend,
@@ -58,7 +59,7 @@ fn options() -> Result<Option<Options>, String> {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / u unban / s statistics / i invite / r refresh / t period\nEsc goes back; from the main menu it asks before closing.\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / 1 players / 2 TPS / 3 save / 4 restrictions / k kick / b ban / m mute / u unban / n unmute / s statistics / i invite / r refresh / t period\nEsc goes back; from the main menu it asks before closing.\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
@@ -298,11 +299,21 @@ fn interactive(
                             app.set_menu_message("Обзор недоступен. Проверьте настройки админки и права.\nr — повторить чтение.".into());
                         }
                         Ok(Reply::Moderation(v, section)) => {
-                            if let Some((command, message)) = section {
-                                app.refresh_section(&command, message);
+                            match section {
+                                Some(ModerationRefresh::Membership(command, message)) => {
+                                    app.refresh_section(&command, message);
+                                }
+                                Some(ModerationRefresh::Restrictions(snapshot)) => {
+                                    app.show_restrictions(snapshot);
+                                }
+                                None => {}
                             }
                             app.failed = !v.ok;
                             app.show_detail(v.message());
+                        }
+                        Ok(Reply::Restrictions(snapshot)) => {
+                            app.failed = !snapshot.ok;
+                            app.show_restrictions(Some(snapshot));
                         }
                         Ok(Reply::PlayerStats(v)) => {
                             let ok = v.ok;
@@ -487,7 +498,9 @@ fn interactive(
                                 a.command,
                                 a.player
                             ));
-                            let refresh = if a.permanent_ban() || a.command == "unban" {
+                            let refresh = if app.restrictions.is_some() {
+                                Some("restrictions".into())
+                            } else if a.permanent_ban() || a.command == "unban" {
                                 app.membership_section().map(str::to_owned)
                             } else {
                                 None
@@ -567,6 +580,24 @@ fn interactive(
                     }
                     _ => {}
                 }
+            } else if let Some(panel) = app.restrictions_panel() {
+                let idle = pending.as_ref().is_none_or(|work| work.overview);
+                match panel.key(key.code, shortcut, idle) {
+                    Some(restrictions::Input::Refresh) => {
+                        drop(pending.take());
+                        request = Some(Request::Restrictions);
+                    }
+                    Some(restrictions::Input::Restore {
+                        command,
+                        player,
+                        profile,
+                    }) => {
+                        app.moderation = app.server().map(|server| {
+                            moderation::Form::for_profile(server.into(), command, player, profile)
+                        });
+                    }
+                    None => {}
+                }
             } else {
                 #[cfg(windows)]
                 let clipboard_idle = clipboard_copy.is_none();
@@ -594,7 +625,7 @@ fn interactive(
                             next_refresh = Instant::now() + Duration::from_secs(5);
                         }
                     }
-                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'u' | 'o' | 's'))
+                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'u' | 'n' | 'o' | 's'))
                         if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
                     {
                         app.moderation = app.server().map(|s| {
@@ -604,6 +635,7 @@ fn interactive(
                                     'k' => "kick",
                                     'b' => "ban",
                                     'u' => "unban",
+                                    'n' => "unmute",
                                     'o' => "revoke-invite",
                                     's' => "stats",
                                     _ => "mute",
@@ -663,12 +695,13 @@ fn interactive(
                             if app.server().is_some() {
                                 app.confirm = Some(Confirmation::Save(String::new()));
                             }
+                        } else if c == '4' {
+                            request = Some(Request::Restrictions);
                         } else {
                             request = app.server().map(|s| Request::Console {
                                 server: s.into(),
                                 command: match c {
                                     '1' => "roster",
-                                    '4' => "permanent-bans",
                                     'l' => "invites",
                                     _ => "tps",
                                 }
@@ -680,7 +713,8 @@ fn interactive(
                 }
             }
         }
-        if pending.is_none()
+        if request.is_none()
+            && pending.is_none()
             && app.confirm.is_none()
             && app.range_picker.is_none()
             && app.moderation.is_none()
@@ -760,6 +794,8 @@ fn shortcut_key(code: KeyCode) -> KeyCode {
         'и' => 'b',
         'ь' => 'm',
         'г' => 'u',
+        'т' => 'n',
+        'а' => 'f',
         'д' => 'l',
         'щ' => 'o',
         'ы' => 's',

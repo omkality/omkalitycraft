@@ -346,6 +346,9 @@ def _add_tps_history_parser(actions):
 
 
 def _add_tui_operation_parsers(actions):
+    actions.add_parser(
+        "project-restrictions", help="List active project-wide bans and mutes"
+    )
     stats = actions.add_parser(
         "player-stats", help="Read a private player card by nickname"
     )
@@ -368,12 +371,15 @@ def _add_tui_operation_parsers(actions):
         "--command",
         required=True,
         dest="moderation_command",
-        choices=["init", "ban", "mute", "unban", "revoke-invite"],
+        choices=["init", "ban", "mute", "unban", "unmute", "revoke-invite"],
     )
     project.add_argument("--player", default="")
     project.add_argument("--duration", default="")
     project.add_argument("--reason", default="")
     project.add_argument("--confirm-ban", action="store_true")
+    project.add_argument(
+        "--profile", help="Bind removal to a selected game profile UUID"
+    )
     world_reset = actions.add_parser(
         "world-reset", help="Manual staged world reset for the owner TUI"
     )
@@ -546,6 +552,11 @@ def _execute_admin(config, args):
 
 
 def _run_tui_action(args):
+    result = None
+    if args.admin_action == "project-restrictions":
+        from omk.owner.panels.owner_restrictions import run  # noqa: PLC0415
+
+        result = run(args.config)
     if args.admin_action == "player-stats":
         from omk.owner.panels.owner_player_stats import run  # noqa: PLC0415
 
@@ -571,6 +582,7 @@ def _run_tui_action(args):
             duration=args.duration,
             reason=args.reason,
             confirmed=args.confirm_ban,
+            profile=args.profile,
         )
     if args.admin_action == "moderation":
         from omk.owner.panels.owner_moderation import run  # noqa: PLC0415
@@ -598,7 +610,7 @@ def _run_tui_action(args):
         from omk.owner.panels.owner_overview import run  # noqa: PLC0415
 
         return run(args.config, args.server)
-    return None
+    return result
 
 
 def run_admin(args):

@@ -38,6 +38,7 @@ MAX_BYTES = 65536
 MAX_SECONDS = 31536000
 NAME = re.compile(r"[A-Za-z0-9_]{1,16}")
 TIMESTAMP = re.compile(r"[1-9][0-9]{0,11}")
+REVERSALS = {"unban": "ban", "unmute": "mute"}
 
 
 @dataclass(frozen=True)
@@ -57,7 +58,7 @@ class HistoryEntry(BaseModel):
 
     model_config = ConfigDict(extra="forbid", strict=True)
     uuid: UUID
-    kind: Literal["ban", "mute", "unban"]
+    kind: Literal["ban", "mute", "unban", "unmute"]
     time: int = Field(gt=0, le=253402300799)
     expires: int | None = Field(default=None, gt=0, le=253402300799)
     reason: str = ""
@@ -94,7 +95,7 @@ class Result(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
     schema_version: Literal[1] = 1
     action: Literal["owner.project-moderation"] = "owner.project-moderation"
-    command: Literal["init", "ban", "mute", "unban", "revoke-invite"]
+    command: Literal["init", "ban", "mute", "unban", "unmute", "revoke-invite"]
     player: str = Field(max_length=16)
     ok: bool = False
     effect: Literal["none", "applied", "unknown"] = "none"
@@ -106,6 +107,7 @@ class Result(BaseModel):
             "player_offline",
             "ambiguous",
             "not_banned",
+            "not_muted",
             "already_banned",
             "inconsistent_servers",
             "profile_not_found",
@@ -237,7 +239,10 @@ def player_moderation(
     if ban := permanent.bans.get(profile):
         if ban.stage != "active":
             raise Refused("unavailable")
-        active.append(Restriction("ban", uid, ban.player, ban.time, None, ban.reason))
+        active = [
+            Restriction("ban", uid, ban.player, ban.time, None, ban.reason),
+            *(entry for entry in active if entry.kind != "ban"),
+        ]
     recent = sorted(
         (
             entry
@@ -304,7 +309,25 @@ def _find_player(config, store, player, result):
     return next(iter(matches.items()))
 
 
-def _update(config, result, seconds, reason):
+def _discard_temporary_ban(root, store, entries, profile, result):
+    """Drop the replaced temporary ban once the project lock owns the profile."""
+    key = ("ban", str(profile))
+    if key not in entries:
+        return
+    path = _private_path(root, HISTORY)
+    history = _history(path, _snapshot(store, entries))
+    updated = {k: entry for k, entry in entries.items() if k != key}
+    _write_private_text(path, root, history.model_dump_json())
+    result.effect = "unknown"
+    _write_private_text(
+        _private_path(root, f"{DIRECTORY}/{STATE}"),
+        root,
+        _snapshot(store, updated),
+        newline="\n",
+    )
+
+
+def _update(config, result, seconds, reason, profile):
     from omk.game.project_permanent_bans import load, update  # noqa: PLC0415
 
     action, player = result.command, result.player
@@ -314,13 +337,27 @@ def _update(config, result, seconds, reason):
     if (action == "ban" and seconds is None) or (
         action == "unban"
         and any(
-            b.player.casefold() == player.casefold() for b in permanent.bans.values()
+            b.player.casefold() == player.casefold()
+            and (profile is None or str(b.uuid) == profile)
+            for b in permanent.bans.values()
         )
     ):
+
+        def discard_temporary(uuid):
+            _discard_temporary_ban(config.private, store, entries, uuid, result)
+
         with account_lock(config):
-            update(config, result, permanent, permanent_path, entries, reason)
+            update(
+                config,
+                result,
+                permanent,
+                permanent_path,
+                discard_temporary,
+                reason,
+                profile,
+            )
         return
-    if action != "unban":
+    if action not in REVERSALS:
         uid, name = _find_player(config, store, player, result)
         if action == "ban" and UUID(uid) in permanent.bans:
             raise Refused("already_banned")
@@ -330,14 +367,21 @@ def _update(config, result, seconds, reason):
         for key, entry in entries.items()
         if entry.expires is not None and entry.expires > now
     }
-    if action == "unban":
+    if action in REVERSALS:
         keys = [
             key
             for key, entry in active.items()
-            if entry.kind == "ban" and entry.player.lower() == player.lower()
+            if entry.kind == REVERSALS[action]
+            and (
+                entry.player.casefold() == player.casefold()
+                if profile is None
+                else entry.uuid == profile
+            )
         ]
+        if not keys:
+            raise Refused("not_banned" if action == "unban" else "not_muted")
         if len(keys) != 1:
-            raise Refused("ambiguous" if keys else "not_banned")
+            raise Refused("ambiguous")
         _, uid = keys[0]
         del active[keys[0]]
         expires = None
@@ -362,7 +406,7 @@ def _update(config, result, seconds, reason):
             kind=action,
             time=now,
             expires=expires,
-            reason=reason if action != "unban" else "",
+            reason="" if action in REVERSALS else reason,
         ),
     )
     # Stage the event before replacing the live file. Its hash distinguishes a
@@ -373,11 +417,36 @@ def _update(config, result, seconds, reason):
     result.expires_at = expires
 
 
-def run(path, action, player, *, duration="", reason="", confirmed=False):
+def _requested_seconds(action, player, duration, reason, confirmed):
+    if (
+        not NAME.fullmatch(player)
+        or not _valid_reason(reason)
+        or (action == "ban" and not confirmed)
+        or (action in REVERSALS and duration)
+    ):
+        raise Refused("invalid_request")
+    if action in REVERSALS:
+        return 0
+    if action == "ban" and duration == "perm":
+        return None
+    try:
+        return duration_seconds(duration)
+    except ValueError:
+        raise Refused("invalid_request") from None
+
+
+def run(path, action, player, *, duration="", reason="", confirmed=False, profile=None):
     """Apply a project-wide restriction or revoke an unused invitation."""
     result = Result(command=action, player=player[:16])
     try:
         config = load_operator_config(path)
+        if profile is not None:
+            try:
+                _uuid(profile)
+            except ValueError:
+                raise Refused("invalid_request") from None
+            if action not in REVERSALS:
+                raise Refused("invalid_request")
         if action == "init":
             if player or duration or reason or confirmed:
                 raise Refused("invalid_request")
@@ -396,22 +465,9 @@ def run(path, action, player, *, duration="", reason="", confirmed=False):
             result.effect = "applied" if changed else "none"
         else:
             reason = reason or "Owner moderation"
-            if (
-                not NAME.fullmatch(player)
-                or not _valid_reason(reason)
-                or (action == "ban" and not confirmed)
-                or (action == "unban" and duration)
-            ):
-                raise Refused("invalid_request")
-            try:
-                if action == "ban" and duration == "perm":
-                    seconds = None
-                else:
-                    seconds = 0 if action == "unban" else duration_seconds(duration)
-            except ValueError:
-                raise Refused("invalid_request") from None
+            seconds = _requested_seconds(action, player, duration, reason, confirmed)
             with _lock(config.private):
-                _update(config, result, seconds, reason)
+                _update(config, result, seconds, reason, profile)
             result.effect = "applied"
         result.ok = True
     except Refused as error:
