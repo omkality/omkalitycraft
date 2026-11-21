@@ -202,14 +202,18 @@ impl Form {
             error: String::new(),
         }
     }
+    pub fn dismiss_confirmation(&mut self) -> bool {
+        self.yes = false;
+        std::mem::take(&mut self.confirming)
+    }
+
     pub fn key(&mut self, key: KeyCode) -> Option<Action> {
         if self.confirming {
             match key {
                 KeyCode::Left | KeyCode::Right | KeyCode::Tab => self.yes = !self.yes,
                 KeyCode::Enter if self.yes => return Some(self.action.clone()),
                 KeyCode::Enter => {
-                    self.confirming = false;
-                    self.yes = false;
+                    self.dismiss_confirmation();
                 }
                 _ => {}
             }
@@ -315,7 +319,7 @@ impl Form {
             )
         } else if self.confirming {
             format!(
-                "\nОбласть: {}\nИгрок: {}\nБан на: {}\nПричина: {}\n\n{}\n\n← → / Tab — выбор · Enter — принять · Esc — отмена",
+                "\nОбласть: {}\nИгрок: {}\nБан на: {}\nПричина: {}\n\n{}\n\n← → / Tab — выбор · Enter — принять · Esc — назад",
                 self.action.scope(),
                 self.action.player,
                 self.action.duration,

@@ -120,8 +120,8 @@ fn failed_player_lookup_keeps_the_roster_and_the_error_expires() {
     .message();
     let roster = "Игроки проекта\n\nFirstJoin\nSecondJoin";
     let mut app = App::new(false);
-    app.message = roster.into();
-    app.scroll = 1;
+    app.show_section(roster.into());
+    app.command_page_mut().scroll = 1;
     let mut terminal = Terminal::new(TestBackend::new(84, 28)).unwrap();
     let mut render = |app: &mut App| {
         terminal.draw(|f| ui::draw(f, app)).unwrap();
@@ -140,18 +140,61 @@ fn failed_player_lookup_keeps_the_roster_and_the_error_expires() {
     assert!(active.contains("FirstJoin") && active.contains("SecondJoin"));
     assert!(active.contains("Ошибка · Игрок MissingProfile"));
     assert!(!app.failed);
-    assert_eq!(app.message, roster);
-    assert_eq!(app.scroll, 1);
+    assert_eq!(app.command_page().message, roster);
+    assert_eq!(app.command_page().scroll, 1);
 
     app.finish_player_stats(Err(error), now - Duration::from_secs(5));
     let expired = render(&mut app);
     assert!(expired.contains("FirstJoin") && expired.contains("SecondJoin"));
     assert!(!expired.contains("MissingProfile"));
-    assert_eq!(app.scroll, 1);
+    assert_eq!(app.command_page().scroll, 1);
 
     app.finish_player_stats(Ok("Карточка FirstJoin".into()), now);
     assert!(render(&mut app).contains("Карточка FirstJoin"));
-    assert_eq!(app.scroll, 0);
+    assert_eq!(app.command_page().scroll, 0);
+}
+
+#[test]
+fn escape_returns_one_level_and_only_the_menu_opens_exit_confirmation() {
+    let mut app = App::new(false);
+    let menu = app.command_page().message.clone();
+    app.show_section("Игроки проекта\nMember".into());
+    app.command_page_mut().scroll = 7;
+    app.finish_player_stats(Ok("Карточка Member".into()), Instant::now());
+    app.back_or_confirm_exit();
+    assert_eq!(app.command_page().message, "Игроки проекта\nMember");
+    assert_eq!(app.command_page().scroll, 7);
+    assert!(app.confirm.is_none());
+
+    let mut form = moderation::Form::new("dj2".into(), "ban");
+    for c in "Member".chars() {
+        form.key(KeyCode::Char(c));
+    }
+    form.key(KeyCode::Enter);
+    form.key(KeyCode::Right);
+    assert!(form.confirming);
+    app.moderation = Some(form);
+    assert!(app.dismiss_dialog());
+    let form = app.moderation.as_mut().unwrap();
+    assert!(!form.confirming);
+    assert_eq!(form.action.player, "Member");
+    assert!(form.key(KeyCode::Enter).is_none());
+    assert!(form.key(KeyCode::Enter).is_none());
+    assert!(app.dismiss_dialog());
+    assert!(app.moderation.is_none());
+    assert_eq!(app.command_page().scroll, 7);
+
+    app.back_or_confirm_exit();
+    assert_eq!(app.command_page().message, menu);
+    assert!(app.confirm.is_none());
+    app.back_or_confirm_exit();
+    assert!(matches!(
+        app.confirm,
+        Some(Confirmation::Exit { approved: false })
+    ));
+    assert!(app.dismiss_dialog());
+    assert_eq!(app.command_page().message, menu);
+    assert!(app.confirm.is_none());
 }
 
 #[test]
