@@ -29,11 +29,11 @@ note = "Свободное место указано с запасом для о
 [servers.requirements.minimum]
 cpu = "Core i5-4460 / Ryzen 3 1200"
 ram_gb = 8
-graphics = "Intel HD 4600 / GeForce GTX 750"
+graphics = "Intel HD 4600 / GTX 750"
 storage_gb = 10
 
 [servers.requirements.recommended]
 cpu = "Core i5-10400 / Ryzen 5 3600"
 ram_gb = 16
-graphics = "GeForce GTX 1650 / Radeon RX 570"
+graphics = "GTX 1650 / RX 570"
 storage_gb = 20
