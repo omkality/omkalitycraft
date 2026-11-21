@@ -106,6 +106,55 @@ fn player_stats_uses_nickname_only_and_rejects_unbound_output() {
 }
 
 #[test]
+fn failed_player_lookup_keeps_the_roster_and_the_error_expires() {
+    let missing = serde_json::json!({
+        "schema_version": 1, "action": "owner.player-stats", "server_id": "dj2",
+        "player": "MissingProfile", "ok": false, "output": "", "error": "profile_not_found",
+    });
+    let error = protocol::PlayerStatsResult::parse(
+        &serde_json::to_vec(&missing).unwrap(),
+        "dj2",
+        "MissingProfile",
+    )
+    .unwrap()
+    .message();
+    let roster = "Игроки проекта\n\nFirstJoin\nSecondJoin";
+    let mut app = App::new(false);
+    app.message = roster.into();
+    app.scroll = 1;
+    let mut terminal = Terminal::new(TestBackend::new(84, 28)).unwrap();
+    let mut render = |app: &mut App| {
+        terminal.draw(|f| ui::draw(f, app)).unwrap();
+        terminal
+            .backend()
+            .buffer()
+            .content
+            .iter()
+            .map(|cell| cell.symbol())
+            .collect::<String>()
+    };
+
+    let now = Instant::now();
+    app.finish_player_stats(Err(error.clone()), now);
+    let active = render(&mut app);
+    assert!(active.contains("FirstJoin") && active.contains("SecondJoin"));
+    assert!(active.contains("Ошибка · Игрок MissingProfile"));
+    assert!(!app.failed);
+    assert_eq!(app.message, roster);
+    assert_eq!(app.scroll, 1);
+
+    app.finish_player_stats(Err(error), now - Duration::from_secs(5));
+    let expired = render(&mut app);
+    assert!(expired.contains("FirstJoin") && expired.contains("SecondJoin"));
+    assert!(!expired.contains("MissingProfile"));
+    assert_eq!(app.scroll, 1);
+
+    app.finish_player_stats(Ok("Карточка FirstJoin".into()), now);
+    assert!(render(&mut app).contains("Карточка FirstJoin"));
+    assert_eq!(app.scroll, 0);
+}
+
+#[test]
 fn renders_resizes_and_keeps_unknown_distinct_from_zero() {
     let mut app = App::new(true);
     app.accept(Overview::parse(&serde_json::to_vec(&demo()).unwrap()).unwrap());

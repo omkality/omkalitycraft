@@ -111,10 +111,12 @@ struct Pending {
     handle: Option<thread::JoinHandle<()>>,
     mutating: bool,
     resetting: bool,
+    player_stats: bool,
 }
 impl Pending {
     fn start(backend: Backend, request: Request) -> Self {
         let resetting = matches!(&request, Request::WorldReset(_));
+        let player_stats = matches!(&request, Request::PlayerStats { .. });
         let mutating = matches!(&request, Request::WorldReset(a) if a.mutating())
             || matches!(&request, Request::Console { command, .. } if command == "save")
             || matches!(&request, Request::Moderation(_) | Request::Invite);
@@ -130,6 +132,7 @@ impl Pending {
             handle: Some(handle),
             mutating,
             resetting,
+            player_stats,
         }
     }
 }
@@ -266,9 +269,12 @@ fn interactive(
                             app.message = v.message();
                         }
                         Ok(Reply::PlayerStats(v)) => {
-                            app.failed = !v.ok;
-                            app.scroll = 0;
-                            app.message = v.message();
+                            let ok = v.ok;
+                            let message = v.message();
+                            app.finish_player_stats(
+                                if ok { Ok(message) } else { Err(message) },
+                                Instant::now(),
+                            );
                         }
                         Ok(Reply::Invitation(v)) => {
                             app.failed = !v.ok;
@@ -321,11 +327,25 @@ fn interactive(
                                 )
                             };
                         }
+                        Err(_) if work.player_stats => {
+                            app.finish_player_stats(
+                                Err("Не удалось загрузить статистику.".into()),
+                                Instant::now(),
+                            );
+                        }
                         Err(error) => {
                             app.failed = true;
                             app.message = format!("{error}\n\nАвтоматической отправки команд нет.");
                         }
                     }
+                    pending = None;
+                    app.loading = false;
+                }
+                Err(mpsc::TryRecvError::Disconnected) if work.player_stats => {
+                    app.finish_player_stats(
+                        Err("Не удалось загрузить статистику.".into()),
+                        Instant::now(),
+                    );
                     pending = None;
                     app.loading = false;
                 }
@@ -379,15 +399,15 @@ fn interactive(
                 } else if let Some(a) = app.moderation.as_mut().and_then(|f| f.key(key.code)) {
                     if let Some(b) = &backend {
                         drop(pending.take());
-                        app.failed = false;
-                        app.scroll = 0;
                         let request = if a.command == "stats" {
-                            app.message = format!("Загружается статистика {}…", a.player);
+                            app.clear_stats_error();
                             Request::PlayerStats {
                                 server: a.server,
                                 player: a.player,
                             }
                         } else {
+                            app.failed = false;
+                            app.scroll = 0;
                             app.message =
                                 format!("Отправка: {} · {} · {}", a.scope(), a.command, a.player);
                             Request::Moderation(a)
