@@ -30,7 +30,7 @@ pub enum Request {
     Overview(Option<String>, TpsWindow),
     Console { server: String, command: String },
     PlayerStats { server: String, player: String },
-    Moderation(crate::moderation::Action),
+    Moderation(crate::moderation::Action, Option<String>),
     Invite,
     WorldReset(crate::world_reset::Request),
 }
@@ -38,7 +38,7 @@ pub enum Reply {
     Overview(Overview, Option<Result<TpsHistory, String>>),
     Console(ConsoleResult),
     PlayerStats(PlayerStatsResult),
-    Moderation(crate::moderation::Receipt),
+    Moderation(crate::moderation::Receipt, Option<(String, String)>),
     Invitation(InvitationResult),
     WorldReset(crate::world_reset::Receipt),
 }
@@ -221,7 +221,7 @@ impl Backend {
                 }
                 command.args(["player-stats", "--server", server, "--player", player]);
             }
-            Request::Moderation(a) => {
+            Request::Moderation(a, _) => {
                 if !valid_server(&a.server)
                     || !matches!(
                         a.command.as_str(),
@@ -265,7 +265,7 @@ impl Backend {
                 if !valid_server(server)
                     || !matches!(
                         action.as_str(),
-                        "players" | "roster" | "invites" | "tps" | "save"
+                        "players" | "roster" | "permanent-bans" | "invites" | "tps" | "save"
                     )
                 {
                     return Err("Неверная команда".into());
@@ -278,8 +278,8 @@ impl Backend {
         }
         let timeout = match &request {
             Request::WorldReset(a) if a.mutating() => 24 * 60 * 60,
-            Request::Moderation(action) if action.permanent_ban() => 120,
-            Request::Moderation(_) => 25,
+            Request::Moderation(action, _) if action.permanent_ban() => 120,
+            Request::Moderation(..) => 25,
             Request::PlayerStats { .. } => 300,
             _ => 15,
         };
@@ -295,10 +295,29 @@ impl Backend {
                 let ok = value.ok;
                 (Reply::WorldReset(value), ok)
             }
-            Request::Moderation(a) => {
+            Request::Moderation(a, section) => {
                 let value = crate::moderation::Receipt::parse(&bytes, &a)?;
                 let ok = value.ok;
-                (Reply::Moderation(value), ok)
+                let refresh =
+                    section.filter(|_| ok == success && (ok || value.effect == "unknown"));
+                let page = refresh.map(|command| {
+                    let reply = self.request(
+                        Request::Console {
+                            server: a.server,
+                            command: command.clone(),
+                        },
+                        cancel,
+                    );
+                    let message = match reply {
+                        Ok(Reply::Console(list)) => list.membership_message(),
+                        _ => None,
+                    }
+                    .unwrap_or_else(|| {
+                        "Список не обновился. Нажмите 1 или 4, чтобы перечитать его.".into()
+                    });
+                    (command, message)
+                });
+                (Reply::Moderation(value, page), ok)
             }
             Request::PlayerStats { server, player } => {
                 let value = PlayerStatsResult::parse(&bytes, &server, &player)?;

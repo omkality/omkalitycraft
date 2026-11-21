@@ -314,7 +314,10 @@ impl ConsoleResult {
             || v.server_id != server
             || v.command != command
             || !valid_server(server)
-            || !matches!(command, "players" | "roster" | "invites" | "tps" | "save")
+            || !matches!(
+                command,
+                "players" | "roster" | "permanent-bans" | "invites" | "tps" | "save"
+            )
             || !matches!(v.effect.as_str(), "none" | "unknown")
             || (command != "save" && v.effect != "none")
             || !valid_terminal_output(&v.output)
@@ -330,6 +333,20 @@ impl ConsoleResult {
             return Err("Нарушен контракт команды v1".into());
         }
         Ok(v)
+    }
+
+    pub fn membership_message(&self) -> Option<String> {
+        if !self.ok {
+            return None;
+        }
+        match self.command.as_str() {
+            "roster" => Some(format!("Игроки проекта\n\n{}", self.output)),
+            "permanent-bans" => Some(format!(
+                "Бессрочные баны\n\n{}\n\nu — снять бан",
+                self.output
+            )),
+            _ => None,
+        }
     }
 }
 

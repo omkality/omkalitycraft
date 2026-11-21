@@ -120,7 +120,7 @@ fn failed_player_lookup_keeps_the_roster_and_the_error_expires() {
     .message();
     let roster = "Игроки проекта\n\nFirstJoin\nSecondJoin";
     let mut app = App::new(false);
-    app.show_section(roster.into());
+    app.show_section("roster".into(), roster.into());
     app.command_page_mut().scroll = 1;
     let mut terminal = Terminal::new(TestBackend::new(84, 28)).unwrap();
     let mut render = |app: &mut App| {
@@ -158,7 +158,7 @@ fn failed_player_lookup_keeps_the_roster_and_the_error_expires() {
 fn escape_returns_one_level_and_only_the_menu_opens_exit_confirmation() {
     let mut app = App::new(false);
     let menu = app.command_page().message.clone();
-    app.show_section("Игроки проекта\nMember".into());
+    app.show_section("roster".into(), "Игроки проекта\nMember".into());
     app.command_page_mut().scroll = 7;
     app.finish_player_stats(Ok("Карточка Member".into()), Instant::now());
     app.back_or_confirm_exit();
@@ -195,6 +195,19 @@ fn escape_returns_one_level_and_only_the_menu_opens_exit_confirmation() {
     assert!(app.dismiss_dialog());
     assert_eq!(app.command_page().message, menu);
     assert!(app.confirm.is_none());
+}
+
+#[test]
+fn refreshed_membership_section_is_visible_after_dismissing_the_ban_result() {
+    let mut app = App::new(false);
+    app.show_section("roster".into(), "Игроки проекта\nMember".into());
+    assert_eq!(app.membership_section(), Some("roster"));
+    app.show_detail("Бессрочный бан применён".into());
+    app.refresh_section("permanent-bans", "Неверный раздел".into());
+    app.refresh_section("roster", "В списке пока нет игроков.".into());
+    assert_eq!(app.command_page().message, "Бессрочный бан применён");
+    app.back_or_confirm_exit();
+    assert_eq!(app.command_page().message, "В списке пока нет игроков.");
 }
 
 #[test]

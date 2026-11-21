@@ -121,7 +121,7 @@ impl Pending {
         let overview = matches!(&request, Request::Overview(..));
         let mutating = matches!(&request, Request::WorldReset(a) if a.mutating())
             || matches!(&request, Request::Console { command, .. } if command == "save")
-            || matches!(&request, Request::Moderation(_) | Request::Invite);
+            || matches!(&request, Request::Moderation(..) | Request::Invite);
         let cancel = Arc::new(AtomicBool::new(false));
         let c = cancel.clone();
         let (sender, receiver) = mpsc::channel();
@@ -263,7 +263,10 @@ fn interactive(
                             app.failed = true;
                             app.set_menu_message("Обзор недоступен. Проверьте настройки админки и права.\nr — повторить чтение.".into());
                         }
-                        Ok(Reply::Moderation(v)) => {
+                        Ok(Reply::Moderation(v, section)) => {
+                            if let Some((command, message)) = section {
+                                app.refresh_section(&command, message);
+                            }
                             app.failed = !v.ok;
                             app.show_detail(v.message());
                         }
@@ -295,8 +298,8 @@ fn interactive(
                         }
                         Ok(Reply::Console(v)) => {
                             app.failed = !v.ok;
-                            let message = if v.ok && v.command == "roster" {
-                                format!("Игроки проекта\n\n{}", v.output)
+                            let message = if let Some(list) = v.membership_message() {
+                                list
                             } else if v.ok && v.command == "invites" {
                                 format!("Активные приглашения\n\n{}\n\no — отозвать", v.output)
                             } else if v.ok {
@@ -325,7 +328,7 @@ fn interactive(
                             if v.command == "save" {
                                 app.show_detail(message);
                             } else {
-                                app.show_section(message);
+                                app.show_section(v.command, message);
                             }
                         }
                         Err(_) if work.player_stats => {
@@ -428,7 +431,12 @@ fn interactive(
                                 a.command,
                                 a.player
                             ));
-                            Request::Moderation(a)
+                            let refresh = if a.permanent_ban() || a.command == "unban" {
+                                app.membership_section().map(str::to_owned)
+                            } else {
+                                None
+                            };
+                            Request::Moderation(a, refresh)
                         };
                         pending = Some(Pending::start(b.clone(), request));
                         next_refresh = Instant::now() + Duration::from_secs(5);
@@ -580,7 +588,7 @@ fn interactive(
                             app.window(),
                         ))
                     }
-                    KeyCode::Char(c @ ('1' | '2' | '3' | 'l'))
+                    KeyCode::Char(c @ ('1' | '2' | '3' | '4' | 'l'))
                         if pending.is_none() && !app.demo =>
                     {
                         if c == '3' {
@@ -592,6 +600,7 @@ fn interactive(
                                 server: s.into(),
                                 command: match c {
                                     '1' => "roster",
+                                    '4' => "permanent-bans",
                                     'l' => "invites",
                                     _ => "tps",
                                 }
