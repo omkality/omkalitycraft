@@ -265,7 +265,13 @@ impl Backend {
                 if !valid_server(server)
                     || !matches!(
                         action.as_str(),
-                        "players" | "roster" | "permanent-bans" | "invites" | "tps" | "save"
+                        "players"
+                            | "roster"
+                            | "permanent-bans"
+                            | "invites"
+                            | "player-names"
+                            | "tps"
+                            | "save"
                     )
                 {
                     return Err("Неверная команда".into());
