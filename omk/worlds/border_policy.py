@@ -160,15 +160,20 @@ def _primer(text: str, plan: dict) -> str:
 
 
 def _borders(plan: dict) -> str:
-    blocks = ["# Configuration file\n"]
-    for dim, width in plan["dimensions"].items():
-        name = plan["world"] if dim == "0" else "DIM" + dim
+    widths = {
+        (plan["world"] if dim == "0" else "DIM" + dim): width
+        for dim, width in plan["dimensions"].items()
+    }
+    # WorldBorder rewrites this file through Forge Configuration at shutdown.
+    # Match the saved bytes so a routine stop preserves the runtime fingerprint.
+    blocks = ["# Configuration file\n\n"]
+    for name, width in sorted(widths.items()):
         radius = width // 2
         blocks.append(
             f"{name} {{\n    I:radiusX={radius}\n    I:radiusZ={radius}\n"
-            "    B:wrapping=false\n    D:x=0.0\n    D:z=0.0\n}\n"
+            "    B:wrapping=false\n    D:x=0.0\n    D:z=0.0\n}\n\n\n"
         )
-    return "\n".join(blocks)
+    return "".join(blocks)
 
 
 def prepare_borders(output: Path, config: Path, mods: Path, world_name: str) -> dict:

@@ -5,7 +5,7 @@ import json
 import pytest
 
 from omk.shared.nbt import Tag
-from omk.worlds.border_policy import _dimension_info, border_plan
+from omk.worlds.border_policy import _borders, _dimension_info, border_plan
 from omk.worlds.reset import (
     dimension_reset,
     resource_reset_stage,
@@ -22,6 +22,14 @@ def test_exact_dj2_border_sizes_and_dynamic_default():
     assert plan["default_width"] == 8192
     with pytest.raises(ValueError, match="ambiguous"):
         border_plan("DIM-1")
+
+
+def test_worldborder_config_matches_forge_shutdown_serialization():
+    plan = {"world": "world", "dimensions": {"-2": 16, "0": 16, "-10": 16}}
+    block = " {\n    I:radiusX=8\n    I:radiusZ=8\n    B:wrapping=false\n    D:x=0.0\n    D:z=0.0\n}\n\n\n"
+    assert _borders(plan) == "# Configuration file\n\n" + "".join(
+        name + block for name in ("DIM-10", "DIM-2", "world")
+    )
 
 
 def test_border_only_dimensions_keep_the_provider_spawn_on_first_load():
