@@ -263,6 +263,22 @@ def test_timeout_still_removes_only_the_owned_helper(transport):
     assert calls[-1][0] == ("rm", "--force", "a" * 64)
 
 
+def test_auto_removed_helper_preserves_the_saved_time_result(transport):
+    calls, state, data = transport
+    state["auto_removed"] = True
+    assert (
+        owner._worker(
+            {"world": "world", "data_volume": "owned-data"},
+            PLAYER,
+            owner.settings({}),
+            {"helper_memory_mib": 128, "helper_cpus": 1},
+        )
+        == data
+    )
+    assert "--rm" in calls[0][0]
+    assert calls[-1][0][0] == "inspect"
+
+
 def test_cleanup_never_removes_a_foreign_helper(transport):
     calls, state, _ = transport
     state["owner"] = "foreign"
