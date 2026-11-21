@@ -71,6 +71,8 @@ def _moderation(root: Path, uid: str) -> list[str]:
         "Действующие ограничения на проекте",
         *(
             f"{_OPERATIONS[entry.kind]} до {_date(entry.expires)} · {entry.reason}"
+            if entry.expires is not None
+            else f"Бессрочный бан · {entry.reason}"
             for entry in active
         ),
     ]
@@ -78,8 +80,12 @@ def _moderation(root: Path, uid: str) -> list[str]:
         lines.append("Нет действующих ограничений.")
     lines.extend(["", "Недавние действия на проекте"])
     for entry in recent:
-        suffix = f" до {_date(entry.expires)} · {entry.reason}" if entry.expires else ""
-        lines.append(f"{_date(entry.time)} · {_OPERATIONS[entry.kind]}{suffix}")
+        label = _OPERATIONS[entry.kind]
+        if entry.expires is not None:
+            label += f" до {_date(entry.expires)} · {entry.reason}"
+        elif entry.kind == "ban":
+            label = f"Бессрочный бан · {entry.reason}"
+        lines.append(f"{_date(entry.time)} · {label}")
     if not recent:
         lines.append("В журнале пока нет записей об этом игроке.")
     return lines
