@@ -6,6 +6,7 @@ import json
 import os
 import shutil
 import subprocess
+import tempfile
 import zipfile
 from pathlib import Path
 
@@ -192,12 +193,16 @@ if args.target in {"all", "dj2"}:
         "GroovyLogReloadControlsTest",
         "DisconnectDropControlsTest",
     ):
-        subprocess.run(
-            [
-                str(args.java.resolve()),
-                "-cp",
-                os.pathsep.join([str(controls), test_classpath]),
-                "net.omkality." + control,
-            ],
-            check=True,
-        )
+        with tempfile.TemporaryDirectory(prefix="omk-forge-controls-") as directory:
+            subprocess.run(
+                [
+                    str(args.java.resolve()),
+                    "-cp",
+                    os.pathsep.join([str(controls), test_classpath]),
+                    "net.omkality." + control,
+                ],
+                cwd=directory,
+                env=os.environ
+                | {"OMK_CRAFTTWEAKER_LOG_MIB": "1", "OMK_CRAFTTWEAKER_LOG_FILES": "3"},
+                check=True,
+            )

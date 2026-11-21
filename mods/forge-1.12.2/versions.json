@@ -7,9 +7,9 @@
       "sha256": "99961bfdf0a8a4f712c69304993d34bd11459bd06de061440c450423b0517588"
     },
     "dj2fix": {
-      "version": "0.1.9",
-      "file": "OmkalityDJ2Fix-0.1.9.jar",
-      "sha256": "a3596bd3cf606a93d533ae27b85471c5c7d0bd51db9d03cd7c92a3489d6b13a7"
+      "version": "0.1.10",
+      "file": "OmkalityDJ2Fix-0.1.10.jar",
+      "sha256": "f08111f1c4dfd8d412f342a270712442caf6b98cfabe5a47171eb371224881a7"
     },
     "client": {
       "version": "0.1.8",

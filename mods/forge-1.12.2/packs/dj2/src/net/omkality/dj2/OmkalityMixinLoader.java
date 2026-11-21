@@ -12,7 +12,9 @@ public final class OmkalityMixinLoader implements ILateMixinLoader {
     @Override
     public List<String> getMixinConfigs() {
         return FMLLaunchHandler.side() == Side.SERVER
-            ? Arrays.asList("mixins.omkalitydj2fix.wrcbe.json", "mixins.omkalitydj2fix.twilight.json", "mixins.omkalitydj2fix.ae2.json", "mixins.omkalitydj2fix.mekanism.json", "mixins.omkalitydj2fix.disconnect.json")
+            ? Arrays.asList("mixins.omkalitydj2fix.wrcbe.json", "mixins.omkalitydj2fix.twilight.json",
+                "mixins.omkalitydj2fix.ae2.json", "mixins.omkalitydj2fix.mekanism.json",
+                "mixins.omkalitydj2fix.disconnect.json", "mixins.omkalitydj2fix.crafttweaker.json")
             : Collections.<String>emptyList();
     }
 }

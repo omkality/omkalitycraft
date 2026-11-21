@@ -49,16 +49,15 @@
 | Drasl Docker stdout | `deploy/auth/service.yaml`, `OMK_AUTH_LOG_SIZE/FILES` | `10m × 3`, local driver |
 | Проверочный game container stdout | `candidate_slot_spec.py`, `OMK_SLOT_DOCKER_LOG_MIB/FILES` | `10m × 3`; frozen в плане, проверяется Inspect |
 | Forge `logs/latest.log` | `launcher/log_policy.py`, `OMK_FORGE_LOG_MIB/FILES` | 8 МиБ + 3 gzip; порог событий, не жёсткий cap одной записи |
-| CT/Groovy отдельные файлы | Собственные Writer модов | Жёсткого online cap пока нет; см. ниже |
+| Отдельные файлы CraftTweaker и GroovyScript | DJ2Fix, настройки в `deploy/game/forge-logging.example.env` | По 3 файла × 8 МиБ на каждый журнал, включая текущий |
 | Portable Python stdout/launcher log | `omk/observability/diagnostics.py`, launcher callers | 3 × 8 МиБ /3 × 1 МиБ, фиксированная клиентская политика |
 | Закрытые diagnostic ZIP | `deploy/owner/diagnostics.example.env` | 5 /64 МиБ; только export, не source logs |
 | Prometheus / Telegraf | `deploy/metrics/example.env` | TSDB blocks 1024 МиБ /180 дней (ранняя граница), отдельно WAL/head/compaction и reserve; Docker stdout каждого сервиса `1m × 2`. [Бюджет и scrape limits](RESOURCE_HISTORY.md) |
 | Завершённые operator journals | `deploy/owner/nightly.example.env` | Opt-in archive, 256 МиБ /10000 файлов; pending recovery references не удаляются |
 
-`OMK_STORAGE_LOGS_GIB=4` — плановая часть общего бюджета, **не** quota или
-универсальный cleanup. Управляемые копии, CT/Groovy writers и оставшийся общий
-storage/config audit сохраняются в #30/#33. Два независимых планировщика копий
-не включаются ради выполнения этой таблицы.
+`OMK_STORAGE_LOGS_GIB=4` задаёт долю диска в расчёте общего запаса. Лимиты отдельных
+журналов применяются самими компонентами. Полный бюджет управляемых копий ведётся
+в [#33](https://github.com/omkality/omkalitycraft/issues/33).
 
 ### Настройки Forge Log4j
 
@@ -82,21 +81,6 @@ filter сохраняются. Настройка применяется при 
 Размер проверяется по событиям: отдельное большое сообщение может превысить
 порог, следующий event запускает rollover. Это проверено на Log4j 2.25.5/Java 8;
 механизм описан в [документации Apache](https://logging.apache.org/log4j/2.x/manual/appenders/rolling-file.html#SizeBasedTriggeringPolicy).
-
-### Остаток для CraftTweaker и GroovyScript
-
-У CT 4.1.20.711 и GroovyScript 1.4.3 отдельные writers, не appender нашего XML.
-На настоящем `FileLogger` из закреплённого CT JAR в Linux Java 8 проверены два
-негативных контроля: после rename запись остаётся в старом inode; после внешнего
-truncate writer продолжает с прежнего смещения. Простая внешняя ротация/обрезка
-не объявляется решением. Это FileLogger probe, не новый запуск Forge.
-
-Для Groovy здесь проверены исходники **точной v1.4.3**: собственный PrintWriter и
-новый файл при setup/clean; native Groovy/game test этим не подменяется.
-Источники: [CraftTweaker](https://github.com/CraftTweaker/CraftTweaker/blob/69c7b5082c41dab549fabcfd54d152666961889d/CraftTweaker2-MC1120-Main/src/main/java/crafttweaker/mc1120/logger/MCLogger.java),
-[GroovyScript 1.4.3](https://github.com/CleanroomMC/GroovyScript/blob/6a3340814ce9527d23c2b88cdfd340b4f146b4c4/src/main/java/com/cleanroommc/groovyscript/sandbox/GroovyLogImpl.java).
-Отдельный version-pinned writer adapter с проверкой startup/reload/ENOSPC и
-сохранности рецептов остаётся открытым #30; изменений Java-модов в этом шаге нет.
 
 Перед новым запуском текущий stdout-журнал ротируется, чтобы в отчёт не попал стек
 предыдущей сессии. Новые crash-файлы определяются относительно снимка до запуска,
@@ -292,7 +276,22 @@ DJ2Fix 0.1.9 ограничивает серверный `logs/groovy_server.log
 Первичное открытие файла и штатный fallback GroovyScript продолжает выполнять
 сам мод. Диагностический ZIP по-прежнему берёт ограниченный хвост текущих
 файлов. Этот лимит действует отдельно от Docker stdout и Forge Log4j.
-Активный `crafttweaker.log` остаётся отдельной задачей #30.
+
+## Лимиты журнала CraftTweaker
+
+DJ2Fix 0.1.10 ограничивает серверный `crafttweaker.log`. В профиле DJ2 файл пишет
+ZenUtils. Лимит применяется при первом открытии и при последующих очистках
+журнала. Формат сообщений, порядок загрузки скриптов и обработка рецептов
+остаются штатными.
+
+| Переменная процесса Java | По умолчанию | Диапазон |
+| --- | ---: | ---: |
+| `OMK_CRAFTTWEAKER_LOG_MIB` | 8 | 1–64 МиБ на файл |
+| `OMK_CRAFTTWEAKER_LOG_FILES` | 3 | 1–8 файлов, включая текущий |
+
+По умолчанию предел текущего журнала с архивами составляет 24 МиБ. Имена архивов,
+обработка недопустимых значений и пауза между попытками записи при ошибке диска
+совпадают с политикой GroovyScript. [Пример окружения](../deploy/game/forge-logging.example.env).
 
 ## Java logging и сервер
 
