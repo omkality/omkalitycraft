@@ -5,16 +5,19 @@
     {
       "interval": "5s",
       "input_series": [
-        {"series": "up{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "values": "1 1 1 0"},
+        {"series": "up{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "values": "1 1 1 0 1 1"},
         {"series": "up{job=\"host\",instance=\"agent:9273\"}", "values": "1 1 1 1"},
-        {"series": "mc_player_list{job=\"dj2\",instance=\"game:19565\",service=\"dj2\",id=\"fake-a\",name=\"FakeA\"}", "values": "stale 1 stale 1"},
-        {"series": "mc_player_list{job=\"dj2\",instance=\"game:19565\",service=\"dj2\",id=\"fake-b\",name=\"FakeB\"}", "values": "stale 1 stale 1"}
+        {"series": "mc_server_tick_seconds_count{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "values": "20 120 220 220 stale 10"},
+        {"series": "mc_player_list{job=\"dj2\",instance=\"game:19565\",service=\"dj2\",id=\"fake-a\",name=\"FakeA\"}", "values": "stale 1 stale 1 stale stale"},
+        {"series": "mc_player_list{job=\"dj2\",instance=\"game:19565\",service=\"dj2\",id=\"fake-b\",name=\"FakeB\"}", "values": "stale 1 stale 1 stale stale"}
       ],
       "promql_expr_test": [
         {"expr": "omk_game_online", "eval_time": "0s", "exp_samples": [{"labels": "omk_game_online{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 0}]},
         {"expr": "omk_game_online", "eval_time": "5s", "exp_samples": [{"labels": "omk_game_online{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 2}]},
         {"expr": "omk_game_online", "eval_time": "10s", "exp_samples": [{"labels": "omk_game_online{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 0}]},
-        {"expr": "omk_game_online", "eval_time": "15s", "exp_samples": []}
+        {"expr": "omk_game_online", "eval_time": "15s", "exp_samples": []},
+        {"expr": "omk_game_online", "eval_time": "20s", "exp_samples": []},
+        {"expr": "omk_game_online", "eval_time": "25s", "exp_samples": [{"labels": "omk_game_online{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 0}]}
       ]
     },
     {

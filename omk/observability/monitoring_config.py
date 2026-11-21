@@ -176,8 +176,8 @@ def render(config, environment=None):
                 "rules": [
                     {
                         "record": "omk_game_online",
-                        "expr": '(sum without(id,name) (mc_player_list) or (up{job!="host"} * 0))'
-                        + live,
+                        "expr": "(sum without(id,name) (mc_player_list) or "
+                        '(mc_server_tick_seconds_count{job!="host"} * 0))' + live,
                     },
                     {
                         "record": "omk_game_tps",
