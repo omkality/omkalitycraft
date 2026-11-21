@@ -42,7 +42,7 @@ pub struct App {
 
 impl App {
     pub fn new(demo: bool) -> Self {
-        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\nw  Вайп ресурсного мира\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, branding_header: false, window_index: 0, range_picker: None }
+        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\nw  Вайп мира\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, branding_header: false, window_index: 0, range_picker: None }
     }
     pub fn server(&self) -> Option<&str> {
         self.overview
@@ -161,7 +161,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     let mode = if app.demo {
         "ДЕМО · команды отключены"
     } else {
-        "OWNER · локальный Python backend"
+        "OWNER"
     };
     frame.render_widget(
         Paragraph::new(Line::from(vec![
@@ -476,14 +476,14 @@ fn render_metrics(
     let state = current
         .map(|v| v.metrics_status.as_str())
         .unwrap_or("unavailable");
-    lines.push(Line::styled(
-        match state {
-            "disabled" => " Мониторинг не подключён",
-            "unavailable" => " Prometheus недоступен / конфигурация неверна",
-            "partial" => " Часть показателей недоступна",
-            _ => " Prometheus · свежие измерения",
-        },
-        Style::default().fg(MUTED),
-    ));
+    let warning = match state {
+        "disabled" => Some(" Мониторинг не подключён"),
+        "unavailable" => Some(" Мониторинг недоступен"),
+        "partial" => Some(" Часть показателей недоступна"),
+        _ => None,
+    };
+    if let Some(warning) = warning {
+        lines.push(Line::styled(warning, Style::default().fg(MUTED)));
+    }
     frame.render_widget(Paragraph::new(lines).block(block(title)), area);
 }
