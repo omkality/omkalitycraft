@@ -59,7 +59,7 @@ fn options() -> Result<Option<Options>, String> {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / 1 players / 2 TPS / 3 save / 4 restrictions / k kick / b ban / m mute / u unban / n unmute / s statistics / i invite / r refresh / t period\nEsc goes back; from the main menu it asks before closing.\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / 1 players / 2 TPS / 3 save / 4 restrictions (u unban, n unmute) / k kick / b ban / m mute / s statistics / i invite / r refresh / t period\nEsc goes back; from the main menu it asks before closing.\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
@@ -500,7 +500,7 @@ fn interactive(
                             ));
                             let refresh = if app.restrictions.is_some() {
                                 Some("restrictions".into())
-                            } else if a.permanent_ban() || a.command == "unban" {
+                            } else if a.permanent_ban() {
                                 app.membership_section().map(str::to_owned)
                             } else {
                                 None
@@ -625,7 +625,7 @@ fn interactive(
                             next_refresh = Instant::now() + Duration::from_secs(5);
                         }
                     }
-                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'u' | 'n' | 'o' | 's'))
+                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'o' | 's'))
                         if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
                     {
                         app.moderation = app.server().map(|s| {
@@ -634,8 +634,6 @@ fn interactive(
                                 match c {
                                     'k' => "kick",
                                     'b' => "ban",
-                                    'u' => "unban",
-                                    'n' => "unmute",
                                     'o' => "revoke-invite",
                                     's' => "stats",
                                     _ => "mute",

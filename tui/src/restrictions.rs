@@ -254,6 +254,7 @@ impl Panel {
         } else {
             &self.query
         };
+        let search_label = "Поиск: ";
         frame.render_widget(
             Paragraph::new(vec![
                 Line::styled(
@@ -262,13 +263,16 @@ impl Panel {
                 ),
                 Line::from(tabs.to_vec()),
                 Line::raw(format!(
-                    "Поиск: {query}{}   ·   {}",
-                    if self.searching { "▏" } else { "" },
-                    entries.len()
+                    "{search_label}{query}   ·   Найдено: {}",
+                    entries.len(),
                 )),
             ]),
             regions[0],
         );
+        let cursor_column = (search_label.chars().count() + self.query.len()) as u16;
+        if self.searching && regions[0].height >= 3 && cursor_column < regions[0].width {
+            frame.set_cursor_position((regions[0].x + cursor_column, regions[0].y + 2));
+        }
         if entries.is_empty() {
             let text = if !self.available {
                 "Не удалось загрузить ограничения."
@@ -414,6 +418,9 @@ mod tests {
         let key = KeyCode::Char('z');
         panel.key(key, key, true);
         assert!(panel.filtered(now()).is_empty());
+        terminal.draw(|f| panel.draw(f, f.area())).unwrap();
+        assert_eq!(terminal.get_cursor_position().unwrap().x, 8);
+        assert_eq!(terminal.get_cursor_position().unwrap().y, 2);
         assert!(panel.cancel_search());
         assert_eq!(panel.filtered(now()).len(), 1);
     }

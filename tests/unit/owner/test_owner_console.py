@@ -111,3 +111,25 @@ def test_nickname_lookup_uses_current_players_in_offline_mode(tmp_path, monkeypa
     assert result.ok and result.effect == "none"
     assert result.output == "Alpha_1\nzulu"
     command.assert_called_once_with("endpoint", "test", "list uuids")
+
+
+def test_roster_keeps_registered_names_when_game_status_is_unavailable(
+    tmp_path, monkeypatch
+):
+    _, path = config(tmp_path)
+    monkeypatch.setattr(console, "_project_members", lambda _: ({"Bravo", "Alpha"}, {}))
+    monkeypatch.setattr(
+        "omk.owner.admin_maintenance.credential", lambda *args: ("endpoint", "test")
+    )
+    monkeypatch.setattr(
+        "omk.labs.recovery.recovery_console.command",
+        Mock(side_effect=OSError("game stopped")),
+    )
+    result = console.run(path, "dj2", "roster")
+    assert result["ok"]
+    assert result["output"].splitlines() == [
+        "Не удалось проверить, кто в игре.",
+        "",
+        "Alpha",
+        "Bravo",
+    ]
