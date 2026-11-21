@@ -332,7 +332,7 @@ def _add_tui_operation_parsers(actions):
     project.add_argument("--reason", default="")
     project.add_argument("--confirm-ban", action="store_true")
     world_reset = actions.add_parser(
-        "world-reset", help="Manual staged resource-world reset for the owner TUI"
+        "world-reset", help="Manual staged world reset for the owner TUI"
     )
     world_reset.add_argument("--server", type=_console_server, required=True)
     world_reset.add_argument(

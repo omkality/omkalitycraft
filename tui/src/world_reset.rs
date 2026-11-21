@@ -124,13 +124,11 @@ impl Receipt {
                     | "complete"
             )
             || (value.stage == "unconfigured") != value.dimension.is_none()
-            || request
-                .world
-                .is_some_and(|world| value.ok && Some(world) != value.dimension)
-            || value.stage != "unsupported"
-                && value
-                    .dimension
-                    .is_some_and(|id| !(-32000..=-2).contains(&id))
+            || request.world.is_some_and(|world| {
+                value.ok
+                    && (Some(world) != value.dimension
+                        || !value.worlds.iter().any(|entry| entry.dimension == world))
+            })
             || value.worlds.len() > 64
             || value.worlds.iter().enumerate().any(|(index, world)| {
                 !valid_text(&world.name, 64)
@@ -425,5 +423,26 @@ mod tests {
         let mut value = sealed();
         value["server_id"] = serde_json::json!("other");
         assert!(Receipt::parse(&serde_json::to_vec(&value).unwrap(), &query).is_err());
+    }
+
+    #[test]
+    fn selected_world_confirmation_carries_the_exact_dimension() {
+        for dimension in [0, -1, 420, 49000] {
+            let mut value = sealed();
+            value["dimension"] = serde_json::json!(dimension);
+            value["worlds"] = serde_json::json!([
+                {"dimension": dimension, "name": "Выбранный мир", "description": "Сохранение мира"}
+            ]);
+            let mut query = Request::inspect("dj2".into());
+            query.world = Some(dimension);
+            let receipt = Receipt::parse(&serde_json::to_vec(&value).unwrap(), &query).unwrap();
+            let mut form = Form::new(receipt);
+            assert!(form.key(KeyCode::Enter).is_none());
+            assert!(form.key(KeyCode::Right).is_none());
+            let request = form.key(KeyCode::Enter).unwrap();
+            assert_eq!(request.world, Some(dimension));
+            assert_eq!(request.command, "apply");
+            assert_eq!(request.confirmation, Some("a".repeat(64)));
+        }
     }
 }

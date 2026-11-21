@@ -12,7 +12,10 @@ import re
 from omk.shared.nbt import Tag, read_nbt, write_nbt
 from omk.worlds import enderutilities_reset as ender
 from omk.worlds.ftb_dimension_references import ftb_record
-from omk.worlds.reset import resource_reset_inventory as audit
+from omk.worlds.reset import (
+    dimension_reset,
+    resource_reset_inventory as audit,
+)
 
 
 def landing(value):
@@ -27,7 +30,7 @@ def landing(value):
     return [value[0] + 0.5, float(value[1]), value[2] + 0.5]
 
 
-def player(root, dimension, position):
+def player(root, dimension, position, *, landing_dimension=0):
     """Return a copy; inventory, XP, capabilities and unknown tags stay intact."""
     result = copy.deepcopy(root)
     if audit._tag(result, "Dimension", 3) == dimension:
@@ -35,7 +38,7 @@ def player(root, dimension, position):
             raise ValueError("Mounted resource player requires a vehicle adapter")
         # Position/motion are deliberately reset together, including old NBT copies.
         result.update(
-            Dimension=Tag(3, 0),
+            Dimension=Tag(3, landing_dimension),
             Pos=Tag(9, (6, [Tag(6, v) for v in position])),
             Motion=Tag(9, (6, [Tag(6, 0.0) for _ in range(3)])),
             FallDistance=Tag(5, 0.0),
@@ -60,10 +63,13 @@ def player(root, dimension, position):
         result["Spawns"] = Tag(
             9, (child, [v for v in rows if audit._tag(v.value, "Dim", 3) != dimension])
         )
+    if dimension == 0:
+        for key in ("SpawnX", "SpawnY", "SpawnZ", "SpawnForced"):
+            result.pop(key, None)
     return result
 
 
-def jed_record(root, dimension):
+def jed_record(root, dimension, *, landing_dimension=0):
     result = copy.deepcopy(root)
     if "PlayerData" in result and "PlayerDimensions" in result:
         raise ValueError("Mixed JED tracker generations require review")
@@ -75,7 +81,7 @@ def jed_record(root, dimension):
             raise ValueError("Duplicate JED player identity")
         seen.add(identity)
         if audit._tag(row, "Dimension", 3) == dimension:
-            row["Dimension"] = Tag(3, 0)
+            row["Dimension"] = Tag(3, landing_dimension)
     return result
 
 
@@ -97,7 +103,16 @@ def _kind(name, world):
     return None
 
 
-def changes(server, world, dimension, position, files, *, enderutilities_targets=False):
+def changes(
+    server,
+    world,
+    dimension,
+    position,
+    files,
+    *,
+    enderutilities_targets=False,
+    landing_dimension=0,
+):
     """Sparse bytes only; even unchanged NBT compression is preserved verbatim."""
     position = landing(position)
     payloads = {}
@@ -109,11 +124,13 @@ def changes(server, world, dimension, position, files, *, enderutilities_targets
         raw = audit._read(server / name, server / world)
         label, root = read_nbt(audit.ftb.unpack(raw))
         if kind == "player":
-            result = player(root, dimension, position)
+            result = player(
+                root, dimension, position, landing_dimension=landing_dimension
+            )
             if enderutilities_targets:
                 result, _removed = ender.unbind_player_targets(result, dimension)
         elif kind == "jed":
-            result = jed_record(root, dimension)
+            result = jed_record(root, dimension, landing_dimension=landing_dimension)
         else:
             result = ftb_record(
                 root, dimension, universe=kind == "universe", claims=kind == "claims"
@@ -129,13 +146,11 @@ def changes(server, world, dimension, position, files, *, enderutilities_targets
     return payloads
 
 
-def result_inventory(files, payloads, world, dimension):
-    prefix = world + f"/DIM{dimension}/"
-    marker = world + "/omk-resource-world.properties"
+def result_inventory(files, payloads, world, dimension, *, reset=None):
     result = {
         name: copy.deepcopy(row)
         for name, row in files.items()
-        if not name.startswith(prefix) and name != marker
+        if not dimension_reset.omitted(name, world, dimension, reset)
     }
     for name, data in payloads.items():
         if name not in result:

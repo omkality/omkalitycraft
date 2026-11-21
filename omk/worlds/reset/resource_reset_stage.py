@@ -26,6 +26,7 @@ from omk.backups.stopped_world_backup import inventory
 from omk.worlds import enderutilities_reset as ender
 from omk.worlds.linux_world_restore import _copy, _read
 from omk.worlds.reset import (
+    dimension_reset,
     resource_reset_inventory as audit,
     resource_reset_preflight,
     resource_reset_transform as transform,
@@ -51,6 +52,8 @@ def _request(request):
         keys.add("expected")
     if isinstance(request, dict) and "preflight_options" in request:
         keys.add("preflight_options")
+    if isinstance(request, dict) and "reset" in request:
+        keys.add("reset")
     if (
         sys.platform != "linux"
         or not isinstance(request, dict)
@@ -68,7 +71,12 @@ def _request(request):
         or not 1 <= request["world_max_bytes"] <= 1024**4
     ):
         raise ValueError("Invalid Linux resource staging request")
-    audit.validate_dimension(request["dimension"])
+    if "reset" not in request:
+        audit.validate_dimension(request["dimension"])
+    elif request["position"] != "auto" or request["reset"] != dimension_reset.layout(
+        request["dimension"]
+    ):
+        raise ValueError("Invalid dimension reset request")
     if request["position"] != "auto":
         transform.landing(request["position"])
     BackupPolicy(**request["policy"])
@@ -108,6 +116,7 @@ def _inputs(request, source, storage, target):
         request["world"],
         request["dimension"],
         world_max_bytes=request["world_max_bytes"],
+        **({"reset": request["reset"]} if "reset" in request else {}),
     )
     position, preflight = request["position"], None
     if position == "auto":
@@ -117,6 +126,7 @@ def _inputs(request, source, storage, target):
             request["dimension"],
             options=request.get("preflight_options"),
             world_max_bytes=request["world_max_bytes"],
+            **({"reset": request["reset"]} if "reset" in request else {}),
         )
         if not preflight["can_stage_data"]:
             raise ValueError(
@@ -133,9 +143,14 @@ def _inputs(request, source, storage, target):
         enderutilities_targets=bool(
             preflight and ender.ADAPTER in preflight.get("adapters", {})
         ),
+        landing_dimension=request.get("reset", {}).get("landing_dimension", 0),
     )
     result = transform.result_inventory(
-        files, payloads, request["world"], request["dimension"]
+        files,
+        payloads,
+        request["world"],
+        request["dimension"],
+        reset=request.get("reset"),
     )
     after, after_identity = source_summary(source, request)
     if after != files or after_identity != source_identity:
@@ -146,6 +161,7 @@ def _inputs(request, source, storage, target):
         "world": request["world"],
         "dimension": request["dimension"],
         "position": position,
+        **({"reset": request["reset"]} if "reset" in request else {}),
         "snapshot": request["snapshot"],
         "archive_sha256": manifest["sha256"],
         "source": source_identity,
@@ -228,10 +244,10 @@ def _verified(request, source, storage, target, *, extra_roots=()):
         max_expanded_bytes=request["world_max_bytes"],
         path_policy="linux-server",
     )
-    if (
-        actual != result
-        or (target / request["world"] / f"DIM{request['dimension']}").exists()
-    ):
+    folder = request.get("reset", {"folder": f"DIM{request['dimension']}"}).get(
+        "folder"
+    )
+    if actual != result or (folder and (target / request["world"] / folder).exists()):
         raise ValueError("Resource candidate differs from expected retained files")
     return {
         "operation": request["operation"],

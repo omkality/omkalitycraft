@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "servers": {
+    "dj2": [
+      {"dimension": 0, "name": "Основной мир", "description": "Поверхность, стартовая зона и основные базы игроков."},
+      {"dimension": -18000, "name": "Ресурсный мир", "description": "Отдельный мир для добычи ресурсов."},
+      {"dimension": -1, "name": "Ад", "description": "Нижний мир с крепостями."},
+      {"dimension": 1, "name": "Энд", "description": "Край с драконом и городами Края."},
+      {"dimension": 7, "name": "Сумеречный лес", "description": "Лес, лабиринты и боссы Twilight Forest."},
+      {"dimension": 4, "name": "Эфир", "description": "Летающие острова и подземелья Aether."},
+      {"dimension": 17, "name": "Атум", "description": "Пустыня с пирамидами и гробницами."},
+      {"dimension": 66, "name": "Эребус", "description": "Подземный мир насекомых Erebus."},
+      {"dimension": 420, "name": "Эдем", "description": "Первое измерение цепочки приключений DivineRPG."},
+      {"dimension": 421, "name": "Дикий лес", "description": "Измерение Wildwood из DivineRPG."},
+      {"dimension": 422, "name": "Апалачия", "description": "Фиолетовые острова DivineRPG."},
+      {"dimension": 423, "name": "Скайтерн", "description": "Небесное измерение DivineRPG."},
+      {"dimension": 424, "name": "Мортум", "description": "Тёмное измерение DivineRPG."},
+      {"dimension": 425, "name": "Айсика", "description": "Снежное измерение DivineRPG."},
+      {"dimension": 426, "name": "Аркана", "description": "Подземелье с торговцами и ключами DivineRPG."},
+      {"dimension": 427, "name": "Ветея", "description": "Измерение с отдельным инвентарём DivineRPG."},
+      {"dimension": 50, "name": "Пустошь Бездны", "description": "Первое измерение AbyssalCraft."},
+      {"dimension": 51, "name": "Земли ужаса", "description": "Измерение Dreadlands из AbyssalCraft."},
+      {"dimension": 52, "name": "Омотол", "description": "Измерение Omothol из AbyssalCraft."},
+      {"dimension": 53, "name": "Тёмное царство", "description": "Измерение Dark Realm из AbyssalCraft."},
+      {"dimension": -28, "name": "Луна", "description": "Лунное измерение Galacticraft."},
+      {"dimension": -29, "name": "Марс", "description": "Марсианское измерение Galacticraft."},
+      {"dimension": -30, "name": "Астероиды", "description": "Пояс астероидов Galacticraft."},
+      {"dimension": -31, "name": "Венера", "description": "Венерианское измерение Galacticraft."},
+      {"dimension": -9, "name": "Преисподняя", "description": "Подземный мир LightningCraft."},
+      {"dimension": -100, "name": "Простой мир", "description": "Дополнительное измерение Simple Void World."},
+      {"dimension": -11325, "name": "Глубокая тьма", "description": "Измерение Deep Dark из Extra Utilities 2."},
+      {"dimension": -9999, "name": "Карьерное измерение", "description": "Служебный мир карьерных механизмов Extra Utilities 2."},
+      {"dimension": 2, "name": "Ячейки хранения", "description": "Внутренние пространства ячеек AE2. Вайп затрагивает их содержимое."},
+      {"dimension": 14676, "name": "Пустота", "description": "Измерение Emptiness из Thaumic Augmentation."}
+    ]
+  }
+}

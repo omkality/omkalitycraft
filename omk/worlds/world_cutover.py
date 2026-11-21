@@ -154,6 +154,7 @@ def runtime_request(p):
         "world": p["source"]["world"],
         "dimension": p["dimension"],
         "position": "auto",
+        **({"reset": p["reset"]} if "reset" in p else {}),
         "snapshot": p["snapshot"],
         "world_max_bytes": p["settings"]["world_max_bytes"],
         "preflight_options": p["preflight_options"],
