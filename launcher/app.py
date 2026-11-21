@@ -209,6 +209,7 @@ class LauncherWindow(QMainWindow):
         self.installation: InstallController | None = None
         self.game: GameProcess | None = None
         self.game_pack: str | None = None
+        self._hidden_for_game = False
         self._close_after_install = False
         self._busy_button: BusyButton | None = None
         self.busy = False
@@ -385,7 +386,8 @@ class LauncherWindow(QMainWindow):
         ):
             return
         self.status.clear()
-        memory_mb = self.home_page.cards[pack_id].memory.selected_mb
+        pack_card = self.home_page.cards[pack_id]
+        memory_mb = pack_card.memory.selected_mb
         if memory_mb < MIN_MB:
             self.status.setText("Недостаточно памяти для запуска этой сборки.")
             return
@@ -394,10 +396,9 @@ class LauncherWindow(QMainWindow):
         self.home_page.change_password.setEnabled(False)
         for card in self.home_page.cards.values():
             card.action.setEnabled(False)
-        self.home_page.cards[pack_id].action.set_busy(True, "Подготавливаем…")
-        self.installation.start(
-            pack_id, play=self.home_page.cards[pack_id].installed, memory_mb=memory_mb
-        )
+            card.memory.setEnabled(False)
+        pack_card.action.set_busy(True, "Подготавливаем…")
+        self.installation.start(pack_id, play=pack_card.installed, memory_mb=memory_mb)
 
     def _install_progress(self, pack_id: str, progress) -> None:
         self.home_page.cards[pack_id].update_progress(progress)
@@ -407,7 +408,9 @@ class LauncherWindow(QMainWindow):
         self.home_page.reset_skin_button.setEnabled(True)
         self.home_page.change_password.setEnabled(True)
         for card in self.home_page.cards.values():
-            card.action.setEnabled(card.profile.status != "planned")
+            available = card.profile.status != "planned"
+            card.action.setEnabled(available)
+            card.memory.setEnabled(available)
 
     def _installed(self, pack_id: str, result: InstallationResult) -> None:
         if self.diagnostic_root is not None:
@@ -417,17 +420,20 @@ class LauncherWindow(QMainWindow):
                 pack=pack_id,
                 pack_version=result.release.version,
             )
-        self._installation_idle()
         card = self.home_page.cards[pack_id]
         card.finished(success=True)
         card.state_label.setText("Установлена · " + result.release.version)
-        if result.game is not None:
+        if result.game is None:
+            self._installation_idle()
+        else:
             self.game, self.game_pack = result.game, pack_id
             card.action.setText("Игра запущена")
-            for other in self.home_page.cards.values():
-                other.action.setEnabled(False)
+            card.action.setEnabled(False)
             self.skin_preview.animation.pause()
             self.game_timer.start()
+            self._hidden_for_game = self.isVisible() and not self._close_after_install
+            if self._hidden_for_game:
+                self.hide()
         if self._close_after_install:
             self.close()
 
@@ -465,7 +471,10 @@ class LauncherWindow(QMainWindow):
             self.status.setText(
                 "Не удалось записать журнал игры. Проверьте свободное место и доступ к папке лаунчера."
             )
-        if self.isHidden():
+        if self._hidden_for_game:
+            self._hidden_for_game = False
+            self.show()
+        elif self.isHidden():
             self.close()
             QApplication.instance().quit()
 
