@@ -430,7 +430,7 @@ def add_admin_commands(sub):
         "--command",
         dest="console_command",
         required=True,
-        choices=["players", "roster", "invites", "tps", "save"],
+        choices=["players", "roster", "permanent-bans", "invites", "tps", "save"],
     )
     console.add_argument("--confirm-save", action="store_true")
     _add_tui_operation_parsers(actions)

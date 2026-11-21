@@ -16,7 +16,7 @@ const ACCENT: Color = Color::Rgb(114, 205, 220);
 const WARN: Color = Color::Rgb(237, 184, 104);
 const ERROR: Color = Color::Rgb(235, 114, 119);
 const STATS_ERROR_DURATION: Duration = Duration::from_secs(5);
-const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\ns  Статистика игрока\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
+const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\n4  Бессрочные баны\nk / b / m / u  Модерация игроков\ns  Статистика игрока\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
 
 pub enum Confirmation {
     Save(String),
@@ -39,7 +39,7 @@ pub struct App {
     pub overview: Option<Overview>,
     pub selected_server: usize,
     menu: CommandPage,
-    section: Option<CommandPage>,
+    section: Option<(String, CommandPage)>,
     detail: Option<CommandPage>,
     pub loading: bool,
     pub failed: bool,
@@ -86,10 +86,26 @@ impl App {
         self.menu = CommandPage::new(message);
     }
 
-    pub fn show_section(&mut self, message: String) {
-        self.section = Some(CommandPage::new(message));
+    pub fn show_section(&mut self, command: String, message: String) {
+        self.section = Some((command, CommandPage::new(message)));
         self.detail = None;
         self.clear_stats_error();
+    }
+
+    pub fn membership_section(&self) -> Option<&str> {
+        let (command, _) = self.section.as_ref()?;
+        matches!(command.as_str(), "roster" | "permanent-bans").then_some(command)
+    }
+
+    pub fn refresh_section(&mut self, command: &str, message: String) {
+        if let Some((current, page)) = &mut self.section
+            && current == command
+        {
+            page.scroll = page
+                .scroll
+                .min(message.lines().count().saturating_sub(1) as u16);
+            page.message = message;
+        }
     }
 
     pub fn show_detail(&mut self, message: String) {
@@ -100,14 +116,14 @@ impl App {
     pub fn command_page(&self) -> &CommandPage {
         self.detail
             .as_ref()
-            .or(self.section.as_ref())
+            .or(self.section.as_ref().map(|(_, page)| page))
             .unwrap_or(&self.menu)
     }
 
     pub fn command_page_mut(&mut self) -> &mut CommandPage {
         self.detail
             .as_mut()
-            .or(self.section.as_mut())
+            .or(self.section.as_mut().map(|(_, page)| page))
             .unwrap_or(&mut self.menu)
     }
 
@@ -429,7 +445,7 @@ fn exit_prompt(approved: bool) -> String {
 }
 
 fn render_commands(frame: &mut Frame, area: Rect, app: &mut App) {
-    let panel = block(" Команды · 1/2/3 · k/b/m/u/s · w вайп ");
+    let panel = block(" Команды · 1/2/3/4 · k/b/m/u/s · w вайп ");
     let mut content = panel.inner(area);
     frame.render_widget(panel, area);
     if let Some(error) = app.stats_error(Instant::now()) {

@@ -2,6 +2,7 @@ from omk.game import (
     project_moderation as moderation,
     project_permanent_bans as permanent,
 )
+from omk.owner.panels import owner_console as console
 from tests.fixtures.unit.game.project_moderation import UUID, project
 from tests.fixtures.unit.game.project_permanent_bans import ACCOUNT, drasl
 
@@ -89,3 +90,31 @@ def test_perm_is_for_bans_and_keeps_existing_temporary_restrictions(drasl):
     )["ok"]
     assert _ban(drasl)["error"] == "already_banned"
     assert not drasl.calls
+
+
+def test_project_roster_excludes_banned_profile_even_if_reported_online(
+    drasl, monkeypatch
+):
+    monkeypatch.setattr(
+        console, "_client", lambda config: permanent._operator(config)[0]
+    )
+    monkeypatch.setattr(console, "_credential", lambda _: "test operator token")
+    monkeypatch.setattr(
+        "omk.owner.admin_maintenance.credential", lambda *a: ("endpoint", "test")
+    )
+    monkeypatch.setattr(
+        "omk.labs.recovery.recovery_console.command",
+        lambda *a: f"There are 1/4 players online: FirstJoin ({UUID})",
+    )
+    path = drasl.project.path
+    assert "FirstJoin" in console.run(path, "alpha", "roster")["output"]
+    assert _ban(drasl)["ok"]
+    roster = console.run(path, "alpha", "roster")
+    assert roster["ok"] and "FirstJoin" not in roster["output"]
+    assert console.run(path, "alpha", "permanent-bans")["output"] == "FirstJoin"
+    assert moderation.run(path, "unban", "FirstJoin")["ok"]
+    assert "FirstJoin" in console.run(path, "alpha", "roster")["output"]
+    assert (
+        console.run(path, "alpha", "permanent-bans")["output"]
+        == "Бессрочных банов нет."
+    )
