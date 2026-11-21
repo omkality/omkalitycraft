@@ -14,6 +14,30 @@ from launcher.storage import FileSessionStore
 from tests.fixtures.fakes import FakeDrasl
 
 
+def test_previously_installed_pack_repairs_and_launches_from_one_action(
+    qtbot, tmp_path, monkeypatch
+):
+    service = AccountService(FakeDrasl(), FileSessionStore(tmp_path / "session.json"))
+    installer = SimpleNamespace(
+        local_state=lambda _pack: {"state": "incomplete", "install_complete": True}
+    )
+    window = LauncherWindow(
+        service, installer=installer, runner=GameRunner(tmp_path), auto_restore=False
+    )
+    qtbot.addWidget(window)
+    window._authenticated(service.login("test_player", "test-password"))
+    calls = []
+    monkeypatch.setattr(
+        window.installation,
+        "start",
+        lambda pack_id, **options: calls.append((pack_id, options)),
+    )
+    card = window.home_page.cards["dj2"]
+    qtbot.waitUntil(lambda: card.action.text() == "Проверить и играть")
+    card.action.click()
+    assert [(pack_id, options["play"]) for pack_id, options in calls] == [("dj2", True)]
+
+
 @pytest.mark.parametrize(
     "error",
     [

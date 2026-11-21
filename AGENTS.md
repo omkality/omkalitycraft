@@ -5,7 +5,7 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
 - Development is on `dev`; use focused commits and task branches with PRs into `dev`.
   `master` is for tested milestones. No force pushes or automatic production deployments.
 - Track actionable bugs and open work in GitHub Issues; inspect existing issues to avoid duplicates.
-  Use the DJ2 launch milestone/tracker #41, priorities and concrete acceptance criteria.
+  Use the DJ2 launch milestone/tracker #38, priorities and concrete acceptance criteria.
   Link PRs to issues and close only the scope actually implemented and tested; DEVELOPMENT.md
   keeps decisions/evidence, rather than a second full backlog. Keep detailed unfinished security
   reproductions and raw private lab data outside public issues.
