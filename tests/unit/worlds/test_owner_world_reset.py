@@ -130,6 +130,18 @@ def test_prepare_requires_successful_backup_before_staging(monkeypatch):
     monkeypatch.setattr(wipe.staging, "plan", never_stage)
     result = wipe.run("operator.toml", "dj2", "prepare", state.confirmation("dj2"))
     assert result["ok"] is False and result["effect"] == "unknown"
+    assert "AdminError: Backup failed" in result["diagnostic"]
+    assert "test_owner_world_reset.py:" in result["diagnostic"]
+    assert str(result["confirmation"]) not in result["diagnostic"]
+
+
+def test_diagnostic_omits_subprocess_arguments_and_output():
+    from subprocess import CalledProcessError  # noqa: PLC0415
+
+    error = CalledProcessError(1, ["synthetic-private-input"], stderr="private-output")
+    detail = wipe._diagnostic(error)
+    assert detail.endswith("CalledProcessError")
+    assert "private" not in detail
 
 
 def test_interrupted_write_requires_review_and_running_commit_does_not_restart():

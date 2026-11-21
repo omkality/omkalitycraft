@@ -5,6 +5,7 @@ mod protocol;
 mod startup;
 mod tps_grid;
 mod ui;
+mod wipe_report;
 mod world_reset;
 
 use backend::{Backend, Reply, Request};
@@ -33,6 +34,7 @@ struct Options {
     snapshot: Option<PathBuf>,
     branding_header: bool,
     window_index: usize,
+    reports: wipe_report::Destination,
 }
 
 fn options() -> Result<Option<Options>, String> {
@@ -51,6 +53,7 @@ fn options() -> Result<Option<Options>, String> {
     let mut snapshot = None;
     let mut branding_header = true;
     let mut window_index = 0;
+    let mut export_dir = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--help" | "-h") => {
@@ -77,6 +80,13 @@ fn options() -> Result<Option<Options>, String> {
             Some("--snapshot") => {
                 snapshot = Some(PathBuf::from(args.next().ok_or("--snapshot требует путь")?))
             }
+            Some("--windows-report-dir") => {
+                let path = PathBuf::from(args.next().ok_or("--windows-report-dir требует путь")?);
+                if !path.is_absolute() {
+                    return Err("--windows-report-dir требует абсолютный путь".into());
+                }
+                export_dir = Some(path);
+            }
             _ => return Err("Неизвестный аргумент; используйте --help".into()),
         }
     }
@@ -102,6 +112,7 @@ fn options() -> Result<Option<Options>, String> {
         snapshot,
         branding_header,
         window_index,
+        reports: wipe_report::Destination { export_dir },
     }))
 }
 
@@ -110,13 +121,16 @@ struct Pending {
     receiver: mpsc::Receiver<Result<Reply, String>>,
     handle: Option<thread::JoinHandle<()>>,
     mutating: bool,
-    resetting: bool,
+    reset_step: Option<&'static str>,
     player_stats: bool,
     overview: bool,
 }
 impl Pending {
     fn start(backend: Backend, request: Request) -> Self {
-        let resetting = matches!(&request, Request::WorldReset(_));
+        let reset_step = match &request {
+            Request::WorldReset(action) => Some(action.command),
+            _ => None,
+        };
         let player_stats = matches!(&request, Request::PlayerStats { .. });
         let overview = matches!(&request, Request::Overview(..));
         let mutating = matches!(&request, Request::WorldReset(a) if a.mutating())
@@ -133,7 +147,7 @@ impl Pending {
             receiver,
             handle: Some(handle),
             mutating,
-            resetting,
+            reset_step,
             player_stats,
             overview,
         }
@@ -192,7 +206,7 @@ fn execute() -> Result<(), String> {
     #[cfg(windows)]
     startup::widen_standalone_console();
     let mut terminal = ratatui::init();
-    let result = interactive(&mut terminal, &mut app, options.backend);
+    let result = interactive(&mut terminal, &mut app, options.backend, &options.reports);
     ratatui::restore();
     result.map_err(|_| "Ошибка терминала; результат незавершённой команды неизвестен".into())
 }
@@ -233,6 +247,7 @@ fn interactive(
     terminal: &mut ratatui::DefaultTerminal,
     app: &mut App,
     backend: Option<Backend>,
+    reports: &wipe_report::Destination,
 ) -> io::Result<()> {
     let mut pending = backend
         .as_ref()
@@ -261,10 +276,15 @@ fn interactive(
             page.message = page.message.replacen(COPY_PENDING, status, 1);
             clipboard_copy = None;
         }
-        app.loading = pending.is_some();
+        #[cfg(windows)]
+        let copying = clipboard_copy.is_some();
+        #[cfg(not(windows))]
+        let copying = false;
+        app.loading = pending.is_some() || name_lookup.is_some() || copying;
         app.resetting = pending
             .as_ref()
-            .is_some_and(|work| work.resetting && work.mutating);
+            .and_then(|work| work.reset_step)
+            .filter(|step| *step != "inspect");
         if let Some(work) = &pending {
             match work.receiver.try_recv() {
                 Ok(result) => {
@@ -308,7 +328,17 @@ fn interactive(
                         }
                         Ok(Reply::WorldReset(v)) => {
                             app.failed = !v.ok;
-                            app.world_reset = Some(world_reset::Form::new(v));
+                            let report = (!v.ok).then(|| reports.save(&v.report()));
+                            let form = world_reset::Form::new(v);
+                            app.world_reset = Some(if let Some(report) = report {
+                                form.with_report(report)
+                            } else {
+                                form
+                            });
+                        }
+                        Ok(Reply::Console(v)) if v.ok && v.command == "tps" => {
+                            app.failed = false;
+                            app.show_forge_tps(&v.server_id, &v.output);
                         }
                         Ok(Reply::Console(v)) => {
                             app.failed = !v.ok;
@@ -353,7 +383,7 @@ fn interactive(
                         }
                         Err(error) => {
                             app.failed = true;
-                            let message = format!("{error}\n\nАвтоматической отправки команд нет.");
+                            let message = request_error(&error, work, reports);
                             if work.overview {
                                 app.set_menu_message(message);
                             } else {
@@ -363,7 +393,7 @@ fn interactive(
                     }
                     pending = None;
                     app.loading = false;
-                    app.resetting = false;
+                    app.resetting = None;
                 }
                 Err(mpsc::TryRecvError::Disconnected) if work.player_stats => {
                     app.finish_player_stats(
@@ -375,9 +405,11 @@ fn interactive(
                 }
                 Err(mpsc::TryRecvError::Disconnected) => {
                     app.failed = true;
-                    let message =
-                        "Рабочий процесс завершился без ответа. Результат команды неизвестен."
-                            .into();
+                    let message = request_error(
+                        "Рабочий процесс завершился без ответа. Результат команды неизвестен.",
+                        work,
+                        reports,
+                    );
                     if work.overview {
                         app.set_menu_message(message);
                     } else {
@@ -385,7 +417,7 @@ fn interactive(
                     }
                     pending = None;
                     app.loading = false;
-                    app.resetting = false;
+                    app.resetting = None;
                 }
                 Err(mpsc::TryRecvError::Empty) => {}
             }
@@ -418,7 +450,10 @@ fn interactive(
             if key.modifiers.contains(KeyModifiers::CONTROL) {
                 continue;
             }
-            if pending.as_ref().is_some_and(|work| work.resetting) {
+            if pending
+                .as_ref()
+                .is_some_and(|work| work.reset_step.is_some())
+            {
                 continue;
             }
             if let Some(form) = &mut app.world_reset {
@@ -664,6 +699,15 @@ fn interactive(
             pending = Some(Pending::start(b.clone(), request));
             app.loading = true;
         }
+    }
+}
+
+fn request_error(error: &str, work: &Pending, reports: &wipe_report::Destination) -> String {
+    if let Some(step) = work.reset_step {
+        let path = reports.save(&format!("Step: {step}\n{error}"));
+        format!("{error}\n\n{path}")
+    } else {
+        error.to_owned()
     }
 }
 

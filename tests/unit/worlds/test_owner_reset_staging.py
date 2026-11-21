@@ -305,7 +305,7 @@ def test_dimension_config_is_strict_and_reserved_dimensions_are_refused(targets,
         owner_volumes.target_for(cfg, "dj2", source, "resource-resets.toml")
 
 
-@pytest.mark.parametrize("action", ["plan", "stage", "verify"])
+@pytest.mark.parametrize("action", ["plan", "full-plan", "stage", "verify"])
 def test_worker_mounts_source_and_backup_readonly_and_only_stage_can_write_target(
     monkeypatch, action
 ):
@@ -321,6 +321,12 @@ def test_worker_mounts_source_and_backup_readonly_and_only_stage_can_write_targe
         "preflight_options": {"landing_radius": 7},
         "expected": {"frozen": True},
     }
+    if action == "full-plan":
+        record.update(
+            dimension=0,
+            reset={"folder": None, "landing_dimension": 0, "all_worlds": True},
+        )
+        action = "plan"
     monkeypatch.setattr(backups, "volume", lambda *a: {})
     monkeypatch.setattr(owner_volumes, "destination", lambda *a, **kw: {})
 
@@ -332,9 +338,11 @@ def test_worker_mounts_source_and_backup_readonly_and_only_stage_can_write_targe
             result = {
                 k: request[k] for k in ("operation", "world", "dimension", "snapshot")
             }
-            result.update(
-                ready_for_start=False, preflight={"policy": record["preflight_options"]}
-            )
+            result["ready_for_start"] = False
+            if "reset" in record:
+                result.update(reset=request["reset"], position="auto")
+            else:
+                result["preflight"] = {"policy": record["preflight_options"]}
         else:
             result = {
                 "operation": record["operation"],
