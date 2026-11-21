@@ -6,7 +6,7 @@ use ratatui::{
     text::{Line, Span},
     widgets::{Block, Borders, Clear, Paragraph, Wrap},
 };
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 pub const BG: Color = Color::Rgb(12, 16, 21);
 const PANEL: Color = Color::Rgb(18, 24, 31);
@@ -14,6 +14,8 @@ const TEXT: Color = Color::Rgb(218, 226, 235);
 const MUTED: Color = Color::Rgb(139, 155, 172);
 const ACCENT: Color = Color::Rgb(114, 205, 220);
 const WARN: Color = Color::Rgb(237, 184, 104);
+const ERROR: Color = Color::Rgb(235, 114, 119);
+const STATS_ERROR_DURATION: Duration = Duration::from_secs(5);
 
 pub enum Confirmation {
     Save(String),
@@ -37,11 +39,12 @@ pub struct App {
     pub branding_header: bool,
     pub window_index: usize,
     pub range_picker: Option<usize>,
+    stats_error: Option<(String, Instant)>,
 }
 
 impl App {
     pub fn new(demo: bool) -> Self {
-        Self { overview: None, selected_server: 0, message: "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\ns  Статистика игрока\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, branding_header: false, window_index: 0, range_picker: None }
+        Self { overview: None, selected_server: 0, message: "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\ns  Статистика игрока\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, branding_header: false, window_index: 0, range_picker: None, stats_error: None }
     }
     pub fn server(&self) -> Option<&str> {
         self.overview
@@ -81,6 +84,28 @@ impl App {
             }
             _ => self.history_failed = true,
         }
+    }
+
+    pub fn clear_stats_error(&mut self) {
+        self.stats_error = None;
+    }
+
+    pub fn finish_player_stats(&mut self, result: Result<String, String>, now: Instant) {
+        match result {
+            Ok(card) => {
+                self.stats_error = None;
+                self.message = card;
+                self.scroll = 0;
+            }
+            Err(message) => self.stats_error = Some((message, now + STATS_ERROR_DURATION)),
+        }
+    }
+
+    fn stats_error(&mut self, now: Instant) -> Option<&str> {
+        let _ = self.stats_error.take_if(|(_, expires)| now >= *expires);
+        self.stats_error
+            .as_ref()
+            .map(|(message, _)| message.as_str())
     }
 }
 
@@ -189,14 +214,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         left[0],
     );
     render_tps(frame, app, left[1]);
-    frame.render_widget(
-        Paragraph::new(app.message.as_str())
-            .scroll((app.scroll, 0))
-            .style(Style::default().fg(if app.failed { WARN } else { TEXT }))
-            .block(block(" Команды · 1/2/3 · k/b/m/u/s · w вайп "))
-            .wrap(Wrap { trim: false }),
-        body[1],
-    );
+    render_commands(frame, body[1], app);
     let age = app.refreshed.map(|t| t.elapsed().as_secs());
     let status = if app.loading {
         "Запрос выполняется…".into()
@@ -287,6 +305,29 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
             popup,
         );
     }
+}
+
+fn render_commands(frame: &mut Frame, area: Rect, app: &mut App) {
+    let panel = block(" Команды · 1/2/3 · k/b/m/u/s · w вайп ");
+    let mut content = panel.inner(area);
+    frame.render_widget(panel, area);
+    if let Some(error) = app.stats_error(Instant::now()) {
+        let rows = Layout::vertical([Constraint::Min(1), Constraint::Length(2)]).split(content);
+        content = rows[0];
+        frame.render_widget(
+            Paragraph::new(format!("Ошибка · {error}"))
+                .style(Style::default().fg(ERROR))
+                .wrap(Wrap { trim: true }),
+            rows[1],
+        );
+    }
+    frame.render_widget(
+        Paragraph::new(app.message.as_str())
+            .scroll((app.scroll, 0))
+            .style(Style::default().fg(if app.failed { WARN } else { TEXT }))
+            .wrap(Wrap { trim: false }),
+        content,
+    );
 }
 
 fn render_tps(frame: &mut Frame, app: &App, area: Rect) {

@@ -381,7 +381,7 @@ impl PlayerStatsResult {
 
     pub fn message(self) -> String {
         match self.error.as_deref() {
-            Some("profile_not_found") => "Игрок с таким ником не зарегистрирован.".into(),
+            Some("profile_not_found") => format!("Игрок {} не зарегистрирован.", self.player),
             Some("invalid_request") => "Проверьте ник игрока и выбранный сервер.".into(),
             Some(_) => "Не удалось проверить профиль игрока.".into(),
             None => self.output,
