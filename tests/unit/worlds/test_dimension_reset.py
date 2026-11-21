@@ -1,9 +1,11 @@
 """A selected world cannot omit another world's files or shared player state."""
 
+import json
+
 import pytest
 
 from omk.shared.nbt import Tag
-from omk.worlds.border_policy import border_plan
+from omk.worlds.border_policy import _dimension_info, border_plan
 from omk.worlds.reset import (
     dimension_reset,
     resource_reset_stage,
@@ -20,6 +22,24 @@ def test_exact_dj2_border_sizes_and_dynamic_default():
     assert plan["default_width"] == 8192
     with pytest.raises(ValueError, match="ambiguous"):
         border_plan("DIM-1")
+
+
+def test_border_only_dimensions_keep_the_provider_spawn_on_first_load():
+    source = {
+        "dimensions": [
+            {"dim": 420, "jed": {"SpawnPointSearchType": {"type": "cavern"}}},
+            {"dim": -18000, "worldinfo_onetime": {"RandomSeed": 31}},
+        ]
+    }
+    result = json.loads(
+        _dimension_info(json.dumps(source).encode(), border_plan("dj2"))
+    )
+    rows = {row["dim"]: row for row in result["dimensions"]}
+    assert rows[14676]["jed"]["SpawnPointSearchType"] == {"type": "none"}
+    assert rows[14676]["worldinfo"]["BorderSize"] == 8192
+    assert rows[420]["jed"]["SpawnPointSearchType"] == {"type": "cavern"}
+    assert rows[-18000]["worldinfo_onetime"] == {"RandomSeed": 31}
+    assert "jed" not in rows[-18000] and "jed" not in rows[0]
 
 
 def test_eden_reset_leaves_its_neighbors_and_resource_identity_byte_equivalent():
