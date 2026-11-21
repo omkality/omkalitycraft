@@ -181,26 +181,23 @@ if args.target in {"all", "dj2"}:
             test_classpath,
             "-d",
             str(controls),
+            str(project / "tests/java/net/omkality/BoundedModLogControlsTest.java"),
             str(project / "tests/java/net/omkality/GroovyLogReloadControlsTest.java"),
             str(project / "tests/java/net/omkality/DisconnectDropControlsTest.java"),
         ],
         check=True,
     )
-    subprocess.run(
-        [
-            str(args.java.resolve()),
-            "-cp",
-            os.pathsep.join([str(controls), test_classpath]),
-            "net.omkality.GroovyLogReloadControlsTest",
-        ],
-        check=True,
-    )
-    subprocess.run(
-        [
-            str(args.java.resolve()),
-            "-cp",
-            os.pathsep.join([str(controls), test_classpath]),
-            "net.omkality.DisconnectDropControlsTest",
-        ],
-        check=True,
-    )
+    for control in (
+        "BoundedModLogControlsTest",
+        "GroovyLogReloadControlsTest",
+        "DisconnectDropControlsTest",
+    ):
+        subprocess.run(
+            [
+                str(args.java.resolve()),
+                "-cp",
+                os.pathsep.join([str(controls), test_classpath]),
+                "net.omkality." + control,
+            ],
+            check=True,
+        )
