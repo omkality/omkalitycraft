@@ -5,6 +5,13 @@ import re
 from dataclasses import dataclass
 from urllib.parse import urlsplit
 
+JOURNEYMAP_PREFERENCES_CONFIGS = frozenset(
+    {
+        "journeymap/config/5.7/journeymap.core.config",
+        "journeymap/config/5.7/journeymap.waypoint.config",
+    }
+)
+
 
 @dataclass(frozen=True)
 class DefaultServer:
@@ -45,8 +52,7 @@ def _initial_options(raw: dict) -> tuple[tuple[str, str], ...]:
 
 
 def _initial_configs(raw: list) -> tuple[InitialConfig, ...]:
-    # Explicit adapter allowlist: these are personal JSON settings, never maps,
-    # waypoints, executable files or globally managed pack configuration.
+    # Only initialize personal JSON preferences. Map and waypoint data belong to the player.
     if not isinstance(raw, list) or len(raw) > 8:
         raise ValueError("Invalid initial configs")
     configs = tuple(InitialConfig(**entry) for entry in raw)
@@ -55,9 +61,12 @@ def _initial_configs(raw: list) -> tuple[InitialConfig, ...]:
     for entry in configs:
         if (
             not isinstance(entry.path, str)
-            or not re.fullmatch(
-                r"journeymap/config/5\.7/journeymap\.(minimap2?|fullmap)\.config",
-                entry.path,
+            or (
+                entry.path not in JOURNEYMAP_PREFERENCES_CONFIGS
+                and not re.fullmatch(
+                    r"journeymap/config/5\.7/journeymap\.(minimap2?|fullmap)\.config",
+                    entry.path,
+                )
             )
             or not isinstance(entry.content, dict)
             or len(entry.content) > 100
