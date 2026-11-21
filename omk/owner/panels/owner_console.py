@@ -73,15 +73,13 @@ def _roster(config, online):
     names.update(current)
     if not names:
         return "В списке пока нет игроков."
-    rows = []
-    for name in sorted(names, key=str.casefold):
-        state = (
-            "Статус неизвестен"
-            if online is None
-            else ("В игре" if name in current else "Не в игре")
-        )
-        rows.append(f"{name:<16}  {state}")
-    return "\n".join(rows)
+    ordered = sorted(names, key=str.casefold)
+    if online is None:
+        return "\n".join(["Не удалось проверить, кто в игре.", "", *ordered])
+    return "\n".join(
+        f"{name:<16}  {'В игре' if name in current else 'Не в игре'}"
+        for name in ordered
+    )
 
 
 def _view(config, action, server):

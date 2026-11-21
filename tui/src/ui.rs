@@ -16,7 +16,7 @@ const ACCENT: Color = Color::Rgb(114, 205, 220);
 const WARN: Color = Color::Rgb(237, 184, 104);
 const ERROR: Color = Color::Rgb(235, 114, 119);
 const STATS_ERROR_DURATION: Duration = Duration::from_secs(5);
-const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\n4  Ограничения игроков\nk / b / m / u / n  Модерация игроков\ns  Статистика игрока\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
+const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\n4  Ограничения игроков\n\nk  Кик   b  Бан   m  Выдать мут\ns  Статистика игрока\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
 
 pub enum Confirmation {
     Save(String),
@@ -489,7 +489,7 @@ fn exit_prompt(approved: bool) -> String {
 }
 
 fn render_commands(frame: &mut Frame, area: Rect, app: &mut App) {
-    let panel = block(" Команды · 1/2/3/4 · k/b/m/u/n/s · w вайп ");
+    let panel = block(" Команды · 1/2/3/4 · k/b/m/s · w вайп ");
     let mut content = panel.inner(area);
     frame.render_widget(panel, area);
     if app.resetting.is_none()
