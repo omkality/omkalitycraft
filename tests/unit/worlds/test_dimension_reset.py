@@ -31,7 +31,9 @@ def test_border_only_dimensions_keep_the_provider_spawn_on_first_load():
             {"dim": -18000, "worldinfo_onetime": {"RandomSeed": 31}},
         ]
     }
-    result = json.loads(_dimension_info(json.dumps(source).encode(), border_plan("dj2")))
+    result = json.loads(
+        _dimension_info(json.dumps(source).encode(), border_plan("dj2"))
+    )
     rows = {row["dim"]: row for row in result["dimensions"]}
     assert rows[14676]["jed"]["SpawnPointSearchType"] == {"type": "none"}
     assert rows[14676]["worldinfo"]["BorderSize"] == 8192
