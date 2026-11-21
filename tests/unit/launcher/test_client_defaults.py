@@ -67,8 +67,41 @@ def test_game_discarded_language_alias_is_not_reseeded_until_options_reset(tmp_p
     assert "key_EN alias:88\n" in path.read_text(encoding="utf-8")
 
 
-@pytest.mark.parametrize("minimum", [None, "0.3.0.dev11", "0.3.0.dev12"])
-def test_signed_key_defaults_require_a_capable_minimum_launcher(tmp_path, minimum):
+@pytest.mark.parametrize(
+    ("defaults", "previous", "supported"),
+    [
+        ({"initial_keybindings": {"key.test": 37}}, "0.3.0.dev11", "0.3.0.dev12"),
+        (
+            {
+                "initial_configs": [
+                    {
+                        "path": "journeymap/config/5.7/journeymap.core.config",
+                        "content": {"themeName": "Stronghold"},
+                    }
+                ]
+            },
+            "0.3.0.dev16",
+            "0.3.0.dev17",
+        ),
+        (
+            {
+                "initial_configs": [
+                    {
+                        "path": "journeymap/config/5.7/journeymap.waypoint.config",
+                        "content": {"beaconEnabled": "true"},
+                    }
+                ]
+            },
+            "0.3.0.dev16",
+            "0.3.0.dev17",
+        ),
+    ],
+)
+@pytest.mark.parametrize("level", ["none", "previous", "supported"])
+def test_signed_defaults_require_a_capable_minimum_launcher(
+    tmp_path, defaults, previous, supported, level
+):
+    minimum = {"none": None, "previous": previous, "supported": supported}[level]
     _, release = setup(tmp_path)
     payload = {
         "pack_id": release.pack_id,
@@ -86,18 +119,18 @@ def test_signed_key_defaults_require_a_capable_minimum_launcher(tmp_path, minimu
             ]
         ],
     }
-    payload["launch"]["client_defaults"] = {"initial_keybindings": {"key.test": 37}}
+    payload["launch"]["client_defaults"] = defaults
     payload["schema"] = 1 if minimum is None else 2
     if minimum is not None:
         payload["minimum_launcher_version"] = minimum
-    if minimum != "0.3.0.dev12":
+    if minimum != supported:
         with pytest.raises(ReleaseError):
             Release.parse(payload, {})
     else:
         parsed = Release.parse(payload, {})
-        parsed.require_launcher("0.3.0.dev12")
+        parsed.require_launcher(supported)
         with pytest.raises(ReleaseError, match="обновление"):
-            parsed.require_launcher("0.3.0.dev11")
+            parsed.require_launcher(previous)
 
 
 @pytest.mark.parametrize(
@@ -195,10 +228,43 @@ def test_journeymap_defaults_seed_once_and_preserve_player_changes(tmp_path: Pat
         json.loads((base / "journeymap.fullmap.config").read_text())["showGrid"]
         == "false"
     )
-    personal = b'{"shape":"Circle","showGrid":"true"}'
-    minimap.write_bytes(personal)
+    theme = base / "journeymap.core.config"
+    waypoint = base / "journeymap.waypoint.config"
+    assert json.loads(theme.read_bytes())["themeName"] == "Stronghold"
+    settings = json.loads(waypoint.read_bytes())
+    assert {key for key in settings if settings[key] == "true"} == {
+        "managerEnabled",
+        "beaconEnabled",
+        "showTexture",
+        "showName",
+        "showDistance",
+        "autoHideLabel",
+        "textureSmall",
+        "createDeathpoints",
+        "showDeathpointlabel",
+    }
+    assert {key for key in settings if settings[key] == "false"} == {
+        "showStaticBeam",
+        "showRotatingBeam",
+        "boldLabel",
+        "autoRemoveDeathpoints",
+    }
+    assert settings["fontScale"] == "2"
+    assert settings["minDistance"] == "4"
+    assert settings["maxDistance"] == "0"
+    personal = {
+        minimap: b'{"shape":"Circle","showGrid":"true"}',
+        theme: b'{"themeName":"Purist","configVersion":"5.7.1p3"}',
+        waypoint: b'{"autoHideLabel":"false","fontScale":"3"}',
+    }
+    marker = folder / "journeymap/data/mp/local/waypoints/home.json"
+    marker.parent.mkdir(parents=True)
+    personal[marker] = b'{"name":"Home"}'
+    for path, data in personal.items():
+        path.write_bytes(data)
     prepare_client_defaults(release, folder)
-    assert minimap.read_bytes() == personal
+    for path, data in personal.items():
+        assert path.read_bytes() == data
 
 
 @pytest.mark.parametrize(

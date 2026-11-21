@@ -16,7 +16,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 )
 from packaging.version import Version
 
-from launcher.pack.client_policy import ClientDefaults
+from launcher.pack.client_policy import JOURNEYMAP_PREFERENCES_CONFIGS, ClientDefaults
 from launcher.version import VERSION
 from omk.shared.content_policy import is_private_path
 from omk.shared.fs import resolved
@@ -179,6 +179,13 @@ def _require_default_capabilities(defaults: dict, minimum: str | None) -> None:
             minimum is None or Version(minimum) < Version(version)
         ):
             raise ValueError(f"{field} requires minimum launcher {version}")
+    if any(
+        config["path"] in JOURNEYMAP_PREFERENCES_CONFIGS
+        for config in defaults.get("initial_configs", ())
+    ) and (minimum is None or Version(minimum) < Version("0.3.0.dev17")):
+        raise ValueError(
+            "JourneyMap core and waypoint defaults require launcher 0.3.0.dev17"
+        )
 
 
 @dataclass(frozen=True)

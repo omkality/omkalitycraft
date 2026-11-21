@@ -89,6 +89,39 @@
         "zoomLevel": "1",
         "configVersion": "5.7.1p3"
       }
+    },
+    {
+      "path": "journeymap/config/5.7/journeymap.core.config",
+      "content": {
+        "themeName": "Stronghold",
+        "configVersion": "5.7.1p3"
+      }
+    },
+    {
+      "path": "journeymap/config/5.7/journeymap.waypoint.config",
+      "content": {
+        "managerEnabled": "true",
+        "beaconEnabled": "true",
+        "showTexture": "true",
+        "showStaticBeam": "false",
+        "showRotatingBeam": "false",
+        "showName": "true",
+        "showDistance": "true",
+        "autoHideLabel": "true",
+        "boldLabel": "false",
+        "fontScale": "2",
+        "textureSmall": "true",
+        "maxDistance": "0",
+        "minDistance": "4",
+        "createDeathpoints": "true",
+        "autoRemoveDeathpoints": "false",
+        "autoRemoveDeathpointDistance": "2",
+        "showDeathpointlabel": "true",
+        "teleportCommand": "/tp {name} {x} {y} {z}",
+        "dateFormat": "MM-dd-yyyy",
+        "timeFormat": "HH:mm:ss",
+        "configVersion": "5.7.1p3"
+      }
     }
   ]
 }
