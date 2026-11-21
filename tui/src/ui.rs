@@ -27,11 +27,16 @@ pub enum Confirmation {
 pub struct CommandPage {
     pub message: String,
     pub scroll: u16,
+    forge_tps: Option<Vec<Line<'static>>>,
 }
 
 impl CommandPage {
     fn new(message: String) -> Self {
-        Self { message, scroll: 0 }
+        Self {
+            message,
+            scroll: 0,
+            forge_tps: None,
+        }
     }
 }
 
@@ -48,7 +53,8 @@ pub struct App {
     pub confirm: Option<Confirmation>,
     pub moderation: Option<crate::moderation::Form>,
     pub world_reset: Option<crate::world_reset::Form>,
-    pub resetting: bool,
+    pub resetting: Option<&'static str>,
+    animation_start: Instant,
     pub history: Option<TpsHistory>,
     pub history_failed: bool,
     pub branding_header: bool,
@@ -72,7 +78,8 @@ impl App {
             confirm: None,
             moderation: None,
             world_reset: None,
-            resetting: false,
+            resetting: None,
+            animation_start: Instant::now(),
             history: None,
             history_failed: false,
             branding_header: false,
@@ -90,6 +97,17 @@ impl App {
         self.section = Some((command, CommandPage::new(message)));
         self.detail = None;
         self.clear_stats_error();
+    }
+
+    pub fn show_forge_tps(&mut self, server: &str, output: &str) {
+        self.show_section("tps".into(), format!("Forge TPS · {server}\n\n{output}"));
+        self.command_page_mut().forge_tps = forge_tps_lines(server, output);
+    }
+
+    fn spinner(&self) -> char {
+        const FRAMES: [char; 10] = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+        let frame = (self.animation_start.elapsed().as_millis() / 100) % FRAMES.len() as u128;
+        FRAMES[frame as usize]
     }
 
     pub fn membership_section(&self) -> Option<&str> {
@@ -339,7 +357,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     render_commands(frame, body[1], app);
     let age = app.refreshed.map(|t| t.elapsed().as_secs());
     let status = if app.loading {
-        "Запрос выполняется…".into()
+        format!("{} Запрос выполняется", app.spinner())
     } else if app.failed {
         "Ошибка · показания могут быть устаревшими".into()
     } else {
@@ -351,7 +369,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         })
         .unwrap_or_else(|| "Данных пока нет".into())
     };
-    let back_hint = if app.at_menu() && !app.resetting {
+    let back_hint = if app.at_menu() && app.resetting.is_none() {
         "Esc выход"
     } else {
         "Esc назад"
@@ -360,13 +378,13 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         Paragraph::new(format!(
             " r обновить   ← → сервер   t период   i ключ   {back_hint}  |  {status}"
         ))
-        .style(
-            Style::default().fg(if app.failed || age.is_some_and(|a| a > 20) {
-                WARN
-            } else {
-                MUTED
-            }),
-        )
+        .style(Style::default().fg(if app.loading {
+            ACCENT
+        } else if app.failed || age.is_some_and(|a| a > 20) {
+            WARN
+        } else {
+            MUTED
+        }))
         .block(block(" просмотр обновляется каждые 5 с ")),
         rows[2],
     );
@@ -459,21 +477,116 @@ fn render_commands(frame: &mut Frame, area: Rect, app: &mut App) {
         );
     }
     let page = app.command_page();
-    let (message, scroll) = if app.resetting {
+    let (message, scroll) = if let Some(step) = app.resetting {
+        let label = match step {
+            "prepare" => "Подготовка мира и резервной копии",
+            "apply" => "Установка нового мира",
+            _ => "Запуск и проверка сервера",
+        };
         (
-            "Выполняется этап вайпа.\nРезультат появится здесь после завершения.",
+            Paragraph::new(Line::styled(
+                format!("{} {label}", app.spinner()),
+                Style::default().fg(ACCENT),
+            )),
             0,
         )
+    } else if let Some(lines) = &page.forge_tps {
+        (Paragraph::new(lines.clone()), page.scroll)
     } else {
-        (page.message.as_str(), page.scroll)
+        (Paragraph::new(page.message.as_str()), page.scroll)
     };
     frame.render_widget(
-        Paragraph::new(message)
+        message
             .scroll((scroll, 0))
             .style(Style::default().fg(if app.failed { WARN } else { TEXT }))
             .wrap(Wrap { trim: false }),
         content,
     );
+}
+
+fn forge_tps_lines(server: &str, output: &str) -> Option<Vec<Line<'static>>> {
+    let mut readings = Vec::new();
+    let mut other = Vec::new();
+    for mut line in output.lines().map(str::trim).filter(|s| !s.is_empty()) {
+        while !line.is_empty() {
+            let Some((name, tick, tps, rest)) = forge_reading(line) else {
+                other.push(line.to_owned());
+                break;
+            };
+            readings.push((name, tick, tps));
+            line = rest.trim();
+        }
+    }
+    if readings.is_empty() {
+        return None;
+    }
+    let mut lines = vec![
+        Line::styled(format!("Forge TPS · {server}"), Style::default().fg(ACCENT)),
+        Line::default(),
+        Line::styled(
+            format!("{:<28} {:>8} {:>8}", "Измерение", "Тик, мс", "TPS"),
+            Style::default().fg(MUTED),
+        ),
+        Line::styled(
+            "──────────────────────────── ──────── ────────",
+            Style::default().fg(MUTED),
+        ),
+    ];
+    readings.sort_by_key(|(name, _, _)| *name != "Overall");
+    for (index, (name, tick, tps)) in readings.into_iter().enumerate() {
+        let overall = name == "Overall";
+        let title = if overall {
+            "Весь сервер"
+        } else {
+            name.trim_start_matches("Dim ").trim_start()
+        };
+        let mut label: String = title.chars().take(28).collect();
+        if label != title {
+            label.pop();
+            label.push('…');
+        }
+        let background = if index % 2 == 0 { PANEL } else { BG };
+        lines.push(
+            Line::from(vec![
+                Span::styled(
+                    format!("{label:<28}"),
+                    Style::default().fg(if overall { ACCENT } else { TEXT }),
+                ),
+                Span::styled(format!(" {tick:>8.2} "), Style::default().fg(MUTED)),
+                Span::styled(
+                    format!("{tps:>8.2}"),
+                    Style::default().fg(crate::tps_grid::color(tps)),
+                ),
+            ])
+            .style(Style::default().bg(background)),
+        );
+    }
+    if !other.is_empty() {
+        lines.push(Line::default());
+        lines.extend(other.into_iter().map(Line::raw));
+    }
+    Some(lines)
+}
+
+fn forge_reading(line: &str) -> Option<(&str, f64, f64, &str)> {
+    let (name, values) = line.split_once(": Mean tick time:")?;
+    let name = name.trim();
+    if name != "Overall" && !name.starts_with("Dim ") {
+        return None;
+    }
+    let (tick, rest) = values.split_once(" ms. Mean TPS:")?;
+    let rest = rest.trim_start();
+    let end = rest
+        .find(|c: char| !c.is_ascii_digit() && !matches!(c, '.' | ','))
+        .unwrap_or(rest.len());
+    let parse = |text: &str| {
+        text.trim()
+            .replace(',', ".")
+            .parse::<f64>()
+            .ok()
+            .filter(|v| v.is_finite() && *v >= 0.0)
+    };
+    Some((name, parse(tick)?, parse(&rest[..end])?, &rest[end..]))
 }
 
 fn render_tps(frame: &mut Frame, app: &App, area: Rect) {
@@ -570,4 +683,32 @@ fn render_metrics(
         lines.push(Line::styled(warning, Style::default().fg(MUTED)));
     }
     frame.render_widget(Paragraph::new(lines).block(block(title)), area);
+}
+
+#[cfg(test)]
+mod forge_tests {
+    use super::*;
+
+    #[test]
+    fn forge_tps_separates_rcon_rows_and_colors_the_total_and_slow_dimensions() {
+        let rows = forge_tps_lines(
+            "dj2",
+            "Dim 0 (overworld) : Mean tick time: 2.00 ms. Mean TPS: 20.000\n\
+             Dim -1 (nether): Mean tick time: 63.12 ms. Mean TPS: 15.843\
+             Overall: Mean tick time: 66.0 ms. Mean TPS: 15.151\nExtra status",
+        )
+        .unwrap();
+        assert_eq!(rows[4].spans[0].content.trim(), "Весь сервер");
+        assert_eq!(rows[5].spans[0].content.trim(), "0 (overworld)");
+        assert_eq!(
+            rows[5].spans[2].style.fg,
+            Some(crate::tps_grid::color(20.0))
+        );
+        assert_eq!(
+            rows[6].spans[2].style.fg,
+            Some(crate::tps_grid::color(15.843))
+        );
+        assert_eq!(rows.last().unwrap().spans[0].content, "Extra status");
+        assert!(forge_tps_lines("dj2", "You may not use this command").is_none());
+    }
 }

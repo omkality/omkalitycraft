@@ -80,6 +80,7 @@ pub struct Receipt {
     backup: Option<String>,
     resource: Option<String>,
     installation: Option<String>,
+    diagnostic: Option<String>,
     #[serde(default)]
     worlds: Vec<World>,
 }
@@ -93,6 +94,12 @@ impl Receipt {
             || value.command != request.command
             || !matches!(value.effect.as_str(), "none" | "applied" | "unknown")
             || value.ok != value.error.is_none()
+            || value.diagnostic.as_deref().is_some_and(|detail| {
+                value.ok
+                    || detail.is_empty()
+                    || detail.len() > 4096
+                    || detail.chars().any(|c| c != '\n' && c.is_control())
+            })
             || value.ok
                 && value.effect
                     != if request.mutating() {
@@ -169,6 +176,35 @@ impl Receipt {
         Ok(value)
     }
 
+    pub fn report(&self) -> String {
+        let mut lines = vec![
+            format!("Server: {}", self.server_id),
+            format!("Step: {}", self.command),
+            format!(
+                "Result: {} ({})",
+                self.error.as_deref().unwrap_or("unknown"),
+                self.effect
+            ),
+        ];
+        if let Some(dimension) = self.dimension {
+            lines.push(format!("Dimension: {dimension}"));
+        }
+        for (name, id) in [
+            ("Maintenance", &self.maintenance),
+            ("Backup", &self.backup),
+            ("Staging", &self.resource),
+            ("Installation", &self.installation),
+        ] {
+            if let Some(id) = id {
+                lines.push(format!("{name}: {id}"));
+            }
+        }
+        if let Some(detail) = &self.diagnostic {
+            lines.push(detail.to_owned());
+        }
+        lines.join("\n")
+    }
+
     fn label(&self) -> &str {
         match self.stage.as_str() {
             "prepare" => "Подготовить вайп и резервную копию",
@@ -185,9 +221,7 @@ impl Receipt {
                 "owner_busy" => "Другая операция уже выполняется.",
                 "ingress_not_drained" => "Дождитесь, пока все игроки выйдут.",
                 "join_closed" => "Новый мир запустился. Игровой вход открыть не удалось.",
-                _ if self.effect == "unknown" => {
-                    "Этап прервался. Проверьте состояние и журналы перед продолжением."
-                }
+                _ if self.effect == "unknown" => "Этап вайпа прервался.",
                 _ => "Проверьте настройки резервного копирования и вайпа.",
             };
         }
@@ -219,6 +253,7 @@ pub struct Form {
     receipt: Receipt,
     confirming: bool,
     yes: bool,
+    report: Option<String>,
 }
 
 impl Form {
@@ -227,7 +262,13 @@ impl Form {
             receipt,
             confirming: false,
             yes: false,
+            report: None,
         }
+    }
+
+    pub fn with_report(mut self, report: String) -> Self {
+        self.report = Some(report);
+        self
     }
 
     pub fn dismiss_confirmation(&mut self) -> bool {
@@ -307,6 +348,9 @@ impl Form {
             }
         }
         body.push_str(&format!("\n{}\n", self.receipt.status()));
+        if let Some(report) = &self.report {
+            body.push_str(&format!("\n{report}\n"));
+        }
         if self.confirming {
             let choices = if self.yes {
                 "  Нет      [ Да, выполнить ]"

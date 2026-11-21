@@ -4,6 +4,9 @@ import re
 import subprocess
 from contextlib import nullcontext
 from dataclasses import dataclass
+from datetime import UTC, datetime
+from pathlib import Path
+from traceback import extract_tb
 
 from omk.backups.cold_backup_worker import digest
 from omk.deployment import ingress, ingress_config
@@ -370,8 +373,9 @@ def _execute_stage(config, server, action, state, result):
                 result["effect"] = "unknown"
                 _set_ingress(config, server, "closed")
         _require_drained(config, server, state.window)
-    except AdminError, OSError, subprocess.SubprocessError:
+    except (AdminError, OSError, subprocess.SubprocessError) as error:
         result["error"] = "ingress_not_drained"
+        result["diagnostic"] = _diagnostic(error)
         return False
     result["effect"] = "unknown"
     if action == "prepare":
@@ -384,10 +388,49 @@ def _execute_stage(config, server, action, state, result):
             result.update(stage="complete", confirmation=None)
             try:
                 _set_ingress(config, server, "open")
-            except AdminError, OSError, subprocess.SubprocessError:
+            except (AdminError, OSError, subprocess.SubprocessError) as error:
                 result["error"] = "join_closed"
+                result["diagnostic"] = _diagnostic(error)
                 return False
     return True
+
+
+def _diagnostic(error: Exception) -> str:
+    """Summarize the failed check without arguments, locals, or raw CLI output."""
+    # AdminError is reserved for operator-safe messages. Other exception messages
+    # can contain private paths or the input/output of a failed subprocess.
+    detail = type(error).__name__
+    if isinstance(error, AdminError):
+        message = "".join(char for char in str(error) if char.isprintable())[:500]
+        detail = f"{detail}: {message}"
+    trace = extract_tb(error.__traceback__)[-8:]
+    lines = [
+        f"{Path(frame.filename).name}:{frame.lineno} ({frame.name})" for frame in trace
+    ]
+    return "\n".join([datetime.now(UTC).isoformat(timespec="seconds"), detail, *lines])
+
+
+def _record_current_stage(config, server, worlds, dimension, result):
+    """Include current journal references when an attempted step fails."""
+    if result["effect"] != "unknown":
+        return
+    try:
+        state = _selected_state(config, server, worlds, dimension)
+    except (
+        AdminError,
+        KeyError,
+        OSError,
+        TypeError,
+        ValueError,
+        subprocess.SubprocessError,
+    ):
+        return
+    for field in ("maintenance", "backup", "resource", "installation"):
+        operation = _operation(
+            getattr(state, "window" if field == "maintenance" else field)
+        )
+        if operation is not None:
+            result[field] = operation
 
 
 def run(path, server, action, confirmation, *, catalog=False, dimension=None):
@@ -424,8 +467,20 @@ def run(path, server, action, confirmation, *, catalog=False, dimension=None):
                 ):
                     result["error"] = "state_changed"
                     return result
-                if not _execute_stage(config, server, action, state, result):
-                    return result
+                try:
+                    if not _execute_stage(config, server, action, state, result):
+                        _record_current_stage(config, server, worlds, dimension, result)
+                        return result
+                except (
+                    AdminError,
+                    KeyError,
+                    OSError,
+                    TypeError,
+                    ValueError,
+                    subprocess.SubprocessError,
+                ):
+                    _record_current_stage(config, server, worlds, dimension, result)
+                    raise
                 result.update(
                     _selected_state(config, server, worlds, dimension).payload(
                         server, world=world
@@ -435,8 +490,9 @@ def run(path, server, action, confirmation, *, catalog=False, dimension=None):
                 )
                 result["effect"] = "applied"
             result["ok"] = True
-    except backups.OwnerBusy:
+    except backups.OwnerBusy as error:
         result["error"] = "owner_busy"
+        result["diagnostic"] = _diagnostic(error)
     except (
         AdminError,
         KeyError,
@@ -444,6 +500,7 @@ def run(path, server, action, confirmation, *, catalog=False, dimension=None):
         TypeError,
         ValueError,
         subprocess.SubprocessError,
-    ):
+    ) as error:
         result["error"] = "operation_rejected"
+        result["diagnostic"] = _diagnostic(error)
     return result

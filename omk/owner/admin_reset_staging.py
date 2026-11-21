@@ -326,13 +326,21 @@ def worker(record, action, *, allowed_container=None):
         ):
             raise AdminError("Runtime worker returned a different identity or receipt")
     elif action == "plan":
+        full_reset = request.get("reset", {}).get("all_worlds") is True
+        # A full reset discards player positions and generates every dimension again.
+        landing_bound = (
+            "preflight" not in result and result.get("position") == request["position"]
+            if full_reset
+            else result.get("preflight", {}).get("policy")
+            == record["preflight_options"]
+        )
         if (
             any(
                 result.get(k) != request[k]
                 for k in ("operation", "world", "dimension", "snapshot")
             )
             or result.get("reset") != request.get("reset")
-            or result.get("preflight", {}).get("policy") != record["preflight_options"]
+            or not landing_bound
         ):
             raise AdminError(
                 "Resource staging worker returned a different plan identity"
