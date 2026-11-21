@@ -13,6 +13,7 @@ from omk.backups.stopped_world_backup import inventory
 from omk.shared.fs import regular
 from omk.shared.profiles import PROJECT_ROOT
 from omk.worlds import enderutilities_reset as ender
+from omk.worlds.reset.dimension_reset import layout
 from omk.worlds.reset.resource_reset_inventory import validate_dimension
 from omk.worlds.reset.resource_reset_landing import (
     NoReviewedLanding,
@@ -28,13 +29,19 @@ LIMITS = {
     "landing_chunks": ("OMK_RESET_LANDING_CHUNK_BUDGET", 32, 1, 256),
     "reference_chunks": ("OMK_RESET_REFERENCE_CHUNK_BUDGET", 100000, 1, 1000000),
 }
+OVERWORLD_LANDING_DEFAULTS = {
+    "landing_radius": 32,
+    "landing_vertical": 32,
+    "landing_chunks": 128,
+}
 
 
-def settings(environment=None):
+def settings(environment=None, *, overworld=False):
     env = os.environ if environment is None else environment
     result = {}
+    defaults = OVERWORLD_LANDING_DEFAULTS if overworld else {}
     for key, (name, default, low, high) in LIMITS.items():
-        raw = env.get(name, str(default))
+        raw = env.get(name, str(defaults.get(key, default)))
         if not isinstance(raw, str) or not raw.isascii() or not raw.isdecimal():
             raise ValueError("Invalid preflight option: " + name)
         number = int(raw)
@@ -74,12 +81,18 @@ def preflight(
     *,
     options=None,
     world_max_bytes=1024**4,
+    reset=None,
 ):
     if type(world_max_bytes) is not int or not 1 <= world_max_bytes <= 1024**4:
         raise ValueError("Invalid preflight world byte budget")
-    validate_dimension(dimension)
+    if reset is None:
+        validate_dimension(dimension)
+    elif reset != layout(dimension):
+        raise ValueError("Unreviewed dimension reset layout")
     world = world_path(server, world_name)
-    policy = options_checked(settings() if options is None else options)
+    policy = options_checked(
+        settings(overworld=dimension == 0) if options is None else options
+    )
     raw = PROFILE.read_bytes()
     profile = json.loads(raw)
     pins = artifacts(server, profile)
@@ -103,6 +116,7 @@ def preflight(
                 radius=policy["landing_radius"],
                 vertical=policy["landing_vertical"],
                 max_chunks=policy["landing_chunks"],
+                **({"resource_landing": True} if dimension == 0 else {}),
             ),
         }
     except NoReviewedLanding:
@@ -115,6 +129,7 @@ def preflight(
         max_chunks=policy["reference_chunks"],
         nonportal_patterns=profile["nonportal_binary_patterns"],
         enderutilities_targets=ender_enabled,
+        reset=reset,
     )
     if (
         snapshot() != before

@@ -11,6 +11,7 @@ from omk.backups.stopped_world_backup import inventory
 from omk.shared.fs import regular
 from omk.shared.nbt import Tag
 from omk.shared.profiles import PROJECT_ROOT
+from omk.worlds.reset import dimension_reset
 
 PROFILE = PROJECT_ROOT / "profiles/server-defaults/dj2/resource-world.json"
 
@@ -138,15 +139,15 @@ def _policy(server, dimension, profile):
 
 
 def inspect_resource(  # noqa: PLR0912, PLR0915 -- one bounded read-only audit
-    server, world_name, dimension, *, world_max_bytes
+    server, world_name, dimension, *, world_max_bytes, reset=None
 ):
-    profile = validate_dimension(dimension)
+    profile = validate_dimension(dimension) if reset is None else None
     if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", world_name):
         raise ValueError("Invalid configured world root")
     server = Path(server).absolute()
     if server.resolve() != server or not server.is_dir():
         raise ValueError("Expected a regular source server root")
-    policy = _policy(server, dimension, profile)
+    policy = _policy(server, dimension, profile) if profile is not None else None
     world = server / world_name
     before = inventory(
         world,
@@ -154,18 +155,29 @@ def inspect_resource(  # noqa: PLR0912, PLR0915 -- one bounded read-only audit
         max_expanded_bytes=world_max_bytes,
         path_policy="linux-server",
     )
-    expected = {
-        "schema": "1",
-        "identity": policy["identity"],
-        "dimension": str(dimension),
-        "seed": str(int(policy["seed"])),
-    }
-    if (
-        _properties(world / "omk-resource-world.properties", world) != expected
-        or _properties(world / f"DIM{dimension}/.omk-resource.properties", world)
-        != expected
-    ):
-        raise ValueError("Resource ownership records differ")
+    if policy is not None:
+        expected = {
+            "schema": "1",
+            "identity": policy["identity"],
+            "dimension": str(dimension),
+            "seed": str(int(policy["seed"])),
+        }
+        if (
+            _properties(world / "omk-resource-world.properties", world) != expected
+            or _properties(world / f"DIM{dimension}/.omk-resource.properties", world)
+            != expected
+        ):
+            raise ValueError("Resource ownership records differ")
+    else:
+        dimension_reset.verify_layout(world, dimension, reset, before)
+        ftb.check_runtime(server)
+        expected = {"schema": "1", "dimension": str(dimension), **reset}
+        if dimension == 0:
+            _policy(
+                server,
+                dimension_reset.RESOURCE,
+                validate_dimension(dimension_reset.RESOURCE),
+            )
     result = {
         "primary_player_records": 0,
         "primary_positions_in_resource": 0,
@@ -276,7 +288,7 @@ def inspect_resource(  # noqa: PLR0912, PLR0915 -- one bounded read-only audit
     )
     if before != after:
         raise ValueError("Source world changed during read-only inspection")
-    if _policy(server, dimension, profile) != policy:
+    if profile is not None and _policy(server, dimension, profile) != policy:
         raise ValueError("Resource configuration changed during read-only inspection")
     return {
         "schema": 1,

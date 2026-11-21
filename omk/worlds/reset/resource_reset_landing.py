@@ -34,6 +34,21 @@ class NoReviewedLanding(ValueError):
     """Valid save, but no conservative candidate inside the bounded search."""
 
 
+def _protected_spawn_chunks(world):
+    team = nbt(_read(world / "data/ftb_lib/teams/omk_spawn.dat", world))
+    if anvil.value(team, "Type", 8) != "server":
+        raise ValueError("Landing protection is not a server team")
+    claims = anvil.value(
+        nbt(_read(world / "data/ftb_lib/teams/claimedchunks/omk_spawn.dat", world)),
+        "ClaimedChunks",
+        10,
+    )
+    return {
+        (anvil.value(row, "x", 3), anvil.value(row, "z", 3))
+        for row in anvil.compounds(claims, "0")
+    }
+
+
 def world_path(server, world_name):
     if not isinstance(world_name, str) or not re.fullmatch(
         r"[A-Za-z0-9_-]{1,64}", world_name
@@ -48,7 +63,13 @@ def world_path(server, world_name):
 
 
 def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
-    server: Path, world_name: str, *, radius=16, vertical=8, max_chunks=32
+    server: Path,
+    world_name: str,
+    *,
+    radius=16,
+    vertical=8,
+    max_chunks=32,
+    resource_landing=False,
 ):
     if any(type(v) is not int for v in (radius, vertical, max_chunks)) or not (
         0 <= radius <= 32 and 0 <= vertical <= 32 and 1 <= max_chunks <= 256
@@ -57,6 +78,11 @@ def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
     world = world_path(server, world_name)
     root = nbt(_read(world / "level.dat", world))
     data = anvil.value(root, "Data", 10)
+    terrain = world
+    if resource_landing:
+        terrain = world / "DIM-18000"
+        saved_resource = nbt(_read(terrain / "jed_level.dat", world))
+        data = anvil.value(saved_resource, "Data", 10)
     spawn = [anvil.value(data, "Spawn" + axis, 3) for axis in "XYZ"]
     if not all(abs(spawn[i]) <= 29999000 for i in (0, 2)) or not 1 <= spawn[1] <= 253:
         raise ValueError("Invalid saved spawn")
@@ -82,18 +108,7 @@ def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
         names.add(name)
     if "minecraft:air" not in names:
         raise ValueError("FML registry has no air")
-    team = nbt(_read(world / "data/ftb_lib/teams/omk_spawn.dat", world))
-    if anvil.value(team, "Type", 8) != "server":
-        raise ValueError("Landing protection is not a server team")
-    claims = anvil.value(
-        nbt(_read(world / "data/ftb_lib/teams/claimedchunks/omk_spawn.dat", world)),
-        "ClaimedChunks",
-        10,
-    )
-    points = {
-        (anvil.value(row, "x", 3), anvil.value(row, "z", 3))
-        for row in anvil.compounds(claims, "0")
-    }
+    points = None if resource_landing else _protected_spawn_chunks(world)
     cache, missing = {}, set()
 
     def saved(cx, cz):
@@ -101,7 +116,7 @@ def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
         if key not in cache and key not in missing:
             if len(cache) + len(missing) >= max_chunks:
                 raise ValueError("Landing chunk budget exceeded")
-            path = world / "region" / f"r.{cx // 32}.{cz // 32}.mca"
+            path = terrain / "region" / f"r.{cx // 32}.{cz // 32}.mca"
             if not path.exists():
                 missing.add(key)
                 return None
@@ -164,7 +179,7 @@ def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
         for dx in range(-1, 2):
             for dz in range(-1, 2):
                 xx, zz = x + dx, z + dz
-                if (xx >> 4, zz >> 4) not in points or not (
+                if (points is not None and (xx >> 4, zz >> 4) not in points) or not (
                     abs(xx + 0.5 - border[0]) < border[2] / 2 - 1
                     and abs(zz + 0.5 - border[1]) < border[2] / 2 - 1
                 ):
@@ -193,7 +208,11 @@ def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
             if safe(x, y, z):
                 return {
                     "schema": 1,
-                    "kind": "forge112-saved-vanilla-floor-air-server-claim",
+                    "kind": (
+                        "forge112-resource-floor-air"
+                        if resource_landing
+                        else "forge112-saved-vanilla-floor-air-server-claim"
+                    ),
                     "position": [x, y, z],
                     "saved_spawn": spawn,
                     "chunks_read": len(cache),

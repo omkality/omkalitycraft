@@ -1,6 +1,5 @@
 """Manual TUI workflow over the existing cold resource-world operations."""
 
-import json
 import re
 import subprocess
 from contextlib import nullcontext
@@ -21,7 +20,8 @@ from omk.owner.admin import (
 )
 from omk.owner.panels import owner_volumes
 from omk.worlds import world_cutover as cutover
-from omk.worlds.reset.resource_reset_inventory import PROFILE, validate_dimension
+from omk.worlds.reset.dimension_reset import RESOURCE, layout
+from omk.worlds.reset.resource_reset_inventory import validate_dimension
 
 COMMANDS = ("inspect", "prepare", "apply", "start")
 
@@ -38,6 +38,7 @@ class State:
     backup: dict | None = None
     resource: dict | None = None
     installation: dict | None = None
+    reset: dict | None = None
 
     def confirmation(self, server, *, world=None):
         """Return the confirmation details for the next permitted operation."""
@@ -122,25 +123,37 @@ def _phase(state):
     return "prepare"
 
 
-def _state(config, server):
+def _state(config, server, selection=None):
     if server not in config.servers:
         raise AdminError("Server is not in the operator allowlist")
-    path = config.private / "resource-resets.toml"
+    filename = "resource-resets.toml"
+    path = config.private / filename
     if not path.exists() and not path.is_symlink():
-        return State()
+        return State(
+            dimension=selection,
+            stage="unsupported" if selection is not None else "unconfigured",
+        )
     _require_private(path)
-    entry = owner_volumes.document(config, "resource-resets.toml").get(server)
+    entry = owner_volumes.document(config, filename).get(server)
     if entry is None:
-        return State()
-    owner_volumes.validate_entry(entry, "resource-resets.toml")
-    dimension = entry["dimension"]
-    if dimension != validate_dimension(dimension)["dimension"]:
+        return State(
+            dimension=selection,
+            stage="unsupported" if selection is not None else "unconfigured",
+        )
+    owner_volumes.validate_entry(entry, filename)
+    dimension = entry["dimension"] if selection is None else selection
+    if selection is None and dimension != validate_dimension(dimension)["dimension"]:
         return State(dimension=dimension, stage="unsupported")
     if not ingress_config.configured(config):
         return State(dimension=dimension, stage="no-ingress")
     source = backups.target_for(config, server)
-    target = owner_volumes.target_for(config, server, source, "resource-resets.toml")
-    state = State(dimension=dimension, source=source, target=target)
+    target = owner_volumes.target_for(config, server, source, filename)
+    state = State(
+        dimension=dimension,
+        source=source,
+        target=target,
+        reset=layout(dimension) if selection is not None else None,
+    )
     state.installation = _one(
         [
             r
@@ -166,6 +179,7 @@ def _state(config, server):
         if (
             state.resource["target"] != target
             or state.resource["dimension"] != dimension
+            or state.resource.get("reset") != state.reset
             or state.resource["source"] != source
             or state.window["server"] != server
         ):
@@ -227,7 +241,14 @@ def _prepare(config, server, state):
             backup_id = backups.plan(config, server)["operation"]
         if state.backup is None or state.backup["stage"] == "planned":
             backups.run(config, backup_id)
-        resource = staging.plan(config, server, state.dimension, window_id, backup_id)
+        resource = staging.plan(
+            config,
+            server,
+            state.dimension,
+            window_id,
+            backup_id,
+            **({"selected_world": True} if state.reset is not None else {}),
+        )
     for before, action in (
         ("planned", "stage"),
         ("staged", "runtime-plan"),
@@ -311,15 +332,19 @@ def _selected_state(config, server, worlds, dimension):
     if dimension is None:
         state = _state(config, server)
         if worlds and state.dimension is None:
-            return State(dimension=next(iter(worlds)), stage="unsupported")
+            return _selected_state(config, server, worlds, next(iter(worlds)))
         return state
     if dimension not in worlds:
         raise AdminError("World is not in the operator catalog")
-    if dimension == json.loads(PROFILE.read_bytes())["dimension"]:
+    if dimension == RESOURCE:
         state = _state(config, server)
         if state.dimension == dimension:
             return state
-    return State(dimension=dimension, stage="unsupported")
+        return State(dimension=dimension, stage="unsupported")
+    path = config.private / "resource-resets.toml"
+    if not path.exists() and not path.is_symlink():
+        return State(dimension=dimension, stage="unsupported")
+    return _state(config, server, dimension)
 
 
 def run(path, server, action, confirmation, *, catalog=False, dimension=None):
@@ -369,7 +394,9 @@ def run(path, server, action, confirmation, *, catalog=False, dimension=None):
                 else:
                     _start(config, state)
                 result.update(
-                    _state(config, server).payload(server, world=world)
+                    _selected_state(config, server, worlds, dimension).payload(
+                        server, world=world
+                    )
                     if action != "start"
                     else {"stage": "complete", "confirmation": None}
                 )

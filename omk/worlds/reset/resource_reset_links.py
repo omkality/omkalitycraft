@@ -15,8 +15,33 @@ from omk.worlds import (
     enderutilities_reset as ender,
     forge112_regions as anvil,
 )
+from omk.worlds.reset.dimension_reset import omitted
 from omk.worlds.reset.resource_reset_inventory import _read
 from omk.worlds.reset.resource_reset_landing import world_path
+
+
+def _world_primer_counts(root):
+    value = root.get("DimLoadCounts")
+    if value is None:
+        return False
+    if value.kind != 9:
+        raise ValueError("Unexpected World Primer dimension-count data")
+    kind, entries = value.value
+    if kind != 10 and (kind != 0 or entries):
+        raise ValueError("Unexpected World Primer dimension-count rows")
+    found = set()
+    for row in entries:
+        fields = row.value
+        if (
+            set(fields) != {"Dim", "Count"}
+            or fields["Dim"].kind != 3
+            or fields["Count"].kind != 3
+            or fields["Count"].value < 0
+            or fields["Dim"].value in found
+        ):
+            raise ValueError("Unexpected World Primer dimension-count row")
+        found.add(fields["Dim"].value)
+    return True
 
 
 def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversal
@@ -28,11 +53,11 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
     max_chunks=100000,
     nonportal_patterns=(),
     enderutilities_targets=False,
+    reset=None,
 ):
     if type(max_chunks) is not int or not 1 <= max_chunks <= 1000000:
         raise ValueError("Invalid mod reference scan budget")
     world, prefix = world_path(server, world_name), world_name + "/"
-    omitted = prefix + f"DIM{dimension}/"
     records = []
     receiver_ids = set()
     known_receiver_ids = set()
@@ -57,7 +82,7 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
             or any(part in {"", ".", ".."} for part in name.split("/"))
         ):
             raise ValueError("Noncanonical reference input path")
-        if not name.startswith(prefix) or name.startswith(omitted):
+        if not name.startswith(prefix) or omitted(name, world_name, dimension, reset):
             continue
         relative = name.removeprefix(prefix)
         if any(re.fullmatch(pattern, relative) for pattern in nonportal_patterns):
@@ -207,6 +232,12 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                 eligible = set(paths)
             if Path(relative).name in {"level.dat", "level.dat_old"}:
                 skip.add("FML")  # Registry IDs are not bound teleport destinations.
+            if relative == "worldprimer/data_tracker.nbt" and _world_primer_counts(
+                root
+            ):
+                skip.add(
+                    "DimLoadCounts"
+                )  # Audited counters, not transport destinations.
             walk(root, relative, skip=skip)
     return {
         "schema": 1,

@@ -14,6 +14,7 @@ from omk.owner import (
 from omk.owner.admin import AdminError, _private_path, _read_json, _write_private
 from omk.owner.panels import owner_volumes
 from omk.shared.profiles import PROJECT_ROOT
+from omk.worlds.reset.dimension_reset import layout
 from omk.worlds.reset.resource_reset_preflight import settings as preflight_settings
 
 STAGES = {
@@ -74,6 +75,7 @@ def read_record(config, operation):
             "runtime_created_at",
             "runtime_result",
             "installation_operation",
+            "reset",
         }
         or record.get("stage") not in STAGES
         or not isinstance(record.get("maintenance_operation"), str)
@@ -224,6 +226,7 @@ def worker(record, action, *, allowed_container=None):
         "world": source["world"],
         "dimension": record["dimension"],
         "position": "auto",
+        **({"reset": record["reset"]} if "reset" in record else {}),
         "snapshot": record["snapshot"],
         "world_max_bytes": policy["world_max_bytes"],
         "preflight_options": record["preflight_options"],
@@ -331,6 +334,7 @@ def worker(record, action, *, allowed_container=None):
                 result.get(k) != request[k]
                 for k in ("operation", "world", "dimension", "snapshot")
             )
+            or result.get("reset") != request.get("reset")
             or result.get("preflight", {}).get("policy") != record["preflight_options"]
         ):
             raise AdminError(
@@ -347,17 +351,28 @@ def worker(record, action, *, allowed_container=None):
 
 
 def plan(
-    config, server, dimension, maintenance_operation, backup_operation, environment=None
+    config,
+    server,
+    dimension,
+    maintenance_operation,
+    backup_operation,
+    environment=None,
+    *,
+    selected_world=False,
 ):
+    """Freeze staging against the selected world, stop and complete backup."""
     from omk.worlds.world_cutover import consumed  # noqa: PLC0415
 
     with backups.locked(config):
         backups.local_engine()
         source = backups.target_for(config, server)
+        selection = {"reset": layout(dimension)} if selected_world else {}
         target = owner_volumes.target_for(
             config, server, source, "resource-resets.toml"
         )
-        if type(dimension) is not int or dimension != target["dimension"]:
+        if type(dimension) is not int or (
+            not selected_world and dimension != target["dimension"]
+        ):
             raise AdminError(
                 "Dimension differs from the explicit resource staging allowlist"
             )
@@ -389,10 +404,13 @@ def plan(
             "maintenance_sha256": digest(window),
             "backup_operation": backup_operation,
             "dimension": dimension,
+            **selection,
             "source": source,
             "target": target,
             "settings": policy,
-            "preflight_options": preflight_settings(environment),
+            "preflight_options": preflight_settings(
+                environment, overworld=dimension == 0
+            ),
             "created_at": datetime.now(UTC).isoformat(),
             "operator_root": str(config.servers[server]),
             "checkpoint": window["checkpoint"],
@@ -416,12 +434,14 @@ def plan(
 
 
 def runtime_action(config, record, action, environment):
+    options = preflight_settings(environment, overworld=record["dimension"] == 0)
     if action == "runtime-plan":
         if record["stage"] != "staged" or "runtime_expected" in record:
             raise AdminError("Runtime planning requires an unchanged data-only stage")
-        if record["settings"] != backups.settings(environment) or record[
-            "preflight_options"
-        ] != preflight_settings(environment):
+        if (
+            record["settings"] != backups.settings(environment)
+            or record["preflight_options"] != options
+        ):
             raise AdminError("Runtime policy differs from the frozen source backup")
         record["runtime_expected"] = worker(record, action)
         record["runtime_created_at"] = datetime.now(UTC).isoformat()
@@ -437,7 +457,7 @@ def runtime_action(config, record, action, environment):
         if (
             not 0 <= age <= record["settings"]["plan_ttl_seconds"]
             or record["settings"] != backups.settings(environment)
-            or record["preflight_options"] != preflight_settings(environment)
+            or record["preflight_options"] != options
         ):
             raise AdminError("Runtime plan is stale or policy changed")
         save(config, record, "runtime-writing")
@@ -499,7 +519,8 @@ def execute(config, operation, action, environment=None):
                 record["stage"] != "planned"
                 or not 0 <= age <= record["settings"]["plan_ttl_seconds"]
                 or record["settings"] != backups.settings(environment)
-                or record["preflight_options"] != preflight_settings(environment)
+                or record["preflight_options"]
+                != preflight_settings(environment, overworld=record["dimension"] == 0)
             ):
                 raise AdminError(
                     "Resource staging plan is stale, changed or already attempted"
