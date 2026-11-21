@@ -125,3 +125,80 @@ def test_interrupted_write_requires_review_and_running_commit_does_not_restart()
     assert wipe._phase(state) == "review"
     state.window["stage"] = "complete"
     assert wipe._phase(state) == "start"
+
+
+def test_catalog_selects_by_dimension_without_authorizing_other_worlds(
+    monkeypatch, tmp_path
+):
+    worlds = [
+        {"dimension": -18000, "name": "Ресурсы", "description": "Добыча ресурсов"},
+        {"dimension": 0, "name": "Основной мир", "description": "Общий мир игроков"},
+    ]
+    state = wipe.State(
+        dimension=-18000, stage="prepare", target={"data_volume": "owned"}
+    )
+    (tmp_path / "world-catalog.json").write_text("{}")
+    monkeypatch.setattr(
+        wipe,
+        "load_operator_config",
+        lambda _: SimpleNamespace(private=tmp_path, servers={"dj2": tmp_path}),
+    )
+    monkeypatch.setattr(
+        wipe, "_read_json", lambda *_: {"schema": 1, "servers": {"dj2": worlds}}
+    )
+    monkeypatch.setattr(wipe, "_state", lambda *_: state)
+    monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
+
+    def never_apply(*_):
+        raise AssertionError("An unconfirmed world must not reach mutation")
+
+    monkeypatch.setattr(wipe, "_require_drained", never_apply)
+    inspection = wipe.run("operator.toml", "dj2", "inspect", "", catalog=True)
+    assert inspection["worlds"] == worlds
+    assert inspection["confirmation"] == state.confirmation("dj2", world=worlds[0])
+    overworld = wipe.run(
+        "operator.toml", "dj2", "inspect", "", catalog=True, dimension=0
+    )
+    assert (overworld["dimension"], overworld["stage"], overworld["confirmation"]) == (
+        0,
+        "unsupported",
+        None,
+    )
+    old_token = inspection["confirmation"]
+    for dimension in (0, 1):
+        result = wipe.run(
+            "operator.toml",
+            "dj2",
+            "prepare",
+            old_token,
+            catalog=True,
+            dimension=dimension,
+        )
+        assert not result["ok"] and result["effect"] == "none"
+    worlds[0]["name"] = "Новая подпись ресурсов"
+    renamed = wipe.run(
+        "operator.toml", "dj2", "prepare", old_token, catalog=True, dimension=-18000
+    )
+    assert renamed["error"] == "state_changed"
+
+
+def test_catalog_rejects_terminal_control_characters(monkeypatch, tmp_path):
+    (tmp_path / "world-catalog.json").write_text("{}")
+    monkeypatch.setattr(
+        wipe,
+        "load_operator_config",
+        lambda _: SimpleNamespace(private=tmp_path, servers={"dj2": tmp_path}),
+    )
+    monkeypatch.setattr(
+        wipe,
+        "_read_json",
+        lambda *_: {
+            "schema": 1,
+            "servers": {
+                "dj2": [{"dimension": 0, "name": "bad\x1b", "description": "a"}]
+            },
+        },
+    )
+    result = wipe.run("operator.toml", "dj2", "inspect", "", catalog=True, dimension=0)
+    assert result["error"] == "operation_rejected"
+    assert result["effect"] == "none"

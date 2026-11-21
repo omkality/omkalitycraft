@@ -342,6 +342,8 @@ def _add_tui_operation_parsers(actions):
         required=True,
     )
     world_reset.add_argument("--confirm", default="")
+    world_reset.add_argument("--catalog", action="store_true")
+    world_reset.add_argument("--world", type=int)
 
 
 def add_admin_commands(sub):
@@ -496,7 +498,14 @@ def run_admin(args):
     if args.admin_action == "world-reset" and args.result_version is None:
         from omk.owner.panels.owner_world_reset import run  # noqa: PLC0415
 
-        return run(args.config, args.server, args.world_reset_command, args.confirm)
+        return run(
+            args.config,
+            args.server,
+            args.world_reset_command,
+            args.confirm,
+            catalog=args.catalog,
+            dimension=args.world,
+        )
     if args.admin_action == "project-moderation" and args.result_version is None:
         from omk.game.project_moderation import run  # noqa: PLC0415
 

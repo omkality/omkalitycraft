@@ -1,5 +1,6 @@
 """Manual TUI workflow over the existing cold resource-world operations."""
 
+import json
 import re
 import subprocess
 from contextlib import nullcontext
@@ -12,10 +13,15 @@ from omk.owner import (
     admin_maintenance as maintenance,
     admin_reset_staging as staging,
 )
-from omk.owner.admin import AdminError, _require_private, load_operator_config
+from omk.owner.admin import (
+    AdminError,
+    _read_json,
+    _require_private,
+    load_operator_config,
+)
 from omk.owner.panels import owner_volumes
 from omk.worlds import world_cutover as cutover
-from omk.worlds.reset.resource_reset_inventory import validate_dimension
+from omk.worlds.reset.resource_reset_inventory import PROFILE, validate_dimension
 
 COMMANDS = ("inspect", "prepare", "apply", "start")
 
@@ -33,18 +39,21 @@ class State:
     resource: dict | None = None
     installation: dict | None = None
 
-    def confirmation(self, server):
+    def confirmation(self, server, *, world=None):
         """Return the confirmation details for the next permitted operation."""
         if self.stage not in COMMANDS[1:]:
             return None
-        return digest({"server": server, **vars(self)})
+        binding = {"server": server, **vars(self)}
+        if world is not None:
+            binding["world"] = world
+        return digest(binding)
 
-    def payload(self, server):
+    def payload(self, server, *, world=None):
         """Serialize world-reset state for the owner interface."""
         return {
             "dimension": self.dimension,
             "stage": self.stage,
-            "confirmation": self.confirmation(server),
+            "confirmation": self.confirmation(server, world=world),
             "maintenance": _operation(self.window),
             "backup": _operation(self.backup),
             "resource": _operation(self.resource),
@@ -255,7 +264,66 @@ def _start(config, state):
         raise AdminError("World installation acknowledgement is unconfirmed")
 
 
-def run(path, server, action, confirmation):
+def _catalog(config, server):
+    path = config.private / "world-catalog.json"
+    if not path.exists() and not path.is_symlink():
+        return {}
+    document = _read_json(path, config.private)
+    servers = document.get("servers")
+    if (
+        set(document) != {"schema", "servers"}
+        or type(document["schema"]) is not int
+        or document["schema"] != 1
+        or not isinstance(servers, dict)
+        or set(servers) - config.servers.keys()
+    ):
+        raise AdminError("Invalid world catalog")
+    entries = servers.get(server, [])
+    if not isinstance(entries, list) or len(entries) > 64:
+        raise AdminError("Invalid world list")
+    worlds = {}
+    for entry in entries:
+        if not isinstance(entry, dict) or set(entry) != {
+            "dimension",
+            "name",
+            "description",
+        }:
+            raise AdminError("Invalid world catalog entry")
+        dimension = entry["dimension"]
+        if (
+            type(dimension) is not int
+            or not -(2**31) <= dimension < 2**31
+            or dimension in worlds
+            or not all(
+                isinstance(entry[key], str)
+                and 1 <= len(entry[key]) <= limit
+                and entry[key].strip() == entry[key]
+                and entry[key].isprintable()
+                for key, limit in (("name", 64), ("description", 240))
+            )
+        ):
+            raise AdminError("Invalid world catalog entry")
+        worlds[dimension] = entry
+    return worlds
+
+
+def _selected_state(config, server, worlds, dimension):
+    if dimension is None:
+        state = _state(config, server)
+        if worlds and state.dimension is None:
+            return State(dimension=next(iter(worlds)), stage="unsupported")
+        return state
+    if dimension not in worlds:
+        raise AdminError("World is not in the operator catalog")
+    if dimension == json.loads(PROFILE.read_bytes())["dimension"]:
+        state = _state(config, server)
+        if state.dimension == dimension:
+            return state
+    return State(dimension=dimension, stage="unsupported")
+
+
+def run(path, server, action, confirmation, *, catalog=False, dimension=None):
+    """Inspect or execute an owner-confirmed operation on a configured world."""
     result = {
         "schema_version": 1,
         "action": "owner.world-reset",
@@ -267,15 +335,25 @@ def run(path, server, action, confirmation):
         **State().payload(server),
     }
     try:
-        if action not in COMMANDS or (action == "inspect" and confirmation):
+        if (
+            action not in COMMANDS
+            or (action == "inspect" and confirmation)
+            or (dimension is not None and not catalog)
+        ):
             result["error"] = "invalid_request"
             return result
         config = load_operator_config(path)
         with backups.locked(config) if action != "inspect" else nullcontext():
-            state = _state(config, server)
-            result.update(state.payload(server))
+            worlds = _catalog(config, server) if catalog else {}
+            if catalog:
+                result["worlds"] = list(worlds.values())
+            state = _selected_state(config, server, worlds, dimension)
+            world = worlds.get(state.dimension)
+            result.update(state.payload(server, world=world))
             if action != "inspect":
-                if action != state.stage or confirmation != state.confirmation(server):
+                if action != state.stage or confirmation != state.confirmation(
+                    server, world=world
+                ):
                     result["error"] = "state_changed"
                     return result
                 try:
@@ -291,7 +369,7 @@ def run(path, server, action, confirmation):
                 else:
                     _start(config, state)
                 result.update(
-                    _state(config, server).payload(server)
+                    _state(config, server).payload(server, world=world)
                     if action != "start"
                     else {"stage": "complete", "confirmation": None}
                 )

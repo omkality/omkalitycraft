@@ -13,6 +13,7 @@ pub struct Request {
     pub server: String,
     pub command: &'static str,
     pub confirmation: Option<String>,
+    pub world: Option<i32>,
 }
 
 impl Request {
@@ -21,6 +22,7 @@ impl Request {
             server,
             command: "inspect",
             confirmation: None,
+            world: None,
         }
     }
 
@@ -48,6 +50,21 @@ fn hex(s: &str, length: usize) -> bool {
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
+struct World {
+    dimension: i32,
+    name: String,
+    description: String,
+}
+
+fn valid_text(text: &str, limit: usize) -> bool {
+    !text.is_empty()
+        && text.trim() == text
+        && text.chars().count() <= limit
+        && !text.chars().any(char::is_control)
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Receipt {
     schema_version: u32,
     action: String,
@@ -63,6 +80,8 @@ pub struct Receipt {
     backup: Option<String>,
     resource: Option<String>,
     installation: Option<String>,
+    #[serde(default)]
+    worlds: Vec<World>,
 }
 
 impl Receipt {
@@ -105,9 +124,21 @@ impl Receipt {
                     | "complete"
             )
             || (value.stage == "unconfigured") != value.dimension.is_none()
-            || value
-                .dimension
-                .is_some_and(|id| !(-32000..=-2).contains(&id))
+            || request
+                .world
+                .is_some_and(|world| value.ok && Some(world) != value.dimension)
+            || value.stage != "unsupported"
+                && value
+                    .dimension
+                    .is_some_and(|id| !(-32000..=-2).contains(&id))
+            || value.worlds.len() > 64
+            || value.worlds.iter().enumerate().any(|(index, world)| {
+                !valid_text(&world.name, 64)
+                    || !valid_text(&world.description, 240)
+                    || value.worlds[..index]
+                        .iter()
+                        .any(|entry| entry.dimension == world.dimension)
+            })
             || matches!(value.stage.as_str(), "prepare" | "apply" | "start")
                 != value.confirmation.is_some()
             || value.confirmation.as_deref().is_some_and(|s| !hex(s, 64))
@@ -196,8 +227,24 @@ impl Form {
     }
 
     pub fn key(&mut self, key: KeyCode) -> Option<Request> {
+        let worlds = &self.receipt.worlds;
+        let selected = worlds
+            .iter()
+            .position(|entry| Some(entry.dimension) == self.receipt.dimension);
         if key == KeyCode::Char('r') {
-            return Some(Request::inspect(self.receipt.server_id.clone()));
+            let mut request = Request::inspect(self.receipt.server_id.clone());
+            request.world = selected.map(|index| worlds[index].dimension);
+            return Some(request);
+        }
+        if !self.confirming && worlds.len() > 1 && matches!(key, KeyCode::Up | KeyCode::Down) {
+            let index = match (key, selected) {
+                (KeyCode::Up, Some(index)) => (index + worlds.len() - 1) % worlds.len(),
+                (_, Some(index)) => (index + 1) % worlds.len(),
+                (_, None) => 0,
+            };
+            let mut request = Request::inspect(self.receipt.server_id.clone());
+            request.world = Some(worlds[index].dimension);
+            return Some(request);
         }
         if !self.receipt.ok || self.receipt.confirmation.is_none() {
             return None;
@@ -214,6 +261,7 @@ impl Form {
                         _ => return None,
                     },
                     confirmation: self.receipt.confirmation.clone(),
+                    world: selected.map(|index| worlds[index].dimension),
                 });
             }
             (_, KeyCode::Enter) => {
@@ -231,7 +279,20 @@ impl Form {
         let h = 21.min(area.height);
         let popup = Rect::new((area.width - w) / 2, (area.height - h) / 2, w, h);
         let mut body = format!("\nСервер  {}\n", self.receipt.server_id);
-        if let Some(dimension) = self.receipt.dimension {
+        let worlds = &self.receipt.worlds;
+        if let Some(index) = worlds
+            .iter()
+            .position(|world| Some(world.dimension) == self.receipt.dimension)
+        {
+            let world = &worlds[index];
+            body.push_str(&format!(
+                "Мир  {} ({} из {})\n{}\n",
+                world.name,
+                index + 1,
+                worlds.len(),
+                world.description
+            ));
+        } else if let Some(dimension) = self.receipt.dimension {
             if self.receipt.stage == "unsupported" {
                 body.push_str(&format!("Мир  DIM{dimension}\n"));
             } else {
@@ -265,6 +326,9 @@ impl Form {
         } else {
             if self.receipt.ok && self.receipt.confirmation.is_some() {
                 body.push_str(&format!("\nEnter — {}\n", self.receipt.label()));
+            }
+            if worlds.len() > 1 {
+                body.push_str("\n↑ ↓ — выбрать мир");
             }
             body.push_str("\nr — обновить · Esc — закрыть");
         }
@@ -312,6 +376,28 @@ mod tests {
             "resource": "d".repeat(32),
             "installation": null
         })
+    }
+
+    #[test]
+    fn world_picker_keeps_selection_and_refuses_a_reply_for_another_world() {
+        let mut value = sealed();
+        value["worlds"] = serde_json::json!([
+            {"dimension": -18000, "name": "Ресурсы", "description": "Добыча ресурсов"},
+            {"dimension": 0, "name": "Основной мир", "description": "Общий мир игроков"}
+        ]);
+        let query = Request::inspect("dj2".into());
+        let receipt = Receipt::parse(&serde_json::to_vec(&value).unwrap(), &query).unwrap();
+        let mut form = Form::new(receipt);
+        assert_eq!(form.key(KeyCode::Char('r')).unwrap().world, Some(-18000));
+        let next = form.key(KeyCode::Down).unwrap();
+        assert_eq!(next.world, Some(0));
+        assert!(!next.mutating());
+        assert!(Receipt::parse(&serde_json::to_vec(&value).unwrap(), &next).is_err());
+        value["dimension"] = serde_json::json!(0);
+        value["stage"] = serde_json::json!("unsupported");
+        value["confirmation"] = serde_json::Value::Null;
+        let selected = Receipt::parse(&serde_json::to_vec(&value).unwrap(), &next).unwrap();
+        assert!(Form::new(selected).key(KeyCode::Enter).is_none());
     }
 
     #[test]
