@@ -16,16 +16,31 @@ const ACCENT: Color = Color::Rgb(114, 205, 220);
 const WARN: Color = Color::Rgb(237, 184, 104);
 const ERROR: Color = Color::Rgb(235, 114, 119);
 const STATS_ERROR_DURATION: Duration = Duration::from_secs(5);
+const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\ns  Статистика игрока\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
 
 pub enum Confirmation {
     Save(String),
     Invitation { approved: bool },
+    Exit { approved: bool },
+}
+
+pub struct CommandPage {
+    pub message: String,
+    pub scroll: u16,
+}
+
+impl CommandPage {
+    fn new(message: String) -> Self {
+        Self { message, scroll: 0 }
+    }
 }
 
 pub struct App {
     pub overview: Option<Overview>,
     pub selected_server: usize,
-    pub message: String,
+    menu: CommandPage,
+    section: Option<CommandPage>,
+    detail: Option<CommandPage>,
     pub loading: bool,
     pub failed: bool,
     pub refreshed: Option<Instant>,
@@ -33,7 +48,7 @@ pub struct App {
     pub confirm: Option<Confirmation>,
     pub moderation: Option<crate::moderation::Form>,
     pub world_reset: Option<crate::world_reset::Form>,
-    pub scroll: u16,
+    pub resetting: bool,
     pub history: Option<TpsHistory>,
     pub history_failed: bool,
     pub branding_header: bool,
@@ -44,8 +59,90 @@ pub struct App {
 
 impl App {
     pub fn new(demo: bool) -> Self {
-        Self { overview: None, selected_server: 0, message: "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\ns  Статистика игрока\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, branding_header: false, window_index: 0, range_picker: None, stats_error: None }
+        Self {
+            overview: None,
+            selected_server: 0,
+            menu: CommandPage::new(MAIN_MENU.into()),
+            section: None,
+            detail: None,
+            loading: false,
+            failed: false,
+            refreshed: None,
+            demo,
+            confirm: None,
+            moderation: None,
+            world_reset: None,
+            resetting: false,
+            history: None,
+            history_failed: false,
+            branding_header: false,
+            window_index: 0,
+            range_picker: None,
+            stats_error: None,
+        }
     }
+
+    pub fn set_menu_message(&mut self, message: String) {
+        self.menu = CommandPage::new(message);
+    }
+
+    pub fn show_section(&mut self, message: String) {
+        self.section = Some(CommandPage::new(message));
+        self.detail = None;
+        self.clear_stats_error();
+    }
+
+    pub fn show_detail(&mut self, message: String) {
+        self.detail = Some(CommandPage::new(message));
+        self.clear_stats_error();
+    }
+
+    pub fn command_page(&self) -> &CommandPage {
+        self.detail
+            .as_ref()
+            .or(self.section.as_ref())
+            .unwrap_or(&self.menu)
+    }
+
+    pub fn command_page_mut(&mut self) -> &mut CommandPage {
+        self.detail
+            .as_mut()
+            .or(self.section.as_mut())
+            .unwrap_or(&mut self.menu)
+    }
+
+    pub fn dismiss_dialog(&mut self) -> bool {
+        if let Some(form) = &mut self.world_reset {
+            if !form.dismiss_confirmation() {
+                self.world_reset = None;
+            }
+            return true;
+        }
+        if let Some(form) = &mut self.moderation {
+            if !form.dismiss_confirmation() {
+                self.moderation = None;
+            }
+            return true;
+        }
+        self.confirm.take().is_some() || self.range_picker.take().is_some()
+    }
+
+    pub fn back_or_confirm_exit(&mut self) {
+        self.clear_stats_error();
+        if self.detail.take().is_none() && self.section.take().is_none() {
+            self.confirm = Some(Confirmation::Exit { approved: false });
+        }
+    }
+
+    fn at_menu(&self) -> bool {
+        self.section.is_none()
+            && self.detail.is_none()
+            && self.confirm.is_none()
+            && self.range_picker.is_none()
+            && self.moderation.is_none()
+            && self.world_reset.is_none()
+    }
+
     pub fn server(&self) -> Option<&str> {
         self.overview
             .as_ref()?
@@ -64,6 +161,9 @@ impl App {
         self.overview = Some(value);
         self.refreshed = Some(Instant::now());
         self.failed = false;
+        if !self.demo && self.menu.message != MAIN_MENU {
+            self.set_menu_message(MAIN_MENU.into());
+        }
     }
 
     pub fn accept_history(&mut self, result: Option<Result<TpsHistory, String>>) {
@@ -92,11 +192,7 @@ impl App {
 
     pub fn finish_player_stats(&mut self, result: Result<String, String>, now: Instant) {
         match result {
-            Ok(card) => {
-                self.stats_error = None;
-                self.message = card;
-                self.scroll = 0;
-            }
+            Ok(card) => self.show_detail(card),
             Err(message) => self.stats_error = Some((message, now + STATS_ERROR_DURATION)),
         }
     }
@@ -124,7 +220,17 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         area,
     );
     if area.width < 84 || area.height < 28 {
-        frame.render_widget(Paragraph::new("OmkalityCraft · Owner\nНужно окно от 84 × 28. Увеличьте терминал.\nq / Ctrl+C — выход").style(Style::default().fg(TEXT)).wrap(Wrap { trim: false }), area);
+        let hint = if let Some(Confirmation::Exit { approved }) = app.confirm {
+            exit_prompt(approved)
+        } else {
+            "OmkalityCraft · Owner\nНужно окно от 84 × 28. Увеличьте терминал.\nEsc — назад или выход".into()
+        };
+        frame.render_widget(
+            Paragraph::new(hint)
+                .style(Style::default().fg(TEXT))
+                .wrap(Wrap { trim: false }),
+            area,
+        );
         return;
     }
     let rows = Layout::default()
@@ -229,9 +335,14 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         })
         .unwrap_or_else(|| "Данных пока нет".into())
     };
+    let back_hint = if app.at_menu() && !app.resetting {
+        "Esc выход"
+    } else {
+        "Esc назад"
+    };
     frame.render_widget(
         Paragraph::new(format!(
-            " r обновить   ← → сервер   t период   i ключ   q выход  |  {status}"
+            " r обновить   ← → сервер   t период   i ключ   {back_hint}  |  {status}"
         ))
         .style(
             Style::default().fg(if app.failed || age.is_some_and(|a| a > 20) {
@@ -297,6 +408,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
                     },
                 ),
             ),
+            Confirmation::Exit { approved } => (" Выход из TUI ", exit_prompt(*approved)),
         };
         frame.render_widget(
             Paragraph::new(text)
@@ -305,6 +417,15 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
             popup,
         );
     }
+}
+
+fn exit_prompt(approved: bool) -> String {
+    let choice = if approved {
+        "  Нет      › Да"
+    } else {
+        "› Нет        Да"
+    };
+    format!("Закрыть админку?\n\n{choice}\n\n←/→ выбор · Enter подтвердить · Esc отменить")
 }
 
 fn render_commands(frame: &mut Frame, area: Rect, app: &mut App) {
@@ -321,9 +442,18 @@ fn render_commands(frame: &mut Frame, area: Rect, app: &mut App) {
             rows[1],
         );
     }
+    let page = app.command_page();
+    let (message, scroll) = if app.resetting {
+        (
+            "Выполняется этап вайпа.\nРезультат появится здесь после завершения.",
+            0,
+        )
+    } else {
+        (page.message.as_str(), page.scroll)
+    };
     frame.render_widget(
-        Paragraph::new(app.message.as_str())
-            .scroll((app.scroll, 0))
+        Paragraph::new(message)
+            .scroll((scroll, 0))
             .style(Style::default().fg(if app.failed { WARN } else { TEXT }))
             .wrap(Wrap { trim: false }),
         content,

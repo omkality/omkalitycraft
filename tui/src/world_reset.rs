@@ -230,6 +230,11 @@ impl Form {
         }
     }
 
+    pub fn dismiss_confirmation(&mut self) -> bool {
+        self.yes = false;
+        std::mem::take(&mut self.confirming)
+    }
+
     pub fn key(&mut self, key: KeyCode) -> Option<Request> {
         let worlds = &self.receipt.worlds;
         let selected = worlds
@@ -309,7 +314,7 @@ impl Form {
                 "[ Нет, вернуться ]       Да"
             };
             body.push_str(&format!(
-                "\n{}\n{choices}\n← → / Tab · Enter · Esc",
+                "\n{}\n{choices}\n← → / Tab · Enter · Esc — назад",
                 self.receipt.label()
             ));
         } else {
@@ -319,7 +324,7 @@ impl Form {
             if worlds.len() > 1 {
                 body.push_str("\n↑ ↓ — выбрать мир");
             }
-            body.push_str("\nEsc — закрыть");
+            body.push_str("\nEsc — назад");
         }
         frame.render_widget(Clear, popup);
         frame.render_widget(
