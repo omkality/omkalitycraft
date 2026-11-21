@@ -22,7 +22,7 @@ def test_shipped_profile_catalog_has_only_dj2() -> None:
     (dj2,) = load_profiles()
     assert dj2.id == "dj2"
     assert dj2.pack_version == "2.23.4"
-    assert dj2.status == "testing"
+    assert dj2.status == "ready"
     assert dj2.version_url.endswith(f"/releases/tag/{dj2.pack_version}")
     assert dj2.utilities_adapter == "ftbutilities_112"
 

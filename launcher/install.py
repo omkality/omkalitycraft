@@ -361,7 +361,7 @@ class Installer:
 
     def _check_cancel(self) -> None:
         if self.cancel.is_set():
-            raise InstallCancelled("Загрузка приостановлена. Её можно продолжить.")
+            raise InstallCancelled("Загрузка приостановлена")
 
     def _download(
         self,

@@ -2,6 +2,7 @@
 
 import contextlib
 import getpass
+import hashlib
 import json
 import os
 import re
@@ -246,6 +247,52 @@ def list_invites(config: OperatorConfig):
     return {"ok": True, "inventory_file": str(path), "count": len(values)}
 
 
+def _active_invites(config):
+    values = _client(config).request(
+        "GET", "/drasl/api/v3/invites", token=_credential(config)
+    )
+    if not isinstance(values, list) or len(values) > 1000:
+        raise AdminError("Invalid invitation inventory response")
+    return [_invite(value) for value in values]
+
+
+def invite_reference(code):
+    """Identify an invitation in the owner UI without sending its secret in argv."""
+    return hashlib.sha256(code.encode("ascii")).hexdigest()[:12]
+
+
+def invitation_summary(config):
+    """Return only the operator-visible reference, masked code and creation time."""
+    return [
+        (invite_reference(row["code"]), row["code"][:4], row["created_at"])
+        for row in _active_invites(config)
+    ]
+
+
+def _revoke_code(config, code):
+    try:
+        _client(config).request(
+            "DELETE", "/drasl/api/v3/invites/" + code, token=_credential(config)
+        )
+    except DraslError as error:
+        if error.status != 404:
+            raise
+        return False
+    return True
+
+
+def revoke_invite_reference(config, reference):
+    """Revoke an unused invite once. A missing invite is already inactive."""
+    matches = [
+        row["code"]
+        for row in _active_invites(config)
+        if invite_reference(row["code"]) == reference
+    ]
+    if len(matches) > 1:
+        raise AdminError("Invitation reference is ambiguous")
+    return len(matches) == 1 and _revoke_code(config, matches[0])
+
+
 def revoke_invite(config: OperatorConfig, file: Path):
     file = _private_path(
         config.private, str(file.absolute().relative_to(config.private))
@@ -254,16 +301,7 @@ def revoke_invite(config: OperatorConfig, file: Path):
     if value.get("origin") != config.auth_origin or value.get("schema") != 1:
         raise AdminError("Invitation origin mismatch")
     code = _invite(value)["code"]
-    try:
-        _client(config).request(
-            "DELETE", "/drasl/api/v3/invites/" + code, token=_credential(config)
-        )
-    except DraslError as error:
-        if error.status == 404:
-            raise AdminError(
-                "Invitation was already used, revoked or not found; no account was blocked"
-            ) from None
-        raise
+    _revoke_code(config, code)
     _write_private(file, config.private, {**value, "revoked": True})
     return {"ok": True, "invitation_file": str(file), "revoked": True}
 
@@ -325,7 +363,7 @@ def _add_tui_operation_parsers(actions):
         "--command",
         required=True,
         dest="moderation_command",
-        choices=["init", "ban", "mute", "unban"],
+        choices=["init", "ban", "mute", "unban", "revoke-invite"],
     )
     project.add_argument("--player", default="")
     project.add_argument("--duration", default="")
@@ -387,7 +425,7 @@ def add_admin_commands(sub):
         "--command",
         dest="console_command",
         required=True,
-        choices=["players", "tps", "save"],
+        choices=["players", "roster", "invites", "tps", "save"],
     )
     console.add_argument("--confirm-save", action="store_true")
     _add_tui_operation_parsers(actions)

@@ -576,9 +576,7 @@ class LauncherWindow(QMainWindow):
 
         def done(_: Any) -> None:
             self.skin_preview.set_skin(png, model)
-            self.status.setText(
-                "Скин загружен. В игре он появится после обновления профиля."
-            )
+            self.status.setText("Скин загружен")
 
         self._start(lambda: self.service.upload_skin(png, model), done, "skin")
 
@@ -593,9 +591,7 @@ class LauncherWindow(QMainWindow):
 
         def done(_: Any) -> None:
             self.skin_preview.reset_skin()
-            self.status.setText(
-                "Скин сброшен. В игре он появится после обновления профиля."
-            )
+            self.status.setText("Скин сброшен")
 
         self._start(self.service.reset_skin, done, "skin_reset")
 

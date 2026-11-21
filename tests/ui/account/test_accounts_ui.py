@@ -385,7 +385,7 @@ def test_default_skin_is_exact_owner_asset(qtbot: QtBot):
 
 def test_dashboard_shows_only_dj2_and_social_footer(window: LauncherWindow):
     assert list(window.home_page.cards) == ["dj2"]
-    assert window.home_page.cards["dj2"].profile.name == "Divine Journey 2 RU"
+    assert window.home_page.cards["dj2"].profile.name == "Divine Journey 2 Server 1"
     assert "https://kick.com/omkality" in window.findChild(QLabel, "social_kick").text()
     assert window.home_page.findChildren(QComboBox) == []
 

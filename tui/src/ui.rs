@@ -4,7 +4,7 @@ use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Clear, List, ListItem, ListState, Paragraph, Wrap},
+    widgets::{Block, Borders, Clear, Paragraph, Wrap},
 };
 use std::time::Instant;
 
@@ -23,7 +23,6 @@ pub enum Confirmation {
 pub struct App {
     pub overview: Option<Overview>,
     pub selected_server: usize,
-    pub operation: ListState,
     pub message: String,
     pub loading: bool,
     pub failed: bool,
@@ -42,7 +41,7 @@ pub struct App {
 
 impl App {
     pub fn new(demo: bool) -> Self {
-        Self { overview: None, selected_server: 0, operation: ListState::default(), message: "1  Список игроков\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\nw  Вайп мира\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, branding_header: false, window_index: 0, range_picker: None }
+        Self { overview: None, selected_server: 0, message: "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\nk / b / m / u  Модерация игроков\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.".into(), loading: false, failed: false, refreshed: None, demo, confirm: None, moderation: None, world_reset: None, scroll: 0, history: None, history_failed: false, branding_header: false, window_index: 0, range_picker: None }
     }
     pub fn server(&self) -> Option<&str> {
         self.overview
@@ -54,49 +53,12 @@ impl App {
     pub fn window(&self) -> TpsWindow {
         TPS_WINDOWS[self.window_index]
     }
-    pub fn filtered(&self) -> Vec<&crate::protocol::Operation> {
-        self.overview
-            .as_ref()
-            .map(|v| {
-                v.operations
-                    .iter()
-                    .filter(|o| o.server_id.as_deref() == self.server())
-                    .collect()
-            })
-            .unwrap_or_default()
-    }
-    pub fn move_operation(&mut self, delta: isize) {
-        let len = self.filtered().len();
-        if len > 0 {
-            self.operation.select(Some(
-                self.operation
-                    .selected()
-                    .unwrap_or(0)
-                    .saturating_add_signed(delta)
-                    .min(len - 1),
-            ));
-        }
-    }
     pub fn accept(&mut self, value: Overview) {
         let selected = self.server().map(str::to_owned);
-        let op = self
-            .filtered()
-            .get(self.operation.selected().unwrap_or(0))
-            .map(|o| (o.kind.clone(), o.id.clone()));
         self.selected_server = selected
             .and_then(|s| value.server_ids.iter().position(|v| v == &s))
             .unwrap_or(0);
         self.overview = Some(value);
-        let index = op.and_then(|(kind, id)| {
-            self.filtered()
-                .iter()
-                .position(|o| o.id == id && o.kind == kind)
-        });
-        self.operation.select(if self.filtered().is_empty() {
-            None
-        } else {
-            Some(index.unwrap_or(0))
-        });
         self.refreshed = Some(Instant::now());
         self.failed = false;
     }
@@ -201,13 +163,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     );
     let body =
         Layout::horizontal([Constraint::Percentage(48), Constraint::Percentage(52)]).split(rows[1]);
-    let left = Layout::vertical([
-        Constraint::Length(3),
-        Constraint::Length(if body[0].height >= 22 { 14 } else { 10 }),
-        Constraint::Min(0),
-        Constraint::Length(if body[0].height >= 20 { 4 } else { 0 }),
-    ])
-    .split(body[0]);
+    let left = Layout::vertical([Constraint::Length(3), Constraint::Min(1)]).split(body[0]);
     let servers = app
         .overview
         .as_ref()
@@ -233,64 +189,6 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
         left[0],
     );
     render_tps(frame, app, left[1]);
-    let ops = app.filtered();
-    let selected = ops.get(app.operation.selected().unwrap_or(0)).copied();
-    let details = selected
-        .map(|o| {
-            format!(
-                "{}\n{}\nФаза workflow; готовность сервера отдельно.",
-                o.id,
-                if o.terminal == Some(true) {
-                    "Workflow завершён"
-                } else {
-                    "Workflow не завершён"
-                }
-            )
-        })
-        .unwrap_or_else(|| {
-            "Нет последних операций.\nЭто не проверка работоспособности сервера.".into()
-        });
-    let items: Vec<ListItem> = ops
-        .iter()
-        .map(|o| {
-            ListItem::new(format!(
-                "{:<12} {:<15} {}",
-                o.kind,
-                o.phase.as_deref().unwrap_or("неизвестно"),
-                &o.id[..8]
-            ))
-        })
-        .collect();
-    let title = app
-        .overview
-        .as_ref()
-        .map(|v| {
-            format!(
-                " Операции · ↑ ↓  / пропущено {}{} ",
-                v.skipped,
-                if v.truncated {
-                    " / список ограничен"
-                } else {
-                    ""
-                }
-            )
-        })
-        .unwrap_or_else(|| " Последние операции ".into());
-    frame.render_stateful_widget(
-        List::new(items)
-            .block(block(&title))
-            .highlight_symbol("› ")
-            .highlight_style(Style::default().bg(Color::Rgb(31, 52, 64)).fg(ACCENT)),
-        left[2],
-        &mut app.operation,
-    );
-    frame.render_widget(
-        Paragraph::new(details)
-            .style(Style::default().fg(MUTED))
-            .block(block(" Выбранная операция "))
-            .wrap(Wrap { trim: false }),
-        left[3],
-    );
     frame.render_widget(
         Paragraph::new(app.message.as_str())
             .scroll((app.scroll, 0))
@@ -409,14 +307,13 @@ fn render_tps(frame: &mut Frame, app: &App, area: Rect) {
         Some(h) if h.state == "disabled" => "Мониторинг не подключён".into(),
         Some(h) if h.state == "missing" => "За этот период нет измерений".into(),
         Some(h) => {
-            let values = h.points.iter().filter_map(|p| p.tps).collect::<Vec<_>>();
-            let min = values.iter().copied().fold(20.0, f64::min);
-            format!(
-                "min {min:.1} · {} / 61 точек · {} {} с",
-                values.len(),
-                if h.step == 5 { "шаг" } else { "min за" },
-                h.step
-            )
+            let min = h
+                .points
+                .iter()
+                .filter_map(|point| point.tps)
+                .reduce(f64::min);
+            min.map(|value| format!("Минимум за период: {value:.1} TPS"))
+                .unwrap_or_else(|| "За этот период нет измерений".into())
         }
         None => "История TPS пока недоступна".into(),
     };

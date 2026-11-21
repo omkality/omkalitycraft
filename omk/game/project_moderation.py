@@ -20,6 +20,7 @@ from omk.owner.admin import (
     _require_private,
     _write_private_text,
     load_operator_config,
+    revoke_invite_reference,
 )
 from omk.owner.admin_maintenance import credential
 from omk.owner.panels.owner_moderation import duration_seconds
@@ -51,7 +52,7 @@ class Result(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
     schema_version: Literal[1] = 1
     action: Literal["owner.project-moderation"] = "owner.project-moderation"
-    command: Literal["init", "ban", "mute", "unban"]
+    command: Literal["init", "ban", "mute", "unban", "revoke-invite"]
     player: str = Field(max_length=16)
     ok: bool = False
     effect: Literal["none", "applied", "unknown"] = "none"
@@ -239,6 +240,7 @@ def _update(config, result, seconds, reason):
 
 
 def run(path, action, player, *, duration="", reason="", confirmed=False):
+    """Apply a project-wide restriction or revoke an unused invitation."""
     result = Result(command=action, player=player[:16])
     try:
         config = load_operator_config(path)
@@ -247,6 +249,17 @@ def run(path, action, player, *, duration="", reason="", confirmed=False):
                 raise Refused("invalid_request")
             _, created = initialize(config.private)
             result.effect = "applied" if created else "none"
+        elif action == "revoke-invite":
+            if (
+                not confirmed
+                or duration
+                or reason
+                or not re.fullmatch(r"[a-f0-9]{12}", player)
+            ):
+                raise Refused("invalid_request")
+            result.effect = "unknown"
+            changed = revoke_invite_reference(config, player)
+            result.effect = "applied" if changed else "none"
         else:
             reason = reason or "Owner moderation"
             if (

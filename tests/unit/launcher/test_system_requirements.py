@@ -24,10 +24,10 @@ def test_profile_requirements_are_optional_for_existing_profiles(tmp_path):
     assert load_profiles(path)[0].requirements is None
 
 
-def test_recommendations_are_serializable_and_do_not_claim_untested_minima():
+def test_requirements_are_serializable_and_include_both_tiers():
     (dj2,) = load_profiles()
     assert dj2.requirements.state == "preliminary"
-    assert dj2.requirements.minimum is None
+    assert dj2.requirements.minimum.ram_gb == 8
     assert dj2.requirements.recommended.ram_gb == 16
     assert dj2.memory_default_mb == 6144
     assert (
