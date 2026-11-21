@@ -3,6 +3,7 @@ use ratatui::{
     Frame,
     layout::Rect,
     style::{Color, Style},
+    text::{Line, Span},
     widgets::{Block, Borders, Clear, Paragraph, Wrap},
 };
 use serde::Deserialize;
@@ -17,6 +18,10 @@ pub struct Action {
 }
 
 impl Action {
+    pub fn permanent_ban(&self) -> bool {
+        self.command == "ban" && self.duration == "perm"
+    }
+
     pub fn project(&self) -> bool {
         self.command != "kick"
     }
@@ -69,8 +74,10 @@ impl Receipt {
             || !v.ok && v.effect == "applied"
             || v.ok != v.error.is_none()
             || v.ok
-                && (matches!(v.command.as_str(), "kick" | "unban" | "revoke-invite")
+                && ((matches!(v.command.as_str(), "kick" | "unban" | "revoke-invite")
+                    || request.permanent_ban())
                     != v.expires_at.is_none())
+            || v.expires_at == Some(0)
             || v.error.as_deref().is_some_and(|s| {
                 !matches!(
                     s,
@@ -84,6 +91,8 @@ impl Receipt {
                         | "ambiguous"
                         | "inconsistent_servers"
                         | "profile_not_found"
+                        | "account_locked"
+                        | "operator_account"
                 )
             })
         {
@@ -101,12 +110,15 @@ impl Receipt {
             }
             .into();
         }
+        let permanent_ban = self.command == "ban" && self.ok && self.expires_at.is_none();
         format!(
             "Область: {}\nИгрок: {}\nДействие: {}\n\n{}{}{}",
             self.server_id.as_deref().unwrap_or("Весь проект"),
             self.player,
             self.command,
-            if self.ok && self.server_id.is_none() {
+            if permanent_ban {
+                "Бессрочный бан применён. Вход на проект закрыт."
+            } else if self.ok && self.server_id.is_none() {
                 "Записано в общий список проекта."
             } else if self.ok {
                 "Сервер подтвердил выполнение."
@@ -129,6 +141,8 @@ impl Receipt {
                         "not_banned" => "у игрока нет бана",
                         "changed" => "бан изменился; проверьте его заново",
                         "already_banned" => "уже есть бан; он сохранён",
+                        "account_locked" => "у аккаунта другая блокировка или незавершённый разбан",
+                        "operator_account" => "этот аккаунт используется админкой",
                         "unavailable" => "проверьте общий список и подключение серверов",
                         _ => "сервер отказал",
                     }
@@ -137,7 +151,9 @@ impl Receipt {
             self.unreachable
                 .as_ref()
                 .filter(|ids| !ids.is_empty())
-                .map(|ids| {
+                .map(|ids| if permanent_ban {
+                    format!("\nНе подтверждено отключение на: {}", ids.join(", "))
+                } else {
                     format!("\nНе удалось проверить соединение с: {}", ids.join(", "))
                 })
                 .unwrap_or_default(),
@@ -241,8 +257,13 @@ impl Form {
                     self.error = "Ник: 1–16 латинских букв, цифр или _".into();
                 } else if matches!(self.action.command.as_str(), "ban" | "mute")
                     && seconds(&self.action.duration).is_none()
+                    && !self.action.permanent_ban()
                 {
-                    self.error = "Срок: 10m, 20h, 1d; от 1s до 365d".into();
+                    self.error = if self.action.command == "ban" {
+                        "Срок: 10m, 20h, 1d или perm.".into()
+                    } else {
+                        "Срок: 10m, 20h, 1d; от 1s до 365d".into()
+                    };
                 } else if matches!(self.action.command.as_str(), "ban" | "revoke-invite") {
                     if self.action.command == "revoke-invite" {
                         self.action.player.make_ascii_lowercase();
@@ -322,7 +343,11 @@ impl Form {
                 "\nОбласть: {}\nИгрок: {}\nБан на: {}\nПричина: {}\n\n{}\n\n← → / Tab — выбор · Enter — принять · Esc — назад",
                 self.action.scope(),
                 self.action.player,
-                self.action.duration,
+                if self.action.permanent_ban() {
+                    "perm (бессрочно)"
+                } else {
+                    self.action.duration.as_str()
+                },
                 self.action.reason,
                 if self.yes {
                     "  Нет     [ Да, забанить ]"
@@ -348,9 +373,14 @@ impl Form {
                     String::new()
                 } else {
                     format!(
-                        "{} Срок: {}  (s/m/h/d/w, до 365d)\n",
+                        "{} Срок: {}  {}\n",
                         cursor(1),
-                        self.action.duration
+                        self.action.duration,
+                        if self.action.command == "ban" {
+                            "(10m, 20h, 1d или perm)"
+                        } else {
+                            "(s/m/h/d/w, до 365d)"
+                        }
                     )
                 },
                 cursor(if self.action.command == "kick" { 1 } else { 2 }),
@@ -363,8 +393,30 @@ impl Form {
                 }
             )
         };
+        let lines = body
+            .lines()
+            .map(|line| {
+                if self.action.command == "ban"
+                    && (line.contains("Срок:") || line.starts_with("Бан на:"))
+                {
+                    let mut spans = Vec::new();
+                    for (index, part) in line.split("perm").enumerate() {
+                        if index != 0 {
+                            spans.push(Span::styled(
+                                "perm",
+                                Style::default().fg(Color::Rgb(235, 114, 119)),
+                            ));
+                        }
+                        spans.push(Span::raw(part));
+                    }
+                    Line::from(spans)
+                } else {
+                    Line::raw(line)
+                }
+            })
+            .collect::<Vec<_>>();
         frame.render_widget(
-            Paragraph::new(body)
+            Paragraph::new(lines)
                 .wrap(Wrap { trim: false })
                 .style(
                     Style::default()
@@ -393,6 +445,42 @@ mod tests {
         for s in ["0s", "01d", "-1d", "1d2h", "366d", "99999999w", "x", "1💩"] {
             assert_eq!(seconds(s), None);
         }
+    }
+
+    #[test]
+    fn permanent_ban_requires_confirmation_and_a_receipt_without_expiry() {
+        let mut form = Form::new("dj2".into(), "ban");
+        form.action.player = "TestPlayer".into();
+        form.action.duration = "perm".into();
+        assert!(form.key(KeyCode::Enter).is_none());
+        assert!(form.confirming);
+        let mut terminal =
+            ratatui::Terminal::new(ratatui::backend::TestBackend::new(96, 28)).unwrap();
+        terminal.draw(|frame| form.draw(frame)).unwrap();
+        assert!(
+            terminal
+                .backend()
+                .buffer()
+                .content
+                .iter()
+                .any(|cell| { cell.symbol() == "p" && cell.fg == Color::Rgb(235, 114, 119) })
+        );
+        form.key(KeyCode::Right);
+        let request = form.key(KeyCode::Enter).unwrap();
+        assert!(request.permanent_ban());
+        let mut value = serde_json::json!({
+            "schema_version": 1, "action": "owner.project-moderation", "command": "ban",
+            "player": "TestPlayer", "ok": true, "effect": "applied", "expires_at": null,
+            "error": null, "unreachable": [],
+        });
+        let receipt = Receipt::parse(&serde_json::to_vec(&value).unwrap(), &request).unwrap();
+        assert!(receipt.message().contains("Бессрочный бан"));
+        value["expires_at"] = serde_json::json!(2000000000_u64);
+        assert!(Receipt::parse(&serde_json::to_vec(&value).unwrap(), &request).is_err());
+        let mut mute = Form::new("dj2".into(), "mute");
+        mute.action.player = "TestPlayer".into();
+        mute.action.duration = "perm".into();
+        assert!(mute.key(KeyCode::Enter).is_none());
     }
     #[test]
     fn ban_requires_second_screen_and_explicit_yes() {

@@ -278,6 +278,7 @@ impl Backend {
         }
         let timeout = match &request {
             Request::WorldReset(a) if a.mutating() => 24 * 60 * 60,
+            Request::Moderation(action) if action.permanent_ban() => 120,
             Request::Moderation(_) => 25,
             Request::PlayerStats { .. } => 300,
             _ => 15,

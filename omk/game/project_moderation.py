@@ -15,6 +15,7 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from omk.accounts.account_recovery import _locked as account_lock
 from omk.labs.recovery.recovery_console import ConsoleError, command, online_players
 from omk.owner.admin import (
     _client,
@@ -47,7 +48,7 @@ class Restriction:
     uuid: str
     player: str
     created: int
-    expires: int
+    expires: int | None
     reason: str
 
 
@@ -108,6 +109,8 @@ class Result(BaseModel):
             "already_banned",
             "inconsistent_servers",
             "profile_not_found",
+            "account_locked",
+            "operator_account",
         ]
         | None
     ) = None
@@ -194,9 +197,9 @@ def _snapshot(store, entries):
     return value
 
 
-def _history_entries(path: Path, snapshot: str) -> list[HistoryEntry]:
+def _history(path: Path, snapshot: str) -> History:
     if not path.exists():
-        return []
+        return History()
     _require_private(path, secret=True)
     limit = 1024**2
     with path.open("rb") as file:
@@ -208,26 +211,42 @@ def _history_entries(path: Path, snapshot: str) -> list[HistoryEntry]:
         history.pending is not None
         and history.pending.restrictions_sha256 == sha256(snapshot.encode()).hexdigest()
     ):
-        return [*history.entries, history.pending.event][-HISTORY_LIMIT:]
-    return history.entries
+        history.entries = [*history.entries, history.pending.event][-HISTORY_LIMIT:]
+    history.pending = None
+    return history
 
 
 def player_moderation(
     root: Path, uid: str
 ) -> tuple[list[Restriction], list[HistoryEntry]]:
     """Read active restrictions and recent applied events for an authenticated UUID."""
+    from omk.game.project_permanent_bans import load  # noqa: PLC0415
+
     profile = UUID(uid)
     with _lock(root):
         store, entries = _read(root)
         history_path = _private_path(root, HISTORY)
-        history = _history_entries(history_path, _snapshot(store, entries))
+        history = _history(history_path, _snapshot(store, entries))
+        _, permanent = load(root)
     now = int(time.time())
     active = [
-        entry for entry in entries.values() if entry.uuid == uid and entry.expires > now
+        entry
+        for entry in entries.values()
+        if entry.uuid == uid and entry.expires is not None and entry.expires > now
     ]
-    recent = [entry for entry in reversed(history) if entry.uuid == profile][
-        :RECENT_LIMIT
-    ]
+    if ban := permanent.bans.get(profile):
+        if ban.stage != "active":
+            raise Refused("unavailable")
+        active.append(Restriction("ban", uid, ban.player, ban.time, None, ban.reason))
+    recent = sorted(
+        (
+            entry
+            for entry in reversed(history.entries + permanent.entries)
+            if entry.uuid == profile
+        ),
+        key=lambda event: event.time,
+        reverse=True,
+    )[:RECENT_LIMIT]
     return active, recent
 
 
@@ -286,12 +305,31 @@ def _find_player(config, store, player, result):
 
 
 def _update(config, result, seconds, reason):
+    from omk.game.project_permanent_bans import load, update  # noqa: PLC0415
+
     action, player = result.command, result.player
     store, entries = _read(config.private)
+    history_path = _private_path(config.private, HISTORY)
+    permanent_path, permanent = load(config.private)
+    if (action == "ban" and seconds is None) or (
+        action == "unban"
+        and any(
+            b.player.casefold() == player.casefold() for b in permanent.bans.values()
+        )
+    ):
+        with account_lock(config):
+            update(config, result, permanent, permanent_path, entries, reason)
+        return
     if action != "unban":
         uid, name = _find_player(config, store, player, result)
+        if action == "ban" and UUID(uid) in permanent.bans:
+            raise Refused("already_banned")
     now = int(time.time())
-    active = {key: entry for key, entry in entries.items() if entry.expires > now}
+    active = {
+        key: entry
+        for key, entry in entries.items()
+        if entry.expires is not None and entry.expires > now
+    }
     if action == "unban":
         keys = [
             key
@@ -315,20 +353,16 @@ def _update(config, result, seconds, reason):
         expires = active[key].expires
     value = _snapshot(store, active)
     path = _private_path(config.private, f"{DIRECTORY}/{STATE}")
-    history_path = _private_path(config.private, HISTORY)
-    history = History(
-        entries=_history_entries(history_path, _snapshot(store, entries))[
-            -(HISTORY_LIMIT - 1) :
-        ],
-        pending=PendingEntry(
-            restrictions_sha256=sha256(value.encode()).hexdigest(),
-            event=HistoryEntry(
-                uuid=UUID(uid),
-                kind=action,
-                time=now,
-                expires=expires,
-                reason=reason if action != "unban" else "",
-            ),
+    history = _history(history_path, _snapshot(store, entries))
+    history.entries = history.entries[-(HISTORY_LIMIT - 1) :]
+    history.pending = PendingEntry(
+        restrictions_sha256=sha256(value.encode()).hexdigest(),
+        event=HistoryEntry(
+            uuid=UUID(uid),
+            kind=action,
+            time=now,
+            expires=expires,
+            reason=reason if action != "unban" else "",
         ),
     )
     # Stage the event before replacing the live file. Its hash distinguishes a
@@ -370,7 +404,10 @@ def run(path, action, player, *, duration="", reason="", confirmed=False):
             ):
                 raise Refused("invalid_request")
             try:
-                seconds = 0 if action == "unban" else duration_seconds(duration)
+                if action == "ban" and duration == "perm":
+                    seconds = None
+                else:
+                    seconds = 0 if action == "unban" else duration_seconds(duration)
             except ValueError:
                 raise Refused("invalid_request") from None
             with _lock(config.private):
