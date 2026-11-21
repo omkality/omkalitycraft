@@ -155,7 +155,7 @@ class Installer:
         return inside(self.root, f"instances/{pack_id}")
 
     def local_state(self, pack_id: str) -> dict:
-        """Report the installed or incomplete state backed by a signed manifest."""
+        """Report file readiness and whether the signed installation had completed."""
         try:
             state = self.directory(pack_id) / ".omk-install.json"
             with state.open("rb") as file:
@@ -174,14 +174,16 @@ class Installer:
                 for value in history
             ):
                 return {"state": "missing"}
-            complete = record.get("complete") is True and all(
+            install_complete = record.get("complete") is True
+            files_present = install_complete and all(
                 inside(self.directory(pack_id), file.path).is_file()
                 and inside(self.directory(pack_id), file.path).stat().st_size
                 == file.size
                 for file in release.files
             )
             return {
-                "state": "installed" if complete else "incomplete",
+                "state": "installed" if files_present else "incomplete",
+                "install_complete": install_complete,
                 "version": release.version,
                 "release": release,
                 "history": history,

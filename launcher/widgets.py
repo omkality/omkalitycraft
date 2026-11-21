@@ -264,8 +264,13 @@ class PackCard(QFrame):
             self.state_label.setStyleSheet(f"color:{SUCCESS};background:transparent")
             self.action.setText("Играть")
         elif state.get("state") == "incomplete":
-            self.state_label.setText("Загрузка не завершена")
-            self.action.setText("Продолжить загрузку")
+            self.installed = state.get("install_complete") is True
+            if self.installed:
+                self.state_label.setText("Файлы изменились · нужна проверка")
+                self.action.setText("Проверить и играть")
+            else:
+                self.state_label.setText("Загрузка не завершена")
+                self.action.setText("Продолжить загрузку")
 
     def update_progress(self, progress: Progress) -> None:
         """Show the current stage and completion percentage."""

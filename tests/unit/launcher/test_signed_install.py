@@ -193,7 +193,9 @@ def test_deleted_files_and_same_size_corruption_repair_without_resetting_maps(
             (folder / name).unlink()
         forge = folder / "forge.jar"
         forge.write_bytes(b"X" * forge.stat().st_size)
-        assert installer.local_state("dj2")["state"] == "incomplete"
+        state = installer.local_state("dj2")
+        assert state["state"] == "incomplete"
+        assert state["install_complete"] is True
         requests.clear()
         installer.install(release, lambda _: None)
         prepare_client_defaults(release, folder)
@@ -275,7 +277,9 @@ def test_interrupted_upgrade_remembers_obsolete_files_without_deleting_user_file
 
         with pytest.raises(InstallCancelled):
             installer.install(release, pause)
-        assert installer.local_state("dj2")["state"] == "incomplete"
+        state = installer.local_state("dj2")
+        assert state["state"] == "incomplete"
+        assert state["install_complete"] is False
         installer.cancel.clear()
         installer.install(release, lambda _: None)
         assert not (folder / "mods/old.jar").exists()
