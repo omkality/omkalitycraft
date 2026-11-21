@@ -429,7 +429,7 @@ class Installer:
         if offset >= file.size:
             temporary.unlink(missing_ok=True)
             offset = 0
-        url = (
+        url = file.source_url or (
             f"{self.client.transport.base_url}/releases/{release.pack_id}/{release.platform}"
             f"/files/{quote(file.path, safe='/')}"
         )

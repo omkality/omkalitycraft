@@ -58,18 +58,27 @@ def build_release(
     key: Ed25519PrivateKey,
     minimum_launcher_version: str | None = None,
     generation: int | None = None,
+    sources: dict[str, str] | None = None,
 ) -> dict[str, Any]:
+    """Hash staged bytes and sign the local and official delivery locations."""
     if generation is not None:
         if not valid_generation(generation):
             raise ValueError("Invalid release generation")
         minimum_launcher_version = minimum_launcher_version or VERSION
     schema = 3 if generation is not None else 2 if minimum_launcher_version else 1
+    if sources is not None and (
+        not isinstance(sources, dict)
+        or any(not isinstance(url, str) for url in sources.values())
+    ):
+        raise ValueError("Expected a mapping from pack paths to official URLs")
+    remaining_sources = dict(sources or {})
     files = []
     for path in sorted(files_root.rglob("*")):
         if not path.is_file():
             continue
         relative = path.relative_to(files_root).as_posix()
         safe_path(relative)
+        source_url = remaining_sources.pop(relative, None)
         if not path.resolve().is_relative_to(files_root.resolve()):
             raise ReleaseError(
                 "В исходниках сборки обнаружена внешняя символическая ссылка."
@@ -81,8 +90,11 @@ def build_release(
                 "sha256": sha256_file(path),
                 "executable": relative == launch["java"]
                 or (platform != "windows-x64" and bool(path.stat().st_mode & 0o111)),
+                **({"source_url": source_url} if source_url is not None else {}),
             }
         )
+    if remaining_sources:
+        raise ValueError("An official URL has no matching staged pack file")
     return sign_release(
         {
             "schema": schema,

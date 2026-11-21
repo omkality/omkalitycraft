@@ -32,6 +32,9 @@ def add_release_commands(subparsers) -> None:
     pack = actions.add_parser("pack", help="Sign a prepared modpack files directory")
     pack.add_argument("--files", type=Path, required=True)
     pack.add_argument("--launch-profile", type=Path, required=True)
+    pack.add_argument(
+        "--sources", type=Path, help="JSON map of staged pack paths to official URLs"
+    )
     pack.add_argument("--private-key", type=Path, required=True)
     pack.add_argument("--public-keys", type=Path, required=True)
     pack.add_argument("--output", type=Path, required=True)
@@ -59,6 +62,7 @@ def add_release_commands(subparsers) -> None:
 
 
 def prepare_release(args: argparse.Namespace) -> dict:
+    """Prepare a signed launcher or pack release without deploying it."""
     if args.release_type == "launcher":
         root = publish_update(
             args.repository,
@@ -76,6 +80,7 @@ def prepare_release(args: argparse.Namespace) -> dict:
     if snapshot_root is not None:
         _check_snapshot_paths(args, snapshot_root)
     key = signing_key(args.private_key, args.public_keys)
+    sources_path = getattr(args, "sources", None)
     envelope = build_release(
         args.files,
         pack_id=args.pack_id,
@@ -86,6 +91,7 @@ def prepare_release(args: argparse.Namespace) -> dict:
         key=key,
         minimum_launcher_version=getattr(args, "minimum_launcher_version", None),
         generation=getattr(args, "generation", None),
+        sources=json.loads(sources_path.read_bytes()) if sources_path else None,
     )
     snapshot = _snapshot(args, envelope, snapshot_root)
     _write_manifest(args.output, envelope)

@@ -24,6 +24,16 @@ from omk.shared.fs import resolved
 MAX_MANIFEST_BYTES = 8 * 1024 * 1024
 MAX_GENERATION = 2**63 - 1
 PLATFORMS = {"windows-x64", "linux-x64", "linux-arm64", "macos-x64", "macos-arm64"}
+UPSTREAM_SOURCE_MINIMUM = "0.3.0.dev18"
+_MOJANG_ARTIFACT_URL = re.compile(
+    r"https://(?:"
+    r"piston-data\.mojang\.com/v1/objects/[a-f0-9]{40}/[\w.-]+|"
+    r"piston-meta\.mojang\.com/v1/packages/[a-f0-9]{40}/[\w.-]+\.json|"
+    r"resources\.download\.minecraft\.net/([a-f0-9]{2})/\1[a-f0-9]{38}|"
+    r"libraries\.minecraft\.net/(?:[\w.-]+/)+[\w.-]+\.jar"
+    r")",
+    re.ASCII,
+)
 
 
 class ReleaseError(RuntimeError):
@@ -98,12 +108,13 @@ def sha256_file(path: Path) -> str:
 
 @dataclass(frozen=True)
 class Artifact:
-    """Describe one signed file, including its size, hash and executable bit."""
+    """Describe one signed file and, when present, its official download URL."""
 
     path: str
     sha256: str
     size: int
     executable: bool = False
+    source_url: str | None = None
 
 
 def _validate_artifacts(files: tuple[Artifact, ...]) -> set[str]:
@@ -120,6 +131,13 @@ def _validate_artifacts(files: tuple[Artifact, ...]) -> set[str]:
             or type(file.executable) is not bool
         ):
             raise ValueError
+        if file.source_url is not None and (
+            not isinstance(file.source_url, str)
+            or len(file.source_url) > 600
+            or not _MOJANG_ARTIFACT_URL.fullmatch(file.source_url)
+            or any(part in {".", ".."} for part in file.source_url.split("/"))
+        ):
+            raise ValueError("Unsupported official artifact URL")
         names.add(file.path.casefold())
     if sum(file.size for file in files) > 50 * 1024**3:
         raise ValueError
@@ -239,6 +257,10 @@ class Release:
                 raise ValueError
             files = tuple(Artifact(**file) for file in payload["files"])
             names = _validate_artifacts(files)
+            if any(file.source_url is not None for file in files) and (
+                minimum is None or Version(minimum) < Version(UPSTREAM_SOURCE_MINIMUM)
+            ):
+                raise ValueError("Official artifact URLs need a compatible launcher")
             launch = payload["launch"]
             _validate_jvm_args(launch.get("jvm_args", []))
             defaults = ClientDefaults.parse(launch.get("client_defaults", {}))

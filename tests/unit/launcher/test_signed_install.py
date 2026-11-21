@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+from urllib.request import Request
 
 import pytest
 
@@ -11,7 +12,13 @@ from launcher.install import (
     current_platform,
 )
 from launcher.pack.client_defaults import prepare_client_defaults
-from launcher.releases import ReleaseError, read_release, safe_path, sha256_file
+from launcher.releases import (
+    UPSTREAM_SOURCE_MINIMUM,
+    ReleaseError,
+    read_release,
+    safe_path,
+    sha256_file,
+)
 from launcher.version import VERSION
 from omk.distribution.publish import build_release
 from omk.distribution.release_store import ReleaseStore, ReleaseStorePolicy
@@ -48,6 +55,92 @@ def test_manifest_tampering_is_rejected(repository):
     envelope["manifest"]["version"] = "tampered"
     with pytest.raises(ReleaseError):
         read_release(json.dumps(envelope).encode(), keys)
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://libraries.minecraft.net/library/file.jar",
+        "https://libraries.minecraft.net.evil.test/library/file.jar",
+        "https://libraries.minecraft.net/library/../file.jar",
+        "https://libraries.minecraft.net/library/file.jar?token=secret",
+        "https://resources.download.minecraft.net/ff/" + "0" * 40,
+    ],
+)
+def test_source_urls_reject_unapproved_locations(repository, url):
+    _, files, previous, _, key = repository
+    with pytest.raises(ReleaseError):
+        build_release(
+            files,
+            pack_id="dj2",
+            version="release",
+            minecraft="1.12.2",
+            platform=current_platform(),
+            launch=previous["manifest"]["launch"],
+            key=key,
+            generation=1,
+            sources={"forge.jar": url},
+        )
+
+
+def test_signed_source_download_keeps_range_and_integrity(
+    repository, tmp_path, monkeypatch
+):
+    root, files, previous, keys, key = repository
+    source_url = "https://libraries.minecraft.net/vendor/forge.jar"
+    vendor_file = root / "original.jar"
+    vendor_file.write_bytes((files / "forge.jar").read_bytes())
+    with pytest.raises(ReleaseError):
+        build_release(
+            files,
+            pack_id="dj2",
+            version="release",
+            minecraft="1.12.2",
+            platform=current_platform(),
+            launch=previous["manifest"]["launch"],
+            key=key,
+            generation=1,
+            minimum_launcher_version="0.3.0.dev17",
+            sources={"forge.jar": source_url},
+        )
+    envelope = build_release(
+        files,
+        pack_id="dj2",
+        version="release",
+        minecraft="1.12.2",
+        platform=current_platform(),
+        launch=previous["manifest"]["launch"],
+        key=key,
+        generation=1,
+        minimum_launcher_version=UPSTREAM_SOURCE_MINIMUM,
+        sources={"forge.jar": source_url},
+    )
+    (files.parent / "manifest.json").write_text(json.dumps(envelope))
+    (files / "forge.jar").unlink()
+    with serve(root) as (origin, requests):
+        client = ReleaseClient(origin, keys)
+        open_request = client.transport._opener.open
+
+        def redirect_fixture(request, **options):
+            if request.full_url == source_url:
+                request = Request(origin + "/original.jar", headers=request.headers)
+            return open_request(request, **options)
+
+        monkeypatch.setattr(client.transport._opener, "open", redirect_fixture)
+        release = client.fetch("dj2")
+        artifact = next(file for file in release.files if file.path == "forge.jar")
+        installer = Installer(tmp_path / "portable", client)
+        part = installer.root / f"cache/downloads/{artifact.sha256}.part"
+        part.parent.mkdir(parents=True)
+        part.write_bytes(vendor_file.read_bytes()[:5])
+        directory = installer.install(release, lambda _: None)
+        assert ("original.jar", 5) in requests
+        assert sha256_file(directory / "forge.jar") == artifact.sha256
+        (directory / "forge.jar").unlink()
+        vendor_file.write_bytes(b"x" * artifact.size)
+        with pytest.raises(ReleaseError, match="не прошёл проверку"):
+            installer.install(release, lambda _: None)
+        assert not (directory / "forge.jar").exists()
 
 
 def test_download_resume_repair_and_user_data(repository, tmp_path: Path):
