@@ -191,12 +191,20 @@ pub fn valid_player(player: &str) -> bool {
             .all(|byte| byte.is_ascii_alphanumeric() || byte == b'_')
 }
 
+enum PlayerNames {
+    Loading { complete_on_arrival: bool },
+    Ready(Vec<String>),
+    Unavailable,
+}
+
 pub struct Form {
     pub action: Action,
     field: usize,
     pub confirming: bool,
     yes: bool,
     error: String,
+    names: PlayerNames,
+    completion_prefix: Option<String>,
 }
 impl Form {
     pub fn new(server: String, command: &str) -> Self {
@@ -216,8 +224,88 @@ impl Form {
             confirming: false,
             yes: false,
             error: String::new(),
+            names: PlayerNames::Unavailable,
+            completion_prefix: None,
         }
     }
+
+    pub fn start_name_lookup(&mut self) {
+        self.names = PlayerNames::Loading {
+            complete_on_arrival: false,
+        };
+    }
+
+    pub fn finish_name_lookup(&mut self, names: Option<Vec<String>>) {
+        let tab_pressed = matches!(
+            self.names,
+            PlayerNames::Loading {
+                complete_on_arrival: true
+            }
+        );
+        self.names = names.map_or(PlayerNames::Unavailable, PlayerNames::Ready);
+        if tab_pressed {
+            self.complete_name();
+        }
+    }
+
+    fn reset_completion(&mut self) {
+        self.completion_prefix = None;
+        if let PlayerNames::Loading {
+            complete_on_arrival,
+        } = &mut self.names
+        {
+            *complete_on_arrival = false;
+        }
+    }
+
+    fn complete_name(&mut self) -> bool {
+        if self.field != 0
+            || self.action.command == "revoke-invite"
+            || self.action.player.is_empty()
+        {
+            return false;
+        }
+        let names = match &mut self.names {
+            PlayerNames::Loading {
+                complete_on_arrival,
+            } => {
+                *complete_on_arrival = true;
+                self.error = "Загружаются ники игроков…".into();
+                return true;
+            }
+            PlayerNames::Unavailable => {
+                self.error = "Список ников недоступен. Ник можно ввести вручную.".into();
+                return true;
+            }
+            PlayerNames::Ready(names) => names,
+        };
+        let player = &self.action.player;
+        let prefix = self.completion_prefix.as_deref().unwrap_or(player);
+        let matches: Vec<_> = names
+            .iter()
+            .filter(|name| {
+                name.get(..prefix.len())
+                    .is_some_and(|start| start.eq_ignore_ascii_case(prefix))
+            })
+            .collect();
+        if matches.as_slice() == [player] {
+            self.error.clear();
+            return false;
+        }
+        if matches.is_empty() {
+            self.error = "Нет совпадений.".into();
+        } else {
+            let next = matches
+                .iter()
+                .position(|name| *name == player)
+                .map_or(0, |index| (index + 1) % matches.len());
+            self.completion_prefix = (matches.len() > 1).then(|| prefix.to_owned());
+            self.action.player.clone_from(matches[next]);
+            self.error.clear();
+        }
+        true
+    }
+
     pub fn dismiss_confirmation(&mut self) -> bool {
         self.yes = false;
         std::mem::take(&mut self.confirming)
@@ -241,9 +329,19 @@ impl Form {
             _ => 3,
         };
         match key {
-            KeyCode::Tab | KeyCode::Down => self.field = (self.field + 1) % fields,
-            KeyCode::BackTab | KeyCode::Up => self.field = (self.field + fields - 1) % fields,
+            KeyCode::Tab if self.complete_name() => {}
+            KeyCode::Tab | KeyCode::Down => {
+                self.reset_completion();
+                self.field = (self.field + 1) % fields;
+                self.error.clear();
+            }
+            KeyCode::BackTab | KeyCode::Up => {
+                self.reset_completion();
+                self.field = (self.field + fields - 1) % fields;
+                self.error.clear();
+            }
             KeyCode::Enter => {
+                self.reset_completion();
                 if self.action.command == "revoke-invite"
                     && (self.action.player.len() != 12
                         || !self
@@ -276,12 +374,14 @@ impl Form {
                 }
             }
             KeyCode::Backspace => {
+                self.reset_completion();
                 self.input().pop();
                 self.error.clear();
             }
             KeyCode::Char(c)
                 if !c.is_control() && c != '§' && self.input().chars().count() < 128 =>
             {
+                self.reset_completion();
                 self.input().push(c);
                 self.error.clear();
             }
@@ -323,7 +423,7 @@ impl Form {
         let cursor = |field| if self.field == field { ">" } else { " " };
         let body = if stats {
             format!(
-                "\n> Ник: {}\n{}\n\nEnter — посмотреть · Esc — отмена",
+                "\n> Ник: {}\n{}\n\nTab — дополнить ник · Enter — посмотреть · Esc — отмена",
                 self.action.player, self.error
             )
         } else if invite {
@@ -357,14 +457,14 @@ impl Form {
             )
         } else if unban {
             format!(
-                "\nОбласть: {}\n\n> Ник: {}\n{}\n\nEnter — снять бан · Esc — отмена",
+                "\nОбласть: {}\n\n> Ник: {}\n{}\n\nTab — дополнить ник · Enter — снять бан · Esc — отмена",
                 self.action.scope(),
                 self.action.player,
                 self.error
             )
         } else {
             format!(
-                "\n{} · {}\n\n{} Ник: {}\n{}{} Причина: {}\n\n{}\n\nTab / ↑ ↓ — поле · Enter — {} · Esc — отмена",
+                "\n{} · {}\n\n{} Ник: {}\n{}{} Причина: {}\n\n{}\n\nTab — дополнить ник · ↑ ↓ — поле\nEnter — {} · Esc — отмена",
                 self.action.scope(),
                 self.action.command,
                 cursor(0),
@@ -432,6 +532,78 @@ impl Form {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn tab_completes_all_nickname_forms_and_cycles_without_submitting() {
+        for command in ["kick", "ban", "mute", "unban", "stats"] {
+            let mut form = Form::new("dj2".into(), command);
+            form.finish_name_lookup(Some(vec!["ProbeAlpha".into(), "ProbeBeta".into()]));
+            form.action.player = "pRO".into();
+            for expected in ["ProbeAlpha", "ProbeBeta", "ProbeAlpha"] {
+                assert!(form.key(KeyCode::Tab).is_none());
+                assert_eq!(form.action.player, expected);
+                assert_eq!(form.field, 0);
+            }
+            form.key(KeyCode::Backspace);
+            form.key(KeyCode::Tab);
+            assert_eq!(form.action.player, "ProbeAlpha");
+            form.key(KeyCode::Down);
+            assert_eq!(form.completion_prefix, None);
+        }
+    }
+
+    #[test]
+    fn tab_waits_for_names_and_editing_cancels_a_waiting_completion() {
+        let mut form = Form::new("dj2".into(), "ban");
+        form.start_name_lookup();
+        form.action.player = "pro".into();
+        form.key(KeyCode::Tab);
+        form.finish_name_lookup(Some(vec!["ProbeAlpha".into()]));
+        assert_eq!(form.action.player, "ProbeAlpha");
+        form.key(KeyCode::Tab);
+        assert_eq!(form.field, 1);
+
+        form.key(KeyCode::Up);
+        form.action.player = "pro".into();
+        form.start_name_lookup();
+        form.key(KeyCode::Tab);
+        form.key(KeyCode::Char('b'));
+        form.finish_name_lookup(Some(vec!["ProbeAlpha".into()]));
+        assert_eq!(form.action.player, "prob");
+
+        form.start_name_lookup();
+        form.key(KeyCode::Tab);
+        form.key(KeyCode::Enter);
+        assert!(form.confirming);
+        form.finish_name_lookup(Some(vec!["ProbeAlpha".into()]));
+        assert_eq!(form.action.player, "prob");
+    }
+
+    #[test]
+    fn missing_match_and_unavailable_list_preserve_manual_entry() {
+        let mut form = Form::new("dj2".into(), "stats");
+        form.finish_name_lookup(Some(vec!["ProbeAlpha".into()]));
+        form.key(KeyCode::Tab);
+        assert!(form.action.player.is_empty());
+        form.action.player = "OtherName".into();
+        form.key(KeyCode::Tab);
+        assert_eq!(form.error, "Нет совпадений.");
+        form.start_name_lookup();
+        form.key(KeyCode::Tab);
+        form.finish_name_lookup(None);
+        assert!(form.error.contains("недоступен"));
+        assert_eq!(form.key(KeyCode::Enter).unwrap().player, "OtherName");
+    }
+
+    #[test]
+    fn tab_does_not_complete_an_invite_reference() {
+        let mut form = Form::new("dj2".into(), "revoke-invite");
+        form.finish_name_lookup(Some(vec!["ProbeAlpha".into()]));
+        form.action.player = "Pro".into();
+        form.key(KeyCode::Tab);
+        assert_eq!(form.action.player, "Pro");
+    }
+
     #[test]
     fn durations() {
         for (s, n) in [

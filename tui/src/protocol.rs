@@ -316,11 +316,21 @@ impl ConsoleResult {
             || !valid_server(server)
             || !matches!(
                 command,
-                "players" | "roster" | "permanent-bans" | "invites" | "tps" | "save"
+                "players"
+                    | "roster"
+                    | "permanent-bans"
+                    | "invites"
+                    | "player-names"
+                    | "tps"
+                    | "save"
             )
             || !matches!(v.effect.as_str(), "none" | "unknown")
             || (command != "save" && v.effect != "none")
-            || !valid_terminal_output(&v.output)
+            || if command == "player-names" {
+                !valid_player_names(&v.output)
+            } else {
+                !valid_terminal_output(&v.output)
+            }
             || if v.ok {
                 v.error.is_some()
             } else {
@@ -333,6 +343,15 @@ impl ConsoleResult {
             return Err("Нарушен контракт команды v1".into());
         }
         Ok(v)
+    }
+
+    pub fn player_names(&self) -> Option<Vec<String>> {
+        (self.ok && self.command == "player-names").then(|| {
+            self.output
+                .split_terminator('\n')
+                .map(str::to_owned)
+                .collect()
+        })
     }
 
     pub fn membership_message(&self) -> Option<String> {
@@ -348,6 +367,14 @@ impl ConsoleResult {
             _ => None,
         }
     }
+}
+
+fn valid_player_names(output: &str) -> bool {
+    output.len() < 17_000
+        && output.split_terminator('\n').count() <= 1000
+        && output
+            .split_terminator('\n')
+            .all(crate::moderation::valid_player)
 }
 
 fn valid_terminal_output(value: &str) -> bool {

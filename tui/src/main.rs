@@ -237,10 +237,24 @@ fn interactive(
     let mut pending = backend
         .as_ref()
         .map(|b| Pending::start(b.clone(), Request::Overview(None, app.window())));
+    let mut name_lookup: Option<Pending> = None;
     let mut next_refresh = Instant::now() + Duration::from_secs(5);
     #[cfg(windows)]
     let mut clipboard_copy: Option<ClipboardCopy> = None;
     loop {
+        if let Some(lookup) = &name_lookup {
+            let names = match lookup.receiver.try_recv() {
+                Ok(Ok(Reply::Console(v))) => Some(v.player_names()),
+                Err(mpsc::TryRecvError::Empty) => None,
+                _ => Some(None),
+            };
+            if let Some(names) = names {
+                if let Some(form) = &mut app.moderation {
+                    form.finish_name_lookup(names);
+                }
+                name_lookup = None;
+            }
+        }
         #[cfg(windows)]
         if let Some(status) = clipboard_copy.as_ref().and_then(ClipboardCopy::status) {
             let page = app.command_page_mut();
@@ -385,7 +399,13 @@ fn interactive(
                 continue;
             }
             if key.code == KeyCode::Esc {
-                if app.dismiss_dialog() || pending.as_ref().is_some_and(|work| work.mutating) {
+                if app.dismiss_dialog() {
+                    if app.moderation.is_none() {
+                        name_lookup = None;
+                    }
+                    continue;
+                }
+                if pending.as_ref().is_some_and(|work| work.mutating) {
                     continue;
                 }
                 if pending.as_ref().is_some_and(|work| !work.overview) {
@@ -415,6 +435,7 @@ fn interactive(
             }
             if let Some(form) = &mut app.moderation {
                 if let Some(a) = form.key(key.code) {
+                    name_lookup = None;
                     if let Some(b) = &backend {
                         drop(pending.take());
                         let request = if a.command == "stats" {
@@ -554,6 +575,18 @@ fn interactive(
                                 },
                             )
                         });
+                        if c != 'o'
+                            && let (Some(b), Some(form)) = (&backend, &mut app.moderation)
+                        {
+                            form.start_name_lookup();
+                            name_lookup = Some(Pending::start(
+                                b.clone(),
+                                Request::Console {
+                                    server: form.action.server.clone(),
+                                    command: "player-names".into(),
+                                },
+                            ));
+                        }
                     }
                     KeyCode::PageUp => {
                         let page = app.command_page_mut();

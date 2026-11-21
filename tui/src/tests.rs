@@ -75,6 +75,33 @@ fn console_requires_correlation_and_safe_text() {
 }
 
 #[test]
+fn player_names_reply_accepts_only_a_bounded_list_of_nicknames() {
+    let mut value = serde_json::json!({
+        "schema_version": 1, "action": "owner.console", "server_id": "dj2",
+        "command": "player-names", "ok": true, "effect": "none", "error": null,
+        "output": "A1\nprobe_2",
+    });
+    let parse = |payload: &serde_json::Value| {
+        ConsoleResult::parse(&serde_json::to_vec(payload).unwrap(), "dj2", "player-names")
+    };
+    assert_eq!(
+        parse(&value).unwrap().player_names().unwrap(),
+        ["A1", "probe_2"]
+    );
+    value["output"] = serde_json::json!("");
+    assert!(parse(&value).unwrap().player_names().unwrap().is_empty());
+    for invalid in [
+        "Good\nBad Name".into(),
+        "Good\n\u{1b}[2J".into(),
+        "Good\n\nOther".into(),
+        "a\n".repeat(1001),
+    ] {
+        value["output"] = serde_json::json!(invalid);
+        assert!(parse(&value).is_err());
+    }
+}
+
+#[test]
 fn player_stats_uses_nickname_only_and_rejects_unbound_output() {
     assert_eq!(shortcut_key(KeyCode::Char('ы')), KeyCode::Char('s'));
     let mut form = moderation::Form::new("dj2".into(), "stats");

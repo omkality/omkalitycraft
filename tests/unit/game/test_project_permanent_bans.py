@@ -108,10 +108,12 @@ def test_project_roster_excludes_banned_profile_even_if_reported_online(
     )
     path = drasl.project.path
     assert "FirstJoin" in console.run(path, "alpha", "roster")["output"]
+    assert console.run(path, "alpha", "player-names")["output"] == "FirstJoin"
     assert _ban(drasl)["ok"]
     roster = console.run(path, "alpha", "roster")
     assert roster["ok"] and "FirstJoin" not in roster["output"]
     assert console.run(path, "alpha", "permanent-bans")["output"] == "FirstJoin"
+    assert console.run(path, "alpha", "player-names")["output"] == "FirstJoin"
     assert moderation.run(path, "unban", "FirstJoin")["ok"]
     assert "FirstJoin" in console.run(path, "alpha", "roster")["output"]
     assert (

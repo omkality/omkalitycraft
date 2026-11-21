@@ -20,7 +20,8 @@ from omk.owner.admin import (
 from omk.owner.owner_result import ServerId
 
 COMMANDS = {"players": "list uuids", "tps": "forge tps", "save": "save-all flush"}
-VIEWS = {"roster", "permanent-bans", "invites"}
+VIEWS = {"roster", "permanent-bans", "invites", "player-names"}
+MAX_PLAYER_NAMES = 1000
 
 
 class ConsoleResult(BaseModel):
@@ -30,10 +31,12 @@ class ConsoleResult(BaseModel):
     schema_version: Literal[1] = 1
     action: Literal["owner.console"] = "owner.console"
     server_id: ServerId
-    command: Literal["players", "roster", "permanent-bans", "invites", "tps", "save"]
+    command: Literal[
+        "players", "roster", "permanent-bans", "invites", "player-names", "tps", "save"
+    ]
     ok: bool
     effect: Literal["none", "unknown"]
-    output: str = Field(default="", max_length=8192)
+    output: str = Field(default="", max_length=MAX_PLAYER_NAMES * 17 - 1)
     error: Literal["invalid_configuration", "console_unavailable"] | None = None
 
 
@@ -82,6 +85,9 @@ def _roster(config, online):
 
 
 def _view(config, action, server):
+    if action == "player-names" and config.auth_origin is not None:
+        names, banned = _project_members(config)
+        return _nickname_list(names.union(banned.values()))
     if action == "permanent-bans":
         _, banned = _project_members(config)
         return (
@@ -109,7 +115,17 @@ def _view(config, action, server):
         online = online_players(command(endpoint, password, COMMANDS["players"]))
     except ValueError, RuntimeError, OSError, KeyError:
         online = None
+    if action == "player-names":
+        if online is None:
+            raise ValueError("Player list unavailable")
+        return _nickname_list(set(online.values()))
     return _roster(config, online)
+
+
+def _nickname_list(names: set[str]) -> str:
+    if len(names) > MAX_PLAYER_NAMES:
+        raise ValueError("Too many player names")
+    return "\n".join(sorted(names, key=lambda name: (name.casefold(), name)))
 
 
 def run(path, server, action, *, confirmed=False):
@@ -144,7 +160,9 @@ def run(path, server, action, *, confirmed=False):
             if action in VIEWS
             else command(endpoint, password, COMMANDS[action])
         )
-        if len(output) > 8192 or (action not in VIEWS and password in output):
+        if (action != "player-names" and len(output) > 8192) or (
+            action not in VIEWS and password in output
+        ):
             raise ValueError("Invalid console output")
         # Terminal escape sequences must never be interpreted by the UI.
         output = "".join(
