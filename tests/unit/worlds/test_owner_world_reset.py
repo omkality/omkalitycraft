@@ -4,6 +4,29 @@ from types import SimpleNamespace
 from omk.cli import main
 from omk.owner.admin import AdminError
 from omk.owner.panels import owner_world_reset as wipe
+from omk.owner.panels.owner_volumes import reset_target
+
+
+def test_repeated_resets_use_distinct_destinations_bound_to_the_window():
+    template = {"data_volume": "reset", "owner": "dj2"}
+    a, b = (reset_target(template, character * 32) for character in ("a", "b"))
+    assert a["data_volume"] == "reset-" + "a" * 32
+    assert b["data_volume"] == "reset-" + "b" * 32
+    assert a["owner"] == b["owner"] == template["owner"]
+
+
+def test_managed_wipe_finishes_before_opening_ingress(monkeypatch):
+    state = wipe.State(dimension=0, stage="start", managed=True)
+    events = []
+    monkeypatch.setattr(wipe, "_require_drained", lambda *_: None)
+    monkeypatch.setattr(wipe, "_start", lambda *_: events.append("start"))
+    monkeypatch.setattr(
+        wipe, "_set_ingress", lambda _, server, action: events.append(action)
+    )
+    result = {}
+    assert wipe._execute_stage(None, "dj2", "start", state, result)
+    assert events == ["start", "open"]
+    assert result["stage"] == "complete"
 
 
 def test_cli_inspection_reports_unconfigured_fixture(monkeypatch, tmp_path, capsys):
@@ -67,7 +90,7 @@ def test_confirmed_prepare_refuses_open_or_occupied_ingress_before_mutation(
 ):
     state = wipe.State(dimension=-18000, stage="prepare")
     monkeypatch.setattr(wipe, "load_operator_config", lambda _: object())
-    monkeypatch.setattr(wipe, "_state", lambda *_: state)
+    monkeypatch.setattr(wipe, "_state", lambda *_, **__: state)
     monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
     monkeypatch.setattr(wipe.ingress, "capture", lambda *a, **k: ({}, {"sessions": 1}))
 
@@ -91,7 +114,7 @@ def test_prepare_requires_successful_backup_before_staging(monkeypatch):
         window={"operation": "a" * 32, "stage": "stopped"},
     )
     monkeypatch.setattr(wipe, "load_operator_config", lambda _: object())
-    monkeypatch.setattr(wipe, "_state", lambda *_: state)
+    monkeypatch.setattr(wipe, "_state", lambda *_, **__: state)
     monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
     monkeypatch.setattr(wipe, "_require_drained", lambda *_: None)
     monkeypatch.setattr(wipe.owner_volumes, "destination", lambda *a, **k: {})
@@ -146,7 +169,7 @@ def test_catalog_selects_by_dimension_without_authorizing_other_worlds(
     monkeypatch.setattr(
         wipe, "_read_json", lambda *_: {"schema": 1, "servers": {"dj2": worlds}}
     )
-    monkeypatch.setattr(wipe, "_state", lambda *_: state)
+    monkeypatch.setattr(wipe, "_state", lambda *_, **__: state)
     monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
 
     def never_apply(*_):

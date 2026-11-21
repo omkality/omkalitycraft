@@ -211,7 +211,8 @@ pub struct Overview {
     pub server_ids: Vec<String>,
     pub operations: Vec<Operation>,
     pub skipped: u32,
-    pub truncated: bool,
+    #[serde(rename = "truncated")]
+    _truncated: bool,
     #[serde(deserialize_with = "required_option")]
     pub selected_server: Option<String>,
     pub metrics_status: String,
@@ -309,7 +310,7 @@ impl ConsoleResult {
     pub fn parse(bytes: &[u8], server: &str, command: &str) -> Result<Self, String> {
         let v: Self = serde_json::from_slice(bytes).map_err(|_| "Неверный ответ команды")?;
         if v.schema_version != 1 || v.action != "owner.console" || v.server_id != server || v.command != command
-            || !valid_server(server) || !matches!(command, "players" | "tps" | "save")
+            || !valid_server(server) || !matches!(command, "players" | "roster" | "invites" | "tps" | "save")
             || !matches!(v.effect.as_str(), "none" | "unknown")
             || (command != "save" && v.effect != "none")
             || v.output.chars().count() > 8192

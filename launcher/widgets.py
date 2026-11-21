@@ -183,7 +183,7 @@ class PackCard(QFrame):
         summary = (
             f"Ориентир: {requirements.recommended.ram_gb} ГБ ОЗУ"
             if requirements is not None and requirements.recommended is not None
-            else "Требования уточняются"
+            else ""
         )
         summary_label = QLabel(summary)
         summary_label.setProperty("muted", True)
@@ -201,7 +201,12 @@ class PackCard(QFrame):
         if self._requirements_dialog is None:
             self._requirements_dialog = RequirementsDialog(self.profile, self)
         if not self._requirements_dialog.isVisible():
-            self._requirements_dialog.open()
+            self._requirements_dialog.adjustSize()
+            self._requirements_dialog.move(
+                self.window().frameGeometry().center()
+                - self._requirements_dialog.rect().center()
+            )
+            self._requirements_dialog.show()
         self._requirements_dialog.raise_()
         self._requirements_dialog.activateWindow()
 

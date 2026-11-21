@@ -64,9 +64,13 @@ impl Receipt {
             || v.command != request.command
             || v.player != request.player
             || !matches!(v.effect.as_str(), "none" | "applied" | "unknown")
-            || v.ok != (v.effect == "applied")
+            || v.ok
+                && !(v.effect == "applied" || v.command == "revoke-invite" && v.effect == "none")
+            || !v.ok && v.effect == "applied"
             || v.ok != v.error.is_none()
-            || v.ok && (matches!(v.command.as_str(), "kick" | "unban") != v.expires_at.is_none())
+            || v.ok
+                && (matches!(v.command.as_str(), "kick" | "unban" | "revoke-invite")
+                    != v.expires_at.is_none())
             || v.error.as_deref().is_some_and(|s| {
                 !matches!(
                     s,
@@ -88,6 +92,15 @@ impl Receipt {
         Ok(v)
     }
     pub fn message(&self) -> String {
+        if self.command == "revoke-invite" {
+            return match (self.ok, self.effect.as_str()) {
+                (true, "applied") => "Приглашение отозвано.",
+                (true, _) => "Приглашение уже не действует.",
+                (_, "unknown") => "Результат неизвестен. Проверьте список приглашений.",
+                _ => "Не удалось отозвать приглашение.",
+            }
+            .into();
+        }
         format!(
             "Область: {}\nИгрок: {}\nДействие: {}\n\n{}{}{}",
             self.server_id.as_deref().unwrap_or("Весь проект"),
@@ -169,7 +182,7 @@ impl Form {
                 server,
                 command: command.into(),
                 player: String::new(),
-                duration: if matches!(command, "kick" | "unban") {
+                duration: if matches!(command, "kick" | "unban" | "revoke-invite") {
                     String::new()
                 } else {
                     "10m".into()
@@ -196,7 +209,7 @@ impl Form {
             return None;
         }
         let fields = match self.action.command.as_str() {
-            "unban" => 1,
+            "unban" | "revoke-invite" => 1,
             "kick" => 2,
             _ => 3,
         };
@@ -204,7 +217,16 @@ impl Form {
             KeyCode::Tab | KeyCode::Down => self.field = (self.field + 1) % fields,
             KeyCode::BackTab | KeyCode::Up => self.field = (self.field + fields - 1) % fields,
             KeyCode::Enter => {
-                if self.action.player.is_empty()
+                if self.action.command == "revoke-invite"
+                    && (self.action.player.len() != 12
+                        || !self
+                            .action
+                            .player
+                            .bytes()
+                            .all(|byte| byte.is_ascii_hexdigit()))
+                {
+                    self.error = "Введите 12 символов из списка приглашений (l).".into();
+                } else if self.action.player.is_empty()
                     || self.action.player.len() > 16
                     || !self
                         .action
@@ -217,7 +239,10 @@ impl Form {
                     && seconds(&self.action.duration).is_none()
                 {
                     self.error = "Срок: 10m, 20h, 1d; от 1s до 365d".into();
-                } else if self.action.command == "ban" {
+                } else if matches!(self.action.command.as_str(), "ban" | "revoke-invite") {
+                    if self.action.command == "revoke-invite" {
+                        self.action.player.make_ascii_lowercase();
+                    }
                     self.confirming = true;
                     self.yes = false;
                     self.error.clear();
@@ -252,10 +277,15 @@ impl Form {
         let area = frame.area();
         let w = area.width.saturating_sub(4).min(80);
         let unban = self.action.command == "unban";
-        let h = if unban { 10 } else { 17 }.min(area.height);
+        let invite = self.action.command == "revoke-invite";
+        let h = if unban || invite { 10 } else { 17 }.min(area.height);
         let popup = Rect::new((area.width - w) / 2, (area.height - h) / 2, w, h);
         frame.render_widget(Clear, popup);
-        let title = if self.confirming {
+        let title = if invite && self.confirming {
+            " Отозвать приглашение? "
+        } else if invite {
+            " Отзыв приглашения "
+        } else if self.confirming {
             " Бан · Вы уверены? "
         } else if unban {
             " Разбан игрока "
@@ -263,7 +293,19 @@ impl Form {
             " Модерация игрока "
         };
         let cursor = |field| if self.field == field { ">" } else { " " };
-        let body = if self.confirming {
+        let body = if invite {
+            let instruction = if !self.confirming {
+                "Введите номер из списка приглашений (l). Enter — продолжить."
+            } else if self.yes {
+                "Нет     [ Да, отозвать ]"
+            } else {
+                "[ Нет ]     Да"
+            };
+            format!(
+                "\nПриглашение: {}\n{}\n\n{instruction}",
+                self.action.player, self.error
+            )
+        } else if self.confirming {
             format!(
                 "\nОбласть: {}\nИгрок: {}\nБан на: {}\nПричина: {}\n\n{}\n\n← → / Tab — выбор · Enter — принять · Esc — отмена",
                 self.action.scope(),

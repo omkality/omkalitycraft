@@ -214,7 +214,10 @@ impl Backend {
             }
             Request::Moderation(a) => {
                 if !valid_server(&a.server)
-                    || !matches!(a.command.as_str(), "kick" | "ban" | "mute" | "unban")
+                    || !matches!(
+                        a.command.as_str(),
+                        "kick" | "ban" | "mute" | "unban" | "revoke-invite"
+                    )
                 {
                     return Err("Неверная команда модерации".into());
                 }
@@ -233,7 +236,7 @@ impl Backend {
                     "--reason",
                     &a.reason,
                 ]);
-                if a.command == "ban" {
+                if matches!(a.command.as_str(), "ban" | "revoke-invite") {
                     command.arg("--confirm-ban");
                 }
             }
@@ -250,7 +253,12 @@ impl Backend {
                 server,
                 command: action,
             } => {
-                if !valid_server(server) || !matches!(action.as_str(), "players" | "tps" | "save") {
+                if !valid_server(server)
+                    || !matches!(
+                        action.as_str(),
+                        "players" | "roster" | "invites" | "tps" | "save"
+                    )
+                {
                     return Err("Неверная команда".into());
                 }
                 command.args(["console", "--server", server, "--command", action]);

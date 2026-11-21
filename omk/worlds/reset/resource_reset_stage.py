@@ -73,15 +73,67 @@ def _request(request):
         raise ValueError("Invalid Linux resource staging request")
     if "reset" not in request:
         audit.validate_dimension(request["dimension"])
-    elif request["position"] != "auto" or request["reset"] != dimension_reset.layout(
-        request["dimension"]
-    ):
-        raise ValueError("Invalid dimension reset request")
+    else:
+        reset = request["reset"]
+        all_worlds = isinstance(reset, dict) and reset.get("all_worlds") is True
+        if request["position"] != "auto" or reset != dimension_reset.layout(
+            request["dimension"], all_worlds=all_worlds
+        ):
+            raise ValueError("Invalid dimension reset request")
     if request["position"] != "auto":
         transform.landing(request["position"])
     BackupPolicy(**request["policy"])
     if "preflight_options" in request:
         resource_reset_preflight.options_checked(request["preflight_options"])
+
+
+def _changes(request, source, files):
+    reset = request.get("reset")
+    all_worlds = bool(reset and reset.get("all_worlds"))
+    if all_worlds:
+        if f"{request['world']}/level.dat" not in files:
+            raise ValueError("Full reset requires the verified saved world metadata")
+        return (
+            request["position"],
+            None,
+            {},
+            {"resource_identity": reset, "references": {}},
+        )
+    inspected = audit.inspect_resource(
+        source,
+        request["world"],
+        request["dimension"],
+        world_max_bytes=request["world_max_bytes"],
+        reset=reset,
+    )
+    position, preflight = request["position"], None
+    if position == "auto":
+        preflight = resource_reset_preflight.preflight(
+            source,
+            request["world"],
+            request["dimension"],
+            options=request.get("preflight_options"),
+            world_max_bytes=request["world_max_bytes"],
+            **({"reset": request["reset"]} if "reset" in request else {}),
+        )
+        if not preflight["can_stage_data"]:
+            raise ValueError(
+                "Resource auto stage needs reviewed landing; known mod links require "
+                "reviewed adapters and opaque records are forbidden"
+            )
+        position = preflight["landing"]["position"]
+    payloads = transform.changes(
+        source,
+        request["world"],
+        request["dimension"],
+        position,
+        files,
+        enderutilities_targets=bool(
+            preflight and ender.ADAPTER in preflight.get("adapters", {})
+        ),
+        landing_dimension=request.get("reset", {}).get("landing_dimension", 0),
+    )
+    return position, preflight, payloads, inspected
 
 
 def _inputs(request, source, storage, target):
@@ -111,40 +163,7 @@ def _inputs(request, source, storage, target):
         raise ValueError(
             "Fresh verified backup of the entire current world is required"
         )
-    inspected = audit.inspect_resource(
-        source,
-        request["world"],
-        request["dimension"],
-        world_max_bytes=request["world_max_bytes"],
-        **({"reset": request["reset"]} if "reset" in request else {}),
-    )
-    position, preflight = request["position"], None
-    if position == "auto":
-        preflight = resource_reset_preflight.preflight(
-            source,
-            request["world"],
-            request["dimension"],
-            options=request.get("preflight_options"),
-            world_max_bytes=request["world_max_bytes"],
-            **({"reset": request["reset"]} if "reset" in request else {}),
-        )
-        if not preflight["can_stage_data"]:
-            raise ValueError(
-                "Resource auto stage needs reviewed landing; known mod links require "
-                "reviewed adapters and opaque records are forbidden"
-            )
-        position = preflight["landing"]["position"]
-    payloads = transform.changes(
-        source,
-        request["world"],
-        request["dimension"],
-        position,
-        files,
-        enderutilities_targets=bool(
-            preflight and ender.ADAPTER in preflight.get("adapters", {})
-        ),
-        landing_dimension=request.get("reset", {}).get("landing_dimension", 0),
-    )
+    position, preflight, payloads, inspected = _changes(request, source, files)
     result = transform.result_inventory(
         files,
         payloads,

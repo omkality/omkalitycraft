@@ -2,12 +2,12 @@ schema_version = 1
 
 [[servers]]
 id = "dj2"
-name = "Divine Journey 2 RU"
+name = "Divine Journey 2 Server 1"
 minecraft = "1.12.2"
 pack_version = "2.23.4"
 loader = "forge"
 utilities_adapter = "ftbutilities_112"
-status = "testing"
+status = "ready"
 description = "От первых инструментов до сложнейших производств — вместе."
 project_url = "https://www.curseforge.com/minecraft/modpacks/divine-journey-2"
 version_url = "https://github.com/Divine-Journey-2/Divine-Journey-2/releases/tag/2.23.4"
@@ -22,14 +22,18 @@ memory_max_mb = 16384
 
 [servers.requirements]
 state = "preliminary"
-scope = "Для игры на нашем сервере, без шейдеров. Точные требования уточняем по тестам."
-minimum_note = "Минимум ещё проверяем. На компьютере с 8 ГБ ОЗУ сборке может не хватить памяти."
-platforms = "Windows / Linux, 64 бита. Точные версии ОС ещё проверяем."
-macos = "Ориентир: Apple M1 и новее, 16 ГБ памяти. Игровой тест ещё впереди. Intel Mac проверяем отдельно."
-note = "Java использует часть общей ОЗУ. Место на SSD — ориентир с запасом для установки и обновлений; карта и личные миры требуют дополнительного места."
+scope = "Без шейдеров"
+platforms = "Windows 10/11 или Ubuntu 24.04 (x64)"
+note = "Свободное место указано с запасом для обновлений."
+
+[servers.requirements.minimum]
+cpu = "Core i5-4460 / Ryzen 3 1200"
+ram_gb = 8
+graphics = "Intel HD 4600 / GeForce GTX 750"
+storage_gb = 10
 
 [servers.requirements.recommended]
-cpu = "Современный Intel / AMD: от 4 ядер, высокая скорость одного ядра"
+cpu = "Core i5-10400 / Ryzen 5 3600"
 ram_gb = 16
-graphics = "Современная встроенная или дискретная графика, без шейдеров"
+graphics = "GeForce GTX 1650 / Radeon RX 570"
 storage_gb = 20

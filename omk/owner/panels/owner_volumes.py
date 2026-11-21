@@ -98,6 +98,30 @@ def target_for(config, server, source, filename):
     return selected
 
 
+def reset_target(template, window_id):
+    """Derive an owned staging resource from the durable maintenance window."""
+    if not isinstance(window_id, str) or not re.fullmatch(r"[a-f0-9]{32}", window_id):
+        raise AdminError("Invalid reset maintenance window")
+    name = template["data_volume"]
+    if len(name) + len(window_id) + 1 > 128:
+        raise AdminError("Reset staging volume base is too long")
+    return {**template, "data_volume": f"{name}-{window_id}"}
+
+
+def ensure_reset_target(target):
+    """Provision the derived resource once and verify its ownership before use."""
+    result = backups.docker(
+        "volume",
+        "create",
+        "--label",
+        f"{target['label']}={target['owner']}",
+        target["data_volume"],
+    )
+    if result.strip() != target["data_volume"]:
+        raise AdminError("Could not provision reset staging")
+    return destination(target, unused=True)
+
+
 def destination(target, *, unused=False, allowed_container=None):
     if allowed_container is not None and (
         not unused or not re.fullmatch(r"[a-f0-9]{64}", allowed_container)

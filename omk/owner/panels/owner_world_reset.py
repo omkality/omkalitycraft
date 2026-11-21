@@ -39,6 +39,7 @@ class State:
     resource: dict | None = None
     installation: dict | None = None
     reset: dict | None = None
+    managed: bool = False
 
     def confirmation(self, server, *, world=None):
         """Return the confirmation details for the next permitted operation."""
@@ -123,7 +124,7 @@ def _phase(state):
     return "prepare"
 
 
-def _state(config, server, selection=None):
+def _state(config, server, selection=None, *, managed=False):
     if server not in config.servers:
         raise AdminError("Server is not in the operator allowlist")
     filename = "resource-resets.toml"
@@ -152,7 +153,12 @@ def _state(config, server, selection=None):
         dimension=dimension,
         source=source,
         target=target,
-        reset=layout(dimension) if selection is not None else None,
+        reset=(
+            layout(dimension, all_worlds=managed and dimension == 0)
+            if selection is not None
+            else None
+        ),
+        managed=managed,
     )
     state.installation = _one(
         [
@@ -177,7 +183,7 @@ def _state(config, server, selection=None):
         )
         state.backup = backups.read_record(config, state.resource["backup_operation"])
         if (
-            state.resource["target"] != target
+            not staging.matches_target(config, state.resource)
             or state.resource["dimension"] != dimension
             or state.resource.get("reset") != state.reset
             or state.resource["source"] != source
@@ -188,7 +194,7 @@ def _state(config, server, selection=None):
     else:
         if state.installation:
             raise AdminError("World installation has no matching candidate")
-        if any(
+        if not managed and any(
             r["stage"] != "abandoned"
             and r["target"]["data_volume"] == target["data_volume"]
             for r in resources
@@ -222,7 +228,7 @@ def _require_drained(config, server, window):
 
 def _prepare(config, server, state):
     window = state.window
-    if state.resource is None:
+    if state.resource is None and not state.managed:
         owner_volumes.destination(state.target, unused=True)
     if window is None:
         window_id = maintenance.plan(config, server)["operation"]
@@ -248,6 +254,7 @@ def _prepare(config, server, state):
             window_id,
             backup_id,
             **({"selected_world": True} if state.reset is not None else {}),
+            **({"managed": True} if state.managed else {}),
         )
     for before, action in (
         ("planned", "stage"),
@@ -283,6 +290,12 @@ def _start(config, state):
     result = cutover.execute(config, state.installation["operation"], "commit")
     if result["stage"] != "committed":
         raise AdminError("World installation acknowledgement is unconfirmed")
+
+
+def _set_ingress(config, server, wanted):
+    operation = ingress.plan(config, server, wanted)["operation"]
+    if ingress.execute(config, operation, "apply")["stage"] != "confirmed":
+        raise AdminError("Game admission change was not confirmed")
 
 
 def _catalog(config, server):
@@ -330,21 +343,51 @@ def _catalog(config, server):
 
 def _selected_state(config, server, worlds, dimension):
     if dimension is None:
-        state = _state(config, server)
+        state = _state(config, server, **({"managed": True} if worlds else {}))
         if worlds and state.dimension is None:
             return _selected_state(config, server, worlds, next(iter(worlds)))
         return state
     if dimension not in worlds:
         raise AdminError("World is not in the operator catalog")
     if dimension == RESOURCE:
-        state = _state(config, server)
+        state = _state(config, server, managed=True)
         if state.dimension == dimension:
             return state
         return State(dimension=dimension, stage="unsupported")
     path = config.private / "resource-resets.toml"
     if not path.exists() and not path.is_symlink():
         return State(dimension=dimension, stage="unsupported")
-    return _state(config, server, dimension)
+    return _state(config, server, dimension, managed=True)
+
+
+def _execute_stage(config, server, action, state, result):
+    try:
+        if state.managed and action == "prepare" and state.window is None:
+            _, observed = ingress.capture(config, server)
+            if observed["sessions"]:
+                raise AdminError("Players must leave before the reset")
+            if not observed["closed"]:
+                result["effect"] = "unknown"
+                _set_ingress(config, server, "closed")
+        _require_drained(config, server, state.window)
+    except AdminError, OSError, subprocess.SubprocessError:
+        result["error"] = "ingress_not_drained"
+        return False
+    result["effect"] = "unknown"
+    if action == "prepare":
+        _prepare(config, server, state)
+    elif action == "apply":
+        _apply(config, state)
+    else:
+        _start(config, state)
+        if state.managed:
+            result.update(stage="complete", confirmation=None)
+            try:
+                _set_ingress(config, server, "open")
+            except AdminError, OSError, subprocess.SubprocessError:
+                result["error"] = "join_closed"
+                return False
+    return True
 
 
 def run(path, server, action, confirmation, *, catalog=False, dimension=None):
@@ -381,18 +424,8 @@ def run(path, server, action, confirmation, *, catalog=False, dimension=None):
                 ):
                     result["error"] = "state_changed"
                     return result
-                try:
-                    _require_drained(config, server, state.window)
-                except AdminError, OSError, subprocess.SubprocessError:
-                    result["error"] = "ingress_not_drained"
+                if not _execute_stage(config, server, action, state, result):
                     return result
-                result["effect"] = "unknown"
-                if action == "prepare":
-                    _prepare(config, server, state)
-                elif action == "apply":
-                    _apply(config, state)
-                else:
-                    _start(config, state)
                 result.update(
                     _selected_state(config, server, worlds, dimension).payload(
                         server, world=world

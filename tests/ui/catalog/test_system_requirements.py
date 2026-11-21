@@ -22,7 +22,7 @@ def test_open_repeatedly_and_close_by_keyboard_without_touching_installation(
     assert dialog.isVisible() and dialog.parentWidget() is card
     assert dialog.findChild(QLabel, "recommended_ram").text() == "16 ГБ"
     assert "6 ГБ" in dialog.findChild(QLabel, "requirementsJavaMemory").text()
-    assert "Минимум ещё проверяем" in dialog.findChild(QLabel, "minimumPending").text()
+    assert dialog.findChild(QLabel, "minimum_ram").text() == "8 ГБ"
     card._show_requirements()
     assert card._requirements_dialog is dialog
     qtbot.keyClick(dialog, Qt.Key.Key_Escape)
@@ -37,21 +37,19 @@ def test_open_repeatedly_and_close_by_keyboard_without_touching_installation(
     assert calls == [] and card.memory.selected_mb == selected
 
 
-def test_small_dialog_scrolls_and_plain_text_cannot_create_links(qtbot, card):
+def test_requirements_fit_without_scroll_and_keep_platforms_plain(qtbot, card):
     requirements = replace(
-        card.profile.requirements, macos="<a href='https://example.invalid'>Mac</a>"
+        card.profile.requirements,
+        platforms="<a href='https://example.invalid'>Windows</a>",
     )
     dialog = RequirementsDialog(replace(card.profile, requirements=requirements), card)
     qtbot.addWidget(dialog)
-    dialog.resize(560, 420)
     dialog.show()
-    mac = dialog.findChild(QLabel, "requirementsMac")
-    assert mac.textFormat() == Qt.TextFormat.PlainText
-    dialog.scroll.ensureWidgetVisible(mac)
-    qtbot.waitUntil(lambda: dialog.scroll.verticalScrollBar().maximum() > 0)
-    viewport = dialog.scroll.viewport()
-    assert viewport.rect().contains(mac.mapTo(viewport, mac.rect().center()))
-    assert dialog.scroll.horizontalScrollBar().maximum() == 0
+    text = dialog.findChild(QLabel, "requirementsOS")
+    assert text.textFormat() == Qt.TextFormat.PlainText
+    assert dialog.height() <= dialog.screen().availableGeometry().height()
+    assert dialog.windowType() == Qt.WindowType.Popup
+    assert dialog.findChild(QLabel, "minimum_storage").text() == "10 ГБ"
 
 
 def test_pending_pack_and_missing_requirements_do_not_advertise_readiness(

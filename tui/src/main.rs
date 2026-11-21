@@ -55,7 +55,7 @@ fn options() -> Result<Option<Options>, String> {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / ↑ ↓ operation / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / u unban / i invite / r refresh / t period / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / u unban / i invite / r refresh / t period / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
@@ -282,13 +282,17 @@ fn interactive(
                         }
                         Ok(Reply::WorldReset(v)) => {
                             app.failed = !v.ok;
-                            app.message = "w — состояние ресурсного мира".into();
+                            app.message = "w — вайп миров".into();
                             app.world_reset = Some(world_reset::Form::new(v));
                         }
                         Ok(Reply::Console(v)) => {
                             app.scroll = 0;
                             app.failed = !v.ok;
-                            app.message = if v.ok {
+                            app.message = if v.ok && v.command == "roster" {
+                                format!("Игроки проекта\n\n{}", v.output)
+                            } else if v.ok && v.command == "invites" {
+                                format!("Активные приглашения\n\n{}\n\no — отозвать", v.output)
+                            } else if v.ok {
                                 format!(
                                     "Сервер: {}\nКоманда: {}\n\nОтвет сервера:\n{}{}",
                                     v.server_id,
@@ -346,8 +350,7 @@ fn interactive(
                     app.world_reset = None;
                 } else if let Some(action) = form.key(key.code) {
                     app.message = if action.mutating() {
-                        "Выполняется этап вайпа. Терминал покажет результат после завершения."
-                            .into()
+                        "Выполняется этап вайпа.\nРезультат появится здесь после завершения.".into()
                     } else {
                         "Читается состояние мира…".into()
                     };
@@ -382,8 +385,9 @@ fn interactive(
                 }
                 continue;
             }
-            if key.code == KeyCode::Char('c') && key.modifiers.contains(KeyModifiers::CONTROL)
-                || app.confirm.is_none() && matches!(key.code, KeyCode::Char('q') | KeyCode::Esc)
+            let shortcut = shortcut_key(key.code);
+            if shortcut == KeyCode::Char('c') && key.modifiers.contains(KeyModifiers::CONTROL)
+                || app.confirm.is_none() && matches!(shortcut, KeyCode::Char('q') | KeyCode::Esc)
             {
                 let uncertain = pending.as_ref().is_some_and(|p| p.mutating);
                 drop(pending.take());
@@ -458,7 +462,7 @@ fn interactive(
                 let clipboard_idle = clipboard_copy.is_none();
                 #[cfg(not(windows))]
                 let clipboard_idle = true;
-                match key.code {
+                match shortcut {
                     KeyCode::Char('i')
                         if clipboard_idle
                             && pending.as_ref().is_none_or(|work| !work.mutating)
@@ -480,7 +484,7 @@ fn interactive(
                             next_refresh = Instant::now() + Duration::from_secs(5);
                         }
                     }
-                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'u'))
+                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'u' | 'o'))
                         if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
                     {
                         app.moderation = app.server().map(|s| {
@@ -490,13 +494,12 @@ fn interactive(
                                     'k' => "kick",
                                     'b' => "ban",
                                     'u' => "unban",
+                                    'o' => "revoke-invite",
                                     _ => "mute",
                                 },
                             )
                         });
                     }
-                    KeyCode::Up => app.move_operation(-1),
-                    KeyCode::Down => app.move_operation(1),
                     KeyCode::PageUp => app.scroll = app.scroll.saturating_sub(10),
                     KeyCode::PageDown => app.scroll = app.scroll.saturating_add(10).min(8192),
                     KeyCode::Char('t') if pending.is_none() => {
@@ -512,7 +515,6 @@ fn interactive(
                                     len - 1
                                 })
                                 % len;
-                            app.operation.select(None);
                             request = Some(Request::Overview(
                                 app.server().map(str::to_owned),
                                 app.window(),
@@ -525,7 +527,9 @@ fn interactive(
                             app.window(),
                         ))
                     }
-                    KeyCode::Char(c @ ('1' | '2' | '3')) if pending.is_none() && !app.demo => {
+                    KeyCode::Char(c @ ('1' | '2' | '3' | 'l'))
+                        if pending.is_none() && !app.demo =>
+                    {
                         if c == '3' {
                             if app.server().is_some() {
                                 app.confirm = Some(Confirmation::Save(String::new()));
@@ -533,7 +537,12 @@ fn interactive(
                         } else {
                             request = app.server().map(|s| Request::Console {
                                 server: s.into(),
-                                command: if c == '1' { "players" } else { "tps" }.into(),
+                                command: match c {
+                                    '1' => "roster",
+                                    'l' => "invites",
+                                    _ => "tps",
+                                }
+                                .into(),
                             });
                         }
                     }
@@ -595,6 +604,30 @@ fn demo_history(window: protocol::TpsWindow) -> Result<protocol::TpsHistory, Str
         "dj2",
         window,
     )
+}
+
+// Treat Russian keyboard positions as shortcuts only. Text fields keep the typed character.
+fn shortcut_key(code: KeyCode) -> KeyCode {
+    let KeyCode::Char(character) = code else {
+        return code;
+    };
+    let character = character.to_lowercase().next().unwrap_or(character);
+    let mapped = match character {
+        'й' => 'q',
+        'ц' => 'w',
+        'к' => 'r',
+        'е' => 't',
+        'ш' => 'i',
+        'л' => 'k',
+        'и' => 'b',
+        'ь' => 'm',
+        'г' => 'u',
+        'д' => 'l',
+        'щ' => 'o',
+        'с' => 'c',
+        _ => character,
+    };
+    KeyCode::Char(mapped)
 }
 
 fn snapshot(app: &mut App, path: PathBuf) -> Result<(), String> {

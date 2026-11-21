@@ -162,7 +162,7 @@ def test_operator_lab_always_cleans_owned_auth_after_api_cleanup_failure(monkeyp
 
 
 @pytest.mark.parametrize("error", [DraslError(404), OSError("private network details")])
-def test_failed_revoke_never_marks_file_or_reports_success(
+def test_revoke_is_idempotent_but_connection_errors_leave_receipt_intact(
     tmp_path, monkeypatch, capsys, error
 ):
     settings, path = config(tmp_path)
@@ -177,27 +177,24 @@ def test_failed_revoke_never_marks_file_or_reports_success(
     before = file.read_bytes()
     monkeypatch.setattr("omk.owner.admin._credential", lambda _: "fixture-admin-token")
     monkeypatch.setattr("omk.owner.admin.DraslClient.request", Mock(side_effect=error))
-    assert (
-        main(
-            [
-                "admin",
-                "--config",
-                str(path),
-                "access",
-                "revoke-invite",
-                "--invitation-file",
-                str(file),
-            ]
-        )
-        == 1
-    )
+    assert main(
+        [
+            "admin",
+            "--config",
+            str(path),
+            "access",
+            "revoke-invite",
+            "--invitation-file",
+            str(file),
+        ]
+    ) == (0 if isinstance(error, DraslError) else 1)
     output = capsys.readouterr().out
     result = json.loads(output)
-    assert not result["ok"] and file.read_bytes() == before
+    if isinstance(error, DraslError):
+        assert result["ok"] and json.loads(file.read_bytes())["revoked"]
+    else:
+        assert not result["ok"] and file.read_bytes() == before
     assert (
         "private-fixture-code" not in output and "private network details" not in output
     )
     assert "fixture-admin-token" not in (settings.private / "audit.jsonl").read_text()
-    if isinstance(error, DraslError):
-        assert "already used, revoked or not found" in result["error"]
-        assert "no account was blocked" in result["error"]

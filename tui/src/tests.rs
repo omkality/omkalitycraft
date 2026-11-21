@@ -93,10 +93,6 @@ fn renders_resizes_and_keeps_unknown_distinct_from_zero() {
             assert!(text.contains("ДЕМО"));
         }
     }
-    app.move_operation(500);
-    assert_eq!(app.operation.selected(), Some(app.filtered().len() - 1));
-    app.move_operation(-500);
-    assert_eq!(app.operation.selected(), Some(0));
     app.confirm = Some(Confirmation::Save("SAVE dj2".into()));
     let mut terminal = Terminal::new(TestBackend::new(120, 38)).unwrap();
     terminal.draw(|f| ui::draw(f, &mut app)).unwrap();

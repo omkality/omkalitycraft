@@ -7,7 +7,6 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QPushButton,
-    QScrollArea,
     QVBoxLayout,
     QWidget,
 )
@@ -28,13 +27,11 @@ class RequirementsDialog(QDialog):
     """Display the pack's published system requirements and memory guidance."""
 
     def __init__(self, profile: ServerProfile, parent: QWidget) -> None:
-        super().__init__(parent)
+        super().__init__(parent, Qt.WindowType.Popup)
         self.setObjectName("requirements_" + profile.id)
         self.setWindowTitle("Системные требования · " + profile.name)
-        self.setWindowModality(Qt.WindowModality.WindowModal)
-        self.setMinimumSize(560, 380)
         screen = self.screen().availableGeometry()
-        self.resize(min(860, screen.width() - 48), min(760, screen.height() - 80))
+        self.setFixedWidth(min(650, screen.width() - 30))
         layout = QVBoxLayout(self)
         layout.setContentsMargins(24, 22, 24, 22)
         layout.setSpacing(12)
@@ -43,12 +40,7 @@ class RequirementsDialog(QDialog):
         layout.addWidget(title)
         layout.addWidget(_text(profile.name, muted=True))
 
-        self.scroll = QScrollArea()
-        self.scroll.setFrameShape(QFrame.Shape.NoFrame)
-        self.scroll.setWidgetResizable(True)
-        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.scroll.setWidget(self._content(profile))
-        layout.addWidget(self.scroll, 1)
+        layout.addWidget(self._content(profile))
         close = QPushButton("Понятно")
         close.setObjectName("closeRequirements")
         close.setProperty("primary", True)
@@ -69,17 +61,8 @@ class RequirementsDialog(QDialog):
         if requirements is None:
             body.addWidget(_text("Требования для этой сборки пока не подготовлены."))
         else:
-            badge = _text(
-                (
-                    "ПРЕДВАРИТЕЛЬНЫЕ ОРИЕНТИРЫ"
-                    if requirements.state == "preliminary"
-                    else "СБОРКА ГОТОВИТСЯ"
-                ),
-                "requirementsState",
-            )
-            badge.setProperty("warning", True)
-            body.addWidget(badge)
-            body.addWidget(_text(requirements.scope, "requirementsScope", muted=True))
+            if requirements.state == "pending":
+                body.addWidget(_text("СБОРКА ГОТОВИТСЯ", "requirementsState"))
             columns = QHBoxLayout()
             columns.setSpacing(14)
             columns.addWidget(
@@ -96,7 +79,7 @@ class RequirementsDialog(QDialog):
                     "Рекомендуемые",
                     "recommended",
                     requirements.recommended,
-                    "Уточним после выбора версии и тестов.",
+                    "",
                 ),
                 1,
             )
@@ -108,11 +91,8 @@ class RequirementsDialog(QDialog):
                         "requirementsJavaMemory",
                     )
                 )
-            body.addWidget(_text("Операционные системы"))
             body.addWidget(_text(requirements.platforms, "requirementsOS", muted=True))
-            body.addWidget(_text("Отдельно про Mac"))
-            body.addWidget(_text(requirements.macos, "requirementsMac", muted=True))
-            body.addWidget(_text(requirements.note, "requirementsNote", muted=True))
+            body.addWidget(_text(requirements.scope, "requirementsScope", muted=True))
         body.addStretch()
         return content
 
@@ -127,14 +107,14 @@ class RequirementsDialog(QDialog):
         heading = _text(title)
         heading.setStyleSheet("font-size:18px")
         layout.addWidget(heading)
-        if tier is None:
+        if tier is None and note:
             layout.addWidget(_text(note, name + "Pending", muted=True))
-        else:
+        if tier is not None:
             for key, caption, value in (
                 ("ram", "Оперативная память ПК", f"{tier.ram_gb} ГБ"),
                 ("cpu", "Процессор", tier.cpu),
                 ("graphics", "Графика", tier.graphics),
-                ("storage", "Свободное место", f"От {tier.storage_gb} ГБ на SSD"),
+                ("storage", "Свободное место", f"{tier.storage_gb} ГБ"),
             ):
                 label = _text(caption, muted=True)
                 label.setStyleSheet("font-size:13px;margin-top:4px")

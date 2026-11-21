@@ -109,6 +109,7 @@ impl Receipt {
                         | "ingress_not_drained"
                         | "owner_busy"
                         | "operation_rejected"
+                        | "join_closed"
                 )
             })
             || !matches!(
@@ -182,7 +183,8 @@ impl Receipt {
             return match error {
                 "state_changed" => "Состояние изменилось. Откройте вайп заново.",
                 "owner_busy" => "Другая операция уже выполняется.",
-                "ingress_not_drained" => "Закройте игровой вход и дождитесь выхода игроков.",
+                "ingress_not_drained" => "Дождитесь, пока все игроки выйдут.",
+                "join_closed" => "Новый мир запустился. Игровой вход открыть не удалось.",
                 _ if self.effect == "unknown" => {
                     "Этап прервался. Проверьте состояние и журналы перед продолжением."
                 }
@@ -193,17 +195,21 @@ impl Receipt {
             "unconfigured" => "Для этого сервера вайп не настроен.",
             "unsupported" => "Этот мир требует отдельной процедуры сброса.",
             "no-ingress" => "Настройте управление игровым входом.",
-            "used-target" => "Этот том уже использовался. Для нового вайпа укажите свежий том.",
+            "used-target" => "Не удалось подготовить следующий вайп.",
             "prepare" => {
-                "Вход должен быть закрыт, а игроки выйти. Сервер остановится и создаст резервную копию."
+                if self.dimension == Some(0) {
+                    "Выйдите с сервера.\nВайп сбросит все миры и игровой прогресс.\nСервер остановится и создаст резервную копию."
+                } else {
+                    "Выйдите с сервера.\nСервер остановится и создаст резервную копию."
+                }
             }
             "apply" => {
                 "Копия проверена. Прежний мир сохранится в истории. Сервер останется остановленным."
             }
             "start" => {
-                "Новый мир установлен. Запуск проверит его. Игровой вход останется закрытым."
+                "Новый мир установлен. Запуск проверит его. Игровой вход откроется после проверки."
             }
-            "complete" => "Сервер запущен с новым миром. Игровой вход закрыт.",
+            "complete" => "Сервер запущен с новым миром.",
             _ => "Этап требует проверки в журналах владельца.",
         }
     }
@@ -229,11 +235,6 @@ impl Form {
         let selected = worlds
             .iter()
             .position(|entry| Some(entry.dimension) == self.receipt.dimension);
-        if key == KeyCode::Char('r') {
-            let mut request = Request::inspect(self.receipt.server_id.clone());
-            request.world = selected.map(|index| worlds[index].dimension);
-            return Some(request);
-        }
         if !self.confirming && worlds.len() > 1 && matches!(key, KeyCode::Up | KeyCode::Down) {
             let index = match (key, selected) {
                 (KeyCode::Up, Some(index)) => (index + worlds.len() - 1) % worlds.len(),
@@ -301,16 +302,6 @@ impl Form {
             }
         }
         body.push_str(&format!("\n{}\n", self.receipt.status()));
-        for (title, id) in [
-            ("Обслуживание", &self.receipt.maintenance),
-            ("Резервная копия", &self.receipt.backup),
-            ("Подготовка", &self.receipt.resource),
-            ("Установка", &self.receipt.installation),
-        ] {
-            if let Some(id) = id {
-                body.push_str(&format!("{title}  {id}\n"));
-            }
-        }
         if self.confirming {
             let choices = if self.yes {
                 "  Нет      [ Да, выполнить ]"
@@ -328,7 +319,7 @@ impl Form {
             if worlds.len() > 1 {
                 body.push_str("\n↑ ↓ — выбрать мир");
             }
-            body.push_str("\nr — обновить · Esc — закрыть");
+            body.push_str("\nEsc — закрыть");
         }
         frame.render_widget(Clear, popup);
         frame.render_widget(
@@ -386,7 +377,6 @@ mod tests {
         let query = Request::inspect("dj2".into());
         let receipt = Receipt::parse(&serde_json::to_vec(&value).unwrap(), &query).unwrap();
         let mut form = Form::new(receipt);
-        assert_eq!(form.key(KeyCode::Char('r')).unwrap().world, Some(-18000));
         let next = form.key(KeyCode::Down).unwrap();
         assert_eq!(next.world, Some(0));
         assert!(!next.mutating());

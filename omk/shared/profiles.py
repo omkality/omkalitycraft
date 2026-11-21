@@ -24,10 +24,10 @@ class SystemRequirements:
 
     state: str
     scope: str
-    minimum_note: str
     platforms: str
-    macos: str
     note: str
+    minimum_note: str = ""
+    macos: str = ""
     minimum: HardwareTier | None = None
     recommended: HardwareTier | None = None
 
@@ -71,9 +71,7 @@ def _requirements(value: object) -> SystemRequirements | None:
             isinstance(text, str) and 0 < len(text) <= 1000
             for text in (
                 requirements.scope,
-                requirements.minimum_note,
                 requirements.platforms,
-                requirements.macos,
                 requirements.note,
             )
         )

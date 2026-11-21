@@ -185,10 +185,7 @@ def stable(config, record, *, allowed_container=None):
         or window.get("checkpoint") != record["checkpoint"]
         or str(config.servers[record["server"]]) != record["operator_root"]
         or backups.target_for(config, record["server"]) != record["source"]
-        or owner_volumes.target_for(
-            config, record["server"], record["source"], "resource-resets.toml"
-        )
-        != record["target"]
+        or not matches_target(config, record)
     ):
         raise AdminError("Resource staging configuration or maintenance window changed")
     maintenance.current(config, window)
@@ -350,6 +347,17 @@ def worker(record, action, *, allowed_container=None):
     return result
 
 
+def matches_target(config, record):
+    """Verify a legacy or maintenance-scoped target against the private template."""
+    template = owner_volumes.target_for(
+        config, record["server"], record["source"], "resource-resets.toml"
+    )
+    return record["target"] in (
+        template,
+        owner_volumes.reset_target(template, record["maintenance_operation"]),
+    )
+
+
 def plan(
     config,
     server,
@@ -359,6 +367,7 @@ def plan(
     environment=None,
     *,
     selected_world=False,
+    managed=False,
 ):
     """Freeze staging against the selected world, stop and complete backup."""
     from omk.worlds.world_cutover import consumed  # noqa: PLC0415
@@ -366,7 +375,11 @@ def plan(
     with backups.locked(config):
         backups.local_engine()
         source = backups.target_for(config, server)
-        selection = {"reset": layout(dimension)} if selected_world else {}
+        selection = (
+            {"reset": layout(dimension, all_worlds=managed and dimension == 0)}
+            if selected_world
+            else {}
+        )
         target = owner_volumes.target_for(
             config, server, source, "resource-resets.toml"
         )
@@ -379,6 +392,8 @@ def plan(
         window = maintenance.read_record(config, maintenance_operation)
         if window.get("stage") != "stopped" or window.get("server") != server:
             raise AdminError("Resource staging requires a stopped maintenance window")
+        if managed:
+            target = owner_volumes.reset_target(target, maintenance_operation)
         previous = records(config)
         policy = backups.settings(environment)
         if len(previous) >= policy["journal_count"]:
@@ -396,6 +411,11 @@ def plan(
             raise AdminError(
                 "Resolve the existing resource candidate before planning another"
             )
+        destination = (
+            owner_volumes.ensure_reset_target(target)
+            if managed
+            else owner_volumes.destination(target, unused=True)
+        )
         record = {
             "schema": 1,
             "operation": uuid4().hex,
@@ -414,7 +434,7 @@ def plan(
             "created_at": datetime.now(UTC).isoformat(),
             "operator_root": str(config.servers[server]),
             "checkpoint": window["checkpoint"],
-            "destination": owner_volumes.destination(target, unused=True),
+            "destination": destination,
         }
         backup = backup_for(config, record)
         record["backup_sha256"] = digest(backup)

@@ -143,6 +143,29 @@ def test_fresh_backup_plan_stage_verify_preserve_source_and_all_other_world_file
         stage.execute({**request, "action": "stage"}, source, storage, target)
 
 
+def test_main_world_reset_stages_only_level_metadata_from_the_verified_backup(data):
+    request, source, storage, target, before = data
+    request.update(
+        position="auto",
+        dimension=0,
+        reset=stage.dimension_reset.layout(0, all_worlds=True),
+    )
+    plan = stage.execute({**request, "action": "plan"}, source, storage, target)
+    assert plan["retained_files"] == 1
+    expected = {**request, "expected": plan}
+    written = stage.execute({**expected, "action": "stage"}, source, storage, target)
+    assert (
+        stage.execute({**expected, "action": "verify"}, source, storage, target)
+        == written
+    )
+    after = inventory(target / "world", world_name="world", path_policy="linux-server")
+    assert after == {"world/level.dat": before["world/level.dat"]}
+    assert (
+        inventory(source / "world", world_name="world", path_policy="linux-server")
+        == before
+    )
+
+
 @pytest.mark.parametrize(
     "change",
     ["world", "runtime", "position", "policy", "snapshot", "foreign", "target", "plan"],
