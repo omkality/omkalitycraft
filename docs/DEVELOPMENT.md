@@ -1578,7 +1578,7 @@ Linux data-only replay сохраняет точные native stats через v
 allowlisted reset stage в синтетический мир; не game acceptance после wipe.
 Старый полный restore откатывает и часы. 82 focused Linux Docker cases и восемь
 проверок replay; Windows/full CI — в [протоколе](validation/player-time-2026-11-13.json).
-#43 открыт для rollback/lifetime, #44 — для chat welcome. [Контракт](PLAYER_TIME.md).
+Этот этап закрыл учёт сохранённых тиков по серверу. Несбрасываемый учёт всего проекта и награды вынесены за рамки #43. [Контракт](PLAYER_TIME.md).
 
 ## Настройки Forge/Docker-журналов — 13 ноября 2026
 
