@@ -121,6 +121,13 @@ def _dimension_info(raw: bytes, plan: dict) -> str:
         if row is None:
             row = {"dim": int(dim)}
             rows.append(row)
+        if row["dim"] != 0 and not {"worldinfo", "worldinfo_onetime"} & row.keys():
+            # JED would otherwise generate terrain to locate a spawn on first load.
+            # Providers such as Emptiness can still be initializing their structures.
+            jed = row.setdefault("jed", {})
+            if not isinstance(jed, dict):
+                raise ValueError("Unsupported JED dimension options")
+            jed.setdefault("SpawnPointSearchType", {"type": "none"})
         info = row.setdefault("worldinfo", {})
         if not isinstance(info, dict):
             raise ValueError("Unsupported JED world info")
