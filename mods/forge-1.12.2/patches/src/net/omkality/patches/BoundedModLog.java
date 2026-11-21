@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -11,7 +12,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-/** Bounds the dedicated-server Groovy log at its native byte stream. */
+/** Bounds the dedicated-server script logs at their native byte streams. */
 public final class BoundedModLog extends OutputStream {
     private static final int MAX_FILES = 8;
     private static final long RETRY_DELAY = TimeUnit.SECONDS.toNanos(5);
@@ -25,7 +26,6 @@ public final class BoundedModLog extends OutputStream {
     private boolean oversized;
     private boolean closed;
 
-
     /** Wrap the publisher's already opened truncating log stream for a known server log. */
     public static OutputStream wrap(Path path, OutputStream stream) {
         Path file = path.toAbsolutePath().normalize();
@@ -36,6 +36,19 @@ public final class BoundedModLog extends OutputStream {
         long limit = setting("OMK_GROOVY_LOG_MIB", 8, 64) * 1024L * 1024L;
         int files = setting("OMK_GROOVY_LOG_FILES", 3, MAX_FILES);
         BoundedModLog log = new BoundedModLog(file, stream, limit, files);
+        log.trimArchives();
+        return log;
+    }
+
+    /** Open the active ZenUtils stream with retention for the dedicated-server CraftTweaker file. */
+    public static OutputStream openCraftTweaker(Path path, OpenOption... options) throws IOException {
+        Path file = path.toAbsolutePath().normalize();
+        if (!file.equals(Paths.get("crafttweaker.log").toAbsolutePath().normalize())) {
+            return Files.newOutputStream(path, options);
+        }
+        long limit = setting("OMK_CRAFTTWEAKER_LOG_MIB", 8, 64) * 1024L * 1024L;
+        int files = setting("OMK_CRAFTTWEAKER_LOG_FILES", 3, MAX_FILES);
+        BoundedModLog log = new BoundedModLog(file, Files.newOutputStream(path, options), limit, files);
         log.trimArchives();
         return log;
     }

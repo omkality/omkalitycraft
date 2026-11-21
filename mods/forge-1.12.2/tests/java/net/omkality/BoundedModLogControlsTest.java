@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import net.omkality.patches.BoundedModLog;
 
 /** Exercise byte limits, UTF-8, native writer lifecycle and I/O failure handling. */
@@ -16,6 +17,23 @@ public final class BoundedModLogControlsTest {
 
     private static String text(Path file) throws IOException {
         return new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
+    }
+
+    private static void craftTweakerReopensAfterRotation() throws Exception {
+        Path file = Paths.get("crafttweaker.log");
+        require(!Files.exists(file), "writer test must run in a fresh directory");
+        byte[] line = new byte[128 * 1024];
+        try (OutputStream log = BoundedModLog.openCraftTweaker(file)) {
+            for (int i = 0; i < 10; i++) {
+                log.write(line);
+                require(Files.size(file) <= 1024 * 1024, "CraftTweaker writes respect byte limit");
+            }
+            require(Files.exists(Paths.get("crafttweaker.log.omk-log.1")), "CraftTweaker log rotates");
+        }
+        try (OutputStream reopened = BoundedModLog.openCraftTweaker(file)) {
+            reopened.write('B');
+            require(text(file).equals("B"), "CraftTweaker can reopen a fresh log after clean");
+        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -64,6 +82,7 @@ public final class BoundedModLogControlsTest {
             Files.deleteIfExists(active);
             Files.delete(directory);
         }
+        craftTweakerReopensAfterRotation();
         System.out.println("Bounded script log controls passed");
     }
 }
