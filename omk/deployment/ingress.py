@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from omk.backups.backup_store import _sync_directory
 from omk.deployment import ingress_config as deployment
-from omk.deployment.ingress_template import LABEL
+from omk.deployment.ingress_template import LABEL, valid_maintenance_reason
 from omk.labs.recovery.recovery_console import RecoveryConsole
 from omk.owner import (
     admin_backups as backups,
@@ -188,6 +188,10 @@ def read(config, operation):
         or r.get("operation") != operation
         or set(r) - {"reason"} != keys
         or r["wanted"] not in {"open", "closed"}
+        or (
+            "reason" in r
+            and (r["wanted"] != "closed" or not valid_maintenance_reason(r["reason"]))
+        )
         or r["stage"] not in TERMINAL | {"planned", "applying"}
         or r["server"] not in config.servers
     ):
@@ -354,7 +358,9 @@ def plan(config, server, wanted, environment=None, *, _operation=None, reason=No
         if wanted not in {"open", "closed"}:
             raise AdminError("Invalid ingress target state")
         if reason is not None and (
-            wanted != "closed" or reason not in {"maintenance", "restart", "wipe"}
+            wanted != "closed"
+            or reason == "offline"
+            or not valid_maintenance_reason(reason)
         ):
             raise AdminError("Invalid maintenance reason")
         policy = maintenance.settings(environment)

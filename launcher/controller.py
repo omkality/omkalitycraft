@@ -7,7 +7,7 @@ from PySide6.QtCore import QObject, QThreadPool, Signal, Slot
 
 from launcher.accounts import AccountService
 from launcher.game import GameProcess, GameRunner
-from launcher.install import InstallCancelled, Installer
+from launcher.install import InstallCancelled, Installer, Progress
 from launcher.releases import Release
 from launcher.tasks import Task
 
@@ -66,19 +66,21 @@ class InstallController(QObject):
         self.started.emit(pack_id)
 
         def operation() -> InstallationResult:
+            task.signals.progress.emit(Progress("Проверяем версию сборки", 0, 0))
             release = self.installer.client.fetch(pack_id)
             if self.installer.cancel.is_set():
                 raise InstallCancelled("Загрузка приостановлена")
             folder = self.installer.install(
                 release, task.signals.progress.emit, clean_mods=True
             )
-            game = (
-                self.runner.start(
-                    release, folder, self.service.renew_for_game(), memory_mb=memory_mb
+            game = None
+            if play:
+                task.signals.progress.emit(Progress("Проверяем игровой вход", 0, 0))
+                session = self.service.renew_for_game()
+                task.signals.progress.emit(
+                    Progress("Готовим настройки Minecraft", 0, 0)
                 )
-                if play
-                else None
-            )
+                game = self.runner.start(release, folder, session, memory_mb=memory_mb)
             return InstallationResult(release, folder, game)
 
         task = Task(operation)

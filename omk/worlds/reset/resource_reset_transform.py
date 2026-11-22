@@ -7,6 +7,7 @@ The caller must bind the complete inventory and require a current verified backu
 import copy
 import gzip
 import hashlib
+import json
 import re
 
 from omk.shared.nbt import Tag, read_nbt, write_nbt
@@ -157,3 +158,47 @@ def result_inventory(files, payloads, world, dimension, *, reset=None):
             raise ValueError("Resource reset edit is outside retained source")
         result[name] = {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
     return result
+
+
+def fresh_dimension(server, request, identity):
+    """Produce only JED metadata and ownership markers for a new dimension."""
+    dimension = request["dimension"]
+    world = request["world"]
+    resource = request.get("reset") is None
+    folder = f"DIM{dimension}" if resource else request["reset"]["folder"]
+    config = server / "config/justenoughdimensions/dimensions.json"
+    rows = [
+        row
+        for row in json.loads(audit._read(config, server, 65536))["dimensions"]
+        if row.get("dim") == dimension
+    ]
+    if (
+        len(rows) != 1
+        or not {"worldinfo", "worldinfo_onetime"} & rows[0].keys()
+        or ("RandomSeed" in rows[0].get("worldinfo", {}))
+    ):
+        raise ValueError("The selected dimension has no independent JED seed")
+    name = f"{world}/{folder}/jed_level.dat"
+    previous = server / name
+    if not previous.exists() and not resource:
+        previous = server / world / "level.dat"
+    root = audit.ftb.nbt(audit._read(previous, server / world))
+    data = dict(audit._tag(root, "Data", 10))
+    old_seed = audit._tag(data, "RandomSeed", 4)
+    seed = int.from_bytes(bytes.fromhex(request["operation"])[:8], signed=True)
+    if seed == old_seed:
+        seed ^= 1
+    data["RandomSeed"] = Tag(4, seed)
+    data.pop("Player", None)
+    staged = {
+        name: gzip.compress(
+            write_nbt("", {"Data": Tag(10, data)}), compresslevel=1, mtime=0
+        )
+    }
+    if resource:
+        marker = (
+            f"schema=1\nidentity={identity['identity']}\ndimension={dimension}\nseed={seed}\n"
+        ).encode("ascii")
+        staged[f"{world}/{folder}/.omk-resource.properties"] = marker
+        staged[f"{world}/omk-resource-world.properties"] = marker
+    return staged

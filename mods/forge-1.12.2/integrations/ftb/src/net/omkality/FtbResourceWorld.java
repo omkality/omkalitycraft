@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 public final class FtbResourceWorld {
     private final Logger log;
     private final int dimension,centerX,centerZ,radius,step,loadBudget;
-    private final long seed;
+    private long seed;
     private final String command,identity;
     private final Path folder,marker,ledger;
     private final Object server,timer,nativeSpawn;
@@ -137,10 +137,11 @@ public final class FtbResourceWorld {
     }
     private void verifyMarker()throws Exception{
         if(!Files.isDirectory(folder,LinkOption.NOFOLLOW_LINKS)||Files.isSymbolicLink(folder))throw new IllegalStateException("Linked resource dimension directory");
-        verifyOwnership(properties(marker));verifyOwnership(properties(ledger));
+        Properties current=properties(marker);long saved=Long.parseLong(current.getProperty("seed", ""));
+        verifyOwnership(current,saved);verifyOwnership(properties(ledger),saved);seed=saved;
     }
-    private void verifyOwnership(Properties p){
-        if(p.size()!=4||!"1".equals(p.getProperty("schema"))||!identity.equals(p.getProperty("identity"))||!Integer.toString(dimension).equals(p.getProperty("dimension"))||!Long.toString(seed).equals(p.getProperty("seed")))throw new IllegalStateException("Existing resource dimension is not owned by this policy");
+    private void verifyOwnership(Properties p,long saved){
+        if(p.size()!=4||!"1".equals(p.getProperty("schema"))||!identity.equals(p.getProperty("identity"))||!Integer.toString(dimension).equals(p.getProperty("dimension"))||!Long.toString(saved).equals(p.getProperty("seed")))throw new IllegalStateException("Existing resource dimension is not owned by this policy");
     }
     private static void writeOwnership(Path file,byte[] bytes)throws Exception{
         try(java.nio.channels.FileChannel channel=java.nio.channels.FileChannel.open(file,StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE)){

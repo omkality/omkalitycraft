@@ -24,7 +24,7 @@ public final class FtbRtpGuard {
     private int minimum, maximum, percent, maxTrials, maxLoads, retrySeconds;
     private boolean failed;
     private final Class<?> player;
-    private final Field dimension, world;
+    private final Field dimension, world, playerX, playerZ;
     private final Method sender, command, name, parameters, permission, alive;
     private final Method dataGet, forgePlayer, online, cooldown, teleport, rank, ticks, seconds;
     private final Method blockState, material, liquid, block, registry, full, air, generated, chunk;
@@ -63,6 +63,8 @@ public final class FtbRtpGuard {
         Class<?> source = c("net.minecraft.command.ICommandSender");
         dimension = f(entity, "field_71093_bK", "dimension");
         world = f(entity, "field_70170_p", "world");
+        playerX = f(entity, "field_70165_t", "posX");
+        playerZ = f(entity, "field_70161_v", "posZ");
         alive = m(entity, "func_70089_S", "isEntityAlive");
         sender = CommandEvent.class.getMethod("getSender");
         command = CommandEvent.class.getMethod("getCommand");
@@ -183,7 +185,7 @@ public final class FtbRtpGuard {
                             || online.invoke(forgePlayer.invoke(null, current)) != current
                             || dimension.getInt(current) != dim || world.get(current) != level) return null;
                     cooldown.invoke(dataGet.invoke(null, forgePlayer.invoke(null, current)), current, timer);
-                    Object result = find(level, dim);
+                    Object result = find(level, dim, playerX.getDouble(current), playerZ.getDouble(current));
                     if (result == null) tell(current, "Безопасная точка RTP не найдена. Попробуйте позже.");
                     return result;
                 } catch (InvocationTargetException error) {
@@ -213,7 +215,7 @@ public final class FtbRtpGuard {
         return false;
     }
 
-    private Object find(Object level, int dim) throws Exception {
+    private Object find(Object level, int dim, double x, double z) throws Exception {
         processQueue.invoke(claims); // Include claims queued earlier in the same tick.
         Object border = worldBorder.invoke(level);
         double limit = Math.min(maximum, ((Number) diameter.invoke(border)).doubleValue() * percent / 200.0 - 2);
@@ -221,8 +223,23 @@ public final class FtbRtpGuard {
         double cx = ((Number) centerX.invoke(border)).doubleValue(), cz = ((Number) centerZ.invoke(border)).doubleValue();
         Set<Long> loaded = new HashSet<Long>();
         int[] vertical = worlds.get(dim);
-        for (int trial = 0; trial < maxTrials; trial++) {
-            double radius = Math.sqrt(minimum * (double) minimum + random.nextDouble() * (limit * limit - minimum * (double) minimum));
+        // A newly generated world can have no chunks at the configured distance.
+        // Use the same safety and total chunk budget for a nearby search.
+        boolean near = minimum > 64 && maxTrials >= 4;
+        int distantTrials = near ? maxTrials / 2 : maxTrials;
+        Object result = search(level, dim, border, cx, cz, minimum, limit, distantTrials, loaded, vertical);
+        if (result != null || !near) return result;
+        int nearbyTrials = maxTrials - distantTrials;
+        result = search(level, dim, border, x, z, 32, Math.min(limit, 96), nearbyTrials / 2, loaded, vertical);
+        return result != null ? result : search(level, dim, border, cx, cz, 48, Math.min(limit, 192),
+                nearbyTrials - nearbyTrials / 2, loaded, vertical);
+    }
+
+    private Object search(Object level, int dim, Object border, double cx, double cz, double minimum,
+            double limit, int trials, Set<Long> loaded, int[] vertical) throws Exception {
+        if (limit <= minimum) return null;
+        for (int trial = 0; trial < trials; trial++) {
+            double radius = Math.sqrt(minimum * minimum + random.nextDouble() * (limit * limit - minimum * minimum));
             double angle = random.nextDouble() * Math.PI * 2;
             int x = (int) Math.floor(cx + Math.cos(angle) * radius), z = (int) Math.floor(cz + Math.sin(angle) * radius);
             double actual = (x + 0.5 - cx) * (x + 0.5 - cx) + (z + 0.5 - cz) * (z + 0.5 - cz);

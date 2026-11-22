@@ -190,7 +190,7 @@ def test_defaults_merge_without_resetting_player_options_or_other_servers(
     ) == ["MyPack", "FM_NewFont"]
     servers = read_nbt((folder / "servers.dat").read_bytes())[1]["servers"].value[1]
     assert len(servers) == 2 and servers[1] == custom
-    assert servers[0].value["name"].value == "Divine Journey 2 (server 1)"
+    assert servers[0].value["name"].value == "Divine Journey 2 RU"
     assert any(
         path.read_bytes() == original_options
         for path in (folder / ".omk-defaults-backups").glob("*options.txt")
@@ -204,6 +204,21 @@ def test_managed_server_address_can_change_without_duplicate_entries(tmp_path: P
     prepare_client_defaults(release, folder)
     servers = read_nbt((folder / "servers.dat").read_bytes())[1]["servers"].value[1]
     assert len(servers) == 1 and servers[0].value["ip"].value == "localhost:25577"
+
+
+def test_start_restores_a_deleted_project_server_without_touching_other_entries(
+    tmp_path: Path,
+):
+    folder, release = setup(tmp_path)
+    release = replace(release, pack_id="dj2")
+    prepare_client_defaults(release, folder)
+    custom = Tag(10, {"name": Tag(8, "Other"), "ip": Tag(8, "example.org")})
+    file = folder / "servers.dat"
+    file.write_bytes(write_nbt("", {"servers": Tag(9, (10, [custom]))}))
+    prepare_client_defaults(release, folder)
+    entries = read_nbt(file.read_bytes())[1]["servers"].value[1]
+    assert len(entries) == 2 and entries[1] == custom
+    assert entries[0].value["name"].value == "Divine Journey 2 RU"
 
 
 def test_corrupt_server_list_is_not_overwritten(tmp_path: Path):

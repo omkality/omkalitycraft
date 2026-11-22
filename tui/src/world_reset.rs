@@ -8,6 +8,48 @@ use ratatui::{
 };
 use serde::Deserialize;
 
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Progress {
+    pub phase: String,
+    pub world: String,
+}
+
+impl Progress {
+    pub fn label(&self) -> Option<&'static str> {
+        Some(match self.phase.as_str() {
+            "closing" => "Закрываем вход",
+            "disconnecting" => "Отключаем игроков",
+            "drained" => "Игроки отключены",
+            "stopping" => "Сохраняем и останавливаем сервер",
+            "backup" => "Создаём и проверяем резервную копию",
+            "preparing" => "Готовим новое сохранение",
+            "installing" => "Устанавливаем новое сохранение",
+            "starting" => "Запускаем Forge и проверяем мир",
+            "opening" => "Открываем игровой вход",
+            _ => return None,
+        })
+    }
+
+    pub fn valid(&self) -> bool {
+        self.label().is_some()
+            && (1..=64).contains(&self.world.chars().count())
+            && self.world.trim() == self.world
+            && !self.world.chars().any(char::is_control)
+    }
+
+    pub fn players_disconnected(&self) -> bool {
+        !matches!(self.phase.as_str(), "closing" | "disconnecting")
+    }
+
+    pub fn server_stopped(&self) -> bool {
+        matches!(
+            self.phase.as_str(),
+            "backup" | "preparing" | "installing" | "starting"
+        )
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct Request {
     pub server: String,

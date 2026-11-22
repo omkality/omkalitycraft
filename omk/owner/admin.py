@@ -393,6 +393,7 @@ def _add_tui_operation_parsers(actions):
     world_reset.add_argument("--confirm", default="")
     world_reset.add_argument("--catalog", action="store_true")
     world_reset.add_argument("--world", type=int)
+    world_reset.add_argument("--stream-progress", action="store_true")
 
 
 def add_admin_commands(sub):
@@ -564,6 +565,12 @@ def _run_tui_action(args):
     if args.admin_action == "world-reset":
         from omk.owner.panels.owner_world_reset import run  # noqa: PLC0415
 
+        def progress(phase, world):
+            print(
+                "OMK_PROGRESS " + json.dumps({"phase": phase, "world": world}),
+                flush=True,
+            )
+
         return run(
             args.config,
             args.server,
@@ -571,6 +578,7 @@ def _run_tui_action(args):
             args.confirm,
             catalog=args.catalog,
             dimension=args.world,
+            progress=progress if args.stream_progress else None,
         )
     if args.admin_action == "project-moderation":
         from omk.game.project_moderation import run  # noqa: PLC0415
