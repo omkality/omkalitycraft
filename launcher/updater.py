@@ -262,10 +262,11 @@ class LauncherUpdater:
         ):
             return active
         archive = self._download_archive(updater, fetcher, target, asset)
-        progress("Подготавливаем новую версию…")
+        progress("Распаковываем обновление лаунчера…")
         folder = inside(self.root, f"app_versions/{version}-{digest[:12]}")
         # Never trust a leftover extracted directory: recreate from the verified archive.
         self._extract(archive, folder)
+        progress("Проверяем файлы запуска…")
         executable = inside(folder, entrypoint)
         if not executable.is_file():
             raise UpdateError("В обновлении отсутствует программа запуска.")

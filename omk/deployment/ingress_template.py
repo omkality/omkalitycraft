@@ -19,6 +19,28 @@ MAINTENANCE_MESSAGES = {
 LABEL = "omkality.ingress.owner"
 
 
+def valid_maintenance_reason(reason):
+    """Accept fixed reasons and a bounded, display-only world name."""
+    if not isinstance(reason, str):
+        return False
+    if reason in MAINTENANCE_MESSAGES:
+        return True
+    name = reason.removeprefix("wipe:")
+    return (
+        reason.startswith("wipe:")
+        and 1 <= len(name) <= 64
+        and name.strip() == name
+        and name.isprintable()
+    )
+
+
+def maintenance_message(reason):
+    """Return the Minecraft text for an authorized reason."""
+    if valid_maintenance_reason(reason) and reason.startswith("wipe:"):
+        return f"Сервер временно недоступен. Идёт вайп мира «{reason[5:]}»."
+    return MAINTENANCE_MESSAGES.get(reason, MAINTENANCE_MESSAGES["offline"])
+
+
 def profile():
     return json.loads(
         (

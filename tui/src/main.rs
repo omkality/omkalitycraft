@@ -125,6 +125,8 @@ struct Pending {
     reset_step: Option<&'static str>,
     player_stats: bool,
     overview: bool,
+    activity: &'static str,
+    progress: mpsc::Receiver<world_reset::Progress>,
 }
 impl Pending {
     fn start(backend: Backend, request: Request) -> Self {
@@ -133,6 +135,21 @@ impl Pending {
             _ => None,
         };
         let player_stats = matches!(&request, Request::PlayerStats { .. });
+        let activity = match &request {
+            Request::Overview(..) => "Обновляем обзор",
+            Request::WorldReset(action) if action.mutating() => "Проверяем состояние мира",
+            Request::WorldReset(_) => "Читаем список миров",
+            Request::Invite => "Создаём приглашение",
+            Request::PlayerStats { .. } => "Загружаем статистику игрока",
+            Request::Restrictions => "Загружаем баны и муты",
+            Request::Moderation(..) => "Применяем команду модерации",
+            Request::Console { command, .. } => match command.as_str() {
+                "save" => "Сохраняем мир",
+                "tps" => "Читаем TPS по мирам",
+                "invites" => "Загружаем приглашения",
+                _ => "Обновляем список игроков",
+            },
+        };
         let overview = matches!(&request, Request::Overview(..));
         let mutating = matches!(&request, Request::WorldReset(a) if a.mutating())
             || matches!(&request, Request::Console { command, .. } if command == "save")
@@ -140,8 +157,20 @@ impl Pending {
         let cancel = Arc::new(AtomicBool::new(false));
         let c = cancel.clone();
         let (sender, receiver) = mpsc::channel();
+        let (progress_sender, progress) = mpsc::channel();
         let handle = thread::spawn(move || {
-            let _ = sender.send(backend.request(request, c));
+            let report = |value| {
+                let _ = progress_sender.send(value);
+            };
+            let _ = sender.send(
+                backend.request_reporting(
+                    request,
+                    c,
+                    reset_step
+                        .filter(|step| *step != "inspect")
+                        .map(|_| &report as &dyn Fn(world_reset::Progress)),
+                ),
+            );
         });
         Self {
             cancel,
@@ -151,6 +180,8 @@ impl Pending {
             reset_step,
             player_stats,
             overview,
+            activity,
+            progress,
         }
     }
 }
@@ -254,10 +285,24 @@ fn interactive(
         .as_ref()
         .map(|b| Pending::start(b.clone(), Request::Overview(None, app.window())));
     let mut name_lookup: Option<Pending> = None;
+    let mut background: Option<Pending> = None;
     let mut next_refresh = Instant::now() + Duration::from_secs(5);
     #[cfg(windows)]
     let mut clipboard_copy: Option<ClipboardCopy> = None;
     loop {
+        if let Some(work) = &background {
+            match work.receiver.try_recv() {
+                Ok(Ok(Reply::Overview(value, history))) if value.ok => {
+                    let failed = app.failed;
+                    app.accept(value);
+                    app.accept_history(history);
+                    app.failed = failed;
+                    background = None;
+                }
+                Err(mpsc::TryRecvError::Empty) => {}
+                _ => background = None,
+            }
+        }
         if let Some(lookup) = &name_lookup {
             let names = match lookup.receiver.try_recv() {
                 Ok(Ok(Reply::Console(v))) => Some(v.player_names()),
@@ -282,11 +327,15 @@ fn interactive(
         #[cfg(not(windows))]
         let copying = false;
         app.loading = pending.is_some() || name_lookup.is_some() || copying;
+        app.activity = pending.as_ref().map(|work| work.activity);
         app.resetting = pending
             .as_ref()
             .and_then(|work| work.reset_step)
             .filter(|step| *step != "inspect");
         if let Some(work) = &pending {
+            if let Some(progress) = work.progress.try_iter().last() {
+                app.reset_progress = Some(progress);
+            }
             match work.receiver.try_recv() {
                 Ok(result) => {
                     match result {
@@ -405,6 +454,7 @@ fn interactive(
                     pending = None;
                     app.loading = false;
                     app.resetting = None;
+                    app.reset_progress = None;
                 }
                 Err(mpsc::TryRecvError::Disconnected) if work.player_stats => {
                     app.finish_player_stats(
@@ -429,15 +479,22 @@ fn interactive(
                     pending = None;
                     app.loading = false;
                     app.resetting = None;
+                    app.reset_progress = None;
                 }
                 Err(mpsc::TryRecvError::Empty) => {}
             }
         }
         terminal.draw(|f| ui::draw(f, app))?;
         let mut request = None;
-        if event::poll(Duration::from_millis(100))?
-            && let Event::Key(key) = event::read()?
-        {
+        let event = if event::poll(Duration::from_millis(100))? {
+            Some(event::read()?)
+        } else {
+            None
+        };
+        if matches!(event, Some(Event::Resize(..))) {
+            terminal.clear()?;
+        }
+        if let Some(Event::Key(key)) = event {
             if key.kind != KeyEventKind::Press {
                 continue;
             }
@@ -711,12 +768,20 @@ fn interactive(
                 }
             }
         }
+        if Instant::now() >= next_refresh
+            && pending.as_ref().is_some_and(|work| !work.overview)
+            && background.is_none()
+            && let Some(b) = &backend
+        {
+            next_refresh = Instant::now() + Duration::from_secs(5);
+            background = Some(Pending::start(
+                b.clone(),
+                Request::Overview(app.server().map(str::to_owned), app.window()),
+            ));
+        }
         if request.is_none()
             && pending.is_none()
-            && app.confirm.is_none()
-            && app.range_picker.is_none()
-            && app.moderation.is_none()
-            && app.world_reset.is_none()
+            && background.is_none()
             && Instant::now() >= next_refresh
         {
             request = Some(Request::Overview(

@@ -283,11 +283,10 @@ class PackCard(QFrame):
         self.state_label.setStyleSheet(f"color:{MUTED};background:transparent")
         self.progress.show()
         self.cancel.show()
-        self.action.set_busy(
-            True, "Проверяем…" if progress.stage.startswith("Провер") else "Скачиваем…"
-        )
-        self.progress.setRange(0, 100)
-        self.progress.setValue(progress.percent)
+        self.action.set_busy(True, "Подождите…")
+        self.progress.setRange(0, 100 if progress.total else 0)
+        if progress.total:
+            self.progress.setValue(progress.percent)
         if progress.stage.startswith("Скач"):
             self.state_label.setText(
                 f"Скачивание · {progress.percent}% · {progress.done / 1024**2:.0f} / {progress.total / 1024**2:.0f} МБ"

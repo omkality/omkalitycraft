@@ -100,7 +100,39 @@ pub fn capture(
     cancel: &AtomicBool,
     timeout: Duration,
 ) -> Result<(Vec<u8>, bool), String> {
-    capture_limit(command, cancel, timeout, MAX_OUTPUT)
+    capture_limit(command, cancel, timeout, MAX_OUTPUT, None)
+}
+
+const PROGRESS_PREFIX: &[u8] = b"OMK_PROGRESS ";
+
+fn forward_progress(
+    file: &mut File,
+    size: u64,
+    cursor: &mut u64,
+    report: &dyn Fn(crate::world_reset::Progress),
+) -> Result<(), String> {
+    if size <= *cursor {
+        return Ok(());
+    }
+    file.seek(SeekFrom::Start(*cursor))
+        .map_err(|_| "Ошибка чтения хода вайпа")?;
+    let mut chunk = Vec::new();
+    file.take(size - *cursor)
+        .read_to_end(&mut chunk)
+        .map_err(|_| "Ошибка чтения хода вайпа")?;
+    for line in chunk.split_inclusive(|b| *b == b'\n') {
+        if line.last() != Some(&b'\n') {
+            break;
+        }
+        *cursor += line.len() as u64;
+        if let Some(value) = line.strip_prefix(PROGRESS_PREFIX)
+            && let Ok(event) = serde_json::from_slice::<crate::world_reset::Progress>(value)
+            && event.valid()
+        {
+            report(event);
+        }
+    }
+    Ok(())
 }
 
 fn capture_limit(
@@ -108,14 +140,14 @@ fn capture_limit(
     cancel: &AtomicBool,
     timeout: Duration,
     limit: u64,
+    report: Option<&dyn Fn(crate::world_reset::Progress)>,
 ) -> Result<(Vec<u8>, bool), String> {
-    // A private anonymous file avoids pipe deadlocks and reader threads surviving a timeout.
-    let mut output = tempfile::tempfile().map_err(|_| "Не удалось создать буфер ответа")?;
+    // Reopening the private file gives the reader its own cursor while the child writes.
+    let channel = tempfile::NamedTempFile::new().map_err(|_| "Не удалось создать буфер ответа")?;
+    let mut output = channel.reopen().map_err(|_| "Ошибка буфера")?;
     command
         .stdin(Stdio::null())
-        .stdout(Stdio::from(
-            output.try_clone().map_err(|_| "Ошибка буфера")?,
-        ))
+        .stdout(Stdio::from(channel.reopen().map_err(|_| "Ошибка буфера")?))
         .stderr(Stdio::null());
     #[cfg(windows)]
     {
@@ -128,6 +160,7 @@ fn capture_limit(
             .map_err(|_| "Не удалось запустить Python CLI")?,
     );
     let deadline = Instant::now() + timeout;
+    let mut read = 0;
     let status = loop {
         if cancel.load(Ordering::Relaxed) {
             return Err("Запрос прерван; результат команды неизвестен".into());
@@ -135,8 +168,12 @@ fn capture_limit(
         if Instant::now() >= deadline {
             return Err("CLI не ответил вовремя; результат команды неизвестен".into());
         }
-        if file_size(&output)? > limit {
+        let size = file_size(&output)?;
+        if size > limit {
             return Err("Ответ CLI превысил лимит".into());
+        }
+        if let Some(report) = report {
+            forward_progress(&mut output, size, &mut read, report)?;
         }
         if let Some(status) = child
             .0
@@ -163,6 +200,14 @@ fn capture_limit(
         .map_err(|_| "Ошибка чтения ответа")?;
     if bytes.len() as u64 > limit {
         return Err("Ответ CLI превысил лимит".into());
+    }
+    if report.is_some() {
+        bytes = bytes
+            .split_inclusive(|b| *b == b'\n')
+            .filter(|line| !line.starts_with(PROGRESS_PREFIX))
+            .flatten()
+            .copied()
+            .collect();
     }
     Ok((bytes, status.success()))
 }
@@ -208,6 +253,15 @@ impl Backend {
     }
 
     pub fn request(&self, request: Request, cancel: Arc<AtomicBool>) -> Result<Reply, String> {
+        self.request_reporting(request, cancel, None)
+    }
+
+    pub fn request_reporting(
+        &self,
+        request: Request,
+        cancel: Arc<AtomicBool>,
+        report: Option<&dyn Fn(crate::world_reset::Progress)>,
+    ) -> Result<Reply, String> {
         let mut command = self.command();
         match &request {
             Request::Invite => {
@@ -233,6 +287,9 @@ impl Backend {
                 }
                 if let Some(confirmation) = &action.confirmation {
                     command.args(["--confirm", confirmation]);
+                }
+                if report.is_some() && action.mutating() {
+                    command.arg("--stream-progress");
                 }
             }
             Request::PlayerStats { server, player } => {
@@ -318,9 +375,9 @@ impl Backend {
         };
         let timeout = Duration::from_secs(timeout);
         let (bytes, success) = if matches!(&request, Request::Restrictions) {
-            capture_limit(command, &cancel, timeout, 512 * 1024)?
+            capture_limit(command, &cancel, timeout, 512 * 1024, None)?
         } else {
-            capture(command, &cancel, timeout)?
+            capture_limit(command, &cancel, timeout, MAX_OUTPUT, report)?
         };
         let (reply, ok) = match request {
             Request::Invite => {

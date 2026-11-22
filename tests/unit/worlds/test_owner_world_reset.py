@@ -69,9 +69,21 @@ def test_wipe_closes_ingress_before_kicking_players(monkeypatch):
         "kick_for_maintenance",
         lambda *args: events.append(("kick", args[-1])),
     )
-    result = {}
-    wipe._close_and_drain(None, "dj2", result)
-    assert events == [("close", "wipe"), ("kick", wipe.MAINTENANCE_MESSAGES["wipe"])]
+    result = {
+        "dimension": -18000,
+        "worlds": [{"name": "Ресурсный мир", "dimension": -18000}],
+    }
+    progress = []
+    token = wipe._progress.set(progress.append)
+    try:
+        wipe._close_and_drain(None, "dj2", result)
+    finally:
+        wipe._progress.reset(token)
+    assert events == [
+        ("close", "wipe:Ресурсный мир"),
+        ("kick", "Сервер временно недоступен. Идёт вайп мира «Ресурсный мир»."),
+    ]
+    assert progress == ["closing", "disconnecting", "drained"]
     assert result["effect"] == "unknown"
 
 

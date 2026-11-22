@@ -15,9 +15,9 @@ from tempfile import NamedTemporaryFile
 
 from omk.deployment.ingress_template import (
     CONFIG,
-    MAINTENANCE_MESSAGES,
     MAINTENANCE_REASON,
     SOCKET,
+    valid_maintenance_reason,
 )
 from omk.worlds.linux_restore_policy import _read
 
@@ -113,7 +113,7 @@ def _reason(value):
     path = Path(MAINTENANCE_REASON)
     with NamedTemporaryFile(dir=path.parent, delete=False) as stream:
         temporary = Path(stream.name)
-        stream.write((value + "\n").encode("ascii"))
+        stream.write((value + "\n").encode("utf-8"))
     try:
         os.replace(temporary, path)
     finally:
@@ -157,7 +157,7 @@ def execute(request, config=Path(CONFIG), source=Path("/server")):
         and (
             not maintenance
             or request["action"] not in {"open", "close"}
-            or reason not in MAINTENANCE_MESSAGES
+            or not valid_maintenance_reason(reason)
         )
     ):
         raise ValueError("Unsupported maintenance reason")

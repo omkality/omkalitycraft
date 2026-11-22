@@ -76,6 +76,7 @@ def read_record(config, operation):
             "runtime_result",
             "installation_operation",
             "reset",
+            "reroll_seed",
         }
         or record.get("stage") not in STAGES
         or not isinstance(record.get("maintenance_operation"), str)
@@ -224,6 +225,7 @@ def worker(record, action, *, allowed_container=None):
         "dimension": record["dimension"],
         "position": "auto",
         **({"reset": record["reset"]} if "reset" in record else {}),
+        **({"reroll_seed": True} if record.get("reroll_seed") is True else {}),
         "snapshot": record["snapshot"],
         "world_max_bytes": policy["world_max_bytes"],
         "preflight_options": record["preflight_options"],
@@ -340,6 +342,7 @@ def worker(record, action, *, allowed_container=None):
                 for k in ("operation", "world", "dimension", "snapshot")
             )
             or result.get("reset") != request.get("reset")
+            or result.get("reroll_seed") != request.get("reroll_seed")
             or not landing_bound
         ):
             raise AdminError(
@@ -433,6 +436,7 @@ def plan(
             "backup_operation": backup_operation,
             "dimension": dimension,
             **selection,
+            **({"reroll_seed": True} if managed and dimension != 0 else {}),
             "source": source,
             "target": target,
             "settings": policy,

@@ -156,11 +156,16 @@ def inspect_resource(  # noqa: PLR0912, PLR0915 -- one bounded read-only audit
         path_policy="linux-server",
     )
     if policy is not None:
+        metadata = world / f"DIM{dimension}/jed_level.dat"
+        seed = int(policy["seed"])
+        if metadata.exists() or metadata.is_symlink():
+            data = _tag(ftb.nbt(_read(metadata, world)), "Data", 10)
+            seed = _tag(data, "RandomSeed", 4)
         expected = {
             "schema": "1",
             "identity": policy["identity"],
             "dimension": str(dimension),
-            "seed": str(int(policy["seed"])),
+            "seed": str(seed),
         }
         if (
             _properties(world / "omk-resource-world.properties", world) != expected
