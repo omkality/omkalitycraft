@@ -6,7 +6,7 @@ import os
 import re
 from pathlib import Path
 
-from omk.game.policies.dj2_rtp_policy import rtp_plan, write_rtp_policy
+from omk.game.policies.dj2_rtp_policy import write_native_rtp_policy
 from omk.game.policies.dj2_spawn_policy import spawn_plan
 from omk.game.territory_policy import territory_plan, write_territory_policy
 from omk.shared.profiles import PROJECT_ROOT
@@ -34,18 +34,12 @@ def resource_plan(environ=None):
     if dimension in profile["reserved_dimensions"]:
         raise ValueError("Resource dimension overlaps a DJ2 dimension")
     radius = _integer(values, "OMK_DJ2_RESOURCE_SPAWN_RADIUS", 100, 16, 512)
-    rtp = rtp_plan(values)
-    rows = rtp["worlds"]
-    if any(row["id"] == dimension for row in rows) or len(rows) >= 8:
-        raise ValueError("Resource dimension conflicts with RTP profile")
     main_spawn = spawn_plan(values)
     resource_spawn = spawn_plan({"OMK_DJ2_SPAWN_RADIUS": str(radius)})
     territory_plan(values)
     diameter = _integer(values, "OMK_DJ2_RESOURCE_DIAMETER", 16384, 512, 100000)
-    if diameter <= 2 * (radius + 16) or rtp["minimum"] >= min(
-        rtp["maximum"], diameter * rtp["border_percent"] / 200 - 2
-    ):
-        raise ValueError("Resource border leaves no safe spawn/RTP range")
+    if diameter <= 2 * (radius + 16):
+        raise ValueError("Resource border leaves no safe spawn range")
     if main_spawn["chunks"] + resource_spawn["chunks"] > 10000:
         raise ValueError("Combined spawn plan exceeds the Core bound")
     return {
@@ -65,10 +59,6 @@ def resource_plan(environ=None):
         "chunk_loads": _integer(
             values, "OMK_DJ2_RESOURCE_SEARCH_CHUNK_LOADS", 64, 16, 64
         ),
-        "rtp_worlds": [
-            *rows,
-            {"id": dimension, "mode": "surface", "min_y": 1, "max_y": 250},
-        ],
         "artifact": profile["artifact"],
         "ready_for_players": False,
         "required_capabilities": [
@@ -216,14 +206,7 @@ def prepare_resource_bundle(
         f"version=1\nzones=0:{-a}:{a}:{-a}:{a};{plan['dimension']}:{-b}:{b}:{-b}:{b}\n",
         encoding="ascii",
     )
-    profiles = output / "profiles"
-    profiles.mkdir()
-    rtp = profiles / "rtp-worlds.json"
-    rtp.write_text(
-        json.dumps({"version": 1, "worlds": plan["rtp_worlds"]}, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    write_rtp_policy(config, {**values, "OMK_DJ2_RTP_PROFILE": str(rtp)})
+    write_native_rtp_policy(config)
     write_territory_policy(config, values)
     files = {
         p.relative_to(output).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()

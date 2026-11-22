@@ -27,8 +27,8 @@ def test_policy_bundle_is_offline_exclusive_and_hash_complete(tmp_path):
     assert (output / "bundle.json").read_bytes() == before
     config = output / "config"
     assert "RandomSeed" in (config / "justenoughdimensions/dimensions.json").read_text()
-    assert (
-        "-18000:surface:1:250" in (config / "omkalitycore-rtp.properties").read_text()
+    assert (config / "omkalitycore-rtp.properties").read_text() == (
+        "version=2\nattempts=3\ncooldown_seconds=300\n"
     )
     assert (
         "0:-300:300:-300:300;-18000:-100:100:-100:100"
@@ -57,9 +57,8 @@ def test_bad_or_reserved_dimension_never_creates_bundle(tmp_path, dimension):
         ("OMK_DJ2_RESOURCE_SEED", "9223372036854775808"),
         ("OMK_DJ2_RESOURCE_SEED", "-9223372036854775809"),
         ("OMK_DJ2_RESOURCE_DIAMETER", "100001"),
-        ("OMK_DJ2_RESOURCE_DIAMETER", "512"),
+        ("OMK_DJ2_RESOURCE_DIAMETER", "511"),
         ("OMK_DJ2_RESOURCE_SPAWN_RADIUS", "0"),
-        ("OMK_DJ2_RTP_MIN_DISTANCE", "6000"),
         ("OMK_DJ2_TERRITORIES_PER_MEMBER", "0"),
         ("OMK_DJ2_RESOURCE_SEARCH_CHUNK_LOADS", "15"),
         ("OMK_DJ2_RESOURCE_SEARCH_CHUNK_LOADS", "65"),
@@ -87,26 +86,11 @@ def test_jed_options_do_not_override_or_automatically_wipe_worlds():
     assert dimension["jed"]["RespawnDimension"] == 0
 
 
-def test_duplicate_resource_dimension_in_operator_rtp_profile_rejected(tmp_path):
-    profile = tmp_path / "rtp.json"
-    profile.write_text(
-        json.dumps(
-            {
-                "version": 1,
-                "worlds": [{"id": -18000, "mode": "surface", "min_y": 1, "max_y": 250}],
-            }
-        )
-    )
-    with pytest.raises(ValueError, match="conflicts"):
-        prepare_resource_bundle(tmp_path / "out", {"OMK_DJ2_RTP_PROFILE": str(profile)})
-    assert not (tmp_path / "out").exists()
-
-
 def test_partial_bundle_has_no_completion_marker(tmp_path, monkeypatch):
     def fail(*args, **kwargs):
         raise OSError("synthetic disk failure")
 
-    monkeypatch.setattr(policy, "write_rtp_policy", fail)
+    monkeypatch.setattr(policy, "write_native_rtp_policy", fail)
     output = tmp_path / "out"
     with pytest.raises(OSError):
         prepare_resource_bundle(output, {})
