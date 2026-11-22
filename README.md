@@ -2,183 +2,30 @@
 
 [![Проверки dev](https://github.com/omkality/omkalitycraft/actions/workflows/checks.yml/badge.svg?branch=dev&event=push)](https://github.com/omkality/omkalitycraft/actions/workflows/checks.yml?query=branch%3Adev+event%3Apush)
 
-[![Python 3.14](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](pyproject.toml)
-[![Qt 6 · PySide6](https://img.shields.io/badge/Qt_6-PySide6-41CD52?logo=qt&logoColor=white)](launcher/)
-[![Rust · Ratatui](https://img.shields.io/badge/Owner_TUI-Rust_·_Ratatui-DEA584?logo=rust&logoColor=white)](docs/OWNER_TUI.md)
-[![Litestar](https://img.shields.io/badge/API-Litestar-5561D9)](api/)
-[![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](deploy/)
-[![Forge · Minecraft 1.12.2](https://img.shields.io/badge/Forge-Minecraft_1.12.2-6F7E91)](mods/README.md)
-[![Java 8 · Forge runtime](https://img.shields.io/badge/Java-8-ED8B00)](mods/forge-1.12.2/versions.json)
-[![Drasl](https://img.shields.io/badge/Аутентификация-Drasl-627D98)](docs/AUTH_STORAGE.md)
-[![Prometheus](https://img.shields.io/badge/Мониторинг-Prometheus-E6522C?logo=prometheus&logoColor=white)](docs/RESOURCE_HISTORY.md)
+Minecraft-сервер сообщества с русифицированной сборкой Divine Journey 2 2.23.4
+на Minecraft 1.12.2 и Forge. Для регистрации нужно приглашение.
 
-Переносимый лаунчер и CDN API для игры сообщества стримера на модовых Minecraft-серверах.
-Лаунчер находится в `launcher/` того же репозитория. Python + Qt, Drasl + authlib-injector,
-Forge сборки без гибридных Bukkit-ядер.
+## Как начать играть
 
-Есть регистрация со своим паролем и приглашением, запомненная сессия, скины, установка по подписанному
-manifest и автообновление самого лаунчера через TUF. Текущий кандидат — DJ2 2.23.4
-на Forge 1.12.2; прежняя 2.21.3 остаётся частью истории тестов. Серверные проверки
-выполняются в Linux Docker, графический вход проверялся Windows-клиентом.
-GTNH пока планируется; публичного сервиса и финального допуска игроков ещё нет.
-Версия `0.3.0.dev16` — этап разработки, не публичный игровой релиз.
+1. Скачайте ZIP лаунчера для Windows x64 или Linux x64. [Последний релиз](https://github.com/omkality/omkalitycraft/releases/latest)
+2. Распакуйте архив целиком в папку, доступную для записи, и запустите
+   `OmkalityCraft.exe` на Windows или `OmkalityCraft` на Linux.
+3. Зарегистрируйтесь с приглашением или войдите в свой аккаунт. На карточке DJ2
+   нажмите **«Скачать сборку»**, затем **«Играть»**. Лаунчер сам установит игру и Java.
+4. В Minecraft выберите **«Сетевая игра» → «Divine Journey 2 RU»**. Запись сервера
+   вернётся в список при следующем запуске Minecraft, если её удалить.
 
-**[Входная точка для аудита запуска DJ2](docs/LAUNCH_READINESS.md)** — где смотреть
-код, контракты, подтверждённые проверки и ещё открытые блокеры. Канонический трекер —
-[#41](https://github.com/omkality/omkalitycraft/issues/41).
+Лаунчер проверяет обновления при старте. Настройки, сессия и установленные
+игровые файлы сохраняются при обновлении.
 
-**[История ресурсов Linux-сервера](docs/RESOURCE_HISTORY.md)** — приватные Prometheus
-и Telegraf в Docker, игровой exporter cpburnz для DJ2. Собственный sampler/SQLite
-store удалён после сравнения; текущие запросы учитывают доступность источника.
-Корреляция с обслуживанием и реальная нагрузка VPS остаются в #146.
+- [Системные требования](docs/CLIENT_REQUIREMENTS.md)
+- [Команды и правила игры](docs/commands/dj2/README.md)
+- [Журналы и файлы диагностики](docs/LOGGING.md)
 
-**[Команды, ограничения, таймеры и роли серверов](docs/commands/README.md)** — практический
-справочник DJ2, полный реестр 438 серверных команд/подкоманд и отдельная предварительная справка GTNH.
+## Для владельца и разработчиков
 
-**[Обслуживание Docker-сервера владельцем](docs/OWNER_MAINTENANCE.md)** — штатная
-остановка, проверенная копия, возврат того же контейнера и разбор прерванной операции.
-
-**[Подготовка ресурсного сброса владельцем](docs/OWNER_RESOURCE_STAGING.md)** —
-отдельная проверенная копия в Linux volume, барьер запуска и восстановление после
-потери ответа. Переключение рабочего сервера ещё не разрешено.
-
-**[Постоянный Drasl, Docker volume и backup/restore](docs/AUTH_STORAGE.md)** — общий
-runtime для локальной проверки и VPS, переменные, хранение аккаунтов/скинов/ключей.
-
-**[Общий Forge Core и отдельные исправления сборки](docs/SERVER_MOD_COMPONENTS.md)** —
-архитектура серверных модов, профили и проверка перехода со старого Core.
-
-**[Исходники наших Forge-модов](mods/README.md)** — Core, DJ2Fix и клиентский
-адаптер с независимыми версиями, воспроизводимой Docker-сборкой и проверками CI.
-Прежняя полная история и лаборатория остаются в приватном архиве.
-
-**[Рост растений у границы привата](docs/DJ2_PLANT_PLACEMENT.md)** — проверка до записи,
-сохранность контейнеров и границы покрытия проверенной механики DJ2.
-
-## Разработка
-
-```powershell
-uv sync --locked --all-groups
-uv run omk doctor
-uv run omk server list
-docker compose -f deploy/auth-lab/compose.yaml build --pull
-uv run omk lab launcher smoke
-uv run omk lab auth expiry
-uv run --no-sync pytest tests/unit -q -n 4 --dist=loadfile
-uv run --no-sync pytest tests/ui -q -n 0
-```
-
-Unit-тесты распределяются по файлам между четырьмя процессами. Глобальные pytest
-настройки не включают параллельность: Qt и игровые сценарии выполняются отдельно
-и последовательно. На машине с меньшим запасом памяти можно явно выбрать `-n 2`
-или `-n 0`; `-n auto` не используется. В Linux Docker полный unit-набор дал
-64 → 23 секунды при одинаковых 2711 passed/1 skipped; повтор — те же 23 секунды.
-Сверены все JUnit case/outcome, не только итоговый счётчик.
-[Условия и ограничения замера](docs/validation/pytest-unit-parallel-2026-11-15.json).
-
-Локальный CDN:
-
-```powershell
-uv run python -m api
-```
-
-Для локального контента `CONTENT_ROOT` должен указывать на абсолютный путь к папке CDN.
-Пустой CDN допустим. БД, Java, модпаки и игровые миры в Git не входят.
-
-Интерфейс из исходников, с отдельными тестовыми данными:
-
-```powershell
-uv run omk launcher --auth-url http://127.0.0.1:25586 --api-url http://127.0.0.1:8000 --root .local/player-test --data-dir .local/player-test/userdata
-```
-
-Этому запуску нужны Drasl и подписанный контент; `omk lab launcher smoke` сам создаёт
-одноразовый стенд аккаунтов. Самостоятельный дистрибутив не требует Python у игрока.
-Все файлы приложения, сборки, Java и сессии размещаются в переносимой папке.
-Пароль и токен управления аккаунтом не сохраняются.
-
-Папки Windows-дистрибутива находятся рядом с `OmkalityCraft.exe`:
-
-| Папка | Что хранится |
-| --- | --- |
-| `_internal/` | Встроенные Python, Qt, библиотеки и ресурсы приложения. Нужна для запуска EXE. |
-| `userdata/` | Игровая сессия, настройки, логи, отчёты и данные автообновления. Не передавать другим людям. |
-| `instances/dj2/` | Установленная DJ2: моды, конфиги, Java и остальные файлы игры. Появляется при установке. |
-| `cache/downloads/` | Временные файлы и незавершённые загрузки сборок. |
-
-Устанавливать Python/Java в систему не нужно. Для переноса сохраняйте всю папку
-лаунчера вместе с её данными. `userdata` не вшивается в EXE: данные создаются и
-меняются после запуска и должны переживать обновление программы.
-
-В превью скин вращается за полный оборот примерно за 45 секунд. Наведение
-приостанавливает автоповорот; удержание левой кнопки мыши позволяет повернуть
-и наклонить персонажа. После ухода курсора автоповорот продолжается с выбранного
-ракурса. Это работает также в окне проверки загружаемого скина.
-
-**«Сбросить скин»** возвращает Стива в белой футболке после подтверждения
-«Вы уверены?». Скин сохраняется в Drasl через игровую сессию; ввод пароля
-не требуется. При отмене запрос не отправляется, при ошибке прежнее превью
-сохраняется. Окно смены пароля расширено: подписи по центру полей, верхний текст
-без переноса, две кнопки одинаковой ширины.
-
-На карточке DJ2 есть **«Системные требования»** с характеристиками ПК,
-пояснением памяти Java и совместимости Mac. Ориентиры предварительные.
-Минимальный порог ещё проверяем. [Данные профиля и границы проверки](docs/CLIENT_REQUIREMENTS.md).
-
-## Где искать крашлоги и отчёты
-
-У игрока пути ниже отсчитываются от **переносимой папки лаунчера**, содержащей
-`instances/` и `userdata/`. При запуске из исходников с `--root .local/player-test`
-это `omkalitycraft/.local/player-test/`. Они не находятся в системной `.minecraft`.
-
-| Что нужно | Где находится |
-| --- | --- |
-| Исходные crash-report DJ2 | `instances/dj2/crash-reports/crash-*.txt` |
-| Фатальная ошибка Java, если JVM смогла записать её | `instances/dj2/hs_err_pid*.log` |
-| Журнал Minecraft/Forge | `instances/dj2/logs/latest.log` |
-| stdout/stderr игры и журнал лаунчера | `userdata/logs/dj2-game.log`, `userdata/logs/launcher.jsonl` и их ротации |
-| Ожидающие отправки короткие клиентские отчёты | `userdata/client-incidents/<id>.json`; после подтверждения API запись удаляется |
-
-Лаунчер собирает отчёт автоматически, без меню диагностики и уведомлений. Если API
-недоступен, отчёт остаётся в очереди. При успешной доставке исходный crash-report
-остаётся локально до ротации; это другой файл. Наличие crash-report не гарантировано
-при выключении ПК, принудительном завершении или падении самой JVM/ОС.
-
-**У владельца:** при конфигурации из `deploy/owner/operator.example.toml`, скопированной
-в `.omk-admin/operator.toml`, принятые отчёты находятся в
-`.omk-admin/client-reports/client-reports.sqlite3`. Фактическую папку задают
-`[reports].root` и совпадающий `CLIENT_REPORTS_ROOT` API; это закрытая папка вне CDN.
-Публичный приём ещё не развёрнут. Чтение и экспорт выполняются утилитой владельца:
-
-```text
-uv run omk admin --config .omk-admin/operator.toml reports list
-uv run omk admin --config .omk-admin/operator.toml reports export --id REPORT_ID
-```
-
-Список сохраняется в `.omk-admin/client-report-inventory.json`, выбранный отчёт —
-в `.omk-admin/report-exports/<id>.json`. Игрокам эти файлы и чтение inbox недоступны.
-Хранение ограничено 14 сутками / 20 отчётами на игрока / 1000 всего; локальная очередь
-дополнительно ограничена 20 файлами / 2 МиБ. Подробнее: [LOGGING.md](docs/LOGGING.md).
-
-**Сервер Minecraft:** `crash-reports/`, `logs/` и `hs_err_pid*.log` находятся в корне
-данных выбранного Forge-сервера. В нашем Linux-стенде это `/srv` внутри контейнера,
-а данные хранятся в Docker named volume, который не является обычной подпапкой проекта
-в Windows. Рабочая привязка данных VPS ещё не настроена. Папки отдельных стендов и их
-`report.json` находятся в `omkalitycraft/.local/`; состояние последнего восстановления —
-`.local/recovery-status.json`. Сырые крашлоги, БД и сессии не публиковать в Git.
-
-- [Текущее состояние и следующий этап](docs/DEVELOPMENT.md)
-- [MCMCP: управление лабораторной Minecraft и ограничения пилота](docs/MINECRAFT_MCP.md)
-- [Миры, предгенерация, RTP и бюджет диска из env](docs/WORLDS_AND_STORAGE.md)
-- [Онлайн серверов и его env-настройки](docs/SERVER_STATUS.md)
-- [Env-настройки и запуск API в Docker](docs/API_RUNTIME.md)
-- [Порядок обновления сборки и переход на свежий DJ2](docs/PACK_UPGRADES.md)
-- [Релизы и автообновления](docs/RELEASES.md)
-- [Команды владельца и выдача приглашений](docs/ADMIN.md)
-- [Награды зрителям: расчёт баллов и ручная выдача приглашения](docs/STREAM_ACCESS.md)
-- [Логи, crash-report и диагностический архив](docs/LOGGING.md)
-- [Переносимые сессии](docs/PORTABLE_SESSIONS.md)
+- [Терминал владельца, приглашения, модерация и вайп](docs/OWNER_TUI.md)
+- [Развёртывание и обслуживание](deploy/README.md)
+- [Сборка, публикация и автообновление](docs/RELEASES.md)
+- [Структура проекта и локальные проверки](docs/DEVELOPMENT.md)
 - [История изменений](CHANGELOG.md)
-
-Изменения проходят отдельные коммиты и PR в `dev`. `master` сохраняется для проверенных этапов.
-Интерфейс и упаковка проверяются на Windows, Linux и macOS; игровой запуск каждой платформы —
-отдельная проверка. OmkalityCore остаётся закрытым и в этот репозиторий не входит.
