@@ -4,7 +4,7 @@
     "core": {
       "version": "0.3.14",
       "file": "OmkalityCore-0.3.14.jar",
-      "sha256": "3bfdd917a5ecb30b7dcd429eee3120f563f6e535059b725169bf7fc1a018f179"
+      "sha256": "f17f5b3bda73752e106ee3472eba28aa7883c4c74755f5c4516365aec84f6d3f"
     },
     "dj2fix": {
       "version": "0.1.10",

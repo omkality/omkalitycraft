@@ -11,8 +11,13 @@ def test_guide_color_profile_is_shared_and_preserves_the_accepted_plain_text():
         "guides/dj2-2.23.4.properties"
     )
     raw = server.read_bytes()
-    assert raw == client.read_bytes() and len(raw) < 16384
+    assert len(raw) < 16384
+    client_lines = client.read_text(encoding="utf-8").splitlines()
     text = raw.decode("utf-8")
+    # Installed client builds still match the legacy RTP line for chat timing.
+    assert [line for line in client_lines if not line.startswith("line.4=")] == [
+        line for line in text.splitlines() if not line.startswith("line.4=")
+    ]
     fields = dict(line.split("=", 1) for line in text.splitlines())
     assert fields.pop("schema") == "1"
     plain = [
@@ -23,7 +28,7 @@ def test_guide_color_profile_is_shared_and_preserves_the_accepted_plain_text():
         "OmkalityCraft · Короткая памятка",
         "/sethome <имя> — сохранить дом; /home <имя> — вернуться домой.",
         "/spawn — спавн; /resource — ресурсный мир.",
-        "/rtp — случайная точка в текущем мире, если RTP здесь разрешён.",
+        "/rtp — случайная точка в основном мире.",
         "На игрока: 3 дома и 50 чанков привата. Приваты — через карту FTB.",
         "/guide — показать эту памятку снова.",
     ]

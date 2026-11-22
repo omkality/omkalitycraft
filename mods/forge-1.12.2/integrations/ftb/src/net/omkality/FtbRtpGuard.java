@@ -307,8 +307,8 @@ public final class FtbRtpGuard {
     /** Charge attempts at command dispatch. FTB executes all accepted commands itself. */
     public static final class NativeCooldown {
         private static final String KEY = "omkality_rtp_budget";
-        private final Class<?> rtp, player;
-        private final Method command, sender, persisted, getLong, setLong, send;
+        private final Class<?> player;
+        private final Method command, name, sender, persisted, getLong, setLong, send;
         private final Constructor<?> message;
         private final int attempts;
         private final long cooldown;
@@ -319,7 +319,8 @@ public final class FtbRtpGuard {
             this.attempts = attempts;
             this.cooldown = cooldown;
             this.log = log;
-            rtp = c("com.feed_the_beast.ftbutilities.command.tp.CmdRTP");
+            Class<?> commandType = c("net.minecraft.command.ICommand");
+            name = m(commandType, "func_71517_b", "getName");
             player = c("net.minecraft.entity.player.EntityPlayerMP");
             command = CommandEvent.class.getMethod("getCommand");
             sender = CommandEvent.class.getMethod("getSender");
@@ -335,7 +336,7 @@ public final class FtbRtpGuard {
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public void onCommand(CommandEvent event) throws ReflectiveOperationException {
-            if (!rtp.isInstance(command.invoke(event))) return;
+            if (!"rtp".equals(name.invoke(command.invoke(event)))) return;
             Object actor = sender.invoke(event);
             if (!player.isInstance(actor)) return;
             try {
