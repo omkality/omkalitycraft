@@ -7,7 +7,7 @@ Minecraft-сервер сообщества с русифицированной 
 
 ## Как начать играть
 
-1. Скачайте ZIP лаунчера для Windows x64 или Linux x64. [Последний релиз](https://github.com/omkality/omkalitycraft/releases/latest)
+1. Скачайте лаунчер. [Windows x64](https://github.com/omkality/omkalitycraft/releases/latest/download/OmkalityCraft-windows-x64.zip) · [Linux x64](https://github.com/omkality/omkalitycraft/releases/latest/download/OmkalityCraft-linux-x64.zip)
 2. Распакуйте архив целиком в папку, доступную для записи, и запустите
    `OmkalityCraft.exe` на Windows или `OmkalityCraft` на Linux.
 3. Зарегистрируйтесь с приглашением или войдите в свой аккаунт. На карточке DJ2
