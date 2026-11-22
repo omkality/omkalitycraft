@@ -3,7 +3,7 @@ use ratatui::{
     Frame,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
-    text::{Line, Span},
+    text::{Line, Span, Text},
     widgets::{Block, Borders, Clear, Paragraph, Wrap},
 };
 use std::time::{Duration, Instant};
@@ -47,6 +47,7 @@ pub struct App {
     section: Option<(String, CommandPage)>,
     detail: Option<CommandPage>,
     pub loading: bool,
+    pub activity: Option<&'static str>,
     pub failed: bool,
     pub refreshed: Option<Instant>,
     pub demo: bool,
@@ -55,6 +56,7 @@ pub struct App {
     pub restrictions: Option<crate::restrictions::Panel>,
     pub world_reset: Option<crate::world_reset::Form>,
     pub resetting: Option<&'static str>,
+    pub reset_progress: Option<crate::world_reset::Progress>,
     animation_start: Instant,
     pub history: Option<TpsHistory>,
     pub history_failed: bool,
@@ -73,6 +75,7 @@ impl App {
             section: None,
             detail: None,
             loading: false,
+            activity: None,
             failed: false,
             refreshed: None,
             demo,
@@ -81,6 +84,7 @@ impl App {
             restrictions: None,
             world_reset: None,
             resetting: None,
+            reset_progress: None,
             animation_start: Instant::now(),
             history: None,
             history_failed: false,
@@ -383,7 +387,11 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     render_commands(frame, body[1], app);
     let age = app.refreshed.map(|t| t.elapsed().as_secs());
     let status = if app.loading {
-        format!("Запрос выполняется... {}", app.spinner())
+        format!(
+            "{}... {}",
+            app.activity.unwrap_or("Запрос выполняется"),
+            app.spinner()
+        )
     } else if app.failed {
         "Ошибка · показания могут быть устаревшими".into()
     } else {
@@ -516,9 +524,13 @@ fn render_commands(frame: &mut Frame, area: Rect, app: &mut App) {
             "apply" => "Установка нового мира",
             _ => "Запуск и проверка сервера",
         };
+        let operation = app.reset_progress.as_ref().map_or_else(
+            || label.to_owned(),
+            |progress| format!("{}\n{}", progress.world, progress.label().unwrap_or(label)),
+        );
         (
-            Paragraph::new(Line::styled(
-                format!("{label}... {}", app.spinner()),
+            Paragraph::new(Text::styled(
+                format!("{operation}... {}", app.spinner()),
                 Style::default().fg(ACCENT),
             )),
             0,
@@ -698,6 +710,17 @@ fn render_metrics(
                 Some("invalid") => "неоднозначные данные".into(),
                 _ => "нет данных".into(),
             });
+        let value = match app.reset_progress.as_ref() {
+            Some(progress) if *key == "game_players" && progress.players_disconnected() => {
+                "0".into()
+            }
+            Some(progress)
+                if matches!(*key, "game_mspt" | "game_tps") && progress.server_stopped() =>
+            {
+                "—".into()
+            }
+            _ => value,
+        };
         lines.push(Line::from(vec![
             Span::styled(format!(" {label:<17}"), Style::default().fg(MUTED)),
             Span::styled(value, Style::default().fg(ACCENT)),

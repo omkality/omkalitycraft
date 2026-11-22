@@ -1,14 +1,16 @@
 import shutil
 import threading
+import zipfile
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 
 from launcher.nbt import Tag
+from omk.backups.backup_store import BackupStore
 from omk.backups.stopped_world_backup import inventory
 from omk.worlds.reset import resource_reset_stage as stage
 from tests.fixtures.unit.backups.ftb_restore_authority import records
-from tests.fixtures.unit.worlds.resource_reset_inventory import sample
+from tests.fixtures.unit.worlds.resource_reset_inventory import encoded, sample
 from tests.fixtures.unit.worlds.resource_reset_stage import LIMITS, data
 
 __all__ = ["LIMITS", "data", "records", "sample"]
@@ -170,6 +172,50 @@ def test_main_world_reset_removes_all_progress_from_the_verified_backup(data, fr
         inventory(source / "world", world_name="world", path_policy="linux-server")
         == before
     )
+
+
+def test_new_resource_seed_is_sealed_with_the_new_world_and_ownership(data):
+    request, source, storage, target, _ = data
+    world = source / "world"
+    metadata = world / "DIM-18000/jed_level.dat"
+    markers = [
+        world / "omk-resource-world.properties",
+        world / "DIM-18000/.omk-resource.properties",
+    ]
+    previous = int(
+        next(
+            line[5:]
+            for line in markers[0].read_text().splitlines()
+            if line.startswith("seed=")
+        )
+    )
+    encoded(metadata, {"Data": Tag(10, {"RandomSeed": Tag(4, previous)})})
+    before = inventory(world, world_name="world", path_policy="linux-server")
+    archive = source.parent / "seed-reset.zip"
+    with zipfile.ZipFile(archive, "w") as output:
+        for name in before:
+            output.write(source / name, name)
+    store = BackupStore(storage / "store", LIMITS, path_policy="linux-server")
+    request.update(snapshot=store.publish(archive, before)["id"], reroll_seed=True)
+    expected = stage.execute({**request, "action": "plan"}, source, storage, target)
+    request["expected"] = expected
+    staged = stage.execute({**request, "action": "stage"}, source, storage, target)
+    assert (
+        stage.execute({**request, "action": "verify"}, source, storage, target)
+        == staged
+    )
+    seed = (
+        stage.audit.ftb.nbt((target / metadata.relative_to(source)).read_bytes())[
+            "Data"
+        ]
+        .value["RandomSeed"]
+        .value
+    )
+    assert seed != previous
+    for path in markers:
+        assert f"seed={seed}\n" in (target / path.relative_to(source)).read_text()
+    assert not (target / "world/DIM-18000/region").exists()
+    assert inventory(world, world_name="world", path_policy="linux-server") == before
 
 
 @pytest.mark.parametrize(

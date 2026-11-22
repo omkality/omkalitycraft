@@ -158,6 +158,7 @@ def runtime_request(p):
         "snapshot": p["snapshot"],
         "world_max_bytes": p["settings"]["world_max_bytes"],
         "preflight_options": p["preflight_options"],
+        **({"reroll_seed": True} if p.get("reroll_seed") is True else {}),
         "policy": {
             k: p["settings"][k]
             for k in ("max_bytes", "max_count", "staging_bytes", "reserve_bytes")

@@ -7,9 +7,9 @@ from contextlib import suppress
 from pathlib import Path
 
 from omk.deployment.ingress_template import (
-    MAINTENANCE_MESSAGES,
     MAINTENANCE_REASON,
     MAINTENANCE_SOCKET,
+    maintenance_message,
 )
 from omk.game.minecraft_status import _read_varint, _varint
 
@@ -40,11 +40,11 @@ async def _handshake(reader):
 
 def _message(path):
     try:
-        with path.open("r", encoding="ascii") as stream:
-            reason = stream.read(32).strip()
+        with path.open("r", encoding="utf-8") as stream:
+            reason = stream.read(80).strip()
     except OSError, UnicodeError:
         reason = "offline"
-    return MAINTENANCE_MESSAGES.get(reason, MAINTENANCE_MESSAGES["offline"])
+    return maintenance_message(reason)
 
 
 async def _send(writer, packet_id, payload):

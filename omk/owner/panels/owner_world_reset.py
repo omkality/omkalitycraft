@@ -4,6 +4,7 @@ import re
 import subprocess
 import time
 from contextlib import nullcontext
+from contextvars import ContextVar
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -11,7 +12,7 @@ from traceback import extract_tb
 
 from omk.backups.cold_backup_worker import digest
 from omk.deployment import ingress, ingress_config
-from omk.deployment.ingress_template import MAINTENANCE_MESSAGES
+from omk.deployment.ingress_template import maintenance_message
 from omk.owner import (
     admin_backups as backups,
     admin_maintenance as maintenance,
@@ -30,6 +31,12 @@ from omk.worlds.reset.resource_reset_inventory import validate_dimension
 
 STEPS = ("prepare", "apply", "start")
 COMMANDS = ("inspect", "run", *STEPS)
+_progress = ContextVar("world_reset_progress", default=None)
+
+
+def _announce(phase):
+    if (send := _progress.get()) is not None:
+        send(phase)
 
 
 @dataclass
@@ -242,17 +249,20 @@ def _prepare(config, server, state):
     window_id = window["operation"]
     _require_drained(config, server, window)
     if window["stage"] == "planned":
+        _announce("stopping")
         result = maintenance.execute(config, window_id, "stop")
         if result["stage"] != "stopped":
             raise AdminError("Clean maintenance stop is unconfirmed")
     if state.resource:
         resource = staging.status(state.resource)
     else:
+        _announce("backup")
         backup_id = _operation(state.backup)
         if backup_id is None:
             backup_id = backups.plan(config, server)["operation"]
         if state.backup is None or state.backup["stage"] == "planned":
             backups.run(config, backup_id)
+        _announce("preparing")
         resource = staging.plan(
             config,
             server,
@@ -275,6 +285,7 @@ def _prepare(config, server, state):
 
 
 def _apply(config, state):
+    _announce("installing")
     operation = _operation(state.installation)
     if operation is None:
         operation = cutover.plan(config, state.resource["operation"])["operation"]
@@ -284,6 +295,7 @@ def _apply(config, state):
 
 
 def _start(config, state):
+    _announce("starting")
     if state.window["stage"] == "stopped":
         result = maintenance.execute(
             config,
@@ -369,23 +381,36 @@ def _selected_state(config, server, worlds, dimension):
 
 
 def _close_and_drain(config, server, result):
+    _announce("closing")
     binding, observed = ingress.capture(config, server)
     result["effect"] = "unknown"
+    world = next(
+        (
+            world["name"]
+            for world in result.get("worlds", ())
+            if world["dimension"] == result.get("dimension")
+        ),
+        None,
+    )
+    reason = "wipe:" + world if world else "wipe"
     if not observed["closed"] or binding.get("spec", {}).get("maintenance_messages"):
-        _set_ingress(config, server, "closed", reason="wipe")
-    owner_moderation.kick_for_maintenance(config, server, MAINTENANCE_MESSAGES["wipe"])
+        _set_ingress(config, server, "closed", reason=reason)
+    _announce("disconnecting")
+    owner_moderation.kick_for_maintenance(config, server, maintenance_message(reason))
     deadline = time.monotonic() + 5
     while time.monotonic() < deadline:
         value, observed = ingress.capture(config, server, closed=True)
         if value != binding:
             raise AdminError("Game admission changed during player disconnect")
         if observed["sessions"] == 0:
+            _announce("drained")
             return
         time.sleep(0.2)
     # Pending handshakes have no player identity. Disconnect only the closed
     # gameplay route, after authenticated players have received the reason.
     if ingress.worker(config, binding, "drain")["sessions"]:
         raise AdminError("Game connections did not close before the wipe")
+    _announce("drained")
 
 
 def _execute_stage(config, server, action, state, result):
@@ -411,6 +436,7 @@ def _execute_stage(config, server, action, state, result):
         if state.managed:
             result.update(stage="complete", confirmation=None)
             try:
+                _announce("opening")
                 _set_ingress(config, server, "open")
             except (AdminError, OSError, subprocess.SubprocessError) as error:
                 result["error"] = "join_closed"
@@ -473,7 +499,9 @@ def _run_steps(config, server, action, state, worlds, dimension, world, result):
     return True
 
 
-def run(path, server, action, confirmation, *, catalog=False, dimension=None):
+def run(
+    path, server, action, confirmation, *, catalog=False, dimension=None, progress=None
+):
     """Inspect or execute an owner-confirmed operation on a configured world."""
     result = {
         "schema_version": 1,
@@ -523,6 +551,10 @@ def run(path, server, action, confirmation, *, catalog=False, dimension=None):
                 ) or confirmation != state.confirmation(server, world=world):
                     result["error"] = "state_changed"
                     return result
+                world_name = world["name"] if world else "Мир"
+                scope = _progress.set(
+                    (lambda phase: progress(phase, world_name)) if progress else None
+                )
                 try:
                     if not _run_steps(
                         config, server, action, state, worlds, dimension, world, result
@@ -539,6 +571,8 @@ def run(path, server, action, confirmation, *, catalog=False, dimension=None):
                 ):
                     _record_current_stage(config, server, worlds, dimension, result)
                     raise
+                finally:
+                    _progress.reset(scope)
             result["ok"] = True
     except backups.OwnerBusy as error:
         result["error"] = "owner_busy"

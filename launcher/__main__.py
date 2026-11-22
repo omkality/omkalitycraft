@@ -101,9 +101,12 @@ def _update_before_window(app: QApplication, updater: LauncherUpdater, lock, sha
             continue
         attempted.add(update.digest)
         lock.unlock()
-        outcome = _startup(
-            app, lambda _progress, update=update: updater.handoff(update)
-        )
+
+        def handoff(progress, target=update):
+            progress("Запускаем и проверяем новую версию…")
+            return updater.handoff(target)
+
+        outcome = _startup(app, handoff)
         if outcome is True:
             return 0, lock, warning
         event(updater.root, "launcher_handoff_failed")

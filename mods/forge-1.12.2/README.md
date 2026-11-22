@@ -1,6 +1,6 @@
 # OmkalityCraft · Forge 1.12.2
 
-Текущие исходники Core 0.3.12, DJ2Fix 0.1.10 и Client 0.1.8.
+Текущие исходники Core 0.3.13, DJ2Fix 0.1.10 и Client 0.1.8.
 
 DJ2Fix 0.1.9 ограничивает размер журнала GroovyScript на сервере.
 DJ2Fix 0.1.10 ограничивает журнал CraftTweaker, который пишет ZenUtils.

@@ -228,6 +228,7 @@ class Installer:
         if len(history) > 16:
             raise ReleaseError("Сначала завершите предыдущее обновление сборки.")
         if clean_mods:
+            progress(Progress("Готовим папку сборки", 0, 0))
             self._begin_install(folder, release, floor_path, list(history.values()))
             clean_extra_mods(release, folder)
         self._bytes = {}
@@ -261,6 +262,12 @@ class Installer:
             raise ReleaseError("Недостаточно свободного места для сборки.")
         if not clean_mods:
             self._begin_install(folder, release, floor_path, list(history.values()))
+        if missing:
+            progress(
+                Progress(
+                    "Скачиваем файлы", sum(self._bytes.values()), release.total_size
+                )
+            )
         with ThreadPoolExecutor(max_workers=self.workers) as pool:
             futures = [
                 pool.submit(self._download, release, file, folder, progress)
@@ -273,6 +280,7 @@ class Installer:
                 self.cancel.set()
                 raise
         self._check_cancel()
+        progress(Progress("Завершаем установку", 0, 0))
         self._remove_obsolete(folder, release, history.values())
         self._state(folder, release, complete=True)
         progress(Progress("Готово к игре", release.total_size, release.total_size))

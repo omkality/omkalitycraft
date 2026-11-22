@@ -55,6 +55,8 @@ def _request(request):
         keys.add("preflight_options")
     if isinstance(request, dict) and "reset" in request:
         keys.add("reset")
+    if isinstance(request, dict) and "reroll_seed" in request:
+        keys.add("reroll_seed")
     if (
         sys.platform != "linux"
         or not isinstance(request, dict)
@@ -69,6 +71,10 @@ def _request(request):
         or not isinstance(request["snapshot"], str)
         or not re.fullmatch(r"snapshot-[a-f0-9]{32}", request["snapshot"])
         or type(request["world_max_bytes"]) is not int
+        or (
+            "reroll_seed" in request
+            and (request["reroll_seed"] is not True or request["dimension"] == 0)
+        )
         or not 1 <= request["world_max_bytes"] <= 1024**4
     ):
         raise ValueError("Invalid Linux resource staging request")
@@ -182,6 +188,19 @@ def _inputs(request, source, storage, target):
         request["dimension"],
         reset=request.get("reset"),
     )
+    if request.get("reroll_seed"):
+        fresh = transform.fresh_dimension(
+            source, request, inspected["resource_identity"]
+        )
+        if result.keys() & fresh.keys():
+            raise ValueError("New dimension files overlap retained files")
+        payloads.update(fresh)
+        result.update(
+            {
+                name: {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
+                for name, data in fresh.items()
+            }
+        )
     after, after_identity = source_summary(source, request)
     if after != files or after_identity != source_identity:
         raise ValueError("Resource source changed while planning edits")
@@ -192,13 +211,14 @@ def _inputs(request, source, storage, target):
         "dimension": request["dimension"],
         "position": position,
         **({"reset": request["reset"]} if "reset" in request else {}),
+        **({"reroll_seed": True} if request.get("reroll_seed") else {}),
         "snapshot": request["snapshot"],
         "archive_sha256": manifest["sha256"],
         "source": source_identity,
         "resource_identity": inspected["resource_identity"],
         "result_inventory_sha256": digest(result),
         "retained_files": len(result),
-        "omitted_files": len(files) - len(result),
+        "omitted_files": len(files.keys() - result.keys()),
         "edit_sha256": digest(
             {
                 name: {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
@@ -278,7 +298,11 @@ def _verified(request, source, storage, target, *, extra_roots=()):
     folder = request.get("reset", {"folder": f"DIM{request['dimension']}"}).get(
         "folder"
     )
-    if actual != result or (folder and (target / request["world"] / folder).exists()):
+    if actual != result or (
+        folder
+        and not request.get("reroll_seed")
+        and (target / request["world"] / folder).exists()
+    ):
         raise ValueError("Resource candidate differs from expected retained files")
     return {
         "operation": request["operation"],

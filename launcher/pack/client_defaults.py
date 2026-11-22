@@ -167,7 +167,7 @@ def prepare_client_defaults(release: Release, folder: Path) -> None:
             defaults = replace(
                 defaults,
                 servers=tuple(
-                    replace(server, name="Divine Journey 2 (server 1)")
+                    replace(server, name="Divine Journey 2 RU")
                     if server.id == "dj2"
                     else server
                     for server in defaults.servers
