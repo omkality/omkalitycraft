@@ -123,7 +123,7 @@ impl App {
     }
 
     fn spinner(&self) -> char {
-        const FRAMES: [char; 10] = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+        const FRAMES: [char; 4] = ['|', '/', '-', '\\'];
         let frame = (self.animation_start.elapsed().as_millis() / 100) % FRAMES.len() as u128;
         FRAMES[frame as usize]
     }
@@ -383,7 +383,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     render_commands(frame, body[1], app);
     let age = app.refreshed.map(|t| t.elapsed().as_secs());
     let status = if app.loading {
-        format!("{} Запрос выполняется", app.spinner())
+        format!("Запрос выполняется... {}", app.spinner())
     } else if app.failed {
         "Ошибка · показания могут быть устаревшими".into()
     } else {
@@ -511,13 +511,14 @@ fn render_commands(frame: &mut Frame, area: Rect, app: &mut App) {
     let page = app.command_page();
     let (message, scroll) = if let Some(step) = app.resetting {
         let label = match step {
+            "run" => "Вайп мира",
             "prepare" => "Подготовка мира и резервной копии",
             "apply" => "Установка нового мира",
             _ => "Запуск и проверка сервера",
         };
         (
             Paragraph::new(Line::styled(
-                format!("{} {label}", app.spinner()),
+                format!("{label}... {}", app.spinner()),
                 Style::default().fg(ACCENT),
             )),
             0,

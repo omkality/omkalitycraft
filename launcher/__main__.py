@@ -12,7 +12,7 @@ from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication, QLabel, QMessageBox
 
 from launcher.accounts import AccountService
-from launcher.app import LauncherWindow, instance_lock
+from launcher.app import LauncherLocks, LauncherWindow, user_lock_dir
 from launcher.branding import install_branding
 from launcher.game import GameRunner
 from launcher.install import Installer, ReleaseClient
@@ -61,16 +61,27 @@ def _arguments():
     return args
 
 
-def _bootstrap_lock(root: Path, handoff: bool):
+def _bootstrap_lock(root: Path, handoff: bool, shared: Path):
     if handoff:
         return None
-    lock = instance_lock(root / "userdata/updates", "bootstrap.lock")
+    lock = LauncherLocks.acquire(shared, root / "userdata/updates", "bootstrap.lock")
     if lock is None:
         raise OSError("Another bootstrap is running")
     return lock
 
 
-def _update_before_window(app: QApplication, updater: LauncherUpdater, lock):
+def _startup_locks(root: Path, handoff: bool):
+    shared = user_lock_dir()
+    bootstrap = _bootstrap_lock(root, handoff, shared)
+    try:
+        return shared, bootstrap, LauncherLocks.acquire(shared, root / "userdata")
+    except OSError:
+        if bootstrap is not None:
+            bootstrap.unlock()
+        raise
+
+
+def _update_before_window(app: QApplication, updater: LauncherUpdater, lock, shared):
     warning = ""
     result = _startup(app, updater.prepare)
     if isinstance(result, Exception):
@@ -96,7 +107,7 @@ def _update_before_window(app: QApplication, updater: LauncherUpdater, lock):
         if outcome is True:
             return 0, lock, warning
         event(updater.root, "launcher_handoff_failed")
-        lock = instance_lock(updater.root / "userdata")
+        lock = LauncherLocks.acquire(shared, updater.root / "userdata")
         if lock is None:
             return 2, lock, warning
     return None, lock, warning
@@ -111,19 +122,20 @@ def main() -> int:
     install_font(app)
     app.setQuitOnLastWindowClosed(False)
     try:
-        bootstrap_lock = _bootstrap_lock(root, args.health_file is not None)
+        shared, bootstrap_lock, lock = _startup_locks(
+            root, args.health_file is not None
+        )
     except OSError:
         QMessageBox.information(
-            None, "OmkalityCraft", "Лаунчер уже запускается из этой папки."
+            None,
+            "OmkalityCraft",
+            "Лаунчер уже запускается или папка данных недоступна.",
         )
         return 2
-    lock = instance_lock(root / "userdata")
     if lock is None:
         if bootstrap_lock is not None:
             bootstrap_lock.unlock()
-        QMessageBox.information(
-            None, "OmkalityCraft", "Лаунчер из этой папки уже открыт."
-        )
+        QMessageBox.information(None, "OmkalityCraft", "Лаунчер уже открыт.")
         return 2
     try:
         config = json.loads((ASSETS / "deployment.json").read_text(encoding="utf-8"))
@@ -132,7 +144,9 @@ def main() -> int:
         )
         update_warning = ""
         if args.health_file is None:
-            exit_code, lock, update_warning = _update_before_window(app, updater, lock)
+            exit_code, lock, update_warning = _update_before_window(
+                app, updater, lock, shared
+            )
             if exit_code is not None:
                 return exit_code
         keys = json.loads((ASSETS / "release-keys.json").read_text(encoding="utf-8"))

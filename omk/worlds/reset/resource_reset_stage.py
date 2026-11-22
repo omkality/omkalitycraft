@@ -24,6 +24,7 @@ from omk.backups.backup_store import (
 from omk.backups.cold_backup_worker import digest, source_summary
 from omk.backups.stopped_world_backup import inventory
 from omk.worlds import enderutilities_reset as ender
+from omk.worlds.linux_restore_policy import _read as _runtime_file
 from omk.worlds.linux_world_restore import _copy, _read
 from omk.worlds.reset import (
     dimension_reset,
@@ -77,7 +78,9 @@ def _request(request):
         reset = request["reset"]
         all_worlds = isinstance(reset, dict) and reset.get("all_worlds") is True
         if request["position"] != "auto" or reset != dimension_reset.layout(
-            request["dimension"], all_worlds=all_worlds
+            request["dimension"],
+            all_worlds=all_worlds,
+            fresh=isinstance(reset, dict) and reset.get("fresh_world") is True,
         ):
             raise ValueError("Invalid dimension reset request")
     if request["position"] != "auto":
@@ -93,6 +96,14 @@ def _changes(request, source, files):
     if all_worlds:
         if f"{request['world']}/level.dat" not in files:
             raise ValueError("Full reset requires the verified saved world metadata")
+        if reset.get("fresh_world"):
+            properties = _runtime_file(source, "server.properties", limit=65536)
+            if re.findall(
+                rb"^level-seed[ \t]*=[ \t]*([^\r\n]*)\r?$", properties, re.M
+            ) != [b""]:
+                raise ValueError(
+                    "Full reset requires an empty level-seed in server.properties"
+                )
         return (
             request["position"],
             None,
@@ -262,6 +273,7 @@ def _verified(request, source, storage, target, *, extra_roots=()):
         world_name=request["world"],
         max_expanded_bytes=request["world_max_bytes"],
         path_policy="linux-server",
+        allow_empty=(request.get("reset") or {}).get("fresh_world") is True,
     )
     folder = request.get("reset", {"folder": f"DIM{request['dimension']}"}).get(
         "folder"

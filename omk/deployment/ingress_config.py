@@ -36,7 +36,11 @@ def validate_entries(config, entries):
     }
     containers, controls, folders, ports = set(), set(), set(), set()
     for item in entries.values():
-        if not isinstance(item, dict) or set(item) != required:
+        if (
+            not isinstance(item, dict)
+            or set(item) - {"maintenance_messages"} != required
+            or type(item.get("maintenance_messages", False)) is not bool
+        ):
             raise AdminError("Invalid ingress entry")
         for k in required - {"host_port", "container_port", "backend_port"}:
             if not isinstance(item[k], str):
@@ -245,6 +249,35 @@ def proxy_snapshot(data, spec, target, policy, image, network, control, folder):
     }
 
 
+def _maintenance_container(spec, image):
+    rows = json.loads(
+        backups.docker(
+            "inspect", "--type", "container", spec["container"] + "-maintenance"
+        )
+    )
+    if len(rows) != 1:
+        raise AdminError("Maintenance responder is missing")
+    data = rows[0]
+    container, host = data["Config"], data["HostConfig"]
+    control = [m for m in data["Mounts"] if m["Destination"] == "/run/omk-ingress"]
+    if (
+        not data["State"]["Running"]
+        or data["Image"] != image["id"]
+        or (container.get("Labels") or {}).get(template.LABEL) != spec["owner"]
+        or container["Cmd"] != ["python", "-m", "omk.deployment.minecraft_maintenance"]
+        or host["NetworkMode"] != "none"
+        or not host["ReadonlyRootfs"]
+        or host.get("Privileged")
+        or len(control) != 1
+        or control[0].get("Name") != spec["control_volume"]
+        or not control[0].get("RW")
+    ):
+        raise AdminError(
+            "Maintenance responder differs from the private ingress binding"
+        )
+    return data["Id"]
+
+
 def capture(config, server, policy=None):
     from omk.deployment import candidate_slot_spec  # noqa: PLC0415
     from omk.owner import admin_maintenance as maintenance  # noqa: PLC0415
@@ -315,11 +348,25 @@ def capture(config, server, policy=None):
     proxy = proxy_snapshot(
         data, spec, {"id": source["Id"]}, policy, image, network, control, folder
     )
-    if set(
-        backups.docker(
-            "ps", "-aq", "--no-trunc", "--filter", "volume=" + spec["control_volume"]
-        ).split()
-    ) != {proxy["id"]}:
+    references = {proxy["id"]}
+    if spec.get("maintenance_messages"):
+        responder = _maintenance_container(
+            spec, candidate_slot_spec.image(backups.IMAGE)
+        )
+        proxy["maintenance_id"] = responder
+        references.add(responder)
+    if (
+        set(
+            backups.docker(
+                "ps",
+                "-aq",
+                "--no-trunc",
+                "--filter",
+                "volume=" + spec["control_volume"],
+            ).split()
+        )
+        != references
+    ):
         raise AdminError(
             "Ingress control volume has a foreign container/helper reference"
         )

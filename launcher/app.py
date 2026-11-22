@@ -5,9 +5,9 @@ import sys
 from collections.abc import Callable
 from dataclasses import replace
 from pathlib import Path
-from typing import Any, override
+from typing import Any, Self, override
 
-from PySide6.QtCore import QLockFile, Qt, QThreadPool, QTimer
+from PySide6.QtCore import QLockFile, QStandardPaths, Qt, QThreadPool, QTimer
 from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import (
     QApplication,
@@ -740,6 +740,47 @@ def instance_lock(data_dir: Path, name: str = "launcher.lock") -> QLockFile | No
     return lock if lock.tryLock(0) else None
 
 
+def user_lock_dir() -> Path:
+    """Locate the same lock directory for all portable copies of the launcher."""
+    directory = QStandardPaths.writableLocation(
+        QStandardPaths.StandardLocation.GenericDataLocation
+    )
+    if not directory:
+        raise OSError("Launcher user directory unavailable")
+    return Path(directory) / "OmkalityCraft" / "launcher-locks"
+
+
+class LauncherLocks:
+    """Hold both the current user's lock and the legacy per-installation lock."""
+
+    def __init__(self, locks: list[QLockFile]):
+        self.locks = locks
+
+    @classmethod
+    def acquire(
+        cls, shared: Path, local: Path, name: str = "launcher.lock"
+    ) -> Self | None:
+        locks = []
+        try:
+            for directory in dict.fromkeys((shared, local)):
+                lock = instance_lock(directory, name)
+                if lock is None:
+                    for held in locks:
+                        held.unlock()
+                    return None
+                locks.append(lock)
+        except OSError:
+            for held in locks:
+                held.unlock()
+            raise
+        return cls(locks)
+
+    def unlock(self) -> None:
+        """Release the lock pair before an authenticated launcher handoff."""
+        for lock in reversed(self.locks):
+            lock.unlock()
+
+
 def run_launcher(
     auth_url: str,
     data_dir: Path,
@@ -749,11 +790,9 @@ def run_launcher(
 ) -> int:
     app = QApplication.instance() or QApplication(sys.argv[:1])
     try:
-        lock = instance_lock(data_dir)
+        lock = LauncherLocks.acquire(user_lock_dir(), data_dir)
         if lock is None:
-            QMessageBox.information(
-                None, "OmkalityCraft", "Лаунчер с этой папкой данных уже открыт."
-            )
+            QMessageBox.information(None, "OmkalityCraft", "Лаунчер уже открыт.")
             return 2
         service = AccountService(
             DraslClient(auth_url), FileSessionStore(data_dir / "session.json")

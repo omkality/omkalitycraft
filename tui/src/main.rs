@@ -339,7 +339,7 @@ fn interactive(
                         }
                         Ok(Reply::WorldReset(v)) => {
                             app.failed = !v.ok;
-                            let report = (!v.ok).then(|| reports.save(&v.report()));
+                            let report = v.needs_report().then(|| reports.save(&v.report()));
                             let form = world_reset::Form::new(v);
                             app.world_reset = Some(if let Some(report) = report {
                                 form.with_report(report)

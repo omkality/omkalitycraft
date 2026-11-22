@@ -9,6 +9,17 @@ internal static class OwnerTerminal
 {
     private static int Main()
     {
+        bool first;
+        using (var instance = new Mutex(true, @"Local\OmkalityCraftOwnerTui", out first))
+        {
+            if (!first)
+                return Fail("Админка OmkalityCraft уже открыта.");
+            return RunTerminal();
+        }
+    }
+
+    private static int RunTerminal()
+    {
         var profile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var sshDirectory = Path.Combine(profile, ".ssh");
         var config = Path.Combine(sshDirectory, "omkalitycraft_vps.conf");

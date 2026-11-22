@@ -24,7 +24,15 @@ from omk.shared.profiles import PROJECT_ROOT
 TERMINAL = {"confirmed", "cancelled"}
 
 
-def worker(config, value, action="status", *, source_required=False, operation=None):
+def worker(
+    config,
+    value,
+    action="status",
+    *,
+    source_required=False,
+    operation=None,
+    reason=None,
+):
     spec, target = value["spec"], value["target"]
     operation = operation or uuid4().hex
     args = [
@@ -54,11 +62,19 @@ def worker(config, value, action="status", *, source_required=False, operation=N
         "32",
         "--log-driver",
         "none",
-        "--volumes-from",
-        value["proxy"]["id"] + ":ro",
         "--mount",
         f"type=volume,source={target['data_volume']},target=/server,readonly",
     ]
+    if reason is None:
+        args += ["--volumes-from", value["proxy"]["id"] + ":ro"]
+    else:
+        folder = _private_path(config.private, spec["config_dir"])
+        args += [
+            "--mount",
+            f"type=bind,source={folder},target=/usr/local/etc/haproxy,readonly",
+            "--mount",
+            f"type=volume,source={spec['control_volume']},target=/run/omk-ingress",
+        ]
     for name in ("omk", "launcher"):
         args += [
             "--mount",
@@ -73,6 +89,10 @@ def worker(config, value, action="status", *, source_required=False, operation=N
         "rcon_port": value["rcon_port"],
         "source_required": source_required,
     }
+    if spec.get("maintenance_messages"):
+        request["maintenance"] = True
+    if reason is not None:
+        request["reason"] = reason
     raw = backups.docker(
         *args,
         "--workdir",
@@ -166,7 +186,7 @@ def read(config, operation):
         type(r.get("schema")) is not int
         or r["schema"] != 1
         or r.get("operation") != operation
-        or set(r) != keys
+        or set(r) - {"reason"} != keys
         or r["wanted"] not in {"open", "closed"}
         or r["stage"] not in TERMINAL | {"planned", "applying"}
         or r["server"] not in config.servers
@@ -328,11 +348,15 @@ def backend_address(value):
     return data["NetworkSettings"]["Networks"][value["spec"]["network"]]["IPAddress"]
 
 
-def plan(config, server, wanted, environment=None, *, _operation=None):
+def plan(config, server, wanted, environment=None, *, _operation=None, reason=None):
     with backups.locked(config):
         operation = backups.planned_id(config, "ingress", _operation)
         if wanted not in {"open", "closed"}:
             raise AdminError("Invalid ingress target state")
+        if reason is not None and (
+            wanted != "closed" or reason not in {"maintenance", "restart", "wipe"}
+        ):
+            raise AdminError("Invalid maintenance reason")
         policy = maintenance.settings(environment)
         if len(records(config)) >= policy["journal_count"]:
             raise AdminError("Archive terminal ingress history before planning")
@@ -358,6 +382,8 @@ def plan(config, server, wanted, environment=None, *, _operation=None):
             "updated_at": "",
             "result": None,
         }
+        if value.get("spec", {}).get("maintenance_messages") and wanted == "closed":
+            r["reason"] = reason or "maintenance"
         save(config, r, "planned")
         return status(r)
 
@@ -444,6 +470,11 @@ def execute(config, operation, action):
             r["wanted"] if opening else "close",
             source_required=opening,
             operation=r["operation"],
+            **(
+                {"reason": "offline" if opening else r.get("reason", "maintenance")}
+                if value.get("spec", {}).get("maintenance_messages")
+                else {}
+            ),
         )
         return confirm(config, r)
 
@@ -472,6 +503,7 @@ def add_parser(actions):
     p = sub.add_parser("plan")
     p.add_argument("--server", required=True)
     p.add_argument("--state", choices=["open", "closed"], required=True)
+    p.add_argument("--reason", choices=["maintenance", "restart", "wipe"])
     for name in ("apply", "verify", "status", "cancel"):
         sub.add_parser(name).add_argument("--operation", required=True)
 
@@ -494,5 +526,5 @@ def run(config, args):
             ).hexdigest(),
         }
     if args.ingress_action == "plan":
-        return plan(config, args.server, args.state)
+        return plan(config, args.server, args.state, reason=args.reason)
     return execute(config, args.operation, args.ingress_action)

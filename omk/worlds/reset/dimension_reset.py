@@ -63,7 +63,7 @@ def _check_named_provider(world, dimension):
         raise ValueError("Named dimension ID differs from the saved-folder profile")
 
 
-def layout(dimension: int, *, all_worlds: bool = False) -> dict:
+def layout(dimension: int, *, all_worlds: bool = False, fresh: bool = True) -> dict:
     """Resolve a catalog ID to its reviewed save layout and evacuation world."""
     if type(dimension) is not int or not -(2**31) <= dimension < 2**31:
         raise ValueError("Invalid Forge dimension ID")
@@ -72,7 +72,12 @@ def layout(dimension: int, *, all_worlds: bool = False) -> dict:
     if all_worlds:
         if dimension != 0:
             raise ValueError("Only the main world can reset the entire save")
-        return {"folder": None, "landing_dimension": 0, "all_worlds": True}
+        return {
+            "folder": None,
+            "landing_dimension": 0,
+            "all_worlds": True,
+            **({"fresh_world": True} if fresh else {}),
+        }
     return {
         "folder": STORAGE.get(dimension, f"DIM{dimension}") if dimension else None,
         "landing_dimension": 0 if dimension else RESOURCE,
@@ -107,7 +112,7 @@ def omitted(name: str, world: str, dimension: int, reset: dict | None) -> bool:
     if relative == name:
         return False
     if reset and reset.get("all_worlds") is True:
-        return relative != "level.dat"
+        return reset.get("fresh_world") is True or relative != "level.dat"
     if reset is None:
         return relative.startswith(f"DIM{dimension}/") or relative == (
             "omk-resource-world.properties"

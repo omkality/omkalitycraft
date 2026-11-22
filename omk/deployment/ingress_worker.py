@@ -5,13 +5,20 @@ import hashlib
 import io
 import ipaddress
 import json
+import os
 import re
 import socket
 import stat
 import sys
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 
-from omk.deployment.ingress_template import CONFIG, SOCKET
+from omk.deployment.ingress_template import (
+    CONFIG,
+    MAINTENANCE_MESSAGES,
+    MAINTENANCE_REASON,
+    SOCKET,
+)
 from omk.worlds.linux_restore_policy import _read
 
 
@@ -31,14 +38,26 @@ def exchange(command, path=Path(SOCKET)):
     return output.decode("ascii")
 
 
-def parse(state, counters, backend, port):
+def parse(state, counters, backend, port, *, maintenance=False):
     lines = [line for line in state.splitlines() if line]
-    if len(lines) != 3 or lines[0] != "1" or not lines[1].startswith("# "):
+    if (
+        len(lines) != 3 + int(maintenance)
+        or lines[0] != "1"
+        or not lines[1].startswith("# ")
+    ):
         raise ValueError("Unexpected ingress server-state schema")
-    keys, values = lines[1][2:].split(), lines[2].split()
-    if len(keys) != len(values) or len(set(keys)) != len(keys):
+    keys = lines[1][2:].split()
+    values = [line.split() for line in lines[2:]]
+    if any(len(keys) != len(value) for value in values) or len(set(keys)) != len(keys):
         raise ValueError("Ambiguous ingress server state")
-    row = dict(zip(keys, values, strict=True))
+    rows = [dict(zip(keys, value, strict=True)) for value in values]
+    actual_servers = {(row.get("be_name"), row.get("srv_name")): row for row in rows}
+    expected_servers = {("minecraft", "source")}
+    if maintenance:
+        expected_servers.add(("minecraft", "maintenance"))
+    if set(actual_servers) != expected_servers:
+        raise ValueError("Unexpected ingress routes")
+    row = actual_servers["minecraft", "source"]
     if (
         row.get("be_name") != "minecraft"
         or row.get("srv_name") != "source"
@@ -53,10 +72,14 @@ def parse(state, counters, backend, port):
         raise ValueError("Unexpected backend address family")
     data = list(csv.DictReader(io.StringIO(counters.removeprefix("# "))))
     expected = {("game", "FRONTEND"), ("minecraft", "source"), ("minecraft", "BACKEND")}
+    if maintenance:
+        expected.add(("minecraft", "maintenance"))
     actual = {(r.get("pxname"), r.get("svname")): r for r in data}
-    if len(data) != 3 or set(actual) != expected:
+    if len(data) != len(expected) or set(actual) != expected:
         raise ValueError("Unexpected ingress statistics inventory")
-    count = actual["game", "FRONTEND"]["scur"]
+    count = actual[("minecraft", "source") if maintenance else ("game", "FRONTEND")][
+        "scur"
+    ]
     if not count.isascii() or not count.isdecimal() or len(count) > 8:
         raise ValueError("Invalid ingress session counter")
     closed = bool(int(row["srv_admin_state"]) & 1)
@@ -86,8 +109,19 @@ def source_proof(request, source):
     return hashlib.sha256(props).hexdigest()
 
 
+def _reason(value):
+    path = Path(MAINTENANCE_REASON)
+    with NamedTemporaryFile(dir=path.parent, delete=False) as stream:
+        temporary = Path(stream.name)
+        stream.write((value + "\n").encode("ascii"))
+    try:
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def execute(request, config=Path(CONFIG), source=Path("/server")):
-    if not isinstance(request, dict) or set(request) != {
+    if not isinstance(request, dict) or set(request) - {"maintenance", "reason"} != {
         "schema",
         "action",
         "config_sha256",
@@ -100,7 +134,7 @@ def execute(request, config=Path(CONFIG), source=Path("/server")):
     if (
         type(request["schema"]) is not int
         or request["schema"] != 1
-        or request["action"] not in {"status", "open", "close"}
+        or request["action"] not in {"status", "open", "close", "drain"}
         or type(request["source_required"]) is not bool
         or (request["action"] == "open" and not request["source_required"])
         or not isinstance(request["backend"], str)
@@ -116,17 +150,43 @@ def execute(request, config=Path(CONFIG), source=Path("/server")):
     if hashlib.sha256(raw).hexdigest() != request["config_sha256"]:
         raise ValueError("Ingress template bytes changed")
     proof = source_proof(request, source) if request["source_required"] else None
-    if request["action"] != "status":
+    maintenance = request.get("maintenance", False)
+    reason = request.get("reason")
+    if type(maintenance) is not bool or (
+        reason is not None
+        and (
+            not maintenance
+            or request["action"] not in {"open", "close"}
+            or reason not in MAINTENANCE_MESSAGES
+        )
+    ):
+        raise ValueError("Unsupported maintenance reason")
+    if request["action"] in {"open", "close"}:
+        if reason is not None:
+            _reason(reason)
         verb = "enable" if request["action"] == "open" else "disable"
         reply = exchange(verb + " server minecraft/source")
         if reply.strip():
             raise ValueError("Ingress command was not acknowledged")
-    result = parse(
-        exchange("show servers state"),
-        exchange("show stat"),
-        request["backend"],
-        request["port"],
-    )
+
+    def observe():
+        return parse(
+            exchange("show servers state"),
+            exchange("show stat"),
+            request["backend"],
+            request["port"],
+            maintenance=maintenance,
+        )
+
+    result = observe()
+    if request["action"] == "drain":
+        if not result["closed"]:
+            raise ValueError(
+                "Closing ingress is required before disconnecting sessions"
+            )
+        if exchange("shutdown sessions server minecraft/source").strip():
+            raise ValueError("Ingress disconnect was not acknowledged")
+        result = observe()
     return {
         **result,
         "config_sha256": request["config_sha256"],
