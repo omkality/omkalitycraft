@@ -7,7 +7,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from omk.game.mod_components import add_pack_inputs
-from omk.game.policies.dj2_rtp_policy import write_rtp_policy
+from omk.game.policies.dj2_rtp_policy import write_native_rtp_policy, write_rtp_policy
 from omk.labs.accounts.operator_lab import _cleanup
 from omk.labs.dj2.dj2_commands_lab import FIRST, SECOND, _hold, _near, _place, _response
 from omk.labs.dj2.dj2_lab import _accounts, _console_sender, _copy_server, _wait_server
@@ -18,6 +18,9 @@ from omk.shared.profiles import PROJECT_ROOT
 
 def add_rtp_lab(parser):
     add_pack_inputs(parser)
+    parser.add_argument(
+        "--native", action="store_true", help="Check the native FTB attempt budget"
+    )
     for name in ("server-source", "agent", "core", "mods-json"):
         parser.add_argument("--" + name, type=Path, required=True)
 
@@ -358,6 +361,38 @@ class RtpScenario:
             # Let empty dimensions unload while the server is still running.
             time.sleep(5)
 
+    def native(self, client, session, session2, mods):
+        """Check native search, the full cooldown, and reconnect in the real game."""
+
+        def landed(actor):
+            if actor.position is None or actor.dimension != 0:
+                return False
+            x, y, z = actor.position[:3]
+            return 247 <= y < 248 and 7 <= (x * x + z * z) ** 0.5 <= 13
+
+        with LabPlayer(client, session, 25576, mods) as first:
+            self.console("ranks setp player ftbutilities.rtp.warmup 1s")
+            self.surface(first, FIRST, material="stone")
+            for attempt in range(1, 4):
+                _place(first, FIRST, (24.5, 241.0, 24.5), self.console)
+                started = time.monotonic()
+                _response(first, "/rtp", "stand_still")
+                first.wait(lambda: landed(first), timeout=25)
+                self.expect(True, f"native_ftb_landing_{attempt}")
+            self.response(first, "/rtp", "RTP будет доступен через 4:")
+            self.expect(True, "fourth_call_is_delayed_five_minutes")
+        with LabPlayer(client, session2, 25576, mods) as second:
+            self.response(second, "/rtp", "stand_still")
+            self.expect(True, "attempt_budget_is_per_player")
+        with LabPlayer(client, session, 25576, mods) as first:
+            self.response(first, "/rtp", "RTP будет доступен через")
+            self.expect(True, "cooldown_survives_reconnect")
+            time.sleep(max(0, started + 302 - time.monotonic()))
+            _place(first, FIRST, (24.5, 241.0, 24.5), self.console)
+            self.response(first, "/rtp", "stand_still")
+            first.wait(lambda: landed(first), timeout=25)
+            self.expect(True, "native_ftb_lands_after_five_minutes")
+
 
 def run_rtp_lab(args):
     run = uuid4().hex[:10]
@@ -397,19 +432,31 @@ def run_rtp_lab(args):
         scenario.state("preparing")
         client, _service, session, session2 = _accounts(compose, lab)
         dest, mods = _copy_server(args, lab)
-        report["policy"] = write_rtp_policy(
-            dest / "config",
-            {"OMK_DJ2_RTP_MIN_DISTANCE": "8", "OMK_DJ2_RTP_MAX_DISTANCE": "12"},
-        )
+        if args.native:
+            write_native_rtp_policy(dest / "config")
+        else:
+            report["policy"] = write_rtp_policy(
+                dest / "config",
+                {"OMK_DJ2_RTP_MIN_DISTANCE": "8", "OMK_DJ2_RTP_MAX_DISTANCE": "12"},
+            )
         server.prepare(dest, args, client)
         process = server.start()
         _wait_server(process, server.log, scenario.state)
-        scenario.expect(
-            "Omkality dimension RTP enabled" in server.log.read_text(encoding="utf-8"),
-            "dimension_rtp_adapter_initialized",
-        )
+        startup = server.log.read_text(encoding="utf-8")
         scenario.console = _console_sender(process, server.log)
-        scenario.run(client, session, session2, mods)
+        if args.native:
+            scenario.expect(
+                "Omkality native FTB RTP enabled (3 attempts, 300s cooldown)" in startup
+                and "Omkality dimension RTP enabled" not in startup,
+                "native_ftb_mode_without_custom_search",
+            )
+            scenario.native(client, session, session2, mods)
+        else:
+            scenario.expect(
+                "Omkality dimension RTP enabled" in startup,
+                "dimension_rtp_adapter_initialized",
+            )
+            scenario.run(client, session, session2, mods)
         report["ok"] = True
     except Exception as error:
         report["error_type"] = type(error).__name__

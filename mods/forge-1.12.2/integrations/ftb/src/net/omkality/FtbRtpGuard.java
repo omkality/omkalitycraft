@@ -38,9 +38,18 @@ public final class FtbRtpGuard {
         if (!Files.exists(file, LinkOption.NOFOLLOW_LINKS)) return;
         FtbMuteGuard.requireVersion("ftbutilities", "5.4.1.131");
         FtbMuteGuard.requireVersion("ftblib", "5.4.7.2");
-        MinecraftForge.EVENT_BUS.register(new FtbRtpGuard(file, log));
+        Map<String, String> fields = readPolicy(file);
+        if ("2".equals(fields.get("version"))) {
+            if (fields.size() != 3) throw new IllegalArgumentException("Invalid native RTP policy");
+            int attempts = number(fields.get("attempts"), 1, 64);
+            long cooldown = number(fields.get("cooldown_seconds"), 1, 3600) * 1000L;
+            MinecraftForge.EVENT_BUS.register(new NativeCooldown(attempts, cooldown, log));
+            log.info("Omkality native FTB RTP enabled ({} attempts, {}s cooldown)", attempts, cooldown / 1000);
+        } else {
+            MinecraftForge.EVENT_BUS.register(new FtbRtpGuard(fields, log));
+            log.info("Omkality dimension RTP enabled (generated chunks only)");
+        }
         state = "enabled";
-        log.info("Omkality dimension RTP enabled (generated chunks only)");
     }
 
     private static Method m(Class<?> c, String srg, String dev, Class<?>... types) throws Exception {
@@ -53,9 +62,9 @@ public final class FtbRtpGuard {
     }
     private static Class<?> c(String type) throws Exception { return Class.forName(type); }
 
-    private FtbRtpGuard(Path file, Logger logger) throws Exception {
+    private FtbRtpGuard(Map<String, String> fields, Logger logger) throws Exception {
         log = logger;
-        parse(file);
+        parse(fields);
         player = c("net.minecraft.entity.player.EntityPlayerMP");
         Class<?> base = c("net.minecraft.entity.player.EntityPlayer"), entity = c("net.minecraft.entity.Entity");
         Class<?> level = c("net.minecraft.world.World"), pos = c("net.minecraft.util.math.BlockPos");
@@ -113,7 +122,7 @@ public final class FtbRtpGuard {
         nativeArgs = m(c("net.minecraft.command.CommandException"), "func_74844_a", "getErrorObjects");
     }
 
-    private void parse(Path file) throws Exception {
+    private static Map<String, String> readPolicy(Path file) throws Exception {
         if (!Files.isRegularFile(file, LinkOption.NOFOLLOW_LINKS) || Files.size(file) > 4096)
             throw new IllegalArgumentException("Invalid RTP policy file");
         Map<String, String> fields = new HashMap<String, String>();
@@ -123,6 +132,10 @@ public final class FtbRtpGuard {
             if (parts.length != 2 || fields.put(parts[0], parts[1]) != null)
                 throw new IllegalArgumentException("Duplicate or invalid RTP field");
         }
+        return fields;
+    }
+
+    private void parse(Map<String, String> fields) {
         if (fields.size() != 8 || !"1".equals(fields.get("version")))
             throw new IllegalArgumentException("Incomplete RTP policy");
         minimum = number(fields.get("minimum"), 0, 100000);
@@ -289,5 +302,64 @@ public final class FtbRtpGuard {
             for (int dy = 0; dy <= 2; dy++)
                 if (hazard(blockState.invoke(level, position.newInstance(x + dx, y + dy, z + dz)))) return false;
         return true;
+    }
+
+    /** Charge attempts at command dispatch. FTB executes all accepted commands itself. */
+    public static final class NativeCooldown {
+        private static final String KEY = "omkality_rtp_budget";
+        private final Class<?> rtp, player;
+        private final Method command, sender, persisted, getLong, setLong, send;
+        private final Constructor<?> message;
+        private final int attempts;
+        private final long cooldown;
+        private final Logger log;
+        private boolean warned;
+
+        NativeCooldown(int attempts, long cooldown, Logger log) throws Exception {
+            this.attempts = attempts;
+            this.cooldown = cooldown;
+            this.log = log;
+            rtp = c("com.feed_the_beast.ftbutilities.command.tp.CmdRTP");
+            player = c("net.minecraft.entity.player.EntityPlayerMP");
+            command = CommandEvent.class.getMethod("getCommand");
+            sender = CommandEvent.class.getMethod("getSender");
+            persisted = c("com.feed_the_beast.ftblib.lib.util.NBTUtils")
+                .getMethod("getPersistedData", c("net.minecraft.entity.player.EntityPlayer"), boolean.class);
+            Class<?> nbt = c("net.minecraft.nbt.NBTTagCompound");
+            getLong = m(nbt, "func_74763_f", "getLong", String.class);
+            setLong = m(nbt, "func_74772_a", "setLong", String.class, long.class);
+            send = m(c("net.minecraft.command.ICommandSender"), "func_145747_a", "sendMessage",
+                c("net.minecraft.util.text.ITextComponent"));
+            message = c("net.minecraft.util.text.TextComponentString").getConstructor(String.class);
+        }
+
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public void onCommand(CommandEvent event) throws ReflectiveOperationException {
+            if (!rtp.isInstance(command.invoke(event))) return;
+            Object actor = sender.invoke(event);
+            if (!player.isInstance(actor)) return;
+            try {
+                Object data = persisted.invoke(null, actor, true);
+                long state = ((Number) getLong.invoke(data, KEY)).longValue();
+                long now = System.currentTimeMillis();
+                if (state > now) {
+                    event.setCanceled(true);
+                    long seconds = (state - now + 999) / 1000;
+                    send.invoke(actor, message.newInstance(
+                        String.format(Locale.ROOT, "RTP будет доступен через %d:%02d.", seconds / 60, seconds % 60)));
+                    return;
+                }
+                // Negative values count the accepted calls in this series.
+                long used = state < 0 ? -state : 0;
+                setLong.invoke(data, KEY, used + 1 >= attempts ? now + cooldown : -used - 1);
+            } catch (ReflectiveOperationException error) {
+                event.setCanceled(true);
+                if (!warned) {
+                    warned = true;
+                    log.error("Omkality native RTP cooldown failed", error);
+                }
+                send.invoke(actor, message.newInstance("RTP временно недоступен."));
+            }
+        }
     }
 }
