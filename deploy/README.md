@@ -12,14 +12,9 @@
 | Метрики | [metrics/compose.yaml](metrics/compose.yaml), рабочее имя omk-metrics |
 | Локальные стенды | [auth-lab](auth-lab/compose.yaml), [tui-lab](tui-lab/compose.yaml), изолированные проекты |
 
-Корневой docker-compose.yml переехал в deploy/api/compose.yaml,
-а deploy/server-status.example.env — в deploy/api/server-status.example.env.
-Имена остальных перенесённых примеров прежние. Ищите их в deploy/owner/
-для owner CLI и резервных копий, deploy/game/ для игрового процесса,
-deploy/offsite/ для offsite-копий и deploy/ingress/ для входного прокси.
-Отдельно скопированные приватные конфиги сохраняют свои рабочие пути.
-Имена Compose-сетей и томов Drasl, ingress и метрик сохраняются при выборе
-прежнего имени проекта.
+Шаблоны для [терминала владельца и копий](owner/), [Forge](game/) и
+[внешнего хранения копий](offsite/) находятся в отдельных каталогах.
+Для рабочих стеков сохраняйте существующие приватные пути и имена томов.
 
 Порядок запуска и восстановления описан в
 [инструкции закрытого переноса](../docs/LAUNCH_READINESS.md#закрытый-перенос-на-vps).
