@@ -2,7 +2,7 @@
 
 import hashlib
 import json
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 
 from launcher.files import atomic_write, local_file
@@ -162,6 +162,17 @@ def prepare_client_defaults(release: Release, folder: Path) -> None:
         return
     try:
         defaults = ClientDefaults.parse(raw)
+        if release.pack_id == "dj2":
+            # The signed presets still supply the server identity and address.
+            defaults = replace(
+                defaults,
+                servers=tuple(
+                    replace(server, name="Divine Journey 2 (server 1)")
+                    if server.id == "dj2"
+                    else server
+                    for server in defaults.servers
+                ),
+            )
         for name in defaults.resourcepacks:
             path = inside(folder, "resourcepacks/" + name)
             if not (

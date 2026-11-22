@@ -3,9 +3,14 @@
 import re
 import unicodedata
 from typing import Literal
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from omk.game.project_permanent_bans import (
+    USERS,
+    load as load_permanent_bans,
+)
 from omk.owner.admin import (
     _client,
     _credential,
@@ -15,7 +20,8 @@ from omk.owner.admin import (
 from omk.owner.owner_result import ServerId
 
 COMMANDS = {"players": "list uuids", "tps": "forge tps", "save": "save-all flush"}
-VIEWS = {"roster", "invites"}
+VIEWS = {"roster", "permanent-bans", "invites", "player-names"}
+MAX_PLAYER_NAMES = 1000
 
 
 class ConsoleResult(BaseModel):
@@ -25,20 +31,22 @@ class ConsoleResult(BaseModel):
     schema_version: Literal[1] = 1
     action: Literal["owner.console"] = "owner.console"
     server_id: ServerId
-    command: Literal["players", "roster", "invites", "tps", "save"]
+    command: Literal[
+        "players", "roster", "permanent-bans", "invites", "player-names", "tps", "save"
+    ]
     ok: bool
     effect: Literal["none", "unknown"]
-    output: str = Field(default="", max_length=8192)
+    output: str = Field(default="", max_length=MAX_PLAYER_NAMES * 17 - 1)
     error: Literal["invalid_configuration", "console_unavailable"] | None = None
 
 
-def _roster(config, online):
-    values = _client(config).request(
-        "GET", "/drasl/api/v3/users", token=_credential(config)
-    )
+def _project_members(config):
+    values = _client(config).request("GET", USERS, token=_credential(config))
     if not isinstance(values, list) or len(values) > 1000:
         raise ValueError("Invalid player inventory")
+    _, permanent = load_permanent_bans(config.private)
     names = set()
+    banned = {}
     for user in values:
         players = user.get("players")
         if not isinstance(players, list):
@@ -49,22 +57,41 @@ def _roster(config, online):
                 r"[A-Za-z0-9_]{1,16}", name
             ):
                 raise ValueError("Invalid player name")
+            if user.get("isLocked") is True and permanent.bans:
+                profile = UUID(row["uuid"])
+                ban = permanent.bans.get(profile)
+                if ban is not None and ban.account == UUID(user["uuid"]):
+                    banned[str(profile)] = name
+                    continue
             names.add(name)
-    names.update(online or ())
+    return names, banned
+
+
+def _roster(config, online):
+    names, banned = _project_members(config)
+    current = {name for uid, name in (online or {}).items() if uid not in banned}
+    names.update(current)
     if not names:
-        return "Никто пока не зарегистрировался."
-    rows = []
-    for name in sorted(names, key=str.casefold):
-        state = (
-            "Статус неизвестен"
-            if online is None
-            else ("В игре" if name in online else "Не в игре")
-        )
-        rows.append(f"{name:<16}  {state}")
-    return "\n".join(rows)
+        return "В списке пока нет игроков."
+    ordered = sorted(names, key=str.casefold)
+    if online is None:
+        return "\n".join(["Не удалось проверить, кто в игре.", "", *ordered])
+    return "\n".join(
+        f"{name:<16}  {'В игре' if name in current else 'Не в игре'}"
+        for name in ordered
+    )
 
 
 def _view(config, action, server):
+    if action == "player-names" and config.auth_origin is not None:
+        names, banned = _project_members(config)
+        return _nickname_list(names.union(banned.values()))
+    if action == "permanent-bans":
+        _, banned = _project_members(config)
+        return (
+            "\n".join(sorted(banned.values(), key=str.casefold))
+            or "Бессрочных банов нет."
+        )
     if action == "invites":
         entries = invitation_summary(config)
         return (
@@ -83,12 +110,20 @@ def _view(config, action, server):
 
     try:
         endpoint, password = credential(config, server)
-        online = set(
-            online_players(command(endpoint, password, COMMANDS["players"])).values()
-        )
-    except ValueError, RuntimeError, OSError:
+        online = online_players(command(endpoint, password, COMMANDS["players"]))
+    except ValueError, RuntimeError, OSError, KeyError:
         online = None
+    if action == "player-names":
+        if online is None:
+            raise ValueError("Player list unavailable")
+        return _nickname_list(set(online.values()))
     return _roster(config, online)
+
+
+def _nickname_list(names: set[str]) -> str:
+    if len(names) > MAX_PLAYER_NAMES:
+        raise ValueError("Too many player names")
+    return "\n".join(sorted(names, key=lambda name: (name.casefold(), name)))
 
 
 def run(path, server, action, *, confirmed=False):
@@ -123,7 +158,9 @@ def run(path, server, action, *, confirmed=False):
             if action in VIEWS
             else command(endpoint, password, COMMANDS[action])
         )
-        if len(output) > 8192 or (action not in VIEWS and password in output):
+        if (action != "player-names" and len(output) > 8192) or (
+            action not in VIEWS and password in output
+        ):
             raise ValueError("Invalid console output")
         # Terminal escape sequences must never be interpreted by the UI.
         output = "".join(

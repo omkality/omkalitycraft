@@ -2,11 +2,16 @@
 
 import re
 import subprocess
+import time
 from contextlib import nullcontext
 from dataclasses import dataclass
+from datetime import UTC, datetime
+from pathlib import Path
+from traceback import extract_tb
 
 from omk.backups.cold_backup_worker import digest
 from omk.deployment import ingress, ingress_config
+from omk.deployment.ingress_template import MAINTENANCE_MESSAGES
 from omk.owner import (
     admin_backups as backups,
     admin_maintenance as maintenance,
@@ -18,12 +23,13 @@ from omk.owner.admin import (
     _require_private,
     load_operator_config,
 )
-from omk.owner.panels import owner_volumes
+from omk.owner.panels import owner_moderation, owner_volumes
 from omk.worlds import world_cutover as cutover
 from omk.worlds.reset.dimension_reset import RESOURCE, layout
 from omk.worlds.reset.resource_reset_inventory import validate_dimension
 
-COMMANDS = ("inspect", "prepare", "apply", "start")
+STEPS = ("prepare", "apply", "start")
+COMMANDS = ("inspect", "run", *STEPS)
 
 
 @dataclass
@@ -43,7 +49,7 @@ class State:
 
     def confirmation(self, server, *, world=None):
         """Return the confirmation details for the next permitted operation."""
-        if self.stage not in COMMANDS[1:]:
+        if self.stage not in STEPS:
             return None
         binding = {"server": server, **vars(self)}
         if world is not None:
@@ -292,8 +298,10 @@ def _start(config, state):
         raise AdminError("World installation acknowledgement is unconfirmed")
 
 
-def _set_ingress(config, server, wanted):
-    operation = ingress.plan(config, server, wanted)["operation"]
+def _set_ingress(config, server, wanted, *, reason=None):
+    operation = ingress.plan(
+        config, server, wanted, **({"reason": reason} if reason else {})
+    )["operation"]
     if ingress.execute(config, operation, "apply")["stage"] != "confirmed":
         raise AdminError("Game admission change was not confirmed")
 
@@ -360,18 +368,38 @@ def _selected_state(config, server, worlds, dimension):
     return _state(config, server, dimension, managed=True)
 
 
+def _close_and_drain(config, server, result):
+    binding, observed = ingress.capture(config, server)
+    result["effect"] = "unknown"
+    if not observed["closed"] or binding.get("spec", {}).get("maintenance_messages"):
+        _set_ingress(config, server, "closed", reason="wipe")
+    owner_moderation.kick_for_maintenance(config, server, MAINTENANCE_MESSAGES["wipe"])
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        value, observed = ingress.capture(config, server, closed=True)
+        if value != binding:
+            raise AdminError("Game admission changed during player disconnect")
+        if observed["sessions"] == 0:
+            return
+        time.sleep(0.2)
+    # Pending handshakes have no player identity. Disconnect only the closed
+    # gameplay route, after authenticated players have received the reason.
+    if ingress.worker(config, binding, "drain")["sessions"]:
+        raise AdminError("Game connections did not close before the wipe")
+
+
 def _execute_stage(config, server, action, state, result):
     try:
-        if state.managed and action == "prepare" and state.window is None:
-            _, observed = ingress.capture(config, server)
-            if observed["sessions"]:
-                raise AdminError("Players must leave before the reset")
-            if not observed["closed"]:
-                result["effect"] = "unknown"
-                _set_ingress(config, server, "closed")
+        if (
+            state.managed
+            and action == "prepare"
+            and (state.window is None or state.window["stage"] == "planned")
+        ):
+            _close_and_drain(config, server, result)
         _require_drained(config, server, state.window)
-    except AdminError, OSError, subprocess.SubprocessError:
+    except (RuntimeError, OSError, subprocess.SubprocessError) as error:
         result["error"] = "ingress_not_drained"
+        result["diagnostic"] = _diagnostic(error)
         return False
     result["effect"] = "unknown"
     if action == "prepare":
@@ -384,9 +412,64 @@ def _execute_stage(config, server, action, state, result):
             result.update(stage="complete", confirmation=None)
             try:
                 _set_ingress(config, server, "open")
-            except AdminError, OSError, subprocess.SubprocessError:
+            except (AdminError, OSError, subprocess.SubprocessError) as error:
                 result["error"] = "join_closed"
+                result["diagnostic"] = _diagnostic(error)
                 return False
+    return True
+
+
+def _diagnostic(error: Exception) -> str:
+    """Summarize the failed check without arguments, locals, or raw CLI output."""
+    # AdminError is reserved for operator-safe messages. Other exception messages
+    # can contain private paths or the input/output of a failed subprocess.
+    detail = type(error).__name__
+    if isinstance(error, AdminError):
+        message = "".join(char for char in str(error) if char.isprintable())[:500]
+        detail = f"{detail}: {message}"
+    trace = extract_tb(error.__traceback__)[-8:]
+    lines = [
+        f"{Path(frame.filename).name}:{frame.lineno} ({frame.name})" for frame in trace
+    ]
+    return "\n".join([datetime.now(UTC).isoformat(timespec="seconds"), detail, *lines])
+
+
+def _record_current_stage(config, server, worlds, dimension, result):
+    """Include current journal references when an attempted step fails."""
+    if result["effect"] != "unknown":
+        return
+    try:
+        state = _selected_state(config, server, worlds, dimension)
+    except (
+        AdminError,
+        KeyError,
+        OSError,
+        TypeError,
+        ValueError,
+        subprocess.SubprocessError,
+    ):
+        return
+    for field in ("maintenance", "backup", "resource", "installation"):
+        operation = _operation(
+            getattr(state, "window" if field == "maintenance" else field)
+        )
+        if operation is not None:
+            result[field] = operation
+
+
+def _run_steps(config, server, action, state, worlds, dimension, world, result):
+    steps = STEPS[STEPS.index(state.stage) :] if action == "run" else (action,)
+    for step in steps:
+        if state.stage != step:
+            raise AdminError("World reset reached an unexpected state")
+        if not _execute_stage(config, server, step, state, result):
+            return False
+        if step == "start":
+            result.update(stage="complete", confirmation=None)
+        else:
+            state = _selected_state(config, server, worlds, dimension)
+            result.update(state.payload(server, world=world))
+    result["effect"] = "applied"
     return True
 
 
@@ -418,25 +501,48 @@ def run(path, server, action, confirmation, *, catalog=False, dimension=None):
             state = _selected_state(config, server, worlds, dimension)
             world = worlds.get(state.dimension)
             result.update(state.payload(server, world=world))
+            if action == "inspect" and state.stage == "review":
+                result["diagnostic"] = (
+                    "\n".join(
+                        f"{name}: {record['stage']}"
+                        for name, record in (
+                            ("Maintenance", state.window),
+                            ("Backup", state.backup),
+                            ("Staging", state.resource),
+                            ("Installation", state.installation),
+                        )
+                        if record is not None
+                    )
+                    or "Current reset bindings require inspection"
+                )
             if action != "inspect":
-                if action != state.stage or confirmation != state.confirmation(
-                    server, world=world
-                ):
+                if (
+                    (state.stage not in STEPS or not state.managed)
+                    if action == "run"
+                    else action != state.stage
+                ) or confirmation != state.confirmation(server, world=world):
                     result["error"] = "state_changed"
                     return result
-                if not _execute_stage(config, server, action, state, result):
-                    return result
-                result.update(
-                    _selected_state(config, server, worlds, dimension).payload(
-                        server, world=world
-                    )
-                    if action != "start"
-                    else {"stage": "complete", "confirmation": None}
-                )
-                result["effect"] = "applied"
+                try:
+                    if not _run_steps(
+                        config, server, action, state, worlds, dimension, world, result
+                    ):
+                        _record_current_stage(config, server, worlds, dimension, result)
+                        return result
+                except (
+                    AdminError,
+                    KeyError,
+                    OSError,
+                    TypeError,
+                    ValueError,
+                    subprocess.SubprocessError,
+                ):
+                    _record_current_stage(config, server, worlds, dimension, result)
+                    raise
             result["ok"] = True
-    except backups.OwnerBusy:
+    except backups.OwnerBusy as error:
         result["error"] = "owner_busy"
+        result["diagnostic"] = _diagnostic(error)
     except (
         AdminError,
         KeyError,
@@ -444,6 +550,7 @@ def run(path, server, action, confirmation, *, catalog=False, dimension=None):
         TypeError,
         ValueError,
         subprocess.SubprocessError,
-    ):
+    ) as error:
         result["error"] = "operation_rejected"
+        result["diagnostic"] = _diagnostic(error)
     return result

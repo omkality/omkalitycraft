@@ -85,8 +85,11 @@ def _cleanup(name, operation):
     if not raw.strip():
         return
     rows = json.loads(raw)
+    if rows == []:
+        return
     if (
-        len(rows) != 1
+        not isinstance(rows, list)
+        or len(rows) != 1
         or rows[0]["Config"].get("Labels", {}).get(LABEL) != operation
         or rows[0]["Config"]["Image"] != backups.IMAGE
     ):
@@ -104,6 +107,7 @@ def _worker(target, player, policy, resources):
     }
     args = [
         "run",
+        "--rm",
         "--pull",
         "never",
         "-i",

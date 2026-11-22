@@ -29,6 +29,52 @@ def test_managed_wipe_finishes_before_opening_ingress(monkeypatch):
     assert result["stage"] == "complete"
 
 
+def test_one_confirmation_runs_prepare_apply_and_start_in_order(monkeypatch):
+    config = object()
+    sequence = [
+        wipe.State(dimension=0, stage=stage, managed=True)
+        for stage in ("prepare", "apply", "start")
+    ]
+    performed = []
+    monkeypatch.setattr(wipe, "load_operator_config", lambda _: config)
+    monkeypatch.setattr(wipe, "_catalog", lambda *_: {})
+    monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
+    monkeypatch.setattr(wipe, "_selected_state", lambda *_: sequence[len(performed)])
+    monkeypatch.setattr(
+        wipe,
+        "_execute_stage",
+        lambda _config, _server, action, state, _result: (
+            performed.append((action, state.stage)) or True
+        ),
+    )
+    assert not wipe.run("operator.toml", "dj2", "run", "wrong", catalog=True)["ok"]
+    result = wipe.run(
+        "operator.toml", "dj2", "run", sequence[0].confirmation("dj2"), catalog=True
+    )
+    assert performed == [(x, x) for x in ("prepare", "apply", "start")]
+    assert result["ok"] and result["stage"] == "complete"
+
+
+def test_wipe_closes_ingress_before_kicking_players(monkeypatch):
+    events = []
+    states = iter(
+        [({}, {"closed": False, "sessions": 3}), ({}, {"closed": True, "sessions": 0})]
+    )
+    monkeypatch.setattr(wipe.ingress, "capture", lambda *_args, **_kwargs: next(states))
+    monkeypatch.setattr(
+        wipe, "_set_ingress", lambda *args, reason: events.append(("close", reason))
+    )
+    monkeypatch.setattr(
+        wipe.owner_moderation,
+        "kick_for_maintenance",
+        lambda *args: events.append(("kick", args[-1])),
+    )
+    result = {}
+    wipe._close_and_drain(None, "dj2", result)
+    assert events == [("close", "wipe"), ("kick", wipe.MAINTENANCE_MESSAGES["wipe"])]
+    assert result["effect"] == "unknown"
+
+
 def test_cli_inspection_reports_unconfigured_fixture(monkeypatch, tmp_path, capsys):
     path = tmp_path / "operator.toml"
     path.write_text('schema=1\n[servers.sandbox]\nroot="sandbox"\n')
@@ -130,6 +176,18 @@ def test_prepare_requires_successful_backup_before_staging(monkeypatch):
     monkeypatch.setattr(wipe.staging, "plan", never_stage)
     result = wipe.run("operator.toml", "dj2", "prepare", state.confirmation("dj2"))
     assert result["ok"] is False and result["effect"] == "unknown"
+    assert "AdminError: Backup failed" in result["diagnostic"]
+    assert "test_owner_world_reset.py:" in result["diagnostic"]
+    assert str(result["confirmation"]) not in result["diagnostic"]
+
+
+def test_diagnostic_omits_subprocess_arguments_and_output():
+    from subprocess import CalledProcessError  # noqa: PLC0415
+
+    error = CalledProcessError(1, ["synthetic-private-input"], stderr="private-output")
+    detail = wipe._diagnostic(error)
+    assert detail.endswith("CalledProcessError")
+    assert "private" not in detail
 
 
 def test_interrupted_write_requires_review_and_running_commit_does_not_restart():

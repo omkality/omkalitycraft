@@ -6,6 +6,7 @@ import pytest
 
 from omk.worlds import world_cutover_worker as cutover
 from omk.worlds.reset import resource_reset_runtime as runtime
+from omk.worlds.reset.dimension_reset import layout
 from tests.fixtures.unit.backups.ftb_restore_authority import records
 from tests.fixtures.unit.worlds.resource_reset_inventory import sample
 from tests.fixtures.unit.worlds.resource_reset_runtime import (
@@ -19,6 +20,13 @@ __all__ = ["data", "records", "sample"]
 @pytest.fixture
 def prepared(data):
     return prepared_runtime.__wrapped__(data)
+
+
+@pytest.fixture
+def full_world_exchange(data, monkeypatch):
+    request = data[0]
+    request.update(dimension=0, position="auto", reset=layout(0, all_worlds=True))
+    return exchange.__wrapped__(prepared_runtime.__wrapped__(data), monkeypatch)
 
 
 @pytest.fixture

@@ -2,12 +2,14 @@ mod backend;
 mod branding;
 mod moderation;
 mod protocol;
+mod restrictions;
 mod startup;
 mod tps_grid;
 mod ui;
+mod wipe_report;
 mod world_reset;
 
-use backend::{Backend, Reply, Request};
+use backend::{Backend, ModerationRefresh, Reply, Request};
 use ratatui::{
     Terminal,
     backend::TestBackend,
@@ -33,6 +35,7 @@ struct Options {
     snapshot: Option<PathBuf>,
     branding_header: bool,
     window_index: usize,
+    reports: wipe_report::Destination,
 }
 
 fn options() -> Result<Option<Options>, String> {
@@ -51,11 +54,12 @@ fn options() -> Result<Option<Options>, String> {
     let mut snapshot = None;
     let mut branding_header = true;
     let mut window_index = 0;
+    let mut export_dir = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / 1 players / 2 TPS / 3 save / k kick / b ban / m mute / u unban / i invite / r refresh / t period / q quit\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / 1 players / 2 TPS / 3 save / 4 restrictions (u unban, n unmute) / k kick / b ban / m mute / s statistics / i invite / r refresh / t period\nEsc goes back; from the main menu it asks before closing.\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
@@ -76,6 +80,13 @@ fn options() -> Result<Option<Options>, String> {
             }
             Some("--snapshot") => {
                 snapshot = Some(PathBuf::from(args.next().ok_or("--snapshot требует путь")?))
+            }
+            Some("--windows-report-dir") => {
+                let path = PathBuf::from(args.next().ok_or("--windows-report-dir требует путь")?);
+                if !path.is_absolute() {
+                    return Err("--windows-report-dir требует абсолютный путь".into());
+                }
+                export_dir = Some(path);
             }
             _ => return Err("Неизвестный аргумент; используйте --help".into()),
         }
@@ -102,6 +113,7 @@ fn options() -> Result<Option<Options>, String> {
         snapshot,
         branding_header,
         window_index,
+        reports: wipe_report::Destination { export_dir },
     }))
 }
 
@@ -110,14 +122,21 @@ struct Pending {
     receiver: mpsc::Receiver<Result<Reply, String>>,
     handle: Option<thread::JoinHandle<()>>,
     mutating: bool,
-    resetting: bool,
+    reset_step: Option<&'static str>,
+    player_stats: bool,
+    overview: bool,
 }
 impl Pending {
     fn start(backend: Backend, request: Request) -> Self {
-        let resetting = matches!(&request, Request::WorldReset(_));
+        let reset_step = match &request {
+            Request::WorldReset(action) => Some(action.command),
+            _ => None,
+        };
+        let player_stats = matches!(&request, Request::PlayerStats { .. });
+        let overview = matches!(&request, Request::Overview(..));
         let mutating = matches!(&request, Request::WorldReset(a) if a.mutating())
             || matches!(&request, Request::Console { command, .. } if command == "save")
-            || matches!(&request, Request::Moderation(_) | Request::Invite);
+            || matches!(&request, Request::Moderation(..) | Request::Invite);
         let cancel = Arc::new(AtomicBool::new(false));
         let c = cancel.clone();
         let (sender, receiver) = mpsc::channel();
@@ -129,7 +148,9 @@ impl Pending {
             receiver,
             handle: Some(handle),
             mutating,
-            resetting,
+            reset_step,
+            player_stats,
+            overview,
         }
     }
 }
@@ -166,7 +187,7 @@ fn execute() -> Result<(), String> {
         app.accept_history(Some(demo_history(app.window())));
     }
     if app.demo && env::args_os().len() == 1 {
-        app.message="Демо: подключение к серверу не настроено.\nДля подключения укажите --repo, --python и --config.\nКоманды в демо отключены.".into();
+        app.set_menu_message("Демо: подключение к серверу не настроено.\nДля подключения укажите --repo, --python и --config.\nКоманды в демо отключены.".into());
     }
     if let Some(path) = options.snapshot {
         if let Some(backend) = options.backend {
@@ -186,16 +207,9 @@ fn execute() -> Result<(), String> {
     #[cfg(windows)]
     startup::widen_standalone_console();
     let mut terminal = ratatui::init();
-    let result = interactive(&mut terminal, &mut app, options.backend);
+    let result = interactive(&mut terminal, &mut app, options.backend, &options.reports);
     ratatui::restore();
-    match result {
-        Ok(true) => {
-            eprintln!("Команда могла выполниться: ответ не подтверждён. Автоповтора нет.");
-            Ok(())
-        }
-        Ok(false) => Ok(()),
-        Err(_) => Err("Ошибка терминала; результат незавершённой команды неизвестен".into()),
-    }
+    result.map_err(|_| "Ошибка терминала; результат незавершённой команды неизвестен".into())
 }
 
 const COPY_FAILED: &str = "Не удалось скопировать. Код можно выделить вручную.";
@@ -234,20 +248,44 @@ fn interactive(
     terminal: &mut ratatui::DefaultTerminal,
     app: &mut App,
     backend: Option<Backend>,
-) -> io::Result<bool> {
+    reports: &wipe_report::Destination,
+) -> io::Result<()> {
     let mut pending = backend
         .as_ref()
         .map(|b| Pending::start(b.clone(), Request::Overview(None, app.window())));
+    let mut name_lookup: Option<Pending> = None;
     let mut next_refresh = Instant::now() + Duration::from_secs(5);
     #[cfg(windows)]
     let mut clipboard_copy: Option<ClipboardCopy> = None;
     loop {
+        if let Some(lookup) = &name_lookup {
+            let names = match lookup.receiver.try_recv() {
+                Ok(Ok(Reply::Console(v))) => Some(v.player_names()),
+                Err(mpsc::TryRecvError::Empty) => None,
+                _ => Some(None),
+            };
+            if let Some(names) = names {
+                if let Some(form) = &mut app.moderation {
+                    form.finish_name_lookup(names);
+                }
+                name_lookup = None;
+            }
+        }
         #[cfg(windows)]
         if let Some(status) = clipboard_copy.as_ref().and_then(ClipboardCopy::status) {
-            app.message = app.message.replacen(COPY_PENDING, status, 1);
+            let page = app.command_page_mut();
+            page.message = page.message.replacen(COPY_PENDING, status, 1);
             clipboard_copy = None;
         }
-        app.loading = pending.is_some();
+        #[cfg(windows)]
+        let copying = clipboard_copy.is_some();
+        #[cfg(not(windows))]
+        let copying = false;
+        app.loading = pending.is_some() || name_lookup.is_some() || copying;
+        app.resetting = pending
+            .as_ref()
+            .and_then(|work| work.reset_step)
+            .filter(|step| *step != "inspect");
         if let Some(work) = &pending {
             match work.receiver.try_recv() {
                 Ok(result) => {
@@ -258,38 +296,65 @@ fn interactive(
                         }
                         Ok(Reply::Overview(_, _)) => {
                             app.failed = true;
-                            app.message = "Обзор недоступен. Проверьте private operator config и права.\nr — повторить чтение.".into();
+                            app.set_menu_message("Обзор недоступен. Проверьте настройки админки и права.\nr — повторить чтение.".into());
                         }
-                        Ok(Reply::Moderation(v)) => {
+                        Ok(Reply::Moderation(v, section)) => {
+                            match section {
+                                Some(ModerationRefresh::Membership(command, message)) => {
+                                    app.refresh_section(&command, message);
+                                }
+                                Some(ModerationRefresh::Restrictions(snapshot)) => {
+                                    app.show_restrictions(snapshot);
+                                }
+                                None => {}
+                            }
                             app.failed = !v.ok;
-                            app.scroll = 0;
-                            app.message = v.message();
+                            app.show_detail(v.message());
+                        }
+                        Ok(Reply::Restrictions(snapshot)) => {
+                            app.failed = !snapshot.ok;
+                            app.show_restrictions(Some(snapshot));
+                        }
+                        Ok(Reply::PlayerStats(v)) => {
+                            let ok = v.ok;
+                            let message = v.message();
+                            app.finish_player_stats(
+                                if ok { Ok(message) } else { Err(message) },
+                                Instant::now(),
+                            );
                         }
                         Ok(Reply::Invitation(v)) => {
                             app.failed = !v.ok;
-                            app.scroll = 0;
                             #[cfg(windows)]
                             {
-                                app.message = v.message(v.code().map(|_| COPY_PENDING));
+                                app.show_detail(v.message(v.code().map(|_| COPY_PENDING)));
                                 clipboard_copy =
                                     v.code().map(|code| ClipboardCopy::start(code.to_owned()));
                             }
                             #[cfg(not(windows))]
                             {
                                 let status = v.code().map(clipboard_status);
-                                app.message = v.message(status);
+                                app.show_detail(v.message(status));
                             }
                         }
                         Ok(Reply::WorldReset(v)) => {
                             app.failed = !v.ok;
-                            app.message = "w — вайп миров".into();
-                            app.world_reset = Some(world_reset::Form::new(v));
+                            let report = v.needs_report().then(|| reports.save(&v.report()));
+                            let form = world_reset::Form::new(v);
+                            app.world_reset = Some(if let Some(report) = report {
+                                form.with_report(report)
+                            } else {
+                                form
+                            });
+                        }
+                        Ok(Reply::Console(v)) if v.ok && v.command == "tps" => {
+                            app.failed = false;
+                            app.show_forge_tps(&v.server_id, &v.output);
                         }
                         Ok(Reply::Console(v)) => {
-                            app.scroll = 0;
                             app.failed = !v.ok;
-                            app.message = if v.ok && v.command == "roster" {
-                                format!("Игроки проекта\n\n{}", v.output)
+                            let message = if let Some(list) = v.membership_message() {
+                                list
                             } else if v.ok && v.command == "invites" {
                                 format!("Активные приглашения\n\n{}\n\no — отозвать", v.output)
                             } else if v.ok {
@@ -315,21 +380,55 @@ fn interactive(
                                     }
                                 )
                             };
+                            if v.command == "save" {
+                                app.show_detail(message);
+                            } else {
+                                app.show_section(v.command, message);
+                            }
+                        }
+                        Err(_) if work.player_stats => {
+                            app.finish_player_stats(
+                                Err("Не удалось загрузить статистику.".into()),
+                                Instant::now(),
+                            );
                         }
                         Err(error) => {
                             app.failed = true;
-                            app.message = format!("{error}\n\nАвтоматической отправки команд нет.");
+                            let message = request_error(&error, work, reports);
+                            if work.overview {
+                                app.set_menu_message(message);
+                            } else {
+                                app.show_detail(message);
+                            }
                         }
                     }
+                    pending = None;
+                    app.loading = false;
+                    app.resetting = None;
+                }
+                Err(mpsc::TryRecvError::Disconnected) if work.player_stats => {
+                    app.finish_player_stats(
+                        Err("Не удалось загрузить статистику.".into()),
+                        Instant::now(),
+                    );
                     pending = None;
                     app.loading = false;
                 }
                 Err(mpsc::TryRecvError::Disconnected) => {
                     app.failed = true;
-                    app.message =
-                        "Рабочий процесс завершился без ответа. Результат команды неизвестен."
-                            .into();
+                    let message = request_error(
+                        "Рабочий процесс завершился без ответа. Результат команды неизвестен.",
+                        work,
+                        reports,
+                    );
+                    if work.overview {
+                        app.set_menu_message(message);
+                    } else {
+                        app.show_detail(message);
+                    }
                     pending = None;
+                    app.loading = false;
+                    app.resetting = None;
                 }
                 Err(mpsc::TryRecvError::Empty) => {}
             }
@@ -342,18 +441,34 @@ fn interactive(
             if key.kind != KeyEventKind::Press {
                 continue;
             }
-            if pending.as_ref().is_some_and(|work| work.resetting) {
+            if key.code == KeyCode::Esc {
+                if app.dismiss_dialog() {
+                    if app.moderation.is_none() {
+                        name_lookup = None;
+                    }
+                    continue;
+                }
+                if pending.as_ref().is_some_and(|work| work.mutating) {
+                    continue;
+                }
+                if pending.as_ref().is_some_and(|work| !work.overview) {
+                    drop(pending.take());
+                } else {
+                    app.back_or_confirm_exit();
+                }
+                continue;
+            }
+            if key.modifiers.contains(KeyModifiers::CONTROL) {
+                continue;
+            }
+            if pending
+                .as_ref()
+                .is_some_and(|work| work.reset_step.is_some())
+            {
                 continue;
             }
             if let Some(form) = &mut app.world_reset {
-                if key.code == KeyCode::Esc {
-                    app.world_reset = None;
-                } else if let Some(action) = form.key(key.code) {
-                    app.message = if action.mutating() {
-                        "Выполняется этап вайпа.\nРезультат появится здесь после завершения.".into()
-                    } else {
-                        "Читается состояние мира…".into()
-                    };
+                if let Some(action) = form.key(key.code) {
                     app.world_reset = None;
                     request = Some(Request::WorldReset(action));
                 }
@@ -364,21 +479,35 @@ fn interactive(
                 }
                 continue;
             }
-            if app.range_picker.is_some() && key.code == KeyCode::Esc {
-                app.range_picker = None;
-                continue;
-            }
-            if app.moderation.is_some() && !key.modifiers.contains(KeyModifiers::CONTROL) {
-                if key.code == KeyCode::Esc {
-                    app.moderation = None;
-                } else if let Some(a) = app.moderation.as_mut().and_then(|f| f.key(key.code)) {
+            if let Some(form) = &mut app.moderation {
+                if let Some(a) = form.key(key.code) {
+                    name_lookup = None;
                     if let Some(b) = &backend {
-                        drop(pending.take()); // Cancel an in-flight read before starting one mutation.
-                        app.message =
-                            format!("Отправка: {} · {} · {}", a.scope(), a.command, a.player);
-                        app.failed = false;
-                        app.scroll = 0;
-                        pending = Some(Pending::start(b.clone(), Request::Moderation(a)));
+                        drop(pending.take());
+                        let request = if a.command == "stats" {
+                            app.clear_stats_error();
+                            Request::PlayerStats {
+                                server: a.server,
+                                player: a.player,
+                            }
+                        } else {
+                            app.failed = false;
+                            app.show_detail(format!(
+                                "Отправка: {} · {} · {}",
+                                a.scope(),
+                                a.command,
+                                a.player
+                            ));
+                            let refresh = if app.restrictions.is_some() {
+                                Some("restrictions".into())
+                            } else if a.permanent_ban() {
+                                app.membership_section().map(str::to_owned)
+                            } else {
+                                None
+                            };
+                            Request::Moderation(a, refresh)
+                        };
+                        pending = Some(Pending::start(b.clone(), request));
                         next_refresh = Instant::now() + Duration::from_secs(5);
                     }
                     app.moderation = None;
@@ -386,16 +515,6 @@ fn interactive(
                 continue;
             }
             let shortcut = shortcut_key(key.code);
-            if shortcut == KeyCode::Char('c') && key.modifiers.contains(KeyModifiers::CONTROL)
-                || app.confirm.is_none() && matches!(shortcut, KeyCode::Char('q') | KeyCode::Esc)
-            {
-                let uncertain = pending.as_ref().is_some_and(|p| p.mutating);
-                drop(pending.take());
-                if uncertain {
-                    app.message = "Команда могла выполниться: результат неизвестен".into();
-                }
-                return Ok(uncertain);
-            }
             if let Some(selected) = app.range_picker {
                 match key.code {
                     KeyCode::Up => app.range_picker = Some(selected.saturating_sub(1)),
@@ -418,27 +537,31 @@ fn interactive(
                     }
                     _ => {}
                 }
-            } else if let Some(Confirmation::Invitation { approved }) = app.confirm.as_mut() {
+            } else if let Some(
+                Confirmation::Invitation { approved } | Confirmation::Exit { approved },
+            ) = app.confirm.as_mut()
+            {
                 match key.code {
-                    KeyCode::Esc => app.confirm = None,
                     KeyCode::Left => *approved = false,
                     KeyCode::Right => *approved = true,
                     KeyCode::Tab => *approved = !*approved,
                     KeyCode::Enter => {
-                        if *approved {
+                        let approved = *approved;
+                        let confirmation = app.confirm.take();
+                        if approved && matches!(confirmation, Some(Confirmation::Exit { .. })) {
+                            return Ok(());
+                        }
+                        if approved {
                             drop(pending.take());
-                            app.message = "Создаётся приглашение…".into();
                             app.failed = false;
-                            app.scroll = 0;
+                            app.show_detail("Создаётся приглашение…".into());
                             request = Some(Request::Invite);
                         }
-                        app.confirm = None;
                     }
                     _ => {}
                 }
             } else if let Some(Confirmation::Save(input)) = app.confirm.as_mut() {
                 match key.code {
-                    KeyCode::Esc => app.confirm = None,
                     KeyCode::Backspace => {
                         input.pop();
                     }
@@ -456,6 +579,24 @@ fn interactive(
                         }
                     }
                     _ => {}
+                }
+            } else if let Some(panel) = app.restrictions_panel() {
+                let idle = pending.as_ref().is_none_or(|work| work.overview);
+                match panel.key(key.code, shortcut, idle) {
+                    Some(restrictions::Input::Refresh) => {
+                        drop(pending.take());
+                        request = Some(Request::Restrictions);
+                    }
+                    Some(restrictions::Input::Restore {
+                        command,
+                        player,
+                        profile,
+                    }) => {
+                        app.moderation = app.server().map(|server| {
+                            moderation::Form::for_profile(server.into(), command, player, profile)
+                        });
+                    }
+                    None => {}
                 }
             } else {
                 #[cfg(windows)]
@@ -484,7 +625,7 @@ fn interactive(
                             next_refresh = Instant::now() + Duration::from_secs(5);
                         }
                     }
-                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'u' | 'o'))
+                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'o' | 's'))
                         if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
                     {
                         app.moderation = app.server().map(|s| {
@@ -493,15 +634,33 @@ fn interactive(
                                 match c {
                                     'k' => "kick",
                                     'b' => "ban",
-                                    'u' => "unban",
                                     'o' => "revoke-invite",
+                                    's' => "stats",
                                     _ => "mute",
                                 },
                             )
                         });
+                        if c != 'o'
+                            && let (Some(b), Some(form)) = (&backend, &mut app.moderation)
+                        {
+                            form.start_name_lookup();
+                            name_lookup = Some(Pending::start(
+                                b.clone(),
+                                Request::Console {
+                                    server: form.action.server.clone(),
+                                    command: "player-names".into(),
+                                },
+                            ));
+                        }
                     }
-                    KeyCode::PageUp => app.scroll = app.scroll.saturating_sub(10),
-                    KeyCode::PageDown => app.scroll = app.scroll.saturating_add(10).min(8192),
+                    KeyCode::PageUp => {
+                        let page = app.command_page_mut();
+                        page.scroll = page.scroll.saturating_sub(10);
+                    }
+                    KeyCode::PageDown => {
+                        let page = app.command_page_mut();
+                        page.scroll = page.scroll.saturating_add(10).min(8192);
+                    }
                     KeyCode::Char('t') if pending.is_none() => {
                         app.range_picker = Some(app.window_index);
                     }
@@ -527,13 +686,15 @@ fn interactive(
                             app.window(),
                         ))
                     }
-                    KeyCode::Char(c @ ('1' | '2' | '3' | 'l'))
+                    KeyCode::Char(c @ ('1' | '2' | '3' | '4' | 'l'))
                         if pending.is_none() && !app.demo =>
                     {
                         if c == '3' {
                             if app.server().is_some() {
                                 app.confirm = Some(Confirmation::Save(String::new()));
                             }
+                        } else if c == '4' {
+                            request = Some(Request::Restrictions);
                         } else {
                             request = app.server().map(|s| Request::Console {
                                 server: s.into(),
@@ -550,7 +711,8 @@ fn interactive(
                 }
             }
         }
-        if pending.is_none()
+        if request.is_none()
+            && pending.is_none()
             && app.confirm.is_none()
             && app.range_picker.is_none()
             && app.moderation.is_none()
@@ -569,6 +731,15 @@ fn interactive(
             pending = Some(Pending::start(b.clone(), request));
             app.loading = true;
         }
+    }
+}
+
+fn request_error(error: &str, work: &Pending, reports: &wipe_report::Destination) -> String {
+    if let Some(step) = work.reset_step {
+        let path = reports.save(&format!("Step: {step}\n{error}"));
+        format!("{error}\n\n{path}")
+    } else {
+        error.to_owned()
     }
 }
 
@@ -613,7 +784,6 @@ fn shortcut_key(code: KeyCode) -> KeyCode {
     };
     let character = character.to_lowercase().next().unwrap_or(character);
     let mapped = match character {
-        'й' => 'q',
         'ц' => 'w',
         'к' => 'r',
         'е' => 't',
@@ -622,9 +792,11 @@ fn shortcut_key(code: KeyCode) -> KeyCode {
         'и' => 'b',
         'ь' => 'm',
         'г' => 'u',
+        'т' => 'n',
+        'а' => 'f',
         'д' => 'l',
         'щ' => 'o',
-        'с' => 'c',
+        'ы' => 's',
         _ => character,
     };
     KeyCode::Char(mapped)

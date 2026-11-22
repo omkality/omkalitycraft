@@ -346,6 +346,14 @@ def _add_tps_history_parser(actions):
 
 
 def _add_tui_operation_parsers(actions):
+    actions.add_parser(
+        "project-restrictions", help="List active project-wide bans and mutes"
+    )
+    stats = actions.add_parser(
+        "player-stats", help="Read a private player card by nickname"
+    )
+    stats.add_argument("--server", required=True, type=_console_server)
+    stats.add_argument("--player", required=True)
     moderation = actions.add_parser("moderation", help="Owner online-player moderation")
     moderation.add_argument("--server", required=True, type=_console_server)
     moderation.add_argument(
@@ -363,12 +371,15 @@ def _add_tui_operation_parsers(actions):
         "--command",
         required=True,
         dest="moderation_command",
-        choices=["init", "ban", "mute", "unban", "revoke-invite"],
+        choices=["init", "ban", "mute", "unban", "unmute", "revoke-invite"],
     )
     project.add_argument("--player", default="")
     project.add_argument("--duration", default="")
     project.add_argument("--reason", default="")
     project.add_argument("--confirm-ban", action="store_true")
+    project.add_argument(
+        "--profile", help="Bind removal to a selected game profile UUID"
+    )
     world_reset = actions.add_parser(
         "world-reset", help="Manual staged world reset for the owner TUI"
     )
@@ -376,7 +387,7 @@ def _add_tui_operation_parsers(actions):
     world_reset.add_argument(
         "--command",
         dest="world_reset_command",
-        choices=("inspect", "prepare", "apply", "start"),
+        choices=("inspect", "run", "prepare", "apply", "start"),
         required=True,
     )
     world_reset.add_argument("--confirm", default="")
@@ -425,7 +436,15 @@ def add_admin_commands(sub):
         "--command",
         dest="console_command",
         required=True,
-        choices=["players", "roster", "invites", "tps", "save"],
+        choices=[
+            "players",
+            "roster",
+            "permanent-bans",
+            "invites",
+            "player-names",
+            "tps",
+            "save",
+        ],
     )
     console.add_argument("--confirm-save", action="store_true")
     _add_tui_operation_parsers(actions)
@@ -532,8 +551,17 @@ def _execute_admin(config, args):
     return result
 
 
-def run_admin(args):
-    if args.admin_action == "world-reset" and args.result_version is None:
+def _run_tui_action(args):
+    result = None
+    if args.admin_action == "project-restrictions":
+        from omk.owner.panels.owner_restrictions import run  # noqa: PLC0415
+
+        result = run(args.config)
+    if args.admin_action == "player-stats":
+        from omk.owner.panels.owner_player_stats import run  # noqa: PLC0415
+
+        return run(args.config, args.server, args.player)
+    if args.admin_action == "world-reset":
         from omk.owner.panels.owner_world_reset import run  # noqa: PLC0415
 
         return run(
@@ -544,7 +572,7 @@ def run_admin(args):
             catalog=args.catalog,
             dimension=args.world,
         )
-    if args.admin_action == "project-moderation" and args.result_version is None:
+    if args.admin_action == "project-moderation":
         from omk.game.project_moderation import run  # noqa: PLC0415
 
         return run(
@@ -554,8 +582,9 @@ def run_admin(args):
             duration=args.duration,
             reason=args.reason,
             confirmed=args.confirm_ban,
+            profile=args.profile,
         )
-    if args.admin_action == "moderation" and args.result_version is None:
+    if args.admin_action == "moderation":
         from omk.owner.panels.owner_moderation import run  # noqa: PLC0415
 
         return run(
@@ -567,20 +596,30 @@ def run_admin(args):
             reason=args.reason,
             confirmed=args.confirm_ban,
         )
-    if args.admin_action == "tps-history" and args.result_version is None:
+    if args.admin_action == "tps-history":
         from omk.owner.panels.owner_tps_history import run  # noqa: PLC0415
 
         return run(args.config, args.server, args.window)
-    if args.admin_action == "console" and args.result_version is None:
+    if args.admin_action == "console":
         from omk.owner.panels.owner_console import run  # noqa: PLC0415
 
         return run(
             args.config, args.server, args.console_command, confirmed=args.confirm_save
         )
-    if args.admin_action == "overview" and args.result_version is None:
+    if args.admin_action == "overview":
         from omk.owner.panels.owner_overview import run  # noqa: PLC0415
 
         return run(args.config, args.server)
+    return result
+
+
+def run_admin(args):
+    """Execute a private owner command and return its result contract."""
+    if (
+        getattr(args, "result_version", None) is None
+        and (result := _run_tui_action(args)) is not None
+    ):
+        return result
     config = None
     operation = args.admin_action
     suffix = {

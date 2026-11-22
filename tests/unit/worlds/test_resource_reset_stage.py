@@ -143,23 +143,29 @@ def test_fresh_backup_plan_stage_verify_preserve_source_and_all_other_world_file
         stage.execute({**request, "action": "stage"}, source, storage, target)
 
 
-def test_main_world_reset_stages_only_level_metadata_from_the_verified_backup(data):
+@pytest.mark.parametrize("fresh", [True, False])
+def test_main_world_reset_removes_all_progress_from_the_verified_backup(data, fresh):
     request, source, storage, target, before = data
     request.update(
         position="auto",
         dimension=0,
-        reset=stage.dimension_reset.layout(0, all_worlds=True),
+        reset=stage.dimension_reset.layout(0, all_worlds=True, fresh=fresh),
     )
     plan = stage.execute({**request, "action": "plan"}, source, storage, target)
-    assert plan["retained_files"] == 1
+    assert plan["retained_files"] == (0 if fresh else 1)
     expected = {**request, "expected": plan}
     written = stage.execute({**expected, "action": "stage"}, source, storage, target)
     assert (
         stage.execute({**expected, "action": "verify"}, source, storage, target)
         == written
     )
-    after = inventory(target / "world", world_name="world", path_policy="linux-server")
-    assert after == {"world/level.dat": before["world/level.dat"]}
+    after = inventory(
+        target / "world",
+        world_name="world",
+        path_policy="linux-server",
+        allow_empty=fresh,
+    )
+    assert after == ({} if fresh else {"world/level.dat": before["world/level.dat"]})
     assert (
         inventory(source / "world", world_name="world", path_policy="linux-server")
         == before

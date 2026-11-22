@@ -8,6 +8,14 @@ from pathlib import Path
 
 CONFIG = "/usr/local/etc/haproxy/haproxy.cfg"
 SOCKET = "/run/omk-ingress/admin.sock"
+MAINTENANCE_SOCKET = "/run/omk-ingress/maintenance.sock"
+MAINTENANCE_REASON = "/run/omk-ingress/reason"
+MAINTENANCE_MESSAGES = {
+    "offline": "Сервер временно недоступен. Попробуйте чуть позже.",
+    "maintenance": "Сервер временно недоступен. Идёт плановое обслуживание.",
+    "restart": "Сервер временно недоступен. Идёт перезапуск.",
+    "wipe": "Сервер временно недоступен. Идёт вайп мира.",
+}
 LABEL = "omkality.ingress.owner"
 
 
@@ -75,6 +83,11 @@ def docker_log_config(policy):
 def render(spec, policy, backend):
     # The backend name is validated by the controller, never arbitrary HAProxy text.
     route = f"server source {backend}:{spec['backend_port']} check inter 1s"
+    fallback = (
+        f"    server maintenance unix@{MAINTENANCE_SOCKET} backup\n"
+        if spec.get("maintenance_messages")
+        else ""
+    )
     return f"""global
     maxconn {policy["max_connections"]}
     nbthread 1
@@ -95,4 +108,4 @@ frontend game
     default_backend minecraft
 backend minecraft
     {route} resolvers docker resolve-prefer ipv4 init-addr none disabled
-"""
+{fallback}"""

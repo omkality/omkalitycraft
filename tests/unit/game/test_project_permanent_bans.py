@@ -1,0 +1,149 @@
+from omk.game import (
+    project_moderation as moderation,
+    project_permanent_bans as permanent,
+)
+from omk.owner.panels import (
+    owner_console as console,
+    owner_restrictions,
+)
+from tests.fixtures.unit.game.project_moderation import UUID, project
+from tests.fixtures.unit.game.project_permanent_bans import ACCOUNT, drasl
+
+__all__ = ["drasl", "project"]
+
+
+def _ban(drasl, *, confirmed=True):
+    return moderation.run(
+        drasl.project.path,
+        "ban",
+        "firstjoin",
+        confirmed=confirmed,
+        duration="perm",
+        reason="Доступ закрыт",
+    )
+
+
+def test_permanent_ban_locks_and_revokes_offline_account_and_unbans(drasl):
+    drasl.project.online.clear()
+    drasl.fails.add("beta")
+    old = moderation._read(drasl.project.root)
+    result = _ban(drasl)
+    assert result["ok"] and result["expires_at"] is None
+    assert result["unreachable"] == ["beta"] and drasl.drained == ["alpha"]
+    assert drasl.user["isLocked"]
+    assert drasl.calls == [
+        {
+            "isLocked": True,
+            "resetApiToken": True,
+            "resetMinecraftToken": True,
+        }
+    ]
+    assert moderation._read(drasl.project.root) == old
+    active, recent = moderation.player_moderation(drasl.project.root, UUID)
+    assert active[0].expires is None and active[0].reason == "Доступ закрыт"
+    assert [(event.kind, event.expires) for event in recent] == [("ban", None)]
+    assert _ban(drasl)["ok"] and len(drasl.calls) == 1
+    assert moderation.run(drasl.project.path, "unban", "FirstJoin")["ok"]
+    assert not drasl.user["isLocked"] and drasl.calls[-1] == {"isLocked": False}
+    active, recent = moderation.player_moderation(drasl.project.root, UUID)
+    assert not active
+    assert [event.kind for event in recent] == ["unban", "ban"]
+
+
+def test_own_operator_or_foreign_lock_is_preserved_and_confirmation_required(drasl):
+    assert _ban(drasl, confirmed=False)["error"] == "invalid_request"
+    drasl.caller = ACCOUNT
+    assert _ban(drasl)["error"] == "operator_account"
+    drasl.caller = "32345678-1234-4234-8234-123456789abc"
+    drasl.user["isLocked"] = True
+    assert _ban(drasl)["error"] == "account_locked"
+    assert (
+        moderation.run(drasl.project.path, "unban", "FirstJoin")["error"]
+        == "not_banned"
+    )
+    assert not drasl.calls and drasl.user["isLocked"]
+
+
+def test_lost_drasl_reply_keeps_ownership_and_only_records_confirmed_changes(drasl):
+    drasl.lose_reply = True
+    outcome = _ban(drasl)
+    assert not outcome["ok"] and outcome["effect"] == "unknown"
+    _, staged = permanent.load(drasl.project.root)
+    assert not staged.entries
+    assert next(iter(staged.bans.values())).stage == "locking"
+    drasl.lose_reply = False
+    assert _ban(drasl)["ok"]
+    _, history = moderation.player_moderation(drasl.project.root, UUID)
+    assert len(history) == 1 and history[0].kind == "ban"
+
+
+def test_perm_replaces_a_temporary_ban_and_preserves_a_mute(drasl):
+    path = drasl.project.path
+    assert (
+        moderation.run(drasl.project.path, "mute", "FirstJoin", duration="perm")[
+            "error"
+        ]
+        == "invalid_request"
+    )
+    assert moderation.run(
+        path,
+        "ban",
+        "FirstJoin",
+        duration="10m",
+        confirmed=True,
+    )["ok"]
+    assert moderation.run(path, "mute", "FirstJoin", duration="1h")["ok"]
+    assert _ban(drasl)["ok"]
+    active, recent = moderation.player_moderation(drasl.project.root, UUID)
+    assert [(entry.kind, entry.expires) for entry in active] == [
+        ("ban", None),
+        ("mute", 1_800_003_600),
+    ]
+    assert sum(entry.kind == "ban" for entry in recent) == 2
+    snapshot = owner_restrictions.run(path)
+    assert snapshot["ok"] and snapshot["profiles"] == [
+        {
+            "profile": UUID,
+            "player": "FirstJoin",
+            "ban_until": None,
+            "permanent": True,
+            "lock_pending": False,
+            "mute_until": 1_800_003_600,
+        }
+    ]
+    assert moderation.run(path, "unban", "FirstJoin", profile=UUID)["ok"]
+    assert not drasl.user["isLocked"]
+    _, stored = moderation._read(drasl.project.root)
+    assert set(stored) == {("mute", UUID)}
+    assert moderation.run(path, "unmute", "FirstJoin", profile=UUID)["ok"]
+    assert owner_restrictions.run(path)["profiles"] == []
+
+
+def test_project_roster_excludes_banned_profile_even_if_reported_online(
+    drasl, monkeypatch
+):
+    monkeypatch.setattr(
+        console, "_client", lambda config: permanent._operator(config)[0]
+    )
+    monkeypatch.setattr(console, "_credential", lambda _: "test operator token")
+    monkeypatch.setattr(
+        "omk.owner.admin_maintenance.credential", lambda *a: ("endpoint", "test")
+    )
+    monkeypatch.setattr(
+        "omk.labs.recovery.recovery_console.command",
+        lambda *a: f"There are 1/4 players online: FirstJoin ({UUID})",
+    )
+    path = drasl.project.path
+    assert "FirstJoin" in console.run(path, "alpha", "roster")["output"]
+    assert console.run(path, "alpha", "player-names")["output"] == "FirstJoin"
+    assert _ban(drasl)["ok"]
+    roster = console.run(path, "alpha", "roster")
+    assert roster["ok"] and "FirstJoin" not in roster["output"]
+    assert console.run(path, "alpha", "permanent-bans")["output"] == "FirstJoin"
+    assert console.run(path, "alpha", "player-names")["output"] == "FirstJoin"
+    assert moderation.run(path, "unban", "FirstJoin")["ok"]
+    assert "FirstJoin" in console.run(path, "alpha", "roster")["output"]
+    assert (
+        console.run(path, "alpha", "permanent-bans")["output"]
+        == "Бессрочных банов нет."
+    )

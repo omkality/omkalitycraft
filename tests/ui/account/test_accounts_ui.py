@@ -18,7 +18,7 @@ from pytestqt.qtbot import QtBot
 
 from launcher.__main__ import _bootstrap_lock
 from launcher.accounts import AccountService
-from launcher.app import LauncherWindow, instance_lock
+from launcher.app import LauncherLocks, LauncherWindow, instance_lock
 from launcher.dashboard import Dashboard
 from launcher.game import GameRunner
 from launcher.install import Progress
@@ -345,14 +345,16 @@ def test_missing_or_malformed_texture_does_not_block_login(
 
 
 def test_bootstrap_lock_protects_gap_during_handoff(tmp_path: Path, qtbot: QtBot):
-    bootstrap = _bootstrap_lock(tmp_path, False)
-    session = instance_lock(tmp_path / "userdata")
+    shared = tmp_path / "shared"
+    bootstrap = _bootstrap_lock(tmp_path, False, shared)
+    session = LauncherLocks.acquire(shared, tmp_path / "userdata")
+    assert LauncherLocks.acquire(shared, tmp_path / "different-copy/userdata") is None
     session.unlock()
     try:
         with pytest.raises(OSError):
-            _bootstrap_lock(tmp_path, False)
-        assert _bootstrap_lock(tmp_path, True) is None
-        child = instance_lock(tmp_path / "userdata")
+            _bootstrap_lock(tmp_path / "different-copy", False, shared)
+        assert _bootstrap_lock(tmp_path, True, shared) is None
+        child = LauncherLocks.acquire(shared, tmp_path / "userdata")
         assert child is not None
         child.unlock()
     finally:
@@ -385,7 +387,7 @@ def test_default_skin_is_exact_owner_asset(qtbot: QtBot):
 
 def test_dashboard_shows_only_dj2_and_social_footer(window: LauncherWindow):
     assert list(window.home_page.cards) == ["dj2"]
-    assert window.home_page.cards["dj2"].profile.name == "Divine Journey 2 Server 1"
+    assert window.home_page.cards["dj2"].profile.name == "Divine Journey 2 RU"
     assert "https://kick.com/omkality" in window.findChild(QLabel, "social_kick").text()
     assert window.home_page.findChildren(QComboBox) == []
 

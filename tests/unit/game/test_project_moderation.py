@@ -6,6 +6,7 @@ import pytest
 
 from omk.accounts.drasl import DraslClient, DraslError
 from omk.game import project_moderation as moderation
+from omk.owner.panels import owner_restrictions
 from tests.fixtures.unit.game.project_moderation import UUID, project
 
 __all__ = ["UUID", "project"]
@@ -38,6 +39,13 @@ def test_one_record_covers_player_absent_from_other_server_and_unban(project):
     project.online.clear()
     assert moderation.run(project.path, "unban", "FirstJoin")["ok"]
     assert moderation._read(project.root) == (first_store, {})
+    active, recent = moderation.player_moderation(project.root, UUID)
+    assert active == []
+    assert [(entry.kind, entry.reason) for entry in recent] == [
+        ("unban", ""),
+        ("ban", "Причина"),
+    ]
+    assert moderation.player_moderation(project.root, OTHER) == ([], [])
 
 
 def test_mute_keeps_longer_expiry_and_does_not_need_stopped_server(project):
@@ -47,6 +55,54 @@ def test_mute_keeps_longer_expiry_and_does_not_need_stopped_server(project):
     assert first["ok"] and second["ok"]
     assert second["expires_at"] == first["expires_at"]
     assert first["unreachable"] == ["beta"]
+    _, recent = moderation.player_moderation(project.root, UUID)
+    assert [entry.kind for entry in recent] == ["mute"]
+
+
+def test_bound_unmute_is_offline_and_does_not_remove_the_ban(project):
+    assert moderation.run(
+        project.path, "ban", "FirstJoin", duration="1d", confirmed=True
+    )["ok"]
+    assert moderation.run(project.path, "mute", "FirstJoin", duration="1h")["ok"]
+    project.online.clear()
+    (row,) = owner_restrictions.run(project.path)["profiles"]
+    assert row["ban_until"] and row["mute_until"]
+    assert (
+        moderation.run(project.path, "unmute", "FirstJoin", profile=OTHER)["error"]
+        == "not_muted"
+    )
+    result = moderation.run(project.path, "unmute", "FirstJoin", profile=UUID)
+    assert result["ok"] and result["effect"] == "applied"
+    (row,) = owner_restrictions.run(project.path)["profiles"]
+    assert row["ban_until"] and row["mute_until"] is None
+    _, recent = moderation.player_moderation(project.root, UUID)
+    assert [entry.kind for entry in recent] == ["unmute", "mute", "ban"]
+
+
+def test_interrupted_moderation_does_not_create_phantom_history(project, monkeypatch):
+    assert moderation.run(project.path, "mute", "FirstJoin", duration="1h")["ok"]
+    original = moderation._write_private_text
+
+    def fail_live_write(path, *args, **kwargs):
+        if path.name == moderation.STATE:
+            raise OSError("simulated write failure")
+        original(path, *args, **kwargs)
+
+    with monkeypatch.context() as scoped:
+        scoped.setattr(moderation, "_write_private_text", fail_live_write)
+        failure = moderation.run(
+            project.path, "ban", "FirstJoin", duration="1d", confirmed=True
+        )
+        assert not failure["ok"] and failure["effect"] == "unknown"
+
+    active, recent = moderation.player_moderation(project.root, UUID)
+    assert [entry.kind for entry in active] == ["mute"]
+    assert [entry.kind for entry in recent] == ["mute"]
+    assert moderation.run(
+        project.path, "ban", "FirstJoin", duration="1d", confirmed=True
+    )["ok"]
+    _, recent = moderation.player_moderation(project.root, UUID)
+    assert [entry.kind for entry in recent] == ["ban", "mute"]
 
 
 @pytest.mark.parametrize("failure", ["confirmation", "realm", "ambiguous"])

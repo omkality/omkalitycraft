@@ -90,3 +90,46 @@ def test_real_cli_routes_without_overwriting_top_level_command(tmp_path, capsys)
     )
     result = console.ConsoleResult.model_validate_json(capsys.readouterr().out)
     assert result.command == "players" and result.server_id == "dj2"
+
+
+def test_nickname_lookup_uses_current_players_in_offline_mode(tmp_path, monkeypatch):
+    _, path = config(tmp_path, auth=False)
+    monkeypatch.setattr(
+        "omk.owner.admin_maintenance.credential", lambda *args: ("endpoint", "test")
+    )
+    command = Mock(
+        return_value=(
+            "There are 2/4 players online: "
+            "zulu (11111111-1111-1111-1111-111111111111), "
+            "Alpha_1 (22222222-2222-2222-2222-222222222222)"
+        )
+    )
+    monkeypatch.setattr("omk.labs.recovery.recovery_console.command", command)
+    result = console.ConsoleResult.model_validate(
+        console.run(path, "dj2", "player-names")
+    )
+    assert result.ok and result.effect == "none"
+    assert result.output == "Alpha_1\nzulu"
+    command.assert_called_once_with("endpoint", "test", "list uuids")
+
+
+def test_roster_keeps_registered_names_when_game_status_is_unavailable(
+    tmp_path, monkeypatch
+):
+    _, path = config(tmp_path)
+    monkeypatch.setattr(console, "_project_members", lambda _: ({"Bravo", "Alpha"}, {}))
+    monkeypatch.setattr(
+        "omk.owner.admin_maintenance.credential", lambda *args: ("endpoint", "test")
+    )
+    monkeypatch.setattr(
+        "omk.labs.recovery.recovery_console.command",
+        Mock(side_effect=OSError("game stopped")),
+    )
+    result = console.run(path, "dj2", "roster")
+    assert result["ok"]
+    assert result["output"].splitlines() == [
+        "Не удалось проверить, кто в игре.",
+        "",
+        "Alpha",
+        "Bravo",
+    ]

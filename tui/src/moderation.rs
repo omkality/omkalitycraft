@@ -3,6 +3,7 @@ use ratatui::{
     Frame,
     layout::Rect,
     style::{Color, Style},
+    text::{Line, Span},
     widgets::{Block, Borders, Clear, Paragraph, Wrap},
 };
 use serde::Deserialize;
@@ -14,9 +15,14 @@ pub struct Action {
     pub player: String,
     pub duration: String,
     pub reason: String,
+    pub profile: Option<String>,
 }
 
 impl Action {
+    pub fn permanent_ban(&self) -> bool {
+        self.command == "ban" && self.duration == "perm"
+    }
+
     pub fn project(&self) -> bool {
         self.command != "kick"
     }
@@ -69,8 +75,12 @@ impl Receipt {
             || !v.ok && v.effect == "applied"
             || v.ok != v.error.is_none()
             || v.ok
-                && (matches!(v.command.as_str(), "kick" | "unban" | "revoke-invite")
+                && ((matches!(
+                    v.command.as_str(),
+                    "kick" | "unban" | "unmute" | "revoke-invite"
+                ) || request.permanent_ban())
                     != v.expires_at.is_none())
+            || v.expires_at == Some(0)
             || v.error.as_deref().is_some_and(|s| {
                 !matches!(
                     s,
@@ -80,10 +90,13 @@ impl Receipt {
                         | "already_banned"
                         | "refused"
                         | "not_banned"
+                        | "not_muted"
                         | "changed"
                         | "ambiguous"
                         | "inconsistent_servers"
                         | "profile_not_found"
+                        | "account_locked"
+                        | "operator_account"
                 )
             })
         {
@@ -101,12 +114,19 @@ impl Receipt {
             }
             .into();
         }
+        let permanent_ban = self.command == "ban" && self.ok && self.expires_at.is_none();
         format!(
             "Область: {}\nИгрок: {}\nДействие: {}\n\n{}{}{}",
             self.server_id.as_deref().unwrap_or("Весь проект"),
             self.player,
             self.command,
-            if self.ok && self.server_id.is_none() {
+            if permanent_ban {
+                "Бессрочный бан применён. Вход на проект закрыт."
+            } else if self.ok && self.command == "unban" {
+                "Бан снят на всём проекте."
+            } else if self.ok && self.command == "unmute" {
+                "Мут снят на всём проекте."
+            } else if self.ok && self.server_id.is_none() {
                 "Записано в общий список проекта."
             } else if self.ok {
                 "Сервер подтвердил выполнение."
@@ -127,8 +147,11 @@ impl Receipt {
                         "inconsistent_servers" =>
                             "серверы используют разные списки проекта или нуждаются в обновлении",
                         "not_banned" => "у игрока нет бана",
+                        "not_muted" => "у игрока нет мута",
                         "changed" => "бан изменился; проверьте его заново",
                         "already_banned" => "уже есть бан; он сохранён",
+                        "account_locked" => "у аккаунта другая блокировка или незавершённый разбан",
+                        "operator_account" => "этот аккаунт используется админкой",
                         "unavailable" => "проверьте общий список и подключение серверов",
                         _ => "сервер отказал",
                     }
@@ -137,7 +160,9 @@ impl Receipt {
             self.unreachable
                 .as_ref()
                 .filter(|ids| !ids.is_empty())
-                .map(|ids| {
+                .map(|ids| if permanent_ban {
+                    format!("\nНе подтверждено отключение на: {}", ids.join(", "))
+                } else {
                     format!("\nНе удалось проверить соединение с: {}", ids.join(", "))
                 })
                 .unwrap_or_default(),
@@ -168,12 +193,27 @@ pub fn seconds(value: &str) -> Option<u64> {
         .filter(|n| *n > 0 && *n <= 31536000)
 }
 
+pub fn valid_player(player: &str) -> bool {
+    (1..=16).contains(&player.len())
+        && player
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || byte == b'_')
+}
+
+enum PlayerNames {
+    Loading { complete_on_arrival: bool },
+    Ready(Vec<String>),
+    Unavailable,
+}
+
 pub struct Form {
     pub action: Action,
     field: usize,
     pub confirming: bool,
     yes: bool,
     error: String,
+    names: PlayerNames,
+    completion_prefix: Option<String>,
 }
 impl Form {
     pub fn new(server: String, command: &str) -> Self {
@@ -182,41 +222,144 @@ impl Form {
                 server,
                 command: command.into(),
                 player: String::new(),
-                duration: if matches!(command, "kick" | "unban" | "revoke-invite") {
-                    String::new()
-                } else {
+                duration: if matches!(command, "ban" | "mute") {
                     "10m".into()
+                } else {
+                    String::new()
                 },
                 reason: String::new(),
+                profile: None,
             },
             field: 0,
             confirming: false,
             yes: false,
             error: String::new(),
+            names: PlayerNames::Unavailable,
+            completion_prefix: None,
         }
     }
+
+    pub fn for_profile(server: String, command: &str, player: String, profile: String) -> Self {
+        let mut form = Self::new(server, command);
+        form.action.player = player;
+        form.action.profile = Some(profile);
+        form
+    }
+
+    pub fn start_name_lookup(&mut self) {
+        self.names = PlayerNames::Loading {
+            complete_on_arrival: false,
+        };
+    }
+
+    pub fn finish_name_lookup(&mut self, names: Option<Vec<String>>) {
+        let tab_pressed = matches!(
+            self.names,
+            PlayerNames::Loading {
+                complete_on_arrival: true
+            }
+        );
+        self.names = names.map_or(PlayerNames::Unavailable, PlayerNames::Ready);
+        if tab_pressed {
+            self.complete_name();
+        }
+    }
+
+    fn reset_completion(&mut self) {
+        self.completion_prefix = None;
+        if let PlayerNames::Loading {
+            complete_on_arrival,
+        } = &mut self.names
+        {
+            *complete_on_arrival = false;
+        }
+    }
+
+    fn complete_name(&mut self) -> bool {
+        if self.field != 0
+            || self.action.command == "revoke-invite"
+            || self.action.player.is_empty()
+            || self.action.profile.is_some()
+        {
+            return false;
+        }
+        let names = match &mut self.names {
+            PlayerNames::Loading {
+                complete_on_arrival,
+            } => {
+                *complete_on_arrival = true;
+                self.error = "Загружаются ники игроков…".into();
+                return true;
+            }
+            PlayerNames::Unavailable => {
+                self.error = "Список ников недоступен. Ник можно ввести вручную.".into();
+                return true;
+            }
+            PlayerNames::Ready(names) => names,
+        };
+        let player = &self.action.player;
+        let prefix = self.completion_prefix.as_deref().unwrap_or(player);
+        let matches: Vec<_> = names
+            .iter()
+            .filter(|name| {
+                name.get(..prefix.len())
+                    .is_some_and(|start| start.eq_ignore_ascii_case(prefix))
+            })
+            .collect();
+        if matches.as_slice() == [player] {
+            self.error.clear();
+            return false;
+        }
+        if matches.is_empty() {
+            self.error = "Нет совпадений.".into();
+        } else {
+            let next = matches
+                .iter()
+                .position(|name| *name == player)
+                .map_or(0, |index| (index + 1) % matches.len());
+            self.completion_prefix = (matches.len() > 1).then(|| prefix.to_owned());
+            self.action.player.clone_from(matches[next]);
+            self.error.clear();
+        }
+        true
+    }
+
+    pub fn dismiss_confirmation(&mut self) -> bool {
+        self.yes = false;
+        std::mem::take(&mut self.confirming)
+    }
+
     pub fn key(&mut self, key: KeyCode) -> Option<Action> {
         if self.confirming {
             match key {
                 KeyCode::Left | KeyCode::Right | KeyCode::Tab => self.yes = !self.yes,
                 KeyCode::Enter if self.yes => return Some(self.action.clone()),
                 KeyCode::Enter => {
-                    self.confirming = false;
-                    self.yes = false;
+                    self.dismiss_confirmation();
                 }
                 _ => {}
             }
             return None;
         }
         let fields = match self.action.command.as_str() {
-            "unban" | "revoke-invite" => 1,
+            "unban" | "unmute" | "revoke-invite" | "stats" => 1,
             "kick" => 2,
             _ => 3,
         };
         match key {
-            KeyCode::Tab | KeyCode::Down => self.field = (self.field + 1) % fields,
-            KeyCode::BackTab | KeyCode::Up => self.field = (self.field + fields - 1) % fields,
+            KeyCode::Tab if self.complete_name() => {}
+            KeyCode::Tab | KeyCode::Down => {
+                self.reset_completion();
+                self.field = (self.field + 1) % fields;
+                self.error.clear();
+            }
+            KeyCode::BackTab | KeyCode::Up => {
+                self.reset_completion();
+                self.field = (self.field + fields - 1) % fields;
+                self.error.clear();
+            }
             KeyCode::Enter => {
+                self.reset_completion();
                 if self.action.command == "revoke-invite"
                     && (self.action.player.len() != 12
                         || !self
@@ -226,19 +369,17 @@ impl Form {
                             .all(|byte| byte.is_ascii_hexdigit()))
                 {
                     self.error = "Введите 12 символов из списка приглашений (l).".into();
-                } else if self.action.player.is_empty()
-                    || self.action.player.len() > 16
-                    || !self
-                        .action
-                        .player
-                        .bytes()
-                        .all(|b| b.is_ascii_alphanumeric() || b == b'_')
-                {
+                } else if !valid_player(&self.action.player) {
                     self.error = "Ник: 1–16 латинских букв, цифр или _".into();
                 } else if matches!(self.action.command.as_str(), "ban" | "mute")
                     && seconds(&self.action.duration).is_none()
+                    && !self.action.permanent_ban()
                 {
-                    self.error = "Срок: 10m, 20h, 1d; от 1s до 365d".into();
+                    self.error = if self.action.command == "ban" {
+                        "Срок: 10m, 20h, 1d или perm.".into()
+                    } else {
+                        "Срок: 10m, 20h, 1d; от 1s до 365d".into()
+                    };
                 } else if matches!(self.action.command.as_str(), "ban" | "revoke-invite") {
                     if self.action.command == "revoke-invite" {
                         self.action.player.make_ascii_lowercase();
@@ -250,13 +391,18 @@ impl Form {
                     return Some(self.action.clone());
                 }
             }
-            KeyCode::Backspace => {
+            KeyCode::Backspace if self.action.profile.is_none() => {
+                self.reset_completion();
                 self.input().pop();
                 self.error.clear();
             }
             KeyCode::Char(c)
-                if !c.is_control() && c != '§' && self.input().chars().count() < 128 =>
+                if self.action.profile.is_none()
+                    && !c.is_control()
+                    && c != '§'
+                    && self.input().chars().count() < 128 =>
             {
+                self.reset_completion();
                 self.input().push(c);
                 self.error.clear();
             }
@@ -277,11 +423,20 @@ impl Form {
         let area = frame.area();
         let w = area.width.saturating_sub(4).min(80);
         let unban = self.action.command == "unban";
+        let unmute = self.action.command == "unmute";
         let invite = self.action.command == "revoke-invite";
-        let h = if unban || invite { 10 } else { 17 }.min(area.height);
+        let stats = self.action.command == "stats";
+        let h = if unban || unmute || invite || stats {
+            10
+        } else {
+            17
+        }
+        .min(area.height);
         let popup = Rect::new((area.width - w) / 2, (area.height - h) / 2, w, h);
         frame.render_widget(Clear, popup);
-        let title = if invite && self.confirming {
+        let title = if stats {
+            " Статистика игрока "
+        } else if invite && self.confirming {
             " Отозвать приглашение? "
         } else if invite {
             " Отзыв приглашения "
@@ -289,11 +444,18 @@ impl Form {
             " Бан · Вы уверены? "
         } else if unban {
             " Разбан игрока "
+        } else if unmute {
+            " Снять мут "
         } else {
             " Модерация игрока "
         };
         let cursor = |field| if self.field == field { ">" } else { " " };
-        let body = if invite {
+        let body = if stats {
+            format!(
+                "\n> Ник: {}\n{}\n\nTab — дополнить ник · Enter — посмотреть · Esc — отмена",
+                self.action.player, self.error
+            )
+        } else if invite {
             let instruction = if !self.confirming {
                 "Введите номер из списка приглашений (l). Enter — продолжить."
             } else if self.yes {
@@ -307,10 +469,14 @@ impl Form {
             )
         } else if self.confirming {
             format!(
-                "\nОбласть: {}\nИгрок: {}\nБан на: {}\nПричина: {}\n\n{}\n\n← → / Tab — выбор · Enter — принять · Esc — отмена",
+                "\nОбласть: {}\nИгрок: {}\nБан на: {}\nПричина: {}\n\n{}\n\n← → / Tab — выбор · Enter — принять · Esc — назад",
                 self.action.scope(),
                 self.action.player,
-                self.action.duration,
+                if self.action.permanent_ban() {
+                    "perm (бессрочно)"
+                } else {
+                    self.action.duration.as_str()
+                },
                 self.action.reason,
                 if self.yes {
                     "  Нет     [ Да, забанить ]"
@@ -318,16 +484,22 @@ impl Form {
                     "[ Нет, вернуться ]     Да"
                 }
             )
-        } else if unban {
+        } else if unban || unmute {
+            let label = if unban { "бан" } else { "мут" };
+            let autocomplete = if self.action.profile.is_none() {
+                "Tab — дополнить ник · "
+            } else {
+                ""
+            };
             format!(
-                "\nОбласть: {}\n\n> Ник: {}\n{}\n\nEnter — снять бан · Esc — отмена",
+                "\nОбласть: {}\n\n> Ник: {}\n{}\n\n{autocomplete}Enter — снять {label} · Esc — отмена",
                 self.action.scope(),
                 self.action.player,
                 self.error
             )
         } else {
             format!(
-                "\n{} · {}\n\n{} Ник: {}\n{}{} Причина: {}\n\n{}\n\nTab / ↑ ↓ — поле · Enter — {} · Esc — отмена",
+                "\n{} · {}\n\n{} Ник: {}\n{}{} Причина: {}\n\n{}\n\nTab — дополнить ник · ↑ ↓ — поле\nEnter — {} · Esc — отмена",
                 self.action.scope(),
                 self.action.command,
                 cursor(0),
@@ -336,9 +508,14 @@ impl Form {
                     String::new()
                 } else {
                     format!(
-                        "{} Срок: {}  (s/m/h/d/w, до 365d)\n",
+                        "{} Срок: {}  {}\n",
                         cursor(1),
-                        self.action.duration
+                        self.action.duration,
+                        if self.action.command == "ban" {
+                            "(10m, 20h, 1d или perm)"
+                        } else {
+                            "(s/m/h/d/w, до 365d)"
+                        }
                     )
                 },
                 cursor(if self.action.command == "kick" { 1 } else { 2 }),
@@ -351,8 +528,30 @@ impl Form {
                 }
             )
         };
+        let lines = body
+            .lines()
+            .map(|line| {
+                if self.action.command == "ban"
+                    && (line.contains("Срок:") || line.starts_with("Бан на:"))
+                {
+                    let mut spans = Vec::new();
+                    for (index, part) in line.split("perm").enumerate() {
+                        if index != 0 {
+                            spans.push(Span::styled(
+                                "perm",
+                                Style::default().fg(Color::Rgb(235, 114, 119)),
+                            ));
+                        }
+                        spans.push(Span::raw(part));
+                    }
+                    Line::from(spans)
+                } else {
+                    Line::raw(line)
+                }
+            })
+            .collect::<Vec<_>>();
         frame.render_widget(
-            Paragraph::new(body)
+            Paragraph::new(lines)
                 .wrap(Wrap { trim: false })
                 .style(
                     Style::default()
@@ -368,6 +567,78 @@ impl Form {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn tab_completes_all_nickname_forms_and_cycles_without_submitting() {
+        for command in ["kick", "ban", "mute", "unban", "unmute", "stats"] {
+            let mut form = Form::new("dj2".into(), command);
+            form.finish_name_lookup(Some(vec!["ProbeAlpha".into(), "ProbeBeta".into()]));
+            form.action.player = "pRO".into();
+            for expected in ["ProbeAlpha", "ProbeBeta", "ProbeAlpha"] {
+                assert!(form.key(KeyCode::Tab).is_none());
+                assert_eq!(form.action.player, expected);
+                assert_eq!(form.field, 0);
+            }
+            form.key(KeyCode::Backspace);
+            form.key(KeyCode::Tab);
+            assert_eq!(form.action.player, "ProbeAlpha");
+            form.key(KeyCode::Down);
+            assert_eq!(form.completion_prefix, None);
+        }
+    }
+
+    #[test]
+    fn tab_waits_for_names_and_editing_cancels_a_waiting_completion() {
+        let mut form = Form::new("dj2".into(), "ban");
+        form.start_name_lookup();
+        form.action.player = "pro".into();
+        form.key(KeyCode::Tab);
+        form.finish_name_lookup(Some(vec!["ProbeAlpha".into()]));
+        assert_eq!(form.action.player, "ProbeAlpha");
+        form.key(KeyCode::Tab);
+        assert_eq!(form.field, 1);
+
+        form.key(KeyCode::Up);
+        form.action.player = "pro".into();
+        form.start_name_lookup();
+        form.key(KeyCode::Tab);
+        form.key(KeyCode::Char('b'));
+        form.finish_name_lookup(Some(vec!["ProbeAlpha".into()]));
+        assert_eq!(form.action.player, "prob");
+
+        form.start_name_lookup();
+        form.key(KeyCode::Tab);
+        form.key(KeyCode::Enter);
+        assert!(form.confirming);
+        form.finish_name_lookup(Some(vec!["ProbeAlpha".into()]));
+        assert_eq!(form.action.player, "prob");
+    }
+
+    #[test]
+    fn missing_match_and_unavailable_list_preserve_manual_entry() {
+        let mut form = Form::new("dj2".into(), "stats");
+        form.finish_name_lookup(Some(vec!["ProbeAlpha".into()]));
+        form.key(KeyCode::Tab);
+        assert!(form.action.player.is_empty());
+        form.action.player = "OtherName".into();
+        form.key(KeyCode::Tab);
+        assert_eq!(form.error, "Нет совпадений.");
+        form.start_name_lookup();
+        form.key(KeyCode::Tab);
+        form.finish_name_lookup(None);
+        assert!(form.error.contains("недоступен"));
+        assert_eq!(form.key(KeyCode::Enter).unwrap().player, "OtherName");
+    }
+
+    #[test]
+    fn tab_does_not_complete_an_invite_reference() {
+        let mut form = Form::new("dj2".into(), "revoke-invite");
+        form.finish_name_lookup(Some(vec!["ProbeAlpha".into()]));
+        form.action.player = "Pro".into();
+        form.key(KeyCode::Tab);
+        assert_eq!(form.action.player, "Pro");
+    }
+
     #[test]
     fn durations() {
         for (s, n) in [
@@ -381,6 +652,42 @@ mod tests {
         for s in ["0s", "01d", "-1d", "1d2h", "366d", "99999999w", "x", "1💩"] {
             assert_eq!(seconds(s), None);
         }
+    }
+
+    #[test]
+    fn permanent_ban_requires_confirmation_and_a_receipt_without_expiry() {
+        let mut form = Form::new("dj2".into(), "ban");
+        form.action.player = "TestPlayer".into();
+        form.action.duration = "perm".into();
+        assert!(form.key(KeyCode::Enter).is_none());
+        assert!(form.confirming);
+        let mut terminal =
+            ratatui::Terminal::new(ratatui::backend::TestBackend::new(96, 28)).unwrap();
+        terminal.draw(|frame| form.draw(frame)).unwrap();
+        assert!(
+            terminal
+                .backend()
+                .buffer()
+                .content
+                .iter()
+                .any(|cell| { cell.symbol() == "p" && cell.fg == Color::Rgb(235, 114, 119) })
+        );
+        form.key(KeyCode::Right);
+        let request = form.key(KeyCode::Enter).unwrap();
+        assert!(request.permanent_ban());
+        let mut value = serde_json::json!({
+            "schema_version": 1, "action": "owner.project-moderation", "command": "ban",
+            "player": "TestPlayer", "ok": true, "effect": "applied", "expires_at": null,
+            "error": null, "unreachable": [],
+        });
+        let receipt = Receipt::parse(&serde_json::to_vec(&value).unwrap(), &request).unwrap();
+        assert!(receipt.message().contains("Бессрочный бан"));
+        value["expires_at"] = serde_json::json!(2000000000_u64);
+        assert!(Receipt::parse(&serde_json::to_vec(&value).unwrap(), &request).is_err());
+        let mut mute = Form::new("dj2".into(), "mute");
+        mute.action.player = "TestPlayer".into();
+        mute.action.duration = "perm".into();
+        assert!(mute.key(KeyCode::Enter).is_none());
     }
     #[test]
     fn ban_requires_second_screen_and_explicit_yes() {

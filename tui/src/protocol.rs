@@ -309,15 +309,127 @@ pub struct ConsoleResult {
 impl ConsoleResult {
     pub fn parse(bytes: &[u8], server: &str, command: &str) -> Result<Self, String> {
         let v: Self = serde_json::from_slice(bytes).map_err(|_| "Неверный ответ команды")?;
-        if v.schema_version != 1 || v.action != "owner.console" || v.server_id != server || v.command != command
-            || !valid_server(server) || !matches!(command, "players" | "roster" | "invites" | "tps" | "save")
+        if v.schema_version != 1
+            || v.action != "owner.console"
+            || v.server_id != server
+            || v.command != command
+            || !valid_server(server)
+            || !matches!(
+                command,
+                "players"
+                    | "roster"
+                    | "permanent-bans"
+                    | "invites"
+                    | "player-names"
+                    | "tps"
+                    | "save"
+            )
             || !matches!(v.effect.as_str(), "none" | "unknown")
             || (command != "save" && v.effect != "none")
-            || v.output.chars().count() > 8192
-            || v.output.chars().any(|c| (c.is_control() && c != '\n') || matches!(c, '\u{200b}'..='\u{200f}' | '\u{202a}'..='\u{202e}' | '\u{2060}'..='\u{206f}'))
-            || if v.ok { v.error.is_some() } else { !v.output.is_empty() || !v.error.as_deref().is_some_and(|e| matches!(e, "invalid_configuration" | "console_unavailable")) }
-        { return Err("Нарушен контракт команды v1".into()); }
+            || if command == "player-names" {
+                !valid_player_names(&v.output)
+            } else {
+                !valid_terminal_output(&v.output)
+            }
+            || if v.ok {
+                v.error.is_some()
+            } else {
+                !v.output.is_empty()
+                    || !v.error.as_deref().is_some_and(|e| {
+                        matches!(e, "invalid_configuration" | "console_unavailable")
+                    })
+            }
+        {
+            return Err("Нарушен контракт команды v1".into());
+        }
         Ok(v)
+    }
+
+    pub fn player_names(&self) -> Option<Vec<String>> {
+        (self.ok && self.command == "player-names").then(|| {
+            self.output
+                .split_terminator('\n')
+                .map(str::to_owned)
+                .collect()
+        })
+    }
+
+    pub fn membership_message(&self) -> Option<String> {
+        if !self.ok {
+            return None;
+        }
+        match self.command.as_str() {
+            "roster" => Some(format!("Игроки проекта\n\n{}", self.output)),
+            "permanent-bans" => Some(format!(
+                "Бессрочные баны\n\n{}\n\nu — снять бан",
+                self.output
+            )),
+            _ => None,
+        }
+    }
+}
+
+fn valid_player_names(output: &str) -> bool {
+    output.len() < 17_000
+        && output.split_terminator('\n').count() <= 1000
+        && output
+            .split_terminator('\n')
+            .all(crate::moderation::valid_player)
+}
+
+fn valid_terminal_output(value: &str) -> bool {
+    value.chars().count() <= 8192
+        && !value.chars().any(|c| {
+            (c.is_control() && c != '\n')
+                || matches!(c, '\u{200b}'..='\u{200f}' | '\u{202a}'..='\u{202e}' | '\u{2060}'..='\u{206f}')
+        })
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PlayerStatsResult {
+    schema_version: u32,
+    action: String,
+    server_id: String,
+    player: String,
+    pub ok: bool,
+    output: String,
+    #[serde(deserialize_with = "required_option")]
+    error: Option<String>,
+}
+
+impl PlayerStatsResult {
+    pub fn parse(bytes: &[u8], server: &str, player: &str) -> Result<Self, String> {
+        let v: Self = serde_json::from_slice(bytes).map_err(|_| "Неверный ответ статистики")?;
+        let valid_payload = if v.ok {
+            v.error.is_none() && !v.output.is_empty() && valid_terminal_output(&v.output)
+        } else {
+            v.output.is_empty()
+                && matches!(
+                    v.error.as_deref(),
+                    Some("invalid_request" | "profile_not_found" | "profile_unavailable")
+                )
+        };
+        if v.schema_version != 1
+            || v.action != "owner.player-stats"
+            || v.server_id != server
+            || v.player != player
+            || !valid_server(server)
+            || !crate::moderation::valid_player(player)
+            || !valid_payload
+        {
+            return Err("Ответ статистики не соответствует запросу".into());
+        }
+        Ok(v)
+    }
+
+    pub fn message(self) -> String {
+        match self.error.as_deref() {
+            Some("profile_not_found") => format!("Игрок {} не зарегистрирован.", self.player),
+            Some("invalid_request") => "Проверьте ник игрока и выбранный сервер.".into(),
+            Some(_) => "Не удалось проверить профиль игрока.".into(),
+            None => self.output,
+        }
     }
 }
 

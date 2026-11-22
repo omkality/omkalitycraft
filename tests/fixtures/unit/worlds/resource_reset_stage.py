@@ -24,7 +24,7 @@ LIMITS = BackupPolicy(32 * 1024**2, 3, 16 * 1024**2, 1)
 @pytest.fixture
 def data(sample, tmp_path, monkeypatch):
     server, world, entity, player, _records = sample
-    (server / "server.properties").write_text("level-name=world\n")
+    (server / "server.properties").write_text("level-name=world\nlevel-seed=\n")
     (world / "DIM-18000/region").mkdir()
     (world / "DIM-18000/region/r.0.0.mca").write_bytes(b"old-resource")
     (world / "region").mkdir()

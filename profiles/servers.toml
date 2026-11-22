@@ -2,7 +2,7 @@ schema_version = 1
 
 [[servers]]
 id = "dj2"
-name = "Divine Journey 2 Server 1"
+name = "Divine Journey 2 RU"
 minecraft = "1.12.2"
 pack_version = "2.23.4"
 loader = "forge"

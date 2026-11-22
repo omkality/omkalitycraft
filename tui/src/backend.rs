@@ -1,6 +1,8 @@
 use crate::protocol::{
-    ConsoleResult, InvitationResult, Overview, TpsHistory, TpsWindow, valid_server,
+    ConsoleResult, InvitationResult, Overview, PlayerStatsResult, TpsHistory, TpsWindow,
+    valid_server,
 };
+use crate::restrictions;
 use std::{
     ffi::OsString,
     fs::File,
@@ -28,16 +30,25 @@ pub struct Backend {
 pub enum Request {
     Overview(Option<String>, TpsWindow),
     Console { server: String, command: String },
-    Moderation(crate::moderation::Action),
+    PlayerStats { server: String, player: String },
+    Restrictions,
+    Moderation(crate::moderation::Action, Option<String>),
     Invite,
     WorldReset(crate::world_reset::Request),
 }
 pub enum Reply {
     Overview(Overview, Option<Result<TpsHistory, String>>),
     Console(ConsoleResult),
-    Moderation(crate::moderation::Receipt),
+    PlayerStats(PlayerStatsResult),
+    Moderation(crate::moderation::Receipt, Option<ModerationRefresh>),
+    Restrictions(restrictions::Snapshot),
     Invitation(InvitationResult),
     WorldReset(crate::world_reset::Receipt),
+}
+
+pub enum ModerationRefresh {
+    Membership(String, String),
+    Restrictions(Option<restrictions::Snapshot>),
 }
 
 struct OwnedChild(Child);
@@ -85,9 +96,18 @@ pub fn copy_clipboard(code: &str, deadline: Instant) -> std::io::Result<bool> {
 }
 
 pub fn capture(
+    command: Command,
+    cancel: &AtomicBool,
+    timeout: Duration,
+) -> Result<(Vec<u8>, bool), String> {
+    capture_limit(command, cancel, timeout, MAX_OUTPUT)
+}
+
+fn capture_limit(
     mut command: Command,
     cancel: &AtomicBool,
     timeout: Duration,
+    limit: u64,
 ) -> Result<(Vec<u8>, bool), String> {
     // A private anonymous file avoids pipe deadlocks and reader threads surviving a timeout.
     let mut output = tempfile::tempfile().map_err(|_| "Не удалось создать буфер ответа")?;
@@ -115,7 +135,7 @@ pub fn capture(
         if Instant::now() >= deadline {
             return Err("CLI не ответил вовремя; результат команды неизвестен".into());
         }
-        if file_size(&output)? > MAX_OUTPUT {
+        if file_size(&output)? > limit {
             return Err("Ответ CLI превысил лимит".into());
         }
         if let Some(status) = child
@@ -130,7 +150,7 @@ pub fn capture(
     if !matches!(status.code(), Some(0 | 1)) {
         return Err("CLI завершился без контрактного результата".into());
     }
-    if file_size(&output)? > MAX_OUTPUT {
+    if file_size(&output)? > limit {
         return Err("Ответ CLI превысил лимит".into());
     }
     output
@@ -138,10 +158,10 @@ pub fn capture(
         .map_err(|_| "Ошибка чтения ответа")?;
     let mut bytes = Vec::new();
     output
-        .take(MAX_OUTPUT + 1)
+        .take(limit + 1)
         .read_to_end(&mut bytes)
         .map_err(|_| "Ошибка чтения ответа")?;
-    if bytes.len() as u64 > MAX_OUTPUT {
+    if bytes.len() as u64 > limit {
         return Err("Ответ CLI превысил лимит".into());
     }
     Ok((bytes, status.success()))
@@ -193,6 +213,9 @@ impl Backend {
             Request::Invite => {
                 command.args(["access", "invite", "--show-code"]);
             }
+            Request::Restrictions => {
+                command.arg("project-restrictions");
+            }
             Request::WorldReset(action) => {
                 if !action.valid() {
                     return Err("Неверный запрос вайпа".into());
@@ -212,12 +235,22 @@ impl Backend {
                     command.args(["--confirm", confirmation]);
                 }
             }
-            Request::Moderation(a) => {
+            Request::PlayerStats { server, player } => {
+                if !valid_server(server) || !crate::moderation::valid_player(player) {
+                    return Err("Неверный запрос статистики игрока".into());
+                }
+                command.args(["player-stats", "--server", server, "--player", player]);
+            }
+            Request::Moderation(a, _) => {
                 if !valid_server(&a.server)
                     || !matches!(
                         a.command.as_str(),
-                        "kick" | "ban" | "mute" | "unban" | "revoke-invite"
+                        "kick" | "ban" | "mute" | "unban" | "unmute" | "revoke-invite"
                     )
+                    || a.profile.as_deref().is_some_and(|profile| {
+                        !matches!(a.command.as_str(), "unban" | "unmute")
+                            || !restrictions::valid_profile(profile)
+                    })
                 {
                     return Err("Неверная команда модерации".into());
                 }
@@ -239,6 +272,9 @@ impl Backend {
                 if matches!(a.command.as_str(), "ban" | "revoke-invite") {
                     command.arg("--confirm-ban");
                 }
+                if let Some(profile) = &a.profile {
+                    command.args(["--profile", profile]);
+                }
             }
             Request::Overview(server, _) => {
                 command.arg("overview");
@@ -256,7 +292,13 @@ impl Backend {
                 if !valid_server(server)
                     || !matches!(
                         action.as_str(),
-                        "players" | "roster" | "invites" | "tps" | "save"
+                        "players"
+                            | "roster"
+                            | "permanent-bans"
+                            | "invites"
+                            | "player-names"
+                            | "tps"
+                            | "save"
                     )
                 {
                     return Err("Неверная команда".into());
@@ -269,10 +311,17 @@ impl Backend {
         }
         let timeout = match &request {
             Request::WorldReset(a) if a.mutating() => 24 * 60 * 60,
-            Request::Moderation(_) => 25,
+            Request::Moderation(action, _) if action.permanent_ban() => 120,
+            Request::Moderation(..) => 25,
+            Request::PlayerStats { .. } => 300,
             _ => 15,
         };
-        let (bytes, success) = capture(command, &cancel, Duration::from_secs(timeout))?;
+        let timeout = Duration::from_secs(timeout);
+        let (bytes, success) = if matches!(&request, Request::Restrictions) {
+            capture_limit(command, &cancel, timeout, 512 * 1024)?
+        } else {
+            capture(command, &cancel, timeout)?
+        };
         let (reply, ok) = match request {
             Request::Invite => {
                 let value = InvitationResult::parse(&bytes)?;
@@ -284,10 +333,46 @@ impl Backend {
                 let ok = value.ok;
                 (Reply::WorldReset(value), ok)
             }
-            Request::Moderation(a) => {
+            Request::Moderation(a, section) => {
                 let value = crate::moderation::Receipt::parse(&bytes, &a)?;
                 let ok = value.ok;
-                (Reply::Moderation(value), ok)
+                let refresh =
+                    section.filter(|_| ok == success && (ok || value.effect == "unknown"));
+                let page = refresh.map(|command| {
+                    if command == "restrictions" {
+                        let snapshot = match self.request(Request::Restrictions, cancel) {
+                            Ok(Reply::Restrictions(snapshot)) => Some(snapshot),
+                            _ => None,
+                        };
+                        return ModerationRefresh::Restrictions(snapshot);
+                    }
+                    let reply = self.request(
+                        Request::Console {
+                            server: a.server,
+                            command: command.clone(),
+                        },
+                        cancel,
+                    );
+                    let message = match reply {
+                        Ok(Reply::Console(list)) => list.membership_message(),
+                        _ => None,
+                    }
+                    .unwrap_or_else(|| {
+                        "Список не обновился. Нажмите 1 или 4, чтобы перечитать его.".into()
+                    });
+                    ModerationRefresh::Membership(command, message)
+                });
+                (Reply::Moderation(value, page), ok)
+            }
+            Request::Restrictions => {
+                let value = restrictions::Snapshot::parse(&bytes)?;
+                let ok = value.ok;
+                (Reply::Restrictions(value), ok)
+            }
+            Request::PlayerStats { server, player } => {
+                let value = PlayerStatsResult::parse(&bytes, &server, &player)?;
+                let ok = value.ok;
+                (Reply::PlayerStats(value), ok)
             }
             Request::Overview(server, window) => {
                 let value = Overview::parse(&bytes)?;

@@ -30,7 +30,7 @@ impl Request {
         valid_server(&self.server)
             && match self.command {
                 "inspect" => self.confirmation.is_none(),
-                "prepare" | "apply" | "start" => {
+                "run" | "prepare" | "apply" | "start" => {
                     self.confirmation.as_deref().is_some_and(|s| hex(s, 64))
                 }
                 _ => false,
@@ -80,6 +80,7 @@ pub struct Receipt {
     backup: Option<String>,
     resource: Option<String>,
     installation: Option<String>,
+    diagnostic: Option<String>,
     #[serde(default)]
     worlds: Vec<World>,
 }
@@ -93,6 +94,12 @@ impl Receipt {
             || value.command != request.command
             || !matches!(value.effect.as_str(), "none" | "applied" | "unknown")
             || value.ok != value.error.is_none()
+            || value.diagnostic.as_deref().is_some_and(|detail| {
+                value.ok && value.stage != "review"
+                    || detail.is_empty()
+                    || detail.len() > 4096
+                    || detail.chars().any(|c| c != '\n' && c.is_control())
+            })
             || value.ok
                 && value.effect
                     != if request.mutating() {
@@ -159,7 +166,7 @@ impl Receipt {
                 && request.mutating()
                 && !matches!(
                     (request.command, value.stage.as_str()),
-                    ("prepare", "apply") | ("apply", "start") | ("start", "complete")
+                    ("prepare", "apply") | ("apply", "start") | ("start" | "run", "complete")
                 )
         {
             return Err(
@@ -169,11 +176,43 @@ impl Receipt {
         Ok(value)
     }
 
+    pub fn report(&self) -> String {
+        let mut lines = vec![
+            format!("Server: {}", self.server_id),
+            format!("Step: {}", self.command),
+            format!(
+                "Result: {} ({})",
+                self.error.as_deref().unwrap_or("unknown"),
+                self.effect
+            ),
+        ];
+        if let Some(dimension) = self.dimension {
+            lines.push(format!("Dimension: {dimension}"));
+        }
+        for (name, id) in [
+            ("Maintenance", &self.maintenance),
+            ("Backup", &self.backup),
+            ("Staging", &self.resource),
+            ("Installation", &self.installation),
+        ] {
+            if let Some(id) = id {
+                lines.push(format!("{name}: {id}"));
+            }
+        }
+        if let Some(detail) = &self.diagnostic {
+            lines.push(detail.to_owned());
+        }
+        lines.join("\n")
+    }
+
+    pub fn needs_report(&self) -> bool {
+        !self.ok || self.stage == "review"
+    }
+
     fn label(&self) -> &str {
         match self.stage.as_str() {
-            "prepare" => "Подготовить вайп и резервную копию",
-            "apply" => "Установить новый мир",
-            "start" => "Запустить сервер с новым миром",
+            "prepare" => "Начать вайп",
+            "apply" | "start" => "Продолжить вайп",
             _ => "",
         }
     }
@@ -183,11 +222,9 @@ impl Receipt {
             return match error {
                 "state_changed" => "Состояние изменилось. Откройте вайп заново.",
                 "owner_busy" => "Другая операция уже выполняется.",
-                "ingress_not_drained" => "Дождитесь, пока все игроки выйдут.",
+                "ingress_not_drained" => "Не удалось закрыть игровой вход или отключить игроков.",
                 "join_closed" => "Новый мир запустился. Игровой вход открыть не удалось.",
-                _ if self.effect == "unknown" => {
-                    "Этап прервался. Проверьте состояние и журналы перед продолжением."
-                }
+                _ if self.effect == "unknown" => "Этап вайпа прервался.",
                 _ => "Проверьте настройки резервного копирования и вайпа.",
             };
         }
@@ -198,19 +235,19 @@ impl Receipt {
             "used-target" => "Не удалось подготовить следующий вайп.",
             "prepare" => {
                 if self.dimension == Some(0) {
-                    "Выйдите с сервера.\nВайп сбросит все миры и игровой прогресс.\nСервер остановится и создаст резервную копию."
+                    "Вайп сбросит все измерения, предметы, квесты и достижения.\nИгроков отключит. Сервер сохранит копию, создаст новый мир со случайным сидом и запустится."
                 } else {
-                    "Выйдите с сервера.\nСервер остановится и создаст резервную копию."
+                    "Игроков отключит. Сервер сохранит копию, сбросит выбранный мир и запустится."
                 }
             }
             "apply" => {
-                "Копия проверена. Прежний мир сохранится в истории. Сервер останется остановленным."
+                "Копия проверена. Сервер установит новый мир, запустится и откроет вход после проверки."
             }
             "start" => {
                 "Новый мир установлен. Запуск проверит его. Игровой вход откроется после проверки."
             }
             "complete" => "Сервер запущен с новым миром.",
-            _ => "Этап требует проверки в журналах владельца.",
+            _ => "Вайп остановлен на незавершённом этапе. Подробности в отчёте ниже.",
         }
     }
 }
@@ -219,6 +256,7 @@ pub struct Form {
     receipt: Receipt,
     confirming: bool,
     yes: bool,
+    report: Option<String>,
 }
 
 impl Form {
@@ -227,7 +265,18 @@ impl Form {
             receipt,
             confirming: false,
             yes: false,
+            report: None,
         }
+    }
+
+    pub fn with_report(mut self, report: String) -> Self {
+        self.report = Some(report);
+        self
+    }
+
+    pub fn dismiss_confirmation(&mut self) -> bool {
+        self.yes = false;
+        std::mem::take(&mut self.confirming)
     }
 
     pub fn key(&mut self, key: KeyCode) -> Option<Request> {
@@ -253,12 +302,7 @@ impl Form {
             (true, KeyCode::Enter) if self.yes => {
                 return Some(Request {
                     server: self.receipt.server_id.clone(),
-                    command: match self.receipt.stage.as_str() {
-                        "prepare" => "prepare",
-                        "apply" => "apply",
-                        "start" => "start",
-                        _ => return None,
-                    },
+                    command: "run",
                     confirmation: self.receipt.confirmation.clone(),
                     world: selected.map(|index| worlds[index].dimension),
                 });
@@ -302,6 +346,9 @@ impl Form {
             }
         }
         body.push_str(&format!("\n{}\n", self.receipt.status()));
+        if let Some(report) = &self.report {
+            body.push_str(&format!("\n{report}\n"));
+        }
         if self.confirming {
             let choices = if self.yes {
                 "  Нет      [ Да, выполнить ]"
@@ -309,7 +356,7 @@ impl Form {
                 "[ Нет, вернуться ]       Да"
             };
             body.push_str(&format!(
-                "\n{}\n{choices}\n← → / Tab · Enter · Esc",
+                "\n{}\n{choices}\n← → / Tab · Enter · Esc — назад",
                 self.receipt.label()
             ));
         } else {
@@ -319,7 +366,7 @@ impl Form {
             if worlds.len() > 1 {
                 body.push_str("\n↑ ↓ — выбрать мир");
             }
-            body.push_str("\nEsc — закрыть");
+            body.push_str("\nEsc — назад");
         }
         frame.render_widget(Clear, popup);
         frame.render_widget(
@@ -400,7 +447,7 @@ mod tests {
         let command = form.key(KeyCode::Enter).unwrap();
         assert!(command.valid());
         assert_eq!(command.server, "dj2");
-        assert_eq!(command.command, "apply");
+        assert_eq!(command.command, "run");
         assert_eq!(command.confirmation, Some("a".repeat(64)));
     }
 
@@ -431,7 +478,7 @@ mod tests {
             assert!(form.key(KeyCode::Right).is_none());
             let request = form.key(KeyCode::Enter).unwrap();
             assert_eq!(request.world, Some(dimension));
-            assert_eq!(request.command, "apply");
+            assert_eq!(request.command, "run");
             assert_eq!(request.confirmation, Some("a".repeat(64)));
         }
     }

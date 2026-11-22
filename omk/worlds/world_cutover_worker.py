@@ -73,6 +73,7 @@ def tree(root, data):
         world_name=data["world"],
         max_expanded_bytes=data["world_max_bytes"],
         path_policy="linux-server",
+        allow_empty=(data.get("reset") or {}).get("fresh_world") is True,
     )
 
 
@@ -311,6 +312,12 @@ def prepare(request, source, storage, target, root, identity, original, candidat
     _sync_directory(root)
     _sync_directory(root.parent)
     _sync_directory(root.parent.parent)
+    if not candidate:
+        # A full reset installs an empty save directory; Forge creates its metadata.
+        empty = root / "next" / identity["world"]
+        empty.mkdir(mode=0o700)
+        _sync_directory(empty)
+        _sync_directory(empty.parent)
     for name, entry in sorted(candidate.items()):
         lease(request, writing=True)
         runtime._copy(target, root / "next", name, entry)

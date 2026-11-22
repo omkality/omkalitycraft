@@ -75,6 +75,169 @@ fn console_requires_correlation_and_safe_text() {
 }
 
 #[test]
+fn player_names_reply_accepts_only_a_bounded_list_of_nicknames() {
+    let mut value = serde_json::json!({
+        "schema_version": 1, "action": "owner.console", "server_id": "dj2",
+        "command": "player-names", "ok": true, "effect": "none", "error": null,
+        "output": "A1\nprobe_2",
+    });
+    let parse = |payload: &serde_json::Value| {
+        ConsoleResult::parse(&serde_json::to_vec(payload).unwrap(), "dj2", "player-names")
+    };
+    assert_eq!(
+        parse(&value).unwrap().player_names().unwrap(),
+        ["A1", "probe_2"]
+    );
+    value["output"] = serde_json::json!("");
+    assert!(parse(&value).unwrap().player_names().unwrap().is_empty());
+    for invalid in [
+        "Good\nBad Name".into(),
+        "Good\n\u{1b}[2J".into(),
+        "Good\n\nOther".into(),
+        "a\n".repeat(1001),
+    ] {
+        value["output"] = serde_json::json!(invalid);
+        assert!(parse(&value).is_err());
+    }
+}
+
+#[test]
+fn player_stats_uses_nickname_only_and_rejects_unbound_output() {
+    assert_eq!(shortcut_key(KeyCode::Char('ы')), KeyCode::Char('s'));
+    let mut form = moderation::Form::new("dj2".into(), "stats");
+    assert!(form.key(KeyCode::Enter).is_none());
+    for c in "FirstJoin".chars() {
+        assert!(form.key(KeyCode::Char(c)).is_none());
+    }
+    let action = form.key(KeyCode::Enter).unwrap();
+    assert_eq!(action.player, "FirstJoin");
+    assert_eq!(action.command, "stats");
+    assert!(action.duration.is_empty() && action.reason.is_empty());
+    assert!(!form.confirming);
+
+    let base = serde_json::json!({
+        "schema_version": 1, "action": "owner.player-stats", "server_id": "dj2",
+        "player": "FirstJoin", "ok": true, "output": "Наиграно · 1 ч", "error": null,
+    });
+    let parse = |value: &serde_json::Value, player| {
+        protocol::PlayerStatsResult::parse(&serde_json::to_vec(value).unwrap(), "dj2", player)
+    };
+    assert_eq!(
+        parse(&base, "FirstJoin").unwrap().message(),
+        "Наиграно · 1 ч"
+    );
+    assert!(parse(&base, "Other").is_err());
+    let mut unsafe_output = base;
+    unsafe_output["output"] = serde_json::json!("\u{1b}[2J");
+    assert!(parse(&unsafe_output, "FirstJoin").is_err());
+}
+
+#[test]
+fn failed_player_lookup_keeps_the_roster_and_the_error_expires() {
+    let missing = serde_json::json!({
+        "schema_version": 1, "action": "owner.player-stats", "server_id": "dj2",
+        "player": "MissingProfile", "ok": false, "output": "", "error": "profile_not_found",
+    });
+    let error = protocol::PlayerStatsResult::parse(
+        &serde_json::to_vec(&missing).unwrap(),
+        "dj2",
+        "MissingProfile",
+    )
+    .unwrap()
+    .message();
+    let roster = "Игроки проекта\n\nFirstJoin\nSecondJoin";
+    let mut app = App::new(false);
+    app.show_section("roster".into(), roster.into());
+    app.command_page_mut().scroll = 1;
+    let mut terminal = Terminal::new(TestBackend::new(84, 28)).unwrap();
+    let mut render = |app: &mut App| {
+        terminal.draw(|f| ui::draw(f, app)).unwrap();
+        terminal
+            .backend()
+            .buffer()
+            .content
+            .iter()
+            .map(|cell| cell.symbol())
+            .collect::<String>()
+    };
+
+    let now = Instant::now();
+    app.finish_player_stats(Err(error.clone()), now);
+    let active = render(&mut app);
+    assert!(active.contains("FirstJoin") && active.contains("SecondJoin"));
+    assert!(active.contains("Ошибка · Игрок MissingProfile"));
+    assert!(!app.failed);
+    assert_eq!(app.command_page().message, roster);
+    assert_eq!(app.command_page().scroll, 1);
+
+    app.finish_player_stats(Err(error), now - Duration::from_secs(5));
+    let expired = render(&mut app);
+    assert!(expired.contains("FirstJoin") && expired.contains("SecondJoin"));
+    assert!(!expired.contains("MissingProfile"));
+    assert_eq!(app.command_page().scroll, 1);
+
+    app.finish_player_stats(Ok("Карточка FirstJoin".into()), now);
+    assert!(render(&mut app).contains("Карточка FirstJoin"));
+    assert_eq!(app.command_page().scroll, 0);
+}
+
+#[test]
+fn escape_returns_one_level_and_only_the_menu_opens_exit_confirmation() {
+    let mut app = App::new(false);
+    let menu = app.command_page().message.clone();
+    app.show_section("roster".into(), "Игроки проекта\nMember".into());
+    app.command_page_mut().scroll = 7;
+    app.finish_player_stats(Ok("Карточка Member".into()), Instant::now());
+    app.back_or_confirm_exit();
+    assert_eq!(app.command_page().message, "Игроки проекта\nMember");
+    assert_eq!(app.command_page().scroll, 7);
+    assert!(app.confirm.is_none());
+
+    let mut form = moderation::Form::new("dj2".into(), "ban");
+    for c in "Member".chars() {
+        form.key(KeyCode::Char(c));
+    }
+    form.key(KeyCode::Enter);
+    form.key(KeyCode::Right);
+    assert!(form.confirming);
+    app.moderation = Some(form);
+    assert!(app.dismiss_dialog());
+    let form = app.moderation.as_mut().unwrap();
+    assert!(!form.confirming);
+    assert_eq!(form.action.player, "Member");
+    assert!(form.key(KeyCode::Enter).is_none());
+    assert!(form.key(KeyCode::Enter).is_none());
+    assert!(app.dismiss_dialog());
+    assert!(app.moderation.is_none());
+    assert_eq!(app.command_page().scroll, 7);
+
+    app.back_or_confirm_exit();
+    assert_eq!(app.command_page().message, menu);
+    assert!(app.confirm.is_none());
+    app.back_or_confirm_exit();
+    assert!(matches!(
+        app.confirm,
+        Some(Confirmation::Exit { approved: false })
+    ));
+    assert!(app.dismiss_dialog());
+    assert_eq!(app.command_page().message, menu);
+    assert!(app.confirm.is_none());
+}
+
+#[test]
+fn refreshed_membership_section_is_visible_after_dismissing_the_ban_result() {
+    let mut app = App::new(false);
+    app.show_section("roster".into(), "Игроки проекта\nMember".into());
+    assert_eq!(app.membership_section(), Some("roster"));
+    app.show_detail("Бессрочный бан применён".into());
+    app.refresh_section("permanent-bans", "Неверный раздел".into());
+    app.refresh_section("roster", "В списке пока нет игроков.".into());
+    assert_eq!(app.command_page().message, "Бессрочный бан применён");
+    app.back_or_confirm_exit();
+    assert_eq!(app.command_page().message, "В списке пока нет игроков.");
+}
+
+#[test]
 fn renders_resizes_and_keeps_unknown_distinct_from_zero() {
     let mut app = App::new(true);
     app.accept(Overview::parse(&serde_json::to_vec(&demo()).unwrap()).unwrap());
@@ -373,6 +536,22 @@ fn real_python_cli_reads_an_isolated_config_without_writes() {
             assert_eq!(v.metrics_status, "disabled");
         }
         _ => panic!("Wrong reply"),
+    }
+    match b
+        .request(
+            Request::PlayerStats {
+                server: "dj2".into(),
+                player: "FirstJoin".into(),
+            },
+            Arc::new(AtomicBool::new(false)),
+        )
+        .unwrap()
+    {
+        Reply::PlayerStats(v) => {
+            assert!(!v.ok);
+            assert_eq!(v.message(), "Не удалось проверить профиль игрока.");
+        }
+        _ => panic!("Wrong player stats reply"),
     }
     assert_eq!(std::fs::read_dir(private).unwrap().count(), 1);
 }

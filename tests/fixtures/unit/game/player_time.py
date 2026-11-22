@@ -74,6 +74,8 @@ def transport(monkeypatch):
                 raise AdminError("helper timeout")
             return state.get("response", json.dumps({"ok": True, "data": data}))
         if args[0] == "inspect":
+            if state.get("auto_removed"):
+                return "[]\n"
             return json.dumps(
                 [
                     {
