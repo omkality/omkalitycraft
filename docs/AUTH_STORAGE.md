@@ -1,6 +1,6 @@
 # Постоянное состояние Drasl и проверка восстановления
 
-Drasl локально и на будущем VPS использует один Linux runtime:
+Drasl на VPS и в локальном стенде использует общий Linux runtime:
 [`service.yaml`](../deploy/auth/service.yaml), образ `omkalitycraft-drasl:4.0.0-omk.3`,
 один процесс и именованный Docker volume на `/var/lib/drasl`. База находится на
 Linux-файловой системе Docker, не в Windows bind mount. В tmpfs остаётся только `/tmp`.
@@ -9,12 +9,9 @@ Linux-файловой системе Docker, не в Windows bind mount. В tmp
 
 ## Запуск постоянного экземпляра
 
-Это шаблон будущего развёртывания, не команда миграции существующих аккаунтов.
-До публичного использования нужны HTTPS/reverse proxy, rate limits, внешняя копия
-бэкапов, мониторинг диска и проверка доступности домена (#38). Docker Desktop
-использует Linux VM; ядро, диск, маршрутизация, TLS и доступный RAM на VPS могут
-отличаться. Общий Compose устраняет расхождение контейнерной конфигурации, но не
-заменяет финальный smoke на выбранном VPS.
+Команды ниже предназначены для настройки экземпляра Drasl. На VPS используйте
+свой HTTPS-адрес и приватный upstream. При обновлении сохраняйте Compose
+project name и привязку к существующему тому. [Приёмка на VPS](LAUNCH_READINESS.md)
 
 ```powershell
 New-Item -ItemType Directory -Force .omk-admin | Out-Null
