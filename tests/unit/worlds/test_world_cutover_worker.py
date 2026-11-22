@@ -7,9 +7,13 @@ from omk.worlds.reset import resource_reset_runtime as runtime
 from tests.fixtures.unit.backups.ftb_restore_authority import records
 from tests.fixtures.unit.worlds.resource_reset_inventory import sample
 from tests.fixtures.unit.worlds.resource_reset_stage import data
-from tests.fixtures.unit.worlds.world_cutover_worker import exchange, prepared
+from tests.fixtures.unit.worlds.world_cutover_worker import (
+    exchange,
+    full_world_exchange,
+    prepared,
+)
 
-__all__ = ["data", "exchange", "prepared", "records", "sample"]
+__all__ = ["data", "exchange", "full_world_exchange", "prepared", "records", "sample"]
 
 
 def execute(exchange, action):
@@ -100,6 +104,21 @@ def test_install_keeps_exact_previous_world_and_all_runtime_bytes(exchange):
     assert cutover.tree(target, request["runtime"]) == candidate
     with pytest.raises(ValueError, match="already attempted"):
         execute(exchange, "apply")
+
+
+def test_main_world_install_has_no_seed_or_progress_and_preserves_the_backup(
+    full_world_exchange,
+):
+    request, source, _, target = full_world_exchange
+    original = cutover.tree(source, request["runtime"])
+    assert len(original) > 1
+    assert list((target / "world").iterdir()) == []
+    result = execute(full_world_exchange, "apply")
+    assert result["phase"] == "installed"
+    assert result == execute(full_world_exchange, "verify")
+    assert list((source / "world").iterdir()) == []
+    root = cutover.paths(source, request["operation"])
+    assert cutover.tree(root / "previous", request["runtime"]) == original
 
 
 @pytest.mark.parametrize("leg", [1, 2])

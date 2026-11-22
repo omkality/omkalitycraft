@@ -387,7 +387,7 @@ def _add_tui_operation_parsers(actions):
     world_reset.add_argument(
         "--command",
         dest="world_reset_command",
-        choices=("inspect", "prepare", "apply", "start"),
+        choices=("inspect", "run", "prepare", "apply", "start"),
         required=True,
     )
     world_reset.add_argument("--confirm", default="")

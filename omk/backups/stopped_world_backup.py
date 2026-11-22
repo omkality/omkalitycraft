@@ -35,6 +35,7 @@ def inventory(
     world_name="lab-world",
     max_expanded_bytes=MAX_EXPANDED_BYTES,
     path_policy="portable",
+    allow_empty=False,
 ):
     if (
         not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", world_name)
@@ -63,11 +64,12 @@ def inventory(
                     "bytes": length,
                     "sha256": hashlib.file_digest(file, "sha256").hexdigest(),
                 }
-    if world_name + "/level.dat" not in result:
+    if world_name + "/level.dat" not in result and (result or not allow_empty):
         raise ValueError("World has no level marker")
-    validate_inventory(
-        result, max_expanded_bytes=max_expanded_bytes, path_policy=path_policy
-    )
+    if result or not allow_empty:
+        validate_inventory(
+            result, max_expanded_bytes=max_expanded_bytes, path_policy=path_policy
+        )
     return result
 
 

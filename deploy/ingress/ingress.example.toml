@@ -13,3 +13,5 @@ config_dir = "ingress-config/dj2"
 host_port = 25580
 container_port = 25565
 backend_port = 25565
+# Enable this together with the Compose profile maintenance-messages.
+# maintenance_messages = true

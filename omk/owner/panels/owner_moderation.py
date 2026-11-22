@@ -114,6 +114,40 @@ def _receipt(output, result, nonce, uid, action):
     return accepted.model_dump(mode="json")
 
 
+def kick_for_maintenance(config, server, reason):
+    """Send the maintenance reason to each player on the selected server."""
+    from omk.labs.recovery.recovery_console import (  # noqa: PLC0415
+        ConsoleError,
+        command,
+        online_players,
+    )
+    from omk.owner.admin_maintenance import credential  # noqa: PLC0415
+
+    endpoint, password = credential(config, server)
+    players = online_players(command(endpoint, password, "list uuids"))
+    encoded = base64.urlsafe_b64encode(reason.encode("utf-8")).decode().rstrip("=")
+    for uid, player in players.items():
+        nonce = uuid4().hex
+        result = {"server_id": server, "command": "kick", "player": player}
+        receipt = _receipt(
+            command(
+                endpoint,
+                password,
+                f"list omk-moderation kick {nonce} {uid} {player} 0 {encoded} v1",
+            ),
+            result,
+            nonce,
+            uid,
+            "kick",
+        )
+        if not receipt["ok"]:
+            remaining = online_players(command(endpoint, password, "list uuids"))
+            if uid in remaining:
+                raise ConsoleError(
+                    "Minecraft refused to disconnect a player for maintenance"
+                )
+
+
 def run(path, server, action, player, *, duration="", reason="", confirmed=False):
     result = {
         "server_id": server,

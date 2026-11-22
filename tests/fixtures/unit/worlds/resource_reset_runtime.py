@@ -17,7 +17,7 @@ __all__ = ["data", "records", "sample"]
 def prepared(data):
     request, source, storage, target, _ = data
     (source / "server.properties").write_text(
-        "level-name=world\nwhite-list=true\nrcon.password=fixture-only\n"
+        "level-name=world\nlevel-seed=\nwhite-list=true\nrcon.password=fixture-only\n"
     )
     (source / "eula.txt").write_text("# Already accepted in source\neula=true\n")
     for name in runtime.LISTS:

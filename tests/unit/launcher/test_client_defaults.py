@@ -1,5 +1,6 @@
 import copy
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -158,6 +159,7 @@ def test_defaults_merge_without_resetting_player_options_or_other_servers(
     tmp_path: Path,
 ):
     folder, release = setup(tmp_path)
+    release = replace(release, pack_id="dj2")
     original_options = b'lang:en_us\nrenderDistance:6\nsoundCategory_master:0.25\nresourcePacks:["MyPack"]\n'
     (folder / "options.txt").write_bytes(original_options)
     custom = Tag(
@@ -188,6 +190,7 @@ def test_defaults_merge_without_resetting_player_options_or_other_servers(
     ) == ["MyPack", "FM_NewFont"]
     servers = read_nbt((folder / "servers.dat").read_bytes())[1]["servers"].value[1]
     assert len(servers) == 2 and servers[1] == custom
+    assert servers[0].value["name"].value == "Divine Journey 2 (server 1)"
     assert any(
         path.read_bytes() == original_options
         for path in (folder / ".omk-defaults-backups").glob("*options.txt")
