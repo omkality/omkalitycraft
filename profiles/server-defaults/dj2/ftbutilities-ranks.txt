@@ -9,6 +9,8 @@ ftbutilities.homes.cooldown: 10s
 ftbutilities.homes.warmup: 3s
 // Owner accepts stock RTP's magma-surface limitation for the initial launch.
 command.ftbutilities.rtp: true
+// Core's native RTP policy replaces FTB's per-teleport cooldown.
+ftbutilities.rtp.cooldown: 0s
 
 [moderator extends player]
 power: 20

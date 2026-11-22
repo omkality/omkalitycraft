@@ -9,6 +9,7 @@ from omk.shared.profiles import PROJECT_ROOT
 
 POLICY_FILE = "omkalitycore-rtp.properties"
 DEFAULT_PROFILE = PROJECT_ROOT / "profiles/server-defaults/dj2/rtp.json"
+NATIVE_POLICY = DEFAULT_PROFILE.with_name(POLICY_FILE)
 
 
 def _number(values, key, default, low, high):
@@ -101,3 +102,12 @@ def write_rtp_policy(config_directory: Path, environ=None):
             + f"worlds={worlds}\n"
         )
     return plan
+
+
+def write_native_rtp_policy(config_directory: Path) -> None:
+    """Stage the DJ2 native search with a per-player attempt budget."""
+    folder = Path(config_directory)
+    if not folder.is_dir() or any(p.is_symlink() for p in (folder, *folder.parents)):
+        raise ValueError("A real offline config directory is required")
+    with (folder / POLICY_FILE).open("xb") as file:
+        file.write(NATIVE_POLICY.read_bytes())
