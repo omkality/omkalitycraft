@@ -26,6 +26,13 @@ def validate_data(data, player):
         or type(data.get("available")) is not bool
     ):
         raise AdminError("Invalid saved-time response identity")
+    if "active_millis" in data:
+        if (
+            type(data["active_millis"]) is not int
+            or not 0 <= data["active_millis"] < 2**53
+        ):
+            raise AdminError("Invalid active play-time counter")
+        base.add("active_millis")
     if data["available"]:
         expected = base | {
             "ticks",

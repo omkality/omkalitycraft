@@ -836,6 +836,20 @@
         "expected_previous_sha256": "ee4657290f7598f9239265e57302ee4cba2214f38a28c63be8ae7899db8db7c3"
       }
     },
+    "tconstruct": {
+      "item.tconstruct.slime_boots.green.name": {
+        "source_sha256": "0a5f6046d329e441088aaddf7effb3cc81edb1a2a4ea34f1b81f6f0643babdd4",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "1b0cf621f47311bf2f8f1e230f2bc76c9619de23c39454f4a880d837f6afd015",
+        "ru": "Зелёнослизневые ботинки"
+      },
+      "item.tconstruct.slime_boots.blue.name": {
+        "source_sha256": "0a5f6046d329e441088aaddf7effb3cc81edb1a2a4ea34f1b81f6f0643babdd4",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "fbbbe50a268e31f8818b4a4578efc800869836f3f7884cdd0ef210c936fe7b51",
+        "ru": "Синеслизневые ботинки"
+      }
+    },
     "roots": {
       "info.roots.roots_guide.landing": {
         "source_sha256": "45548ac3601bbc2fbf5d0ec7013d0e74f01ddb3e9ab740ddd676dfd093bd022d",

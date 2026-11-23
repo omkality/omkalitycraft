@@ -5,11 +5,11 @@ power: 1
 ftbutilities.homes.max: 3
 // Each team member contributes this personal quota to the shared FTB pool.
 ftbutilities.claims.max_chunks: 50
+ftbutilities.chunkloader.max_chunks: 10
 ftbutilities.homes.cooldown: 10s
 ftbutilities.homes.warmup: 3s
-// Owner accepts stock RTP's magma-surface limitation for the initial launch.
 command.ftbutilities.rtp: true
-// Core's native RTP policy replaces FTB's per-teleport cooldown.
+// Core manages the shared three-attempt RTP cooldown.
 ftbutilities.rtp.cooldown: 0s
 
 [moderator extends player]

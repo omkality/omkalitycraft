@@ -1,3 +1,4 @@
+import gzip
 import json
 import os
 from types import SimpleNamespace
@@ -10,6 +11,7 @@ from omk.game import (
     player_time_reader as reader,
 )
 from omk.owner.admin import AdminError
+from omk.shared.nbt import Tag, write_nbt
 from tests.fixtures.unit.game.player_time import PLAYER, controller, source, transport
 
 __all__ = ["PLAYER", "controller", "source", "transport"]
@@ -33,6 +35,32 @@ def test_saved_ticks_are_nominal_game_time_not_wall_clock_or_lifetime(source):
     assert result["wall_clock_seconds"] is None and not result["afk_excluded"]
     assert not result["live_unsaved_ticks_included"]
     assert (path.read_bytes(), path.stat().st_mtime_ns) == before
+    assert owner.validate_data(result, PLAYER) == result
+
+
+def test_active_time_is_read_from_saved_forge_player_data(source):
+    stats(source, '{"stat.playOneMinute":72000}')
+    folder = source / "world/playerdata"
+    folder.mkdir()
+    (folder / (PLAYER + ".dat")).write_bytes(
+        gzip.compress(
+            write_nbt(
+                "",
+                {
+                    "ForgeData": Tag(
+                        10,
+                        {
+                            "PlayerPersisted": Tag(
+                                10, {"omkality_active_millis": Tag(4, 17500)}
+                            )
+                        },
+                    )
+                },
+            )
+        )
+    )
+    result = reader.read_saved(request(), source)
+    assert result["ticks"] == 72000 and result["active_millis"] == 17500
     assert owner.validate_data(result, PLAYER) == result
 
 
