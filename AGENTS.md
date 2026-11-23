@@ -6,7 +6,10 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
   `master` is for tested milestones. No force pushes or automatic production deployments.
 - Track actionable bugs and open work in GitHub Issues; inspect existing issues to avoid duplicates.
   Use the relevant issue or milestone, priorities and concrete acceptance criteria.
+  Keep the issue, milestone and affected documentation aligned as the owner adds or changes tasks.
   Link PRs to issues and close only the scope actually implemented and tested.
+  Verify the direct issue and PR list and the release evidence before closing a milestone.
+  Use the direct list to resolve a disagreement with the aggregate counters.
   Keep detailed unfinished security
   reproductions and raw private lab data outside public issues.
 - Keep the launcher simple: nickname, chosen password with confirmation, one-use invitation,
