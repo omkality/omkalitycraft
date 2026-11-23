@@ -82,11 +82,9 @@ def _request(request):
         audit.validate_dimension(request["dimension"])
     else:
         reset = request["reset"]
-        all_worlds = isinstance(reset, dict) and reset.get("all_worlds") is True
-        if request["position"] != "auto" or reset != dimension_reset.layout(
-            request["dimension"],
-            all_worlds=all_worlds,
-            fresh=isinstance(reset, dict) and reset.get("fresh_world") is True,
+        dimension_reset.validate_layout(request["dimension"], reset, allow_full=True)
+        if request["position"] != "auto" or (
+            "rftools_identity" in reset and request.get("reroll_seed") is not True
         ):
             raise ValueError("Invalid dimension reset request")
     if request["position"] != "auto":
@@ -181,6 +179,9 @@ def _inputs(request, source, storage, target):
             "Fresh verified backup of the entire current world is required"
         )
     position, preflight, payloads, inspected = _changes(request, source, files)
+    rftools = "rftools_identity" in request.get("reset", {})
+    if rftools:
+        payloads.update(transform.reseed_rftools(source, request))
     result = transform.result_inventory(
         files,
         payloads,
@@ -188,7 +189,7 @@ def _inputs(request, source, storage, target):
         request["dimension"],
         reset=request.get("reset"),
     )
-    if request.get("reroll_seed"):
+    if request.get("reroll_seed") and not rftools:
         fresh = transform.fresh_dimension(
             source, request, inspected["resource_identity"]
         )
@@ -300,7 +301,10 @@ def _verified(request, source, storage, target, *, extra_roots=()):
     )
     if actual != result or (
         folder
-        and not request.get("reroll_seed")
+        and (
+            not request.get("reroll_seed")
+            or "rftools_identity" in request.get("reset", {})
+        )
         and (target / request["world"] / folder).exists()
     ):
         raise ValueError("Resource candidate differs from expected retained files")

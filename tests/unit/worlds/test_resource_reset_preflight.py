@@ -10,9 +10,15 @@ from launcher.nbt import Tag
 from omk.backups.stopped_world_backup import inventory
 from omk.worlds import forge112_regions as anvil
 from omk.worlds.reset import (
+    dimension_reset,
+    resource_reset_inventory as audit,
     resource_reset_landing as landing,
     resource_reset_links as links,
     resource_reset_preflight as preflight,
+)
+from tests.fixtures.unit.worlds.resource_reset_inventory import (
+    rftools_destinations,
+    rftools_registry,
 )
 from tests.fixtures.unit.worlds.resource_reset_preflight import (
     compound_list,
@@ -21,7 +27,65 @@ from tests.fixtures.unit.worlds.resource_reset_preflight import (
     saved,
 )
 
-__all__ = ["compound_list", "encoded", "region_write", "saved"]
+__all__ = ["compound_list", "encoded", "region_write", "rftools_registry", "saved"]
+
+
+@pytest.mark.parametrize(
+    ("linked", "expected_pending"),
+    [
+        (None, []),
+        ("porter", ["rftools.receiver-id"]),
+        ("favorite", ["dimension-tag"]),
+        ("other-receiver", ["dimension-tag"]),
+    ],
+)
+def test_generated_rftools_spawn_receiver_only_is_reviewed(
+    rftools_registry, linked, expected_pending
+):
+    server, _, save = rftools_registry
+    world = server / "world"
+    registry = save([(6200, "Лаборатория"), (6201, "Другая")])
+    destinations = world / audit.RFTOOLS_DESTINATIONS
+    receivers = [(7, 6200, "Лаборатория", 7), (8, 6201, "Другая", 7)]
+    if linked == "other-receiver":
+        receivers.append((9, 6200, "Лаборатория", 24))
+    rftools_destinations(destinations, *receivers)
+    files = [registry, destinations]
+    player = world / "playerdata/fixture.dat"
+    if linked == "porter":
+        encoded(
+            player,
+            {
+                "Inventory": compound_list(
+                    [
+                        {
+                            "id": Tag(8, "rftools:charged_porter"),
+                            "tag": Tag(10, {"target": Tag(3, 7)}),
+                        }
+                    ]
+                )
+            },
+        )
+        files.append(player)
+    elif linked == "favorite":
+        encoded(player, {"Favorites": compound_list([{"dim": Tag(3, 6200)}])})
+        files.append(player)
+    _label, _root, rows = audit._rftools_registry(server, "world")
+    reset = dimension_reset.layout(
+        6200, rftools_identity=audit.rftools_identity(rows[6200])
+    )
+    report = links.inspect_links(
+        server,
+        "world",
+        6200,
+        [p.relative_to(server).as_posix() for p in files],
+        reset=reset,
+    )
+    assert report["handled_finding_count"] == 1
+    assert report["unhandled_finding_count"] == len(expected_pending)
+    assert [
+        row["kind"] for row in report["examples"] if "staging_adapter" not in row
+    ] == expected_pending
 
 
 def test_saved_registry_geometry_and_read_only_proof(saved):

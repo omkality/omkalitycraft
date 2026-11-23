@@ -63,12 +63,31 @@ def _check_named_provider(world, dimension):
         raise ValueError("Named dimension ID differs from the saved-folder profile")
 
 
-def layout(dimension: int, *, all_worlds: bool = False, fresh: bool = True) -> dict:
+def layout(
+    dimension: int,
+    *,
+    all_worlds: bool = False,
+    fresh: bool = True,
+    rftools_identity: str | None = None,
+) -> dict:
     """Resolve a catalog ID to its reviewed save layout and evacuation world."""
     if type(dimension) is not int or not -(2**31) <= dimension < 2**31:
         raise ValueError("Invalid Forge dimension ID")
     if dimension == RESOURCE:
         raise ValueError("Use the dedicated resource reset workflow")
+    if rftools_identity is not None:
+        if (
+            all_worlds
+            or dimension < 2
+            or not isinstance(rftools_identity, str)
+            or not re.fullmatch(r"[a-f0-9]{64}", rftools_identity)
+        ):
+            raise ValueError("Invalid RFTools dimension identity")
+        return {
+            "folder": f"RFTOOLS{dimension}",
+            "landing_dimension": 0,
+            "rftools_identity": rftools_identity,
+        }
     if all_worlds:
         if dimension != 0:
             raise ValueError("Only the main world can reset the entire save")
@@ -84,10 +103,20 @@ def layout(dimension: int, *, all_worlds: bool = False, fresh: bool = True) -> d
     }
 
 
+def validate_layout(dimension, reset, *, allow_full=False):
+    """Require a canonical reset layout before inspecting or changing save data."""
+    if not isinstance(reset, dict) or reset != layout(
+        dimension,
+        all_worlds=allow_full and reset.get("all_worlds") is True,
+        fresh=reset.get("fresh_world") is True,
+        rftools_identity=reset.get("rftools_identity"),
+    ):
+        raise ValueError("Invalid dimension reset layout")
+
+
 def verify_layout(world, dimension, target, files):
     """Require the real saved directory and a protected retained landing dimension."""
-    if target != layout(dimension):
-        raise ValueError("Selected dimension layout changed")
+    validate_layout(dimension, target)
     folder = target["folder"]
     if folder is not None:
         path = world / folder
@@ -97,7 +126,16 @@ def verify_layout(world, dimension, target, files):
             raise ValueError("The selected dimension has no saved files")
     # Unmapped dynamic Forge providers have to use the JED save convention.
     # Known named folders and generic folders must never both claim the same ID.
-    if dimension in STORAGE and (world / f"DIM{dimension}").exists():
+    regular_folder = (world / f"DIM{dimension}").exists()
+    if "rftools_identity" in target:
+        if regular_folder or (
+            dimension in STORAGE and (world / STORAGE[dimension]).exists()
+        ):
+            raise ValueError("Ambiguous save folders for the selected dimension")
+        return
+    if (dimension in STORAGE and regular_folder) or (
+        dimension >= 2 and (world / f"RFTOOLS{dimension}").exists()
+    ):
         raise ValueError("Ambiguous save folders for the selected dimension")
     _check_named_provider(world, dimension)
     if not folder and not any(

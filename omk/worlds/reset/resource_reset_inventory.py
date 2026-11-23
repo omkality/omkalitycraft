@@ -9,7 +9,7 @@ from uuid import UUID
 from omk.backups import ftb_restore_authority as ftb
 from omk.backups.stopped_world_backup import inventory
 from omk.shared.fs import regular
-from omk.shared.nbt import Tag
+from omk.shared.nbt import Tag, read_nbt, write_nbt
 from omk.shared.profiles import PROJECT_ROOT
 from omk.worlds.reset import dimension_reset
 
@@ -19,6 +19,9 @@ RFTOOLS_DIMENSIONS = (
     "ac731cd6b991c6da850499a83585ca34c971e2de8106515d1ee5830995110820",
 )
 WORLD_CATALOG_LIMIT = 64
+RFTOOLS_REGISTRY = "data/RFToolsDimensionManager.dat"
+RFTOOLS_DESTINATIONS = "data/TPDestinations.dat"
+RFTOOLS_SPAWN_ADAPTER = "rftools-dimension-spawn-5.71"
 
 
 def validate_dimension(dimension):
@@ -71,29 +74,106 @@ def _list(root, key, child):
     return [v.value for v in entries]
 
 
-def saved_rftools_worlds(server, world_name):
-    """List registered RFTools worlds from the current save without loading chunks."""
-    saved = server / world_name / "data/RFToolsDimensionManager.dat"
-    if not saved.exists() and not saved.is_symlink():
-        return []
+def _rftools_registry(server, world_name):
     jar, expected = RFTOOLS_DIMENSIONS
     if hashlib.sha256(_read(server / "mods" / jar, server)).hexdigest() != expected:
         raise ValueError("Unreviewed RFTools Dimensions runtime")
-    root = ftb.nbt(_read(saved, server))
+    saved = server / world_name / RFTOOLS_REGISTRY
+    label, root = read_nbt(ftb.unpack(_read(saved, server)))
     rows = _list(_tag(root, "data", 10), "dimensions", 10)
-    names = {}
+    dimensions = {}
     for row in rows:
         dimension = _tag(row, "id", 3)
-        if dimension in names:
+        if dimension in dimensions:
             raise ValueError("Duplicate RFTools dimension ID")
+        dimensions[dimension] = row
+    return label, root, dimensions
+
+
+def rftools_identity(row):
+    """Bind a selection to its RFTools definition, owner and current seed."""
+    keys = {
+        "id": 3,
+        "name": 8,
+        "owner": 8,
+        "descriptionString": 8,
+        "worldVersion": 3,
+        "version": 3,
+        "baseSeed": 4,
+        "forcedSeed": 4,
+    }
+    fields = {key: Tag(kind, _tag(row, key, kind)) for key, kind in keys.items()}
+    owners = {"ownerM", "ownerL"} & row.keys()
+    if owners:
+        for key in ("ownerM", "ownerL"):
+            fields[key] = Tag(4, _tag(row, key, 4))
+    if fields["version"].value != 1 or fields["worldVersion"].value not in (1, 2):
+        raise ValueError("Unreviewed RFTools dimension format")
+    spawn = row.get("spawnPoint")
+    if spawn is not None and (spawn.kind != 11 or len(spawn.value) != 3):
+        raise ValueError("Unreviewed RFTools spawn position")
+    return hashlib.sha256(write_nbt("", fields)).hexdigest()
+
+
+def rftools_spawn_destination(row, destinations):
+    """Find the generated receiver recorded at the dimension's saved spawn."""
+    if "spawnPoint" not in row:
+        return None
+    x, y, z = _tag(row, "spawnPoint", 11)
+    expected = {
+        "dim": row["id"],
+        "name": row["name"],
+        "x": Tag(3, x),
+        "y": Tag(3, y),
+        "z": Tag(3, z),
+    }
+    matches = [
+        index
+        for index, entry in enumerate(destinations)
+        if set(entry) == expected.keys() | {"id"}
+        and entry["id"].kind == 3
+        and entry["id"].value > 0
+        and all(entry[key] == value for key, value in expected.items())
+    ]
+    if len(matches) > 1:
+        raise ValueError("Ambiguous generated RFTools spawn receiver")
+    return matches[0] if matches else None
+
+
+def _saved_rftools_identity(server, world_name, dimension, row):
+    if dimension < 2:
+        return None
+    terrain = server / world_name / f"RFTOOLS{dimension}" / "region"
+    if terrain.resolve() != terrain.absolute() or not terrain.is_dir():
+        return None
+    if not any(
+        re.fullmatch(r"r\.-?[0-9]+\.-?[0-9]+\.mca", path.name) and regular(path, server)
+        for path in terrain.iterdir()
+    ):
+        return None
+    try:
+        return rftools_identity(row)
+    except ValueError:
+        return None
+
+
+def saved_rftools_worlds(server, world_name):
+    """List registered RFTools worlds from the current save without loading chunks."""
+    saved = server / world_name / RFTOOLS_REGISTRY
+    if not saved.exists() and not saved.is_symlink():
+        return []
+    _label, _root, dimensions = _rftools_registry(server, world_name)
+    result = []
+    for dimension in sorted(dimensions)[:WORLD_CATALOG_LIMIT]:
+        row = dimensions[dimension]
         name = _tag(row, "name", 8).strip()
         if not 1 <= len(name) <= 64 or not name.isprintable():
             name = f"Мир RFTools {dimension}"
-        names[dimension] = name
-    return [
-        {"dimension": dimension, "name": names[dimension]}
-        for dimension in sorted(names)[:WORLD_CATALOG_LIMIT]
-    ]
+        entry = {"dimension": dimension, "name": name}
+        if identity := _saved_rftools_identity(server, world_name, dimension, row):
+            entry["rftools_identity"] = identity
+        result.append(entry)
+    return result
 
 
 def _position_dimension(tag):
@@ -205,6 +285,13 @@ def inspect_resource(  # noqa: PLR0912, PLR0915 -- one bounded read-only audit
             raise ValueError("Resource ownership records differ")
     else:
         dimension_reset.verify_layout(world, dimension, reset, before)
+        if "rftools_identity" in reset:
+            _, _, rows = _rftools_registry(server, world_name)
+            if (
+                dimension not in rows
+                or rftools_identity(rows[dimension]) != reset["rftools_identity"]
+            ):
+                raise ValueError("The selected RFTools dimension changed")
         ftb.check_runtime(server)
         expected = {"schema": "1", "dimension": str(dimension), **reset}
         if dimension == 0:

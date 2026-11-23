@@ -20,12 +20,37 @@ def encoded(path, root):
     path.write_bytes(gzip.compress(write_nbt("", root), mtime=0))
 
 
+def rftools_destinations(path, *receivers):
+    destinations = [
+        Tag(
+            10,
+            {
+                "id": Tag(3, receiver),
+                "dim": Tag(3, dimension),
+                "name": Tag(8, name),
+                "x": Tag(3, x),
+                "y": Tag(3, 101),
+                "z": Tag(3, -12),
+            },
+        )
+        for receiver, dimension, name, x in receivers
+    ]
+    encoded(
+        path,
+        {
+            "data": Tag(
+                10, {"lastId": Tag(3, 10), "destinations": Tag(9, (10, destinations))}
+            )
+        },
+    )
+
+
 @pytest.fixture
 def rftools_registry(tmp_path, monkeypatch):
     server = tmp_path / "server"
     path = server / "world/data/RFToolsDimensionManager.dat"
     mods = server / "mods"
-    mods.mkdir(parents=True)
+    mods.mkdir(parents=True, exist_ok=True)
     jar = mods / "rftoolsdim-fixture.jar"
     jar.write_bytes(b"synthetic-rftools-runtime")
     monkeypatch.setattr(
@@ -36,7 +61,22 @@ def rftools_registry(tmp_path, monkeypatch):
 
     def save(worlds):
         entries = [
-            Tag(10, {"id": Tag(3, dimension), "name": Tag(8, name)})
+            Tag(
+                10,
+                {
+                    "id": Tag(3, dimension),
+                    "name": Tag(8, name),
+                    "owner": Tag(8, "fixture"),
+                    "ownerM": Tag(4, 1),
+                    "ownerL": Tag(4, 2),
+                    "descriptionString": Tag(8, "@TVoid"),
+                    "version": Tag(3, 1),
+                    "worldVersion": Tag(3, 2),
+                    "baseSeed": Tag(4, 451),
+                    "forcedSeed": Tag(4, 0),
+                    "spawnPoint": Tag(11, [7, 101, -12]),
+                },
+            )
             for dimension, name in worlds
         ]
         encoded(path, {"data": Tag(10, {"dimensions": Tag(9, (10, entries))})})
