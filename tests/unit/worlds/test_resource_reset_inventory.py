@@ -6,15 +6,46 @@ from launcher.nbt import Tag
 from omk.backups.stopped_world_backup import inventory
 from omk.worlds.reset import resource_reset_inventory as audit
 from tests.fixtures.unit.backups.ftb_restore_authority import records
-from tests.fixtures.unit.worlds.resource_reset_inventory import encoded, sample
+from tests.fixtures.unit.worlds.resource_reset_inventory import (
+    encoded,
+    rftools_registry,
+    sample,
+)
 
-__all__ = ["encoded", "records", "sample"]
+__all__ = ["encoded", "records", "rftools_registry", "sample"]
 
 
 def inspect(sample):
     return audit.inspect_resource(
         sample[0], "world", -18000, world_max_bytes=8 * 1024**2
     )
+
+
+def test_catalog_reads_registered_rftools_worlds_without_terrain(rftools_registry):
+    server, _jar, save = rftools_registry
+    registry = save([(6, "Шахта"), (3, "invalid\x1b")])
+    before = registry.read_bytes()
+    assert not (server / "world/RFTOOLS6").exists()
+    assert audit.saved_rftools_worlds(server, "world") == [
+        {"dimension": 3, "name": "Мир RFTools 3"},
+        {"dimension": 6, "name": "Шахта"},
+    ]
+    assert registry.read_bytes() == before
+
+
+def test_dimension_folder_without_registry_is_not_listed(tmp_path):
+    (tmp_path / "world/RFTOOLS400").mkdir(parents=True)
+    assert audit.saved_rftools_worlds(tmp_path, "world") == []
+
+
+def test_catalog_refuses_duplicate_ids_and_unreviewed_mod(rftools_registry):
+    server, jar, save = rftools_registry
+    save([(6, "Первый"), (6, "Второй")])
+    with pytest.raises(ValueError, match="Duplicate"):
+        audit.saved_rftools_worlds(server, "world")
+    jar.write_bytes(b"different-version")
+    with pytest.raises(ValueError, match="Unreviewed"):
+        audit.saved_rftools_worlds(server, "world")
 
 
 def test_native_shaped_references_are_readonly_and_not_an_apply_plan(sample):

@@ -14,6 +14,11 @@ from omk.shared.profiles import PROJECT_ROOT
 from omk.worlds.reset import dimension_reset
 
 PROFILE = PROJECT_ROOT / "profiles/server-defaults/dj2/resource-world.json"
+RFTOOLS_DIMENSIONS = (
+    "rftoolsdim-1.12-5.71.jar",
+    "ac731cd6b991c6da850499a83585ca34c971e2de8106515d1ee5830995110820",
+)
+WORLD_CATALOG_LIMIT = 64
 
 
 def validate_dimension(dimension):
@@ -64,6 +69,31 @@ def _list(root, key, child):
     if kind != child and not (kind == 0 and not entries):
         raise ValueError("Unreviewed dimension-reference list")
     return [v.value for v in entries]
+
+
+def saved_rftools_worlds(server, world_name):
+    """List registered RFTools worlds from the current save without loading chunks."""
+    saved = server / world_name / "data/RFToolsDimensionManager.dat"
+    if not saved.exists() and not saved.is_symlink():
+        return []
+    jar, expected = RFTOOLS_DIMENSIONS
+    if hashlib.sha256(_read(server / "mods" / jar, server)).hexdigest() != expected:
+        raise ValueError("Unreviewed RFTools Dimensions runtime")
+    root = ftb.nbt(_read(saved, server))
+    rows = _list(_tag(root, "data", 10), "dimensions", 10)
+    names = {}
+    for row in rows:
+        dimension = _tag(row, "id", 3)
+        if dimension in names:
+            raise ValueError("Duplicate RFTools dimension ID")
+        name = _tag(row, "name", 8).strip()
+        if not 1 <= len(name) <= 64 or not name.isprintable():
+            name = f"Мир RFTools {dimension}"
+        names[dimension] = name
+    return [
+        {"dimension": dimension, "name": names[dimension]}
+        for dimension in sorted(names)[:WORLD_CATALOG_LIMIT]
+    ]
 
 
 def _position_dimension(tag):

@@ -59,6 +59,22 @@ def test_valid_request_uses_explicit_source_and_budget(tmp_path, monkeypatch):
     inspect.assert_called_once_with(tmp_path, "world", -18000, world_max_bytes=1024)
 
 
+def test_catalog_request_reads_only_the_current_registry(tmp_path, monkeypatch):
+    rows = [{"dimension": 60, "name": "Foundry"}]
+    saved = Mock(return_value=rows)
+    monkeypatch.setattr(worker, "saved_rftools_worlds", saved)
+    monkeypatch.setattr(worker.sys, "platform", "linux")
+    query = {"schema": 1, "action": "catalog", "world": "world"}
+    assert worker.execute(query, tmp_path) == {
+        "schema": 1,
+        "world": "world",
+        "rftools": rows,
+    }
+    saved.assert_called_once_with(tmp_path, "world")
+    with pytest.raises(ValueError, match="request"):
+        worker.execute({**query, "dimension": 60}, tmp_path)
+
+
 def test_preflight_request_keeps_readonly_inspection_and_checks_same_save(
     tmp_path, monkeypatch
 ):
