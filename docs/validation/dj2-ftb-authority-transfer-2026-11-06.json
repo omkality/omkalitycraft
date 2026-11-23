@@ -255,7 +255,6 @@
     "public_profile_changed": false,
     "production_cutover": false,
     "scheduler": false,
-    "off_host_copy": false,
-    "gtnh_tested": false
+    "off_host_copy": false
   }
 }

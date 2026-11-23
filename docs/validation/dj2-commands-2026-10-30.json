@@ -119,6 +119,6 @@
     "Mute persistence after reconnect/restart, dimensions, death and concurrent teleport requests still need targeted scenarios",
     "Protocol actors do not execute client mods, simulate physics or replace visual/gameplay testing",
     "Current signed local client payload still contains a generated discovery cache; remove and test invalidation in the next content release",
-    "GTNH and graphical Minecraft on Linux/macOS remain untested"
+    "Graphical Minecraft on Linux/macOS remains untested"
   ]
 }

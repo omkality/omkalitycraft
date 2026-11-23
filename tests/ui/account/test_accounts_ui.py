@@ -363,11 +363,11 @@ def test_bootstrap_lock_protects_gap_during_handoff(tmp_path: Path, qtbot: QtBot
 
 def test_dj2_heap_slider_preserves_existing_preferences(qtbot: QtBot, tmp_path: Path):
     preferences = Preferences(tmp_path / "preferences.json")
-    preferences.save_memory("gtnh", 7168)
+    preferences.save_memory("sample-pack", 7168)
     panel = Dashboard(preferences, MemorySnapshot(16384, 12000))
     qtbot.addWidget(panel)
     panel.cards["dj2"].memory.slider.setValue(20)
-    assert Preferences(preferences.path).memory == {"dj2": 5120, "gtnh": 7168}
+    assert Preferences(preferences.path).memory == {"dj2": 5120, "sample-pack": 7168}
     assert panel.cards["dj2"].memory.selected_mb == 5120
 
 

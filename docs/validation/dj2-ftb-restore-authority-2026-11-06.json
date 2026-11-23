@@ -353,7 +353,6 @@
     "applies_to_existing_live_server": false,
     "graphical_client_tested": false,
     "client": "LabPlayer authenticated Forge protocol client, not rendered Minecraft",
-    "gtnh_tested": false,
     "flag_required": "--ftb-authority-policy with Linux full return/access/ranks",
     "conservative_equality": "Unknown FTB data/new or removed players/teams may block return and require explicit owner reconciliation.",
     "remaining": [

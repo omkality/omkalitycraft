@@ -317,10 +317,10 @@ def test_preflight_reclaims_completed_slots_before_a_new_countdown(flow):
 
 def test_another_servers_scope_is_not_moved(flow):
     foreign = clone(flow, flow.root, 2)
-    flow.cfg.servers["gtnh"] = flow.cfg.servers["dj2"]
+    flow.cfg.servers["other-server"] = flow.cfg.servers["dj2"]
     before = {}
     for area, r in history.scope(flow.cfg, foreign):
-        r["server"] = "gtnh"
+        r["server"] = "other-server"
         p = history.path(flow.cfg, area, r["operation"])
         _write_private(p, flow.cfg.private, r)
         before[p] = p.read_bytes()

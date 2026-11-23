@@ -2,7 +2,7 @@
 
 Any signed-int dimension is supported, including Overworld and dynamic worlds.
 This is not wipe authorization: the caller owns allowlisting, backup and stop.
-GTNH/other storage versions require their own verified adapters.
+Other storage formats require a verified adapter.
 """
 
 import copy
