@@ -35,11 +35,29 @@ def test_reserved_names_are_explicit_linux_policy_only(name):
 @pytest.mark.parametrize(
     "name",
     [
+        "world/DIM17/data/atum:ruin.dat",
+        "world/DIM17/data/atum:tomb.dat",
+        "world/Dim-Aether/data/aether_legacy:cold_aercloud.dat",
+    ],
+)
+def test_reviewed_dj2_namespaced_saves_are_linux_only(name):
+    inventory = files(name)
+    with pytest.raises(ValueError, match="Unsafe backup inventory path"):
+        validate_inventory(inventory)
+    validate_inventory(inventory, path_policy="linux-server")
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
         "/absolute",
         "../escape",
         "world/../escape",
         "world//file",
         "world/C:stream",
+        "world/DIM17/data/atum:other.dat",
+        "world/DIM1/data/atum:tomb.dat",
+        "C:stream/DIM17/data/atum:tomb.dat",
         "world/a\\b",
         "world/a.",
         "world/a ",
