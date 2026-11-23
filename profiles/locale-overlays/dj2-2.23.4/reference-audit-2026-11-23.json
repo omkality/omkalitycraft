@@ -1,0 +1,606 @@
+{
+  "schema": 1,
+  "pack_id": "dj2",
+  "minecraft_pack_version": "2.23.4",
+  "base_release": "2.23.4-omk.12",
+  "sources": {
+    "archive_2.21.3_sha256": "e2310f76e77b9ddc77885e5d58602bc12a2cc2275cd9d8a5ab396070ee5fc883",
+    "archive_quest_locale_sha256": "7ca564a7fc470a0fbe0f829fd5f9e01b5b60540196ac9325cc8ac70a0a67dadd",
+    "bmprojects_2.23.3_commit": "15c4fc2267df8fbdec2e218ddd46cfbabc691aa1",
+    "bmprojects_quest_locale_sha256": "c12d7997f35267567e3a3720759d48d34c51fdaefeef25b8bef84688ed09520e",
+    "current_upstream_commit": "2743c22b177ab0479819dadb15785925cfe7d0aa"
+  },
+  "lang": {
+    "betterquesting": {
+      "dj2.quest.db.1155.desc": {
+        "source_sha256": "b4c47ec94e937d8bfb2c97c322dd6ee030a8873192ee8c31b0c59b523af776c1",
+        "expected_previous_sha256": "cecbf435f89b9d388cfb33e86fb4787483c3a023a273af052edaf95590db1d31",
+        "reason": "Актуальное предупреждение касается переноса колёсиком мыши. Восстановлены улучшения и автоматическая подача.",
+        "ru": "Создайте чарователь из Extra Utilities 2. Расставьте вокруг него книжные полки по той же схеме, что и для стола зачарований, и подайте RF. Машина поддерживает улучшения скорости и автоматическую подачу и извлечение предметов.%n%n§c§lВнимание:§r из-за ошибки чарователь §cудаляет§r предметы, если переносить их в него §cколёсиком мыши§r. Перекладывайте предметы другим способом."
+      },
+      "dj2.quest.db.1201.desc": {
+        "source_sha256": "7a900bd4601efdbd6538717f396ce7ab64cb4b1b105d87f7331ff0dcfdc0d915",
+        "expected_previous_sha256": "fb7d84b15e90624a30aa4ca0d42d43dfb043a71e7a0e0e0b423722ecb38c4c01",
+        "reason": "В награде и актуальном тексте указан Omniwand.",
+        "ru": "Улучшите машинный блок из Extra Utilities 2 до рамки механизма из Thermal Expansion.%n%nДобавьте гаечные ключи и похожие инструменты в Омнижезл (Omniwand), который получите за квест. Так вы сможете переключаться между ними."
+      },
+      "dj2.quest.db.1548.desc": {
+        "source_sha256": "70d555ac8d95f4c9a6121f536f15ee21102b9fad23405d2dbe277fa62b160a47",
+        "expected_previous_sha256": "48f6d41028a4b1573208132f75820aa64d4226825b6b6d28ec0f29b96d6f3af1",
+        "reason": "Дух появляется при убийстве мобов. Для урона нужен конкретный фокус.",
+        "ru": "Создайте кольцо мщения. Во включённом состоянии оно даёт несколько положительных эффектов зелий. При убийстве большинства мобов будет появляться дух мщения. Нанести ему урон можно только пронзающим фокусом мщения."
+      },
+      "dj2.quest.db.1598.desc": {
+        "source_sha256": "8f53d0bf26a3d6a46ee005fd84e2dd402a64681fcf6e10487c6684663f531b43",
+        "expected_previous_sha256": "07f968c8325edf0b939649486bdedcb4c014761bf9552c5a309cfb7d40566a8f",
+        "reason": "Сбор мха доступен любым ножом. Указана актуальная схема получения обычного булыжника.",
+        "ru": "Сломайте траву, чтобы получить земляные споры. Поместите споры на обычный булыжник, соседний с блоком-источником воды.%n%nСоскоблите выросший земляной мох любым ножом.%n%nПозже этот процесс понадобится полностью автоматизировать с помощью механического пользователя Extra Utilities 2.%n%nЧтобы получить четыре обычных булыжника, сложите четыре булыжника из Underground Biomes квадратом в сетке крафта."
+      },
+      "dj2.quest.db.1607.desc": {
+        "source_sha256": "29f84c37240ad0e47e2a8fffa695b6ef0998079ab3b22b44550b067aaa1d8c3d",
+        "expected_previous_sha256": "9234486acbba0b315998472737a1cb56481e52bc71193f25590e7a74bde17324",
+        "reason": "Сохранены назначение камней, условие доступа к книге и расположение столба.",
+        "ru": "Создайте несколько рунных камней. Они нужны для крафта и для столбов, используемых в ритуалах на костре.%n%nПодробности есть в книге «Магия дикой природы», если она уже вам доступна. Для большинства ритуалов понадобится столб с резным рунным камнем на вершине. Достаточно поставить его поблизости, точное место из книги повторять необязательно."
+      },
+      "dj2.quest.db.1725.desc": {
+        "source_sha256": "761aeff3afd16eb6e272757363d63798cc7cd4b801fedc74877b69fd00cfee5f",
+        "expected_previous_sha256": "071e1f1e7b92051c030a6768b3c08b617a4b0ea6d57db5d2637d5eeae6e17faf",
+        "reason": "Восстановлены вершина столба и место добычи клатрата.",
+        "ru": "Ритуал трансмутации преобразует блоки в другие блоки или предметы в зависимости от окружения. Поставьте рядом столб высотой в три блока: два обычных рунных камня и резной рунный камень сверху. Ритуал длится 120 секунд и преобразует один блок каждые пять секунд, всего до 24.%n%nРитуалом удобно получать материалы, которые иначе пришлось бы долго искать. Список преобразований есть в отдельной категории JEI.%n%nЭнергетический клатрат (Energized Clathrate) встречается крупными скоплениями на низких уровнях Y в Нижнем мире, среди жидкого светокамня."
+      },
+      "dj2.quest.db.210.desc": {
+        "source_sha256": "65df302e83683d451c999a77e0a741f2bbede45dc2c25489e19ac42f101b14be",
+        "expected_previous_sha256": "8a69ab9c02d2fd5ef3f5e8c5b16e9e8061ae236cfb552064bb2146077a6367f0",
+        "reason": "Добавлен максимум шанса выпадения. Сохранено экранирование процента.",
+        "ru": "Создайте разрушители причинных связей. Для квеста достаточно пяти, но получить жемчужину с пяти попыток удаётся не всегда.%n%nШанс получить первозданную жемчужину зависит от размера разлома и достигает максимум 10%%."
+      },
+      "dj2.quest.db.259.desc": {
+        "source_sha256": "c5be07018c78d81db1a6ab1fdcd8db60e855ecee61b7b6ca70d5a582ea251f05",
+        "expected_previous_sha256": "4529c41d07fe8ec16a6cbd4ff29e361ac9be33018670bee8738f315610963d8a",
+        "reason": "Исправлены требование квеста и порядок нажатий для связи.",
+        "ru": "Создайте передатчик или приёмник LE первого уровня. Передатчик поставьте рядом с ячейкой, в которой вы получаете энергию молний. Приёмник поставьте рядом со столом наполнения молниями, чтобы подать на него LE.%n%nВозьмите метку Tx/Rx. Нажмите Shift + ПКМ по передатчику, затем ПКМ по приёмнику. Чтобы заново привязать метку, перекрафтите её на верстаке.%n%nПо обычным проводам энергия молний не передаётся. Используйте беспроводную связь.%n%n§l§6Для квеста достаточно выполнить одно задание."
+      },
+      "dj2.quest.db.40.desc": {
+        "source_sha256": "153f3ebe9b9b912f3cfb41e93996fa1d42377beb06a1fb436b421ea606bc4507",
+        "expected_previous_sha256": "b62859bc516a4148ae5150b8a4d72f9d3c71d79dff69b6917c78182cbe5e0485",
+        "reason": "Удалена устаревшая рекомендация режима расширенной добычи.",
+        "ru": "Создайте атомный разборщик. Это быстрый мультиинструмент. Режимы переключаются сочетанием Shift + ПКМ."
+      },
+      "dj2.quest.db.498.desc": {
+        "source_sha256": "4f9928ebf51a167518033830011f027617696d3d56bfd88d5a0059818126c07b",
+        "expected_previous_sha256": "5030aa857a170c813fe6b22bf3cf0fb26756f1d03aad7dc6e4be088bc200ac01",
+        "reason": "Станция не собирает урожай. Восстановлены варианты уборки и смысл третьего показателя семян.",
+        "ru": "Соедините в чане кристалл коррозионной энергии, блутониевую пыль и концентрированное облако семян. Полученную жидкость используйте для изготовления жёрдочек.%n%nЖёрдочки позволяют размножать семена Mystical Agriculture. Растения могут разрастаться сами, а ещё с них можно снимать черенки ножницами.%n%nЧтобы улучшить сорт, посадите два одинаковых растения на жёрдочках по диагонали. В угол поставьте двойную жёрдочку. Когда растения скрестятся, на ней может вырасти улучшенный сорт. Воображаемый блок времени ускоряет этот процесс.%n%n§c§lВнимание:§r фермерская станция Ender IO не собирает урожай с этих жёрдочек. Подойдут барабан дикой природы Botania, рог дикой природы в симуляторе игрока, фермер Actually Additions или сборщик растений Industrial Foregoing.%n%nОрганизуйте сбор выпавших предметов, например дальнодействующим сборщиком или поглощающей воронкой.%n%nУ семян AgriCraft три показателя. Первый отвечает за скорость роста, второй за средний урожай. Сорняки в сборке отключены, поэтому третий показатель влияет на шанс получить черенок ножницами. Все три показателя можно развить до 10 и проверить в анализаторе семян.%n%nВ одной из следующих глав понадобится много семян, так что стоит начать их улучшать заранее."
+      },
+      "dj2.quest.db.959.desc": {
+        "source_sha256": "86a4ab3ecd665e314ee12458ee5e765f3237e24a4d7a9753f03c570b0699339c",
+        "expected_previous_sha256": "5a2ac2375f5c6a77236e76d71ca4aa344917c10f01ac3db9a3af1acf080b26b4",
+        "reason": "Восстановлены актуальные способы добычи без обязательного поиска монумента.",
+        "ru": "Добудьте осколки и кристаллы призмарина. Кристаллы выпадают из древних морских фонарей в некоторых подводных ущельях. Другой способ — переработать осколки в дробилке.%n%nНа этом этапе осколки выпадают из стражей. В глубоком океане стражи встречаются редко, а в подводном монументе появляются постоянно. Позже осколки можно будет получить из кварца в атомном реконструкторе.%n%nДля поиска пригодится водное дыхание. Сварите зелье или используйте мешочек знахаря Totemic с тотемом спрута."
+      },
+      "dj2.quest.db.816.title": {
+        "source_sha256": "9aefcad6291683ea1994425c5ec2b0300bc8c43f79ec2f221ebfaaffbf56c2fb",
+        "expected_previous_sha256": "ca3b3bb1b52b0f930d1fa7e9292af34ddac7bd630a48441b34c766bb75174837",
+        "reason": "Восстановлена игра слов между распаковкой подарка и выходом из искажения.",
+        "ru": "Распакуйте подарок и распутайте искажение"
+      },
+      "dj2.quest.db.137.desc": {
+        "source_sha256": "2299096fd2b805c2640ad40266428ab4ba6d07a94470957e5e0f596b98785d1c",
+        "expected_previous_sha256": "049f586ab6efc31e945d51204d34b0a2f2d8acaa43299a064742511a5a8bbd52",
+        "reason": "Термин Magic Power.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "достаточно энергии из алтаря",
+            "new": "достаточно магической силы"
+          }
+        ]
+      },
+      "dj2.quest.db.183.desc": {
+        "source_sha256": "d516d69d189b64a628ec12b2543d4824c01395f2628a816ad02228db2f51bd14",
+        "expected_previous_sha256": "f9319f1c2f4af442863e5d0191b6cc1aac059544a18ce61204c61263fbe8648e",
+        "reason": "Термин Magic Power.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "огромное количество дополнительной энергии для алтаря",
+            "new": "солидный запас магической силы"
+          }
+        ]
+      },
+      "dj2.quest.db.474.desc": {
+        "source_sha256": "675d83c797351ae053acde32fa8246fadf3ae49ef10e68c0a06e3de16219deba",
+        "expected_previous_sha256": "eb55e287beaa46fca9565cac5ef91f1db7c96722b498adce44b007abe0a32d60",
+        "reason": "Актуальные ограничения поиска хранилищ и пояснение назначаемого действия.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§l§4§lПРЕДУПРЕЖДЕНИЕ: §c§4Не работает, если рядом находятся блоки из мода BiblioCraft.§r",
+            "new": "Некоторые хранилища, в том числе BiblioCraft, не поддерживают эту подсветку."
+          },
+          {
+            "kind": "replace",
+            "old": "Вы покажите его всем игрокам",
+            "new": "вы покажете его всем игрокам"
+          },
+          {
+            "kind": "replace",
+            "old": "Вы выведите в чат список всех горячих клавиш и эффект при их нажатии.",
+            "new": "в чат выведется список сочетаний с F3 и их назначение."
+          },
+          {
+            "kind": "replace",
+            "old": "Нажав §eP§r, Вы сможете поместить любой предмет который Вы держите в рукe в мир, что довольно похоже на помещение предмета в рамку.",
+            "new": "Клавиша §e«Разместить в мире»§r позволяет положить предмет из руки в мир, как в рамку. Назначение можно посмотреть в настройках управления."
+          }
+        ]
+      },
+      "dj2.quest.db.891.desc": {
+        "source_sha256": "897ba936f6845782cd6968f6637affd352b69533a6f4a0b0febff7a0a0030608",
+        "expected_previous_sha256": "c952d412a5e7374982e3f7d7a2d4316090ce3a0934a5f448a580710969c617e7",
+        "reason": "В актуальном тексте сталь автоматизируется через Mekanism.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "продвинуться до мода Thermal Expansion.",
+            "new": "продвинуться до мода Mekanism."
+          }
+        ]
+      },
+      "dj2.quest.db.408.desc": {
+        "source_sha256": "4bebe59496b08057ab2bcf335892881b871c273e061695190cdaeef22d813635",
+        "expected_previous_sha256": "fa514dce5802ef21db7638e283d3510305c1fb0147882ef0ef61403a4786a7c2",
+        "reason": "Вернул названия ингредиента и нужной машины.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "с помощью кристаллизированной серы из мода AbyssalCraft.",
+            "new": "из кластеров кристаллизованной серы AbyssalCraft в Liquicrafter."
+          }
+        ]
+      },
+      "dj2.quest.db.1310.desc": {
+        "source_sha256": "80a5d90b16f95020d659f29c0b284fa8a39fa08804946bc5a770ae9f9b2649f5",
+        "expected_previous_sha256": "15ed3e59d0d0a004bad01f4476833456f554d175d985587691361fcc8bd68e74",
+        "reason": "Исправлены применимость двух машин и назначение загона.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "где будет камера для убийтсв.",
+            "new": "куда будут попадать выросшие животные. Там установите машину для их забоя."
+          },
+          {
+            "kind": "replace",
+            "old": "Обратите внимание, что детёныши коров дают столько же розовой слизи, сколько и выросшие коровы, поэтому для добычи слизи третий загон не понадобится. Однако если Вы хотите получать лут с коров, то Вам нужно будет сначала их вырастить.",
+            "new": "На фабрике по забою мобов телята дают столько же розовой слизи, сколько взрослые коровы. Для слизи можно обойтись без второго загона, где они растут. Если используете дробилку мобов, сначала дайте телятам вырасти."
+          }
+        ]
+      },
+      "dj2.quest.db.1589.desc": {
+        "source_sha256": "4e7415db505135e2c6ab29304ded359ccfa1488f2a054a171fff5a0ba6662198",
+        "expected_previous_sha256": "b49dde5d23d2de34c01c96e357a93b62f85114da8f8ab6f12685d305ebf9ceb5",
+        "reason": "Возраст животных и условие сдачи квеста.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "По завершении ритуала, ровно две коровы рядом с тотемом превратятся в бизонов!",
+            "new": "Если ритуал удастся, ровно две коровы рядом с тотемом превратятся в детёнышей бизона."
+          },
+          {
+            "kind": "replace",
+            "old": "Чтобы выполнить этот квест Вам придётся убить нескольких бизонов.",
+            "new": "Для квеста нужно добыть требуемые предметы со взрослого бизона."
+          }
+        ]
+      },
+      "dj2.quest.db.1595.desc": {
+        "source_sha256": "84e4d749482fab0289add6319bc3cc2b9a9067df4995a9b71ffbb69b7db7ae1a",
+        "expected_previous_sha256": "a28eaa39fe4137dba983cb71cb5fab407609602b5e4eca65734a8e36b92c7a35",
+        "reason": "Восстановлено название предмета, выдаваемого ритуалом. Восстановлена отсылка по названию песни.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "По завершении ритуала, Вы наполните любую флейту в вашем инвентаре, наделив её магической силой. Используя наполненную флейту, Вы сможете проводить ритуалы намного легче и быстрее.",
+            "new": "Ритуал превратит любую флейту в вашем инвентаре во флейту Пана. С ней проще завершать церемонии."
+          },
+          {
+            "kind": "replace",
+            "old": "§aБлеск — словно мелодия",
+            "new": "§aReplay%nБлеск — словно мелодия"
+          }
+        ]
+      },
+      "dj2.quest.db.135.desc": {
+        "source_sha256": "6fbeeaef483201423fd73ebb0276688187c283c6946d94083a1e0ad5feb889f7",
+        "expected_previous_sha256": "a43e09bc6423d98b838db0a055948f7986aafbc9279bb62866c4822ca8184e2f",
+        "reason": "Восстановлена отсылка по названию песни.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§aЙо, я создал это",
+            "new": "§aSICKO MODE%nЙо, я создал это"
+          }
+        ]
+      },
+      "dj2.quest.db.654.desc": {
+        "source_sha256": "cfea237171e9f1f531117a443054cbac6c110633e32f34830e7780de538c3524",
+        "expected_previous_sha256": "0bedd8abcabc9c67cb646ed51c7985e1dcd81132299d8598aedb0171c84b23ae",
+        "reason": "Восстановлена отсылка по названию песни.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§aХочу зажечь прямо сейчас",
+            "new": "§aRock That Body%nХочу зажечь прямо сейчас"
+          }
+        ]
+      },
+      "dj2.quest.db.669.desc": {
+        "source_sha256": "a1ac6b43eaba8afe82e7f23bd432de20e6fd279895e66db6dcb1e2721127663c",
+        "expected_previous_sha256": "6bf3cf0d51d9b8a1a3074ee82ffcd8e4bcdbf7cef5991b82d293bf2c05fd8a80",
+        "reason": "Восстановлена отсылка по названию песни.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§a§a§aЛюблю этот бум-бум-пау",
+            "new": "§aBoom Boom Pow%nЛюблю этот бум-бум-пау"
+          }
+        ]
+      },
+      "dj2.quest.db.955.desc": {
+        "source_sha256": "99a3b529030882e14eebe81cc59675519799e6f5e9cadaa3300034334243036a",
+        "expected_previous_sha256": "6056c6bd17580b23768bf7eba691685e90d519d11205d18803d250a0a9bba07c",
+        "reason": "Восстановлена отсылка по названию песни.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§aЯЯЯД",
+            "new": "§aVenom%nЯЯЯД"
+          }
+        ]
+      },
+      "dj2.quest.db.1066.desc": {
+        "source_sha256": "05e29be8e4b0a89312a7d5d22aa454b838971621384f962c9a2d95be7966cb0d",
+        "expected_previous_sha256": "2f952874ed4f2f843720ed30a56987c0bc2188518723ea52421be11d95c1982f",
+        "reason": "Восстановлена отсылка по названию песни.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§aЧёрный тарантул",
+            "new": "§aTarantula%nЧёрный тарантул"
+          }
+        ]
+      },
+      "dj2.quest.db.1508.desc": {
+        "source_sha256": "692a54f7b066768b5e1b67da6a14e60f2bf007dcf5d821ee625094db8e4a30ee",
+        "expected_previous_sha256": "61fb56e5216be80d7e9d3002634872fb33285bd9fc256f4a73435317ae6bda45",
+        "reason": "Восстановлена отсылка по названию песни.",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§aНе останавливайся",
+            "new": "§aTiK ToK%nНе останавливайся"
+          }
+        ]
+      }
+    },
+    "crafttweaker": {
+      "dj2.silver_plate.desc0": {
+        "source_sha256": "c3bc9ad14e3c4439013f19151d739aecfbc6eda24c4ba54b57d40cae86de24be",
+        "expected_previous_sha256": "b365753c2cc8f90a80f9733fefa34886e0bf8b0444711cae41497cabc9d8b6e7",
+        "reason": "Французская реплика сохранена вместе с понятным переводом.",
+        "ru": "§5§oS'il vous plaît — пожалуйста"
+      }
+    }
+  },
+  "advancements": {
+    "config/triumph/script/triumph/dj2/01_divin_into_dj2.txt": {
+      "source_sha256": "b4aa18b43605c9f6ae4ec43e115db7e8a2078b6871ed9542a7141064ff199f3e",
+      "result_sha256": "c5c8e6e9e82bb5459cedcb9afd331f41a142dd50d8a28501a3009dc0f5fbeea2",
+      "title": "Погружение в DJ2!",
+      "description": "Создайте нож для вырезания тотемов и начните знакомство с модами."
+    },
+    "config/triumph/script/triumph/dj2/02_technology.txt": {
+      "source_sha256": "34d25d222455b0a2f4ba8c68f5bcc0d9361559909d268e442535bae28ecabde7",
+      "result_sha256": "096ec23a6f8d29747479c821ba038709cddd851699b3aaca9b6a10723ef3e2f7",
+      "title": "Технологии!",
+      "description": "Получите молот инженера, чтобы начать изучение Immersive Engineering."
+    },
+    "config/triumph/script/triumph/dj2/03_root_3.txt": {
+      "source_sha256": "1ef30742803b5f64fda7dac18998065e4944f94c6abf2709c8741f607e59fb40",
+      "result_sha256": "0eac5a0e52460e28f79a71d6b21cf83bd18963af13ea10d15595f6c460bad7da",
+      "title": "Roots — глава 3",
+      "description": "Откройте третью главу о моде Roots и создайте костёр."
+    },
+    "config/triumph/script/triumph/dj2/04_digital_storage.txt": {
+      "source_sha256": "1f9078a0bcbe0f8142b50db4c00ef9c0358a3090c340b68d8d8ac70c37841bf7",
+      "result_sha256": "156555cc66dd872fb0ae38724cb0ec5bb274a058b6405ff3b820ebbef38ae050",
+      "title": "Цифровое хранилище",
+      "description": "Создайте приёмщик энергии, чтобы начать изучение Applied Energistics 2."
+    },
+    "config/triumph/script/triumph/dj2/05_surviving_the_sands.txt": {
+      "source_sha256": "87424b9bfd4ffb478cda4c1b3643f8508cb4349d34c2b66a561a09d941999ead",
+      "result_sha256": "3a9d0a668945e8a768fbd4132a49831ffbd2a9bfe0fa47ea2d0b0502777477c3",
+      "title": "Выживание в песках",
+      "description": "Выживите в песках Атума!"
+    },
+    "config/triumph/script/triumph/dj2/06_no_more_mosquitos.txt": {
+      "source_sha256": "0a9f9148bfea9158607599b16b1a5ac22ae1184632724f1aaee1eb55c695a346",
+      "result_sha256": "c7828e50464281742d32c377c630c5802bc0ec1899e52c575b8bb72eed6781b9",
+      "title": "Больше никаких москитов!",
+      "description": "Создайте корону небес в Эребусе, чтобы открыть доступ в Рай."
+    },
+    "config/triumph/script/triumph/dj2/07_sky_soarer.txt": {
+      "source_sha256": "04f3cd3d56cbe0f73379f23e7fa21b4d436e0b7312496663289b8f0ab90e50ea",
+      "result_sha256": "a0f49834e9286a0e77e3743ef0d361f195601a86e521be81591d156b0fc09848",
+      "title": "Покоритель небес",
+      "description": "Одолейте всех боссов Рая и пройдите его испытания, чтобы получить резонирующую сферу."
+    },
+    "config/triumph/script/triumph/dj2/08_the_big_tech_block.txt": {
+      "source_sha256": "71316f859bed1e4cb301b03a377dfee36c67955eb3f9d26dc31f58228956798f",
+      "result_sha256": "b45a37e32e48775f58a45e3ebc951369648a061f188a9ff3d4fcea5732f13238",
+      "title": "Большой технологический блок",
+      "description": "Создайте RF-порошок, чтобы открыть технический этап сборки."
+    },
+    "config/triumph/script/triumph/dj2/09_digital_crafting.txt": {
+      "source_sha256": "a5c89638b5159116f3f796e8cff50b2c12d08378f0971c9e695616d7ed2f4330",
+      "result_sha256": "43145b4abe057ad97640520c375ee6a05cba9013430dfd3112e7e16ce63e1bcc",
+      "title": "Цифровой крафт",
+      "description": "Создайте терминал крафта, чтобы использовать в рецептах предметы прямо из МЭ-системы."
+    },
+    "config/triumph/script/triumph/dj2/10_dig_dig_dig.txt": {
+      "source_sha256": "0a162d94ce0beed716997f7b72454a4ec3bf034432b94003db58c1aea42c10c2",
+      "result_sha256": "6867eb8e97d102f28a86180a11d93f2770d665cdac20dd66143e270ba9352bc9",
+      "title": "Копать, копать, копать!",
+      "description": "Создайте Строитель (Builder) и используйте его как первый карьер."
+    },
+    "config/triumph/script/triumph/dj2/11_elevating.txt": {
+      "source_sha256": "09964e48056b0a8e9daa24fda0cd6faf9e923d8ba92a28b29987c138c16a65cb",
+      "result_sha256": "3d32efeb8c5dbdfd85659d107e22328e3c2a42fc81c8453497a8e0ecf3d0ed8c",
+      "title": "Поднимаемся выше…",
+      "description": "Создайте слитки левитирия (Elevatium). Они часто пригодятся в рецептах."
+    },
+    "config/triumph/script/triumph/dj2/12_autocrafting.txt": {
+      "source_sha256": "bdaa485259ee933ac00729f319a0401ba7223bd8602c9319c632337445664923",
+      "result_sha256": "e4feb5dc3e43ca9c84bec179b54e20534cc61b1321ea05a882c4f0045674c540",
+      "title": "Автокрафт!",
+      "description": "Создайте методический процессор, чтобы открыть автокрафт в Applied Energistics 2."
+    },
+    "config/triumph/script/triumph/dj2/13_the_big_magic_block.txt": {
+      "source_sha256": "9eeff75333ab625e17baea7461c0e0879ba791de182046484a2de9ea41c926c6",
+      "result_sha256": "ee962e1d86445291ebfd1bd2e155e7460ee8a29cc24906adc7d32a95b9877910",
+      "title": "Большой магический блок",
+      "description": "Создайте кровавый алтарь, чтобы открыть магический этап сборки."
+    },
+    "config/triumph/script/triumph/dj2/14_manamana.txt": {
+      "source_sha256": "08f946332a2a99059a578564e82452be2cd1b741c3db634c228d5c4099018e46",
+      "result_sha256": "bf46d8def1e6c33a33940094fc32c340841235d712d63bc7e92033ed53c69d65",
+      "title": "Манамана",
+      "description": "Создайте чистую маргаритку, чтобы начать изучение Botania."
+    },
+    "config/triumph/script/triumph/dj2/15_becoming_a_thaumaturge.txt": {
+      "source_sha256": "a176adb632f4a9ccdca38f8c5956a73c77bf6667e8f820c45985b5009935fa09",
+      "result_sha256": "1e2331f885477b644076ceed1e255a53ad4973c4396c4bd46fbcea56b064a75d",
+      "title": "Становимся тауматургом",
+      "description": "Создайте таумономикон, чтобы открыть Thaumcraft."
+    },
+    "config/triumph/script/triumph/dj2/16_nyahhahahahaaaa.txt": {
+      "source_sha256": "1c444f48014d8de97caa8f3ce28668ec6819977ff860180c3858a755f4f60ab4",
+      "result_sha256": "1c117ac3d4738b4aaafce700e49e806855ff11d9fb4f8b521ed77a1836c8523d",
+      "title": "Ньяхахахахахахаха…!",
+      "description": "Создайте ведьмину печь и станьте дипломированной ведьмой!"
+    },
+    "config/triumph/script/triumph/dj2/17_digital_essentia.txt": {
+      "source_sha256": "b6fe1d74206bbc64456b4304c07b307d84ad3f51287e8433452d545de4f3a33f",
+      "result_sha256": "7b2771dcbe856bf4af406a5a50a42a0e31a937cf79102989abd5b42fbff804d9",
+      "title": "Цифровая эссенция",
+      "description": "Создайте поставщик наполнения эссенции, чтобы автоматизировать наполнения в Thaumcraft."
+    },
+    "config/triumph/script/triumph/dj2/18_child_of_zeus.txt": {
+      "source_sha256": "f9279e3af1c2de0698265d2968ad209d444e251a09bf20f128a528d5fa5d1a08",
+      "result_sha256": "af631e5f0fb89c91feb3088ebfe59672fbcdf51c9c7daa33c2529f04a49062e0",
+      "title": "Сын Зевса",
+      "description": "Создайте стол наполнения молниями, чтобы открыть LightningCraft."
+    },
+    "config/triumph/script/triumph/dj2/19_astrology.txt": {
+      "source_sha256": "f0db80d41f97abf2ae106f195e3ac6db3510690bde49b0285aa42b37170c2e3b",
+      "result_sha256": "1cc88b2f860abbe6ebccc49bfc939a815992b0a51bc1005d0e05aa601be783d2",
+      "title": "Астрология",
+      "description": "Создайте астральный том, чтобы открыть Astral Sorcery."
+    },
+    "config/triumph/script/triumph/dj2/20_to_the_skies_and_beyond.txt": {
+      "source_sha256": "5d8ea326d83bd3361bd3bc39b6f36df717fe0ec3118d7dcd80195d4b0debcf4f",
+      "result_sha256": "8b8d1216f101efda7d4e114408eb7d459c9cb40be505d7f1268e17e2dcc22ac1",
+      "title": "К небесам и дальше",
+      "description": "Создайте ракету первого уровня, чтобы отправиться на Луну."
+    },
+    "config/triumph/script/triumph/dj2/21_welcome_to_lategame.txt": {
+      "source_sha256": "1bf89d7ef2ce702e050fff56a3a94b79263132581277012ce5548c663e5e6930",
+      "result_sha256": "b6a14295776af68afd580c6b410364b801770a1502600aba96bf2555ae5ff5f7",
+      "title": "Добро пожаловать в позднюю игру!",
+      "description": "Создайте ядро дракона, чтобы перейти к позднему этапу."
+    },
+    "config/triumph/script/triumph/dj2/22_in_my_element.txt": {
+      "source_sha256": "b4a2367eb24dab5a59c71c300220c5261f3f8ea169bfb4a9b8f035be4aa9c78d",
+      "result_sha256": "86d8030df7255e82ed8e803e7759b6e3f03cac21b23accfb9254f907f7b8dfee",
+      "title": "В своей стихии",
+      "description": "Создайте химический растворитель, чтобы открыть Alchemistry."
+    },
+    "config/triumph/script/triumph/dj2/23_dimension_hopper.txt": {
+      "source_sha256": "c8919fe04843c10c27699af9851da1bb3fa3863a385817f838db2c316a904578",
+      "result_sha256": "2aa718e58827e59f5a8f6a2f7e5ec0b74a6dc99d37e120c0c2a2dc41d6f33f15",
+      "title": "Путешественник по измерениям",
+      "description": "Создайте пустую панель измерения, чтобы делать свои измерения в RFTools."
+    },
+    "config/triumph/script/triumph/dj2/24_philosophy.txt": {
+      "source_sha256": "abe57d5d00215ef24cf447a2162a8056cbb534947ffa929f688f60218e4cd0f5",
+      "result_sha256": "eace9a202761ab66762b2b4de2a037d4518591dd64fa4a76c52535feb7ed9c6a",
+      "title": "Философия",
+      "description": "Создайте философский камень, чтобы открыть ProjectE."
+    },
+    "config/triumph/script/triumph/dj2/25_discovering_the_meaning_of_life.txt": {
+      "source_sha256": "586bc8ff890ba54137b6cb21f1cb5699f4b5aac6e35bc7c860f5dffe09edc876",
+      "result_sha256": "d5ed9c37e096703019598443e14c46dae650c469727fca22d89303cb9240b9c5",
+      "title": "В поисках смысла жизни",
+      "description": "Получите ключ бесконечности и откройте мешочек истины."
+    },
+    "config/triumph/script/triumph/dj2/26_THE_TRUE_ENDING.txt": {
+      "source_sha256": "82ee3e31e3e9a00a025e13ccbc99e2d03e803727ab3a30a0b9351c5bd3544dc5",
+      "result_sha256": "1717a3e00e920d2b1369541219f4e45e0b50c329bdf4a4d9bfeca495fc6879ea",
+      "title": "НАСТОЯЩАЯ КОНЦОВКА",
+      "description": "Узнайте правду!"
+    },
+    "config/triumph/script/triumph/dj2/root.txt": {
+      "source_sha256": "2ace9545d6c652ce9cfa9dab78cefdfb432e62f04016e81a515076fac4155d66",
+      "result_sha256": "7d3dad20e520230bc0c002631c9d8414109ef0bec9b7509aa9475aaee34ee275",
+      "title": "Испытания Divine Journey 2",
+      "description": "Пройдите эти этапы сборки. Пусть друзья гордятся вами или немного завидуют."
+    }
+  },
+  "assets": {
+    "resources/betterquesting/lang/ru_ru.lang": {
+      "previous_sha256": "f5b698445d1e56d512f5a5d61ae267b3b1125490afd07e666424208f7af33937",
+      "sha256": "4dfb1c1a0e856d9447400892f9e862ee44e416401a4c454d1721cd26ba31a1cf",
+      "size": 1102486
+    },
+    "resources/crafttweaker/lang/ru_ru.lang": {
+      "previous_sha256": "300fa82172d5b4e34ad401d59be2022dc68673044751a65b5ff4397256a07c2f",
+      "sha256": "cc4f28ef001fae6ed095c116d6f37e005b0636f3b56664c8b10c20ac2e1c6475",
+      "size": 80685
+    },
+    "config/triumph/script/triumph/dj2/01_divin_into_dj2.txt": {
+      "previous_sha256": "b4aa18b43605c9f6ae4ec43e115db7e8a2078b6871ed9542a7141064ff199f3e",
+      "sha256": "c5c8e6e9e82bb5459cedcb9afd331f41a142dd50d8a28501a3009dc0f5fbeea2",
+      "size": 510
+    },
+    "config/triumph/script/triumph/dj2/02_technology.txt": {
+      "previous_sha256": "34d25d222455b0a2f4ba8c68f5bcc0d9361559909d268e442535bae28ecabde7",
+      "sha256": "096ec23a6f8d29747479c821ba038709cddd851699b3aaca9b6a10723ef3e2f7",
+      "size": 481
+    },
+    "config/triumph/script/triumph/dj2/03_root_3.txt": {
+      "previous_sha256": "1ef30742803b5f64fda7dac18998065e4944f94c6abf2709c8741f607e59fb40",
+      "sha256": "0eac5a0e52460e28f79a71d6b21cf83bd18963af13ea10d15595f6c460bad7da",
+      "size": 416
+    },
+    "config/triumph/script/triumph/dj2/04_digital_storage.txt": {
+      "previous_sha256": "1f9078a0bcbe0f8142b50db4c00ef9c0358a3090c340b68d8d8ac70c37841bf7",
+      "sha256": "156555cc66dd872fb0ae38724cb0ec5bb274a058b6405ff3b820ebbef38ae050",
+      "size": 520
+    },
+    "config/triumph/script/triumph/dj2/05_surviving_the_sands.txt": {
+      "previous_sha256": "87424b9bfd4ffb478cda4c1b3643f8508cb4349d34c2b66a561a09d941999ead",
+      "sha256": "3a9d0a668945e8a768fbd4132a49831ffbd2a9bfe0fa47ea2d0b0502777477c3",
+      "size": 435
+    },
+    "config/triumph/script/triumph/dj2/06_no_more_mosquitos.txt": {
+      "previous_sha256": "0a9f9148bfea9158607599b16b1a5ac22ae1184632724f1aaee1eb55c695a346",
+      "sha256": "c7828e50464281742d32c377c630c5802bc0ec1899e52c575b8bb72eed6781b9",
+      "size": 515
+    },
+    "config/triumph/script/triumph/dj2/07_sky_soarer.txt": {
+      "previous_sha256": "04f3cd3d56cbe0f73379f23e7fa21b4d436e0b7312496663289b8f0ab90e50ea",
+      "sha256": "a0f49834e9286a0e77e3743ef0d361f195601a86e521be81591d156b0fc09848",
+      "size": 543
+    },
+    "config/triumph/script/triumph/dj2/08_the_big_tech_block.txt": {
+      "previous_sha256": "71316f859bed1e4cb301b03a377dfee36c67955eb3f9d26dc31f58228956798f",
+      "sha256": "b45a37e32e48775f58a45e3ebc951369648a061f188a9ff3d4fcea5732f13238",
+      "size": 509
+    },
+    "config/triumph/script/triumph/dj2/09_digital_crafting.txt": {
+      "previous_sha256": "a5c89638b5159116f3f796e8cff50b2c12d08378f0971c9e695616d7ed2f4330",
+      "sha256": "43145b4abe057ad97640520c375ee6a05cba9013430dfd3112e7e16ce63e1bcc",
+      "size": 544
+    },
+    "config/triumph/script/triumph/dj2/10_dig_dig_dig.txt": {
+      "previous_sha256": "0a162d94ce0beed716997f7b72454a4ec3bf034432b94003db58c1aea42c10c2",
+      "sha256": "6867eb8e97d102f28a86180a11d93f2770d665cdac20dd66143e270ba9352bc9",
+      "size": 474
+    },
+    "config/triumph/script/triumph/dj2/11_elevating.txt": {
+      "previous_sha256": "09964e48056b0a8e9daa24fda0cd6faf9e923d8ba92a28b29987c138c16a65cb",
+      "sha256": "3d32efeb8c5dbdfd85659d107e22328e3c2a42fc81c8453497a8e0ecf3d0ed8c",
+      "size": 512
+    },
+    "config/triumph/script/triumph/dj2/12_autocrafting.txt": {
+      "previous_sha256": "bdaa485259ee933ac00729f319a0401ba7223bd8602c9319c632337445664923",
+      "sha256": "e4feb5dc3e43ca9c84bec179b54e20534cc61b1321ea05a882c4f0045674c540",
+      "size": 529
+    },
+    "config/triumph/script/triumph/dj2/13_the_big_magic_block.txt": {
+      "previous_sha256": "9eeff75333ab625e17baea7461c0e0879ba791de182046484a2de9ea41c926c6",
+      "sha256": "ee962e1d86445291ebfd1bd2e155e7460ee8a29cc24906adc7d32a95b9877910",
+      "size": 496
+    },
+    "config/triumph/script/triumph/dj2/14_manamana.txt": {
+      "previous_sha256": "08f946332a2a99059a578564e82452be2cd1b741c3db634c228d5c4099018e46",
+      "sha256": "bf46d8def1e6c33a33940094fc32c340841235d712d63bc7e92033ed53c69d65",
+      "size": 535
+    },
+    "config/triumph/script/triumph/dj2/15_becoming_a_thaumaturge.txt": {
+      "previous_sha256": "a176adb632f4a9ccdca38f8c5956a73c77bf6667e8f820c45985b5009935fa09",
+      "sha256": "1e2331f885477b644076ceed1e255a53ad4973c4396c4bd46fbcea56b064a75d",
+      "size": 478
+    },
+    "config/triumph/script/triumph/dj2/16_nyahhahahahaaaa.txt": {
+      "previous_sha256": "1c444f48014d8de97caa8f3ce28668ec6819977ff860180c3858a755f4f60ab4",
+      "sha256": "1c117ac3d4738b4aaafce700e49e806855ff11d9fb4f8b521ed77a1836c8523d",
+      "size": 492
+    },
+    "config/triumph/script/triumph/dj2/17_digital_essentia.txt": {
+      "previous_sha256": "b6fe1d74206bbc64456b4304c07b307d84ad3f51287e8433452d545de4f3a33f",
+      "sha256": "7b2771dcbe856bf4af406a5a50a42a0e31a937cf79102989abd5b42fbff804d9",
+      "size": 572
+    },
+    "config/triumph/script/triumph/dj2/18_child_of_zeus.txt": {
+      "previous_sha256": "f9279e3af1c2de0698265d2968ad209d444e251a09bf20f128a528d5fa5d1a08",
+      "sha256": "af631e5f0fb89c91feb3088ebfe59672fbcdf51c9c7daa33c2529f04a49062e0",
+      "size": 496
+    },
+    "config/triumph/script/triumph/dj2/19_astrology.txt": {
+      "previous_sha256": "f0db80d41f97abf2ae106f195e3ac6db3510690bde49b0285aa42b37170c2e3b",
+      "sha256": "1cc88b2f860abbe6ebccc49bfc939a815992b0a51bc1005d0e05aa601be783d2",
+      "size": 450
+    },
+    "config/triumph/script/triumph/dj2/20_to_the_skies_and_beyond.txt": {
+      "previous_sha256": "5d8ea326d83bd3361bd3bc39b6f36df717fe0ec3118d7dcd80195d4b0debcf4f",
+      "sha256": "8b8d1216f101efda7d4e114408eb7d459c9cb40be505d7f1268e17e2dcc22ac1",
+      "size": 522
+    },
+    "config/triumph/script/triumph/dj2/21_welcome_to_lategame.txt": {
+      "previous_sha256": "1bf89d7ef2ce702e050fff56a3a94b79263132581277012ce5548c663e5e6930",
+      "sha256": "b6a14295776af68afd580c6b410364b801770a1502600aba96bf2555ae5ff5f7",
+      "size": 523
+    },
+    "config/triumph/script/triumph/dj2/22_in_my_element.txt": {
+      "previous_sha256": "b4a2367eb24dab5a59c71c300220c5261f3f8ea169bfb4a9b8f035be4aa9c78d",
+      "sha256": "86d8030df7255e82ed8e803e7759b6e3f03cac21b23accfb9254f907f7b8dfee",
+      "size": 491
+    },
+    "config/triumph/script/triumph/dj2/23_dimension_hopper.txt": {
+      "previous_sha256": "c8919fe04843c10c27699af9851da1bb3fa3863a385817f838db2c316a904578",
+      "sha256": "2aa718e58827e59f5a8f6a2f7e5ec0b74a6dc99d37e120c0c2a2dc41d6f33f15",
+      "size": 546
+    },
+    "config/triumph/script/triumph/dj2/24_philosophy.txt": {
+      "previous_sha256": "abe57d5d00215ef24cf447a2162a8056cbb534947ffa929f688f60218e4cd0f5",
+      "sha256": "eace9a202761ab66762b2b4de2a037d4518591dd64fa4a76c52535feb7ed9c6a",
+      "size": 478
+    },
+    "config/triumph/script/triumph/dj2/25_discovering_the_meaning_of_life.txt": {
+      "previous_sha256": "586bc8ff890ba54137b6cb21f1cb5699f4b5aac6e35bc7c860f5dffe09edc876",
+      "sha256": "d5ed9c37e096703019598443e14c46dae650c469727fca22d89303cb9240b9c5",
+      "size": 520
+    },
+    "config/triumph/script/triumph/dj2/26_THE_TRUE_ENDING.txt": {
+      "previous_sha256": "82ee3e31e3e9a00a025e13ccbc99e2d03e803727ab3a30a0b9351c5bd3544dc5",
+      "sha256": "1717a3e00e920d2b1369541219f4e45e0b50c329bdf4a4d9bfeca495fc6879ea",
+      "size": 451
+    },
+    "config/triumph/script/triumph/dj2/root.txt": {
+      "previous_sha256": "2ace9545d6c652ce9cfa9dab78cefdfb432e62f04016e81a515076fac4155d66",
+      "sha256": "7d3dad20e520230bc0c002631c9d8414109ef0bec9b7509aa9475aaee34ee275",
+      "size": 450
+    }
+  }
+}
