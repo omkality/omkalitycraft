@@ -32,6 +32,33 @@
         {"expr": "omk_game_tick_mean_ms", "eval_time": "180s", "exp_samples": [{"labels": "omk_game_tick_mean_ms{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 10}]},
         {"expr": "omk_game_progress_observed", "eval_time": "180s", "exp_samples": [{"labels": "omk_game_progress_observed{job=\"dj2\",instance=\"game:19565\",service=\"dj2\"}", "value": 1}]}
       ]
+    },
+    {
+      "interval": "5s",
+      "input_series": [
+        {"series": "up{job=\"host\",instance=\"agent:9273\"}", "values": "1+0x20 0"},
+        {"series": "cgroup_cpu_stat_usage_usec{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/main\",release=\"test\",service=\"dj2\"}", "values": "0+2500000x21"},
+        {"series": "cgroup_memory_current{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/main\",release=\"test\",service=\"dj2\"}", "values": "4294967296+0x21"},
+        {"series": "cgroup_cgroup_events_populated{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/main\",release=\"test\",service=\"dj2\"}", "values": "1+0x21"},
+        {"series": "cgroup_cpu_stat_usage_usec{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/empty\",release=\"test\",service=\"dj2\"}", "values": "5000000+0x21"},
+        {"series": "cgroup_memory_current{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/empty\",release=\"test\",service=\"dj2\"}", "values": "0+0x21"},
+        {"series": "cgroup_cgroup_events_populated{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/empty\",release=\"test\",service=\"dj2\"}", "values": "0+0x21"},
+        {"series": "cgroup_cpu_stat_usage_usec{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/idle\",release=\"test\",service=\"api\"}", "values": "5000000+0x21"},
+        {"series": "cgroup_memory_current{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/idle\",release=\"test\",service=\"api\"}", "values": "1048576+0x21"},
+        {"series": "cgroup_cgroup_events_populated{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/idle\",release=\"test\",service=\"api\"}", "values": "1+0x21"}
+      ],
+      "promql_expr_test": [
+        {"expr": "omk_service_cpu_vcpus", "eval_time": "100s", "exp_samples": [
+          {"labels": "omk_service_cpu_vcpus{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/main\",release=\"test\",service=\"dj2\"}", "value": 0.5},
+          {"labels": "omk_service_cpu_vcpus{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/idle\",release=\"test\",service=\"api\"}", "value": 0}
+        ]},
+        {"expr": "omk_service_memory_bytes", "eval_time": "100s", "exp_samples": [
+          {"labels": "omk_service_memory_bytes{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/main\",release=\"test\",service=\"dj2\"}", "value": 4294967296},
+          {"labels": "omk_service_memory_bytes{host=\"test\",job=\"host\",instance=\"agent:9273\",path=\"/cgroups/idle\",release=\"test\",service=\"api\"}", "value": 1048576}
+        ]},
+        {"expr": "omk_service_cpu_vcpus", "eval_time": "105s", "exp_samples": []},
+        {"expr": "omk_service_memory_bytes", "eval_time": "105s", "exp_samples": []}
+      ]
     }
   ]
 }

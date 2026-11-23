@@ -169,6 +169,11 @@ def render(config, environment=None):
         "  string_as_label=false",
     ]
     live = " and on(job,instance) (up == 1)"
+    populated = (
+        " and on(job,instance,host,service,path,release) "
+        "(cgroup_cgroup_events_populated == 1)"
+    )
+    cgroup_rate_window = max(90, expiry)
     rules = {
         "groups": [
             {
@@ -195,7 +200,21 @@ def render(config, environment=None):
                         + live,
                     },
                 ],
-            }
+            },
+            {
+                "name": "omk-service",
+                "rules": [
+                    {
+                        "record": "omk_service_cpu_vcpus",
+                        "expr": f"rate(cgroup_cpu_stat_usage_usec[{cgroup_rate_window}s])"
+                        " / 1000000" + populated + live,
+                    },
+                    {
+                        "record": "omk_service_memory_bytes",
+                        "expr": "cgroup_memory_current" + populated + live,
+                    },
+                ],
+            },
         ]
     }
     prometheus = {
