@@ -176,7 +176,7 @@
     "Protocol actors do not render, execute client mods, predict container inventory or simulate physics",
     "Positive minimal-actor transfers receive correction confirmations; source/destination item state is checked independently on server",
     "Selected-area recovery is specified but not implemented; WorldEdit snapshot compatibility remains untested",
-    "GTNH and public deployment remain separate milestones"
+    "Public deployment is outside this check"
   ],
   "harness_adjustments": [
     "Load the home destination then use bedrock; Underground Biomes changes stone and cobblestone",

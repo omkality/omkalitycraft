@@ -192,7 +192,6 @@
   },
   "limits": [
     "Only configured servers can be verified; inventory must be complete",
-    "GTNH adapter not implemented or accepted",
     "Actual terminal delivery validated by isolated CLI unit test; native service probe uses an in-memory delivery callback",
     "No cross-service atomic transaction: process death after unlock leaves a non-complete journal and requires explicit resume",
     "Raw legacy production_reset_cli_implemented flag belongs to the first direct-PATCH characterization; owner_workflow separately records the new engine",

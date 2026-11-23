@@ -210,7 +210,7 @@
     "RTP tests use bounded artificial terrain and shorter fixture timings, not all natural terrain or every mod hazard.",
     "The full community profile was checked on the spawn suite; the RTP functional suite uses the explicit lab profile.",
     "An early independent reader expected uppercase SERVER; corrected to the actual saved FTB server format without modifying game data.",
-    "Resource world provisioning, quest progression, other modpacks and GTNH remain outside this acceptance."
+    "Resource world provisioning, quest progression, and other modpacks remain outside this acceptance."
   ],
   "graphical_client_tested": false,
   "live_data_or_signed_player_release_changed": false,

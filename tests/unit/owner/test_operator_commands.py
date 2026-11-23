@@ -47,7 +47,7 @@ def test_server_export_requires_explicit_operator_allowlist_and_is_read_only(tmp
     assert Path(result["archive"]).is_relative_to(settings.private)
     assert source.stat().st_mtime_ns == before
     with pytest.raises(AdminError, match="allowlist"):
-        server_diagnostics(settings, "gtnh")
+        server_diagnostics(settings, "other-server")
 
 
 def test_non_admin_login_never_saves_management_credentials(tmp_path, monkeypatch):

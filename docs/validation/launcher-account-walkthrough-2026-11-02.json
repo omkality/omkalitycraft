@@ -63,6 +63,6 @@
   "additional_assertions": [
     "Old password rejected after the change",
     "New password accepted for the same player UUID",
-    "GTNH planned-profile slider disabled"
+    "Memory slider disabled for the planned profile"
   ]
 }

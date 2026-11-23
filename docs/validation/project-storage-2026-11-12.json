@@ -8,7 +8,7 @@
     "real_drasl": true,
     "drasl_image_id": "sha256:51c185ec27c1896ed1cf6a5c20fd395722a8d8eaf3c9ad4149683c5e16c4b400",
     "real_minecraft_started": false,
-    "game_fixture": "two isolated copies of accepted DJ2 exports; not GTNH acceptance",
+    "game_fixture": "two isolated copies of accepted DJ2 exports",
     "named_volumes": 10,
     "files": 7700,
     "auth_files": 6

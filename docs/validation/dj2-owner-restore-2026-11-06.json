@@ -222,7 +222,6 @@
     "private_core_changed": false,
     "launcher_ui_changed": false,
     "graphical_client_tested": false,
-    "gtnh_tested": false,
     "production_cutover": false,
     "scheduler_added": false,
     "live_data_changed": false,
