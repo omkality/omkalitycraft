@@ -1,5 +1,6 @@
 mod backend;
 mod branding;
+mod invitations;
 mod moderation;
 mod protocol;
 mod restrictions;
@@ -36,6 +37,8 @@ struct Options {
     branding_header: bool,
     window_index: usize,
     reports: wipe_report::Destination,
+    #[cfg(not(windows))]
+    clipboard_socket: Option<PathBuf>,
 }
 
 fn options() -> Result<Option<Options>, String> {
@@ -55,11 +58,13 @@ fn options() -> Result<Option<Options>, String> {
     let mut branding_header = true;
     let mut window_index = 0;
     let mut export_dir = None;
+    #[cfg(not(windows))]
+    let mut clipboard_socket = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / 1 players / 2 TPS / 3 save / 4 restrictions (u unban, n unmute) / k kick / b ban / m mute / s statistics / i invite / r refresh / t period\nEsc goes back; from the main menu it asks before closing.\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / 1 players / 2 TPS / 3 save / 4 restrictions (u unban, n unmute) / 5 backups / k kick / b ban / m mute / s statistics / i invite / r refresh / t period\nEsc goes back; from the main menu it asks before closing.\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
@@ -88,6 +93,14 @@ fn options() -> Result<Option<Options>, String> {
                 }
                 export_dir = Some(path);
             }
+            #[cfg(not(windows))]
+            Some("--clipboard-socket") => {
+                let path = PathBuf::from(args.next().ok_or("--clipboard-socket требует путь")?);
+                if !path.is_absolute() {
+                    return Err("--clipboard-socket требует абсолютный путь".into());
+                }
+                clipboard_socket = Some(path);
+            }
             _ => return Err("Неизвестный аргумент; используйте --help".into()),
         }
     }
@@ -114,6 +127,8 @@ fn options() -> Result<Option<Options>, String> {
         branding_header,
         window_index,
         reports: wipe_report::Destination { export_dir },
+        #[cfg(not(windows))]
+        clipboard_socket,
     }))
 }
 
@@ -147,6 +162,7 @@ impl Pending {
                 "save" => "Сохраняем мир",
                 "tps" => "Читаем TPS по мирам",
                 "invites" => "Загружаем приглашения",
+                "backup-status" => "Читаем состояние резервных копий",
                 _ => "Обновляем список игроков",
             },
         };
@@ -238,7 +254,14 @@ fn execute() -> Result<(), String> {
     #[cfg(windows)]
     startup::widen_standalone_console();
     let mut terminal = ratatui::init();
-    let result = interactive(&mut terminal, &mut app, options.backend, &options.reports);
+    let result = interactive(
+        &mut terminal,
+        &mut app,
+        options.backend,
+        &options.reports,
+        #[cfg(not(windows))]
+        options.clipboard_socket.as_deref(),
+    );
     ratatui::restore();
     result.map_err(|_| "Ошибка терминала; результат незавершённой команды неизвестен".into())
 }
@@ -280,6 +303,7 @@ fn interactive(
     app: &mut App,
     backend: Option<Backend>,
     reports: &wipe_report::Destination,
+    #[cfg(not(windows))] clipboard_socket: Option<&std::path::Path>,
 ) -> io::Result<()> {
     let mut pending = backend
         .as_ref()
@@ -287,11 +311,18 @@ fn interactive(
     let mut name_lookup: Option<Pending> = None;
     let mut background: Option<Pending> = None;
     let mut next_refresh = Instant::now() + Duration::from_secs(5);
+    let mut next_backup_refresh = next_refresh;
     #[cfg(windows)]
     let mut clipboard_copy: Option<ClipboardCopy> = None;
     loop {
         if let Some(work) = &background {
             match work.receiver.try_recv() {
+                Ok(Ok(Reply::Console(value))) if value.ok && value.command == "backup-status" => {
+                    if app.server() == Some(value.server_id.as_str()) && app.viewing_backups() {
+                        app.refresh_section("backup-status", value.output);
+                    }
+                    background = None;
+                }
                 Ok(Ok(Reply::Overview(value, history))) if value.ok => {
                     let failed = app.failed;
                     app.accept(value);
@@ -355,6 +386,9 @@ fn interactive(
                                 Some(ModerationRefresh::Restrictions(snapshot)) => {
                                     app.show_restrictions(snapshot);
                                 }
+                                Some(ModerationRefresh::Invitations(rows)) => {
+                                    app.show_invitations(rows);
+                                }
                                 None => {}
                             }
                             app.failed = !v.ok;
@@ -382,7 +416,9 @@ fn interactive(
                             }
                             #[cfg(not(windows))]
                             {
-                                let status = v.code().map(clipboard_status);
+                                let status = v
+                                    .code()
+                                    .map(|code| clipboard_status(code, clipboard_socket));
                                 app.show_detail(v.message(status));
                             }
                         }
@@ -400,12 +436,21 @@ fn interactive(
                             app.failed = false;
                             app.show_forge_tps(&v.server_id, &v.output);
                         }
+                        Ok(Reply::Console(v)) if v.command == "invites" => {
+                            app.failed = !v.ok;
+                            app.show_invitations(v.invitations);
+                        }
                         Ok(Reply::Console(v)) => {
                             app.failed = !v.ok;
-                            let message = if let Some(list) = v.membership_message() {
+                            let message = if v.command == "backup-status" {
+                                next_backup_refresh = Instant::now() + Duration::from_secs(5);
+                                if v.ok {
+                                    v.output
+                                } else {
+                                    "Состояние резервных копий недоступно.".into()
+                                }
+                            } else if let Some(list) = v.membership_message() {
                                 list
-                            } else if v.ok && v.command == "invites" {
-                                format!("Активные приглашения\n\n{}\n\no — отозвать", v.output)
                             } else if v.ok {
                                 format!(
                                     "Сервер: {}\nКоманда: {}\n\nОтвет сервера:\n{}{}",
@@ -413,7 +458,7 @@ fn interactive(
                                     v.command,
                                     v.output,
                                     if v.command == "save" {
-                                        "\n\nОтвет не является проверкой резервной копии."
+                                        "\n\nПроверенные архивы доступны в разделе 5."
                                     } else {
                                         ""
                                     }
@@ -571,6 +616,43 @@ fn interactive(
                 }
                 continue;
             }
+            if let Some(form) = &mut app.invitation_form {
+                if let Some(selection) = form.key(key.code) {
+                    app.invitation_form = None;
+                    match selection {
+                        invitations::Selection::Copy(code) => {
+                            #[cfg(windows)]
+                            let status = {
+                                clipboard_copy = Some(ClipboardCopy::start(code.clone()));
+                                COPY_PENDING
+                            };
+                            #[cfg(not(windows))]
+                            let status = clipboard_status(&code, clipboard_socket);
+                            app.show_detail(format!("Ключ приглашения\n\n{code}\n\n{status}"));
+                        }
+                        invitations::Selection::Revoke(reference) => {
+                            if let (Some(b), Some(server)) = (&backend, app.server()) {
+                                let action = moderation::Action {
+                                    server: server.to_owned(),
+                                    command: "revoke-invite".into(),
+                                    player: reference,
+                                    duration: String::new(),
+                                    reason: String::new(),
+                                    profile: None,
+                                };
+                                drop(pending.take());
+                                app.show_detail("Отзываем приглашение…".into());
+                                pending = Some(Pending::start(
+                                    b.clone(),
+                                    Request::Moderation(action, Some("invites".into())),
+                                ));
+                                next_refresh = Instant::now() + Duration::from_secs(5);
+                            }
+                        }
+                    }
+                }
+                continue;
+            }
             let shortcut = shortcut_key(key.code);
             if let Some(selected) = app.range_picker {
                 match key.code {
@@ -661,6 +743,15 @@ fn interactive(
                 #[cfg(not(windows))]
                 let clipboard_idle = true;
                 match shortcut {
+                    KeyCode::Char(c @ ('c' | 'o'))
+                        if clipboard_idle
+                            && pending.as_ref().is_none_or(|work| work.overview)
+                            && !app.demo =>
+                    {
+                        if let Some(rows) = app.invitation_rows().filter(|rows| !rows.is_empty()) {
+                            app.invitation_form = Some(invitations::Form::new(rows, c == 'o'));
+                        }
+                    }
                     KeyCode::Char('i')
                         if clipboard_idle
                             && pending.as_ref().is_none_or(|work| !work.mutating)
@@ -682,7 +773,7 @@ fn interactive(
                             next_refresh = Instant::now() + Duration::from_secs(5);
                         }
                     }
-                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 'o' | 's'))
+                    KeyCode::Char(c @ ('k' | 'b' | 'm' | 's'))
                         if pending.as_ref().is_none_or(|work| !work.mutating) && !app.demo =>
                     {
                         app.moderation = app.server().map(|s| {
@@ -691,15 +782,12 @@ fn interactive(
                                 match c {
                                     'k' => "kick",
                                     'b' => "ban",
-                                    'o' => "revoke-invite",
                                     's' => "stats",
                                     _ => "mute",
                                 },
                             )
                         });
-                        if c != 'o'
-                            && let (Some(b), Some(form)) = (&backend, &mut app.moderation)
-                        {
+                        if let (Some(b), Some(form)) = (&backend, &mut app.moderation) {
                             form.start_name_lookup();
                             name_lookup = Some(Pending::start(
                                 b.clone(),
@@ -743,7 +831,7 @@ fn interactive(
                             app.window(),
                         ))
                     }
-                    KeyCode::Char(c @ ('1' | '2' | '3' | '4' | 'l'))
+                    KeyCode::Char(c @ ('1' | '2' | '3' | '4' | '5' | 'l'))
                         if pending.is_none() && !app.demo =>
                     {
                         if c == '3' {
@@ -757,6 +845,7 @@ fn interactive(
                                 server: s.into(),
                                 command: match c {
                                     '1' => "roster",
+                                    '5' => "backup-status",
                                     'l' => "invites",
                                     _ => "tps",
                                 }
@@ -767,6 +856,21 @@ fn interactive(
                     _ => {}
                 }
             }
+        }
+        if app.viewing_backups()
+            && Instant::now() >= next_backup_refresh
+            && background.is_none()
+            && pending.is_none()
+            && let (Some(b), Some(server)) = (&backend, app.server())
+        {
+            next_backup_refresh = Instant::now() + Duration::from_secs(5);
+            background = Some(Pending::start(
+                b.clone(),
+                Request::Console {
+                    server: server.into(),
+                    command: "backup-status".into(),
+                },
+            ));
         }
         if Instant::now() >= next_refresh
             && pending.as_ref().is_some_and(|work| !work.overview)
@@ -809,7 +913,14 @@ fn request_error(error: &str, work: &Pending, reports: &wipe_report::Destination
 }
 
 #[cfg(not(windows))]
-fn clipboard_status(code: &str) -> &'static str {
+fn clipboard_status(code: &str, socket: Option<&std::path::Path>) -> &'static str {
+    if let Some(socket) = socket {
+        return if backend::queue_clipboard(socket, code).unwrap_or(false) {
+            "Код отправлен в буфер Windows."
+        } else {
+            COPY_FAILED
+        };
+    }
     if crossterm::execute!(
         io::stdout(),
         crossterm::clipboard::CopyToClipboard::to_clipboard_from(code),
@@ -861,6 +972,7 @@ fn shortcut_key(code: KeyCode) -> KeyCode {
         'а' => 'f',
         'д' => 'l',
         'щ' => 'o',
+        'с' => 'c',
         'ы' => 's',
         _ => character,
     };
