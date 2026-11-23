@@ -1,5 +1,8 @@
 """Pack cards and a compact account panel, without session-management clutter."""
 
+from collections.abc import Callable
+from pathlib import Path
+
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QFrame,
@@ -29,9 +32,13 @@ class Dashboard(QWidget):
         self,
         preferences: Preferences | None = None,
         machine: MemorySnapshot | None = None,
+        *,
+        instance_directory: Callable[[str], Path] | None = None,
     ) -> None:
         super().__init__()
         self.preferences = preferences or Preferences()
+        self._instance_directory = instance_directory
+        self._profiles = tuple(load_profiles())
         machine = machine or MemorySnapshot.read()
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 24, 0, 0)
@@ -51,7 +58,7 @@ class Dashboard(QWidget):
         packs.addLayout(header)
         self._guide_dialog: PlayerGuideDialog | None = None
         self.cards: dict[str, PackCard] = {}
-        for profile in load_profiles():
+        for profile in self._profiles:
             card = PackCard(profile, machine, self.preferences.memory.get(profile.id))
             self.cards[profile.id] = card
             card.action.clicked.connect(
@@ -75,7 +82,10 @@ class Dashboard(QWidget):
 
     def _show_guide(self) -> None:
         if self._guide_dialog is None:
-            self._guide_dialog = PlayerGuideDialog(self)
+            self._guide_dialog = PlayerGuideDialog(
+                self, self._profiles, self._instance_directory
+            )
+        self._guide_dialog.refresh_keys()
         self._guide_dialog.open()
 
     def _save_memory(self, pack_id: str, value: int) -> None:
