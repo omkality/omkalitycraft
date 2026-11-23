@@ -46,7 +46,7 @@ class Dashboard(QWidget):
         content = QWidget()
         packs = QVBoxLayout(content)
         packs.setContentsMargins(0, 0, 8, 0)
-        heading = QLabel("Ваша сборка")
+        heading = QLabel("Наши сборки")
         heading.setStyleSheet("font-size:23px;margin-bottom:6px")
         header = QHBoxLayout()
         header.addWidget(heading)

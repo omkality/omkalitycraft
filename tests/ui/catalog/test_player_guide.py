@@ -1,6 +1,6 @@
 from dataclasses import replace
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QLabel, QPushButton, QTabWidget, QWidget
 
 from launcher.dashboard import Dashboard
@@ -38,7 +38,8 @@ def test_commands_live_in_the_command_section_and_rules_have_no_commands(
         labels = [label.text() for label in page.findChildren(QLabel)]
         assert labels and not any(text.startswith("/") for text in labels)
         if name == "guideClaims_dj2":
-            assert not page.findChild(QLabel, "claimsScreenshot").pixmap().isNull()
+            for object_name in ("claimsButtonScreenshot", "claimsMapScreenshot"):
+                assert not page.findChild(QLabel, object_name).pixmap().isNull()
         if name == "guideRules":
             assert any("X-ray" in text for text in labels)
             assert any("Краш-машины" in text for text in labels)
@@ -48,9 +49,19 @@ def test_commands_live_in_the_command_section_and_rules_have_no_commands(
     assert page is scopes
     assert scopes.count() == 2
     common = [label.text() for label in scopes.widget(0).findChildren(QLabel)]
-    assert {"/sethome база", "/rtp", "/tpaccept НикОтправителя"}.issubset(common)
+    assert {
+        "/sethome",
+        "/sethome base",
+        "/home",
+        "/home base",
+        "/delhome",
+        "/delhome base",
+        "/rtp",
+        "/tpaccept Alex",
+    }.issubset(common)
     dj2 = [label.text() for label in scopes.widget(1).findChildren(QLabel)]
     assert {"/resource", "/chunks claim", "/bq_user refresh"}.issubset(dj2)
+    assert all(text.isascii() for text in common + dj2 if text.startswith("/"))
 
     memory = window.cards["dj2"].memory.selected_mb
     qtbot.keyClick(dialog, Qt.Key.Key_Escape)
@@ -62,6 +73,19 @@ def test_commands_live_in_the_command_section_and_rules_have_no_commands(
         dialog.findChild(QPushButton, "closePlayerGuide"), Qt.MouseButton.LeftButton
     )
     assert not dialog.isVisible()
+
+
+def test_clicking_outside_the_guide_dismisses_the_popup(qtbot, tmp_path):
+    window, dialog = _open_guide(qtbot, tmp_path)
+    assert dialog.windowType() == Qt.WindowType.Popup
+    qtbot.mouseClick(
+        dialog,
+        Qt.MouseButton.LeftButton,
+        pos=QPoint(-10, dialog.height() // 2),
+    )
+    assert not dialog.isVisible() and window.isVisible()
+    qtbot.mouseClick(window.guide_button, Qt.MouseButton.LeftButton)
+    assert dialog.isVisible()
 
 
 def test_controls_refresh_and_arrows_bisect_the_step_gaps(qtbot, tmp_path):

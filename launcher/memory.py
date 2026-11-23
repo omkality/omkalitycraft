@@ -11,6 +11,8 @@ from omk.shared.profiles import ServerProfile
 
 STEP_MB = 256
 MIN_MB = 1024
+LOW_MEMORY_HOST_MB = 16 * 1024
+MIN_SYSTEM_RESERVE_MB = 2 * 1024
 
 
 @dataclass(frozen=True)
@@ -40,10 +42,19 @@ class MemoryChoice:
 def choose_memory(
     profile: ServerProfile, machine: MemorySnapshot, requested_mb: int | None = None
 ) -> MemoryChoice:
-    reserve = max(2048, machine.total_mb // 4 + 1024)
-    maximum = min(profile.memory_max_mb, max(0, machine.total_mb - reserve))
+    """Use the saved heap or select a default within the host's memory budget."""
+    reserve = max(MIN_SYSTEM_RESERVE_MB, machine.total_mb // 4 + 1024)
+    recommended_room = min(
+        profile.memory_recommended_mb, machine.total_mb - MIN_SYSTEM_RESERVE_MB
+    )
+    maximum = min(
+        profile.memory_max_mb, max(0, machine.total_mb - reserve, recommended_room)
+    )
     maximum = maximum // STEP_MB * STEP_MB
-    requested = requested_mb if type(requested_mb) is int else profile.memory_default_mb
+    default_mb = profile.memory_default_mb
+    if machine.total_mb <= LOW_MEMORY_HOST_MB:
+        default_mb = min(default_mb, profile.memory_recommended_mb)
+    requested = requested_mb if type(requested_mb) is int else default_mb
     selected = max(0, min(max(MIN_MB, requested // STEP_MB * STEP_MB), maximum))
     if maximum < MIN_MB:
         warning = "Недостаточно памяти для запуска сборки."
