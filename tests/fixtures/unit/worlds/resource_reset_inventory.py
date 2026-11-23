@@ -21,6 +21,31 @@ def encoded(path, root):
 
 
 @pytest.fixture
+def rftools_registry(tmp_path, monkeypatch):
+    server = tmp_path / "server"
+    path = server / "world/data/RFToolsDimensionManager.dat"
+    mods = server / "mods"
+    mods.mkdir(parents=True)
+    jar = mods / "rftoolsdim-fixture.jar"
+    jar.write_bytes(b"synthetic-rftools-runtime")
+    monkeypatch.setattr(
+        audit,
+        "RFTOOLS_DIMENSIONS",
+        (jar.name, hashlib.sha256(jar.read_bytes()).hexdigest()),
+    )
+
+    def save(worlds):
+        entries = [
+            Tag(10, {"id": Tag(3, dimension), "name": Tag(8, name)})
+            for dimension, name in worlds
+        ]
+        encoded(path, {"data": Tag(10, {"dimensions": Tag(9, (10, entries))})})
+        return path
+
+    return server, jar, save
+
+
+@pytest.fixture
 def sample(tmp_path, monkeypatch, records):
     server = tmp_path / "server"
     world = server / "world"

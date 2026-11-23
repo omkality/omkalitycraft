@@ -1,5 +1,6 @@
 from contextlib import nullcontext
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 from omk.cli import main
 from omk.owner.admin import AdminError
@@ -295,3 +296,52 @@ def test_catalog_rejects_terminal_control_characters(monkeypatch, tmp_path):
     result = wipe.run("operator.toml", "dj2", "inspect", "", catalog=True, dimension=0)
     assert result["error"] == "operation_rejected"
     assert result["effect"] == "none"
+
+
+def test_discovered_world_is_visible_but_does_not_grant_reset_authority(monkeypatch):
+    main = {"dimension": 0, "name": "Основной", "description": "Базы игроков"}
+    dynamic = {"dimension": 60, "name": "Шахта", "description": "Мир RFTools"}
+    configured = {0: main}
+    context = object()
+    current = wipe.State(dimension=0, stage="prepare", managed=True)
+    discover = Mock(return_value={0: {**main, "name": "Collision"}, 60: dynamic})
+    mutate = Mock(side_effect=AssertionError("Unexpected wipe"))
+    monkeypatch.setattr(wipe, "load_operator_config", lambda _: context)
+    monkeypatch.setattr(wipe, "_catalog", lambda *_: configured)
+    monkeypatch.setattr(wipe, "_state", lambda *_, **__: current)
+    monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
+    monkeypatch.setattr(wipe, "discover_saved_worlds", discover)
+    monkeypatch.setattr(wipe, "_execute_stage", mutate)
+
+    initial = wipe.run("operator.toml", "dj2", "inspect", "", catalog=True)
+    assert initial["ok"] and initial["worlds"] == [main, dynamic]
+    selected = wipe.run(
+        "operator.toml", "dj2", "inspect", "", catalog=True, dimension=60
+    )
+    assert selected["ok"] and selected["stage"] == "unsupported"
+    assert selected["confirmation"] is None
+    attempt = wipe.run(
+        "operator.toml",
+        "dj2",
+        "run",
+        initial["confirmation"],
+        catalog=True,
+        dimension=60,
+    )
+    assert not attempt["ok"] and attempt["effect"] == "none"
+    mutate.assert_not_called()
+    assert discover.call_count == 2
+
+
+def test_unavailable_saved_catalog_keeps_the_configured_worlds(monkeypatch):
+    main = {"dimension": 0, "name": "Основной", "description": "Базы игроков"}
+    current = wipe.State(dimension=0, stage="prepare", managed=True)
+    monkeypatch.setattr(wipe, "load_operator_config", lambda _: object())
+    monkeypatch.setattr(wipe, "_catalog", lambda *_: {0: main})
+    monkeypatch.setattr(wipe, "_state", lambda *_, **__: current)
+    monkeypatch.setattr(
+        wipe, "discover_saved_worlds", Mock(side_effect=AdminError("Source changed"))
+    )
+    result = wipe.run("operator.toml", "dj2", "inspect", "", catalog=True)
+    assert result["ok"] and result["worlds"] == [main]
+    assert result["confirmation"] == current.confirmation("dj2", world=main)

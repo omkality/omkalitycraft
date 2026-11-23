@@ -7,6 +7,7 @@ from contextlib import nullcontext
 from contextvars import ContextVar
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from itertools import islice
 from pathlib import Path
 from traceback import extract_tb
 
@@ -24,10 +25,14 @@ from omk.owner.admin import (
     _require_private,
     load_operator_config,
 )
+from omk.owner.admin_resource_reset import discover_saved_worlds
 from omk.owner.panels import owner_moderation, owner_volumes
 from omk.worlds import world_cutover as cutover
 from omk.worlds.reset.dimension_reset import RESOURCE, layout
-from omk.worlds.reset.resource_reset_inventory import validate_dimension
+from omk.worlds.reset.resource_reset_inventory import (
+    WORLD_CATALOG_LIMIT,
+    validate_dimension,
+)
 
 STEPS = ("prepare", "apply", "start")
 COMMANDS = ("inspect", "run", *STEPS)
@@ -333,7 +338,7 @@ def _catalog(config, server):
     ):
         raise AdminError("Invalid world catalog")
     entries = servers.get(server, [])
-    if not isinstance(entries, list) or len(entries) > 64:
+    if not isinstance(entries, list) or len(entries) > WORLD_CATALOG_LIMIT:
         raise AdminError("Invalid world list")
     worlds = {}
     for entry in entries:
@@ -359,6 +364,19 @@ def _catalog(config, server):
             raise AdminError("Invalid world catalog entry")
         worlds[dimension] = entry
     return worlds
+
+
+def _inspect_other_worlds(config, server, worlds):
+    room = WORLD_CATALOG_LIMIT - len(worlds)
+    if not worlds or not room:
+        return {}
+    try:
+        discovered = discover_saved_worlds(config, server)
+    except AdminError, OSError, KeyError, TypeError, ValueError:
+        # Live WorldSavedData can change during a save. Keep the configured catalog.
+        return {}
+    available = ((dim, entry) for dim, entry in discovered.items() if dim not in worlds)
+    return dict(islice(available, room))
 
 
 def _selected_state(config, server, worlds, dimension):
@@ -524,9 +542,18 @@ def run(
         config = load_operator_config(path)
         with backups.locked(config) if action != "inspect" else nullcontext():
             worlds = _catalog(config, server) if catalog else {}
+            other = (
+                _inspect_other_worlds(config, server, worlds)
+                if action == "inspect"
+                else {}
+            )
             if catalog:
-                result["worlds"] = list(worlds.values())
-            state = _selected_state(config, server, worlds, dimension)
+                result["worlds"] = [*worlds.values(), *other.values()]
+            state = (
+                State(dimension=dimension, stage="unsupported")
+                if dimension in other
+                else _selected_state(config, server, worlds, dimension)
+            )
             world = worlds.get(state.dimension)
             result.update(state.payload(server, world=world))
             if action == "inspect" and state.stage == "review":

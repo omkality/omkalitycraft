@@ -5,25 +5,40 @@ import re
 import sys
 from pathlib import Path
 
-from omk.worlds.reset.resource_reset_inventory import inspect_resource
+from omk.worlds.reset.resource_reset_inventory import (
+    inspect_resource,
+    saved_rftools_worlds,
+)
 from omk.worlds.reset.resource_reset_preflight import options_checked, preflight
 
 
 def execute(request, source=Path("/server")):
     if sys.platform != "linux":
         raise ValueError("Resource inspection worker requires Linux")
-    keys = {"schema", "action", "world", "dimension", "world_max_bytes"}
-    if isinstance(request, dict) and request.get("action") == "preflight":
-        keys.add("options")
+    keys = {"schema", "action", "world"}
+    action = request.get("action") if isinstance(request, dict) else None
+    if action != "catalog":
+        keys.update(("dimension", "world_max_bytes"))
+        if action == "preflight":
+            keys.add("options")
     if (
         not isinstance(request, dict)
         or set(request) != keys
         or type(request["schema"]) is not int
         or request["schema"] != 1
-        or request["action"] not in {"inspect", "preflight"}
+        or action not in ("catalog", "inspect", "preflight")
         or not isinstance(request["world"], str)
         or not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", request["world"])
-        or type(request["world_max_bytes"]) is not int
+    ):
+        raise ValueError("Invalid read-only resource inspection request")
+    if action == "catalog":
+        return {
+            "schema": 1,
+            "world": request["world"],
+            "rftools": saved_rftools_worlds(source, request["world"]),
+        }
+    if (
+        type(request["world_max_bytes"]) is not int
         or not 1 <= request["world_max_bytes"] <= 1024**4
     ):
         raise ValueError("Invalid read-only resource inspection request")
