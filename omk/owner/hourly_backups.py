@@ -8,7 +8,7 @@ import re
 import shutil
 import sys
 import zipfile
-from datetime import UTC, datetime, timedelta, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from omk.backups.backup_archive import MAX_MANIFEST_BYTES, regular_file
@@ -21,6 +21,13 @@ from omk.owner import (
     admin_maintenance as maintenance,
 )
 from omk.owner.admin import AdminError, _read_json, _write_private, load_operator_config
+from omk.owner.hourly_backup_schedule import (
+    HOUR,
+    MOSCOW,
+    daily_due,
+    had_players,
+    hour_end,
+)
 from omk.shared.fs import resolved
 
 GIB = 1024**3
@@ -31,7 +38,8 @@ SNAPSHOT = r"snapshot-[a-f0-9]{32}"
 SHA256 = r"[a-f0-9]{64}"
 STAGES = {
     "checking": "Проверяем состояние сервера",
-    "idle": "Пропущено — на сервере нет игроков",
+    "idle": "Пропущено — за прошедший час никто не играл",
+    "duplicate": "Копия за этот час уже готова",
     "offline": "Пропущено — Minecraft остановлен",
     "saving": "Сохраняем мир в Minecraft",
     "copying": "Копируем файлы мира",
@@ -146,8 +154,27 @@ def _capture(send, world, folder, stage, verify_source):
             verify_source()
 
 
+def _scheduled_reason(when, latest, target, send):
+    boundary = hour_end(when)
+    if latest.get("slot") == boundary.isoformat():
+        return "duplicate"
+    if daily_due(when, latest):
+        return "daily"
+    online = online_players(send("list uuids")).values()
+    log = backups.docker(
+        "logs",
+        "--timestamps",
+        "--since",
+        (boundary - HOUR).isoformat(),
+        "--until",
+        datetime.now(UTC).isoformat(),
+        target["container"],
+    )
+    return "activity" if had_players(boundary, log, online) else "idle"
+
+
 def run(config, server):
-    """Back up a busy running world, publishing only a stable verified archive."""
+    """Back up each played hour and guarantee one copy per Moscow day."""
     folder = _path(config, server)
     status = folder / "run.json"
     last = folder / "latest.json"
@@ -182,8 +209,10 @@ def run(config, server):
                     timeout=30 if text == "save-all flush" else 8,
                 )
 
-            if not online_players(send("list uuids")):
-                stage("idle")
+            now = datetime.now(UTC)
+            reason = _scheduled_reason(now, _read(config, last), target, send)
+            if reason in ("idle", "duplicate"):
+                stage(reason)
                 return
             _notify(send, "started")
             announced = True
@@ -194,7 +223,14 @@ def run(config, server):
                     raise AdminError("Minecraft перезапущен во время копирования")
 
             result = _capture(send, world, folder, stage, verify_source)
-            _write(config, last, "complete", snapshot=result["id"])
+            _write(
+                config,
+                last,
+                "complete",
+                snapshot=result["id"],
+                slot=hour_end(now).isoformat(),
+                reason=reason,
+            )
             stage("complete")
     except (OSError, RuntimeError, ValueError, KeyError) as error:
         if not isinstance(error, backups.OwnerBusy):
@@ -268,9 +304,7 @@ def export(config, server, request, output):
 
 def _moscow(value):
     return (
-        datetime.fromisoformat(value)
-        .astimezone(timezone(timedelta(hours=3)))
-        .strftime("%d.%m.%Y %H:%M МСК")
+        datetime.fromisoformat(value).astimezone(MOSCOW).strftime("%d.%m.%Y %H:%M МСК")
     )
 
 
@@ -283,15 +317,21 @@ def overview(config, server):
     latest = _read(config, folder / "latest.json")
     transfer = _read(config, folder / "transfer.json")
     received = _read(config, folder / "received.json")
-    lines = ["Резервные копии мира", "Раз в час, когда в игре есть игроки", ""]
+    lines = [
+        "Резервные копии мира",
+        "После каждого часа с игроками. Ежедневная копия к 04:00 МСК.",
+        "",
+    ]
     if status:
         stage = STAGES[status["stage"]]
         if status["stage"] == "failed":
             stage += " · " + STAGES[status["step"]]
         lines.append(_moscow(status["time"]) + "  " + stage)
     if latest:
+        kind = {"daily": "Ежедневная", "activity": "После игровой активности"}
         lines += [
             "Последняя копия на VPS · " + _moscow(latest["time"]),
+            *([kind[latest["reason"]]] if latest.get("reason") in kind else []),
             str(folder / "store" / latest["snapshot"] / "archive.zip"),
         ]
     lines.append("")

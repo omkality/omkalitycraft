@@ -24,7 +24,8 @@ def test_hourly_backup_only_for_players_and_exports_verified_archive(
     for module, name, value in (
         (hourly.ingress, "operations_clear", None),
         (hourly.backups, "local_engine", None),
-        (hourly.backups, "target_for", {}),
+        (hourly.backups, "target_for", {"container": "synthetic"}),
+        (hourly.backups, "docker", ""),
         (hourly.maintenance, "binding", {}),
         (hourly.maintenance, "snapshot", {"running": True}),
         (hourly.maintenance, "credential", ("local", "test")),
@@ -32,6 +33,7 @@ def test_hourly_backup_only_for_players_and_exports_verified_archive(
     ):
         monkeypatch.setattr(module, name, lambda *a, value=value: value)
     monkeypatch.setattr(hourly, "POLICY", replace(hourly.POLICY, reserve_bytes=1))
+    monkeypatch.setattr(hourly, "daily_due", lambda *args: False)
     requests = []
 
     def send(_endpoint, _password, text, **_options):
@@ -49,7 +51,7 @@ def test_hourly_backup_only_for_players_and_exports_verified_archive(
     if not online:
         assert rows == []
         assert requests == ["list uuids"]
-        assert "на сервере нет игроков" in hourly.overview(settings, "dj2")
+        assert "за прошедший час никто не играл" in hourly.overview(settings, "dj2")
         return
 
     assert requests == [
