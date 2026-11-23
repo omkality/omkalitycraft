@@ -9,7 +9,7 @@ from omk.shared.profiles import load_profiles
 
 
 @pytest.mark.parametrize(
-    "system_mb, expected", [(4096, 2048), (8192, 5120), (16384, 11264), (65536, 16384)]
+    "system_mb, expected", [(4096, 2048), (8192, 6144), (16384, 11264), (65536, 16384)]
 )
 def test_heap_limit_leaves_headroom_and_respects_pack_cap(system_mb, expected):
     profile = load_profiles()[0]
@@ -24,6 +24,16 @@ def test_low_memory_uses_available_budget_and_warns():
     choice = choose_memory(profile, MemorySnapshot(4096, 3000))
     assert choice.selected_mb == 2048
     assert "не запуститься" in choice.warning
+
+
+@pytest.mark.parametrize(
+    "system_mb, expected", [(8192, 6144), (16384, 6144), (24576, 8192), (32768, 8192)]
+)
+def test_dj2_automatic_heap_depends_on_installed_memory(system_mb, expected):
+    profile = load_profiles()[0]
+    machine = MemorySnapshot(system_mb, system_mb)
+    assert choose_memory(profile, machine).selected_mb == expected
+    assert choose_memory(profile, machine, requested_mb=5120).selected_mb == 5120
 
 
 def test_pack_defaults_are_independent_and_pressure_is_visible():

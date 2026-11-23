@@ -2,7 +2,7 @@
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QPixmap
-from PySide6.QtWidgets import QApplication, QHBoxLayout, QLabel, QVBoxLayout
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QLabel
 
 from launcher.ui.theme import ASSETS
 
@@ -33,18 +33,9 @@ def title_header() -> QHBoxLayout:
     header = QHBoxLayout()
     header.setSpacing(16)
     header.addWidget(logo_label())
-    heading = QVBoxLayout()
-    heading.setSpacing(4)
-    title, subtitle = (
-        QLabel("OMKALITYCRAFT"),
-        QLabel("Играть вместе. Без лишних шагов."),
-    )
-    for item in (title, subtitle):
-        item.setTextFormat(Qt.TextFormat.PlainText)
-        item.setWordWrap(True)
+    title = QLabel("OMKALITYCRAFT")
+    title.setTextFormat(Qt.TextFormat.PlainText)
+    title.setWordWrap(True)
     title.setProperty("title", True)
-    subtitle.setProperty("muted", True)
-    heading.addWidget(title)
-    heading.addWidget(subtitle)
-    header.addLayout(heading, 1)
+    header.addWidget(title, 1)
     return header

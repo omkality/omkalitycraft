@@ -3,8 +3,8 @@
 from collections.abc import Callable, Iterable
 from pathlib import Path
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPixmap
+from PySide6.QtCore import QPointF, Qt
+from PySide6.QtGui import QColor, QPainter, QPen, QPixmap, QPolygonF
 from PySide6.QtWidgets import (
     QButtonGroup,
     QDialog,
@@ -103,6 +103,37 @@ def _world_table(worlds: tuple[tuple[str, str], ...]) -> QFrame:
     return frame
 
 
+def _claim_picture(
+    asset: str,
+    name: str,
+    description: str,
+    width: int,
+    arrow_tip: tuple[int, int] | None = None,
+) -> QLabel | None:
+    screenshot = QPixmap(str(ASSETS / "guides" / asset))
+    if screenshot.isNull():
+        return None
+    if arrow_tip is not None:
+        tip = QPointF(*arrow_tip)
+        arrow = QPolygonF([tip + QPointF(20, -4), tip, tip + QPointF(13, 16)])
+        painter = QPainter(screenshot)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        for color, stroke in (("#161b21", 8), ("#ffe18a", 4)):
+            pen = QPen(QColor(color), stroke)
+            pen.setCapStyle(Qt.PenCapStyle.RoundCap)
+            pen.setJoinStyle(Qt.PenJoinStyle.RoundJoin)
+            painter.setPen(pen)
+            painter.drawLine(tip + QPointF(91, 27), tip)
+            painter.drawPolyline(arrow)
+        painter.end()
+    illustration = QLabel()
+    illustration.setObjectName(name)
+    illustration.setAccessibleName(description)
+    illustration.setPixmap(screenshot.scaledToWidth(min(width, screenshot.width())))
+    illustration.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+    return illustration
+
+
 def _page(*blocks: QWidget) -> QScrollArea:
     content = QWidget()
     column = QVBoxLayout(content)
@@ -128,7 +159,7 @@ class PlayerGuideDialog(QDialog):
         profiles: Iterable[ServerProfile],
         instance_directory: Callable[[str], Path] | None = None,
     ) -> None:
-        super().__init__(parent)
+        super().__init__(parent, Qt.WindowType.Popup)
         self.setObjectName("playerGuide")
         self.setWindowTitle("Памятка игрока")
         area = parent.window().screen().availableGeometry()
@@ -288,6 +319,13 @@ class PlayerGuideDialog(QDialog):
 
     def _claims(self, profile: ServerProfile, guide: PackGuide) -> QScrollArea:
         blocks: list[QWidget] = [_text("Приваты и прогрузка чанков", size=22)]
+        button = _claim_picture(
+            f"{profile.id}-inventory.png",
+            "claimsButtonScreenshot",
+            "Стрелка указывает на кнопку «Занятые чанки»",
+            530,
+            guide.claims_button,
+        )
         if guide.inventory_key:
             blocks.append(
                 self._key_hint(
@@ -300,15 +338,35 @@ class PlayerGuideDialog(QDialog):
             )
         if guide.claims_intro:
             blocks.append(_text(guide.claims_intro))
-        screenshot = QPixmap(str(ASSETS / "guides" / f"{profile.id}-claims.png"))
-        if not screenshot.isNull():
-            illustration = QLabel()
-            illustration.setObjectName("claimsScreenshot")
-            illustration.setAccessibleName("Расположение карты приватов в игре")
-            illustration.setPixmap(
-                screenshot.scaledToWidth(min(screenshot.width(), 600))
+        if button is not None:
+            blocks.append(button)
+        example = _claim_picture(
+            f"{profile.id}-claims.png",
+            "claimsMapScreenshot",
+            "Территория команды и прогруженные чанки внутри неё",
+            350,
+        )
+        if example is not None:
+            blocks.append(_text("Пример привата на карте", size=17))
+            map_panel = QWidget()
+            row = QHBoxLayout(map_panel)
+            row.setContentsMargins(0, 0, 0, 0)
+            row.setSpacing(18)
+            row.addWidget(example, alignment=Qt.AlignmentFlag.AlignTop)
+            row.addWidget(
+                _rows(
+                    "Как читать карту",
+                    (
+                        ("Заливка цветом команды", "Вся занятая территория."),
+                        (
+                            "Красная рамка",
+                            "Чанки внутри привата, где включена прогрузка.",
+                        ),
+                    ),
+                ),
+                1,
+                Qt.AlignmentFlag.AlignTop,
             )
-            illustration.setAlignment(Qt.AlignmentFlag.AlignLeft)
-            blocks.append(illustration)
+            blocks.append(map_panel)
         blocks.append(_rows("Действия на карте", guide.claims))
         return _page(*blocks)

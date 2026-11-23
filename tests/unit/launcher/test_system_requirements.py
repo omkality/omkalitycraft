@@ -29,7 +29,7 @@ def test_requirements_are_serializable_and_include_both_tiers():
     assert dj2.requirements.state == "preliminary"
     assert dj2.requirements.minimum.ram_gb == 8
     assert dj2.requirements.recommended.ram_gb == 16
-    assert dj2.memory_default_mb == 6144
+    assert (dj2.memory_default_mb, dj2.memory_recommended_mb) == (8192, 6144)
     assert (
         json.loads(json.dumps(dj2.as_dict()))["requirements"]["recommended"]["ram_gb"]
         == 16
