@@ -28,6 +28,8 @@ def _remote(args, request, *, output=subprocess.PIPE, timeout=20):
         stdin=subprocess.DEVNULL,
         stdout=output,
         stderr=subprocess.DEVNULL,
+        # The scheduled pythonw process has no console for ssh to inherit.
+        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
         timeout=timeout,
         check=True,
     )
