@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
+    QPushButton,
     QScrollArea,
     QVBoxLayout,
     QWidget,
@@ -12,6 +13,7 @@ from PySide6.QtWidgets import (
 
 from launcher.memory import MemorySnapshot, Preferences
 from launcher.skin_view import SkinView
+from launcher.ui.player_guide import PlayerGuideDialog
 from launcher.widgets import BusyButton, PackCard
 from omk.shared.profiles import load_profiles
 
@@ -39,7 +41,15 @@ class Dashboard(QWidget):
         packs.setContentsMargins(0, 0, 8, 0)
         heading = QLabel("Ваша сборка")
         heading.setStyleSheet("font-size:23px;margin-bottom:6px")
-        packs.addWidget(heading)
+        header = QHBoxLayout()
+        header.addWidget(heading)
+        header.addStretch()
+        self.guide_button = QPushButton("Памятка игрока")
+        self.guide_button.setObjectName("openPlayerGuide")
+        self.guide_button.clicked.connect(self._show_guide)
+        header.addWidget(self.guide_button)
+        packs.addLayout(header)
+        self._guide_dialog: PlayerGuideDialog | None = None
         self.cards: dict[str, PackCard] = {}
         for profile in load_profiles():
             card = PackCard(profile, machine, self.preferences.memory.get(profile.id))
@@ -62,6 +72,11 @@ class Dashboard(QWidget):
         scroll.setWidget(content)
         layout.addWidget(scroll, 1)
         layout.addWidget(self._account_panel())
+
+    def _show_guide(self) -> None:
+        if self._guide_dialog is None:
+            self._guide_dialog = PlayerGuideDialog(self)
+        self._guide_dialog.open()
 
     def _save_memory(self, pack_id: str, value: int) -> None:
         try:
