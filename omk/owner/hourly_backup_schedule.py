@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 HOUR = timedelta(hours=1)
 MOSCOW = timezone(timedelta(hours=3))
 DAILY_HOUR = 4
+MINECRAFT_STYLE = re.compile(r"§[0-9a-fk-or]", re.IGNORECASE)
 EVENT = re.compile(
     r"(?P<time>\S+) \[[^\]]+\] \[Server thread/INFO\] "
     r"\[net\.minecraft\.server\.dedicated\.DedicatedServer\]: "
@@ -35,7 +36,7 @@ def had_players(boundary, logs, online):
     first = boundary - HOUR
     recent_joins = set()
     for line in logs.splitlines():
-        event = EVENT.fullmatch(line)
+        event = EVENT.fullmatch(MINECRAFT_STYLE.sub("", line))
         if not event:
             continue
         when = datetime.fromisoformat(event["time"])

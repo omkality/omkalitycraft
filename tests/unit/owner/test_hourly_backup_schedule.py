@@ -24,6 +24,17 @@ def test_player_who_leaves_before_the_hour_still_triggers_it():
     assert not had_players(moscow(15), events, [])
 
 
+def test_forge_colors_in_connection_log():
+    name = "§eFixture§r§e"
+    same_hour = "\n".join(
+        event(when, action, name) + "§r"
+        for when, action in ((moscow(13, 15), "joined"), (moscow(13, 40), "left"))
+    )
+    assert had_players(moscow(14), same_hour, [])
+    joined_after = event(moscow(14, 1), "joined", name) + "§r"
+    assert not had_players(moscow(14), joined_after, ["Fixture"])
+
+
 @pytest.mark.parametrize("boundary", [16, 17, 18, 19])
 def test_session_across_multiple_hours(boundary):
     start, end = moscow(boundary) - HOUR, moscow(boundary)
