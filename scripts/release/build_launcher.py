@@ -105,6 +105,8 @@ def build(
         "release-keys.json",
         "branding/icon.png",
         "branding/provenance.json",
+        "guides/dj2-claims.png",
+        "guides/dj2-inventory.png",
         "skins/default-slim.png",
         "skins/default-classic.png",
         "skins/default-legacy.png",

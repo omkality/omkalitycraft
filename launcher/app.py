@@ -228,7 +228,7 @@ class LauncherWindow(QMainWindow):
         layout.addLayout(title_header())
         self.pages = QStackedWidget()
         self.auth_page = self._auth_page()
-        self.home_page = self._home_page()
+        self.home_page = self._home_page(installer)
         for page in [self.auth_page, self.home_page]:
             self.pages.addWidget(page)
         layout.addWidget(self.pages, 1)
@@ -357,8 +357,11 @@ class LauncherWindow(QMainWindow):
         tabs.addTab(signup, "Первый вход")
         return page
 
-    def _home_page(self) -> Dashboard:
-        page = Dashboard(self.preferences)
+    def _home_page(self, installer: Installer | None) -> Dashboard:
+        page = Dashboard(
+            self.preferences,
+            instance_directory=getattr(installer, "directory", None),
+        )
         page.message.connect(self.status_message)
         self.greeting = page.greeting
         self.skin_preview = page.skin_preview

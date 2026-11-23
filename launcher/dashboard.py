@@ -1,10 +1,14 @@
 """Pack cards and a compact account panel, without session-management clutter."""
 
+from collections.abc import Callable
+from pathlib import Path
+
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
+    QPushButton,
     QScrollArea,
     QVBoxLayout,
     QWidget,
@@ -12,6 +16,7 @@ from PySide6.QtWidgets import (
 
 from launcher.memory import MemorySnapshot, Preferences
 from launcher.skin_view import SkinView
+from launcher.ui.player_guide import PlayerGuideDialog
 from launcher.widgets import BusyButton, PackCard
 from omk.shared.profiles import load_profiles
 
@@ -27,9 +32,13 @@ class Dashboard(QWidget):
         self,
         preferences: Preferences | None = None,
         machine: MemorySnapshot | None = None,
+        *,
+        instance_directory: Callable[[str], Path] | None = None,
     ) -> None:
         super().__init__()
         self.preferences = preferences or Preferences()
+        self._instance_directory = instance_directory
+        self._profiles = tuple(load_profiles())
         machine = machine or MemorySnapshot.read()
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 24, 0, 0)
@@ -37,11 +46,19 @@ class Dashboard(QWidget):
         content = QWidget()
         packs = QVBoxLayout(content)
         packs.setContentsMargins(0, 0, 8, 0)
-        heading = QLabel("Ваша сборка")
+        heading = QLabel("Наши сборки")
         heading.setStyleSheet("font-size:23px;margin-bottom:6px")
-        packs.addWidget(heading)
+        header = QHBoxLayout()
+        header.addWidget(heading)
+        header.addStretch()
+        self.guide_button = QPushButton("Памятка игрока")
+        self.guide_button.setObjectName("openPlayerGuide")
+        self.guide_button.clicked.connect(self._show_guide)
+        header.addWidget(self.guide_button)
+        packs.addLayout(header)
+        self._guide_dialog: PlayerGuideDialog | None = None
         self.cards: dict[str, PackCard] = {}
-        for profile in load_profiles():
+        for profile in self._profiles:
             card = PackCard(profile, machine, self.preferences.memory.get(profile.id))
             self.cards[profile.id] = card
             card.action.clicked.connect(
@@ -62,6 +79,15 @@ class Dashboard(QWidget):
         scroll.setWidget(content)
         layout.addWidget(scroll, 1)
         layout.addWidget(self._account_panel())
+
+    def _show_guide(self) -> None:
+        if self._guide_dialog is None:
+            self._guide_dialog = PlayerGuideDialog(
+                self, self._profiles, self._instance_directory
+            )
+        self._guide_dialog.refresh_keys()
+        # QDialog.open() turns a macOS popup into a window-modal sheet.
+        self._guide_dialog.show()
 
     def _save_memory(self, pack_id: str, value: int) -> None:
         try:

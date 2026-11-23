@@ -16,7 +16,7 @@ translation_label = "Основы перевода · BMProjects"
 translation_url = "https://github.com/BMProjects-Development/Divine-Journey-2-Translate"
 artwork = "dj2.svg"
 forge_version = "14.23.5.2860"
-memory_default_mb = 6144
+memory_default_mb = 8192
 memory_recommended_mb = 6144
 memory_max_mb = 16384
 

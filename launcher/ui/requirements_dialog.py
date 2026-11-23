@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from launcher.memory import LOW_MEMORY_HOST_MB
 from omk.shared.profiles import HardwareTier, ServerProfile
 
 
@@ -85,12 +86,15 @@ class RequirementsDialog(QDialog):
             )
             body.addLayout(columns)
             if requirements.recommended is not None:
-                body.addWidget(
-                    _text(
-                        f"Для Java по умолчанию: {profile.memory_default_mb / 1024:g} ГБ",
-                        "requirementsJavaMemory",
-                    )
+                memory = (
+                    f"Для Java по умолчанию — {profile.memory_default_mb / 1024:g} ГБ."
                 )
+                if profile.memory_recommended_mb < profile.memory_default_mb:
+                    memory += (
+                        f" При {LOW_MEMORY_HOST_MB / 1024:g} ГБ ОЗУ или меньше — "
+                        f"{profile.memory_recommended_mb / 1024:g} ГБ, если позволяет объём памяти."
+                    )
+                body.addWidget(_text(memory, "requirementsJavaMemory"))
             body.addWidget(_text(requirements.platforms, "requirementsOS", muted=True))
             body.addWidget(_text(requirements.scope, "requirementsScope", muted=True))
         body.addStretch()

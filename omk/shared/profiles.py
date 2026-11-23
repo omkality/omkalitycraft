@@ -145,20 +145,14 @@ def load_profiles(path: Path | None = None) -> list[ServerProfile]:
             raise ValueError("Only Forge profiles are configured at this stage")
         if profile.status not in {"legacy", "planned", "testing", "ready"}:
             raise ValueError("Invalid server profile status")
+        defaults = (profile.memory_default_mb, profile.memory_recommended_mb)
         if (
-            not all(
-                type(value) is int
-                for value in [
-                    profile.memory_default_mb,
-                    profile.memory_recommended_mb,
-                    profile.memory_max_mb,
-                ]
+            type(profile.memory_max_mb) is not int
+            or profile.memory_max_mb > 16384
+            or not all(
+                type(value) is int and 1024 <= value <= profile.memory_max_mb
+                for value in defaults
             )
-            or not 1024
-            <= profile.memory_default_mb
-            <= profile.memory_recommended_mb
-            <= profile.memory_max_mb
-            <= 16384
         ):
             raise ValueError("Invalid memory policy")
         if profile.utilities_adapter not in {
