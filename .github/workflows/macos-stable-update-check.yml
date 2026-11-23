@@ -1,0 +1,102 @@
+name: Verify published macOS launcher update
+
+on:
+  push:
+    branches: [codex/macos-035-update-check]
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    runs-on: macos-15
+    timeout-minutes: 9
+    env:
+      QT_QPA_PLATFORM: offscreen
+      PYTHONUTF8: "1"
+    steps:
+      - name: Download the previous Apple Silicon release
+        run: |
+          test "$(uname -m)" = arm64
+          curl --fail --silent --show-error --location --proto '=https' --max-time 120 \
+            https://github.com/omkality/omkalitycraft/releases/download/launcher-v0.3.4-macos-test.1/OmkalityCraft-0.3.4-macos-arm64.zip \
+            --output "$RUNNER_TEMP/OmkalityCraft-0.3.4-macos-arm64.zip"
+          printf '%s  %s\n' b2b21143f770b1f7d862abb1a82bd87cb7594879223b4e4f3edecac52559da74 \
+            "$RUNNER_TEMP/OmkalityCraft-0.3.4-macos-arm64.zip" | shasum -a 256 -c
+      - name: Run the signed public update with isolated settings
+        run: |
+          python3 - "$RUNNER_TEMP/OmkalityCraft-0.3.4-macos-arm64.zip" <<'PY'
+          import contextlib
+          import json
+          import os
+          import signal
+          import stat
+          import subprocess
+          import sys
+          import time
+          from pathlib import Path
+          from tempfile import TemporaryDirectory
+          from zipfile import ZipFile
+
+          with TemporaryDirectory(prefix="omk-macos-update-") as temporary:
+              root = Path(temporary).resolve()
+              with ZipFile(sys.argv[1]) as archive:
+                  release = json.loads(archive.read("release-info.json"))
+                  assert (release["version"], release["platform"]) == ("0.3.4", "macos-arm64")
+                  for member in archive.infolist():
+                      installed = Path(archive.extract(member, root))
+                      if member.external_attr >> 16 & stat.S_IXUSR:
+                          installed.chmod(installed.stat().st_mode | stat.S_IXUSR)
+              executable = root / "OmkalityCraft"
+              state = root / "userdata/updates/state.json"
+              selected_memory = b'{"schema": 1, "memory": {"dj2": 5120}}'
+              markers = {
+                  root / "userdata/preferences.json": selected_memory,
+                  root / "instances/dj2/options.txt": b"key_key.sneak:42\n",
+              }
+              for path, content in markers.items():
+                  path.parent.mkdir(parents=True, exist_ok=True)
+                  path.write_bytes(content)
+
+              log = root / "ci-launcher.log"
+              with log.open("wb") as diagnostics:
+                  process = subprocess.Popen(
+                      [str(executable), "--root", str(root)],
+                      cwd=root,
+                      stdin=subprocess.DEVNULL,
+                      stdout=diagnostics,
+                      stderr=subprocess.STDOUT,
+                      start_new_session=True,
+                  )
+                  try:
+                      deadline = time.monotonic() + 200
+                      while time.monotonic() < deadline:
+                          if state.is_file():
+                              record = json.loads(state.read_bytes())
+                              assert not record.get("failed"), record
+                              active = record.get("active")
+                              if active:
+                                  digest = "c473d23606bbc1bd894ada8c9bb56ad63b6196ec4a70dfd93834cd2e941aba53"
+                                  assert active["version"] == "0.3.5" and active["digest"] == digest
+                                  assert active["folder"] == f"app_versions/0.3.5-{digest[:12]}"
+                                  child = root / active["folder"] / active["entrypoint"]
+                                  assert executable.is_file() and os.access(child, os.X_OK)
+                                  assert process.wait(timeout=15) == 0
+                                  assert all(path.read_bytes() == value for path, value in markers.items())
+                                  print("MACOS_PUBLIC_UPDATE_OK 0.3.4 -> 0.3.5", digest)
+                                  break
+                          if process.poll() not in (None, 0):
+                              raise RuntimeError(f"Old launcher exited with {process.returncode}")
+                          time.sleep(0.25)
+                      else:
+                          raise TimeoutError("Signed update did not activate")
+                  except Exception:
+                      for report in (log, root / "userdata/logs/launcher.jsonl"):
+                          if report.is_file():
+                              print(report.read_text(encoding="utf-8", errors="replace")[-5000:])
+                      raise
+                  finally:
+                      with contextlib.suppress(ProcessLookupError):
+                          os.killpg(process.pid, signal.SIGTERM)
+                      process.wait(timeout=10)
+          PY
