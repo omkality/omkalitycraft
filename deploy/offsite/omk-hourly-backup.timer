@@ -4,6 +4,7 @@ Description=Check every hour whether to back up the OmkalityCraft world
 [Timer]
 OnCalendar=hourly
 AccuracySec=1s
+Persistent=true
 
 [Install]
 WantedBy=timers.target
