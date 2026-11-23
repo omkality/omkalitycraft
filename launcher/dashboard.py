@@ -86,7 +86,8 @@ class Dashboard(QWidget):
                 self, self._profiles, self._instance_directory
             )
         self._guide_dialog.refresh_keys()
-        self._guide_dialog.open()
+        # QDialog.open() turns a macOS popup into a window-modal sheet.
+        self._guide_dialog.show()
 
     def _save_memory(self, pack_id: str, value: int) -> None:
         try:

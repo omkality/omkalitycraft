@@ -78,6 +78,7 @@ def test_commands_live_in_the_command_section_and_rules_have_no_commands(
 def test_clicking_outside_the_guide_dismisses_the_popup(qtbot, tmp_path):
     window, dialog = _open_guide(qtbot, tmp_path)
     assert dialog.windowType() == Qt.WindowType.Popup
+    assert not dialog.isModal()
     qtbot.mouseClick(
         dialog,
         Qt.MouseButton.LeftButton,
