@@ -155,10 +155,7 @@ def load_profiles(path: Path | None = None) -> list[ServerProfile]:
             )
         ):
             raise ValueError("Invalid memory policy")
-        if profile.utilities_adapter not in {
-            "ftbutilities_112",
-            "serverutilities_1710",
-        }:
+        if profile.utilities_adapter != "ftbutilities_112":
             raise ValueError("Unknown utilities adapter")
         ids.add(profile.id)
     return profiles

@@ -762,7 +762,7 @@
     "Native FTB commands and encoded GUI messages; no rendered GUI or cross-OS game acceptance.",
     "FTB remains the only claim/permission store; no rollback or item/quest bans.",
     "Existing production profiles/worlds, client adapter, releases and backup schedules unchanged.",
-    "GTNH, resource world, arbitrary server mods and operator bypass are outside this acceptance.",
+    "Resource world, arbitrary server mods and operator bypass are outside this acceptance.",
     "Other issue scopes including 29, 32, 33, 34, 37, 38, 49, 102 and 105 stay open."
   ]
 }

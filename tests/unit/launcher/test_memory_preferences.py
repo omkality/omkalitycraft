@@ -51,15 +51,15 @@ def test_preferences_persist_per_pack_without_any_account_fields(tmp_path: Path)
     path = tmp_path / "preferences.json"
     preferences = Preferences(path)
     preferences.save_memory("dj2", 5120)
-    preferences.save_memory("gtnh", 6144)
-    assert Preferences(path).memory == {"dj2": 5120, "gtnh": 6144}
+    preferences.save_memory("sample-pack", 6144)
+    assert Preferences(path).memory == {"dj2": 5120, "sample-pack": 6144}
     assert set(json.loads(path.read_text())) == {"schema", "memory"}
     assert not list(tmp_path.glob(".omk-write-*"))
 
 
 def test_malformed_preferences_and_absurd_values_are_not_used(tmp_path: Path):
     path = tmp_path / "preferences.json"
-    path.write_text('{"schema":1,"memory":{"dj2":true,"gtnh":999999}}')
+    path.write_text('{"schema":1,"memory":{"dj2":true,"sample-pack":999999}}')
     assert Preferences(path).memory == {}
     path.write_text("not JSON")
     assert Preferences(path).memory == {}
