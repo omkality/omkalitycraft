@@ -120,6 +120,102 @@
         "base_state": "reviewed_existing_russian",
         "ru": "Капли зла больше не выпадают из визер-скелетов — их нужно создавать. Скрафтите одну и примените её к дёрну, чтобы превратить землю вокруг в проклятую. На ней постоянно появляются мобы, поэтому она хорошо подходит для фермы. Берегите её от огня!%n%n§6Примечание:§r «Шёлковым касанием» можно добыть только тот блок, к которому непосредственно применили каплю зла.",
         "expected_previous_sha256": "703c5430bbca95934dac5bbca772262a9876554b9ba4eced698e9ab7f6d13413"
+      },
+      "dj2.quest.db.261.title": {
+        "source_sha256": "d4d443065fbf69b25384e940c343e9b3acb882b9a3158d417c0c5faf0c3670a8",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "115625db5dba43eedf78c73231562845b3f5d20ff9c929e8e42384bfa0c835f5",
+        "ru": "RAID: Тайные легенды"
+      },
+      "dj2.quest.db.315.title": {
+        "source_sha256": "bc8a3bbd0808f1aa639e1feaf7ed74665bf9836d35e55ff6c9dcab517a3e5c77",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "e30b6d21c39808b0a63a5e90a04b60c0a381c5066b2ccc9a7a61a69278d84a01",
+        "ru": "Не поверите, какое дерево!"
+      },
+      "dj2.quest.db.690.title": {
+        "source_sha256": "718e1d1ba56cbdef4928d4095514a3b1bc34473582f2e58029adde4a84ba37a2",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "86ae2350f6524660c2d8236c40f97ebcd0dc0c1e9f55c167fda01b1a76c4da59",
+        "ru": "Стальной алхимик"
+      },
+      "dj2.quest.db.774.title": {
+        "source_sha256": "3c3a9ea6e7ab693bd9b342294999a5e6a9ec3d9dbc1697a750e1bb3345fde1da",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "4b6001669853c4b7aa1ed47bbef06144b736ee58b469b551766231b262d7f59b",
+        "ru": "§4Ошибка: текст вне границ"
+      },
+      "dj2.quest.db.1147.title": {
+        "source_sha256": "64e21682e1db4c45a29e381a48183a21e463e84371e993588bede5513f5caf9b",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "d9ca80a0a6cc40986cd1ca8070e5d51bc57e9916e106e334133b7daed59e0657",
+        "ru": "Если вы не фанат вентиляторов…"
+      },
+      "dj2.quest.db.1485.title": {
+        "source_sha256": "5c529381754dd393fff455bd179e70b75240d241366ee780d00b78bc03836357",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "476ff1b5c33f5cf9048d2292dedfd08c9be57cbe30350b20df90e3cf056605b8",
+        "ru": "Рано или поздно доберётесь до Эдема"
+      },
+      "dj2.quest.db.299.desc": {
+        "source_sha256": "acd49d2e68ba8bbbca77b30414f591a1d6906c1678304e489cc7e4c7ae851c61",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "246adbb63884aba04dd3033a2df498a3800bb3ed34e70c4f22a7dbda5fd78412",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§aЙо, послушай эту историю",
+            "new": "§aBlue (Da Ba Dee)%nЙо, послушай эту историю"
+          }
+        ]
+      },
+      "dj2.quest.db.699.desc": {
+        "source_sha256": "e6c76af65fa157f508535b63b77d070bc21cf3922d7701098b2453aa3567eb72",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "5c9e7531bfbfb18776c1788789be0780bafeae11b759d2e47e5b54806bf4d3cc",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§aЯ ТАК СТАРАЛСЯ",
+            "new": "§aIn the End%nЯ ТАК СТАРАЛСЯ"
+          }
+        ]
+      },
+      "dj2.quest.db.704.desc": {
+        "source_sha256": "77d3eb47a90a00f93c6bd162d860e3296fce40af95b11d753b0a0b2178af8d67",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "1e84fa43365606114855d02035e9a680ff179e9a707dd6acfb9f06ad5c1c95fa",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§aТак близко, как бы далеко",
+            "new": "§aNothing Else Matters%nТак близко, как бы далеко"
+          }
+        ]
+      },
+      "dj2.quest.db.1095.desc": {
+        "source_sha256": "b7f30527e50ed48b7ee5622cf80695cb7f3f02b60c490a7b53fe9b2c3a11545f",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "ff506885e50597dc0ebb6c496850a942fefa1ce7721babb28950fedd51b8cb49",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§aТо ты горяч, то холоден",
+            "new": "§aHot N Cold%nТо ты горяч, то холоден"
+          }
+        ]
+      },
+      "dj2.quest.db.1109.desc": {
+        "source_sha256": "2fd0fa95fc9e4b239790d46bd6b70432366234c294829132a04a7963491c2478",
+        "base_state": "reviewed_existing_russian",
+        "expected_previous_sha256": "29b31302d587b43c14ed2ade06087e55aee87af04fe8886590d186dcd4a0a887",
+        "edits": [
+          {
+            "kind": "replace",
+            "old": "§aС неба льётся янтарь! Аллилуйя!",
+            "new": "§aIt's Raining Men%nС неба льётся янтарь! Аллилуйя!"
+          }
+        ]
       }
     },
     "ftblib": {
