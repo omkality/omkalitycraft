@@ -84,7 +84,7 @@ def test_incomplete_stale_or_corrupt_backup_never_starts(flow, monkeypatch, chan
     if change == "stage":
         backup["stage"] = "published"
     elif change == "server":
-        backup["server"] = "gtnh"
+        backup["server"] = "other-server"
     elif change == "checkpoint":
         backup["checkpoint"]["finished"] = "another-stop"
     elif change == "target":

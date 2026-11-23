@@ -20,7 +20,7 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
 - Session files may contain game bearer tokens, never account passwords or Drasl management tokens.
   Do not claim that portable files are encrypted or protected from the user's own processes.
 - Python owns launcher/API/operations; version-specific Forge integration uses adapters and Java as needed.
-  Use FTB/ServerUtilities for claims and available commands. Keep pack logic outside GUI code.
+  Use the supported FTB Utilities integration for DJ2 claims and commands. Keep pack logic outside GUI code.
 - Keep the owner CLI small. Rust TUI is a client of typed Python services, not a second
   execution backend. Use bounded explicit argv subprocesses; no shell strings, Docker
   access or direct private journal reads in Rust. Add actions for concrete owner needs.

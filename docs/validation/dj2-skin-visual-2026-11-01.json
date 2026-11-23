@@ -13,7 +13,7 @@
     "All views/poses and arbitrary PNG model inference",
     "JourneyMap fullscreen GUI and its grid toggle",
     "Server-list GUI",
-    "GTNH and Linux/macOS game clients"
+    "Linux/macOS game clients"
   ],
   "screenshots": {
     "dj2-default-slim-and-classic": {

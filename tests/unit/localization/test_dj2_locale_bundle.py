@@ -258,7 +258,7 @@ def test_generation_contract_and_memory_limits(inputs, fault, monkeypatch):
     elif fault == "archive":
         data["lock"]["locale_archive_sha256"] = "wrong"
     elif fault == "pack":
-        data["lock"]["pack"] = "gtnh"
+        data["lock"]["pack"] = "sample-pack"
     elif fault == "version":
         data["lock"]["version"] = False
     elif fault == "mod_version":

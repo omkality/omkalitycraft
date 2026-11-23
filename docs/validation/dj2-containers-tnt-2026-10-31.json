@@ -126,7 +126,7 @@
     "One iron ingot per container and closed-window replay are not an exhaustive duplication audit",
     "TNT checks block damage only, not entity damage or arbitrary mod explosions",
     "Compound containers across claim borders, already-open permission revocation, machines, pipes, liquids and allies remain untested",
-    "GTNH and public deployment remain separate milestones"
+    "Public deployment is outside this check"
   ],
   "private_core_published": false
 }

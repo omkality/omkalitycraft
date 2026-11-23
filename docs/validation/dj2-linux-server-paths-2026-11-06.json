@@ -135,7 +135,6 @@
     "private_core_changed": false,
     "launcher_ui_changed": false,
     "graphical_client_tested": false,
-    "gtnh_tested": false,
     "production_cutover": false,
     "existing_store_auto_migration": false,
     "portable_extraction_of_reserved_names": false,
