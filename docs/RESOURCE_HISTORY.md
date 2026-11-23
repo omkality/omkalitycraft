@@ -192,11 +192,24 @@ series могут оставаться доступными в lookback; это 
 
 ```promql
 mem_available and on(job,instance) (up == 1)
-rate(cgroup_cpu_stat_usage_usec[90s]) / 1000000 and on(job,instance) (up == 1)
+omk_service_cpu_vcpus and on(job,instance) (up == 1)
+omk_service_memory_bytes and on(job,instance) (up == 1)
 omk_game_online and on(job,instance) (up == 1)
 omk_game_tps and on(job,instance) (up == 1)
 mc_dimension_tick_seconds_count{dimension="-18000"} and on(job,instance) (up == 1)
 ```
+
+Ряды ресурсов сервиса учитывают только заполненную cgroup, указанную в профиле.
+При пустой группе или недоступном сборщике значения отсутствуют. Доступная группа
+без прироста CPU даёт измеренный ноль. `omk_service_cpu_vcpus` показывает среднее
+потребление в vCPU за 90 секунд или три интервала сбора, если они длиннее.
+Перед оценкой нагрузки проверьте совпадение родителя cgroup в профиле с путём
+процесса Minecraft. Общий CPU хоста может быть доступен даже при ошибке привязки.
+
+Для оценки пиков сопоставляйте показатели и онлайн в одном интервале.
+Максимум CPU за целый час и максимум онлайна за тот же час могут приходиться
+на разные минуты. Для оценки второй сборки нужны история под нагрузкой,
+игровое время тика и отдельный контроль интервалов генерации мира и бэкапов.
 
 `omk_game_progress_observed` отличает наблюдавшийся прогресс tick counter от одного
 живого HTTP endpoint. Первые окна rate прогреваются. Экспортерная гистограмма даёт
