@@ -7,7 +7,9 @@ import os
 import re
 import shutil
 import sys
+import time
 import zipfile
+from collections.abc import Generator
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -34,6 +36,8 @@ GIB = 1024**3
 RETENTION = 6
 POLICY = BackupPolicy(48 * GIB, RETENTION, 17 * GIB, 16 * GIB)
 WORLD_MAX = 16 * GIB
+OWNER_LOCK_WAIT = 10 * 60
+OWNER_LOCK_POLL = 5
 SNAPSHOT = r"snapshot-[a-f0-9]{32}"
 SHA256 = r"[a-f0-9]{64}"
 STAGES = {
@@ -173,8 +177,27 @@ def _scheduled_reason(when, latest, target, send):
     return "activity" if had_players(boundary, log, online) else "idle"
 
 
+@contextlib.contextmanager
+def _wait_for_owner_lock(config) -> Generator[None]:
+    """Wait only for admission, before any attempt to save or publish."""
+    deadline = time.monotonic() + OWNER_LOCK_WAIT
+    with contextlib.ExitStack() as stack:
+        while True:
+            try:
+                stack.enter_context(backups.locked(config))
+            except backups.OwnerBusy:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise
+                time.sleep(min(OWNER_LOCK_POLL, remaining))
+            else:
+                break
+        yield
+
+
 def run(config, server):
     """Back up each played hour and guarantee one copy per Moscow day."""
+    now = datetime.now(UTC)
     folder = _path(config, server)
     status = folder / "run.json"
     last = folder / "latest.json"
@@ -189,7 +212,7 @@ def run(config, server):
         _write(config, status, value)
 
     try:
-        with backups.locked(config):
+        with _wait_for_owner_lock(config):
             stage("checking")
             ingress.operations_clear(config, server)
             backups.local_engine()
@@ -209,7 +232,6 @@ def run(config, server):
                     timeout=30 if text == "save-all flush" else 8,
                 )
 
-            now = datetime.now(UTC)
             reason = _scheduled_reason(now, _read(config, last), target, send)
             if reason in ("idle", "duplicate"):
                 stage(reason)

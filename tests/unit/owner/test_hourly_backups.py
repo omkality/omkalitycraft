@@ -1,7 +1,9 @@
 import io
 import json
 import zipfile
+from contextlib import contextmanager
 from dataclasses import replace
+from types import SimpleNamespace
 
 import pytest
 
@@ -96,3 +98,38 @@ def test_changing_live_world_cannot_publish_or_replace_a_existing_copy(
         hourly._package(world, folder, mutate, lambda: None)
     assert [row["snapshot"] for row in hourly._exports(folder)] == [proof["id"]]
     assert not (folder / "incoming.zip").exists()
+
+
+@pytest.mark.parametrize("release_after_wait", (True, False))
+def test_scheduled_backup_waits_for_owner_operation(monkeypatch, release_after_wait):
+    events = []
+    current_time = 0
+
+    def pause(seconds):
+        nonlocal current_time
+        current_time += seconds
+        events.append("waiting")
+
+    @contextmanager
+    def lock(_config):
+        if not release_after_wait or not current_time:
+            raise hourly.backups.OwnerBusy()
+        events.append("acquired")
+        try:
+            yield
+        finally:
+            events.append("released")
+
+    monkeypatch.setattr(hourly, "OWNER_LOCK_WAIT", 5)
+    monkeypatch.setattr(
+        hourly, "time", SimpleNamespace(monotonic=lambda: current_time, sleep=pause)
+    )
+    monkeypatch.setattr(hourly.backups, "locked", lock)
+    if release_after_wait:
+        with hourly._wait_for_owner_lock(None):
+            events.append("running")
+        assert events == ["waiting", "acquired", "running", "released"]
+    else:
+        with pytest.raises(hourly.backups.OwnerBusy), hourly._wait_for_owner_lock(None):
+            pytest.fail("A backup must not start while the owner lock is held")
+        assert events == ["waiting"]
