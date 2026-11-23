@@ -51,15 +51,13 @@ def _time(config, server: str, uid: str) -> str:
     try:
         saved = saved_playtime(config, server, uid)
     except OSError, RuntimeError, ValueError:
-        return "Наиграно в текущем сохранении · данные недоступны"
-    if not saved["available"]:
-        return "Наиграно в текущем сохранении · ещё нет сохранённого времени"
-    seconds = saved["ticks"] // 20
+        return "Активное время · данные недоступны"
+    if "active_millis" not in saved:
+        return "Активное время появится после игры и сохранения мира"
+    seconds = saved["active_millis"] // 1000
     hours, remainder = divmod(seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
-    return (
-        f"Наиграно в текущем сохранении · {hours} ч {minutes:02d} мин {seconds:02d} с"
-    )
+    return f"Активное время · {hours} ч {minutes:02d} мин {seconds:02d} с"
 
 
 def _moderation(root: Path, uid: str) -> list[str]:

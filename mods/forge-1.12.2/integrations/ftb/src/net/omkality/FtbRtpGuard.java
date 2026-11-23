@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
 
 /** Opt-in DJ2 RTP adapter. FTB owns permission, warmup, cooldown and history.
- * Search touches only already generated chunks, with bounded trials/chunk loads.
+ * The current policy can generate a bounded number of unclaimed landing chunks.
  * MC reflection is resolved once because the private build has no mapped stubs.
  */
 public final class FtbRtpGuard {
@@ -32,6 +32,8 @@ public final class FtbRtpGuard {
     private final Method sendMessage, nativeArgs, destination;
     private final Constructor<?> position, plain, translation, chunkPosition;
     private final Object timer, claims;
+    private final NativeCooldown budget;
+    private final Method biome, biomeId;
 
     public static void install(Path config, Logger log) throws Exception {
         Path file = config.resolve("omkalitycore-rtp.properties");
@@ -46,8 +48,10 @@ public final class FtbRtpGuard {
             MinecraftForge.EVENT_BUS.register(new NativeCooldown(attempts, cooldown, log));
             log.info("Omkality native FTB RTP enabled ({} attempts, {}s cooldown)", attempts, cooldown / 1000);
         } else {
-            MinecraftForge.EVENT_BUS.register(new FtbRtpGuard(fields, log));
-            log.info("Omkality dimension RTP enabled (generated chunks only)");
+            FtbRtpGuard guard = new FtbRtpGuard(fields, log);
+            MinecraftForge.EVENT_BUS.register(guard);
+            log.info("Omkality dimension RTP enabled (max {} blocks, {} chunk loads)",
+                    guard.maximum, guard.maxLoads);
         }
         state = "enabled";
     }
@@ -64,7 +68,11 @@ public final class FtbRtpGuard {
 
     private FtbRtpGuard(Map<String, String> fields, Logger logger) throws Exception {
         log = logger;
+        boolean live = "3".equals(fields.get("version"));
         parse(fields);
+        budget = live ? new NativeCooldown(
+                number(fields.get("uses"), 1, 64),
+                number(fields.get("cooldown_seconds"), 1, 3600) * 1000L, log) : null;
         player = c("net.minecraft.entity.player.EntityPlayerMP");
         Class<?> base = c("net.minecraft.entity.player.EntityPlayer"), entity = c("net.minecraft.entity.Entity");
         Class<?> level = c("net.minecraft.world.World"), pos = c("net.minecraft.util.math.BlockPos");
@@ -102,6 +110,8 @@ public final class FtbRtpGuard {
         block = m(state, "func_177230_c", "getBlock");
         registry = c("net.minecraft.block.Block").getMethod("getRegistryName");
         worldBorder = m(level, "func_175723_af", "getWorldBorder");
+        biome = m(level, "func_180494_b", "getBiome", pos);
+        biomeId = biome.getReturnType().getMethod("getRegistryName");
         Class<?> border = worldBorder.getReturnType();
         contains = m(border, "func_177746_a", "contains", pos);
         centerX = m(border, "func_177731_f", "getCenterX");
@@ -136,7 +146,9 @@ public final class FtbRtpGuard {
     }
 
     private void parse(Map<String, String> fields) {
-        if (fields.size() != 8 || !"1".equals(fields.get("version")))
+        String version = fields.get("version");
+        if (!("1".equals(version) && fields.size() == 8)
+                && !("3".equals(version) && fields.size() == 10))
             throw new IllegalArgumentException("Incomplete RTP policy");
         minimum = number(fields.get("minimum"), 0, 100000);
         maximum = number(fields.get("maximum"), 1, 100000);
@@ -189,6 +201,7 @@ public final class FtbRtpGuard {
             }
             Object data = dataGet.invoke(null, forgePlayer.invoke(null, actor));
             cooldown.invoke(data, actor, timer);
+            if (budget != null && !budget.take(actor)) return;
             long warmup = ((Number) seconds.invoke(ticks.invoke(rank.invoke(null, actor, "ftbutilities.rtp.warmup")))).longValue();
             attempts.put(actor, now + Math.max(retrySeconds * 1000L, warmup * 1000L + 1000L));
             final Object original = actor, level = world.get(actor);
@@ -204,7 +217,12 @@ public final class FtbRtpGuard {
                 } catch (InvocationTargetException error) {
                     if (!nativeError(current, error)) failure(error);
                     return null;
-                } catch (Exception error) { failure(error); return null; }
+                } catch (Exception error) {
+                    failure(error);
+                    return null;
+                } finally {
+                    if (budget != null) attempts.remove(original);
+                }
             };
             teleport.invoke(timer, actor, search, null);
         } catch (InvocationTargetException error) {
@@ -236,6 +254,8 @@ public final class FtbRtpGuard {
         double cx = ((Number) centerX.invoke(border)).doubleValue(), cz = ((Number) centerZ.invoke(border)).doubleValue();
         Set<Long> loaded = new HashSet<Long>();
         int[] vertical = worlds.get(dim);
+        if (budget != null)
+            return search(level, dim, border, cx, cz, minimum, limit, maxTrials, loaded, vertical);
         // A newly generated world can have no chunks at the configured distance.
         // Use the same safety and total chunk budget for a nearby search.
         boolean near = minimum > 64 && maxTrials >= 4;
@@ -257,6 +277,11 @@ public final class FtbRtpGuard {
             int x = (int) Math.floor(cx + Math.cos(angle) * radius), z = (int) Math.floor(cz + Math.sin(angle) * radius);
             double actual = (x + 0.5 - cx) * (x + 0.5 - cx) + (z + 0.5 - cz) * (z + 0.5 - cz);
             if (actual < minimum * (double) minimum || actual > limit * limit) continue;
+            if (budget != null && ((x & 15) == 0 || (x & 15) == 15 || (z & 15) == 0 || (z & 15) == 15))
+                continue; // A landing check and its immediate neighbors fit in one chunk.
+            if (budget != null && vertical[2] == 0
+                    && String.valueOf(biomeId.invoke(biome.invoke(level, position.newInstance(x, 64, z)))).contains("ocean"))
+                continue;
             if (!prepare(level, border, loaded, x, z, dim)) continue;
             for (int y = vertical[1]; y >= vertical[0]; y--) {
                 Object floor = position.newInstance(x, y, z);
@@ -277,7 +302,7 @@ public final class FtbRtpGuard {
         for (int a = (x - 1) >> 4; a <= ((x + 1) >> 4); a++) {
             for (int b = (z - 1) >> 4; b <= ((z + 1) >> 4); b++) {
                 if (claimed.invoke(claims, chunkPosition.newInstance(a, b, dim)) != null
-                        || !Boolean.TRUE.equals(generated.invoke(level, a, b))) return false;
+                        || (budget == null && !Boolean.TRUE.equals(generated.invoke(level, a, b)))) return false;
                 long key = ((long) a << 32) ^ (b & 0xffffffffL);
                 if (!loaded.contains(key)) needed.add(new int[] {a, b});
             }
@@ -294,7 +319,7 @@ public final class FtbRtpGuard {
     private boolean hazard(Object state) throws Exception {
         if (Boolean.TRUE.equals(liquid.invoke(material.invoke(state)))) return true;
         String id = registry.invoke(block.invoke(state)).toString();
-        return id.equals("minecraft:fire") || id.equals("minecraft:cactus") || id.equals("minecraft:web")
+        return id.equals("minecraft:fire") || id.equals("minecraft:magma") || id.equals("minecraft:cactus") || id.equals("minecraft:web")
             || id.equals("minecraft:portal") || id.equals("minecraft:end_portal");
     }
     private boolean clearNeighbors(Object level, int x, int y, int z) throws Exception {
@@ -339,27 +364,31 @@ public final class FtbRtpGuard {
             if (!"rtp".equals(name.invoke(command.invoke(event)))) return;
             Object actor = sender.invoke(event);
             if (!player.isInstance(actor)) return;
+            if (!take(actor)) event.setCanceled(true);
+        }
+
+        boolean take(Object actor) throws ReflectiveOperationException {
             try {
                 Object data = persisted.invoke(null, actor, true);
                 long state = ((Number) getLong.invoke(data, KEY)).longValue();
                 long now = System.currentTimeMillis();
                 if (state > now) {
-                    event.setCanceled(true);
                     long seconds = (state - now + 999) / 1000;
                     send.invoke(actor, message.newInstance(
                         String.format(Locale.ROOT, "RTP будет доступен через %d:%02d.", seconds / 60, seconds % 60)));
-                    return;
+                    return false;
                 }
                 // Negative values count the accepted calls in this series.
                 long used = state < 0 ? -state : 0;
                 setLong.invoke(data, KEY, used + 1 >= attempts ? now + cooldown : -used - 1);
+                return true;
             } catch (ReflectiveOperationException error) {
-                event.setCanceled(true);
                 if (!warned) {
                     warned = true;
                     log.error("Omkality native RTP cooldown failed", error);
                 }
                 send.invoke(actor, message.newInstance("RTP временно недоступен."));
+                return false;
             }
         }
     }

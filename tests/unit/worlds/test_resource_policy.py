@@ -27,11 +27,11 @@ def test_policy_bundle_is_offline_exclusive_and_hash_complete(tmp_path):
     assert (output / "bundle.json").read_bytes() == before
     config = output / "config"
     assert "RandomSeed" in (config / "justenoughdimensions/dimensions.json").read_text()
-    assert (config / "omkalitycore-rtp.properties").read_text() == (
-        "version=2\nattempts=3\ncooldown_seconds=300\n"
-    )
+    rtp = (config / "omkalitycore-rtp.properties").read_text()
+    assert rtp.startswith("version=3\n") and "maximum=5000" in rtp
+    assert "-18000:surface" in rtp and "uses=3\ncooldown_seconds=300\n" in rtp
     assert (
-        "0:-300:300:-300:300;-18000:-100:100:-100:100"
+        "overworld_radius=300\nzones=-18000:-100:100:-100:100"
         in (config / "omkalitycore-spawn.properties").read_text()
     )
     assert (

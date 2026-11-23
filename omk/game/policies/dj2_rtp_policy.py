@@ -104,10 +104,16 @@ def write_rtp_policy(config_directory: Path, environ=None):
     return plan
 
 
-def write_native_rtp_policy(config_directory: Path) -> None:
-    """Stage the DJ2 native search with a per-player attempt budget."""
+def write_native_rtp_policy(
+    config_directory: Path, *, resource_dimension: int = -18000
+) -> None:
+    """Stage the default same-dimension search and per-player attempt budget."""
     folder = Path(config_directory)
     if not folder.is_dir() or any(p.is_symlink() for p in (folder, *folder.parents)):
         raise ValueError("A real offline config directory is required")
     with (folder / POLICY_FILE).open("xb") as file:
-        file.write(NATIVE_POLICY.read_bytes())
+        file.write(
+            NATIVE_POLICY.read_bytes().replace(
+                b";-18000:surface", f";{resource_dimension}:surface".encode("ascii")
+            )
+        )
