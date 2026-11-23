@@ -66,6 +66,7 @@ class PackGuide:
     worlds: tuple[tuple[str, str], ...]
     claims_intro: str = ""
     claims_button: tuple[int, int] | None = None
+    world_notes: tuple[tuple[str, str], ...] = ()
 
 
 PACK_GUIDES = {
@@ -171,6 +172,13 @@ PACK_GUIDES = {
             ("Сумеречный лес", "8 192 × 8 192"),
             ("Край", "16 384 × 16 384"),
             ("Остальные измерения", "8 192 × 8 192"),
+        ),
+        world_notes=(
+            (
+                "Вещи после смерти",
+                "Подойдите к своей могиле и зажмите клавишу приседания "
+                "(по умолчанию Shift). Забрать вещи можно и на защищённом спавне.",
+            ),
         ),
     ),
 }
