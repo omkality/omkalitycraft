@@ -27,7 +27,9 @@ def test_stats_cli_reads_saved_time_and_active_and_past_moderation(
     monkeypatch.setattr(stats, "credential", lambda *_: ("alpha", "private"))
     transport = Mock(return_value="There are 0/4 players online:")
     monkeypatch.setattr(stats, "command", transport)
-    saved = Mock(return_value={"available": True, "ticks": 73_240})
+    saved = Mock(
+        return_value={"available": True, "ticks": 150_000, "active_millis": 3_662_000}
+    )
     monkeypatch.setattr(stats, "saved_playtime", saved)
     assert (
         main(
@@ -63,7 +65,7 @@ def test_missing_stats_and_profile_are_distinct_from_zero(project, monkeypatch):
     )
     monkeypatch.setattr(stats, "saved_playtime", lambda *_: {"available": False})
     first = stats.run(project.path, "alpha", "FirstJoin")
-    assert first["ok"] and "ещё нет сохранённого времени" in first["output"]
+    assert first["ok"] and "Активное время появится после игры" in first["output"]
     assert "0 ч" not in first["output"]
     lookup.return_value = None
     missing = stats.run(project.path, "alpha", "FirstJoin")

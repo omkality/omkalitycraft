@@ -45,6 +45,8 @@ public final class FtbIntegration {
         FtbResourceWorld resource=FtbResourceWorld.prepare(config,log);
         FtbSpawnClaims.install(config,log);
         FtbRtpGuard.install(config,log);
+        ActivePlaytime.install(log);
+        WorldCommand.install(resource == null ? Integer.MIN_VALUE : resource.dimension());
         CoreServices.report("ftb.integration","enabled");
         CoreServices.report("ftb.claims","enabled");
         CoreServices.report("ftb.player_placement","enabled");

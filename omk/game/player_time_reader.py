@@ -1,5 +1,6 @@
-"""Read saved Forge 1.12.2 play ticks; never count sessions or write game state."""
+"""Read vanilla play ticks and the separately saved active time."""
 
+import gzip
 import hashlib
 import json
 import os
@@ -9,6 +10,7 @@ from pathlib import Path
 from uuid import UUID
 
 from omk.shared.fs import regular
+from omk.shared.nbt import MAX_BYTES, read_nbt
 from omk.shared.profiles import PROJECT_ROOT
 
 
@@ -27,6 +29,29 @@ def unique_object(pairs):
             raise ValueError("Duplicate statistics key")
         result[key] = value
     return result
+
+
+def _active_time(root, world, player):
+    path = root / world / "playerdata" / (player + ".dat")
+    if not path.exists() and not path.is_symlink():
+        return {}
+    if not regular(path, root) or path.stat().st_size > MAX_BYTES:
+        raise ValueError("Linked or oversized player data")
+    with gzip.open(path, "rb") as stream:
+        data = read_nbt(stream.read(MAX_BYTES + 1))[1]
+    for key in ("ForgeData", "PlayerPersisted"):
+        tag = data.get(key)
+        if tag is None:
+            return {}
+        if tag.kind != 10:
+            raise ValueError("Invalid persistent player data")
+        data = tag.value
+    tag = data.get("omkality_active_millis")
+    if tag is None:
+        return {}
+    if tag.kind != 4 or not 0 <= tag.value < 2**53:
+        raise ValueError("Invalid active play-time counter")
+    return {"active_millis": tag.value}
 
 
 def read_saved(request, root=Path("/server")):
@@ -72,6 +97,7 @@ def read_saved(request, root=Path("/server")):
         "player_uuid": player,
         "source": "forge112_saved_stat_play_one_minute",
         "available": False,
+        **_active_time(root, world, player),
     }
     if not path.exists() and not path.is_symlink():
         return {**base, "reason": "no_saved_statistics"}

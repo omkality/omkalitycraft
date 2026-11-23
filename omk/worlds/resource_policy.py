@@ -203,10 +203,10 @@ def prepare_resource_bundle(
     )
     a, b = plan["main_spawn_radius"], plan["spawn_radius"]
     (config / "omkalitycore-spawn.properties").write_text(
-        f"version=1\nzones=0:{-a}:{a}:{-a}:{a};{plan['dimension']}:{-b}:{b}:{-b}:{b}\n",
+        f"version=2\noverworld_radius={a}\nzones={plan['dimension']}:{-b}:{b}:{-b}:{b}\n",
         encoding="ascii",
     )
-    write_native_rtp_policy(config)
+    write_native_rtp_policy(config, resource_dimension=plan["dimension"])
     write_territory_policy(config, values)
     files = {
         p.relative_to(output).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()

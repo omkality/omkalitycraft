@@ -64,6 +64,7 @@ public final class FtbResourceWorld {
         if(!Files.exists(file,LinkOption.NOFOLLOW_LINKS)){CoreServices.report("ftb.resource","not configured");return null;}
         return new FtbResourceWorld(config,properties(file),log);
     }
+    int dimension() { return dimension; }
     private FtbResourceWorld(Path config,Properties p,Logger logger)throws Exception{
         log=logger;
         Set<String> keys=new HashSet<String>(Arrays.asList("schema","dimension","seed","command","identity","jed_config_sha256","spawn_x","spawn_z","search_radius","search_step","chunk_loads"));

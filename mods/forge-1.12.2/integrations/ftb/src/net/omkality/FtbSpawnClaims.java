@@ -6,8 +6,11 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
@@ -16,12 +19,13 @@ import com.feed_the_beast.ftblib.lib.data.TeamType;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Logger;
 
 /** Explicit startup bootstrap of server-owned FTB claims. No player OP, world
- * generation, chunk loading, custom block protection or separate claim database.
+ * pre-generation or separate claim database.
  * Missing policy preserves compatibility; a present invalid/conflicting policy
- * aborts startup before accepting players. Never removes claims on radius shrink.
+ * aborts startup before accepting players.
  */
 public final class FtbSpawnClaims {
     private static final String TEAM = "omk_spawn";
@@ -32,7 +36,34 @@ public final class FtbSpawnClaims {
         if (!Files.exists(file, LinkOption.NOFOLLOW_LINKS)) return;
         if (!Files.isRegularFile(file, LinkOption.NOFOLLOW_LINKS) || Files.size(file) > 4096)
             throw new IllegalArgumentException("Invalid spawn policy file");
-        List<ChunkDimPos> positions = parse(Files.readAllLines(file, StandardCharsets.UTF_8));
+        Map<String, String> fields = read(Files.readAllLines(file, StandardCharsets.UTF_8));
+        List<ChunkDimPos> positions = parseZones(fields.get("zones"));
+        List<ChunkDimPos> retiring = Collections.emptyList();
+        SpawnLanding landing = null;
+        String version = fields.get("version");
+        if ("2".equals(version)) {
+            Set<String> allowed = new HashSet<String>();
+            Collections.addAll(allowed, "version", "zones", "overworld_radius", "relocate", "retire");
+            if (!allowed.containsAll(fields.keySet()) || !fields.containsKey("overworld_radius"))
+                throw new IllegalArgumentException("Invalid relocation policy");
+            String radiusText = fields.get("overworld_radius");
+            if (!radiusText.matches("[0-9]{1,3}")) throw new IllegalArgumentException("Invalid spawn radius");
+            int radius = Integer.parseInt(radiusText);
+            if (radius < 1 || radius > 768 || positions.stream().anyMatch(pos -> pos.dim == 0))
+                throw new IllegalArgumentException("Invalid overworld spawn zone");
+            landing = new SpawnLanding(fields.get("relocate"));
+            int x = landing.x(), z = landing.z();
+            positions.addAll(parseZones("0:" + (x - radius) + ":" + (x + radius)
+                    + ":" + (z - radius) + ":" + (z + radius)));
+            if (fields.containsKey("retire")) {
+                retiring = parseZones(fields.get("retire"));
+                if (retiring.stream().anyMatch(pos -> pos.dim != 0))
+                    throw new IllegalArgumentException("Only old Overworld spawn claims may be retired");
+            }
+            if (positions.size() > 10000) throw new IllegalArgumentException("Spawn chunk budget exceeded");
+        } else if (!"1".equals(version) || fields.size() != 2 || positions.isEmpty()) {
+            throw new IllegalArgumentException("Invalid spawn policy version");
+        }
         FtbMuteGuard.requireVersion("ftbutilities", "5.4.1.131");
         FtbMuteGuard.requireVersion("ftblib", "5.4.7.2");
         Class<?> claimsType = Class.forName("com.feed_the_beast.ftbutilities.data.ClaimedChunks");
@@ -42,6 +73,7 @@ public final class FtbSpawnClaims {
         Method queue = claimsType.getMethod("processQueue");
         Method owner = claimsType.getMethod("getChunkTeam", ChunkDimPos.class);
         Method claim = claimsType.getMethod("claimChunk", ForgePlayer.class, ChunkDimPos.class, boolean.class);
+        Method unclaim = claimsType.getMethod("unclaimChunk", ForgePlayer.class, ChunkDimPos.class);
         Object worldConfig = Class.forName("com.feed_the_beast.ftbutilities.FTBUtilitiesConfig")
             .getField("world").get(null);
         Method blockedDimension = worldConfig.getClass().getMethod("blockDimension", int.class);
@@ -84,6 +116,17 @@ public final class FtbSpawnClaims {
         queue.invoke(claims);
         for (ChunkDimPos pos : positions) if (owner.invoke(claims, pos) != team)
             throw new IllegalStateException("Spawn claim verification failed");
+        if (landing != null) {
+            landing.apply(log);
+            Set<ChunkDimPos> kept = new HashSet<ChunkDimPos>(positions);
+            for (ChunkDimPos pos : retiring) {
+                if (!kept.contains(pos) && owner.invoke(claims, pos) == team
+                        && !Boolean.TRUE.equals(unclaim.invoke(claims, virtual, pos)))
+                    throw new IllegalStateException("FTB could not release an old spawn claim");
+            }
+            queue.invoke(claims);
+        }
+        MinecraftForge.EVENT_BUS.register(new SpawnProtection(team, log));
         state = "enabled";
         log.info("Omkality spawn claims verified: {} (no force loading)", positions.size());
     }
@@ -104,17 +147,21 @@ public final class FtbSpawnClaims {
         }
     }
 
-    private static List<ChunkDimPos> parse(List<String> lines) {
-        String zones = null;
-        boolean version = false;
+    private static Map<String, String> read(List<String> lines) {
+        Map<String, String> fields = new HashMap<String, String>();
         for (String line : lines) {
             if (line.isEmpty() || line.startsWith("#")) continue;
-            if (line.equals("version=1") && !version) { version = true; continue; }
-            if (line.startsWith("zones=") && zones == null) { zones = line.substring(6); continue; }
-            throw new IllegalArgumentException("Unknown or duplicate spawn policy field");
+            int split = line.indexOf('=');
+            if (split <= 0 || fields.put(line.substring(0, split), line.substring(split + 1)) != null)
+                throw new IllegalArgumentException("Unknown or duplicate spawn policy field");
         }
-        if (!version || zones == null) throw new IllegalArgumentException("Incomplete spawn policy");
+        return fields;
+    }
+
+    private static List<ChunkDimPos> parseZones(String zones) {
+        if (zones == null) throw new IllegalArgumentException("Incomplete spawn policy");
         List<ChunkDimPos> result = new ArrayList<ChunkDimPos>();
+        if (zones.isEmpty()) return result;
         Set<Integer> dimensions = new HashSet<Integer>();
         String[] entries = zones.split(";", -1);
         if (entries.length > 8) throw new IllegalArgumentException("Too many spawn dimensions");

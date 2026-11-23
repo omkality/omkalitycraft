@@ -19,7 +19,9 @@ from omk.shared.profiles import PROJECT_ROOT
 def add_rtp_lab(parser):
     add_pack_inputs(parser)
     parser.add_argument(
-        "--native", action="store_true", help="Check the native FTB attempt budget"
+        "--native",
+        action="store_true",
+        help="Check the shipped DJ2 range and attempt budget",
     )
     for name in ("server-source", "agent", "core", "mods-json"):
         parser.add_argument("--" + name, type=Path, required=True)
@@ -362,22 +364,21 @@ class RtpScenario:
             time.sleep(5)
 
     def native(self, client, session, session2, mods):
-        """Check native search, the full cooldown, and reconnect in the real game."""
+        """Check the shipped range, the full cooldown, and reconnect in Forge."""
 
         def landed(actor):
             if actor.position is None or actor.dimension != 0:
                 return False
             x, y, z = actor.position[:3]
-            return 247 <= y < 248 and 7 <= (x * x + z * z) ** 0.5 <= 13
+            return 1 < y < 254 and 384 <= (x * x + z * z) ** 0.5 <= 5000
 
         with LabPlayer(client, session, 25576, mods) as first:
             self.console("ranks setp player ftbutilities.rtp.warmup 1s")
-            self.surface(first, FIRST, material="stone")
             for attempt in range(1, 4):
                 _place(first, FIRST, (24.5, 241.0, 24.5), self.console)
                 started = time.monotonic()
                 _response(first, "/rtp", "stand_still")
-                first.wait(lambda: landed(first), timeout=25)
+                first.wait(lambda: landed(first), timeout=60)
                 self.expect(True, f"native_ftb_landing_{attempt}")
             self.response(first, "/rtp", "RTP будет доступен через 4:")
             self.expect(True, "fourth_call_is_delayed_five_minutes")
@@ -390,8 +391,8 @@ class RtpScenario:
             time.sleep(max(0, started + 302 - time.monotonic()))
             _place(first, FIRST, (24.5, 241.0, 24.5), self.console)
             self.response(first, "/rtp", "stand_still")
-            first.wait(lambda: landed(first), timeout=25)
-            self.expect(True, "native_ftb_lands_after_five_minutes")
+            first.wait(lambda: landed(first), timeout=60)
+            self.expect(True, "rtp_lands_after_five_minutes")
 
 
 def run_rtp_lab(args):
@@ -446,9 +447,9 @@ def run_rtp_lab(args):
         scenario.console = _console_sender(process, server.log)
         if args.native:
             scenario.expect(
-                "Omkality native FTB RTP enabled (3 attempts, 300s cooldown)" in startup
-                and "Omkality dimension RTP enabled" not in startup,
-                "native_ftb_mode_without_custom_search",
+                "Omkality dimension RTP enabled (max 5000 blocks, 6 chunk loads)"
+                in startup,
+                "shipped_dimension_rtp_enabled",
             )
             scenario.native(client, session, session2, mods)
         else:
