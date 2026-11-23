@@ -1,0 +1,9 @@
+[Unit]
+Description=Check every hour whether to back up the OmkalityCraft world
+
+[Timer]
+OnCalendar=hourly
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target

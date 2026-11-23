@@ -1,4 +1,4 @@
-use crate::protocol::{Overview, TPS_WINDOWS, TpsHistory, TpsWindow};
+use crate::protocol::{InvitationEntry, Overview, TPS_WINDOWS, TpsHistory, TpsWindow};
 use ratatui::{
     Frame,
     layout::{Constraint, Direction, Layout, Rect},
@@ -16,7 +16,7 @@ const ACCENT: Color = Color::Rgb(114, 205, 220);
 const WARN: Color = Color::Rgb(237, 184, 104);
 const ERROR: Color = Color::Rgb(235, 114, 119);
 const STATS_ERROR_DURATION: Duration = Duration::from_secs(5);
-const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранение мира (с подтверждением)\n4  Ограничения игроков\n\nk  Кик   b  Бан   m  Выдать мут\ns  Статистика игрока\nl  Список приглашений · o отозвать\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
+const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранить мир\n4  Ограничения игроков\n5  Резервные копии\n\nk  Кик   b  Бан   m  Выдать мут\ns  Статистика игрока\nl  Активные приглашения\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
 
 pub enum Confirmation {
     Save(String),
@@ -28,6 +28,7 @@ pub struct CommandPage {
     pub message: String,
     pub scroll: u16,
     forge_tps: Option<Vec<Line<'static>>>,
+    invitations: Option<Vec<InvitationEntry>>,
 }
 
 impl CommandPage {
@@ -36,6 +37,7 @@ impl CommandPage {
             message,
             scroll: 0,
             forge_tps: None,
+            invitations: None,
         }
     }
 }
@@ -53,6 +55,7 @@ pub struct App {
     pub demo: bool,
     pub confirm: Option<Confirmation>,
     pub moderation: Option<crate::moderation::Form>,
+    pub invitation_form: Option<crate::invitations::Form>,
     pub restrictions: Option<crate::restrictions::Panel>,
     pub world_reset: Option<crate::world_reset::Form>,
     pub resetting: Option<&'static str>,
@@ -81,6 +84,7 @@ impl App {
             demo,
             confirm: None,
             moderation: None,
+            invitation_form: None,
             restrictions: None,
             world_reset: None,
             resetting: None,
@@ -104,6 +108,30 @@ impl App {
         self.restrictions = None;
         self.detail = None;
         self.clear_stats_error();
+    }
+
+    pub fn show_invitations(&mut self, rows: Option<Vec<InvitationEntry>>) {
+        use std::fmt::Write;
+        let mut message = "Активные приглашения\n".to_owned();
+        match &rows {
+            Some(rows) if rows.is_empty() => message.push_str("\nАктивных приглашений нет."),
+            Some(rows) => {
+                message.push_str("c — скопировать · o — отозвать · l — обновить\n\n");
+                for (index, row) in rows.iter().enumerate() {
+                    let _ = writeln!(message, "{:>4}  {}   {}", index + 1, row.code, row.date);
+                }
+            }
+            None => message.push_str("\nСписок недоступен. Нажмите l, чтобы обновить."),
+        }
+        self.show_section("invites".into(), message);
+        self.command_page_mut().invitations = rows;
+    }
+
+    pub fn invitation_rows(&self) -> Option<&[InvitationEntry]> {
+        if self.detail.is_some() {
+            return None;
+        }
+        self.section.as_ref()?.1.invitations.as_deref()
     }
 
     pub fn show_restrictions(&mut self, snapshot: Option<crate::restrictions::Snapshot>) {
@@ -135,6 +163,14 @@ impl App {
     pub fn membership_section(&self) -> Option<&str> {
         let (command, _) = self.section.as_ref()?;
         matches!(command.as_str(), "roster" | "permanent-bans").then_some(command)
+    }
+
+    pub fn viewing_backups(&self) -> bool {
+        self.detail.is_none()
+            && self
+                .section
+                .as_ref()
+                .is_some_and(|(command, _)| command == "backup-status")
     }
 
     pub fn refresh_section(&mut self, command: &str, message: String) {
@@ -180,6 +216,12 @@ impl App {
             }
             return true;
         }
+        if let Some(form) = &mut self.invitation_form {
+            if !form.dismiss_confirmation() {
+                self.invitation_form = None;
+            }
+            return true;
+        }
         self.confirm.take().is_some()
             || self.range_picker.take().is_some()
             || self
@@ -204,6 +246,7 @@ impl App {
             && self.confirm.is_none()
             && self.range_picker.is_none()
             && self.moderation.is_none()
+            && self.invitation_form.is_none()
             && self.world_reset.is_none()
     }
 
@@ -448,6 +491,9 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     if let Some(form) = &app.moderation {
         form.draw(frame);
     }
+    if let Some(form) = &app.invitation_form {
+        form.draw(frame);
+    }
     if let Some(form) = &app.world_reset {
         form.draw(frame);
     }
@@ -497,7 +543,7 @@ fn exit_prompt(approved: bool) -> String {
 }
 
 fn render_commands(frame: &mut Frame, area: Rect, app: &mut App) {
-    let panel = block(" Команды · 1/2/3/4 · k/b/m/s · w вайп ");
+    let panel = block(" Команды · 1/2/3/4/5 · k/b/m/s · w вайп ");
     let mut content = panel.inner(area);
     frame.render_widget(panel, area);
     if app.resetting.is_none()

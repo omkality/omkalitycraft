@@ -1,0 +1,13 @@
+[Unit]
+Description=OmkalityCraft hourly world backup
+After=docker.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/omkalitycraft/hourly-backup.env
+ExecStart=/usr/bin/env ${OMK_HOURLY_PYTHON} -m omk.owner.hourly_backups --config ${OMK_HOURLY_OPERATOR} --server ${OMK_HOURLY_SERVER} run
+UMask=0077
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=6
+TimeoutStartSec=30min

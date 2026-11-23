@@ -262,9 +262,9 @@ def invite_reference(code):
 
 
 def invitation_summary(config):
-    """Return only the operator-visible reference, masked code and creation time."""
+    """Return full active codes for the private terminal, with stable revoke references."""
     return [
-        (invite_reference(row["code"]), row["code"][:4], row["created_at"])
+        (invite_reference(row["code"]), row["code"], row["created_at"][:10])
         for row in _active_invites(config)
     ]
 
@@ -445,6 +445,7 @@ def add_admin_commands(sub):
             "player-names",
             "tps",
             "save",
+            "backup-status",
         ],
     )
     console.add_argument("--confirm-save", action="store_true")

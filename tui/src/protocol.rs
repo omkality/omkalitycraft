@@ -294,6 +294,40 @@ impl Overview {
 
 #[derive(Clone, Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub struct InvitationEntry {
+    pub reference: String,
+    pub code: String,
+    pub date: String,
+}
+
+impl InvitationEntry {
+    fn valid(&self) -> bool {
+        self.reference.len() == 12
+            && self
+                .reference
+                .bytes()
+                .all(|b| b.is_ascii_digit() || matches!(b, b'a'..=b'f'))
+            && valid_invite_code(&self.code)
+            && self.date.len() == 10
+            && self.date.bytes().enumerate().all(|(i, b)| {
+                if matches!(i, 4 | 7) {
+                    b == b'-'
+                } else {
+                    b.is_ascii_digit()
+                }
+            })
+    }
+}
+
+pub fn valid_invite_code(code: &str) -> bool {
+    (1..=128).contains(&code.len())
+        && code
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'_' | b'-'))
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct ConsoleResult {
     pub schema_version: u32,
     pub action: String,
@@ -304,6 +338,7 @@ pub struct ConsoleResult {
     pub output: String,
     #[serde(deserialize_with = "required_option")]
     pub error: Option<String>,
+    pub invitations: Option<Vec<InvitationEntry>>,
 }
 
 impl ConsoleResult {
@@ -323,9 +358,22 @@ impl ConsoleResult {
                     | "player-names"
                     | "tps"
                     | "save"
+                    | "backup-status"
             )
             || !matches!(v.effect.as_str(), "none" | "unknown")
             || (command != "save" && v.effect != "none")
+            || if command == "invites" && v.ok {
+                !v.output.is_empty()
+                    || !v.invitations.as_ref().is_some_and(|rows| {
+                        let mut references = std::collections::HashSet::new();
+                        rows.len() <= 1000
+                            && rows
+                                .iter()
+                                .all(|row| row.valid() && references.insert(row.reference.as_str()))
+                    })
+            } else {
+                v.invitations.is_some()
+            }
             || if command == "player-names" {
                 !valid_player_names(&v.output)
             } else {
