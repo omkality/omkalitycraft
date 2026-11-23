@@ -9,6 +9,7 @@ import gzip
 import hashlib
 import json
 import re
+import struct
 
 from omk.shared.nbt import Tag, read_nbt, write_nbt
 from omk.worlds import enderutilities_reset as ender
@@ -158,6 +159,79 @@ def result_inventory(files, payloads, world, dimension, *, reset=None):
             raise ValueError("Resource reset edit is outside retained source")
         result[name] = {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
     return result
+
+
+def _signed(value, bits):
+    # Java's int and long arithmetic wraps within the signed width.
+    half = 1 << (bits - 1)
+    return (value + half) % (2 * half) - half
+
+
+def _java_string_hash(value):
+    result = 0
+    for (unit,) in struct.iter_unpack(">H", value.encode("utf-16-be", "surrogatepass")):
+        result = _signed(31 * result + unit, 32)
+    return result
+
+
+def _rftools_seed(server, world, row):
+    forced = audit._tag(row, "forcedSeed", 4)
+    if forced:
+        return forced
+    base = audit._tag(row, "baseSeed", 4)
+    if not base:
+        root = audit.ftb.nbt(audit._read(server / world / "level.dat", server))
+        base = audit._tag(audit._tag(root, "Data", 10), "RandomSeed", 4)
+    if audit._tag(row, "worldVersion", 3) == 1:
+        return _signed(base + 13 * audit._tag(row, "id", 3), 64)
+    description = audit._tag(row, "descriptionString", 8)
+    if description and not description.startswith("@"):
+        raise ValueError("Unreviewed RFTools dimlet encoding")
+    for token in filter(None, description[1:].split(",")):
+        opcode = token[1:] if token[0] in "#?" else token
+        if not opcode:
+            raise ValueError("Invalid RFTools dimlet opcode")
+        base = _signed(31 * base + _java_string_hash(opcode[1:]), 64)
+    return base
+
+
+def reseed_rftools(server, request):
+    """Prepare the selected generator and retire its obsolete spawn receiver."""
+    world = request["world"]
+    dimension = request["dimension"]
+    label, root, rows = audit._rftools_registry(server, world)
+    row = rows.get(dimension)
+    if (
+        row is None
+        or audit.rftools_identity(row) != request["reset"]["rftools_identity"]
+    ):
+        raise ValueError("The selected RFTools dimension changed")
+    previous = _rftools_seed(server, world, row)
+    seed = int.from_bytes(bytes.fromhex(request["operation"])[:8], signed=True)
+    while seed in (0, previous):
+        seed = _signed(seed + 1, 64)
+    edits = {audit.RFTOOLS_REGISTRY: (label, root)}
+    destinations = server / world / audit.RFTOOLS_DESTINATIONS
+    if destinations.exists():
+        dest_label, dest_root = read_nbt(
+            audit.ftb.unpack(audit._read(destinations, server))
+        )
+        dest_data = audit._tag(dest_root, "data", 10)
+        rows = audit._list(dest_data, "destinations", 10)
+        receiver = audit.rftools_spawn_destination(row, rows)
+        if receiver is not None:
+            # Keep lastId so no old receiver ID can be reused for the new spawn.
+            del dest_data["destinations"].value[1][receiver]
+            edits[audit.RFTOOLS_DESTINATIONS] = (dest_label, dest_root)
+    row.pop("spawnPoint", None)
+    row["forcedSeed"] = Tag(4, seed)
+    payloads = {}
+    for name, (label, root) in edits.items():
+        data = gzip.compress(write_nbt(label, root), compresslevel=1, mtime=0)
+        if read_nbt(audit.ftb.unpack(data)) != (label, root):
+            raise ValueError("RFTools reset edit failed readback")
+        payloads[f"{world}/{name}"] = data
+    return payloads
 
 
 def fresh_dimension(server, request, identity):

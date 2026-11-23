@@ -80,6 +80,20 @@ def test_ambiguous_named_save_layout_is_refused(tmp_path):
         )
 
 
+@pytest.mark.parametrize("identity", [None, "a" * 64])
+def test_rftools_and_generic_save_folders_cannot_share_a_selected_id(
+    tmp_path, identity
+):
+    world = tmp_path / "world"
+    (world / "RFTOOLS6000").mkdir(parents=True)
+    (world / "DIM6000").mkdir()
+    layout = dimension_reset.layout(6000, rftools_identity=identity)
+    with pytest.raises(ValueError, match="Ambiguous"):
+        dimension_reset.verify_layout(
+            world, 6000, layout, [f"world/{layout['folder']}/region/r.0.0.mca"]
+        )
+
+
 def test_overworld_omits_only_local_state_and_retains_player_data():
     paths = {
         "world/region/r.0.0.mca",

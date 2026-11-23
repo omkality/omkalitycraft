@@ -38,6 +38,25 @@ def test_dimension_folder_without_registry_is_not_listed(tmp_path):
     assert audit.saved_rftools_worlds(tmp_path, "world") == []
 
 
+def test_rftools_reset_selection_includes_a_binding_only_for_saved_terrain(
+    rftools_registry,
+):
+    server, _jar, save = rftools_registry
+    save([(6000, "Шахта"), (6001, "Проект")])
+    terrain = server / "world/RFTOOLS6000/region"
+    terrain.mkdir(parents=True)
+    (terrain / "r.0.0.mca").write_bytes(b"terrain")
+    _, _, rows = audit._rftools_registry(server, "world")
+    assert audit.saved_rftools_worlds(server, "world") == [
+        {
+            "dimension": 6000,
+            "name": "Шахта",
+            "rftools_identity": audit.rftools_identity(rows[6000]),
+        },
+        {"dimension": 6001, "name": "Проект"},
+    ]
+
+
 def test_catalog_refuses_duplicate_ids_and_unreviewed_mod(rftools_registry):
     server, jar, save = rftools_registry
     save([(6, "Первый"), (6, "Второй")])

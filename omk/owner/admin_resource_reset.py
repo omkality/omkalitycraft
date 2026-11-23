@@ -217,7 +217,9 @@ def discover_saved_worlds(config, server):
     for row in rows:
         if (
             not isinstance(row, dict)
-            or set(row) != {"dimension", "name"}
+            or not {"dimension", "name"}
+            <= row.keys()
+            <= {"dimension", "name", "rftools_identity"}
             or type(row["dimension"]) is not int
             or not -(2**31) <= row["dimension"] < 2**31
             or row["dimension"] in worlds
@@ -225,10 +227,18 @@ def discover_saved_worlds(config, server):
             or not 1 <= len(row["name"]) <= 64
             or row["name"].strip() != row["name"]
             or not row["name"].isprintable()
+            or (
+                "rftools_identity" in row
+                and (
+                    not isinstance(row["rftools_identity"], str)
+                    or re.fullmatch(r"[a-f0-9]{64}", row["rftools_identity"]) is None
+                )
+            )
         ):
             raise AdminError("Invalid saved world catalog entry")
         worlds[row["dimension"]] = {
             **row,
+            "rftools_identity": row.get("rftools_identity"),
             "description": "Измерение, созданное в RFTools Dimensions.",
         }
     return worlds

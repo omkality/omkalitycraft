@@ -10,10 +10,14 @@ from omk.backups.backup_store import BackupStore
 from omk.backups.stopped_world_backup import inventory
 from omk.worlds.reset import resource_reset_stage as stage
 from tests.fixtures.unit.backups.ftb_restore_authority import records
-from tests.fixtures.unit.worlds.resource_reset_inventory import encoded, sample
-from tests.fixtures.unit.worlds.resource_reset_stage import LIMITS, data
+from tests.fixtures.unit.worlds.resource_reset_inventory import (
+    encoded,
+    rftools_registry,
+    sample,
+)
+from tests.fixtures.unit.worlds.resource_reset_stage import LIMITS, data, rftools_data
 
-__all__ = ["LIMITS", "data", "records", "sample"]
+__all__ = ["LIMITS", "data", "records", "rftools_data", "rftools_registry", "sample"]
 
 
 def test_auto_stage_receives_frozen_owner_preflight_options(data, monkeypatch):
@@ -216,6 +220,76 @@ def test_new_resource_seed_is_sealed_with_the_new_world_and_ownership(data):
         assert f"seed={seed}\n" in (target / path.relative_to(source)).read_text()
     assert not (target / "world/DIM-18000/region").exists()
     assert inventory(world, world_name="world", path_policy="linux-server") == before
+
+
+def test_rftools_candidate_reseeds_only_the_selected_dimension_and_preserves_progress(
+    rftools_data, monkeypatch
+):
+    request, source, storage, target, before, player = rftools_data
+    monkeypatch.setattr(
+        stage.resource_reset_preflight,
+        "preflight",
+        lambda *a, **k: {"can_stage_data": True, "landing": {"position": [8, 100, 8]}},
+    )
+    plan = stage.execute({**request, "action": "plan"}, source, storage, target)
+    sealed = {**request, "expected": plan}
+    staged = stage.execute({**sealed, "action": "stage"}, source, storage, target)
+    assert (
+        stage.execute({**sealed, "action": "verify"}, source, storage, target) == staged
+    )
+    assert not (target / "world/RFTOOLS6200").exists()
+    world = source / "world"
+    assert inventory(world, world_name="world", path_policy="linux-server") == before
+
+    _, _, original = stage.audit._rftools_registry(source, "world")
+    registry_name = "world/" + stage.audit.RFTOOLS_REGISTRY
+    candidate = stage.audit.ftb.nbt((target / registry_name).read_bytes())
+    rows = {
+        v["id"].value: v
+        for v in stage.audit._list(candidate["data"].value, "dimensions", 10)
+    }
+    assert rows[6201] == original[6201]
+    expected = {**original[6200], "forcedSeed": Tag(4, 2686034)}
+    del expected["spawnPoint"]
+    assert rows[6200] == expected
+
+    receiver_name = "world/" + stage.audit.RFTOOLS_DESTINATIONS
+    old_receivers = stage.audit.ftb.nbt((source / receiver_name).read_bytes())["data"]
+    new_receivers = stage.audit.ftb.nbt((target / receiver_name).read_bytes())["data"]
+    assert new_receivers.value["lastId"] == old_receivers.value["lastId"]
+    assert (
+        new_receivers.value["destinations"].value[1]
+        == old_receivers.value["destinations"].value[1][1:]
+    )
+
+    staged_player = stage.audit.ftb.nbt(
+        (target / player.relative_to(source)).read_bytes()
+    )
+    original_player = stage.audit.ftb.nbt(player.read_bytes())
+    assert staged_player["Dimension"] == Tag(3, 0)
+    assert staged_player["Inventory"] == original_player["Inventory"]
+    assert staged_player["XpTotal"] == original_player["XpTotal"]
+    changed = {
+        registry_name,
+        receiver_name,
+        player.relative_to(source).as_posix(),
+        player.with_suffix(".dat_old").relative_to(source).as_posix(),
+    }
+    after = inventory(target / "world", world_name="world", path_policy="linux-server")
+    assert changed <= after.keys() and changed <= before.keys()
+    assert {key: value for key, value in after.items() if key not in changed} == {
+        key: value
+        for key, value in before.items()
+        if key not in changed and not key.startswith("world/RFTOOLS6200/")
+    }
+
+
+def test_rftools_candidate_refuses_a_stale_selection_before_writing(rftools_data):
+    request, source, storage, target, _files, _player = rftools_data
+    request["reset"]["rftools_identity"] = "b" * 64
+    with pytest.raises(ValueError, match="selected RFTools dimension changed"):
+        stage.execute({**request, "action": "plan"}, source, storage, target)
+    assert not list(target.iterdir())
 
 
 @pytest.mark.parametrize(
