@@ -1,6 +1,6 @@
 use crate::protocol::{
-    ConsoleResult, InvitationResult, Overview, PlayerStatsResult, TpsHistory, TpsWindow,
-    valid_server,
+    ConsoleResult, InvitationEntry, InvitationResult, Overview, PlayerStatsResult, TpsHistory,
+    TpsWindow, valid_server,
 };
 use crate::restrictions;
 use std::{
@@ -49,6 +49,7 @@ pub enum Reply {
 pub enum ModerationRefresh {
     Membership(String, String),
     Restrictions(Option<restrictions::Snapshot>),
+    Invitations(Option<Vec<InvitationEntry>>),
 }
 
 struct OwnedChild(Child);
@@ -84,6 +85,41 @@ pub fn copy_clipboard(code: &str, deadline: Instant) -> std::io::Result<bool> {
         .take()
         .ok_or_else(|| std::io::Error::other("Clipboard input unavailable"))?
         .write_all(code.as_bytes())?;
+    loop {
+        if let Some(status) = child.0.try_wait()? {
+            return Ok(status.success());
+        }
+        if Instant::now() >= deadline {
+            return Ok(false);
+        }
+        thread::sleep(Duration::from_millis(20));
+    }
+}
+
+#[cfg(not(windows))]
+pub fn queue_clipboard(socket: &std::path::Path, code: &str) -> std::io::Result<bool> {
+    use std::io::Write;
+
+    if !crate::protocol::valid_invite_code(code) {
+        return Ok(false);
+    }
+    let mut child = OwnedChild(
+        Command::new("/usr/bin/tmux")
+            .arg("-S")
+            .arg(socket)
+            .args(["load-buffer", "-b", "omk-invite-clipboard", "-"])
+            .stdin(Stdio::piped())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()?,
+    );
+    child
+        .0
+        .stdin
+        .take()
+        .ok_or_else(|| std::io::Error::other("Clipboard input unavailable"))?
+        .write_all(code.as_bytes())?;
+    let deadline = Instant::now() + Duration::from_secs(2);
     loop {
         if let Some(status) = child.0.try_wait()? {
             return Ok(status.success());
@@ -356,6 +392,7 @@ impl Backend {
                             | "player-names"
                             | "tps"
                             | "save"
+                            | "backup-status"
                     )
                 {
                     return Err("Неверная команда".into());
@@ -410,6 +447,12 @@ impl Backend {
                         },
                         cancel,
                     );
+                    if command == "invites" {
+                        return ModerationRefresh::Invitations(match reply {
+                            Ok(Reply::Console(list)) => list.invitations,
+                            _ => None,
+                        });
+                    }
                     let message = match reply {
                         Ok(Reply::Console(list)) => list.membership_message(),
                         _ => None,

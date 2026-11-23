@@ -20,8 +20,16 @@ from omk.owner.admin import (
 from omk.owner.owner_result import ServerId
 
 COMMANDS = {"players": "list uuids", "tps": "forge tps", "save": "save-all flush"}
-VIEWS = {"roster", "permanent-bans", "invites", "player-names"}
+VIEWS = {"roster", "permanent-bans", "invites", "player-names", "backup-status"}
 MAX_PLAYER_NAMES = 1000
+
+
+class InvitationEntry(BaseModel):
+    """A private owner view of one unused registration code."""
+
+    reference: str = Field(pattern=r"^[a-f0-9]{12}$")
+    code: str = Field(pattern=r"^[A-Za-z0-9_-]{1,128}$")
+    date: str = Field(pattern=r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
 
 
 class ConsoleResult(BaseModel):
@@ -32,12 +40,22 @@ class ConsoleResult(BaseModel):
     action: Literal["owner.console"] = "owner.console"
     server_id: ServerId
     command: Literal[
-        "players", "roster", "permanent-bans", "invites", "player-names", "tps", "save"
+        "players",
+        "roster",
+        "permanent-bans",
+        "invites",
+        "player-names",
+        "tps",
+        "save",
+        "backup-status",
     ]
     ok: bool
     effect: Literal["none", "unknown"]
     output: str = Field(default="", max_length=MAX_PLAYER_NAMES * 17 - 1)
     error: Literal["invalid_configuration", "console_unavailable"] | None = None
+    invitations: list[InvitationEntry] | None = Field(
+        default=None, exclude_if=lambda rows: rows is None
+    )
 
 
 def _project_members(config):
@@ -83,6 +101,10 @@ def _roster(config, online):
 
 
 def _view(config, action, server):
+    if action == "backup-status":
+        from omk.owner.hourly_backups import overview  # noqa: PLC0415
+
+        return overview(config, server)
     if action == "player-names" and config.auth_origin is not None:
         names, banned = _project_members(config)
         return _nickname_list(names.union(banned.values()))
@@ -91,16 +113,6 @@ def _view(config, action, server):
         return (
             "\n".join(sorted(banned.values(), key=str.casefold))
             or "Бессрочных банов нет."
-        )
-    if action == "invites":
-        entries = invitation_summary(config)
-        return (
-            "\n".join(
-                f"{reference}   {prefix}…   {created[:10]}"
-                for reference, prefix, created in entries
-            )
-            if entries
-            else "Активных приглашений нет."
         )
     from omk.labs.recovery.recovery_console import (  # noqa: PLC0415
         command,
@@ -153,11 +165,19 @@ def run(path, server, action, *, confirmed=False):
     try:
         # From this point a save may have reached the server, even on lost reply.
         effect = "unknown" if action == "save" else "none"
-        output = (
-            _view(config, action, server)
-            if action in VIEWS
-            else command(endpoint, password, COMMANDS[action])
-        )
+        invitations = None
+        if action == "invites":
+            invitations = [
+                InvitationEntry(reference=reference, code=code, date=date)
+                for reference, code, date in invitation_summary(config)
+            ]
+            if len({row.reference for row in invitations}) != len(invitations):
+                raise ValueError("Ambiguous invitation inventory")
+            output = ""
+        elif action in VIEWS:
+            output = _view(config, action, server)
+        else:
+            output = command(endpoint, password, COMMANDS[action])
         if (action != "player-names" and len(output) > 8192) or (
             action not in VIEWS and password in output
         ):
@@ -174,6 +194,7 @@ def run(path, server, action, *, confirmed=False):
             ok=True,
             effect=effect,
             output=output,
+            invitations=invitations,
         ).model_dump(mode="json")
     except Exception:
         return ConsoleResult(

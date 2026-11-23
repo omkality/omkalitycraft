@@ -8,6 +8,12 @@ import time
 from dataclasses import dataclass
 from uuid import UUID
 
+BACKUP_CHAT = {
+    "started": "say Начинается резервное копирование мира.",
+    "complete": "say Резервная копия мира сохранена.",
+    "failed": "say Резервное копирование мира не удалось.",
+}
+
 
 class ConsoleError(RuntimeError):
     """Report that a recovery console operation failed its checks."""
@@ -68,12 +74,13 @@ def _receive(stream, deadline):
     return number, kind, body[8:-2].decode("utf-8", errors="strict")
 
 
-def command(config, password, text):
+def command(config, password, text, *, timeout=8):
     # Fixed owner operations only; no arbitrary RCON text or player message.
     if text not in {
         "list uuids",
         "forge tps",
         "save-all flush",
+        *BACKUP_CHAT.values(),
         "list omk-recovery version",
         "list omk-maintenance probe",
         "list omk-maintenance operators",
@@ -95,7 +102,7 @@ def command(config, password, text):
         or "\0" in password
     ):
         raise ConsoleError("Invalid recovery console credential")
-    deadline = time.monotonic() + 8
+    deadline = time.monotonic() + timeout
     with socket.create_connection((config.host, config.port), timeout=3) as stream:
         stream.sendall(_packet(1, 3, password))
         for _ in range(3):
