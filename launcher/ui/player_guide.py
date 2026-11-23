@@ -210,14 +210,7 @@ class PlayerGuideDialog(QDialog):
                 self._add_topic(
                     f"guideWorlds_{profile.id}",
                     "Миры",
-                    _page(
-                        _text("Размеры миров", size=22),
-                        _world_table(guide.worlds),
-                        _text(
-                            "Размер показывает расстояние от края до края по каждой оси.",
-                            muted=True,
-                        ),
-                    ),
+                    self._worlds(guide),
                 )
         self._navigation.addStretch()
         self._buttons.button(0).setChecked(True)
@@ -316,6 +309,19 @@ class PlayerGuideDialog(QDialog):
                 muted=True,
             ),
         )
+
+    def _worlds(self, guide: PackGuide) -> QScrollArea:
+        blocks: list[QWidget] = [
+            _text("Размеры миров", size=22),
+            _world_table(guide.worlds),
+            _text(
+                "Размер показывает расстояние от края до края по каждой оси.",
+                muted=True,
+            ),
+        ]
+        if guide.world_notes:
+            blocks.append(_rows("", guide.world_notes))
+        return _page(*blocks)
 
     def _claims(self, profile: ServerProfile, guide: PackGuide) -> QScrollArea:
         blocks: list[QWidget] = [_text("Приваты и прогрузка чанков", size=22)]
