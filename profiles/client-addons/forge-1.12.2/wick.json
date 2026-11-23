@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "purpose": "Динамический свет факела в руке в Divine Journey 2.",
+  "minecraft": "1.12.2",
+  "loader": "forge",
+  "artifacts": [
+    {
+      "filename": "wick-forge-1.0.1+mc1.12.2.jar",
+      "mod_id": "wick",
+      "mod_version": "1.0.1+mc1.12.2",
+      "curseforge_file": "https://www.curseforge.com/minecraft/mc-mods/wick-lights/files/9092509",
+      "sha256": "06f26dce5bde9297d72416b95ac15ea19a57839d655037a975fbb04118fa250b",
+      "sha512": "e202b055042b4a237a63222d7d53d7a11c931177ea0354ab28b0128da132c4af603cf1da5e471377aec8235dc4a9388cd33a60d1ebd7adfbefe3444da4ccfc9f",
+      "size": 67891,
+      "side": "client",
+      "source": "https://github.com/comedy01/Wick",
+      "license": "MIT",
+      "license_notice": "notices/Wick-LICENSE.txt",
+      "license_notice_sha256": "2f6ca215079aeae217af168941e7c744fd2a983066b2b0fe1f6f85b3ef6648ed"
+    }
+  ],
+  "composition_requires": [
+    "Включить проверенный JAR и текст лицензии в подписанные сборки Windows и Linux.",
+    "Указать ?wick=1.0.1+mc1.12.2 в серверном списке клиентских модов."
+  ]
+}

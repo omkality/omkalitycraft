@@ -121,36 +121,25 @@ if args.target in {"all", "core"}:
             str(project / "tests/java/net/omkality/MaintenanceControlsTest.java"),
             str(project / "tests/java/net/omkality/GameMetricsControlsTest.java"),
             str(project / "tests/java/net/omkality/WelcomeControlsTest.java"),
+            str(project / "tests/java/net/omkality/ClientModPolicyControlsTest.java"),
         ],
         check=True,
     )
-    subprocess.run(
-        [
-            str(args.java.resolve()),
-            "-cp",
-            os.pathsep.join([str(core), str(controls)]),
-            "net.omkality.WelcomeControlsTest",
-        ],
-        check=True,
-    )
-    subprocess.run(
-        [
-            str(args.java.resolve()),
-            "-cp",
-            os.pathsep.join([str(core), str(controls)]),
-            "net.omkality.GameMetricsControlsTest",
-        ],
-        check=True,
-    )
-    subprocess.run(
-        [
-            str(args.java.resolve()),
-            "-cp",
-            os.pathsep.join([str(core), str(controls)]),
-            "net.omkality.MaintenanceControlsTest",
-        ],
-        check=True,
-    )
+    for control in (
+        "WelcomeControlsTest",
+        "GameMetricsControlsTest",
+        "MaintenanceControlsTest",
+        "ClientModPolicyControlsTest",
+    ):
+        subprocess.run(
+            [
+                str(args.java.resolve()),
+                "-cp",
+                os.pathsep.join([str(core), str(controls)]),
+                f"net.omkality.{control}",
+            ],
+            check=True,
+        )
 if args.target in {"all", "dj2"}:
     if not core.is_file():
         raise ValueError("Build Core before DJ2Fix")

@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import net.minecraftforge.fml.common.Mod;
@@ -19,12 +17,12 @@ import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 /** Server-side policy over the declared FML mod list; not proof of client integrity. */
-@Mod(modid = "omkalitycore", name = "Omkality Core", version = "0.3.15", dependencies = "after:ftbutilities;after:justenoughdimensions",
+@Mod(modid = "omkalitycore", name = "Omkality Core", version = "0.3.16", dependencies = "after:ftbutilities;after:justenoughdimensions",
      acceptedMinecraftVersions = "[1.12.2]", serverSideOnly = true,
      acceptableRemoteVersions = "*")
 public final class OmkalityCore {
-    public static final String VERSION = "0.3.15";
-    private volatile Map<String, String> expected;
+    public static final String VERSION = "0.3.16";
+    private volatile ClientModPolicy expected;
     private org.apache.logging.log4j.Logger logger;
     private Path configDirectory;
     private ServerProfile profile;
@@ -76,20 +74,10 @@ public final class OmkalityCore {
             try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
                 values.load(reader);
             }
-            if (values.isEmpty() || values.size() > 1000) {
-                throw new IllegalArgumentException("Invalid client mod count");
-            }
-            Map<String, String> approved = new HashMap<String, String>();
-            for (String key : values.stringPropertyNames()) {
-                String version = values.getProperty(key);
-                // Some legacy coremods legitimately declare an empty version.
-                if (!key.matches("[A-Za-z0-9_.-]{1,100}") || version.length() > 100) {
-                    throw new IllegalArgumentException("Invalid client mod entry");
-                }
-                approved.put(key, version);
-            }
-            expected = Collections.unmodifiableMap(approved);
-            event.getModLog().info("Loaded strict client mod policy: {} entries", expected.size());
+            ClientModPolicy policy = new ClientModPolicy(values);
+            expected = policy;
+            event.getModLog().info("Loaded strict client mod policy: {} required, {} optional",
+                policy.requiredCount(), policy.optionalCount());
         } catch (Exception error) {
             throw new IllegalStateException("Omkality Core requires a valid explicit client mod policy", error);
         }
@@ -97,7 +85,7 @@ public final class OmkalityCore {
 
     @NetworkCheckHandler
     public boolean accept(Map<String, String> remote, Side remoteSide) {
-        Map<String, String> policy = expected;
-        return remoteSide != Side.CLIENT || (policy != null && policy.equals(remote));
+        ClientModPolicy policy = expected;
+        return remoteSide != Side.CLIENT || (policy != null && policy.accepts(remote));
     }
 }
