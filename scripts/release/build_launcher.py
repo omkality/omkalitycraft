@@ -47,7 +47,8 @@ def _stage_macos_app(dist: Path, bundle: Path, platform: str) -> None:
     app = bundle / MACOS_APP
     shutil.move(dist / MACOS_APP, app)
     executable = bundle / bundle_entrypoint(platform)
-    executable.rename(executable.with_name(MACOS_RUNTIME))
+    runtime = executable.with_name(MACOS_RUNTIME)
+    executable.rename(runtime)
     subprocess.run(
         [
             "/usr/bin/clang",
@@ -61,8 +62,13 @@ def _stage_macos_app(dist: Path, bundle: Path, platform: str) -> None:
         ],
         check=True,
     )
+    # The former main binary can no longer use the signature of the app it belonged to.
+    for code in (runtime, app):
+        subprocess.run(
+            ["/usr/bin/codesign", "--force", "--sign", "-", str(code)], check=True
+        )
     subprocess.run(
-        ["/usr/bin/codesign", "--force", "--sign", "-", str(app)], check=True
+        ["/usr/bin/codesign", "--verify", "--deep", "--strict", str(app)], check=True
     )
 
 
