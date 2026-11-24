@@ -1,0 +1,139 @@
+import json
+import re
+from itertools import pairwise
+
+import pytest
+
+from omk.cli import main
+from omk.owner.admin import _write_private
+from omk.owner.panels import owner_capacity_report as report
+from tests.fixtures.unit.observability.owner_metrics import endpoint
+from tests.fixtures.unit.owner.operator_commands import config
+
+NOW = 1_790_000_321
+HOUR = NOW // 3600 * 3600
+
+
+@pytest.mark.parametrize(
+    ("window", "step", "expected"),
+    [("24h", 60, 1440), ("7d", 300, 2016), ("14d", 300, 4032)],
+)
+def test_capacity_summarizes_only_completed_hours(
+    tmp_path, capsys, monkeypatch, window, step, expected
+):
+    settings, path = config(tmp_path)
+    _write_private(
+        settings.private / "tui.json",
+        settings.private,
+        {"schema": 1, "host": "test", "prometheus_origin": "http://127.0.0.1:9000"},
+    )
+    monkeypatch.setattr(report.time, "time", lambda: NOW)
+    first = HOUR - expected * step
+    observed = [0, 1, 2, 95, 96, expected - 2, expected - 1]
+    sample_values = {
+        "players": dict(zip(observed, [0, 1, 3, 1, 0, 2, 1], strict=True)),
+        "host_cpu_p95_percent": dict.fromkeys(observed, 65) | {0: 99, 96: 100},
+        "game_tps_min": {1: 20, 95: 0, expected - 1: 18},
+        "project_disk_free_min_bytes": {0: 1000, 1: 1010},
+    }
+    chunks = []
+
+    def sample(_settings, expression, *, result_type, start, end, step):
+        assert result_type == "matrix"
+        assert end - start < report.BATCH_POINTS * step
+        assert 'host="test"' in expression
+        assert 'service="dj2"' in expression
+        assert 'timestamp(up{job="dj2"})' in expression
+        chunks.append((start, end))
+        rows = []
+        for name in re.findall(r'"stat", "([^"]+)"', expression):
+            values = [
+                [first + point * step, str(value)]
+                for point, value in sample_values.get(name, {}).items()
+                if start <= first + point * step <= end
+            ]
+            if values:
+                rows.append(
+                    {"metric": {"host": "test", "stat": name}, "values": values}
+                )
+        return rows
+
+    monkeypatch.setattr(report, "query", sample)
+    assert (
+        main(
+            [
+                "admin",
+                "--config",
+                str(path),
+                "capacity-report",
+                "--server",
+                "dj2",
+                "--window",
+                window,
+            ]
+        )
+        == 0
+    )
+    result = json.loads(capsys.readouterr().out)
+    assert result["state"] == "partial"
+    assert result["end_exclusive"] == HOUR
+    assert result["start"] == first
+    assert chunks[0][0] == first and chunks[-1][1] == HOUR - step
+    assert all(left[1] + step == right[0] for left, right in pairwise(chunks))
+    assert result["coverage"] == {
+        "expected": expected,
+        "with_players": 5,
+        "without_players": 2,
+        "unknown": expected - 7,
+        "peak_players": 3,
+    }
+    assert result["metrics"]["host_cpu_p95_percent"] == {"value": 65, "samples": 5}
+    assert result["metrics"]["game_tps_min"] == {"value": 0, "samples": 3}
+    assert result["metrics"]["game_cpu_p95_vcpus"] == {"value": None, "samples": 0}
+    assert result["metrics"]["project_disk_free_min_bytes"] == {
+        "value": 1000,
+        "samples": 2,
+    }
+
+
+def test_empty_prometheus_history_has_no_guessed_load(tmp_path):
+    settings, path = config(tmp_path)
+    payload = b'{"status":"success","data":{"resultType":"matrix","result":[]}}'
+    assert report.run(path, "dj2", "24h")["state"] == "disabled"
+    with endpoint(payload) as (origin, requests):
+        _write_private(
+            settings.private / "tui.json",
+            settings.private,
+            {"schema": 1, "host": "test", "prometheus_origin": origin},
+        )
+        assert report.run(path, "unknown", "24h")["error"] == "invalid_configuration"
+        assert not requests
+        result = report.run(path, "dj2", "24h")
+    assert requests and all(
+        item.startswith("/api/v1/query_range?") for item in requests
+    )
+    assert result["ok"] and result["state"] == "missing"
+    assert result["coverage"]["unknown"] == 1440
+    assert result["coverage"]["peak_players"] is None
+    assert all(
+        metric == {"value": None, "samples": 0} for metric in result["metrics"].values()
+    )
+
+
+def test_ambiguous_history_is_reported_as_unavailable(tmp_path, monkeypatch):
+    settings, path = config(tmp_path)
+    _write_private(
+        settings.private / "tui.json",
+        settings.private,
+        {"schema": 1, "host": "test", "prometheus_origin": "http://127.0.0.1:9000"},
+    )
+
+    def duplicate(_, _expression, *, start, **_options):
+        row = {"metric": {"host": "test", "stat": "players"}, "values": [[start, "3"]]}
+        return [row, row]
+
+    monkeypatch.setattr(report, "query", duplicate)
+    result = report.run(path, "dj2", "24h")
+    assert not result["ok"] and result["state"] == "unavailable"
+    assert result["error"] == "history_unavailable"
+    assert result["coverage"] is None
