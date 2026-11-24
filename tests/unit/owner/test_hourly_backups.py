@@ -100,6 +100,39 @@ def test_changing_live_world_cannot_publish_or_replace_a_existing_copy(
     assert not (folder / "incoming.zip").exists()
 
 
+def test_transient_world_changes_wait_for_a_stable_verified_archive(
+    tmp_path, monkeypatch
+):
+    world, folder = tmp_path / "test-world", tmp_path / "backups"
+    world.mkdir()
+    folder.mkdir()
+    level = world / "level.dat"
+    level.write_bytes(b"initial")
+    monkeypatch.setattr(hourly, "POLICY", replace(hourly.POLICY, reserve_bytes=1))
+    delays = []
+    monkeypatch.setattr(hourly.time, "sleep", delays.append)
+    stages = []
+
+    def stage(value):
+        stages.append(value)
+        if value == "verifying" and stages.count("verifying") <= 2:
+            level.write_bytes(f"server save {stages.count('verifying')}".encode())
+
+    def send(text):
+        assert text == "save-all flush"
+        return "Saving...Flushing completedSaved the world"
+
+    result = hourly._capture(send, world, folder, stage, lambda: None)
+    assert delays == [5, 15]
+    assert stages.count("retrying") == 2
+    assert stages.count("saving") == 3
+    assert stages.count("publishing") == 1
+    archived = folder / "store" / result["id"] / "archive.zip"
+    with zipfile.ZipFile(archived) as archive:
+        assert archive.read("test-world/level.dat") == b"server save 2"
+    assert not (folder / "incoming.zip").exists()
+
+
 @pytest.mark.parametrize("release_after_wait", (True, False))
 def test_scheduled_backup_waits_for_owner_operation(monkeypatch, release_after_wait):
     events = []

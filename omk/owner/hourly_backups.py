@@ -38,6 +38,7 @@ POLICY = BackupPolicy(48 * GIB, RETENTION, 17 * GIB, 16 * GIB)
 WORLD_MAX = 16 * GIB
 OWNER_LOCK_WAIT = 10 * 60
 OWNER_LOCK_POLL = 5
+WORLD_RETRY_DELAYS = (5, 15, 30)
 SNAPSHOT = r"snapshot-[a-f0-9]{32}"
 SHA256 = r"[a-f0-9]{64}"
 STAGES = {
@@ -48,6 +49,7 @@ STAGES = {
     "saving": "Сохраняем мир в Minecraft",
     "copying": "Копируем файлы мира",
     "verifying": "Проверяем содержимое архива",
+    "retrying": "Файлы мира изменились, ждём перед новой попыткой",
     "publishing": "Сохраняем проверенный архив",
     "complete": "Копия на VPS готова",
     "failed": "Сбой при резервном копировании",
@@ -145,7 +147,7 @@ def _notify(send, state):
 
 
 def _capture(send, world, folder, stage, verify_source):
-    for attempt in (1, 2):
+    for delay in (*WORLD_RETRY_DELAYS, None):
         stage("saving")
         flushed = send("save-all flush")
         if "Flushing completed" not in flushed or "Saved the world" not in flushed:
@@ -153,8 +155,10 @@ def _capture(send, world, folder, stage, verify_source):
         try:
             return _package(world, folder, stage, verify_source)
         except WorldChanged:
-            if attempt == 2:
+            if delay is None:
                 raise
+            stage("retrying")
+            time.sleep(delay)
             verify_source()
 
 

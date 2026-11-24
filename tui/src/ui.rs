@@ -1,4 +1,5 @@
 use crate::protocol::{InvitationEntry, Overview, TPS_WINDOWS, TpsHistory, TpsWindow};
+use crate::save_world;
 use ratatui::{
     Frame,
     layout::{Constraint, Direction, Layout, Rect},
@@ -19,7 +20,6 @@ const STATS_ERROR_DURATION: Duration = Duration::from_secs(5);
 const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранить мир\n4  Ограничения игроков\n5  Резервные копии\n\nk  Кик   b  Бан   m  Выдать мут\ns  Статистика игрока\nl  Активные приглашения\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
 
 pub enum Confirmation {
-    Save(String),
     Invitation { approved: bool },
     Exit { approved: bool },
 }
@@ -54,6 +54,7 @@ pub struct App {
     pub refreshed: Option<Instant>,
     pub demo: bool,
     pub confirm: Option<Confirmation>,
+    pub save_world: Option<save_world::Form>,
     pub moderation: Option<crate::moderation::Form>,
     pub invitation_form: Option<crate::invitations::Form>,
     pub restrictions: Option<crate::restrictions::Panel>,
@@ -83,6 +84,7 @@ impl App {
             refreshed: None,
             demo,
             confirm: None,
+            save_world: None,
             moderation: None,
             invitation_form: None,
             restrictions: None,
@@ -189,6 +191,19 @@ impl App {
         self.clear_stats_error();
     }
 
+    pub fn open_save_world(&mut self) {
+        let servers = self
+            .overview
+            .as_ref()
+            .map_or(&[][..], |overview| overview.server_ids.as_slice());
+        if servers.is_empty() {
+            self.failed = true;
+            self.show_detail("Список серверов недоступен.".into());
+        } else {
+            self.save_world = Some(save_world::Form::new(servers));
+        }
+    }
+
     pub fn command_page(&self) -> &CommandPage {
         self.detail
             .as_ref()
@@ -223,6 +238,7 @@ impl App {
             return true;
         }
         self.confirm.take().is_some()
+            || self.save_world.take().is_some()
             || self.range_picker.take().is_some()
             || self
                 .restrictions_panel()
@@ -244,6 +260,7 @@ impl App {
             && self.restrictions.is_none()
             && self.detail.is_none()
             && self.confirm.is_none()
+            && self.save_world.is_none()
             && self.range_picker.is_none()
             && self.moderation.is_none()
             && self.invitation_form.is_none()
@@ -497,20 +514,14 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     if let Some(form) = &app.world_reset {
         form.draw(frame);
     }
+    if let Some(form) = &mut app.save_world {
+        form.draw(frame);
+    }
     if let Some(confirmation) = &app.confirm {
         let w = area.width.min(72);
         let popup = Rect::new((area.width - w) / 2, area.height / 2 - 4, w, 8);
         frame.render_widget(Clear, popup);
         let (title, text) = match confirmation {
-            Confirmation::Save(input) => {
-                let server = app.server().unwrap_or("?");
-                (
-                    " Сохранение мира ",
-                    format!(
-                        "Команда: save-all flush\nСервер: {server}\nДля отправки введите SAVE {server} и нажмите Enter.\nEsc — отмена. Повторной отправки автоматически нет.\n\n> {input}"
-                    ),
-                )
-            }
             Confirmation::Invitation { approved } => (
                 " Приглашение в проект ",
                 format!(
