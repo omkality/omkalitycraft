@@ -18,7 +18,7 @@ def bundle_entrypoint(platform: str) -> str:
 
 
 def default_data_dir() -> Path:
-    """Keep new Mac app data writable, while recognizing an adjacent portable install."""
+    """Keep portable data beside the executable or its macOS app bundle."""
     if not getattr(sys, "frozen", False):
         return PROJECT_ROOT / "userdata"
     binary = Path(sys.executable).resolve()
@@ -31,8 +31,5 @@ def default_data_dir() -> Path:
             and contents.name == "Contents"
             and app.suffix == ".app"
         ):
-            # Existing installs can reuse their downloads by placing the app beside them.
-            if any((app.parent / name).is_dir() for name in ("userdata", "instances")):
-                return app.parent / "userdata"
-            return Path.home() / "Library/Application Support/OmkalityCraft/userdata"
+            return app.parent / "userdata"
     return binary.parent / "userdata"

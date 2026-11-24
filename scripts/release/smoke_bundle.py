@@ -82,8 +82,9 @@ def smoke_finder(archive: Path, version: str) -> None:
         app = root / MACOS_APP
         binary = root / bundle_entrypoint(current_platform())
         log = root / "userdata/logs/launcher.jsonl"
-        log.parent.mkdir(parents=True)
         subprocess.run(["/usr/bin/ditto", "-x", "-k", archive, root], check=True)
+        if (root / "userdata").exists():
+            raise RuntimeError("The Mac ZIP must be tested as a clean portable install")
         subprocess.run(
             ["/usr/bin/codesign", "--verify", "--deep", "--strict", app], check=True
         )

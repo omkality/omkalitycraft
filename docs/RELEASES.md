@@ -50,11 +50,10 @@ uv run --no-sync python scripts/smoke_bundle.py --archive <archive.zip>
 
 Архивы с `OmkalityCraft.app` проверяйте на macOS через
 `uv run --no-sync python scripts/smoke_bundle.py --finder-archive <archive.zip>`.
-Проверка распаковывает ZIP, запускает приложение через Launch Services и ждёт
-первого рисования окна в Cocoa. В новых установках данные находятся в
-`~/Library/Application Support/OmkalityCraft`. Для использования ранее
-загруженной игры положите `OmkalityCraft.app` рядом с исходными папками
-`userdata/` и `instances/`.
+Проверка распаковывает ZIP в пустую папку, открывает приложение через Launch
+Services и ждёт записи о первом рисовании окна в локальном журнале.
+Приложение создаёт `userdata/`, `instances/` и папку загрузок рядом с
+`OmkalityCraft.app`. Распаковывайте ZIP в папку, доступную для записи.
 
 ## Публикация обновления лаунчера
 
