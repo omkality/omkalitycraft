@@ -18,6 +18,7 @@ from omk.labs.recovery.recovery_console import ConsoleConfig
 from omk.observability.diagnostic_export import export_bundle
 from omk.observability.diagnostics import BoundedLog, regular
 from omk.observability.report_store import ReportStore
+from omk.owner.client_report_relay import ReportRelay
 from omk.owner.owner_access import require_private
 from omk.shared.fs import resolved
 
@@ -317,19 +318,34 @@ def server_diagnostics(config: OperatorConfig, server_id: str):
 
 def client_reports(config, args):
     store = ReportStore(config.reports_root)
-    if args.reports_action == "list":
+    action = args.reports_action
+    relay_dir = getattr(args, "windows_relay_dir", None)
+    relay = ReportRelay(relay_dir) if relay_dir is not None else None
+    directory = relay.directory if relay else config.private / "report-exports"
+    if action == "browse":
+        rows = [
+            {key: row[key] for key in ("id", "name", "received_at", "kind", "pack")}
+            for row in store.list()
+        ]
+        return {"ok": True, "directory": str(directory), "reports": rows}
+    if action == "list":
         player = UUID(args.player).hex if args.player else None
         values = store.list(player=player)
         path = config.private / "client-report-inventory.json"
         _write_private(path, config.private, {"reports": values})
         return {"ok": True, "inventory_file": str(path), "count": len(values)}
-    if args.reports_action == "prune":
+    if action == "prune":
         store.prune()
         return {"ok": True, "expired_reports_pruned": True}
-    if re.fullmatch(r"[a-f0-9]{32}", args.report_id) is None:
+    report_id = args.report_id
+    if re.fullmatch(r"[a-f0-9]{32}", report_id) is None:
         raise AdminError("Invalid report identifier")
-    path = config.private / "report-exports" / (args.report_id + ".json")
-    _write_private(path, config.private, store.get(args.report_id))
+    report = store.get(report_id)
+    if relay:
+        path = relay.publish(report_id, report)
+    else:
+        path = directory / (report_id + ".json")
+        _write_private(path, config.private, report)
     return {"ok": True, "report_file": str(path)}
 
 
@@ -337,6 +353,25 @@ def _console_server(value):
     if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,47}", value):
         raise ValueError("Invalid server identifier")
     return value
+
+
+def _add_report_commands(actions):
+    reports = actions.add_parser(
+        "reports", help="Read the private local client incident inbox"
+    )
+    report_actions = reports.add_subparsers(dest="reports_action", required=True)
+    listing = report_actions.add_parser("list")
+    listing.add_argument("--player", help="Optional Minecraft UUID")
+    browsing = report_actions.add_parser(
+        "browse", help="Read the latest 20 report summaries"
+    )
+    exporting = report_actions.add_parser("export")
+    exporting.add_argument("--id", dest="report_id", required=True)
+    for action in (browsing, exporting):
+        action.add_argument(
+            "--windows-relay-dir", type=Path, help="Private Windows SSH relay"
+        )
+    report_actions.add_parser("prune")
 
 
 def _add_monitoring_parsers(actions):
@@ -477,15 +512,7 @@ def add_admin_commands(sub):
     )
     playtime.add_argument("server")
     playtime.add_argument("player", help="Minecraft account UUID, not a nickname")
-    reports = actions.add_parser(
-        "reports", help="Read the private local client incident inbox"
-    )
-    report_actions = reports.add_subparsers(dest="reports_action", required=True)
-    listing = report_actions.add_parser("list")
-    listing.add_argument("--player", help="Optional Minecraft UUID")
-    exporting = report_actions.add_parser("export")
-    exporting.add_argument("--id", dest="report_id", required=True)
-    report_actions.add_parser("prune")
+    _add_report_commands(actions)
     access = actions.add_parser(
         "access", help="Registration invitations, not Minecraft OP"
     )
