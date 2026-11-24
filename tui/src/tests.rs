@@ -528,6 +528,7 @@ fn real_python_cli_reads_an_isolated_config_without_writes() {
             .unwrap()
             .to_owned(),
         config,
+        windows_report_dir: None,
     };
     match b
         .request(

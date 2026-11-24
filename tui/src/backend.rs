@@ -1,3 +1,4 @@
+use crate::client_reports;
 use crate::protocol::{
     ConsoleResult, InvitationEntry, InvitationResult, Overview, PlayerStatsResult, TpsHistory,
     TpsWindow, valid_server,
@@ -24,6 +25,7 @@ pub struct Backend {
     pub python: OsString,
     pub repo: PathBuf,
     pub config: PathBuf,
+    pub windows_report_dir: Option<PathBuf>,
 }
 
 #[derive(Clone, Debug)]
@@ -35,6 +37,8 @@ pub enum Request {
     Moderation(crate::moderation::Action, Option<String>),
     Invite,
     WorldReset(crate::world_reset::Request),
+    ClientReports,
+    ExportClientReport(String),
 }
 pub enum Reply {
     Overview(Overview, Option<Result<TpsHistory, String>>),
@@ -44,6 +48,8 @@ pub enum Reply {
     Restrictions(restrictions::Snapshot),
     Invitation(InvitationResult),
     WorldReset(crate::world_reset::Receipt),
+    ClientReports(client_reports::Listing),
+    ClientReportExport(client_reports::Export),
 }
 
 pub enum ModerationRefresh {
@@ -306,6 +312,20 @@ impl Backend {
             Request::Restrictions => {
                 command.arg("project-restrictions");
             }
+            Request::ClientReports | Request::ExportClientReport(_) => {
+                command.arg("reports");
+                if let Request::ExportClientReport(id) = &request {
+                    if !client_reports::valid_id(id) {
+                        return Err("Неверный номер краш-отчёта".into());
+                    }
+                    command.args(["export", "--id", id]);
+                } else {
+                    command.arg("browse");
+                }
+                if let Some(directory) = &self.windows_report_dir {
+                    command.arg("--windows-relay-dir").arg(directory);
+                }
+            }
             Request::WorldReset(action) => {
                 if !action.valid() {
                     return Err("Неверный запрос вайпа".into());
@@ -417,6 +437,17 @@ impl Backend {
             capture_limit(command, &cancel, timeout, MAX_OUTPUT, report)?
         };
         let (reply, ok) = match request {
+            Request::ClientReports => {
+                let value = client_reports::Listing::parse(&bytes)?;
+                let ok = value.ok;
+                (Reply::ClientReports(value), ok)
+            }
+            Request::ExportClientReport(id) => {
+                let value =
+                    client_reports::Export::parse(&bytes, &id, self.windows_report_dir.is_some())?;
+                let ok = value.ok;
+                (Reply::ClientReportExport(value), ok)
+            }
             Request::Invite => {
                 let value = InvitationResult::parse(&bytes)?;
                 let ok = value.ok;
