@@ -33,6 +33,15 @@ DJ2_MACOS_OPTIONS = {
     "key_key.plustic_mots.desc": "13:CONTROL",
 }
 
+# Bindings from the previously shipped DJ2 DefaultOptions profile.
+_DJ2_MACOS_LEGACY_SHORTCUTS = {
+    "key_roots.keybinds.spell_library": "24:SHIFT",
+    "key_key.open_wireless_terminal.desc": "20:SHIFT",
+    "key_key.open_wireless_crafting_terminal.desc": "18:SHIFT",
+    "key_key.open_wireless_pattern_terminal.desc": "19:SHIFT",
+    "key_key.open_wireless_fluid_terminal.desc": "33:SHIFT",
+}
+
 
 def _replace(folder: Path, filename: str, data: bytes) -> None:
     path = local_file(folder, filename)
@@ -47,6 +56,38 @@ def _replace(folder: Path, filename: str, data: bytes) -> None:
         if not backup.exists():
             atomic_write(backup, old)
     atomic_write(path, data)
+
+
+def _previous_keys(record: Path) -> set[str]:
+    if not record.exists():
+        return set()
+    if record.stat().st_size > 32768:
+        raise ValueError("Initial keybinding record too large")
+    saved = json.loads(record.read_text(encoding="utf-8"))
+    values = saved.get("bindings")
+    if (
+        saved.get("schema") != 1
+        or not isinstance(values, list)
+        or len(values) > 64
+        or any(not isinstance(v, str) or not 1 <= len(v) <= 160 for v in values)
+    ):
+        raise ValueError("Invalid initial keybinding record")
+    return set(values)
+
+
+def _macos_shortcut_changes(
+    folder: Path, options: dict[str, str]
+) -> tuple[dict[str, str], Path | None]:
+    record = local_file(folder, ".omk-dj2-macos-shortcuts-v1")
+    if record.exists():
+        return {}, None
+    occupied = {value for key, value in options.items() if key.startswith("key_")}
+    changes = {}
+    for key, legacy in _DJ2_MACOS_LEGACY_SHORTCUTS.items():
+        replacement = DJ2_MACOS_OPTIONS[key]
+        if options.get(key) == legacy and replacement not in occupied:
+            changes[key] = replacement
+    return changes, record
 
 
 def _options(
@@ -78,19 +119,8 @@ def _options(
     )
     key_record = local_file(folder, ".omk-initial-keybindings.json")
     previous_keys = set()
-    if defaults.initial_keybindings and path.exists() and key_record.exists():
-        if key_record.stat().st_size > 32768:
-            raise ValueError("Initial keybinding record too large")
-        record = json.loads(key_record.read_text(encoding="utf-8"))
-        values = record.get("bindings")
-        if (
-            record.get("schema") != 1
-            or not isinstance(values, list)
-            or len(values) > 64
-            or any(not isinstance(v, str) or not 1 <= len(v) <= 160 for v in values)
-        ):
-            raise ValueError("Invalid initial keybinding record")
-        previous_keys = set(values)
+    if defaults.initial_keybindings and path.exists():
+        previous_keys = _previous_keys(key_record)
     for binding, code in defaults.initial_keybindings:
         key = "key_" + binding
         if binding not in previous_keys and key not in options:
@@ -98,6 +128,10 @@ def _options(
     changed.update(
         (key, value) for key, value in platform_options.items() if key not in options
     )
+    migration_record = None
+    if platform_options:
+        shortcut_changes, migration_record = _macos_shortcut_changes(folder, options)
+        changed.update(shortcut_changes)
     if any(options.get(key) != value for key, value in changed.items()):
         output = [line for line in lines if line.split(":", 1)[0] not in changed]
         output.extend(f"{key}:{value}" for key, value in changed.items())
@@ -109,6 +143,8 @@ def _options(
         ).encode()
         if not key_record.exists() or key_record.read_bytes() != data:
             atomic_write(key_record, data)
+    if migration_record is not None:
+        atomic_write(migration_record, b"1\n")
 
 
 def _remember_platform_keys(folder: Path, options: dict[str, str]) -> None:

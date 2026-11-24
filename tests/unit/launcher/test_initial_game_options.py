@@ -102,7 +102,7 @@ def test_mac_personal_graphics_and_keys_survive_repair(tmp_path):
     release = replace(release, pack_id="dj2", platform="macos-arm64")
     personal = (
         "renderDistance:12\nparticles:0\nmaxFps:140\nenableVsync:false\n"
-        "key_key.inventory:23:NONE\nkey_key.open_wireless_terminal.desc:20:SHIFT\n"
+        "key_key.inventory:23:NONE\nkey_key.open_wireless_terminal.desc:25:SHIFT\n"
     )
     path = folder / "options.txt"
     path.write_text(personal, encoding="utf-8")
@@ -116,6 +116,34 @@ def test_mac_personal_graphics_and_keys_survive_repair(tmp_path):
     seen = known.read_bytes().splitlines()
     assert seen[:2] == [b"key.journeymap", b"key.inventory"]
     assert len(seen) == len(set(seen))
+
+
+def test_previous_mac_install_migrates_shipped_shortcuts_once(tmp_path):
+    folder, release = setup(tmp_path)
+    release = replace(release, pack_id="dj2", platform="macos-arm64")
+    path = folder / "options.txt"
+    original = (
+        "key_key.inventory:18:NONE\nkey_key.chat:20:NONE\n"
+        "key_key.open_wireless_crafting_terminal.desc:18:SHIFT\n"
+        "key_key.open_wireless_terminal.desc:20:SHIFT\n"
+        "key_key.open_wireless_pattern_terminal.desc:23:SHIFT\n"
+        "key_key.open_wireless_fluid_terminal.desc:33:SHIFT\n"
+        "key_custom.action:38:CONTROL\n"
+    )
+    path.write_text(original, encoding="utf-8")
+    prepare_client_defaults(release, folder)
+    migrated = path.read_text(encoding="utf-8")
+    assert "key_key.inventory:18:NONE\n" in migrated
+    assert "key_key.chat:20:NONE\n" in migrated
+    assert "key_key.open_wireless_crafting_terminal.desc:18:CONTROL\n" in migrated
+    assert "key_key.open_wireless_terminal.desc:34:CONTROL\n" in migrated
+    assert "key_key.open_wireless_pattern_terminal.desc:23:SHIFT\n" in migrated
+    assert "key_key.open_wireless_fluid_terminal.desc:33:SHIFT\n" in migrated
+    assert "key_custom.action:38:CONTROL\n" in migrated
+    restored = migrated.replace("18:CONTROL", "18:SHIFT")
+    path.write_text(restored, encoding="utf-8")
+    prepare_client_defaults(release, folder)
+    assert path.read_text(encoding="utf-8") == restored
 
 
 @pytest.mark.parametrize(
