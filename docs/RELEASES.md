@@ -52,8 +52,9 @@ uv run --no-sync python scripts/smoke_bundle.py --archive <archive.zip>
 `uv run --no-sync python scripts/smoke_bundle.py --finder-archive <archive.zip>`.
 Проверка распаковывает ZIP в пустую папку, открывает приложение через Launch
 Services и ждёт записи о первом рисовании окна в локальном журнале.
-Приложение создаёт `userdata/`, `instances/` и папку загрузок рядом с
-`OmkalityCraft.app`. Распаковывайте ZIP в папку, доступную для записи.
+Приложение хранит `userdata/`, `instances/`, обновления и загрузки рядом с
+`OmkalityCraft.app`. Встроенные библиотеки распаковываются в `userdata/tmp`.
+Распаковывайте ZIP в папку, доступную для записи.
 
 ## Публикация обновления лаунчера
 

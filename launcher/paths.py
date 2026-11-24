@@ -6,6 +6,7 @@ from pathlib import Path
 from omk.shared.profiles import PROJECT_ROOT
 
 MACOS_APP = "OmkalityCraft.app"
+MACOS_RUNTIME = "OmkalityCraftRuntime"
 
 
 def bundle_entrypoint(platform: str) -> str:

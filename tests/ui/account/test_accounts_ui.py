@@ -345,16 +345,17 @@ def test_missing_or_malformed_texture_does_not_block_login(
 
 
 def test_bootstrap_lock_protects_gap_during_handoff(tmp_path: Path, qtbot: QtBot):
-    shared = tmp_path / "shared"
-    bootstrap = _bootstrap_lock(tmp_path, False, shared)
-    session = LauncherLocks.acquire(shared, tmp_path / "userdata")
-    assert LauncherLocks.acquire(shared, tmp_path / "different-copy/userdata") is None
+    bootstrap = _bootstrap_lock(tmp_path, False)
+    session = LauncherLocks.acquire(tmp_path / "userdata")
+    assert session is not None
+    assert LauncherLocks.acquire(tmp_path / "different-copy/userdata") is None
+    assert not (tmp_path / "different-copy").exists()
     session.unlock()
     try:
         with pytest.raises(OSError):
-            _bootstrap_lock(tmp_path / "different-copy", False, shared)
-        assert _bootstrap_lock(tmp_path, True, shared) is None
-        child = LauncherLocks.acquire(shared, tmp_path / "userdata")
+            _bootstrap_lock(tmp_path / "different-copy", False)
+        assert _bootstrap_lock(tmp_path, True) is None
+        child = LauncherLocks.acquire(tmp_path / "userdata")
         assert child is not None
         child.unlock()
     finally:

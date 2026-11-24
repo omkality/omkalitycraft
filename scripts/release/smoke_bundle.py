@@ -16,7 +16,7 @@ from unittest.mock import patch
 import psutil
 
 from launcher.install import current_platform
-from launcher.paths import MACOS_APP, bundle_entrypoint
+from launcher.paths import MACOS_APP, MACOS_RUNTIME, bundle_entrypoint
 from launcher.releases import sha256_file
 from launcher.updater import LauncherUpdater, PreparedUpdate
 from launcher.version import VERSION
@@ -101,8 +101,12 @@ def smoke_finder(archive: Path, version: str) -> None:
                                 and record["version"] == version
                                 and record["qt"] == "cocoa"
                             ):
+                                if not list((root / "userdata/tmp").glob("_MEI*")):
+                                    raise RuntimeError(
+                                        "macOS runtime extracted outside the portable root"
+                                    )
                                 print(
-                                    "Launch Services opened the app and Cocoa painted the launcher"
+                                    "Launch Services opened the app, with runtime and logs in the portable root"
                                 )
                                 return
                 time.sleep(0.1)
@@ -111,10 +115,11 @@ def smoke_finder(archive: Path, version: str) -> None:
             )
         finally:
             # The one-file bootloader may use two processes. Only stop this copy.
+            executables = {str(binary), str(binary.with_name(MACOS_RUNTIME))}
             children = [
                 process
                 for process in psutil.process_iter(["exe"])
-                if process.info["exe"] == str(binary)
+                if process.info["exe"] in executables
             ]
             for process in children:
                 with contextlib.suppress(psutil.NoSuchProcess):

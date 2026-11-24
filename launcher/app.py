@@ -1,13 +1,18 @@
 """Portable desktop launcher with account and installation workflows."""
 
+import errno
+import getpass
 import json
+import os
+import socket
 import sys
 from collections.abc import Callable
 from dataclasses import replace
+from hashlib import blake2s
 from pathlib import Path
 from typing import Any, Self, override
 
-from PySide6.QtCore import QLockFile, QStandardPaths, Qt, QThreadPool, QTimer, Signal
+from PySide6.QtCore import QLockFile, Qt, QThreadPool, QTimer, Signal
 from PySide6.QtGui import QCloseEvent, QPaintEvent
 from PySide6.QtWidgets import (
     QApplication,
@@ -753,45 +758,51 @@ def instance_lock(data_dir: Path, name: str = "launcher.lock") -> QLockFile | No
     return lock if lock.tryLock(0) else None
 
 
-def user_lock_dir() -> Path:
-    """Locate the same lock directory for all portable copies of the launcher."""
-    directory = QStandardPaths.writableLocation(
-        QStandardPaths.StandardLocation.GenericDataLocation
-    )
-    if not directory:
-        raise OSError("Launcher user directory unavailable")
-    return Path(directory) / "OmkalityCraft" / "launcher-locks"
+def _user_lock(name: str) -> socket.socket | None:
+    # Reserve a loopback address without listening, so the OS releases it on exit.
+    user = str(os.getuid()) if hasattr(os, "getuid") else getpass.getuser().casefold()
+    digest = blake2s(f"OmkalityCraft/{user}".encode(), digest_size=2).digest()
+    port = 20_000 + 2 * (int.from_bytes(digest) % 6000) + (name == "bootstrap.lock")
+    lease = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        if sys.platform == "win32":
+            lease.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        lease.bind(("127.0.0.1", port))
+    except OSError as error:
+        lease.close()
+        if error.errno in {errno.EADDRINUSE, 10048, 10013}:
+            return None
+        raise
+    return lease
 
 
 class LauncherLocks:
-    """Hold both the current user's lock and the legacy per-installation lock."""
+    """Reserve one launcher per user and hold the compatible lock in the install."""
 
-    def __init__(self, locks: list[QLockFile]):
-        self.locks = locks
+    def __init__(self, lease: socket.socket, local: QLockFile) -> None:
+        self.lease = lease
+        self.local = local
 
     @classmethod
-    def acquire(
-        cls, shared: Path, local: Path, name: str = "launcher.lock"
-    ) -> Self | None:
-        locks = []
+    def acquire(cls, local: Path, name: str = "launcher.lock") -> Self | None:
+        """Lock the portable installation and reserve its per-user slot."""
+        lease = _user_lock(name)
+        if lease is None:
+            return None
         try:
-            for directory in dict.fromkeys((shared, local)):
-                lock = instance_lock(directory, name)
-                if lock is None:
-                    for held in locks:
-                        held.unlock()
-                    return None
-                locks.append(lock)
+            lock = instance_lock(local, name)
         except OSError:
-            for held in locks:
-                held.unlock()
+            lease.close()
             raise
-        return cls(locks)
+        if lock is None:
+            lease.close()
+            return None
+        return cls(lease, lock)
 
     def unlock(self) -> None:
         """Release the lock pair before an authenticated launcher handoff."""
-        for lock in reversed(self.locks):
-            lock.unlock()
+        self.local.unlock()
+        self.lease.close()
 
 
 def run_launcher(
@@ -803,7 +814,7 @@ def run_launcher(
 ) -> int:
     app = QApplication.instance() or QApplication(sys.argv[:1])
     try:
-        lock = LauncherLocks.acquire(user_lock_dir(), data_dir)
+        lock = LauncherLocks.acquire(data_dir)
         if lock is None:
             QMessageBox.information(None, "OmkalityCraft", "Лаунчер уже открыт.")
             return 2

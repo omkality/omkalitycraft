@@ -16,7 +16,7 @@ from PIL import Image
 from tuf.api.metadata import Metadata, Root
 
 from launcher.install import current_platform
-from launcher.paths import MACOS_APP, bundle_entrypoint
+from launcher.paths import MACOS_APP, MACOS_RUNTIME, bundle_entrypoint
 from launcher.releases import generation_floors
 from launcher.version import VERSION
 from omk.accounts.drasl import DraslClient
@@ -40,6 +40,30 @@ def packaging_icon(source: Path, stage: Path) -> Path:
         target = stage / "app-icon.png"
         canvas.save(target)
     return target
+
+
+def _stage_macos_app(dist: Path, bundle: Path, platform: str) -> None:
+    bundle.mkdir(parents=True)
+    app = bundle / MACOS_APP
+    shutil.move(dist / MACOS_APP, app)
+    executable = bundle / bundle_entrypoint(platform)
+    executable.rename(executable.with_name(MACOS_RUNTIME))
+    subprocess.run(
+        [
+            "/usr/bin/clang",
+            "-Os",
+            "-fobjc-arc",
+            "-framework",
+            "AppKit",
+            str(Path(__file__).with_name("macos_bootstrap.m")),
+            "-o",
+            str(executable),
+        ],
+        check=True,
+    )
+    subprocess.run(
+        ["/usr/bin/codesign", "--force", "--sign", "-", str(app)], check=True
+    )
 
 
 def _write_zip(archive: Path, bundle: Path, *, macos: bool) -> None:
@@ -191,7 +215,12 @@ def build(
             "OmkalityCraft",
             *(["--icon", str(icon)] if sys.platform in {"win32", "darwin"} else []),
             *(
-                ["--osx-bundle-identifier", "io.github.omkality.omkalitycraft"]
+                [
+                    "--osx-bundle-identifier",
+                    "io.github.omkality.omkalitycraft",
+                    "--runtime-tmpdir",
+                    "userdata/tmp",
+                ]
                 if macos
                 else []
             ),
@@ -215,8 +244,7 @@ def build(
     )
     platform = current_platform()
     if macos:
-        bundle.mkdir(parents=True)
-        shutil.move(dist / MACOS_APP, bundle / MACOS_APP)
+        _stage_macos_app(dist, bundle, platform)
     if not (bundle / bundle_entrypoint(platform)).is_file():
         raise ValueError("Built launcher entrypoint is missing")
     entries = analysis_entries(stage / "work/OmkalityCraft/Analysis-00.toc")
