@@ -15,8 +15,8 @@ from omk.worlds import (
     enderutilities_reset as ender,
     forge112_regions as anvil,
 )
+from omk.worlds.reset import resource_reset_inventory as audit
 from omk.worlds.reset.dimension_reset import omitted
-from omk.worlds.reset.resource_reset_inventory import _read
 from omk.worlds.reset.resource_reset_landing import world_path
 
 
@@ -64,6 +64,7 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
     findings, opaque = [], []
     chunks_read, nodes, nonportal = 0, 0, 0
     eligible, reviewed = set(), 0
+    spawn_receiver = None
 
     def add(file, path, kind):
         nonlocal reviewed
@@ -72,6 +73,9 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
         finding = {"file": file, "nbt_path": path, "kind": kind}
         if kind == "enderutilities.target" and path in eligible:
             finding["staging_adapter"] = ender.ADAPTER
+            reviewed += 1
+        elif kind == "rftools.spawn-receiver":
+            finding["staging_adapter"] = audit.RFTOOLS_SPAWN_ADAPTER
             reviewed += 1
         findings.append(finding)
 
@@ -107,15 +111,25 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
             opaque.append(relative)
 
     # Receiver numbers are references too. A porter need not contain a dimension.
-    registry_name = prefix + "data/TPDestinations.dat"
+    registry_name = prefix + audit.RFTOOLS_DESTINATIONS
     if registry_name in files:
-        raw = nbt(_read(server / registry_name, world))
+        raw = nbt(audit._read(server / registry_name, world))
         data = anvil.value(raw, "data", 10)
         last_id = anvil.value(data, "lastId", 3)
         if last_id < 0:
             raise ValueError("Invalid RFTools destination counter")
         seen = set()
-        for row in anvil.compounds(data, "destinations"):
+        rows = anvil.compounds(data, "destinations")
+        if reset and "rftools_identity" in reset:
+            _label, _root, definitions = audit._rftools_registry(server, world_name)
+            definition = definitions.get(dimension)
+            if (
+                definition is None
+                or audit.rftools_identity(definition) != reset["rftools_identity"]
+            ):
+                raise ValueError("The selected RFTools dimension changed")
+            spawn_receiver = audit.rftools_spawn_destination(definition, rows)
+        for row in rows:
             target = anvil.value(row, "dim", 3)
             if "id" in row:
                 number = anvil.value(row, "id", 3)
@@ -169,6 +183,12 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                         if context.startswith("enderutilities:") and "/Target/" in here
                         else "dimension-tag"
                     )
+                    if (
+                        spawn_receiver is not None
+                        and file == audit.RFTOOLS_DESTINATIONS
+                        and here == f"/data/destinations/{spawn_receiver}/dim"
+                    ):
+                        kind = "rftools.spawn-receiver"
                     add(file, here, kind)
                 if (
                     context.startswith("rftools:")
@@ -218,7 +238,7 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                     walk(chunk[key], relative, f"chunk/{index}/{key}")
         else:
             try:
-                root = nbt(_read(server / name, world))
+                root = nbt(audit._read(server / name, world))
             except ValueError, UnicodeError, KeyError:
                 opaque.append(relative)
                 continue
@@ -250,6 +270,7 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
         ).hexdigest(),
         "examples": findings[:32],
         "rftools_resource_receiver_ids": len(receiver_ids),
+        **({"rftools_spawn_receiver": True} if spawn_receiver is not None else {}),
         "chunks_read": chunks_read,
         "records_read": len(records),
         "opaque_record_count": len(opaque),

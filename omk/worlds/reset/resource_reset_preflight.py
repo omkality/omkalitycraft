@@ -13,8 +13,12 @@ from omk.backups.stopped_world_backup import inventory
 from omk.shared.fs import regular
 from omk.shared.profiles import PROJECT_ROOT
 from omk.worlds import enderutilities_reset as ender
-from omk.worlds.reset.dimension_reset import layout
-from omk.worlds.reset.resource_reset_inventory import validate_dimension
+from omk.worlds.reset.dimension_reset import validate_layout
+from omk.worlds.reset.resource_reset_inventory import (
+    RFTOOLS_DIMENSIONS,
+    RFTOOLS_SPAWN_ADAPTER,
+    validate_dimension,
+)
 from omk.worlds.reset.resource_reset_landing import (
     NoReviewedLanding,
     select_landing,
@@ -87,8 +91,8 @@ def preflight(
         raise ValueError("Invalid preflight world byte budget")
     if reset is None:
         validate_dimension(dimension)
-    elif reset != layout(dimension):
-        raise ValueError("Unreviewed dimension reset layout")
+    else:
+        validate_layout(dimension, reset)
     world = world_path(server, world_name)
     policy = options_checked(
         settings(overworld=dimension == 0) if options is None else options
@@ -137,6 +141,7 @@ def preflight(
         or PROFILE.read_bytes() != raw
     ):
         raise ValueError("Preflight world/runtime changed during inspection")
+    spawn_receiver = int(links.get("rftools_spawn_receiver") is True)
     return {
         "schema": 1,
         "adapter": profile["adapter"],
@@ -149,16 +154,29 @@ def preflight(
         "policy": policy,
         "landing": landing,
         "links": links,
-        "adapters": (
-            {
-                ender.ADAPTER: {
-                    "artifact_sha256": ender.SHA256,
-                    "handled_references": links["handled_finding_count"],
+        "adapters": {
+            **(
+                {
+                    ender.ADAPTER: {
+                        "artifact_sha256": ender.SHA256,
+                        "handled_references": links["handled_finding_count"]
+                        - spawn_receiver,
+                    }
                 }
-            }
-            if ender_enabled
-            else {}
-        ),
+                if ender_enabled
+                else {}
+            ),
+            **(
+                {
+                    RFTOOLS_SPAWN_ADAPTER: {
+                        "artifact_sha256": RFTOOLS_DIMENSIONS[1],
+                        "handled_references": 1,
+                    }
+                }
+                if spawn_receiver
+                else {}
+            ),
+        },
         "can_stage_data": bool(
             landing["found"]
             and not links["unhandled_finding_count"]

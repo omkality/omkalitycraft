@@ -6,10 +6,16 @@ import re
 from uuid import uuid4
 
 from omk.backups.cold_backup_worker import digest
-from omk.owner import admin_backups as backups
+from omk.owner import (
+    admin_backups as backups,
+    admin_maintenance as maintenance,
+)
 from omk.owner.admin import AdminError
 from omk.shared.profiles import PROJECT_ROOT
-from omk.worlds.reset.resource_reset_inventory import validate_dimension
+from omk.worlds.reset.resource_reset_inventory import (
+    WORLD_CATALOG_LIMIT,
+    validate_dimension,
+)
 from omk.worlds.reset.resource_reset_preflight import (
     PROFILE as PREFLIGHT_PROFILE,
     options_checked,
@@ -59,10 +65,7 @@ def frozen_preflight_profile():
     return profile_raw, profile_id
 
 
-def worker(target, dimension, settings, *, preflight_options=None):
-    profile_raw, profile_id = (
-        frozen_preflight_profile() if preflight_options is not None else (None, None)
-    )
+def _inspection_worker(target, settings, request):
     operation = uuid4().hex
     name = "omk-resource-inspect-" + operation
     args = [
@@ -102,15 +105,6 @@ def worker(target, dimension, settings, *, preflight_options=None):
             "--mount",
             f"type=bind,source={PROJECT_ROOT / module},target=/src/{module},readonly",
         ]
-    request = {
-        "schema": 1,
-        "action": "inspect",
-        "world": target["world"],
-        "dimension": dimension,
-        "world_max_bytes": settings["world_max_bytes"],
-    }
-    if preflight_options is not None:
-        request.update(action="preflight", options=options_checked(preflight_options))
     try:
         raw = backups.docker(
             *args,
@@ -140,7 +134,26 @@ def worker(target, dimension, settings, *, preflight_options=None):
             + "); check runtime, ownership and data format"
         )
     value = result.get("result")
-    if not isinstance(value, dict) or any(
+    if not isinstance(value, dict):
+        raise AdminError("Invalid resource inspection worker response")
+    return value
+
+
+def worker(target, dimension, settings, *, preflight_options=None):
+    profile_raw, profile_id = (
+        frozen_preflight_profile() if preflight_options is not None else (None, None)
+    )
+    request = {
+        "schema": 1,
+        "action": "inspect",
+        "world": target["world"],
+        "dimension": dimension,
+        "world_max_bytes": settings["world_max_bytes"],
+    }
+    if preflight_options is not None:
+        request.update(action="preflight", options=options_checked(preflight_options))
+    value = _inspection_worker(target, settings, request)
+    if any(
         value.get(k) is not False
         for k in ("world_changes", "reset_plan", "can_apply", "backup_verified")
     ):
@@ -173,6 +186,62 @@ def worker(target, dimension, settings, *, preflight_options=None):
         ):
             raise AdminError("Invalid read-only preflight identity/result")
     return value
+
+
+def discover_saved_worlds(config, server):
+    """Read the name and ID of registered worlds through the owned read-only volume."""
+    target = backups.target_for(config, server)
+    backups.local_engine()
+    binding = maintenance.binding(config, server)
+    before = maintenance.snapshot(target, binding)
+    settings = {**backups.settings(), "timeout_seconds": 5}
+    result = _inspection_worker(
+        target, settings, {"schema": 1, "action": "catalog", "world": target["world"]}
+    )
+    if (
+        backups.target_for(config, server) != target
+        or maintenance.snapshot(target, binding) != before
+    ):
+        raise AdminError("World catalog source changed during inspection")
+    rows = result.get("rftools")
+    if (
+        set(result) != {"schema", "world", "rftools"}
+        or type(result["schema"]) is not int
+        or result["schema"] != 1
+        or result["world"] != target["world"]
+        or not isinstance(rows, list)
+        or len(rows) > WORLD_CATALOG_LIMIT
+    ):
+        raise AdminError("Invalid saved world catalog response")
+    worlds = {}
+    for row in rows:
+        if (
+            not isinstance(row, dict)
+            or not {"dimension", "name"}
+            <= row.keys()
+            <= {"dimension", "name", "rftools_identity"}
+            or type(row["dimension"]) is not int
+            or not -(2**31) <= row["dimension"] < 2**31
+            or row["dimension"] in worlds
+            or not isinstance(row["name"], str)
+            or not 1 <= len(row["name"]) <= 64
+            or row["name"].strip() != row["name"]
+            or not row["name"].isprintable()
+            or (
+                "rftools_identity" in row
+                and (
+                    not isinstance(row["rftools_identity"], str)
+                    or re.fullmatch(r"[a-f0-9]{64}", row["rftools_identity"]) is None
+                )
+            )
+        ):
+            raise AdminError("Invalid saved world catalog entry")
+        worlds[row["dimension"]] = {
+            **row,
+            "rftools_identity": row.get("rftools_identity"),
+            "description": "Измерение, созданное в RFTools Dimensions.",
+        }
+    return worlds
 
 
 def inspect(config, server, dimension, environment=None, *, preflight=False):

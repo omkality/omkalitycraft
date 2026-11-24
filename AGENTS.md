@@ -4,6 +4,8 @@ Read `docs/DEVELOPMENT.md` and `CHANGELOG.md` before changing the architecture.
 
 - Development is on `dev`; use focused commits and task branches with PRs into `dev`.
   `master` is for tested milestones. No force pushes or automatic production deployments.
+- After merging a task PR, delete its remote branch if its tip matches the merged PR head
+  and no other open PR uses it. Keep branches used for pending acceptance or release builds.
 - Track actionable bugs and open work in GitHub Issues; inspect existing issues to avoid duplicates.
   Use the relevant issue or milestone, priorities and concrete acceptance criteria.
   Keep the issue, milestone and affected documentation aligned as the owner adds or changes tasks.

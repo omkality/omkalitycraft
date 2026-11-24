@@ -3,7 +3,7 @@
 import json
 import subprocess
 import zipfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from unittest.mock import Mock
 
 import pytest
@@ -33,9 +33,10 @@ def child_factory(started, *, healthy=True, wrong_nonce=False):
         nonce = command[command.index("--health-nonce") + 1]
         assert cwd == root
         assert kwargs == {"shell": False}
-        assert executable.parent.parent == root / "app_versions"
+        version_folder = executable.parents[len(PurePosixPath(ENTRYPOINT).parts) - 1]
+        assert version_folder.parent == root / "app_versions"
         assert executable.read_bytes() == b"actual archived executable"
-        assert (executable.parent / "_internal/runtime.bin").read_bytes() == (
+        assert (version_folder / "_internal/runtime.bin").read_bytes() == (
             b"runtime dependency"
         )
         process = Mock()
@@ -88,7 +89,7 @@ def test_incomplete_zip_cannot_borrow_runtime_from_build_directory(bundle, monke
 
     # The previous directory-only check can succeed despite this incomplete ZIP.
     def directory_start(command, *, cwd):
-        assert Path(command[0]).parent == unpacked
+        assert Path(command[0]) == unpacked / ENTRYPOINT
         assert (unpacked / "_internal/runtime.bin").is_file()
         acknowledge_health(Path(cwd), Path(command[4]), command[6])
         process = Mock()

@@ -379,6 +379,7 @@ def plan(
     *,
     selected_world=False,
     managed=False,
+    rftools_identity=None,
 ):
     """Freeze staging against the selected world, stop and complete backup."""
     from omk.worlds.world_cutover import consumed  # noqa: PLC0415
@@ -386,8 +387,16 @@ def plan(
     with backups.locked(config):
         backups.local_engine()
         source = backups.target_for(config, server)
+        if rftools_identity is not None and not (selected_world and managed):
+            raise AdminError("RFTools reset requires an owner catalog selection")
         selection = (
-            {"reset": layout(dimension, all_worlds=managed and dimension == 0)}
+            {
+                "reset": layout(
+                    dimension,
+                    all_worlds=managed and dimension == 0,
+                    rftools_identity=rftools_identity,
+                )
+            }
             if selected_world
             else {}
         )

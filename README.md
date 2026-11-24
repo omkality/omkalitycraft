@@ -7,9 +7,10 @@ Minecraft-сервер сообщества с русифицированной 
 
 ## Как начать играть
 
-1. Скачайте лаунчер. [Windows x64](https://github.com/omkality/omkalitycraft/releases/latest/download/OmkalityCraft-windows-x64.zip) · [Linux x64](https://github.com/omkality/omkalitycraft/releases/latest/download/OmkalityCraft-linux-x64.zip)
+1. Скачайте лаунчер. [Windows x64](https://github.com/omkality/omkalitycraft/releases/latest/download/OmkalityCraft-windows-x64.zip) · [Linux x64](https://github.com/omkality/omkalitycraft/releases/latest/download/OmkalityCraft-linux-x64.zip) · [macOS Apple Silicon](https://github.com/omkality/omkalitycraft/releases/latest/download/OmkalityCraft-macos-arm64.zip)
 2. Распакуйте архив целиком в папку, доступную для записи, и запустите
-   `OmkalityCraft.exe` на Windows или `OmkalityCraft` на Linux.
+   `OmkalityCraft.exe` на Windows или `OmkalityCraft` на Linux и macOS.
+   Для запуска Minecraft на Apple Silicon нужна [Rosetta 2](https://support.apple.com/ru-ru/102527).
 3. Зарегистрируйтесь с приглашением или войдите в свой аккаунт. На карточке DJ2
    нажмите **«Скачать сборку»**, затем **«Играть»**. Лаунчер сам установит игру и Java.
 4. В Minecraft выберите **«Сетевая игра» → «Divine Journey 2 RU»**. Запись сервера

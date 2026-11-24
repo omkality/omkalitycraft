@@ -208,6 +208,42 @@ def test_worker_is_networkless_readonly_and_never_mounts_store_or_docker_socket(
     assert json.loads(kwargs["stdin"])["world_max_bytes"] == 123456
 
 
+@pytest.mark.parametrize("changed", [False, True])
+def test_saved_world_catalog_requires_the_same_owned_active_save(monkeypatch, changed):
+    config = object()
+    binding = {"port": 25587}
+    first = {"container": "owned", "running": True}
+    last = {**first, "container": "replaced"} if changed else first
+    snapshot = Mock(side_effect=[first, last])
+    catalog = {
+        "schema": 1,
+        "world": TARGET["world"],
+        "rftools": [{"dimension": 60, "name": "Foundry"}],
+    }
+    docker = Mock(return_value=json.dumps({"ok": True, "result": catalog}))
+    monkeypatch.setattr(owner.backups, "docker", docker)
+    monkeypatch.setattr(owner.backups, "local_engine", Mock())
+    monkeypatch.setattr(owner.backups, "target_for", Mock(return_value=TARGET))
+    monkeypatch.setattr(owner.maintenance, "binding", Mock(return_value=binding))
+    monkeypatch.setattr(owner.maintenance, "snapshot", snapshot)
+    if changed:
+        with pytest.raises(AdminError, match="source changed"):
+            owner.discover_saved_worlds(config, "dj2")
+    else:
+        worlds = owner.discover_saved_worlds(config, "dj2")
+        assert set(worlds) == {60}
+        assert worlds[60]["name"] == "Foundry"
+    assert snapshot.call_count == 2
+    args, kwargs = docker.call_args
+    assert "--read-only" in args and args[args.index("--network") + 1] == "none"
+    assert kwargs["timeout"] == 5
+    assert json.loads(kwargs["stdin"]) == {
+        "schema": 1,
+        "action": "catalog",
+        "world": TARGET["world"],
+    }
+
+
 @pytest.mark.parametrize(
     "fault",
     [

@@ -16,6 +16,7 @@ from PIL import Image
 from tuf.api.metadata import Metadata, Root
 
 from launcher.install import current_platform
+from launcher.paths import MACOS_APP, MACOS_RUNTIME, bundle_entrypoint
 from launcher.releases import generation_floors
 from launcher.version import VERSION
 from omk.accounts.drasl import DraslClient
@@ -39,6 +40,49 @@ def packaging_icon(source: Path, stage: Path) -> Path:
         target = stage / "app-icon.png"
         canvas.save(target)
     return target
+
+
+def _stage_macos_app(dist: Path, bundle: Path, platform: str) -> None:
+    bundle.mkdir(parents=True)
+    app = bundle / MACOS_APP
+    shutil.move(dist / MACOS_APP, app)
+    executable = bundle / bundle_entrypoint(platform)
+    runtime = executable.with_name(MACOS_RUNTIME)
+    executable.rename(runtime)
+    subprocess.run(
+        [
+            "/usr/bin/clang",
+            "-Os",
+            "-fobjc-arc",
+            "-framework",
+            "AppKit",
+            str(Path(__file__).with_name("macos_bootstrap.m")),
+            "-o",
+            str(executable),
+        ],
+        check=True,
+    )
+    # The former main binary can no longer use the signature of the app it belonged to.
+    for code in (runtime, app):
+        subprocess.run(
+            ["/usr/bin/codesign", "--force", "--sign", "-", str(code)], check=True
+        )
+    subprocess.run(
+        ["/usr/bin/codesign", "--verify", "--deep", "--strict", str(app)], check=True
+    )
+
+
+def _write_zip(archive: Path, bundle: Path, *, macos: bool) -> None:
+    with zipfile.ZipFile(
+        archive, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6
+    ) as target:
+        for path in sorted(bundle.rglob("*")):
+            if macos and path.is_symlink():
+                raise ValueError(
+                    "macOS launcher app must be portable without ZIP symlinks"
+                )
+            if path.is_file():
+                target.write(path, path.relative_to(bundle).as_posix())
 
 
 def build(
@@ -140,7 +184,10 @@ def build(
         encoding="utf-8",
     )
     output = output.resolve()
-    if (output / "OmkalityCraft").exists():
+    bundle = output / "OmkalityCraft"
+    macos = sys.platform == "darwin"
+    dist = stage / "dist" if macos else output
+    if any((output / name).exists() for name in ("OmkalityCraft", MACOS_APP)):
         raise ValueError("Use a fresh build output folder")
     environment = {**os.environ, "PYTHONNOUSERSITE": "1"}
     for name in ["PYTHONHOME", "PYTHONPATH"]:
@@ -167,13 +214,24 @@ def build(
             "PyInstaller",
             "--noconfirm",
             "--clean",
-            "--onedir",
+            # The macOS one-file app needs no ZIP symlinks, including on 0.3.5 upgrades.
+            "--onefile" if macos else "--onedir",
             "--windowed",
             "--name",
             "OmkalityCraft",
             *(["--icon", str(icon)] if sys.platform in {"win32", "darwin"} else []),
+            *(
+                [
+                    "--osx-bundle-identifier",
+                    "io.github.omkality.omkalitycraft",
+                    "--runtime-tmpdir",
+                    "userdata/tmp",
+                ]
+                if macos
+                else []
+            ),
             "--distpath",
-            str(output),
+            str(dist),
             "--workpath",
             str(stage / "work"),
             "--specpath",
@@ -190,28 +248,27 @@ def build(
         env=environment,
         check=True,
     )
-    bundle = output / "OmkalityCraft"
+    platform = current_platform()
+    if macos:
+        _stage_macos_app(dist, bundle, platform)
+    if not (bundle / bundle_entrypoint(platform)).is_file():
+        raise ValueError("Built launcher entrypoint is missing")
     entries = analysis_entries(stage / "work/OmkalityCraft/Analysis-00.toc")
-    prepare_notices(bundle, entries)
+    prepare_notices(bundle, entries, embedded_fonts=assets / "fonts" if macos else None)
     json_file(
         bundle / "release-info.json",
         {
             "schema": 1,
             "version": version,
-            "platform": current_platform(),
+            "platform": platform,
             "python": "3.14.2",
             "pyinstaller": installed_version("pyinstaller"),
         },
     )
-    archive = output / f"OmkalityCraft-{version}-{current_platform()}.zip"
-    with zipfile.ZipFile(
-        archive, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6
-    ) as target:
-        for path in sorted(bundle.rglob("*")):
-            if path.is_file():
-                target.write(path, path.relative_to(bundle).as_posix())
-    write_materials(archive, version, current_platform())
-    verify_materials(archive, version, current_platform())
+    archive = output / f"OmkalityCraft-{version}-{platform}.zip"
+    _write_zip(archive, bundle, macos=macos)
+    write_materials(archive, version, platform)
+    verify_materials(archive, version, platform)
     return archive
 
 

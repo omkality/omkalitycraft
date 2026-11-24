@@ -14,7 +14,11 @@ from urllib.parse import unquote, urlsplit
 from uuid import uuid4
 
 from launcher.install import Installer, ReleaseClient, current_platform
-from launcher.pack.client_defaults import prepare_client_defaults
+from launcher.pack.client_defaults import (
+    initial_platform_options,
+    macos_shortcut_changes,
+    prepare_client_defaults,
+)
 from launcher.pack.client_policy import ClientDefaults
 from launcher.pack.mod_policy import clean_extra_mods, verify_mods
 from launcher.releases import (
@@ -193,7 +197,7 @@ def _personal_files(folder, release):
 
 
 def _options_preserved(original, folder, release):
-    """Permit only declared additions and required font changes on first upgrade."""
+    """Permit the release defaults and the supported platform migration on upgrade."""
     current = (folder / "options.txt").read_bytes()
     before, after = (
         dict(line.split(":", 1) for line in data.decode().splitlines() if ":" in line)
@@ -202,6 +206,9 @@ def _options_preserved(original, folder, release):
     defaults = ClientDefaults.parse(release.launch.get("client_defaults", {}))
     allowed = dict(defaults.initial_options)
     allowed.update(("key_" + k, str(v)) for k, v in defaults.initial_keybindings)
+    platform = initial_platform_options(release)
+    allowed.update(platform)
+    migrations = macos_shortcut_changes(before) if platform else {}
     if defaults.language:
         allowed["lang"] = defaults.language
     managed = {"resourcePacks"}
@@ -214,7 +221,11 @@ def _options_preserved(original, folder, release):
         dict.fromkeys([*packs, *defaults.resourcepacks])
     ):
         return False
-    if any(after.get(k) != v for k, v in before.items() if k not in managed):
+    if any(
+        after.get(k) not in (v, migrations.get(k, v))
+        for k, v in before.items()
+        if k not in managed
+    ):
         return False
     if any(
         k not in allowed or allowed[k] != after[k]

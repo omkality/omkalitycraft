@@ -88,6 +88,59 @@ def test_play_never_falls_back_to_cached_pack_when_manifest_check_fails(
     assert controller.pool.waitForDone(5000)
 
 
+def test_previous_game_blocks_pack_changes_after_restart(qtbot, tmp_path):
+    service = AccountService(FakeDrasl(), FileSessionStore(tmp_path / "session.json"))
+    release = object()
+    blocked = ReleaseError("Minecraft уже запущен.")
+    calls = []
+
+    def check(manifest):
+        assert manifest is release
+        calls.append("previous game")
+        raise blocked
+
+    def forbidden(*_args, **_kwargs):
+        calls.append("install or launch")
+        raise AssertionError("The running game must be checked before altering files")
+
+    installer = SimpleNamespace(
+        client=SimpleNamespace(fetch=lambda _pack: release),
+        cancel=threading.Event(),
+        install=forbidden,
+    )
+    runner = SimpleNamespace(ensure_stopped=check, start=forbidden)
+    parent = QObject()
+    controller = InstallController(installer, service, runner, parent)
+    with qtbot.waitSignal(controller.failed, timeout=5000) as result:
+        controller.start("dj2", play=True)
+    assert result.args == ["dj2", blocked]
+    assert calls == ["previous game"]
+    assert controller.pool.waitForDone(5000)
+
+
+def test_launcher_dock_follows_the_hidden_game_lifecycle(qtbot, tmp_path, monkeypatch):
+    service = AccountService(FakeDrasl(), FileSessionStore(tmp_path / "session.json"))
+    window = LauncherWindow(service, runner=GameRunner(tmp_path), auto_restore=False)
+    qtbot.addWidget(window)
+    seen = []
+    monkeypatch.setattr("launcher.app.set_launcher_dock_visible", seen.append)
+    result = None
+    game = SimpleNamespace(
+        poll=lambda: result,
+        diagnostics_done=threading.Event(),
+        logging_failed=threading.Event(),
+    )
+    window.show()
+    window._installed(
+        "dj2", SimpleNamespace(game=game, release=SimpleNamespace(version="2.23.4"))
+    )
+    assert window.isHidden() and seen == [False]
+    result = 0
+    game.diagnostics_done.set()
+    window._poll_game()
+    assert window.isVisible() and seen == [False, True]
+
+
 @pytest.mark.parametrize(
     "message",
     [

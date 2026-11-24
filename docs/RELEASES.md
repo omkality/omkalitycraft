@@ -2,7 +2,7 @@
 
 Игрок скачивает ZIP для своей ОС, распаковывает целиком и запускает
 `OmkalityCraft.exe` или `OmkalityCraft`. Дальше лаунчер проверяет обновления
-при запуске. [Последний релиз для Windows x64 и Linux x64](https://github.com/omkality/omkalitycraft/releases/latest)
+при запуске. [Последний релиз для Windows x64, Linux x64 и macOS Apple Silicon](https://github.com/omkality/omkalitycraft/releases/latest)
 
 ## GitHub Releases для игроков
 
@@ -48,17 +48,27 @@ uv run --no-sync python scripts/smoke_bundle.py --archive <archive.zip>
 тот же комплект с рабочими адресами, публичным корнем, чистой установкой,
 входом в игру и обновлением с предыдущего лаунчера.
 
+Архивы с `OmkalityCraft.app` проверяйте на macOS через
+`uv run --no-sync python scripts/smoke_bundle.py --finder-archive <archive.zip>`.
+Проверка распаковывает ZIP в пустую папку, открывает приложение через Launch
+Services и ждёт записи о первом рисовании окна в локальном журнале.
+Приложение хранит `userdata/`, `instances/`, обновления и загрузки рядом с
+`OmkalityCraft.app`. Встроенные библиотеки распаковываются в `userdata/tmp`.
+Распаковывайте ZIP в папку, доступную для записи.
+
 ## Публикация обновления лаунчера
 
 1. Подготовьте TUF-цель командой `omk release launcher` для каждой платформы.
    Передайте `--repository`, `--keys-dir`, `--archive`, `--version`, `--platform`,
    `--entrypoint` и `--github-asset-url`. Имя файла —
    `OmkalityCraft-<версия>-<платформа>.zip`, entrypoint на Windows —
-   `OmkalityCraft.exe`, на Linux — `OmkalityCraft`.
+   `OmkalityCraft.exe`, на Linux — `OmkalityCraft`, для архива с приложением
+   macOS — `OmkalityCraft.app/Contents/MacOS/OmkalityCraft`.
 2. Прикрепите версионные архивы к черновику GitHub Release. Туда же загрузите
-   побайтовые копии под постоянными именами `OmkalityCraft-windows-x64.zip` и
-   `OmkalityCraft-linux-x64.zip`. После публикации стабильной версии проверьте
-   обе ссылки `releases/latest/download/` из README и соответствие архивов
+   побайтовые копии под постоянными именами `OmkalityCraft-windows-x64.zip`,
+   `OmkalityCraft-linux-x64.zip` и `OmkalityCraft-macos-arm64.zip`.
+   После публикации стабильной версии проверьте ссылки
+   `releases/latest/download/` из README и соответствие архивов
    подписанным размерам и SHA-256.
 3. Разместите те же архивы и новые версионные метаданные в
    `CONTENT_ROOT/updates/{targets,metadata}`. Публикуйте `timestamp.json`

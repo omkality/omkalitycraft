@@ -1,5 +1,6 @@
 import copy
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -62,6 +63,87 @@ def test_existing_options_are_preserved_while_missing_defaults_are_added(tmp_pat
         p.read_bytes() == original
         for p in (folder / ".omk-defaults-backups").glob("*options.txt")
     )
+
+
+@pytest.mark.parametrize(
+    "platform", ["macos-arm64", "macos-x64", "windows-x64", "linux-x64"]
+)
+def test_dj2_mac_defaults_keep_inventory_and_chat_unmodified(tmp_path, platform):
+    folder, release = setup(tmp_path)
+    release = replace(release, pack_id="dj2", platform=platform)
+    prepare_client_defaults(release, folder)
+    options = dict(
+        line.split(":", 1)
+        for line in (folder / "options.txt").read_text(encoding="utf-8").splitlines()
+    )
+    assert "maxFps" not in options and "enableVsync" not in options
+    if not platform.startswith("macos-"):
+        assert "renderDistance" not in options and "key_key.inventory" not in options
+        assert not (folder / "knownkeys.txt").exists()
+        return
+    assert options["renderDistance"] == "6"
+    assert options["fancyGraphics"] == options["entityShadows"] == "false"
+    assert options["particles"] == "1"
+    assert options["key_key.inventory"] == "18:NONE"
+    assert options["key_key.chat"] == "20:NONE"
+    assert options["key_key.open_wireless_crafting_terminal.desc"] == "18:CONTROL"
+    assert options["key_key.open_wireless_terminal.desc"] == "34:CONTROL"
+    assigned = [value for value in options.values() if value.endswith(":CONTROL")]
+    assert len(assigned) == len(set(assigned)) == 9
+    assert set(assigned).isdisjoint({"17:CONTROL", "20:CONTROL", "33:CONTROL"})
+    known = (folder / "knownkeys.txt").read_text(encoding="utf-8").splitlines()
+    assert set(known) == {
+        key.removeprefix("key_") for key in options if key.startswith("key_")
+    }
+
+
+def test_mac_personal_graphics_and_keys_survive_repair(tmp_path):
+    folder, release = setup(tmp_path)
+    release = replace(release, pack_id="dj2", platform="macos-arm64")
+    personal = (
+        "renderDistance:12\nparticles:0\nmaxFps:140\nenableVsync:false\n"
+        "key_key.inventory:23:NONE\nkey_key.open_wireless_terminal.desc:25:SHIFT\n"
+    )
+    path = folder / "options.txt"
+    path.write_text(personal, encoding="utf-8")
+    known = folder / "knownkeys.txt"
+    known.write_bytes(b"key.journeymap\r\nkey.inventory")
+    prepare_client_defaults(release, folder)
+    first = path.read_text(encoding="utf-8")
+    assert first.startswith(personal)
+    prepare_client_defaults(release, folder)
+    assert path.read_text(encoding="utf-8") == first
+    seen = known.read_bytes().splitlines()
+    assert seen[:2] == [b"key.journeymap", b"key.inventory"]
+    assert len(seen) == len(set(seen))
+
+
+def test_previous_mac_install_migrates_shipped_shortcuts_once(tmp_path):
+    folder, release = setup(tmp_path)
+    release = replace(release, pack_id="dj2", platform="macos-arm64")
+    path = folder / "options.txt"
+    original = (
+        "key_key.inventory:18:NONE\nkey_key.chat:20:NONE\n"
+        "key_key.open_wireless_crafting_terminal.desc:18:SHIFT\n"
+        "key_key.open_wireless_terminal.desc:20:SHIFT\n"
+        "key_key.open_wireless_pattern_terminal.desc:23:SHIFT\n"
+        "key_key.open_wireless_fluid_terminal.desc:33:SHIFT\n"
+        "key_custom.action:38:CONTROL\n"
+    )
+    path.write_text(original, encoding="utf-8")
+    prepare_client_defaults(release, folder)
+    migrated = path.read_text(encoding="utf-8")
+    assert "key_key.inventory:18:NONE\n" in migrated
+    assert "key_key.chat:20:NONE\n" in migrated
+    assert "key_key.open_wireless_crafting_terminal.desc:18:CONTROL\n" in migrated
+    assert "key_key.open_wireless_terminal.desc:34:CONTROL\n" in migrated
+    assert "key_key.open_wireless_pattern_terminal.desc:23:SHIFT\n" in migrated
+    assert "key_key.open_wireless_fluid_terminal.desc:33:SHIFT\n" in migrated
+    assert "key_custom.action:38:CONTROL\n" in migrated
+    restored = migrated.replace("18:CONTROL", "18:SHIFT")
+    path.write_text(restored, encoding="utf-8")
+    prepare_client_defaults(release, folder)
+    assert path.read_text(encoding="utf-8") == restored
 
 
 @pytest.mark.parametrize(

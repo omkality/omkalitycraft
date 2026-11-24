@@ -11,6 +11,11 @@ MAX_FILES = 20000
 MAX_EXPANDED_BYTES = 512 * 1024**2
 RESERVED = re.compile(r"^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.|$)", re.I)
 SHA256 = re.compile(r"[a-f0-9]{64}")
+LINUX_SAVED_DATA = {
+    ("DIM17", "data", "atum:ruin.dat"),
+    ("DIM17", "data", "atum:tomb.dat"),
+    ("Dim-Aether", "data", "aether_legacy:cold_aercloud.dat"),
+}
 
 
 def regular_file(path):
@@ -48,16 +53,21 @@ def validate_inventory(
     total, names, prefixes = 0, set(), {}
     for name, entry in files.items():
         parts = name.split("/") if isinstance(name, str) else []
+        # DJ2's Forge serializers use namespaced filenames in these Linux saves.
+        namespaced = (
+            path_policy == "linux-server" and tuple(parts[1:]) in LINUX_SAVED_DATA
+        )
         if (
             not parts
             or len(name.encode("utf-8")) > 1024
             or any(
                 part in ("", ".", "..")
                 or len(part.encode("utf-8")) > 255
-                or any(ord(c) < 32 or c in '\\:*?"<>|' for c in part)
+                or any(ord(c) < 32 or c in '\\*?"<>|' for c in part)
+                or (":" in part and (not namespaced or index != 3))
                 or part.endswith((".", " "))
                 or (path_policy == "portable" and RESERVED.match(part))
-                for part in parts
+                for index, part in enumerate(parts)
             )
         ):
             raise ValueError("Unsafe backup inventory path")

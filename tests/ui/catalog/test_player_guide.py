@@ -43,6 +43,11 @@ def test_commands_live_in_the_command_section_and_rules_have_no_commands(
         if name == "guideRules":
             assert any("X-ray" in text for text in labels)
             assert any("Краш-машины" in text for text in labels)
+        if name == "guideWorlds_dj2":
+            assert "Вещи после смерти" in labels
+            assert any(
+                "своей могиле" in text and "приседания" in text for text in labels
+            )
 
     page = _select(qtbot, dialog, "guideCommands")
     scopes = dialog.findChild(QTabWidget, "guideCommandsPage")

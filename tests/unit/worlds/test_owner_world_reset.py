@@ -1,5 +1,6 @@
 from contextlib import nullcontext
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 from omk.cli import main
 from omk.owner.admin import AdminError
@@ -295,3 +296,128 @@ def test_catalog_rejects_terminal_control_characters(monkeypatch, tmp_path):
     result = wipe.run("operator.toml", "dj2", "inspect", "", catalog=True, dimension=0)
     assert result["error"] == "operation_rejected"
     assert result["effect"] == "none"
+
+
+def test_discovered_world_is_visible_but_does_not_grant_reset_authority(monkeypatch):
+    main = {"dimension": 0, "name": "Основной", "description": "Базы игроков"}
+    dynamic = {"dimension": 60, "name": "Шахта", "description": "Мир RFTools"}
+    configured = {0: main}
+    context = object()
+    current = wipe.State(dimension=0, stage="prepare", managed=True)
+    discover = Mock(
+        return_value={
+            0: {**main, "name": "Collision"},
+            60: {**dynamic, "rftools_identity": None},
+        }
+    )
+    mutate = Mock(side_effect=AssertionError("Unexpected wipe"))
+    monkeypatch.setattr(wipe, "load_operator_config", lambda _: context)
+    monkeypatch.setattr(wipe, "_catalog", lambda *_: configured)
+
+    def state(_config, _server, dimension=None, *, managed=False, rftools=None):
+        return (
+            wipe.State(dimension=dimension, stage="unsupported")
+            if rftools is not None
+            else current
+        )
+
+    monkeypatch.setattr(wipe, "_state", state)
+    monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
+    monkeypatch.setattr(wipe, "discover_saved_worlds", discover)
+    monkeypatch.setattr(wipe, "_execute_stage", mutate)
+
+    initial = wipe.run("operator.toml", "dj2", "inspect", "", catalog=True)
+    assert initial["ok"] and initial["worlds"] == [main, dynamic]
+    selected = wipe.run(
+        "operator.toml", "dj2", "inspect", "", catalog=True, dimension=60
+    )
+    assert selected["ok"] and selected["stage"] == "unsupported"
+    assert selected["confirmation"] is None
+    attempt = wipe.run(
+        "operator.toml",
+        "dj2",
+        "run",
+        initial["confirmation"],
+        catalog=True,
+        dimension=60,
+    )
+    assert not attempt["ok"] and attempt["effect"] == "none"
+    mutate.assert_not_called()
+    assert discover.call_count == 3
+
+
+def test_rftools_confirmation_rechecks_the_saved_selection_before_wipe(monkeypatch):
+    main = {"dimension": 0, "name": "Основной", "description": "Базы игроков"}
+    entry = {
+        "dimension": 6000,
+        "name": "Шахта",
+        "description": "Мир RFTools",
+        "rftools_identity": "a" * 64,
+    }
+    mutate = Mock(side_effect=AssertionError("Stale confirmation reached a wipe"))
+    monkeypatch.setattr(wipe, "load_operator_config", lambda _: object())
+    monkeypatch.setattr(wipe, "_catalog", lambda *_: {0: main})
+    monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
+    monkeypatch.setattr(wipe, "discover_saved_worlds", lambda *_: {6000: dict(entry)})
+
+    def state(_config, _server, dimension, *, managed, rftools):
+        assert managed
+        return wipe.State(
+            dimension=dimension,
+            stage="prepare",
+            managed=True,
+            reset=wipe.layout(dimension, rftools_identity=rftools["rftools_identity"]),
+        )
+
+    monkeypatch.setattr(wipe, "_state", state)
+    monkeypatch.setattr(wipe, "_execute_stage", mutate)
+    selected = wipe.run(
+        "operator.toml", "dj2", "inspect", "", catalog=True, dimension=6000
+    )
+    assert selected["confirmation"] and selected["stage"] == "prepare"
+    assert selected["worlds"][-1] == {
+        k: v for k, v in entry.items() if k != "rftools_identity"
+    }
+    entry["rftools_identity"] = "b" * 64
+    rejected = wipe.run(
+        "operator.toml",
+        "dj2",
+        "run",
+        selected["confirmation"],
+        catalog=True,
+        dimension=6000,
+    )
+    assert rejected["error"] == "state_changed" and rejected["effect"] == "none"
+    mutate.assert_not_called()
+
+
+def test_rftools_restart_uses_the_sealed_cold_plan_after_the_seed_changes():
+    dimension = 6000
+    before = wipe.layout(dimension, rftools_identity="a" * 64)
+    current = wipe.layout(dimension, rftools_identity="b" * 64)
+    record = "d" * 32
+    state = wipe.State(
+        dimension=dimension,
+        reset=current,
+        resource={"operation": record, "dimension": dimension, "reset": before},
+        installation={"resource_operation": record, "stage": "installed"},
+    )
+    assert wipe._installed_reset(state, {"rftools_identity": None}) == before
+    state.installation["stage"] = "planned"
+    assert wipe._installed_reset(state, {"rftools_identity": "b" * 64}) == current
+    state.installation.update(stage="installed", resource_operation="e" * 32)
+    assert wipe._installed_reset(state, {"rftools_identity": None}) == current
+
+
+def test_unavailable_saved_catalog_keeps_the_configured_worlds(monkeypatch):
+    main = {"dimension": 0, "name": "Основной", "description": "Базы игроков"}
+    current = wipe.State(dimension=0, stage="prepare", managed=True)
+    monkeypatch.setattr(wipe, "load_operator_config", lambda _: object())
+    monkeypatch.setattr(wipe, "_catalog", lambda *_: {0: main})
+    monkeypatch.setattr(wipe, "_state", lambda *_, **__: current)
+    monkeypatch.setattr(
+        wipe, "discover_saved_worlds", Mock(side_effect=AdminError("Source changed"))
+    )
+    result = wipe.run("operator.toml", "dj2", "inspect", "", catalog=True)
+    assert result["ok"] and result["worlds"] == [main]
+    assert result["confirmation"] == current.confirmation("dj2", world=main)

@@ -7,6 +7,7 @@ from contextlib import nullcontext
 from contextvars import ContextVar
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from itertools import islice
 from pathlib import Path
 from traceback import extract_tb
 
@@ -24,10 +25,14 @@ from omk.owner.admin import (
     _require_private,
     load_operator_config,
 )
+from omk.owner.admin_resource_reset import discover_saved_worlds
 from omk.owner.panels import owner_moderation, owner_volumes
 from omk.worlds import world_cutover as cutover
-from omk.worlds.reset.dimension_reset import RESOURCE, layout
-from omk.worlds.reset.resource_reset_inventory import validate_dimension
+from omk.worlds.reset.dimension_reset import RESOURCE, layout, validate_layout
+from omk.worlds.reset.resource_reset_inventory import (
+    WORLD_CATALOG_LIMIT,
+    validate_dimension,
+)
 
 STEPS = ("prepare", "apply", "start")
 COMMANDS = ("inspect", "run", *STEPS)
@@ -137,7 +142,25 @@ def _phase(state):
     return "prepare"
 
 
-def _state(config, server, selection=None, *, managed=False):
+def _installed_reset(state, rftools):
+    selected = state.resource.get("reset")
+    if (
+        rftools is None
+        or not state.installation
+        or state.installation["stage"] == "planned"
+        or state.installation["resource_operation"] != _operation(state.resource)
+        or state.resource["dimension"] != state.dimension
+        or not selected
+        or "rftools_identity" not in selected
+    ):
+        return state.reset
+    # An installed candidate has a new seed and may not yet have terrain.
+    # The cutover's sealed receipt, not the new live registry, binds it.
+    validate_layout(state.dimension, selected)
+    return selected
+
+
+def _state(config, server, selection=None, *, managed=False, rftools=None):
     if server not in config.servers:
         raise AdminError("Server is not in the operator allowlist")
     filename = "resource-resets.toml"
@@ -162,13 +185,18 @@ def _state(config, server, selection=None, *, managed=False):
         return State(dimension=dimension, stage="no-ingress")
     source = backups.target_for(config, server)
     target = owner_volumes.target_for(config, server, source, filename)
+    rftools_identity = rftools["rftools_identity"] if rftools is not None else None
     state = State(
         dimension=dimension,
         source=source,
         target=target,
         reset=(
-            layout(dimension, all_worlds=managed and dimension == 0)
-            if selection is not None
+            layout(
+                dimension,
+                all_worlds=managed and dimension == 0,
+                rftools_identity=rftools_identity,
+            )
+            if selection is not None and (rftools is None or rftools_identity)
             else None
         ),
         managed=managed,
@@ -191,6 +219,7 @@ def _state(config, server, selection=None, *, managed=False):
         ]
     )
     if state.resource:
+        state.reset = _installed_reset(state, rftools)
         state.window = maintenance.read_record(
             config, state.resource["maintenance_operation"]
         )
@@ -207,6 +236,9 @@ def _state(config, server, selection=None, *, managed=False):
     else:
         if state.installation:
             raise AdminError("World installation has no matching candidate")
+        if rftools is not None and state.reset is None:
+            state.stage = "unsupported"
+            return state
         if not managed and any(
             r["stage"] != "abandoned"
             and r["target"]["data_volume"] == target["data_volume"]
@@ -271,6 +303,11 @@ def _prepare(config, server, state):
             backup_id,
             **({"selected_world": True} if state.reset is not None else {}),
             **({"managed": True} if state.managed else {}),
+            **(
+                {"rftools_identity": state.reset["rftools_identity"]}
+                if state.reset and "rftools_identity" in state.reset
+                else {}
+            ),
         )
     for before, action in (
         ("planned", "stage"),
@@ -333,7 +370,7 @@ def _catalog(config, server):
     ):
         raise AdminError("Invalid world catalog")
     entries = servers.get(server, [])
-    if not isinstance(entries, list) or len(entries) > 64:
+    if not isinstance(entries, list) or len(entries) > WORLD_CATALOG_LIMIT:
         raise AdminError("Invalid world list")
     worlds = {}
     for entry in entries:
@@ -361,6 +398,19 @@ def _catalog(config, server):
     return worlds
 
 
+def _inspect_other_worlds(config, server, worlds):
+    room = WORLD_CATALOG_LIMIT - len(worlds)
+    if not worlds or not room:
+        return {}
+    try:
+        discovered = discover_saved_worlds(config, server)
+    except AdminError, OSError, KeyError, TypeError, ValueError:
+        # Live WorldSavedData can change during a save. Keep the configured catalog.
+        return {}
+    available = ((dim, entry) for dim, entry in discovered.items() if dim not in worlds)
+    return dict(islice(available, room))
+
+
 def _selected_state(config, server, worlds, dimension):
     if dimension is None:
         state = _state(config, server, **({"managed": True} if worlds else {}))
@@ -369,6 +419,9 @@ def _selected_state(config, server, worlds, dimension):
         return state
     if dimension not in worlds:
         raise AdminError("World is not in the operator catalog")
+    entry = worlds[dimension]
+    if "rftools_identity" in entry:
+        return _state(config, server, dimension, managed=True, rftools=entry)
     if dimension == RESOURCE:
         state = _state(config, server, managed=True)
         if state.dimension == dimension:
@@ -525,7 +578,14 @@ def run(
         with backups.locked(config) if action != "inspect" else nullcontext():
             worlds = _catalog(config, server) if catalog else {}
             if catalog:
-                result["worlds"] = list(worlds.values())
+                if action == "inspect" or (
+                    dimension is not None and dimension not in worlds
+                ):
+                    worlds = {**worlds, **_inspect_other_worlds(config, server, worlds)}
+                result["worlds"] = [
+                    {key: entry[key] for key in ("dimension", "name", "description")}
+                    for entry in worlds.values()
+                ]
             state = _selected_state(config, server, worlds, dimension)
             world = worlds.get(state.dimension)
             result.update(state.payload(server, world=world))

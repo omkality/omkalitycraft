@@ -10,6 +10,38 @@ from launcher.nbt import MAX_BYTES, Tag, read_nbt, write_nbt
 from launcher.pack.client_policy import ClientDefaults
 from launcher.releases import Release, ReleaseError, inside
 
+DJ2_MACOS_OPTIONS = {
+    "renderDistance": "6",
+    "fancyGraphics": "false",
+    "ao": "0",
+    "renderClouds": "false",
+    "entityShadows": "false",
+    "particles": "1",
+    "mipmapLevels": "0",
+    "useVbo": "true",
+    "key_key.inventory": "18:NONE",
+    "key_key.chat": "20:NONE",
+    # Forge serializes Command on macOS as CONTROL. Leave Cmd+F and Cmd+T to JEI.
+    "key_roots.keybinds.spell_library": "24:CONTROL",
+    "key_key.open_wireless_terminal.desc": "34:CONTROL",
+    "key_key.open_wireless_crafting_terminal.desc": "18:CONTROL",
+    "key_key.open_wireless_pattern_terminal.desc": "19:CONTROL",
+    "key_key.open_wireless_fluid_terminal.desc": "38:CONTROL",
+    "key_key.integrateddynamics.logic_programmer_focus_search": "36:CONTROL",
+    "key_key.integrateddynamics.logic_programmer_open_rename": "37:CONTROL",
+    "key_key.plustic_fruit_salad.desc": "12:CONTROL",
+    "key_key.plustic_mots.desc": "13:CONTROL",
+}
+
+# Bindings from the previously shipped DJ2 DefaultOptions profile.
+_DJ2_MACOS_LEGACY_SHORTCUTS = {
+    "key_roots.keybinds.spell_library": "24:SHIFT",
+    "key_key.open_wireless_terminal.desc": "20:SHIFT",
+    "key_key.open_wireless_crafting_terminal.desc": "18:SHIFT",
+    "key_key.open_wireless_pattern_terminal.desc": "19:SHIFT",
+    "key_key.open_wireless_fluid_terminal.desc": "33:SHIFT",
+}
+
 
 def _replace(folder: Path, filename: str, data: bytes) -> None:
     path = local_file(folder, filename)
@@ -26,7 +58,48 @@ def _replace(folder: Path, filename: str, data: bytes) -> None:
     atomic_write(path, data)
 
 
-def _options(folder: Path, defaults: ClientDefaults) -> None:
+def _previous_keys(record: Path) -> set[str]:
+    if not record.exists():
+        return set()
+    if record.stat().st_size > 32768:
+        raise ValueError("Initial keybinding record too large")
+    saved = json.loads(record.read_text(encoding="utf-8"))
+    values = saved.get("bindings")
+    if (
+        saved.get("schema") != 1
+        or not isinstance(values, list)
+        or len(values) > 64
+        or any(not isinstance(v, str) or not 1 <= len(v) <= 160 for v in values)
+    ):
+        raise ValueError("Invalid initial keybinding record")
+    return set(values)
+
+
+def initial_platform_options(release: Release) -> dict[str, str]:
+    """Return the launcher defaults for this game version and platform."""
+    if (
+        release.pack_id == "dj2"
+        and release.minecraft == "1.12.2"
+        and release.platform.startswith("macos-")
+    ):
+        return dict(DJ2_MACOS_OPTIONS)
+    return {}
+
+
+def macos_shortcut_changes(options: dict[str, str]) -> dict[str, str]:
+    """Return replacements for shipped Shift combinations with a free Command slot."""
+    occupied = {value for key, value in options.items() if key.startswith("key_")}
+    changes = {}
+    for key, legacy in _DJ2_MACOS_LEGACY_SHORTCUTS.items():
+        replacement = DJ2_MACOS_OPTIONS[key]
+        if options.get(key) == legacy and replacement not in occupied:
+            changes[key] = replacement
+    return changes
+
+
+def _options(
+    folder: Path, defaults: ClientDefaults, *, platform_options: dict[str, str]
+) -> None:
     path = local_file(folder, "options.txt")
     if path.exists() and path.stat().st_size > MAX_BYTES:
         raise ValueError("Options file too large")
@@ -53,23 +126,22 @@ def _options(folder: Path, defaults: ClientDefaults) -> None:
     )
     key_record = local_file(folder, ".omk-initial-keybindings.json")
     previous_keys = set()
-    if defaults.initial_keybindings and path.exists() and key_record.exists():
-        if key_record.stat().st_size > 32768:
-            raise ValueError("Initial keybinding record too large")
-        record = json.loads(key_record.read_text(encoding="utf-8"))
-        values = record.get("bindings")
-        if (
-            record.get("schema") != 1
-            or not isinstance(values, list)
-            or len(values) > 64
-            or any(not isinstance(v, str) or not 1 <= len(v) <= 160 for v in values)
-        ):
-            raise ValueError("Invalid initial keybinding record")
-        previous_keys = set(values)
-    for binding, code in defaults.initial_keybindings:
-        key = "key_" + binding
-        if binding not in previous_keys and key not in options:
-            changed[key] = str(code)
+    if defaults.initial_keybindings and path.exists():
+        previous_keys = _previous_keys(key_record)
+    changed.update(
+        ("key_" + binding, str(code))
+        for binding, code in defaults.initial_keybindings
+        if binding not in previous_keys and "key_" + binding not in options
+    )
+    changed.update(
+        (key, value) for key, value in platform_options.items() if key not in options
+    )
+    migration_record = None
+    if platform_options:
+        record = local_file(folder, ".omk-dj2-macos-shortcuts-v1")
+        if not record.exists():
+            changed.update(macos_shortcut_changes(options))
+            migration_record = record
     if any(options.get(key) != value for key, value in changed.items()):
         output = [line for line in lines if line.split(":", 1)[0] not in changed]
         output.extend(f"{key}:{value}" for key, value in changed.items())
@@ -81,6 +153,29 @@ def _options(folder: Path, defaults: ClientDefaults) -> None:
         ).encode()
         if not key_record.exists() or key_record.read_bytes() != data:
             atomic_write(key_record, data)
+    if migration_record is not None:
+        atomic_write(migration_record, b"1\n")
+
+
+def _remember_platform_keys(folder: Path, options: dict[str, str]) -> None:
+    # DefaultOptions 9.2.8 resets any binding it has not seen in knownkeys.txt,
+    # even when options.txt already contains a value for that binding.
+    path = local_file(folder, "knownkeys.txt")
+    if path.exists() and path.stat().st_size > MAX_BYTES:
+        raise ValueError("Known keys file too large")
+    old = path.read_bytes() if path.exists() else b""
+    seen = set(old.splitlines())
+    bindings = (
+        key.removeprefix("key_").encode("ascii")
+        for key in options
+        if key.startswith("key_")
+    )
+    additions = [binding for binding in bindings if binding not in seen]
+    if additions:
+        separator = b"\n" if old and not old.endswith(b"\n") else b""
+        _replace(
+            folder, "knownkeys.txt", old + separator + b"\n".join(additions) + b"\n"
+        )
 
 
 def _servers(folder: Path, defaults: ClientDefaults) -> None:
@@ -162,6 +257,7 @@ def prepare_client_defaults(release: Release, folder: Path) -> None:
         return
     try:
         defaults = ClientDefaults.parse(raw)
+        platform_options = initial_platform_options(release)
         if release.pack_id == "dj2":
             # The signed presets still supply the server identity and address.
             defaults = replace(
@@ -187,8 +283,11 @@ def prepare_client_defaults(release: Release, folder: Path) -> None:
             or defaults.unicode_font is not None
             or defaults.initial_keybindings
             or defaults.initial_options
+            or platform_options
         ):
-            _options(folder, defaults)
+            _options(folder, defaults, platform_options=platform_options)
+        if platform_options:
+            _remember_platform_keys(folder, platform_options)
         _servers(folder, defaults)
         for config in defaults.initial_configs:
             path = local_file(folder, config.path)

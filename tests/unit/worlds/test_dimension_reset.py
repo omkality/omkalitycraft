@@ -5,7 +5,7 @@ import json
 import pytest
 
 from omk.shared.nbt import Tag
-from omk.worlds.border_policy import _borders, _dimension_info, border_plan
+from omk.worlds.border_policy import _borders, _dimension_info, _primer, border_plan
 from omk.worlds.reset import (
     dimension_reset,
     resource_reset_stage,
@@ -48,6 +48,31 @@ def test_border_only_dimensions_keep_the_provider_spawn_on_first_load():
     assert rows[420]["jed"]["SpawnPointSearchType"] == {"type": "cavern"}
     assert rows[-18000]["worldinfo_onetime"] == {"RandomSeed": 31}
     assert "jed" not in rows[-18000] and "jed" not in rows[0]
+    assert all(row["worldinfo"]["Difficulty"] == 3 for row in rows.values())
+
+
+def test_existing_primer_policy_adds_hard_for_each_loaded_dimension():
+    source = """Commands {
+    S:dimensionLoadingCommands <
+        jed worldborder {DIMENSION} set 8192
+        worldprimer-dim-command 0 jed worldborder 0 set 32768
+        worldprimer-dim-command 1 jed worldborder 1 set 16384
+        worldprimer-dim-command -18000 jed worldborder -18000 set 16384
+     >
+    S:postWorldLoadingCommands <
+        jed worldborder 0 set 32768
+     >
+}
+Options {
+    B:enableDimensionLoadingCommands=true
+    B:enablePostWorldLoadingCommands=true
+}
+"""
+    plan = border_plan("dj2")
+    updated = _primer(source, plan)
+    assert updated.replace("        jed difficulty {DIMENSION} hard\n", "") == source
+    assert updated.count("jed difficulty {DIMENSION} hard") == 1
+    assert _primer(updated, plan) == updated
 
 
 def test_eden_reset_leaves_its_neighbors_and_resource_identity_byte_equivalent():
@@ -77,6 +102,20 @@ def test_ambiguous_named_save_layout_is_refused(tmp_path):
     with pytest.raises(ValueError, match="Ambiguous"):
         dimension_reset.verify_layout(
             world, 420, dimension_reset.layout(420), ["world/Eden/level.dat"]
+        )
+
+
+@pytest.mark.parametrize("identity", [None, "a" * 64])
+def test_rftools_and_generic_save_folders_cannot_share_a_selected_id(
+    tmp_path, identity
+):
+    world = tmp_path / "world"
+    (world / "RFTOOLS6000").mkdir(parents=True)
+    (world / "DIM6000").mkdir()
+    layout = dimension_reset.layout(6000, rftools_identity=identity)
+    with pytest.raises(ValueError, match="Ambiguous"):
+        dimension_reset.verify_layout(
+            world, 6000, layout, [f"world/{layout['folder']}/region/r.0.0.mca"]
         )
 
 
