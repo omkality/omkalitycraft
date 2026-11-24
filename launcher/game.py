@@ -9,6 +9,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from uuid import UUID, uuid4
 
+import psutil
+
 from launcher.pack.client_defaults import prepare_client_defaults
 from launcher.pack.log_policy import prepare_logging, prune_game_logs
 from launcher.pack.mod_policy import clean_extra_mods, verify_mods
@@ -28,6 +30,34 @@ from omk.observability.incidents import (
     crash_fingerprints,
 )
 from omk.shared.fs import resolved
+
+
+def _is_pack_process(arguments: list[str], release: Release) -> bool:
+    try:
+        classpath = arguments.index("-cp")
+    except ValueError:
+        return False
+    if arguments[classpath + 2 : classpath + 3] != [release.launch["main_class"]]:
+        return False
+    options = arguments[1:classpath]
+    crash_path = next(
+        (
+            arg.removeprefix("-XX:ErrorFile=")
+            for arg in options
+            if arg.startswith("-XX:ErrorFile=")
+        ),
+        "",
+    )
+    crash = Path(crash_path)
+    instance = crash.parent
+    return (
+        crash.is_absolute()
+        and crash.name == "hs_err_pid%p.log"
+        and instance.name == release.pack_id
+        and instance.parent.name == "instances"
+        and "-Dauthlibinjector.side=client" in options
+        and f"-Duser.home={instance.parent.parent / 'userdata/java-home'}" in options
+    )
 
 
 @dataclass
@@ -55,6 +85,31 @@ class GameRunner:
             raise ValueError("Invalid memory setting")
         self.root = resolved(root)
         self.memory_mb = memory_mb
+
+    def ensure_stopped(self, release: Release) -> None:
+        """Detect a surviving client from any portable copy under the current account."""
+        owner = psutil.Process().username()
+        for process in psutil.process_iter(["name", "username"]):
+            name = process.info["name"] or ""
+            if process.info["username"] != owner or name.casefold() not in {
+                "java",
+                "javaw",
+                "java.exe",
+                "javaw.exe",
+            }:
+                continue
+            with contextlib.suppress(psutil.NoSuchProcess, psutil.AccessDenied):
+                # The argument list can include a session token. Keep it in memory only.
+                if _is_pack_process(process.cmdline(), release):
+                    event(
+                        self.root,
+                        "game_already_running",
+                        pack=release.pack_id,
+                        pid=process.pid,
+                    )
+                    raise ReleaseError(
+                        "Minecraft уже запущен. Завершите предыдущий запуск и повторите."
+                    )
 
     def command(
         self,
@@ -136,6 +191,7 @@ class GameRunner:
     ) -> GameProcess:
         """Prepare writable instance settings, launch Java and collect game output."""
         command = self.command(release, folder, session, memory_mb=memory_mb)
+        self.ensure_stopped(release)
         clean_extra_mods(release, folder)
         verify_mods(release, folder)
         prepare_client_defaults(release, folder)
@@ -145,14 +201,12 @@ class GameRunner:
         writer = BoundedLog(log)
         prune_game_logs(self.root, folder)
         environment = {
-            **os.environ,
-            "TMP": str(self.root / "userdata/tmp"),
-            "TEMP": str(self.root / "userdata/tmp"),
-            "TMPDIR": str(self.root / "userdata/tmp"),
+            name: value
+            for name, value in os.environ.items()
+            if name not in {"JAVA_TOOL_OPTIONS", "_JAVA_OPTIONS", "JDK_JAVA_OPTIONS"}
         }
-        environment.pop("JAVA_TOOL_OPTIONS", None)
-        environment.pop("_JAVA_OPTIONS", None)
-        environment.pop("JDK_JAVA_OPTIONS", None)
+        temporary = str(self.root / "userdata/tmp")
+        environment.update(TMP=temporary, TEMP=temporary, TMPDIR=temporary)
         started_at = time.time()
         baseline = crash_fingerprints(self.root, folder)
         try:

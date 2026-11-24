@@ -6,6 +6,7 @@ import time
 from pathlib import Path
 from unittest.mock import Mock, patch
 
+import psutil
 import pytest
 
 from launcher.game import GameRunner
@@ -56,6 +57,41 @@ def test_game_refuses_external_instance(tmp_path: Path):
     folder, release, session = fixture(tmp_path / "outside")
     with pytest.raises(ReleaseError):
         GameRunner(tmp_path / "portable").command(release, folder, session)
+
+
+def test_restart_refuses_a_second_copy_of_the_same_pack(tmp_path, monkeypatch):
+    previous = tmp_path / "previous portable copy"
+    old_folder, release, session = fixture(previous)
+    command = GameRunner(previous).command(release, old_folder, session)
+    user = psutil.Process().username()
+    process = Mock(pid=1234, info={"name": "java", "username": user})
+    process.cmdline.return_value = command
+    monkeypatch.setattr(psutil, "process_iter", lambda *_: [process])
+    new_root = tmp_path / "new portable copy"
+    folder, _, _ = fixture(new_root)
+    with (
+        patch("launcher.game.subprocess.Popen", side_effect=AssertionError) as start,
+        pytest.raises(ReleaseError, match="Minecraft уже запущен"),
+    ):
+        GameRunner(new_root).start(release, folder, session)
+    start.assert_not_called()
+
+
+def test_running_checks_distinguish_game_from_java_helpers(tmp_path, monkeypatch):
+    folder, release, session = fixture(tmp_path)
+    command = GameRunner(tmp_path).command(release, folder, session)
+    user = psutil.Process().username()
+    helper = Mock(pid=1234, info={"name": "java", "username": user})
+    helper.cmdline.return_value = [
+        *command[: command.index("-cp")],
+        "-jar",
+        "helper.jar",
+    ]
+    other_user = Mock(pid=1235, info={"name": "java", "username": user + "-other"})
+    other_user.cmdline.return_value = command
+    monkeypatch.setattr(psutil, "process_iter", lambda *_: [helper, other_user])
+    GameRunner(tmp_path).ensure_stopped(release)
+    other_user.cmdline.assert_not_called()
 
 
 def test_selected_heap_reaches_java_arguments(tmp_path: Path):

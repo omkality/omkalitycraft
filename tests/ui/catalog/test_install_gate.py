@@ -88,6 +88,36 @@ def test_play_never_falls_back_to_cached_pack_when_manifest_check_fails(
     assert controller.pool.waitForDone(5000)
 
 
+def test_previous_game_blocks_pack_changes_after_restart(qtbot, tmp_path):
+    service = AccountService(FakeDrasl(), FileSessionStore(tmp_path / "session.json"))
+    release = object()
+    blocked = ReleaseError("Minecraft уже запущен.")
+    calls = []
+
+    def check(manifest):
+        assert manifest is release
+        calls.append("previous game")
+        raise blocked
+
+    def forbidden(*_args, **_kwargs):
+        calls.append("install or launch")
+        raise AssertionError("The running game must be checked before altering files")
+
+    installer = SimpleNamespace(
+        client=SimpleNamespace(fetch=lambda _pack: release),
+        cancel=threading.Event(),
+        install=forbidden,
+    )
+    runner = SimpleNamespace(ensure_stopped=check, start=forbidden)
+    parent = QObject()
+    controller = InstallController(installer, service, runner, parent)
+    with qtbot.waitSignal(controller.failed, timeout=5000) as result:
+        controller.start("dj2", play=True)
+    assert result.args == ["dj2", blocked]
+    assert calls == ["previous game"]
+    assert controller.pool.waitForDone(5000)
+
+
 @pytest.mark.parametrize(
     "message",
     [

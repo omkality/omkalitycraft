@@ -70,6 +70,7 @@ class InstallController(QObject):
             release = self.installer.client.fetch(pack_id)
             if self.installer.cancel.is_set():
                 raise InstallCancelled("Загрузка приостановлена")
+            self.runner.ensure_stopped(release)
             folder = self.installer.install(
                 release, task.signals.progress.emit, clean_mods=True
             )
