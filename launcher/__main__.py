@@ -173,14 +173,16 @@ def main() -> int:
             update_warning=update_warning,
         )
         window.setWindowTitle(f"OmkalityCraft · {VERSION}")
-        window.show()
-        if args.health_file is not None:
-            QTimer.singleShot(
-                0,
-                lambda: acknowledge_health(
-                    root, args.health_file, args.health_nonce or ""
-                ),
+
+        def window_ready():
+            event(
+                root, "launcher_window_painted", version=VERSION, qt=app.platformName()
             )
+            if args.health_file is not None:
+                acknowledge_health(root, args.health_file, args.health_nonce or "")
+
+        window.first_painted.connect(window_ready)
+        window.show()
 
         # Closing the launcher while the game runs keeps the instance lock held.
         def maybe_quit():

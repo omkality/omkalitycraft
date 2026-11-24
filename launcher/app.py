@@ -7,8 +7,8 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any, Self, override
 
-from PySide6.QtCore import QLockFile, QStandardPaths, Qt, QThreadPool, QTimer
-from PySide6.QtGui import QCloseEvent
+from PySide6.QtCore import QLockFile, QStandardPaths, Qt, QThreadPool, QTimer, Signal
+from PySide6.QtGui import QCloseEvent, QPaintEvent
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -187,6 +187,8 @@ class PasswordDialog(QDialog):
 class LauncherWindow(QMainWindow):
     """Own account, pack installation and running-game UI state."""
 
+    first_painted = Signal()
+
     def __init__(
         self,
         service: AccountService,
@@ -198,6 +200,7 @@ class LauncherWindow(QMainWindow):
         status_origin: str | None = None,
     ) -> None:
         super().__init__()
+        self._painted = False
         self.service = service
         self.diagnostic_root = runner.root if runner is not None else None
         store_path = getattr(service.store, "path", None)
@@ -246,6 +249,13 @@ class LauncherWindow(QMainWindow):
         self._setup_installation(installer, runner)
         if auto_restore:
             QTimer.singleShot(0, self._restore)
+
+    @override
+    def paintEvent(self, paint: QPaintEvent) -> None:
+        super().paintEvent(paint)
+        if not self._painted:
+            self._painted = True
+            QTimer.singleShot(0, self, self.first_painted.emit)
 
     def _setup_server_status(self, origin: str | None) -> None:
         self.server_status = ServerStatusController(

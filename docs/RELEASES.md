@@ -48,13 +48,22 @@ uv run --no-sync python scripts/smoke_bundle.py --archive <archive.zip>
 тот же комплект с рабочими адресами, публичным корнем, чистой установкой,
 входом в игру и обновлением с предыдущего лаунчера.
 
+Архивы с `OmkalityCraft.app` проверяйте на macOS через
+`uv run --no-sync python scripts/smoke_bundle.py --finder-archive <archive.zip>`.
+Проверка распаковывает ZIP, запускает приложение через Launch Services и ждёт
+первого рисования окна в Cocoa. В новых установках данные находятся в
+`~/Library/Application Support/OmkalityCraft`. Для использования ранее
+загруженной игры положите `OmkalityCraft.app` рядом с исходными папками
+`userdata/` и `instances/`.
+
 ## Публикация обновления лаунчера
 
 1. Подготовьте TUF-цель командой `omk release launcher` для каждой платформы.
    Передайте `--repository`, `--keys-dir`, `--archive`, `--version`, `--platform`,
    `--entrypoint` и `--github-asset-url`. Имя файла —
    `OmkalityCraft-<версия>-<платформа>.zip`, entrypoint на Windows —
-   `OmkalityCraft.exe`, на Linux и macOS — `OmkalityCraft`.
+   `OmkalityCraft.exe`, на Linux — `OmkalityCraft`, для архива с приложением
+   macOS — `OmkalityCraft.app/Contents/MacOS/OmkalityCraft`.
 2. Прикрепите версионные архивы к черновику GitHub Release. Туда же загрузите
    побайтовые копии под постоянными именами `OmkalityCraft-windows-x64.zip`,
    `OmkalityCraft-linux-x64.zip` и `OmkalityCraft-macos-arm64.zip`.

@@ -21,3 +21,24 @@ def test_bundled_data_is_beside_executable(
     monkeypatch.setattr(sys, "frozen", True, raising=False)
     monkeypatch.setattr(sys, "executable", str(executable))
     assert default_data_dir() == executable.parent / "userdata"
+
+
+@pytest.mark.parametrize("existing", [None, "userdata", "instances"])
+def test_macos_app_keeps_data_outside_the_bundle(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, existing: str | None
+) -> None:
+    extracted = tmp_path / "old launcher"
+    executable = extracted / "OmkalityCraft.app/Contents/MacOS/OmkalityCraft"
+    if existing:
+        (extracted / existing).mkdir(parents=True)
+    user_home = tmp_path / "home"
+    monkeypatch.setattr(Path, "home", lambda: user_home)
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr(sys, "executable", str(executable))
+    root = (
+        extracted
+        if existing
+        else user_home / "Library/Application Support/OmkalityCraft"
+    )
+    assert default_data_dir() == root / "userdata"

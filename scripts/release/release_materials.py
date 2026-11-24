@@ -12,6 +12,7 @@ from importlib import metadata
 from pathlib import Path, PurePosixPath
 
 from launcher.install import current_platform
+from launcher.paths import MACOS_APP
 from launcher.releases import sha256_file
 from launcher.updater import LauncherUpdater
 from launcher.version import VERSION
@@ -118,7 +119,27 @@ def check_python_ownership(entries, owned_sources) -> None:
             )
 
 
-def prepare_notices(bundle: Path, entries, *, distributions=None) -> dict:
+def _font_component(bundle: Path, embedded_fonts: Path | None) -> dict:
+    fonts = bundle / "_internal/launcher/assets/fonts"
+    filenames = ("OFL.txt", "Monocraft-LICENSE.txt")
+    if embedded_fonts is not None:
+        fonts = bundle / "licenses/launcher-fonts"
+        fonts.mkdir()
+        for filename in filenames:
+            shutil.copyfile(embedded_fonts / filename, fonts / filename)
+    if any(not (fonts / filename).is_file() for filename in filenames):
+        raise ValueError("Bundled font license is missing")
+    return {
+        "name": "Launcher fonts",
+        "notices": [
+            (fonts / name).relative_to(bundle).as_posix() for name in filenames
+        ],
+    }
+
+
+def prepare_notices(
+    bundle: Path, entries, *, distributions=None, embedded_fonts: Path | None = None
+) -> dict:
     """Select installed distributions by exact collected source files, not pip freeze."""
     sources = {Path(source).resolve() for _, source, _ in entries if source}
     distributions = metadata.distributions() if distributions is None else distributions
@@ -177,19 +198,7 @@ def prepare_notices(bundle: Path, entries, *, distributions=None) -> dict:
             "notices": [python_license.relative_to(bundle).as_posix()],
         }
     )
-    fonts = bundle / "_internal/launcher/assets/fonts"
-    for filename in ["OFL.txt", "Monocraft-LICENSE.txt"]:
-        if not (fonts / filename).is_file():
-            raise ValueError("Bundled font license is missing")
-    components.append(
-        {
-            "name": "Launcher fonts",
-            "notices": [
-                f"_internal/launcher/assets/fonts/{name}"
-                for name in ["OFL.txt", "Monocraft-LICENSE.txt"]
-            ],
-        }
-    )
+    components.append(_font_component(bundle, embedded_fonts))
     shutil.copyfile(
         Path(__file__).with_name("release_licenses") / "sources.json",
         licenses / "sources.json",
@@ -240,6 +249,7 @@ def archive_inventory(archive: Path) -> list[dict]:
             if path.parts[0] not in {
                 "OmkalityCraft",
                 "OmkalityCraft.exe",
+                MACOS_APP,
                 "_internal",
                 "licenses",
                 "components.json",

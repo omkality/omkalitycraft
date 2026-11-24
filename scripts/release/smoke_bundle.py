@@ -1,6 +1,7 @@
 """Build-fixture setup and an actual packaged Qt startup in isolated state."""
 
 import argparse
+import contextlib
 import json
 import shutil
 import subprocess
@@ -12,7 +13,10 @@ from secrets import token_hex
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
+import psutil
+
 from launcher.install import current_platform
+from launcher.paths import MACOS_APP, bundle_entrypoint
 from launcher.releases import sha256_file
 from launcher.updater import LauncherUpdater, PreparedUpdate
 from launcher.version import VERSION
@@ -33,9 +37,7 @@ def prepare() -> None:
 
 
 def smoke(bundle: Path) -> None:
-    executable = bundle.resolve() / (
-        "OmkalityCraft.exe" if sys.platform == "win32" else "OmkalityCraft"
-    )
+    executable = bundle.resolve() / bundle_entrypoint(current_platform())
     local = PROJECT_ROOT / ".local"
     local.mkdir(exist_ok=True)
     with TemporaryDirectory(dir=local, prefix="bundle-smoke-") as folder:
@@ -68,6 +70,61 @@ def smoke(bundle: Path) -> None:
                 process.wait(timeout=10)
 
 
+def smoke_finder(archive: Path, version: str) -> None:
+    """Unpack and open a Mac app with Launch Services and wait for its first paint."""
+    if sys.platform != "darwin":
+        raise ValueError("Launch Services checks require macOS")
+    archive = archive.resolve()
+    if archive.is_dir():
+        archive /= f"OmkalityCraft-{version}-{current_platform()}.zip"
+    with TemporaryDirectory(prefix="omk-launch-services-") as folder:
+        root = Path(folder).resolve()
+        app = root / MACOS_APP
+        binary = root / bundle_entrypoint(current_platform())
+        log = root / "userdata/logs/launcher.jsonl"
+        log.parent.mkdir(parents=True)
+        subprocess.run(["/usr/bin/ditto", "-x", "-k", archive, root], check=True)
+        subprocess.run(
+            ["/usr/bin/codesign", "--verify", "--deep", "--strict", app], check=True
+        )
+        try:
+            subprocess.run(["/usr/bin/open", "-n", app], check=True, timeout=15)
+            deadline = time.monotonic() + 45
+            while time.monotonic() < deadline:
+                if log.is_file():
+                    for line in log.read_text(encoding="utf-8").splitlines():
+                        with contextlib.suppress(ValueError):
+                            record = json.loads(line)
+                            if (
+                                record["event"] == "launcher_window_painted"
+                                and record["version"] == version
+                                and record["qt"] == "cocoa"
+                            ):
+                                print(
+                                    "Launch Services opened the app and Cocoa painted the launcher"
+                                )
+                                return
+                time.sleep(0.1)
+            raise RuntimeError(
+                "macOS launcher did not paint after Launch Services open"
+            )
+        finally:
+            # The one-file bootloader may use two processes. Only stop this copy.
+            children = [
+                process
+                for process in psutil.process_iter(["exe"])
+                if process.info["exe"] == str(binary)
+            ]
+            for process in children:
+                with contextlib.suppress(psutil.NoSuchProcess):
+                    process.terminate()
+            _, alive = psutil.wait_procs(children, timeout=5)
+            for process in alive:
+                with contextlib.suppress(psutil.NoSuchProcess):
+                    process.kill()
+            psutil.wait_procs(alive, timeout=5)
+
+
 def _handoff(updater: LauncherUpdater, update: PreparedUpdate) -> None:
     """Run the real handoff, retaining the child handle for smoke-test cleanup."""
     processes = []
@@ -97,28 +154,28 @@ def _handoff(updater: LauncherUpdater, update: PreparedUpdate) -> None:
                 process.wait(timeout=10)
 
 
-def smoke_archive(archive: Path) -> None:
+def smoke_archive(archive: Path, *, version: str = VERSION) -> None:
     """Deliver the actual ZIP over loopback TUF, then start its extracted binary."""
     archive = archive.resolve()
     if archive.is_dir():
-        archive /= f"OmkalityCraft-{VERSION}-{current_platform()}.zip"
+        archive /= f"OmkalityCraft-{version}-{current_platform()}.zip"
     fixture = PROJECT_ROOT / ".local/packaging-fixture"
     bootstrap = (fixture / "repository/metadata/1.root.json").read_bytes()
     digest = sha256_file(archive)
-    entrypoint = "OmkalityCraft.exe" if sys.platform == "win32" else "OmkalityCraft"
+    entrypoint = bundle_entrypoint(current_platform())
     with TemporaryDirectory(
         dir=PROJECT_ROOT / ".local", prefix="archive-smoke-"
     ) as folder:
         temporary = Path(folder)
         repository = temporary / "updates"
         shutil.copytree(fixture / "repository", repository)
-        publish_update(repository, fixture / "keys", archive, VERSION, entrypoint)
+        publish_update(repository, fixture / "keys", archive, version, entrypoint)
         with serve(temporary) as (origin, requests):
             updater = LauncherUpdater(
                 temporary / "portable", origin, bootstrap, "0.0.1"
             )
             update = updater.prepare(print)
-            if update is None or update.version != VERSION or update.digest != digest:
+            if update is None or update.version != version or update.digest != digest:
                 raise RuntimeError("Updater did not prepare the supplied archive")
             _handoff(updater, update)
             print(
@@ -145,13 +202,19 @@ def main() -> None:
         type=Path,
         help="ZIP or output directory built with the --prepare test trust root",
     )
+    mode.add_argument(
+        "--finder-archive", type=Path, help="macOS app ZIP or build output"
+    )
+    parser.add_argument("--version", default=VERSION)
     args = parser.parse_args()
     if args.prepare:
         prepare()
     elif args.bundle:
         smoke(args.bundle)
+    elif args.finder_archive:
+        smoke_finder(args.finder_archive, args.version)
     else:
-        smoke_archive(args.archive)
+        smoke_archive(args.archive, version=args.version)
 
 
 if __name__ == "__main__":
