@@ -3,6 +3,7 @@ import os
 import subprocess
 import sys
 import time
+from dataclasses import replace
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -57,6 +58,37 @@ def test_game_refuses_external_instance(tmp_path: Path):
     folder, release, session = fixture(tmp_path / "outside")
     with pytest.raises(ReleaseError):
         GameRunner(tmp_path / "portable").command(release, folder, session)
+
+
+@pytest.mark.parametrize(
+    ("platform", "minecraft", "lwjgl", "keep_first_thread"),
+    [
+        ("macos-arm64", "1.12.2", "2.9.4-nightly-20150209", False),
+        ("macos-x64", "1.12.2", "2.9.4-nightly-20150209", True),
+        ("macos-arm64", "1.12.2", "3.3.1", True),
+        ("macos-arm64", "1.20.1", "3.3.1", True),
+        ("windows-x64", "1.12.2", "2.9.4-nightly-20150209", True),
+    ],
+)
+def test_first_thread_flag_respects_the_graphics_stack(
+    tmp_path, platform, minecraft, lwjgl, keep_first_thread
+):
+    folder, release, session = fixture(tmp_path)
+    first_thread = "-XstartOnFirstThread"
+    release = replace(
+        release,
+        platform=platform,
+        minecraft=minecraft,
+        launch={
+            **release.launch,
+            "classpath": [f"libraries/org/lwjgl/lwjgl/{lwjgl}/lwjgl-{lwjgl}.jar"],
+            "jvm_args": ["-XX:+UseG1GC", first_thread, "-Dtest.option=kept"],
+        },
+    )
+    command = GameRunner(tmp_path).command(release, folder, session)
+    assert (first_thread in command) is keep_first_thread
+    assert command.count("-XX:+UseG1GC") == 1
+    assert "-Dtest.option=kept" in command
 
 
 def test_restart_refuses_a_second_copy_of_the_same_pack(tmp_path, monkeypatch):

@@ -160,8 +160,19 @@ class GameRunner:
             command.append(
                 f"-Dlog4j.configurationFile={inside(folder, launch['logging'])}"
             )
+        ignored_jvm_args = {"-XX:+UseG1GC"}
+        if (
+            release.platform == "macos-arm64"
+            and release.minecraft == "1.12.2"
+            and any(
+                path.startswith("libraries/org/lwjgl/lwjgl/2.")
+                for path in launch["classpath"]
+            )
+        ):
+            # LWJGL 2 needs the AppKit event loop on the main thread.
+            ignored_jvm_args.add("-XstartOnFirstThread")
         command.extend(
-            arg for arg in launch.get("jvm_args", []) if arg != "-XX:+UseG1GC"
+            arg for arg in launch.get("jvm_args", []) if arg not in ignored_jvm_args
         )
         command.extend(
             [
