@@ -75,19 +75,26 @@ def _previous_keys(record: Path) -> set[str]:
     return set(values)
 
 
-def _macos_shortcut_changes(
-    folder: Path, options: dict[str, str]
-) -> tuple[dict[str, str], Path | None]:
-    record = local_file(folder, ".omk-dj2-macos-shortcuts-v1")
-    if record.exists():
-        return {}, None
+def initial_platform_options(release: Release) -> dict[str, str]:
+    """Return the launcher defaults for this game version and platform."""
+    if (
+        release.pack_id == "dj2"
+        and release.minecraft == "1.12.2"
+        and release.platform.startswith("macos-")
+    ):
+        return dict(DJ2_MACOS_OPTIONS)
+    return {}
+
+
+def macos_shortcut_changes(options: dict[str, str]) -> dict[str, str]:
+    """Return replacements for shipped Shift combinations with a free Command slot."""
     occupied = {value for key, value in options.items() if key.startswith("key_")}
     changes = {}
     for key, legacy in _DJ2_MACOS_LEGACY_SHORTCUTS.items():
         replacement = DJ2_MACOS_OPTIONS[key]
         if options.get(key) == legacy and replacement not in occupied:
             changes[key] = replacement
-    return changes, record
+    return changes
 
 
 def _options(
@@ -121,17 +128,20 @@ def _options(
     previous_keys = set()
     if defaults.initial_keybindings and path.exists():
         previous_keys = _previous_keys(key_record)
-    for binding, code in defaults.initial_keybindings:
-        key = "key_" + binding
-        if binding not in previous_keys and key not in options:
-            changed[key] = str(code)
+    changed.update(
+        ("key_" + binding, str(code))
+        for binding, code in defaults.initial_keybindings
+        if binding not in previous_keys and "key_" + binding not in options
+    )
     changed.update(
         (key, value) for key, value in platform_options.items() if key not in options
     )
     migration_record = None
     if platform_options:
-        shortcut_changes, migration_record = _macos_shortcut_changes(folder, options)
-        changed.update(shortcut_changes)
+        record = local_file(folder, ".omk-dj2-macos-shortcuts-v1")
+        if not record.exists():
+            changed.update(macos_shortcut_changes(options))
+            migration_record = record
     if any(options.get(key) != value for key, value in changed.items()):
         output = [line for line in lines if line.split(":", 1)[0] not in changed]
         output.extend(f"{key}:{value}" for key, value in changed.items())
@@ -247,13 +257,7 @@ def prepare_client_defaults(release: Release, folder: Path) -> None:
         return
     try:
         defaults = ClientDefaults.parse(raw)
-        platform_options = (
-            DJ2_MACOS_OPTIONS
-            if release.pack_id == "dj2"
-            and release.minecraft == "1.12.2"
-            and release.platform.startswith("macos-")
-            else {}
-        )
+        platform_options = initial_platform_options(release)
         if release.pack_id == "dj2":
             # The signed presets still supply the server identity and address.
             defaults = replace(
