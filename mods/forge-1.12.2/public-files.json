@@ -50,6 +50,7 @@
     "client/src/net/omkality/client/ClientNetworkTasks.java",
     "client/src/net/omkality/client/NetworkPacketBridge.java",
     "client/src/net/omkality/client/OmkalityClient.java",
+    "client/src/net/omkality/client/crates/CrateSortButtons.java",
     "client/src/net/omkality/client/books/BookLocaleText.java",
     "client/src/net/omkality/client/bootstrap/BookLocaleMixinLoader.java",
     "client/src/net/omkality/client/bootstrap/ControlsLocaleMixinLoader.java",
