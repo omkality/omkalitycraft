@@ -339,10 +339,15 @@ def _console_server(value):
     return value
 
 
-def _add_tps_history_parser(actions):
+def _add_monitoring_parsers(actions):
     history = actions.add_parser("tps-history", help="Read-only bounded TPS history")
     history.add_argument("--server", required=True, type=_console_server)
     history.add_argument("--window", choices=("5m", "15m", "1h", "3h"), default="5m")
+    capacity = actions.add_parser(
+        "capacity-report", help="Summarize host and game resources over completed hours"
+    )
+    capacity.add_argument("--server", required=True, type=_console_server)
+    capacity.add_argument("--window", choices=("24h", "7d", "14d"), default="24h")
 
 
 def _add_tui_operation_parsers(actions):
@@ -430,7 +435,7 @@ def add_admin_commands(sub):
         "overview", help="Read-only owner TUI overview (separate schema)"
     )
     overview.add_argument("--server", type=_console_server)
-    _add_tps_history_parser(actions)
+    _add_monitoring_parsers(actions)
     console = actions.add_parser("console", help="Fixed owner RCON commands")
     console.add_argument("--server", required=True, type=_console_server)
     console.add_argument(
@@ -609,6 +614,10 @@ def _run_tui_action(args):
         from omk.owner.panels.owner_tps_history import run  # noqa: PLC0415
 
         return run(args.config, args.server, args.window)
+    if args.admin_action == "capacity-report":
+        from omk.owner.panels.owner_capacity_report import run  # noqa: PLC0415
+
+        result = run(args.config, args.server, args.window)
     if args.admin_action == "console":
         from omk.owner.panels.owner_console import run  # noqa: PLC0415
 
