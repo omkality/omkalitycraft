@@ -5,4 +5,7 @@ public class GuiScreenEvent extends net.minecraftforge.fml.common.eventhandler.E
     public static class InitGuiEvent extends GuiScreenEvent {
         public static class Post extends InitGuiEvent {}
     }
+    public static class DrawScreenEvent extends GuiScreenEvent {
+        public static class Pre extends DrawScreenEvent {}
+    }
 }
