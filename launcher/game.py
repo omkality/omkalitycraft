@@ -14,6 +14,7 @@ import psutil
 from launcher.pack.client_defaults import prepare_client_defaults
 from launcher.pack.log_policy import prepare_logging, prune_game_logs
 from launcher.pack.mod_policy import clean_extra_mods, verify_mods
+from launcher.paths import BRAND_ICON
 from launcher.releases import Release, ReleaseError, inside
 from launcher.session import Session
 from launcher.version import VERSION
@@ -89,16 +90,18 @@ class GameRunner:
     def ensure_stopped(self, release: Release) -> None:
         """Detect a surviving client from any portable copy under the current account."""
         owner = psutil.Process().username()
+        java_names = {"java", "javaw", "java.exe", "javaw.exe"}
         for process in psutil.process_iter(["name", "username"]):
-            name = process.info["name"] or ""
-            if process.info["username"] != owner or name.casefold() not in {
-                "java",
-                "javaw",
-                "java.exe",
-                "javaw.exe",
-            }:
+            if process.info["username"] != owner:
                 continue
             with contextlib.suppress(psutil.NoSuchProcess, psutil.AccessDenied):
+                name = (process.info["name"] or "").casefold()
+                # AppKit can give the JVM an application name instead of "java".
+                if name not in java_names and (
+                    not release.platform.startswith("macos-")
+                    or Path(process.exe()).name.casefold() not in java_names
+                ):
+                    continue
                 # The argument list can include a session token. Keep it in memory only.
                 if _is_pack_process(process.cmdline(), release):
                     event(
@@ -174,6 +177,8 @@ class GameRunner:
         command.extend(
             arg for arg in launch.get("jvm_args", []) if arg not in ignored_jvm_args
         )
+        if release.platform.startswith("macos-"):
+            command.extend(["-Xdock:name=OmkalityCraft", f"-Xdock:icon={BRAND_ICON}"])
         command.extend(
             [
                 "-cp",

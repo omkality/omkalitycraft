@@ -118,6 +118,29 @@ def test_previous_game_blocks_pack_changes_after_restart(qtbot, tmp_path):
     assert controller.pool.waitForDone(5000)
 
 
+def test_launcher_dock_follows_the_hidden_game_lifecycle(qtbot, tmp_path, monkeypatch):
+    service = AccountService(FakeDrasl(), FileSessionStore(tmp_path / "session.json"))
+    window = LauncherWindow(service, runner=GameRunner(tmp_path), auto_restore=False)
+    qtbot.addWidget(window)
+    seen = []
+    monkeypatch.setattr("launcher.app.set_launcher_dock_visible", seen.append)
+    result = None
+    game = SimpleNamespace(
+        poll=lambda: result,
+        diagnostics_done=threading.Event(),
+        logging_failed=threading.Event(),
+    )
+    window.show()
+    window._installed(
+        "dj2", SimpleNamespace(game=game, release=SimpleNamespace(version="2.23.4"))
+    )
+    assert window.isHidden() and seen == [False]
+    result = 0
+    game.diagnostics_done.set()
+    window._poll_game()
+    assert window.isVisible() and seen == [False, True]
+
+
 @pytest.mark.parametrize(
     "message",
     [

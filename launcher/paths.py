@@ -7,6 +7,7 @@ from omk.shared.profiles import PROJECT_ROOT
 
 MACOS_APP = "OmkalityCraft.app"
 MACOS_RUNTIME = "OmkalityCraftRuntime"
+BRAND_ICON = Path(__file__).resolve().parent / "assets/branding/icon.png"
 
 
 def bundle_entrypoint(platform: str) -> str:

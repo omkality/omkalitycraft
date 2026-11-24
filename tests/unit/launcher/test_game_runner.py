@@ -11,6 +11,7 @@ import psutil
 import pytest
 
 from launcher.game import GameRunner
+from launcher.paths import BRAND_ICON
 from launcher.releases import ReleaseError
 from tests.fixtures.unit.launcher.game_runner import fixture
 
@@ -89,6 +90,12 @@ def test_first_thread_flag_respects_the_graphics_stack(
     assert (first_thread in command) is keep_first_thread
     assert command.count("-XX:+UseG1GC") == 1
     assert "-Dtest.option=kept" in command
+    dock_args = [value for value in command if value.startswith("-Xdock:")]
+    assert dock_args == (
+        ["-Xdock:name=OmkalityCraft", f"-Xdock:icon={BRAND_ICON}"]
+        if platform.startswith("macos-")
+        else []
+    )
 
 
 def test_restart_refuses_a_second_copy_of_the_same_pack(tmp_path, monkeypatch):
@@ -124,6 +131,20 @@ def test_running_checks_distinguish_game_from_java_helpers(tmp_path, monkeypatch
     monkeypatch.setattr(psutil, "process_iter", lambda *_: [helper, other_user])
     GameRunner(tmp_path).ensure_stopped(release)
     other_user.cmdline.assert_not_called()
+
+
+def test_mac_duplicate_game_with_an_application_name_is_detected(tmp_path, monkeypatch):
+    folder, release, session = fixture(tmp_path)
+    release = replace(release, platform="macos-arm64")
+    runner = GameRunner(tmp_path)
+    child = Mock(
+        pid=1234, info={"name": "Launch", "username": psutil.Process().username()}
+    )
+    child.exe.return_value = str(folder / "runtime/bin/java")
+    child.cmdline.return_value = runner.command(release, folder, session)
+    monkeypatch.setattr(psutil, "process_iter", lambda *_: [child])
+    with pytest.raises(ReleaseError, match="Minecraft уже запущен"):
+        runner.ensure_stopped(release)
 
 
 def test_selected_heap_reaches_java_arguments(tmp_path: Path):

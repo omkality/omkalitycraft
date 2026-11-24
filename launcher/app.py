@@ -55,6 +55,7 @@ from launcher.skin_dialog import SkinDialog, SkinResetDialog
 from launcher.skins import MAX_SKIN_BYTES, SkinError, decode_skin
 from launcher.storage import FileSessionStore
 from launcher.tasks import Task
+from launcher.ui.macos_dock import set_launcher_dock_visible
 from launcher.ui.nickname import NicknameField
 from launcher.ui.social import SocialFooter
 from launcher.ui.theme import ASSETS, STYLE, install_font
@@ -451,7 +452,7 @@ class LauncherWindow(QMainWindow):
             self.game_timer.start()
             self._hidden_for_game = self.isVisible() and not self._close_after_install
             if self._hidden_for_game:
-                self.hide()
+                self._hide_for_game()
         if self._close_after_install:
             self.close()
 
@@ -491,6 +492,7 @@ class LauncherWindow(QMainWindow):
             )
         if self._hidden_for_game:
             self._hidden_for_game = False
+            set_launcher_dock_visible(True)
             self.show()
         elif self.isHidden():
             self.close()
@@ -742,13 +744,17 @@ class LauncherWindow(QMainWindow):
             self.installation.cancel()
             event.ignore()
         elif self.game is not None and self.game.poll() is None:
-            self.hide()
+            self._hide_for_game()
             event.ignore()
         elif self.busy:
             self.status.setText("Дождитесь завершения текущего действия.")
             event.ignore()
         else:
             event.accept()
+
+    def _hide_for_game(self) -> None:
+        self.hide()
+        set_launcher_dock_visible(False)
 
 
 def instance_lock(data_dir: Path, name: str = "launcher.lock") -> QLockFile | None:
