@@ -4,9 +4,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QApplication, QHBoxLayout, QLabel
 
-from launcher.ui.theme import ASSETS
-
-ICON = ASSETS / "branding/icon.png"
+from launcher.paths import BRAND_ICON as ICON
 
 
 def install_branding(app: QApplication) -> None:

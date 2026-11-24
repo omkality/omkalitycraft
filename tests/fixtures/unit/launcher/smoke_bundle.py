@@ -1,15 +1,15 @@
 """Test dependencies for smoke bundle."""
 
-import sys
 import zipfile
 
 import pytest
 
 from launcher.install import current_platform
+from launcher.paths import bundle_entrypoint
 from launcher.version import VERSION
 from scripts.release import smoke_bundle
 
-ENTRYPOINT = "OmkalityCraft.exe" if sys.platform == "win32" else "OmkalityCraft"
+ENTRYPOINT = bundle_entrypoint(current_platform())
 
 
 @pytest.fixture
@@ -19,6 +19,7 @@ def bundle(tmp_path, monkeypatch):
     output = tmp_path / "build"
     unpacked = output / "OmkalityCraft"
     (unpacked / "_internal").mkdir(parents=True)
+    (unpacked / ENTRYPOINT).parent.mkdir(parents=True, exist_ok=True)
     (unpacked / ENTRYPOINT).write_bytes(b"unpacked build is deliberately different")
     (unpacked / "_internal/runtime.bin").write_bytes(b"runtime dependency")
     archive = output / f"OmkalityCraft-{VERSION}-{current_platform()}.zip"

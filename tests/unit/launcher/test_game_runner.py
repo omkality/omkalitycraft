@@ -3,12 +3,15 @@ import os
 import subprocess
 import sys
 import time
+from dataclasses import replace
 from pathlib import Path
 from unittest.mock import Mock, patch
 
+import psutil
 import pytest
 
 from launcher.game import GameRunner
+from launcher.paths import BRAND_ICON
 from launcher.releases import ReleaseError
 from tests.fixtures.unit.launcher.game_runner import fixture
 
@@ -56,6 +59,92 @@ def test_game_refuses_external_instance(tmp_path: Path):
     folder, release, session = fixture(tmp_path / "outside")
     with pytest.raises(ReleaseError):
         GameRunner(tmp_path / "portable").command(release, folder, session)
+
+
+@pytest.mark.parametrize(
+    ("platform", "minecraft", "lwjgl", "keep_first_thread"),
+    [
+        ("macos-arm64", "1.12.2", "2.9.4-nightly-20150209", False),
+        ("macos-x64", "1.12.2", "2.9.4-nightly-20150209", True),
+        ("macos-arm64", "1.12.2", "3.3.1", True),
+        ("macos-arm64", "1.20.1", "3.3.1", True),
+        ("windows-x64", "1.12.2", "2.9.4-nightly-20150209", True),
+    ],
+)
+def test_first_thread_flag_respects_the_graphics_stack(
+    tmp_path, platform, minecraft, lwjgl, keep_first_thread
+):
+    folder, release, session = fixture(tmp_path)
+    first_thread = "-XstartOnFirstThread"
+    release = replace(
+        release,
+        platform=platform,
+        minecraft=minecraft,
+        launch={
+            **release.launch,
+            "classpath": [f"libraries/org/lwjgl/lwjgl/{lwjgl}/lwjgl-{lwjgl}.jar"],
+            "jvm_args": ["-XX:+UseG1GC", first_thread, "-Dtest.option=kept"],
+        },
+    )
+    command = GameRunner(tmp_path).command(release, folder, session)
+    assert (first_thread in command) is keep_first_thread
+    assert command.count("-XX:+UseG1GC") == 1
+    assert "-Dtest.option=kept" in command
+    dock_args = [value for value in command if value.startswith("-Xdock:")]
+    assert dock_args == (
+        ["-Xdock:name=OmkalityCraft", f"-Xdock:icon={BRAND_ICON}"]
+        if platform.startswith("macos-")
+        else []
+    )
+
+
+def test_restart_refuses_a_second_copy_of_the_same_pack(tmp_path, monkeypatch):
+    previous = tmp_path / "previous portable copy"
+    old_folder, release, session = fixture(previous)
+    command = GameRunner(previous).command(release, old_folder, session)
+    user = psutil.Process().username()
+    process = Mock(pid=1234, info={"name": "java", "username": user})
+    process.cmdline.return_value = command
+    monkeypatch.setattr(psutil, "process_iter", lambda *_: [process])
+    new_root = tmp_path / "new portable copy"
+    folder, _, _ = fixture(new_root)
+    with (
+        patch("launcher.game.subprocess.Popen", side_effect=AssertionError) as start,
+        pytest.raises(ReleaseError, match="Minecraft уже запущен"),
+    ):
+        GameRunner(new_root).start(release, folder, session)
+    start.assert_not_called()
+
+
+def test_running_checks_distinguish_game_from_java_helpers(tmp_path, monkeypatch):
+    folder, release, session = fixture(tmp_path)
+    command = GameRunner(tmp_path).command(release, folder, session)
+    user = psutil.Process().username()
+    helper = Mock(pid=1234, info={"name": "java", "username": user})
+    helper.cmdline.return_value = [
+        *command[: command.index("-cp")],
+        "-jar",
+        "helper.jar",
+    ]
+    other_user = Mock(pid=1235, info={"name": "java", "username": user + "-other"})
+    other_user.cmdline.return_value = command
+    monkeypatch.setattr(psutil, "process_iter", lambda *_: [helper, other_user])
+    GameRunner(tmp_path).ensure_stopped(release)
+    other_user.cmdline.assert_not_called()
+
+
+def test_mac_duplicate_game_with_an_application_name_is_detected(tmp_path, monkeypatch):
+    folder, release, session = fixture(tmp_path)
+    release = replace(release, platform="macos-arm64")
+    runner = GameRunner(tmp_path)
+    child = Mock(
+        pid=1234, info={"name": "Launch", "username": psutil.Process().username()}
+    )
+    child.exe.return_value = str(folder / "runtime/bin/java")
+    child.cmdline.return_value = runner.command(release, folder, session)
+    monkeypatch.setattr(psutil, "process_iter", lambda *_: [child])
+    with pytest.raises(ReleaseError, match="Minecraft уже запущен"):
+        runner.ensure_stopped(release)
 
 
 def test_selected_heap_reaches_java_arguments(tmp_path: Path):
