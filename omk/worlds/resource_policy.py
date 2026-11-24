@@ -101,6 +101,7 @@ def jed_dimension(plan):
                     "BorderCenterZ": 0.0,
                     "BorderSize": float(plan["diameter"]),
                 },
+                "worldinfo": {"Difficulty": 3},
                 "jed": {"CanRespawnHere": False, "RespawnDimension": 0},
             }
         ],

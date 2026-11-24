@@ -10,7 +10,7 @@ import net.omkality.patches.*;
 import org.apache.logging.log4j.Logger;
 
 /** Reviewed patch composition for DJ2; reusable implementations live in patches/. */
-@Mod(modid="omkalitydj2fix",name="Omkality DJ2 Fix",version="0.1.11",
+@Mod(modid="omkalitydj2fix",name="Omkality DJ2 Fix",version="0.1.12",
     acceptedMinecraftVersions="[1.12.2]",serverSideOnly=true,acceptableRemoteVersions="*",
     dependencies="required-after:omkalitycore@[0.3.2,0.4.0);required-after:mixinbooter")
 public final class OmkalityDJ2Fix {
@@ -27,6 +27,7 @@ public final class OmkalityDJ2Fix {
                 CoreServices.claims();
                 VanillaBoundaryGuard.install(log);
                 VanillaBedGuard.install(log);
+                NetherPortalBorder.install();
                 DisconnectContainerGuard.install(log);
                 TwilightSortingGuard.install(log);
                 TwilightWorldEffectGuard.install(log);

@@ -256,14 +256,22 @@ fn renders_resizes_and_keeps_unknown_distinct_from_zero() {
             assert!(text.contains("ДЕМО"));
         }
     }
-    app.confirm = Some(Confirmation::Save("SAVE dj2".into()));
+    app.open_save_world();
     let mut terminal = Terminal::new(TestBackend::new(120, 38)).unwrap();
     terminal.draw(|f| ui::draw(f, &mut app)).unwrap();
+    let text: String = terminal
+        .backend()
+        .buffer()
+        .content
+        .iter()
+        .map(|cell| cell.symbol())
+        .collect();
+    assert!(text.contains("1  dj2"));
+    assert!(app.dismiss_dialog());
     let mut v = demo();
     v["metrics"][0]["state"] = serde_json::json!("missing");
     v["metrics"][0]["value"] = serde_json::Value::Null;
     v["metrics_status"] = serde_json::json!("partial");
-    app.confirm = None;
     app.accept(Overview::parse(&serde_json::to_vec(&v).unwrap()).unwrap());
     terminal.draw(|f| ui::draw(f, &mut app)).unwrap();
     let text: String = terminal

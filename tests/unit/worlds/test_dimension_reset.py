@@ -5,7 +5,7 @@ import json
 import pytest
 
 from omk.shared.nbt import Tag
-from omk.worlds.border_policy import _borders, _dimension_info, border_plan
+from omk.worlds.border_policy import _borders, _dimension_info, _primer, border_plan
 from omk.worlds.reset import (
     dimension_reset,
     resource_reset_stage,
@@ -48,6 +48,31 @@ def test_border_only_dimensions_keep_the_provider_spawn_on_first_load():
     assert rows[420]["jed"]["SpawnPointSearchType"] == {"type": "cavern"}
     assert rows[-18000]["worldinfo_onetime"] == {"RandomSeed": 31}
     assert "jed" not in rows[-18000] and "jed" not in rows[0]
+    assert all(row["worldinfo"]["Difficulty"] == 3 for row in rows.values())
+
+
+def test_existing_primer_policy_adds_hard_for_each_loaded_dimension():
+    source = """Commands {
+    S:dimensionLoadingCommands <
+        jed worldborder {DIMENSION} set 8192
+        worldprimer-dim-command 0 jed worldborder 0 set 32768
+        worldprimer-dim-command 1 jed worldborder 1 set 16384
+        worldprimer-dim-command -18000 jed worldborder -18000 set 16384
+     >
+    S:postWorldLoadingCommands <
+        jed worldborder 0 set 32768
+     >
+}
+Options {
+    B:enableDimensionLoadingCommands=true
+    B:enablePostWorldLoadingCommands=true
+}
+"""
+    plan = border_plan("dj2")
+    updated = _primer(source, plan)
+    assert updated.replace("        jed difficulty {DIMENSION} hard\n", "") == source
+    assert updated.count("jed difficulty {DIMENSION} hard") == 1
+    assert _primer(updated, plan) == updated
 
 
 def test_eden_reset_leaves_its_neighbors_and_resource_identity_byte_equivalent():

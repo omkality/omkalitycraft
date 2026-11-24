@@ -67,14 +67,14 @@ def _setting(text: str, kind: str, key: str, value: str) -> str:
     return result
 
 
-def _commands(text: str, key: str, commands: list[str]) -> str:
+def _commands(text: str, key: str, commands: list[str], *, previous=None) -> str:
     pattern = r"(?m)^( +)S:" + re.escape(key) + r" <\n([\s\S]*?)^ +> *$"
     matches = list(re.finditer(pattern, text))
     if len(matches) != 1:
         raise ValueError("Expected exactly one World Primer list: " + key)
     match = matches[0]
     existing = [row.strip() for row in match[2].splitlines() if row.strip()]
-    if existing and existing != commands:
+    if existing and existing not in (commands, previous):
         raise ValueError("Review existing World Primer commands before staging " + key)
     return (
         text[: match.start(2)]
@@ -132,6 +132,7 @@ def _dimension_info(raw: bytes, plan: dict) -> str:
         if not isinstance(info, dict):
             raise ValueError("Unsupported JED world info")
         for key, value in {
+            "Difficulty": 3,
             "BorderCenterX": 0.0,
             "BorderCenterZ": 0.0,
             "BorderSize": float(width),
@@ -148,7 +149,12 @@ def _primer(text: str, plan: dict) -> str:
         f"worldprimer-dim-command {dim} jed worldborder {dim} set {width}"
         for dim, width in plan["overrides"].items()
     )
-    text = _commands(text, "dimensionLoadingCommands", commands)
+    text = _commands(
+        text,
+        "dimensionLoadingCommands",
+        [*commands, "jed difficulty {DIMENSION} hard"],
+        previous=commands,
+    )
     text = _commands(
         text,
         "postWorldLoadingCommands",

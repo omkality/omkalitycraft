@@ -4,6 +4,7 @@ mod invitations;
 mod moderation;
 mod protocol;
 mod restrictions;
+mod save_world;
 mod startup;
 mod tps_grid;
 mod ui;
@@ -699,25 +700,16 @@ fn interactive(
                     }
                     _ => {}
                 }
-            } else if let Some(Confirmation::Save(input)) = app.confirm.as_mut() {
-                match key.code {
-                    KeyCode::Backspace => {
-                        input.pop();
-                    }
-                    KeyCode::Char(c) if input.len() < 60 && c.is_ascii() && !c.is_control() => {
-                        input.push(c)
-                    }
-                    KeyCode::Enter => {
-                        let input = input.clone();
-                        if app.server().is_some_and(|s| input == format!("SAVE {s}")) {
-                            request = app.server().map(|s| Request::Console {
-                                server: s.into(),
-                                command: "save".into(),
-                            });
-                            app.confirm = None;
-                        }
-                    }
-                    _ => {}
+            } else if let Some(form) = &mut app.save_world {
+                if let Some(server) = form.key(key.code) {
+                    app.save_world = None;
+                    app.failed = false;
+                    app.show_detail(format!("Сохраняем мир · {server}"));
+                    drop(pending.take());
+                    request = Some(Request::Console {
+                        server,
+                        command: "save".into(),
+                    });
                 }
             } else if let Some(panel) = app.restrictions_panel() {
                 let idle = pending.as_ref().is_none_or(|work| work.overview);
@@ -835,9 +827,7 @@ fn interactive(
                         if pending.is_none() && !app.demo =>
                     {
                         if c == '3' {
-                            if app.server().is_some() {
-                                app.confirm = Some(Confirmation::Save(String::new()));
-                            }
+                            app.open_save_world();
                         } else if c == '4' {
                             request = Some(Request::Restrictions);
                         } else {
