@@ -27,6 +27,7 @@ from PySide6.QtWidgets import QApplication, QLabel, QLineEdit
 from launcher.accounts import AccountService
 from launcher.app import LauncherWindow
 from launcher.controller import InstallationResult
+from launcher.game import GameRunner
 from launcher.releases import Artifact, read_release
 from launcher.session import Session
 from launcher.storage import FileSessionStore
@@ -66,7 +67,7 @@ def free_local_port():
 
 
 def main(mode):
-    assert mode in {"report", "no-report", "normal"}
+    assert mode in {"report", "no-report", "normal", "baseline"}
     stage = json.loads((lab / "stage.json").read_text())
     root, folder = Path(stage["root"]), Path(stage["game"])
     assert root == lab / "client" and folder == root / "instances/dj2"
@@ -77,8 +78,10 @@ def main(mode):
     data = jar_source.read_bytes()
     assert len(data) == mcp_pin["size"] and hashlib.sha256(data).hexdigest() == mcp_pin["sha256"]
     relative_jar = "mods/" + jar_source.name
-    shutil.copyfile(jar_source, folder / relative_jar)
-    release = replace(signed, files=(*signed.files, Artifact(relative_jar, mcp_pin["sha256"], mcp_pin["size"])))
+    release = signed
+    if mode != "baseline":
+        shutil.copyfile(jar_source, folder / relative_jar)
+        release = replace(signed, files=(*signed.files, Artifact(relative_jar, mcp_pin["sha256"], mcp_pin["size"])))
     client_port = free_local_port()
     link_port = int(os.environ.get("OMK_CRASH_LAB_LINK_PORT", "25680"))
     (folder / "config/mcmcp.cfg").write_text(
@@ -121,7 +124,10 @@ def main(mode):
         )
         service = AccountService(DraslClient(origin), FileSessionStore(root / "userdata/session.json"))
         service.current = session
-        runner = CrashLabRunner(root, fixture=Path(stage["agent"]), marker=request)
+        runner = (
+            GameRunner(root) if mode == "baseline"
+            else CrashLabRunner(root, fixture=Path(stage["agent"]), marker=request)
+        )
         app = QApplication([])
         app.setQuitOnLastWindowClosed(False)
         window = LauncherWindow(service, auto_restore=False, runner=runner)
@@ -167,7 +173,7 @@ def main(mode):
             )
             labels = [label.text() for item in dialogs for label in item.findChildren(QLabel)]
             ok = len(dialogs) == int(expected is not None) and actual == (str(expected) if expected else None)
-            if mode == "normal":
+            if mode in {"normal", "baseline"}:
                 ok = ok and game.poll() == 0 and not saved
             else:
                 ok = ok and "Minecraft вылетел" in labels and "Мы получили отчёт" not in labels

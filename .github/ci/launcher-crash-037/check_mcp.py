@@ -18,6 +18,9 @@ config = (lab / "client/instances/dj2/config/mcmcp.cfg").read_text()
 token = re.search(r"^\s*S:authToken=([a-f0-9]{64})\s*$", config, re.M)[1]
 deadline = monotonic() + 370
 while monotonic() < deadline:
+    current = json.loads((lab / "probe-state.json").read_text(encoding="utf-8"))
+    if current["phase"] == "unexpected-result":
+        raise SystemExit(f"Test Java process ended before menu, exit {current['game_exit']}")
     try:
         with McpClient(state["mcp_endpoint"], token, timeout=7) as mcp:
             gui = mcp.data(mcp.call("client_gui_state"))

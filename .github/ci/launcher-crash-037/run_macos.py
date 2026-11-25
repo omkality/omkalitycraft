@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -32,6 +33,35 @@ def fetch(url, file, size_limit, digest):
         data = response.read(size_limit + 1)
     assert len(data) <= size_limit and hashlib.sha256(data).hexdigest() == digest
     file.write_bytes(data)
+
+
+def diagnostics(state, log):
+    if state.is_file():
+        details = json.loads(state.read_text())
+        print("Observed phase, Java exit and dialog count:", details.get("phase"),
+              details.get("game_exit"), details.get("crash_dialog_count"), flush=True)
+    if not log.is_file():
+        print("Java did not write a game log", flush=True)
+        return
+    lines = log.read_text(errors="replace").splitlines()
+    relevant = re.compile(
+        r"exception|fatal|OpenGL|out.?of.?memory|CrashAssistantJarInJarHelper|crash report|MCMCP instance",
+        re.I,
+    )
+    sensitive = re.compile(r"token|credential|password|secret|authorization", re.I)
+    matches = [line[:550] for line in lines if relevant.search(line) and not sensitive.search(line)]
+    for line in matches[:4] + matches[-22:]:
+        print(line, flush=True)
+    print("Last Java log class:", re.sub(r":.*", "", lines[-1])[:120] if lines else "", flush=True)
+
+
+def finish(process, marker):
+    marker.touch()
+    try:
+        process.wait(timeout=25)
+    except subprocess.TimeoutExpired:
+        process.terminate()
+        process.wait(timeout=15)
 
 
 with tempfile.TemporaryDirectory(prefix="client-crash-lab-macos-", dir=os.environ["RUNNER_TEMP"]) as scope:
@@ -67,6 +97,9 @@ with tempfile.TemporaryDirectory(prefix="client-crash-lab-macos-", dir=os.enviro
     scripts = Path(__file__).resolve().parent
     process = subprocess.Popen([sys.executable, "-u", str(scripts / "probe.py"), "report"], env=env)
     state = lab / "probe-state.json"
+    log = root / "userdata/logs/dj2-game.log"
+    stop = lab / "request-close-validated-probe"
+    failure = None
     try:
         for _ in range(65):
             if state.exists() and json.loads(state.read_text())["phase"] == "java-started":
@@ -83,10 +116,30 @@ with tempfile.TemporaryDirectory(prefix="client-crash-lab-macos-", dir=os.enviro
             time.sleep(1)
         else:
             raise RuntimeError("Native macOS crash verification timed out")
+    except (subprocess.SubprocessError, RuntimeError, AssertionError) as error:
+        failure = error
+        diagnostics(state, log)
     finally:
-        (lab / "request-close-validated-probe").touch()
+        finish(process, stop)
+
+    if failure is not None:
+        state.unlink(missing_ok=True)
+        log.rename(log.with_name("dj2-game-with-instrumentation.log"))
+        baseline = subprocess.Popen(
+            [sys.executable, "-u", str(scripts / "probe.py"), "baseline"], env=env,
+        )
         try:
-            process.wait(timeout=35)
-        except subprocess.TimeoutExpired:
-            process.terminate()
-            process.wait(timeout=15)
+            for _ in range(150):
+                if state.is_file() and json.loads(state.read_text())["phase"] == "unexpected-result":
+                    print("The plain signed client also ended before menu observation")
+                    break
+                if log.is_file() and b"Forge Mod Loader has successfully loaded" in log.read_bytes():
+                    print("The plain signed client reached the end of Forge initialization")
+                    break
+                if baseline.poll() is not None:
+                    break
+                time.sleep(2)
+            diagnostics(state, log)
+        finally:
+            finish(baseline, stop)
+        raise failure

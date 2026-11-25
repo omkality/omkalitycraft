@@ -18,13 +18,14 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
-          fetch-depth: 2
+          fetch-depth: 3
       - uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca
         with:
           version: "0.11.12"
       - run: |
           test "$(uname -m)" = arm64
-          test "$(git rev-parse HEAD^)" = 389d7442232254b99adf49f9106051298e6d58de
-          test -z "$(git diff --name-only HEAD^ HEAD -- launcher omk pyproject.toml uv.lock)"
+          source=389d7442232254b99adf49f9106051298e6d58de
+          git merge-base --is-ancestor "$source" HEAD
+          test -z "$(git diff --name-only "$source" HEAD -- launcher omk pyproject.toml uv.lock)"
           uv sync --locked --all-groups
           uv run --no-sync python .github/ci/launcher-crash-037/run_macos.py
