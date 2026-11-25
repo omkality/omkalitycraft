@@ -37,11 +37,21 @@ def test_nested_lock_and_exception_release_but_other_thread_cannot_enter(tmp_pat
 
 def test_nested_owner_lock_does_not_release_outer_process_exclusion(tmp_path):
     cfg, _ = config(tmp_path)
+    # Reproduce the Windows runner's denial of an exclusive create on the existing lock.
     script = (
         "from pathlib import Path\nfrom types import SimpleNamespace\n"
-        "from omk.owner.admin_backups import locked\nimport sys\ntry:\n"
+        "from omk.owner.admin_backups import OwnerBusy, locked\n"
+        "import errno, sys\n"
+        "lock = Path(sys.argv[1]) / 'backups.lock'\n"
+        "path_open = Path.open\n"
+        "def open_existing(self, mode='r', *args, **kwargs):\n"
+        " if self == lock and mode == 'xb':\n"
+        "  raise PermissionError(errno.EACCES, 'exclusive creation denied')\n"
+        " return path_open(self, mode, *args, **kwargs)\n"
+        "Path.open = open_existing\n"
+        "try:\n"
         " with locked(SimpleNamespace(private=Path(sys.argv[1]))):pass\n"
-        "except OSError:sys.exit(7)\n"
+        "except OwnerBusy:sys.exit(7)\n"
     )
     with owner.locked(cfg):
         with owner.locked(cfg):
@@ -53,7 +63,7 @@ def test_nested_owner_lock_does_not_release_outer_process_exclusion(tmp_path):
             timeout=10,
             check=False,
         )
-        assert result.returncode == 7
+        assert result.returncode == 7, result.stderr
     result = subprocess.run(
         [sys.executable, "-c", script, str(cfg.private)],
         capture_output=True,
@@ -61,7 +71,7 @@ def test_nested_owner_lock_does_not_release_outer_process_exclusion(tmp_path):
         timeout=10,
         check=False,
     )
-    assert result.returncode == 0
+    assert result.returncode == 0, result.stderr
 
 
 @pytest.mark.parametrize("value", ["", True, "bad", "../escape", "a" * 31])
