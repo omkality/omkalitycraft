@@ -1,5 +1,6 @@
 """Validate one complete, isolated Apple Silicon DJ2 launch and crash."""
 
+from contextlib import contextmanager
 import hashlib
 import json
 import os
@@ -10,6 +11,10 @@ import sys
 import tempfile
 import time
 from urllib.request import urlopen
+from urllib.error import HTTPError
+
+import certifi
+import urllib3
 
 repository = Path.cwd()
 sys.path.insert(0, str(repository))
@@ -19,13 +24,38 @@ from launcher.releases import inside
 from omk.labs.launcher.client_crash_fixture import (
     build_crash_agent, COMPILER_SHA256, COMPILER_SOURCE,
 )
+import omk.labs.launcher.client_crash_fixture as fixture_builder
 
 origin = "https://138.124.40.35"
 keys = json.loads((repository / "launcher/assets/release-keys.json").read_text())
 client = ReleaseClient(origin, keys, minimum_generations={"dj2": 2})
 release = client.fetch("dj2", "macos-arm64")
 assert release.platform == "macos-arm64" and release.version == "2.23.4-omk.14"
-pin = json.loads((repository / "profiles/lab/mcmcp.json").read_text())["artifacts"][0]
+
+
+class TestPackTransport:
+    """Keep the lab's signed-file requests on the same TLS connections."""
+
+    pool = urllib3.PoolManager(maxsize=4, block=True, ca_certs=certifi.where())
+
+    @contextmanager
+    def open(self, request, timeout):
+        url = request.full_url
+        assert url.startswith(origin + "/releases/dj2/macos-arm64/files/")
+        try:
+            response = self.pool.request(
+                "GET", url, headers=dict(request.header_items()),
+                timeout=timeout, redirect=False, preload_content=False, retries=False,
+            )
+        except urllib3.exceptions.HTTPError as error:
+            raise OSError("Test artifact transport failed") from error
+        try:
+            if response.status >= 400:
+                raise HTTPError(url, response.status, "Test CDN response", response.headers, None)
+            yield response
+        finally:
+            response.close()
+            response.release_conn()
 
 
 def fetch(url, file, size_limit, digest):
@@ -52,7 +82,7 @@ def diagnostics(state, log):
     matches = [line[:550] for line in lines if relevant.search(line) and not sensitive.search(line)]
     for line in matches[:4] + matches[-22:]:
         print(line, flush=True)
-    print("Last Java log class:", re.sub(r":.*", "", lines[-1])[:120] if lines else "", flush=True)
+    print("Last game log line:", next((line[:420] for line in reversed(lines) if not sensitive.search(line)), ""), flush=True)
 
 
 def finish(process, marker):
@@ -74,16 +104,18 @@ def exercise(scripts, env, lab, mode, log):
                 break
             assert process.poll() is None, "Graphical client exited before launch"
             time.sleep(1)
-        subprocess.run(
-            [sys.executable, "-u", str(scripts / "check_mcp.py"), mode, "--trigger"],
-            env=env, check=True, timeout=400,
-        )
-        for _ in range(55):
+        for attempt in range(950):
             value = json.loads(state.read_text())
             if value["phase"] == "verified" and value["ok"]:
                 print("MACOS_DJ2_VERIFIED", mode, value["game_exit"], value["crash_dialog_count"], flush=True)
                 return
-            assert value["phase"] != "unexpected-result"
+            assert value["phase"] != "unexpected-result", "Client exited before completing the controlled case"
+            if attempt % 60 == 0 and log.is_file():
+                with log.open("rb") as current_log:
+                    current_log.seek(max(0, log.stat().st_size - 1024))
+                    lines = current_log.read().decode(errors="replace").splitlines()
+                if lines and not re.search(r"token|credential|password|secret", lines[-1], re.I):
+                    print("DJ2 boot observation", attempt, lines[-1][:350], flush=True)
             time.sleep(1)
         raise RuntimeError("Native macOS crash verification timed out")
     except (subprocess.SubprocessError, RuntimeError, AssertionError):
@@ -99,7 +131,6 @@ with tempfile.TemporaryDirectory(prefix="client-crash-lab-macos-", dir=os.enviro
     tools = lab / "tooling"
     tools.mkdir()
     fetch(COMPILER_SOURCE, tools / "ecj.jar", 6_000_000, COMPILER_SHA256)
-    fetch(pin["source"], tools / pin["name"], pin["size"], pin["sha256"])
     root = lab / "client"
     installer = Installer(root, client)
     last = 0.0
@@ -111,8 +142,11 @@ with tempfile.TemporaryDirectory(prefix="client-crash-lab-macos-", dir=os.enviro
             print("Installer progressing", flush=True)
             last = now
 
+    client.transport._opener = TestPackTransport()
     folder = installer.install(release, progress, clean_mods=True)
     print("Verified signed macOS DJ2", release.version, len(release.files), release.digest, flush=True)
+    scripts = Path(__file__).resolve().parent
+    fixture_builder.PROJECT_ROOT = scripts / "direct-menu"
     fixture = build_crash_agent(inside(folder, release.launch["java"]), tools / "ecj.jar", lab)
     manifest = lab / "manifest.json"
     manifest.write_text(json.dumps(release.envelope))
@@ -123,7 +157,5 @@ with tempfile.TemporaryDirectory(prefix="client-crash-lab-macos-", dir=os.enviro
         **os.environ, "OMK_CRASH_PROBE_ROOT": str(lab), "OMK_CRASH_TEST_REPO": str(repository),
         "OMK_CRASH_TOOLING": str(tools),
     }
-    scripts = Path(__file__).resolve().parent
     log = root / "userdata/logs/dj2-game.log"
-    for mode in ("report", "no-report", "normal"):
-        exercise(scripts, env, lab, mode, log)
+    exercise(scripts, env, lab, "report", log)

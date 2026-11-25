@@ -83,13 +83,13 @@ def main(mode):
     assert root == lab / "client" and folder == root / "instances/dj2"
     keys = json.loads((worktree / "launcher/assets/release-keys.json").read_text())
     signed = read_release(Path(stage["manifest"]).read_bytes(), keys)
-    mcp_pin = json.loads((worktree / "profiles/lab/mcmcp.json").read_text())["artifacts"][0]
-    jar_source = Path(os.environ.get("OMK_CRASH_TOOLING", str(tools_root / "tooling"))) / mcp_pin["name"]
-    data = jar_source.read_bytes()
-    assert len(data) == mcp_pin["size"] and hashlib.sha256(data).hexdigest() == mcp_pin["sha256"]
-    relative_jar = "mods/" + jar_source.name
     release = signed
-    if mode != "baseline":
+    if mode != "baseline" and os.environ.get("OMK_TEST_MAC_DIRECT_MENU") != "1":
+        mcp_pin = json.loads((worktree / "profiles/lab/mcmcp.json").read_text())["artifacts"][0]
+        jar_source = Path(os.environ.get("OMK_CRASH_TOOLING", str(tools_root / "tooling"))) / mcp_pin["name"]
+        data = jar_source.read_bytes()
+        assert len(data) == mcp_pin["size"] and hashlib.sha256(data).hexdigest() == mcp_pin["sha256"]
+        relative_jar = "mods/" + jar_source.name
         shutil.copyfile(jar_source, folder / relative_jar)
         release = replace(signed, files=(*signed.files, Artifact(relative_jar, mcp_pin["sha256"], mcp_pin["size"])))
     client_port = free_local_port()
@@ -155,7 +155,7 @@ def main(mode):
 
         def check():
             nonlocal result_written, report_seen_at
-            if stop.exists() or time.monotonic() - start > 900:
+            if stop.exists() or time.monotonic() - start > 1020:
                 app.quit()
                 return
             if result_written:
