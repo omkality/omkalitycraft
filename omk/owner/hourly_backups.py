@@ -2,6 +2,7 @@
 
 import argparse
 import contextlib
+import hashlib
 import json
 import os
 import re
@@ -63,7 +64,7 @@ LOCAL_PATH = r"F:\omkalitycraft_backup"
 
 
 class WorldChanged(ValueError):
-    """The live source changed before the archive reached publication."""
+    """The live source changed while its private snapshot was being captured."""
 
 
 def _stamp():
@@ -100,20 +101,67 @@ def _world_path(target):
     return mount / target["world"]
 
 
-def _package(world, folder, stage, verify_source):
+@contextlib.contextmanager
+def _snapshot_directory(folder: Path) -> Generator[Path]:
+    snapshot = folder / "snapshot-input"
+    if resolved(snapshot) != snapshot.absolute() or snapshot.is_junction():
+        raise AdminError("Linked hourly backup staging directory")
+    if snapshot.exists():
+        if not snapshot.is_dir():
+            raise AdminError("Invalid hourly backup staging directory")
+        # The owner lock protects this reserved, unpublished staging path.
+        shutil.rmtree(snapshot)
+    snapshot.mkdir(mode=0o700)
+    try:
+        yield snapshot
+    finally:
+        shutil.rmtree(snapshot)
+
+
+def _copy_snapshot_file(source: Path, destination: Path, record: dict) -> None:
+    remaining = record["bytes"]
+    if regular_file(source) != remaining:
+        raise WorldChanged("World file size changed during snapshot capture")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    digest = hashlib.sha256()
+    with source.open("rb") as incoming, destination.open("xb") as outgoing:
+        while remaining:
+            block = incoming.read(min(remaining, 1024**2))
+            if not block:
+                raise WorldChanged("World file shrank during snapshot capture")
+            outgoing.write(block)
+            digest.update(block)
+            remaining -= len(block)
+        if incoming.read(1) or digest.hexdigest() != record["sha256"]:
+            raise WorldChanged("World file changed during snapshot capture")
+
+
+def _capture_snapshot(world, snapshot):
     options = {
         "world_name": world.name,
         "max_expanded_bytes": WORLD_MAX,
         "path_policy": "linux-server",
     }
-    files = inventory(world, **options)
-    size = sum(row["bytes"] for row in files.values())
-    required = size + 2 * MAX_MANIFEST_BYTES + len(files) * 2048
-    if required > POLICY.staging_bytes or (
-        shutil.disk_usage(folder).free < 2 * required + POLICY.reserve_bytes
-    ):
-        raise OSError("Недостаточно свободного места для копии")
-    store = _store(folder, create=True)
+    try:
+        files = inventory(world, **options)
+        size = sum(row["bytes"] for row in files.values())
+        required = size + 2 * MAX_MANIFEST_BYTES + len(files) * 2048
+        # At most a snapshot and a ZIP coexist here. The store gets its
+        # second ZIP copy only after the raw snapshot has been removed.
+        if required > POLICY.staging_bytes or (
+            shutil.disk_usage(snapshot).free < 2 * required + POLICY.reserve_bytes
+        ):
+            raise OSError("Недостаточно свободного места для копии")
+        for name, record in files.items():
+            _copy_snapshot_file(world.parent / name, snapshot / name, record)
+        if inventory(world, **options) != files:
+            raise WorldChanged("World changed during snapshot capture")
+        return files
+    except FileNotFoundError as error:
+        raise WorldChanged("World file disappeared during snapshot capture") from error
+
+
+def _package(world, folder, stage, verify_source):
     pending = folder / "incoming.zip"
     # An interrupted run may leave this one private staging file. The owner
     # lock is held throughout, and this file has never been published.
@@ -122,21 +170,22 @@ def _package(world, folder, stage, verify_source):
         pending.unlink()
     stage("copying")
     try:
-        with pending.open("xb") as output:
-            pending.chmod(0o600)
-            with zipfile.ZipFile(
-                output, "w", zipfile.ZIP_DEFLATED, compresslevel=1
-            ) as archive:
-                for name in sorted(files):
-                    archive.write(world.parent / name, name)
-            output.flush()
-            os.fsync(output.fileno())
+        with _snapshot_directory(folder) as snapshot:
+            files = _capture_snapshot(world, snapshot)
+            verify_source()
+            with pending.open("xb") as output:
+                pending.chmod(0o600)
+                with zipfile.ZipFile(
+                    output, "w", zipfile.ZIP_DEFLATED, compresslevel=1
+                ) as archive:
+                    for name in sorted(files):
+                        archive.write(snapshot / name, name)
+                output.flush()
+                os.fsync(output.fileno())
         stage("verifying")
-        if inventory(world, **options) != files:
-            raise WorldChanged("World changed during archiving")
         verify_source()
         stage("publishing")
-        return store.publish(pending, files)
+        return _store(folder, create=True).publish(pending, files)
     finally:
         pending.unlink(missing_ok=True)
 

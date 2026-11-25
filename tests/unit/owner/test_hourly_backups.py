@@ -80,7 +80,7 @@ def test_hourly_backup_only_for_players_and_exports_verified_archive(
         hourly.export(settings, "dj2", "get ../../auth.json", received)
 
 
-def test_changing_live_world_cannot_publish_or_replace_a_existing_copy(
+def test_changes_during_snapshot_cannot_publish_or_replace_an_existing_copy(
     tmp_path, monkeypatch
 ):
     world, folder = tmp_path / "test-world", tmp_path / "backups"
@@ -90,14 +90,51 @@ def test_changing_live_world_cannot_publish_or_replace_a_existing_copy(
     monkeypatch.setattr(hourly, "POLICY", replace(hourly.POLICY, reserve_bytes=1))
     proof = hourly._package(world, folder, lambda _stage: None, lambda: None)
 
-    def mutate(stage):
-        if stage == "verifying":
-            (world / "level.dat").write_bytes(b"partially written world")
+    capture_file = hourly._copy_snapshot_file
 
+    def copy_and_mutate(source, destination, record):
+        capture_file(source, destination, record)
+        (world / "level.dat").write_bytes(b"partially written world")
+
+    monkeypatch.setattr(hourly, "_copy_snapshot_file", copy_and_mutate)
     with pytest.raises(hourly.WorldChanged):
-        hourly._package(world, folder, mutate, lambda: None)
+        hourly._package(world, folder, lambda _stage: None, lambda: None)
     assert [row["snapshot"] for row in hourly._exports(folder)] == [proof["id"]]
     assert not (folder / "incoming.zip").exists()
+    assert not (folder / "snapshot-input").exists()
+
+
+def test_live_world_can_change_while_its_snapshot_is_being_compressed(
+    tmp_path, monkeypatch
+):
+    world = tmp_path / "test-world"
+    world.mkdir()
+    folder = tmp_path / "backups"
+    folder.mkdir()
+    (world / "level.dat").write_bytes(b"saved level")
+    region = world / "DIM-1/region/r.0.0.mca"
+    region.parent.mkdir(parents=True)
+    region.write_bytes(b"saved Nether region")
+    monkeypatch.setattr(hourly, "POLICY", replace(hourly.POLICY, reserve_bytes=1))
+    old_stage = folder / "snapshot-input"
+    old_stage.mkdir()
+    (old_stage / "interrupted-copy").touch()
+    zip_write = zipfile.ZipFile.write
+
+    def write_while_playing(archive, source, name):
+        assert source.is_relative_to(old_stage)
+        region.write_bytes(b"new activity in Nether")
+        return zip_write(archive, source, name)
+
+    monkeypatch.setattr(zipfile.ZipFile, "write", write_while_playing)
+    result = hourly._package(world, folder, lambda _stage: None, lambda: None)
+    published = folder / "store" / result["id"] / "archive.zip"
+    with zipfile.ZipFile(published) as archive:
+        assert (
+            archive.read("test-world/DIM-1/region/r.0.0.mca") == b"saved Nether region"
+        )
+    assert region.read_bytes() == b"new activity in Nether"
+    assert not old_stage.exists()
 
 
 def test_transient_world_changes_wait_for_a_stable_verified_archive(
@@ -112,11 +149,20 @@ def test_transient_world_changes_wait_for_a_stable_verified_archive(
     delays = []
     monkeypatch.setattr(hourly.time, "sleep", delays.append)
     stages = []
+    capture_file = hourly._copy_snapshot_file
+    attempts = 0
+
+    def copy_and_save(source, destination, record):
+        nonlocal attempts
+        attempts += 1
+        capture_file(source, destination, record)
+        if attempts <= 2:
+            level.write_bytes(f"server save {attempts}".encode())
 
     def stage(value):
         stages.append(value)
-        if value == "verifying" and stages.count("verifying") <= 2:
-            level.write_bytes(f"server save {stages.count('verifying')}".encode())
+
+    monkeypatch.setattr(hourly, "_copy_snapshot_file", copy_and_save)
 
     def send(text):
         assert text == "save-all flush"
