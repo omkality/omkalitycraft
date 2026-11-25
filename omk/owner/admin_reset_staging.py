@@ -30,6 +30,16 @@ STAGES = {
     "installed",
 }
 
+_PREFLIGHT_SUMMARIES = {
+    "world_links": "Вайп остановлен. В сохранениях есть привязки к мирам, которые нужно проверить.",
+    "opaque_records": "Вайп остановлен. Формат части файлов сохранения неизвестен.",
+    "no_landing": "Вайп остановлен. Не найдена безопасная точка для переноса игроков.",
+}
+
+
+class ResetPreflightRefused(AdminError):
+    """Carry an operator-safe explanation from the read-only reset plan."""
+
 
 def journal(config, operation):
     if not isinstance(operation, str) or not re.fullmatch(r"[a-f0-9]{32}", operation):
@@ -207,6 +217,27 @@ def stable(config, record, *, allowed_container=None):
         )
 
 
+def _worker_error(value, action):
+    reason = value.get("reason")
+    if (
+        action == "plan"
+        and set(value) == {"ok", "error_type", "reason"}
+        and value["ok"] is False
+        and value["error_type"] == "PreflightRefused"
+        and isinstance(reason, str)
+        and reason in _PREFLIGHT_SUMMARIES
+    ):
+        return ResetPreflightRefused(_PREFLIGHT_SUMMARIES[reason])
+    kind = value.get("error_type", "InvalidResponse")
+    if not isinstance(kind, str) or not re.fullmatch(r"[A-Za-z]{1,64}", kind):
+        kind = "InvalidResponse"
+    return AdminError(
+        "Resource staging refused ("
+        + kind
+        + "); inspect the private journal and retained target"
+    )
+
+
 def worker(record, action, *, allowed_container=None):
     source, target, policy = record["source"], record["target"], record["settings"]
     # Never let Docker create an absent named volume on --mount.
@@ -305,14 +336,7 @@ def worker(record, action, *, allowed_container=None):
         or not isinstance(result, dict)
         or result.get("ready_for_start") is not False
     ):
-        kind = value.get("error_type", "InvalidResponse")
-        if not isinstance(kind, str) or not re.fullmatch(r"[A-Za-z]{1,64}", kind):
-            kind = "InvalidResponse"
-        raise AdminError(
-            "Resource staging refused ("
-            + kind
-            + "); inspect the private journal and retained target"
-        )
+        raise _worker_error(value, action)
     if runtime:
         if (
             result.get("operation") != record["operation"]

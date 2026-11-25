@@ -266,6 +266,13 @@ impl Receipt {
                 "owner_busy" => "Другая операция уже выполняется.",
                 "ingress_not_drained" => "Не удалось закрыть игровой вход или отключить игроков.",
                 "join_closed" => "Новый мир запустился. Игровой вход открыть не удалось.",
+                "operation_rejected" if self.effect == "unknown" => self
+                    .diagnostic
+                    .as_deref()
+                    .and_then(|detail| detail.lines().next())
+                    .and_then(|line| line.strip_prefix("Summary: "))
+                    .filter(|summary| valid_text(summary, 240))
+                    .unwrap_or("Этап вайпа прервался."),
                 _ if self.effect == "unknown" => "Этап вайпа прервался.",
                 _ => "Проверьте настройки резервного копирования и вайпа.",
             };
@@ -502,6 +509,27 @@ mod tests {
         let mut value = sealed();
         value["server_id"] = serde_json::json!("other");
         assert!(Receipt::parse(&serde_json::to_vec(&value).unwrap(), &query).is_err());
+    }
+
+    #[test]
+    fn refused_plan_shows_the_summary_and_still_saves_the_report() {
+        let mut query = Request::inspect("dj2".into());
+        query.command = "run".into();
+        let mut value = sealed();
+        value["command"] = serde_json::json!("run");
+        value["ok"] = serde_json::json!(false);
+        value["error"] = serde_json::json!("operation_rejected");
+        value["stage"] = serde_json::json!("prepare");
+        value["effect"] = serde_json::json!("unknown");
+        let summary = "Вайп остановлен. Не найдена безопасная точка для переноса игроков.";
+        value["diagnostic"] = serde_json::json!(format!("Summary: {summary}\nworker.py:20"));
+        let receipt = Receipt::parse(&serde_json::to_vec(&value).unwrap(), &query).unwrap();
+        assert_eq!(receipt.status(), summary);
+        assert!(receipt.needs_report() && receipt.report().contains("worker.py:20"));
+
+        value["diagnostic"] = serde_json::json!("2026-11-25T06:00:00+00:00\nValueError");
+        let receipt = Receipt::parse(&serde_json::to_vec(&value).unwrap(), &query).unwrap();
+        assert_eq!(receipt.status(), "Этап вайпа прервался.");
     }
 
     #[test]
