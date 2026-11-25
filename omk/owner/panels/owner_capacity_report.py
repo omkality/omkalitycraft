@@ -6,14 +6,16 @@ from pathlib import Path
 from statistics import quantiles
 
 from omk.owner.admin import AdminError, load_operator_config
+from omk.owner.hourly_backups import capture_windows
 from omk.owner.panels.owner_metrics import load_settings, query
 
 WINDOWS = {"24h": (24, 60), "7d": (168, 300), "14d": (336, 300)}
 BATCH_POINTS = 96
+BACKUP_STEP = 30
 DISK = "project_disk_free_min_bytes"
 
 
-def _observed(selector, job, maximum):
+def _observed(selector, job, maximum, since):
     # Collapse old and new release labels across the report, but discard
     # a sample if two sources claim the same service at the same time.
     up = f'up{{job="{job}"}}'
@@ -22,13 +24,15 @@ def _observed(selector, job, maximum):
         f"and (time() - timestamp({selector}) <= 90) "
         f"and on(job,instance) (({up} == 1) and (time() - timestamp({up}) <= 90))"
     )
+    if since is not None:
+        fresh = f"({fresh} and (timestamp({selector}) >= {since}))"
     return f"(sum by(host) ({fresh}) and (count by(host) ({fresh}) == 1))"
 
 
-def _selectors(host, server):
+def _selectors(host, server, since=None):
     def source(metric, maximum, job="host", extra=""):
         selector = f'{metric}{{host="{host}",job="{job}"{extra}}}'
-        return _observed(selector, job, maximum)
+        return _observed(selector, job, maximum, since)
 
     service = f',service="{server}"'
     idle_cpu = source("cpu_usage_idle", 100, extra=',cpu="cpu-total"')
@@ -84,8 +88,8 @@ def _read_batch(series, rows, host, first, last, step):
             previous = stamp
 
 
-def _read_series(settings, server, start, end, step):
-    selectors = _selectors(settings["host"], server)
+def _read_series(settings, server, start, end, step, *, since=None):
+    selectors = _selectors(settings["host"], server, since)
     query_text = " or ".join(
         f'label_replace({selector}, "stat", "{key}", "host", ".+")'
         for key, selector in selectors.items()
@@ -156,6 +160,59 @@ def _summarize(series):
     )
 
 
+def _read_backup_series(settings, server, windows):
+    spans = []
+    for first, last in sorted(windows):
+        if spans and first <= spans[-1][1]:
+            spans[-1] = (spans[-1][0], max(last, spans[-1][1]))
+        else:
+            spans.append((first, last))
+
+    combined = {key: {} for key in _selectors(settings["host"], server)}
+    stamps = []
+    for first, last in spans:
+        # Anchor at the end so a short run still gets a query inside its window.
+        final = math.ceil(last) - 1
+        if final < first:
+            continue
+        preceding_points = (final - math.ceil(first)) // BACKUP_STEP
+        beginning = final - preceding_points * BACKUP_STEP
+        end = final + BACKUP_STEP
+        batch = _read_series(settings, server, beginning, end, BACKUP_STEP, since=first)
+        for key, values in batch.items():
+            combined[key].update(values)
+        stamps.extend(range(beginning, end, BACKUP_STEP))
+    return combined, stamps
+
+
+def _during_hourly_backup(config, settings, server, start, end):
+    try:
+        recorded = capture_windows(config, server)
+        if recorded is None:
+            return None
+        windows = [
+            (max(start, first), min(end, last))
+            for first, last in recorded
+            if first < end and last > start
+        ]
+        series, stamps = _read_backup_series(settings, server, windows)
+    except AdminError, OSError, ValueError, TypeError, KeyError:
+        return None
+    online = series["players"]
+    return {
+        "windows": len(windows),
+        "step": BACKUP_STEP,
+        "coverage": {
+            "with_players": sum(
+                online[stamp] > 0 for stamp in stamps if stamp in online
+            ),
+            "without_players": sum(online.get(stamp) == 0 for stamp in stamps),
+            "unknown": sum(stamp not in online for stamp in stamps),
+        },
+        "metrics": _activity_metrics(series, stamps),
+    }
+
+
 def run(path: Path, server: str, window: str) -> dict:
     """Read a capacity summary using only the owner's configured Prometheus."""
     hours, step = WINDOWS[window]
@@ -174,6 +231,7 @@ def run(path: Path, server: str, window: str) -> dict:
         "coverage": None,
         "metrics": {},
         "by_player_count": [],
+        "during_hourly_backup": None,
     }
     try:
         config = load_operator_config(path)
@@ -216,4 +274,7 @@ def run(path: Path, server: str, window: str) -> dict:
         },
         "metrics": metrics,
         "by_player_count": by_player_count,
+        "during_hourly_backup": _during_hourly_backup(
+            config, settings, server, end - duration, end
+        ),
     }
