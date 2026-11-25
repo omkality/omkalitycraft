@@ -33,6 +33,7 @@ def test_capacity_summarizes_only_completed_hours(
     sample_values = {
         "players": dict(zip(observed, [0, 1, 3, 1, 0, 2, 1], strict=True)),
         "host_cpu_p95_percent": dict.fromkeys(observed, 65) | {0: 99, 96: 100},
+        "game_memory_max_bytes": {0: 9000, 2: 3500, 3: 9500, 95: 2100},
         "game_tps_min": {1: 20, 95: 0, expected - 1: 18},
         "project_disk_free_min_bytes": {0: 1000, 1: 1010},
     }
@@ -94,6 +95,20 @@ def test_capacity_summarizes_only_completed_hours(
         "value": 1000,
         "samples": 2,
     }
+    assert result["metrics"]["game_memory_max_bytes"] == {"value": 3500, "samples": 2}
+
+    groups = result["by_player_count"]
+    assert [(group["players"], group["samples"]) for group in groups] == [
+        (1, 3),
+        (2, 1),
+        (3, 1),
+    ]
+    one, two, three = (group["metrics"] for group in groups)
+    assert one["game_tps_min"] == {"value": 0, "samples": 3}
+    assert one["game_memory_max_bytes"] == {"value": 2100, "samples": 1}
+    assert two["game_memory_max_bytes"] == {"value": None, "samples": 0}
+    assert three["game_memory_max_bytes"] == {"value": 3500, "samples": 1}
+    assert all(report.DISK not in group["metrics"] for group in groups)
 
 
 def test_empty_prometheus_history_has_no_guessed_load(tmp_path):
@@ -115,6 +130,7 @@ def test_empty_prometheus_history_has_no_guessed_load(tmp_path):
     assert result["ok"] and result["state"] == "missing"
     assert result["coverage"]["unknown"] == 1440
     assert result["coverage"]["peak_players"] is None
+    assert result["by_player_count"] == []
     assert all(
         metric == {"value": None, "samples": 0} for metric in result["metrics"].values()
     )
