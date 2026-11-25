@@ -1,5 +1,6 @@
 import io
 import json
+import time
 import zipfile
 from contextlib import contextmanager
 from dataclasses import replace
@@ -15,9 +16,12 @@ ONLINE = (
 )
 
 
-@pytest.mark.parametrize("online", (False, True))
+@pytest.mark.parametrize(
+    ("online", "flush_confirmed"),
+    [(False, True), (True, True), (True, False)],
+)
 def test_hourly_backup_only_for_players_and_exports_verified_archive(
-    tmp_path, monkeypatch, online
+    tmp_path, monkeypatch, online, flush_confirmed
 ):
     settings, _ = config(tmp_path)
     world = tmp_path / "test-world"
@@ -42,20 +46,40 @@ def test_hourly_backup_only_for_players_and_exports_verified_archive(
         requests.append(text)
         return {
             "list uuids": ONLINE if online else "There are 0/20 players online:",
-            "save-all flush": "Saving...Flushing completedSaved the world",
+            "save-all flush": (
+                "Saving...Flushing completedSaved the world" if flush_confirmed else ""
+            ),
         }.get(text, "")
 
     monkeypatch.setattr(hourly, "command", send)
-    assert hourly.run(settings, "dj2") is not False
+    before = time.time()
+    succeeded = hourly.run(settings, "dj2")
+    after = time.time()
+    windows = hourly.capture_windows(settings, "dj2")
     listed = io.BytesIO()
     hourly.export(settings, "dj2", "list", listed)
     rows = json.loads(listed.getvalue())
     if not online:
+        assert succeeded is None and windows is None
         assert rows == []
         assert requests == ["list uuids"]
         assert "за прошедший час никто не играл" in hourly.overview(settings, "dj2")
         return
 
+    [[started, finished]] = windows
+    assert before <= started < finished <= after
+    if not flush_confirmed:
+        assert succeeded is False
+        assert rows == []
+        assert requests == [
+            "list uuids",
+            hourly.BACKUP_CHAT["started"],
+            "save-all flush",
+            hourly.BACKUP_CHAT["failed"],
+        ]
+        return
+
+    assert succeeded is True
     assert requests == [
         "list uuids",
         hourly.BACKUP_CHAT["started"],
