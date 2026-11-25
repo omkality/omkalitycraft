@@ -111,6 +111,61 @@ def test_capacity_summarizes_only_completed_hours(
     assert all(report.DISK not in group["metrics"] for group in groups)
 
 
+def test_capacity_samples_short_and_overlapping_backup_windows(tmp_path, monkeypatch):
+    settings, path = config(tmp_path)
+    _write_private(
+        settings.private / "tui.json",
+        settings.private,
+        {"schema": 1, "host": "test", "prometheus_origin": "http://127.0.0.1:9000"},
+    )
+    monkeypatch.setattr(report.time, "time", lambda: NOW)
+    first = HOUR - 24 * 3600
+    _write_private(
+        settings.private / "hourly-backups/dj2/capture-windows.json",
+        settings.private,
+        {
+            "schema": 1,
+            "windows": [
+                [first - 10, first],
+                [first + 12.25, first + 26.75],
+                [first + 40.25, first + 90.5],
+                [first + 50, first + 65],
+                [HOUR, HOUR + 10],
+            ],
+        },
+    )
+    backup_chunks = []
+
+    def sample(_settings, expression, *, start, end, step, **_options):
+        if step != report.BACKUP_STEP:
+            return []
+        backup_chunks.append((start, end))
+        short_window = start == first + 26
+        since = first + (12.25 if short_window else 40.25)
+        assert (
+            f'timestamp(omk_game_online{{host="test",job="dj2",service="dj2"}}) >= {since}'
+            in expression
+        )
+        return [
+            {
+                "metric": {"host": "test", "stat": "players"},
+                "values": [[start, "1" if short_window else "0"]],
+            },
+            {
+                "metric": {"host": "test", "stat": "game_tps_min"},
+                "values": [[start, "18" if short_window else "20"]],
+            },
+        ]
+
+    monkeypatch.setattr(report, "query", sample)
+    backup = report.run(path, "dj2", "24h")["during_hourly_backup"]
+    assert backup["windows"] == 3
+    assert backup["step"] == 30
+    assert backup_chunks == [(first + 26, first + 26), (first + 60, first + 90)]
+    assert backup["coverage"] == {"with_players": 1, "without_players": 1, "unknown": 1}
+    assert backup["metrics"]["game_tps_min"] == {"value": 18, "samples": 2}
+
+
 def test_empty_prometheus_history_has_no_guessed_load(tmp_path):
     settings, path = config(tmp_path)
     payload = b'{"status":"success","data":{"resultType":"matrix","result":[]}}'
@@ -131,6 +186,7 @@ def test_empty_prometheus_history_has_no_guessed_load(tmp_path):
     assert result["coverage"]["unknown"] == 1440
     assert result["coverage"]["peak_players"] is None
     assert result["by_player_count"] == []
+    assert result["during_hourly_backup"] is None
     assert all(
         metric == {"value": None, "samples": 0} for metric in result["metrics"].values()
     )
