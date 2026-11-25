@@ -341,15 +341,18 @@ def locked(config) -> Generator[None]:
             raise AdminError("Owner lock identity changed during composition")
         yield
         return
-    try:
-        with path.open("xb") as file:
-            file.write(b"0")
-        path.chmod(0o600)
-    except FileExistsError:
-        pass
-    if not regular(path, config.private):
+    if path.is_symlink() or (path.exists() and not regular(path, config.private)):
         raise AdminError("Invalid backup lock")
-    with path.open("r+b") as file:
+    # Keep one inode and acquire the OS lock on the descriptor that opened it.
+    flags = (
+        os.O_CREAT
+        | os.O_RDWR
+        | getattr(os, "O_BINARY", 0)
+        | getattr(os, "O_NOFOLLOW", 0)
+    )
+    with os.fdopen(os.open(path, flags, 0o600), "r+b") as file:
+        if not regular(path, config.private):
+            raise AdminError("Invalid backup lock")
         try:
             if os.name == "nt":
                 import msvcrt  # noqa: PLC0415
