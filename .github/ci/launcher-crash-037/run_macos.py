@@ -64,6 +64,35 @@ def finish(process, marker):
         process.wait(timeout=15)
 
 
+def exercise(scripts, env, lab, mode, log):
+    state = lab / "probe-state.json"
+    state.unlink(missing_ok=True)
+    process = subprocess.Popen([sys.executable, "-u", str(scripts / "probe.py"), mode], env=env)
+    try:
+        for _ in range(65):
+            if state.exists() and json.loads(state.read_text())["phase"] == "java-started":
+                break
+            assert process.poll() is None, "Graphical client exited before launch"
+            time.sleep(1)
+        subprocess.run(
+            [sys.executable, "-u", str(scripts / "check_mcp.py"), mode, "--trigger"],
+            env=env, check=True, timeout=400,
+        )
+        for _ in range(55):
+            value = json.loads(state.read_text())
+            if value["phase"] == "verified" and value["ok"]:
+                print("MACOS_DJ2_VERIFIED", mode, value["game_exit"], value["crash_dialog_count"], flush=True)
+                return
+            assert value["phase"] != "unexpected-result"
+            time.sleep(1)
+        raise RuntimeError("Native macOS crash verification timed out")
+    except (subprocess.SubprocessError, RuntimeError, AssertionError):
+        diagnostics(state, log)
+        raise
+    finally:
+        finish(process, lab / "request-close-validated-probe")
+
+
 with tempfile.TemporaryDirectory(prefix="client-crash-lab-macos-", dir=os.environ["RUNNER_TEMP"]) as scope:
     lab = Path(scope).resolve()
     (lab / "OWNED_CRASH_PROBE").write_text("isolated Apple Silicon acceptance")
@@ -95,51 +124,6 @@ with tempfile.TemporaryDirectory(prefix="client-crash-lab-macos-", dir=os.enviro
         "OMK_CRASH_TOOLING": str(tools),
     }
     scripts = Path(__file__).resolve().parent
-    process = subprocess.Popen([sys.executable, "-u", str(scripts / "probe.py"), "report"], env=env)
-    state = lab / "probe-state.json"
     log = root / "userdata/logs/dj2-game.log"
-    stop = lab / "request-close-validated-probe"
-    failure = None
-    try:
-        for _ in range(65):
-            if state.exists() and json.loads(state.read_text())["phase"] == "java-started":
-                break
-            assert process.poll() is None, "Graphical client exited before launch"
-            time.sleep(1)
-        subprocess.run([sys.executable, "-u", str(scripts / "check_mcp.py"), "report", "--trigger"], env=env, check=True, timeout=400)
-        for _ in range(55):
-            value = json.loads(state.read_text())
-            if value["phase"] == "verified" and value["ok"]:
-                print("MACOS_DJ2_ONE_CRASH_DIALOG", value["game_exit"], value["crash_dialog_count"], flush=True)
-                break
-            assert value["phase"] != "unexpected-result"
-            time.sleep(1)
-        else:
-            raise RuntimeError("Native macOS crash verification timed out")
-    except (subprocess.SubprocessError, RuntimeError, AssertionError) as error:
-        failure = error
-        diagnostics(state, log)
-    finally:
-        finish(process, stop)
-
-    if failure is not None:
-        state.unlink(missing_ok=True)
-        log.rename(log.with_name("dj2-game-with-instrumentation.log"))
-        baseline = subprocess.Popen(
-            [sys.executable, "-u", str(scripts / "probe.py"), "baseline"], env=env,
-        )
-        try:
-            for _ in range(150):
-                if state.is_file() and json.loads(state.read_text())["phase"] == "unexpected-result":
-                    print("The plain signed client also ended before menu observation")
-                    break
-                if log.is_file() and b"Forge Mod Loader has successfully loaded" in log.read_bytes():
-                    print("The plain signed client reached the end of Forge initialization")
-                    break
-                if baseline.poll() is not None:
-                    break
-                time.sleep(2)
-            diagnostics(state, log)
-        finally:
-            finish(baseline, stop)
-        raise failure
+    for mode in ("report", "no-report", "normal"):
+        exercise(scripts, env, lab, mode, log)

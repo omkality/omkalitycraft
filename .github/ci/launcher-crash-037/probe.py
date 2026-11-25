@@ -60,6 +60,16 @@ class Metadata(BaseHTTPRequestHandler):
         pass
 
 
+class VirtualMacCrashRunner(CrashLabRunner):
+    """Use a software context on the hosted macOS test worker."""
+
+    def command(self, *args, **kwargs):
+        command = super().command(*args, **kwargs)
+        if sys.platform == "darwin" and os.environ.get("OMK_TEST_MAC_SOFTWARE_GL") == "1":
+            command.insert(1, "-Dorg.lwjgl.opengl.Display.allowSoftwareOpenGL=true")
+        return command
+
+
 def free_local_port():
     with socket.socket() as stream:
         stream.bind(("127.0.0.1", 0))
@@ -126,7 +136,7 @@ def main(mode):
         service.current = session
         runner = (
             GameRunner(root) if mode == "baseline"
-            else CrashLabRunner(root, fixture=Path(stage["agent"]), marker=request)
+            else VirtualMacCrashRunner(root, fixture=Path(stage["agent"]), marker=request)
         )
         app = QApplication([])
         app.setQuitOnLastWindowClosed(False)
