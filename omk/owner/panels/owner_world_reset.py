@@ -503,14 +503,20 @@ def _diagnostic(error: Exception) -> str:
     # AdminError is reserved for operator-safe messages. Other exception messages
     # can contain private paths or the input/output of a failed subprocess.
     detail = type(error).__name__
+    summary = []
     if isinstance(error, AdminError):
         message = "".join(char for char in str(error) if char.isprintable())[:500]
         detail = f"{detail}: {message}"
+        if isinstance(error, staging.ResetPreflightRefused):
+            # Keep the existing receipt compatible with terminals that only save diagnostics.
+            summary.append(f"Summary: {message}")
     trace = extract_tb(error.__traceback__)[-8:]
     lines = [
         f"{Path(frame.filename).name}:{frame.lineno} ({frame.name})" for frame in trace
     ]
-    return "\n".join([datetime.now(UTC).isoformat(timespec="seconds"), detail, *lines])
+    return "\n".join(
+        [*summary, datetime.now(UTC).isoformat(timespec="seconds"), detail, *lines]
+    )
 
 
 def _record_current_stage(config, server, worlds, dimension, result):

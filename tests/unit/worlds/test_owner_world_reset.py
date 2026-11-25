@@ -1,6 +1,9 @@
+import json
 from contextlib import nullcontext
 from types import SimpleNamespace
 from unittest.mock import Mock
+
+import pytest
 
 from omk.cli import main
 from omk.owner.admin import AdminError
@@ -201,6 +204,60 @@ def test_diagnostic_omits_subprocess_arguments_and_output():
     detail = wipe._diagnostic(error)
     assert detail.endswith("CalledProcessError")
     assert "private" not in detail
+
+
+@pytest.mark.parametrize(
+    ("reason", "summary"),
+    [
+        ("world_links", "В сохранениях есть привязки"),
+        ("opaque_records", "Формат части файлов"),
+        ("no_landing", "безопасная точка"),
+        ("private/world/playerdata.dat", None),
+    ],
+)
+def test_only_reviewed_plan_refusals_reach_the_wipe_summary(
+    monkeypatch, reason, summary
+):
+    state = wipe.State(dimension=-18000, stage="prepare", managed=True)
+    record = {
+        "operation": "a" * 32,
+        "source": {"data_volume": "source", "store_volume": "backup", "world": "world"},
+        "target": {"data_volume": "candidate"},
+        "dimension": state.dimension,
+        "settings": wipe.backups.settings({}),
+        "snapshot": "snapshot-" + "b" * 32,
+        "preflight_options": {},
+    }
+    apply = Mock(side_effect=AssertionError("Plan refusal reached installation"))
+    monkeypatch.setattr(wipe, "_apply", apply)
+    monkeypatch.setattr(wipe, "load_operator_config", lambda _: object())
+    monkeypatch.setattr(wipe, "_state", lambda *_, **__: state)
+    monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
+    monkeypatch.setattr(wipe, "_close_and_drain", lambda *_: None)
+    monkeypatch.setattr(wipe, "_require_drained", lambda *_: None)
+    monkeypatch.setattr(
+        wipe, "_prepare", lambda *_: wipe.staging.worker(record, "plan")
+    )
+    monkeypatch.setattr(wipe.backups, "volume", lambda *a: {})
+    monkeypatch.setattr(wipe.owner_volumes, "destination", lambda *a, **k: {})
+    monkeypatch.setattr(
+        wipe.backups,
+        "docker",
+        lambda *a, **k: json.dumps(
+            {"ok": False, "error_type": "PreflightRefused", "reason": reason}
+        ),
+    )
+    result = wipe.run("operator.toml", "dj2", "run", state.confirmation("dj2"))
+    assert not result["ok"] and result["error"] == "operation_rejected"
+    assert result["stage"] == "prepare" and result["effect"] == "unknown"
+    first_line = result["diagnostic"].splitlines()[0]
+    if summary is None:
+        assert not first_line.startswith("Summary: ")
+        assert reason not in result["diagnostic"]
+    else:
+        assert first_line.startswith("Summary: Вайп остановлен. ")
+        assert summary in first_line
+    apply.assert_not_called()
 
 
 def test_interrupted_write_requires_review_and_running_commit_does_not_restart():

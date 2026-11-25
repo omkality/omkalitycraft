@@ -37,6 +37,14 @@ PLAN = ".omk-resource-reset-plan.json"
 DONE = ".omk-resource-reset-staged.json"
 
 
+class PreflightRefused(ValueError):
+    """Report a known reason that prevents preparing a world reset."""
+
+    def __init__(self, reason: str):
+        super().__init__(reason)
+        self.reason = reason
+
+
 def _request(request):
     keys = {
         "schema",
@@ -132,10 +140,12 @@ def _changes(request, source, files):
             **({"reset": request["reset"]} if "reset" in request else {}),
         )
         if not preflight["can_stage_data"]:
-            raise ValueError(
-                "Resource auto stage needs reviewed landing; known mod links require "
-                "reviewed adapters and opaque records are forbidden"
-            )
+            links = preflight["links"]
+            if links["unhandled_finding_count"]:
+                raise PreflightRefused("world_links")
+            if links["opaque_record_count"]:
+                raise PreflightRefused("opaque_records")
+            raise PreflightRefused("no_landing")
         position = preflight["landing"]["position"]
     payloads = transform.changes(
         source,
@@ -361,5 +371,8 @@ if __name__ == "__main__":
             raise ValueError("Resource staging request exceeds limit")
         print(json.dumps({"ok": True, "result": execute(json.loads(raw))}))
     except Exception as error:
-        print(json.dumps({"ok": False, "error_type": type(error).__name__}))
+        refusal = {"ok": False, "error_type": type(error).__name__}
+        if isinstance(error, PreflightRefused):
+            refusal["reason"] = error.reason
+        print(json.dumps(refusal))
         raise SystemExit(1) from None
