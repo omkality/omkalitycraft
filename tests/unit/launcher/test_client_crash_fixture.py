@@ -1,4 +1,7 @@
+import hashlib
+from pathlib import Path
 from unittest.mock import Mock
+from zipfile import ZipFile
 
 import pytest
 
@@ -48,6 +51,33 @@ def test_unpinned_compiler_is_rejected_before_any_java_execution(tmp_path, monke
         build_crash_agent(tmp_path / "unused-java", compiler, tmp_path)
     execute.assert_not_called()
     assert not (tmp_path / "crash-fixture").exists()
+
+
+def test_compiled_agent_entry_is_declared_in_jar_manifest(tmp_path, monkeypatch):
+    compiler = tmp_path / "fixture-compiler.jar"
+    data = b"synthetic compiler"
+    compiler.write_bytes(data)
+    monkeypatch.setattr(
+        "omk.labs.launcher.client_crash_fixture.COMPILER_SHA256",
+        hashlib.sha256(data).hexdigest(),
+    )
+
+    def compile_fixture(command, **kwargs):
+        classes = Path(command[command.index("-d") + 1])
+        entry = classes / "omk/lab/fixture/ClientCrashAgent.class"
+        entry.parent.mkdir(parents=True)
+        entry.write_bytes(b"synthetic class")
+        return Mock(returncode=0)
+
+    monkeypatch.setattr(
+        "omk.labs.launcher.client_crash_fixture.subprocess.run", compile_fixture
+    )
+    with ZipFile(build_crash_agent(tmp_path / "java", compiler, tmp_path)) as jar:
+        assert (
+            b"Premain-Class: omk.lab.fixture.ClientCrashAgent"
+            in jar.read("META-INF/MANIFEST.MF").splitlines()
+        )
+        assert "omk/lab/fixture/ClientCrashAgent.class" in jar.namelist()
 
 
 @pytest.mark.parametrize("port", [True, "25555", 0, 65536])
