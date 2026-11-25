@@ -17,7 +17,7 @@ const ACCENT: Color = Color::Rgb(114, 205, 220);
 const WARN: Color = Color::Rgb(237, 184, 104);
 const ERROR: Color = Color::Rgb(235, 114, 119);
 const STATS_ERROR_DURATION: Duration = Duration::from_secs(5);
-const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранить мир\n4  Ограничения игроков\n5  Резервные копии\n\nk  Кик   b  Бан   m  Выдать мут\ns  Статистика игрока\nl  Активные приглашения\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
+const MAIN_MENU: &str = "1  Игроки проекта\n2  Forge TPS по измерениям\n3  Сохранить мир\n4  Ограничения игроков\n5  Резервные копии\n6  Краш-отчёты игроков\n\nk  Кик   b  Бан   m  Выдать мут\ns  Статистика игрока\nl  Активные приглашения\nw  Вайп миров\n\nPgUp/PgDn — прокрутка ответа.";
 
 pub enum Confirmation {
     Invitation { approved: bool },
@@ -59,6 +59,7 @@ pub struct App {
     pub invitation_form: Option<crate::invitations::Form>,
     pub restrictions: Option<crate::restrictions::Panel>,
     pub world_reset: Option<crate::world_reset::Form>,
+    pub client_reports: Option<crate::client_reports::Panel>,
     pub resetting: Option<&'static str>,
     pub reset_progress: Option<crate::world_reset::Progress>,
     animation_start: Instant,
@@ -89,6 +90,7 @@ impl App {
             invitation_form: None,
             restrictions: None,
             world_reset: None,
+            client_reports: None,
             resetting: None,
             reset_progress: None,
             animation_start: Instant::now(),
@@ -265,6 +267,7 @@ impl App {
             && self.moderation.is_none()
             && self.invitation_form.is_none()
             && self.world_reset.is_none()
+            && self.client_reports.is_none()
     }
 
     pub fn server(&self) -> Option<&str> {
@@ -517,6 +520,9 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     if let Some(form) = &mut app.save_world {
         form.draw(frame);
     }
+    if let Some(panel) = &app.client_reports {
+        panel.draw(frame, app.loading);
+    }
     if let Some(confirmation) = &app.confirm {
         let w = area.width.min(72);
         let popup = Rect::new((area.width - w) / 2, area.height / 2 - 4, w, 8);
@@ -554,7 +560,7 @@ fn exit_prompt(approved: bool) -> String {
 }
 
 fn render_commands(frame: &mut Frame, area: Rect, app: &mut App) {
-    let panel = block(" Команды · 1/2/3/4/5 · k/b/m/s · w вайп ");
+    let panel = block(" Команды · 1/2/3/4/5/6 · k/b/m/s · w вайп ");
     let mut content = panel.inner(area);
     frame.render_widget(panel, area);
     if app.resetting.is_none()

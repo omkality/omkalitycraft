@@ -40,6 +40,10 @@ def test_game_uses_portable_java_and_paths_without_shell(
     assert any(str(root / "userdata/java-home") in argument for argument in command)
     assert start.call_args.kwargs["shell"] is False
     assert start.call_args.kwargs["stdout"] == subprocess.PIPE
+    assert (
+        start.call_args.kwargs["env"]["DisableEntirelyCrashAssistantModOnSystem"]
+        == "true"
+    )
     assert all(
         name not in start.call_args.kwargs["env"]
         for name in ["JAVA_TOOL_OPTIONS", "_JAVA_OPTIONS", "JDK_JAVA_OPTIONS"]
@@ -53,6 +57,7 @@ def test_game_uses_portable_java_and_paths_without_shell(
     assert "test-game-token" not in text and "test-client-token" not in text
     assert "normal output" in text
     assert result.diagnostics_done.wait(2)
+    assert result.crash_report is None
 
 
 def test_game_refuses_external_instance(tmp_path: Path):
@@ -203,4 +208,56 @@ def test_old_future_timestamp_crash_is_not_reported_after_clean_exit(tmp_path):
     os.utime(crash, (time.time() + 86400, time.time() + 86400))
     result = CleanExit(tmp_path).start(release, folder, session)
     assert result.diagnostics_done.wait(10)
+    assert result.crash_report is None
     assert not (tmp_path / "userdata/client-incidents").exists()
+
+
+@pytest.mark.parametrize("name", ["crash-reports/crash-client.txt", "hs_err_pid42.log"])
+def test_new_crash_file_remains_visible_even_when_java_returns_zero(tmp_path, name):
+    class ControlledCrash(GameRunner):
+        def command(self, *args, **kwargs):
+            return [
+                sys.executable,
+                "-c",
+                (
+                    "from pathlib import Path; import sys; "
+                    "path = Path(sys.argv[1]); path.parent.mkdir(exist_ok=True); "
+                    "path.write_text('A fatal error: controlled test')"
+                ),
+                name,
+            ]
+
+    folder, release, session = fixture(tmp_path)
+    result = ControlledCrash(tmp_path).start(release, folder, session)
+    assert result.diagnostics_done.wait(10)
+    assert result.poll() == 0
+    assert result.crash_report == folder / name
+
+
+def test_clean_exit_after_recovery_keeps_report_without_marking_a_new_crash(tmp_path):
+    class RecoveredGame(GameRunner):
+        def command(self, *args, **kwargs):
+            return [
+                sys.executable,
+                "-c",
+                """from pathlib import Path
+import sys
+import time
+
+directory = Path("crash-reports")
+directory.mkdir()
+(directory / "crash-recovered.txt").write_text("Controlled recovered crash")
+deadline = time.monotonic() + 12
+reports = Path(sys.argv[1])
+while not any(reports.glob("*.json")) and time.monotonic() < deadline:
+    time.sleep(0.1)
+""",
+                str(self.root / "userdata/client-incidents"),
+            ]
+
+    folder, release, session = fixture(tmp_path)
+    result = RecoveredGame(tmp_path).start(release, folder, session)
+    assert result.diagnostics_done.wait(15)
+    assert result.poll() == 0
+    assert result.crash_report is None
+    assert len(list((tmp_path / "userdata/client-incidents").glob("*.json"))) == 1

@@ -13,6 +13,7 @@ COMPILER_SOURCE = (
     "https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.26.0/ecj-3.26.0.jar"
 )
 CANARY = "omk_lab_canary_not_a_credential"
+AGENT_CLASS = "omk.lab.fixture.ClientCrashAgent"
 
 
 def build_crash_agent(java, compiler, lab):
@@ -45,6 +46,8 @@ def build_crash_agent(java, compiler, lab):
     )
     if result.returncode:
         raise RuntimeError("Controlled client crash fixture did not compile")
+    if not (classes / (AGENT_CLASS.replace(".", "/") + ".class")).is_file():
+        raise RuntimeError("Controlled client crash fixture entry point is missing")
     jar = lab / "crash-fixture/client-crash-agent.jar"
     with zipfile.ZipFile(jar, "x", zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(classes.rglob("*.class")):
@@ -56,7 +59,7 @@ def build_crash_agent(java, compiler, lab):
             )
         archive.writestr(
             zipfile.ZipInfo("META-INF/MANIFEST.MF", (2026, 1, 1, 0, 0, 0)),
-            "Manifest-Version: 1.0\nPremain-Class: omk.labs.launcher.lab.fixture.ClientCrashAgent\n\n",
+            f"Manifest-Version: 1.0\nPremain-Class: {AGENT_CLASS}\n\n",
         )
     return jar
 

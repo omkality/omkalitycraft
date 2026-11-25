@@ -1,5 +1,6 @@
 mod backend;
 mod branding;
+mod client_reports;
 mod invitations;
 mod moderation;
 mod protocol;
@@ -65,7 +66,7 @@ fn options() -> Result<Option<Options>, String> {
         match arg.to_str() {
             Some("--help" | "-h") => {
                 println!(
-                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / 1 players / 2 TPS / 3 save / 4 restrictions (u unban, n unmute) / 5 backups / k kick / b ban / m mute / s statistics / i invite / r refresh / t period\nEsc goes back; from the main menu it asks before closing.\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
+                    "omk-tui --repo PATH --python EXECUTABLE --config PATH\n        [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\nomk-tui --demo [--snapshot FILE.svg] [--compact-header] [--window 5m|15m|1h|3h]\n\n← → server / 1 players / 2 TPS / 3 save / 4 restrictions (u unban, n unmute) / 5 backups / 6 crash reports / k kick / b ban / m mute / s statistics / i invite / r refresh / t period\nEsc goes back; from the main menu it asks before closing.\nTPS history: 5m / 15m / 1h / 3h, refresh every 5 seconds.\nRun locally on the owner host (or inside an SSH terminal). See docs/OWNER_TUI.md."
                 );
                 return Ok(None);
             }
@@ -122,6 +123,7 @@ fn options() -> Result<Option<Options>, String> {
                 python,
                 repo,
                 config: config.ok_or("Укажите --config или --demo")?,
+                windows_report_dir: export_dir.clone(),
             })
         },
         snapshot,
@@ -158,6 +160,8 @@ impl Pending {
             Request::Invite => "Создаём приглашение",
             Request::PlayerStats { .. } => "Загружаем статистику игрока",
             Request::Restrictions => "Загружаем баны и муты",
+            Request::ClientReports => "Читаем краш-отчёты",
+            Request::ExportClientReport(_) => "Выгружаем краш-отчёт",
             Request::Moderation(..) => "Применяем команду модерации",
             Request::Console { command, .. } => match command.as_str() {
                 "save" => "Сохраняем мир",
@@ -399,6 +403,16 @@ fn interactive(
                             app.failed = !snapshot.ok;
                             app.show_restrictions(Some(snapshot));
                         }
+                        Ok(Reply::ClientReports(listing)) => {
+                            if let Some(panel) = &mut app.client_reports {
+                                panel.listed(listing);
+                            }
+                        }
+                        Ok(Reply::ClientReportExport(export)) => {
+                            if let Some(panel) = &mut app.client_reports {
+                                panel.exported(export);
+                            }
+                        }
                         Ok(Reply::PlayerStats(v)) => {
                             let ok = v.ok;
                             let message = v.message();
@@ -492,6 +506,8 @@ fn interactive(
                             let message = request_error(&error, work, reports);
                             if work.overview {
                                 app.set_menu_message(message);
+                            } else if let Some(panel) = &mut app.client_reports {
+                                panel.error(message);
                             } else {
                                 app.show_detail(message);
                             }
@@ -519,6 +535,8 @@ fn interactive(
                     );
                     if work.overview {
                         app.set_menu_message(message);
+                    } else if let Some(panel) = &mut app.client_reports {
+                        panel.error(message);
                     } else {
                         app.show_detail(message);
                     }
@@ -545,6 +563,12 @@ fn interactive(
                 continue;
             }
             if key.code == KeyCode::Esc {
+                if app.client_reports.take().is_some() {
+                    if pending.as_ref().is_some_and(|work| !work.overview) {
+                        drop(pending.take());
+                    }
+                    continue;
+                }
                 if app.dismiss_dialog() {
                     if app.moderation.is_none() {
                         name_lookup = None;
@@ -711,6 +735,16 @@ fn interactive(
                         command: "save".into(),
                     });
                 }
+            } else if let Some(panel) = &mut app.client_reports {
+                if pending.as_ref().is_none_or(|work| work.overview)
+                    && let Some(action) = panel.key(shortcut)
+                {
+                    drop(pending.take());
+                    request = Some(match action {
+                        client_reports::Input::Refresh => Request::ClientReports,
+                        client_reports::Input::Export(id) => Request::ExportClientReport(id),
+                    });
+                }
             } else if let Some(panel) = app.restrictions_panel() {
                 let idle = pending.as_ref().is_none_or(|work| work.overview);
                 match panel.key(key.code, shortcut, idle) {
@@ -822,6 +856,14 @@ fn interactive(
                             app.server().map(str::to_owned),
                             app.window(),
                         ))
+                    }
+                    KeyCode::Char('6')
+                        if pending.as_ref().is_none_or(|work| work.overview) && !app.demo =>
+                    {
+                        drop(pending.take());
+                        app.client_reports =
+                            Some(client_reports::Panel::new(reports.export_dir.is_some()));
+                        request = Some(Request::ClientReports);
                     }
                     KeyCode::Char(c @ ('1' | '2' | '3' | '4' | '5' | 'l'))
                         if pending.is_none() && !app.demo =>

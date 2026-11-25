@@ -2,8 +2,11 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows.Forms;
 
 internal static class OwnerTerminal
 {
@@ -38,15 +41,15 @@ internal static class OwnerTerminal
                 ssh = nativeSsh;
 
             var start = Child(ssh, "-F " + Quote(config) +
-                " -o ClearAllForwardings=yes -o ForwardAgent=no -tt omkalitycraft-vps .local/bin/omk-tui-vps-restrictions", socket);
+                " -o ClearAllForwardings=yes -o ForwardAgent=no -tt omkalitycraft-vps .local/bin/omk-tui-vps-invites", socket);
             start.EnvironmentVariables["TERM"] = "xterm-256color";
             var reports = Child(ssh, "-F " + Quote(config) +
                 " -o ClearAllForwardings=yes -o ForwardAgent=no -o BatchMode=yes" +
                 " -o ConnectTimeout=8 -o ServerAliveInterval=10 -o ServerAliveCountMax=2" +
-                " -nT omkalitycraft-vps .local/bin/omk-tui-report-stream", socket);
+                " -nT omkalitycraft-vps .local/bin/omk-tui-owner-stream", socket);
             var executable = typeof(OwnerTerminal).Assembly.Location;
             int exitCode;
-            using (var download = new WipeReports(reports, Path.GetDirectoryName(executable)))
+            using (var download = new OwnerReports(reports, Path.GetDirectoryName(executable)))
                 exitCode = Run(start);
             return exitCode == 0 ? 0 : Fail("SSH завершился с кодом " + exitCode + ".");
         }
@@ -55,24 +58,27 @@ internal static class OwnerTerminal
         catch (UnauthorizedAccessException error) { return Fail(error.Message); }
     }
 
-    private sealed class WipeReports : IDisposable
+    private sealed class OwnerReports : IDisposable
     {
+        private const int MaxCrashBytes = 96 * 1024;
+        private const string CrashPrefix = "CRASH ";
         private readonly ProcessStartInfo start;
-        private readonly string destination;
+        private readonly string folder;
         private readonly Thread worker;
         private readonly ManualResetEvent stop = new ManualResetEvent(false);
         private readonly object gate = new object();
         private Process active;
         private string saveError;
 
-        internal WipeReports(ProcessStartInfo start, string folder)
+        internal OwnerReports(ProcessStartInfo start, string folder)
         {
             this.start = start;
             start.CreateNoWindow = true;
             start.RedirectStandardOutput = true;
             start.RedirectStandardError = true;
-            destination = Path.Combine(folder, "OmkalityCraft-Wipe.log");
+            this.folder = folder;
             worker = new Thread(Receive) { IsBackground = true };
+            worker.SetApartmentState(ApartmentState.STA);
             worker.Start();
         }
 
@@ -98,7 +104,12 @@ internal static class OwnerTerminal
                             string line;
                             while (!stop.WaitOne(0) && (line = process.StandardOutput.ReadLine()) != null)
                             {
-                                if (line.Length != 0)
+                                if (line.StartsWith("CLIP ", StringComparison.Ordinal))
+                                {
+                                    try { CopyInvitation(line.Substring(5)); }
+                                    catch (ExternalException) { }
+                                }
+                                else if (line.Length != 0)
                                     Save(line);
                             }
                         }
@@ -121,25 +132,48 @@ internal static class OwnerTerminal
 
         private void Save(string line)
         {
-            if (line.Length > 11000)
+            bool crash = line.StartsWith(CrashPrefix, StringComparison.Ordinal);
+            const int crashHeader = 6 + 32 + 1;
+            string destination = Path.Combine(folder, "OmkalityCraft-Wipe.log");
+            if (crash)
+            {
+                if (line.Length <= crashHeader || line.Length > crashHeader + MaxCrashBytes * 4 / 3 ||
+                    line[crashHeader - 1] != ' ')
+                    return;
+                var id = line.Substring(CrashPrefix.Length, 32);
+                if (!Regex.IsMatch(id, @"\A[0-9a-f]{32}\z"))
+                    return;
+                destination = Path.Combine(folder, "CrashReports", "client-crash-" + id + ".json");
+                line = line.Substring(crashHeader);
+            }
+            else if (line.Length > 11000)
                 return;
             byte[] data;
             try { data = Convert.FromBase64String(line); }
             catch (FormatException) { return; }
-            if (data.Length > 8192 ||
-                !Encoding.UTF8.GetString(data).StartsWith("OmkalityCraft | World reset |", StringComparison.Ordinal))
+            if (crash
+                ? data.Length < 2 || data.Length > MaxCrashBytes || data[0] != '{' || data[data.Length - 1] != '}'
+                : data.Length > 8192 ||
+                    !Encoding.UTF8.GetString(data).StartsWith("OmkalityCraft | World reset |", StringComparison.Ordinal))
                 return;
 
             var temporary = destination + "." + Guid.NewGuid().ToString("N") + ".tmp";
             try
             {
+                if (crash)
+                {
+                    var directory = Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                    if ((directory.Attributes & FileAttributes.ReparsePoint) != 0)
+                        throw new IOException("CrashReports is a redirected directory.");
+                }
                 using (var file = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write))
                     file.Write(data, 0, data.Length);
                 if (File.Exists(destination))
                     File.Replace(temporary, destination, null);
                 else
                     File.Move(temporary, destination);
-                saveError = null;
+                if (saveError == destination)
+                    saveError = null;
             }
             catch (IOException) { saveError = destination; }
             catch (UnauthorizedAccessException) { saveError = destination; }
@@ -167,8 +201,27 @@ internal static class OwnerTerminal
             if (worker.Join(3000))
                 stop.Dispose();
             if (saveError != null)
-                Console.Error.WriteLine("Не удалось сохранить журнал: " + saveError);
+                Console.Error.WriteLine("Не удалось сохранить файл " + saveError);
         }
+    }
+
+    internal static bool CopyInvitation(string encoded)
+    {
+        if (encoded.Length > 172)
+            return false;
+        byte[] bytes;
+        try { bytes = Convert.FromBase64String(encoded); }
+        catch (FormatException) { return false; }
+        if (bytes.Length == 0 || bytes.Length > 128)
+            return false;
+        foreach (byte symbol in bytes)
+        {
+            if (!(symbol >= 'A' && symbol <= 'Z' || symbol >= 'a' && symbol <= 'z' ||
+                  symbol >= '0' && symbol <= '9' || symbol == '_' || symbol == '-'))
+                return false;
+        }
+        Clipboard.SetText(Encoding.ASCII.GetString(bytes), TextDataFormat.UnicodeText);
+        return true;
     }
 
     private static string PrepareAgent(string gitTools, string sshDirectory)

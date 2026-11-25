@@ -84,20 +84,40 @@ def test_auto_point_is_frozen_in_plan_and_changed_preflight_refuses_stage(
     assert not list(target.iterdir())
 
 
-def test_auto_stage_refuses_unknown_portals_or_no_safe_point_before_write(
-    data, monkeypatch
+@pytest.mark.parametrize(
+    ("landing_found", "unhandled_links", "opaque_records", "reason"),
+    [
+        (True, 1, 0, "world_links"),
+        (True, 0, 1, "opaque_records"),
+        (False, 0, 0, "no_landing"),
+    ],
+)
+def test_auto_stage_reports_preflight_refusal_before_write(
+    data, monkeypatch, landing_found, unhandled_links, opaque_records, reason
 ):
-    request, source, storage, target, _ = data
+    request, source, storage, target, before = data
     monkeypatch.setattr(
         stage.resource_reset_preflight,
         "preflight",
-        lambda *a, **k: {"can_stage_data": False},
+        lambda *a, **k: {
+            "can_stage_data": False,
+            "landing": {"found": landing_found},
+            "links": {
+                "unhandled_finding_count": unhandled_links,
+                "opaque_record_count": opaque_records,
+            },
+        },
     )
-    with pytest.raises(ValueError, match="known mod links"):
+    with pytest.raises(ValueError) as rejected:
         stage.execute(
             {**request, "position": "auto", "action": "plan"}, source, storage, target
         )
+    assert getattr(rejected.value, "reason", None) == reason
     assert not list(target.iterdir())
+    assert (
+        inventory(source / "world", world_name="world", path_policy="linux-server")
+        == before
+    )
 
 
 def planned(data):

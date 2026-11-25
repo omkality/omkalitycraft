@@ -106,14 +106,11 @@ def _p95(values):
     return quantiles(values, n=100, method="inclusive")[94]
 
 
-def _summarize(series):
-    online = series["players"]
-    active = {stamp for stamp, count in online.items() if count > 0}
+def _activity_metrics(series, stamps):
     reductions = {
         "host_cpu_p95_percent": _p95,
         "host_cpu_steal_p95_percent": _p95,
         "host_ram_available_min_bytes": min,
-        DISK: min,
         "game_cpu_p95_vcpus": _p95,
         "game_memory_max_bytes": max,
         "game_tps_min": min,
@@ -121,20 +118,41 @@ def _summarize(series):
     }
     metrics = {}
     for key, reduce in reductions.items():
-        values = [
-            value
-            for stamp, value in series[key].items()
-            if key == DISK or stamp in active
-        ]
+        observed = series[key]
+        values = [observed[stamp] for stamp in stamps if stamp in observed]
         metrics[key] = {
             "value": reduce(values) if values else None,
             "samples": len(values),
         }
+    return metrics
+
+
+def _summarize(series):
+    online = series["players"]
+    active = []
+    stamps_by_count = {}
+    for stamp, count in online.items():
+        if count > 0:
+            active.append(stamp)
+            stamps_by_count.setdefault(int(count), []).append(stamp)
+
+    metrics = _activity_metrics(series, active)
+    disk = series[DISK].values()
+    metrics[DISK] = {"value": min(disk, default=None), "samples": len(disk)}
+    by_player_count = [
+        {
+            "players": count,
+            "samples": len(stamps),
+            "metrics": _activity_metrics(series, stamps),
+        }
+        for count, stamps in sorted(stamps_by_count.items())
+    ]
     return (
         len(active),
         len(online),
         int(max(online.values())) if online else None,
         metrics,
+        by_player_count,
     )
 
 
@@ -155,6 +173,7 @@ def run(path: Path, server: str, window: str) -> dict:
         "step": step,
         "coverage": None,
         "metrics": {},
+        "by_player_count": [],
     }
     try:
         config = load_operator_config(path)
@@ -173,7 +192,7 @@ def run(path: Path, server: str, window: str) -> dict:
 
     try:
         series = _read_series(settings, server, end - duration, end, step)
-        active, known, peak, metrics = _summarize(series)
+        active, known, peak, metrics, by_player_count = _summarize(series)
     except OSError, ValueError, TypeError, KeyError:
         return {
             **result,
@@ -196,4 +215,5 @@ def run(path: Path, server: str, window: str) -> dict:
             "peak_players": peak,
         },
         "metrics": metrics,
+        "by_player_count": by_player_count,
     }

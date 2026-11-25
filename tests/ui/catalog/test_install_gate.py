@@ -129,6 +129,8 @@ def test_launcher_dock_follows_the_hidden_game_lifecycle(qtbot, tmp_path, monkey
         poll=lambda: result,
         diagnostics_done=threading.Event(),
         logging_failed=threading.Event(),
+        log_path=tmp_path / "game.log",
+        crash_report=None,
     )
     window.show()
     window._installed(

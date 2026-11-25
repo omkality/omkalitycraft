@@ -4,18 +4,30 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
+from PySide6.QtGui import QDesktopServices
+from PySide6.QtWidgets import QLineEdit, QPushButton
 
 from launcher.controller import InstallationResult
 from launcher.game import GameProcess
 from launcher.releases import ReleaseError
+from launcher.ui.crash_dialog import CrashDialog
 from tests.fixtures.ui.catalog.game_launch import game_launch_window
 
 __all__ = ["game_launch_window"]
 
 
-@pytest.mark.parametrize("exit_code", [0, 1])
+@pytest.mark.parametrize(
+    ("exit_code", "report"),
+    [
+        (0, None),
+        (1, None),
+        (0, "crash-reports/crash-client.txt"),
+        (1, "hs_err_pid42.log"),
+    ],
+    ids=["normal", "output-only", "minecraft-report", "jvm-report"],
+)
 def test_play_locks_memory_and_hides_window_until_game_exits(
-    game_launch_window, tmp_path, monkeypatch, exit_code
+    game_launch_window, tmp_path, monkeypatch, exit_code, report
 ):
     window = game_launch_window
     card = window.home_page.cards["dj2"]
@@ -31,7 +43,10 @@ def test_play_locks_memory_and_hides_window_until_game_exits(
 
     process = Mock()
     process.poll.return_value = None
-    game = GameProcess(process, tmp_path / "game.log", tmp_path)
+    log = tmp_path / "userdata/logs/dj2-game.log"
+    log.parent.mkdir(parents=True)
+    log.touch()
+    game = GameProcess(process, log, tmp_path)
     result = InstallationResult(SimpleNamespace(version="2.23.4"), tmp_path, game)
     window.installation.completed.emit("dj2", result)
     assert window.isHidden()
@@ -39,6 +54,10 @@ def test_play_locks_memory_and_hides_window_until_game_exits(
     assert window.game_timer.isActive()
 
     process.poll.return_value = exit_code
+    if report:
+        game.crash_report = tmp_path / "instances/dj2" / report
+        game.crash_report.parent.mkdir(parents=True)
+        game.crash_report.touch()
     window._poll_game()
     assert window.isHidden()
     game.diagnostics_done.set()
@@ -46,7 +65,24 @@ def test_play_locks_memory_and_hides_window_until_game_exits(
     assert window.isVisible()
     assert card.memory.slider.isEnabled()
     assert card.action.text() == "Играть"
-    assert bool(window.status.text()) is bool(exit_code)
+    assert not window.status.text()
+    window._poll_game()
+    dialogs = window.findChildren(CrashDialog)
+    if not exit_code and report is None:
+        assert not dialogs
+    else:
+        assert len(dialogs) == 1 and dialogs[0].isVisible()
+        directory = game.crash_report.parent if report else log.parent
+        assert dialogs[0].findChild(QLineEdit, "crashDirectory").text() == str(
+            directory
+        )
+        opened = []
+        monkeypatch.setattr(
+            QDesktopServices, "openUrl", lambda url: opened.append(url) or True
+        )
+        dialogs[0].findChild(QPushButton, "openCrashDirectory").click()
+        assert len(opened) == 1 and opened[0].toLocalFile() == directory.as_posix()
+        dialogs[0].accept()
 
 
 def test_startup_failure_unlocks_memory_without_hiding(game_launch_window, monkeypatch):
