@@ -61,6 +61,23 @@ def _is_pack_process(arguments: list[str], release: Release) -> bool:
     )
 
 
+def _java_environment(root: Path) -> dict[str, str]:
+    environment = {
+        name: value
+        for name, value in os.environ.items()
+        if name not in {"JAVA_TOOL_OPTIONS", "_JAVA_OPTIONS", "JDK_JAVA_OPTIONS"}
+    }
+    temporary = str(root / "userdata/tmp")
+    environment.update(
+        TMP=temporary,
+        TEMP=temporary,
+        TMPDIR=temporary,
+        # Crash Assistant 1.11.9 checks this before starting its companion app.
+        DisableEntirelyCrashAssistantModOnSystem="true",
+    )
+    return environment
+
+
 @dataclass
 class GameProcess:
     """Track the child process and the completion of its diagnostic capture."""
@@ -72,6 +89,7 @@ class GameProcess:
         default_factory=threading.Event, repr=False
     )
     logging_failed: threading.Event = field(default_factory=threading.Event, repr=False)
+    crash_report: Path | None = None
 
     def poll(self) -> int | None:
         """Return the Java exit code when the child has stopped."""
@@ -216,20 +234,13 @@ class GameRunner:
         log = self.root / "userdata" / "logs" / f"{release.pack_id}-game.log"
         writer = BoundedLog(log)
         prune_game_logs(self.root, folder)
-        environment = {
-            name: value
-            for name, value in os.environ.items()
-            if name not in {"JAVA_TOOL_OPTIONS", "_JAVA_OPTIONS", "JDK_JAVA_OPTIONS"}
-        }
-        temporary = str(self.root / "userdata/tmp")
-        environment.update(TMP=temporary, TEMP=temporary, TMPDIR=temporary)
         started_at = time.time()
         baseline = crash_fingerprints(self.root, folder)
         try:
             process = subprocess.Popen(
                 command,
                 cwd=folder,
-                env=environment,
+                env=_java_environment(self.root),
                 shell=False,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
@@ -281,6 +292,17 @@ class GameRunner:
                 )
                 code = process.wait()
                 handled = watcher.stop()
+                previous = baseline if code else handled
+                result.crash_report = next(
+                    (
+                        Path(name)
+                        for name, fingerprint in crash_fingerprints(
+                            self.root, folder
+                        ).items()
+                        if previous.get(name) != fingerprint
+                    ),
+                    None,
+                )
                 event(
                     self.root,
                     "game_exited",

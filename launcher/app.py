@@ -55,6 +55,7 @@ from launcher.skin_dialog import SkinDialog, SkinResetDialog
 from launcher.skins import MAX_SKIN_BYTES, SkinError, decode_skin
 from launcher.storage import FileSessionStore
 from launcher.tasks import Task
+from launcher.ui.crash_dialog import CrashDialog
 from launcher.ui.macos_dock import set_launcher_dock_visible
 from launcher.ui.nickname import NicknameField
 from launcher.ui.social import SocialFooter
@@ -472,21 +473,22 @@ class LauncherWindow(QMainWindow):
             self.close()
 
     def _poll_game(self) -> None:
-        if self.game is None or self.game.poll() is None:
+        game = self.game
+        if game is None:
             return
-        if not self.game.diagnostics_done.is_set():
+        code = game.poll()
+        if code is None or not game.diagnostics_done.is_set():
             return
-        code = self.game.poll()
-        logging_failed = self.game.logging_failed.is_set()
+        crash_directory = game.log_path.parent if code else None
+        if game.crash_report is not None:
+            crash_directory = game.crash_report.parent
         card = self.home_page.cards[self.game_pack]
         self.game, self.game_pack = None, None
         self.game_timer.stop()
         self._installation_idle()
         card.finished(success=True)
         self.skin_preview.animation.resume()
-        if code:
-            self.status.setText("Игра завершилась с ошибкой. Можно запустить её снова.")
-        elif logging_failed:
+        if crash_directory is None and game.logging_failed.is_set():
             self.status.setText(
                 "Не удалось записать журнал игры. Проверьте свободное место и доступ к папке лаунчера."
             )
@@ -497,6 +499,9 @@ class LauncherWindow(QMainWindow):
         elif self.isHidden():
             self.close()
             QApplication.instance().quit()
+            return
+        if crash_directory is not None:
+            CrashDialog(crash_directory, self).open()
 
     def _show_signup_password(self, visible: bool) -> None:
         mode = QLineEdit.EchoMode.Normal if visible else QLineEdit.EchoMode.Password
