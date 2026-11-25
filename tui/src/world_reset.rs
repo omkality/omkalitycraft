@@ -514,7 +514,7 @@ mod tests {
     #[test]
     fn refused_plan_shows_the_summary_and_still_saves_the_report() {
         let mut query = Request::inspect("dj2".into());
-        query.command = "run".into();
+        query.command = "run";
         let mut value = sealed();
         value["command"] = serde_json::json!("run");
         value["ok"] = serde_json::json!(false);
