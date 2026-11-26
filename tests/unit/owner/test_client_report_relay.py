@@ -9,7 +9,69 @@ from omk.cli import main
 from omk.observability.incidents import MAX_REPORT_BYTES
 from omk.observability.report_store import ReportStore
 from omk.owner.client_report_relay import ReportRelay
+from tests.fixtures.unit.launcher.client_incidents import report as incident_report
 from tests.fixtures.unit.owner.operator_commands import config
+
+
+def test_client_report_inspect_reads_only_bounded_hints(tmp_path, capsys):
+    settings, path = config(tmp_path, auth=False)
+    detail = """---- Minecraft Crash Report ----
+Description: Rendering entity in world
+
+java.lang.NullPointerException: private-command /not-an-action
+    at example.renderer.EntityRenderer.render(EntityRenderer.java:42)
+
+-- Entity being rendered --
+Details:
+    Entity Type: minecraft:pig (example.entity.Pig)
+    Entity UUID: 12345678-9012-3456-7890-123456789012
+    Entity's Block location: World: (-128,63,15), Chunk: (at 0,3,15 in -8,0)
+
+-- Affected level --
+Details:
+    Level dimension: -1
+    Level spawn location: World: (0,64,0), Chunk: (at 0,4,0 in 0,0)
+"""
+    requested = incident_report(detail=detail)
+    other = incident_report(detail="not the selected event")
+    store = ReportStore(settings.reports_root)
+    for entry in (requested, other):
+        store.ingest(entry, player=entry["player"], token="test-report-token")
+    before = store.path.read_bytes()
+    args = ["admin", "--config", str(path), "reports", "inspect", "--id"]
+    assert main([*args, requested["id"]]) == 0
+    output = capsys.readouterr().out
+    result = json.loads(output)
+    assert result["report_id"] == requested["id"]
+    assert result["player"] == requested["player"]
+    assert result["diagnostic"]["category"] == "rendering_entity"
+    assert result["diagnostic"]["exception"] == "java.lang.NullPointerException"
+    assert result["diagnostic"]["level_dimension"] == -1
+    assert result["diagnostic"]["subject"] == {
+        "registry_id": "minecraft:pig",
+        "block": [-128, 63, 15],
+        "entity_uuid": "12345678901234567890123456789012",
+    }
+    assert len(result["diagnostic"]["stack_signature"]) == 64
+    assert "private-command" not in output
+    assert "EntityRenderer.java" not in output
+    assert other["id"] not in output
+    assert not (settings.private / "report-exports").exists()
+    assert store.path.read_bytes() == before
+
+    assert main([*args, "../world"]) == 1
+    assert json.loads(capsys.readouterr().out)["ok"] is False
+
+
+def test_client_report_inspect_empty_inbox_has_no_new_database(tmp_path, capsys):
+    settings, path = config(tmp_path, auth=False)
+    assert (
+        main(["admin", "--config", str(path), "reports", "inspect", "--id", "a" * 32])
+        == 1
+    )
+    result = json.loads(capsys.readouterr().out)
+    assert result["ok"] is False and result["error_type"] == "ValueError"
+    assert not settings.reports_root.exists()
 
 
 @pytest.mark.skipif(os.name != "posix", reason="The SSH relay runs on the VPS")

@@ -149,6 +149,7 @@ uv run omk admin --config .omk-admin/operator.toml diagnostics dj2
 ```powershell
 uv run omk admin --config .omk-admin/operator.toml reports list
 uv run omk admin --config .omk-admin/operator.toml reports list --player PLAYER_UUID
+uv run omk admin --config .omk-admin/operator.toml reports inspect --id REPORT_ID
 uv run omk admin --config .omk-admin/operator.toml reports export --id REPORT_ID
 uv run omk admin --config .omk-admin/operator.toml reports prune
 ```
@@ -158,6 +159,17 @@ uv run omk admin --config .omk-admin/operator.toml reports prune
 В stdout снова только путь/количество, без stack trace и токенов.
 Чтение inbox выполняется локально: публичной read/admin API для отчётов нет.
 Текст отчёта — данные, утилита не выполняет из него команды и не открывает вложения.
+
+`inspect` читает выбранный отчёт из той же закрытой базы. Сводка показывает
+класс сбоя, исключение и подпись стека без имён файлов и номеров строк.
+Для нативной ошибки JVM доступны сигнал, имя модуля и смещение, если они
+есть в отчёте. Для известных секций Minecraft 1.12.2 доступны ID из реестра,
+UUID сущности, координаты блока или чанка и указанное в отчёте измерение.
+Отсутствующие или неоднозначные поля остаются пустыми.
+
+Координаты и ID берутся со стороны клиента и годятся как подсказки для проверки.
+`inspect` выводит сводку без исходного текста. База открывается в режиме чтения.
+В журнал действий владельца добавляется обычная запись о вызове команды.
 
 Для реальной доставки на сервере API нужно явно задать:
 
