@@ -15,6 +15,7 @@ from omk.owner import admin_backups as backups
 from omk.owner.admin import AdminError, _private_path, _read_json, _write_private
 from omk.owner.maintenance import journal_history
 from omk.owner.maintenance.maintenance_console import stop as console_stop
+from omk.owner.operation_windows import record_window
 from omk.shared.profiles import PROJECT_ROOT
 
 TERMINAL = {"complete", "cancelled"}
@@ -459,6 +460,17 @@ def wait_started(config, record):
         time.sleep(record["settings"]["poll_milliseconds"] / 1000)
 
 
+def _observe_start(config, record, *, request):
+    started = time.time()
+    try:
+        if request:
+            # Use the frozen ID. Reconciliation only waits for readiness.
+            backups.docker("start", record["initial"]["container"])
+        return wait_started(config, record)
+    finally:
+        record_window(config, record["server"], "server_start", started, time.time())
+
+
 def execute(config, operation, action, *, backup_operation=None, environment=None):
     with backups.locked(config):
         record = read_record(config, operation)
@@ -486,7 +498,7 @@ def execute(config, operation, action, *, backup_operation=None, environment=Non
             if record["stage"] == "stop-requested":
                 return wait_stopped(config, record)
             if record["stage"] == "start-requested":
-                return wait_started(config, record)
+                return _observe_start(config, record, request=False)
             raise AdminError("No maintenance intent needs reconciliation")
         if action == "stop":
             return request_stop(config, record, value, environment)
@@ -557,9 +569,7 @@ def request_start(config, record, backup_operation):
         start_requested_at=datetime.now(UTC).isoformat(),
     )
     save(config, record, "start-requested")
-    # Use the frozen immutable ID, never docker compose up or a mutable name.
-    backups.docker("start", record["initial"]["container"])
-    return wait_started(config, record)
+    return _observe_start(config, record, request=True)
 
 
 def add_maintenance_parser(actions):

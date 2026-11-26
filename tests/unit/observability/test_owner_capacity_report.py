@@ -166,7 +166,7 @@ def test_capacity_samples_short_and_overlapping_backup_windows(tmp_path, monkeyp
     assert backup["metrics"]["game_tps_min"] == {"value": 18, "samples": 2}
 
 
-def test_capacity_reports_reset_separately_from_hourly_backup(tmp_path, monkeypatch):
+def test_capacity_reports_each_operation_separately(tmp_path, monkeypatch):
     settings, path = config(tmp_path)
     _write_private(
         settings.private / "tui.json",
@@ -175,9 +175,11 @@ def test_capacity_reports_reset_separately_from_hourly_backup(tmp_path, monkeypa
     )
     monkeypatch.setattr(report.time, "time", lambda: NOW)
     reset_starts = HOUR - 65
+    boot_starts = HOUR - 210
     for folder, bounds in (
         ("hourly-backups", [HOUR - 105, HOUR - 90]),
         ("world-reset", [reset_starts, HOUR + 20]),
+        ("server-starts", [boot_starts, HOUR - 132]),
     ):
         _write_private(
             settings.private / folder / "dj2/capture-windows.json",
@@ -189,6 +191,18 @@ def test_capacity_reports_reset_separately_from_hourly_backup(tmp_path, monkeypa
         if step != 30:
             return []
         assert end < HOUR
+        if start < HOUR - 105:
+            assert (
+                f'timestamp(cpu_usage_idle{{host="test",job="host",cpu="cpu-total"}}) >= {boot_starts}'
+                in expression
+            )
+            return [
+                {
+                    "metric": {"host": "test", "stat": "host_cpu_p95_percent"},
+                    "values": [[start, "67"]],
+                },
+                {"metric": {"host": "test", "stat": "players"}, "values": [[end, "0"]]},
+            ]
         if start < reset_starts:
             return [
                 {
@@ -217,6 +231,11 @@ def test_capacity_reports_reset_separately_from_hourly_backup(tmp_path, monkeypa
     assert reset["coverage"] == {"with_players": 0, "without_players": 1, "unknown": 2}
     assert reset["metrics"]["host_cpu_p95_percent"] == {"value": 86, "samples": 1}
     assert reset["metrics"]["game_tps_min"] == {"value": None, "samples": 0}
+    boot = result["during_server_start"]
+    assert boot["windows"] == 1
+    assert boot["coverage"] == {"with_players": 0, "without_players": 1, "unknown": 2}
+    assert boot["metrics"]["host_cpu_p95_percent"] == {"value": 67, "samples": 1}
+    assert boot["metrics"]["game_tps_min"] == {"value": None, "samples": 0}
 
     # Damaged reset history must not hide successful samples from hourly backups.
     _write_private(
@@ -227,6 +246,7 @@ def test_capacity_reports_reset_separately_from_hourly_backup(tmp_path, monkeypa
     result = report.run(path, "dj2", "24h")
     assert result["ok"] and result["during_world_reset"] is None
     assert result["during_hourly_backup"] == hourly
+    assert result["during_server_start"] == boot
 
 
 def test_empty_prometheus_history_has_no_guessed_load(tmp_path):
@@ -251,6 +271,7 @@ def test_empty_prometheus_history_has_no_guessed_load(tmp_path):
     assert result["by_player_count"] == []
     assert result["during_hourly_backup"] is None
     assert result["during_world_reset"] is None
+    assert result["during_server_start"] is None
     assert all(
         metric == {"value": None, "samples": 0} for metric in result["metrics"].values()
     )
