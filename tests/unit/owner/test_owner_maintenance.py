@@ -4,6 +4,7 @@ import socket
 import threading
 import time
 from datetime import UTC, datetime, timedelta
+from types import SimpleNamespace
 
 import pytest
 
@@ -14,6 +15,7 @@ from omk.owner import (
 )
 from omk.owner.admin import AdminError
 from omk.owner.maintenance.maintenance_worker import execute as work
+from omk.owner.operation_windows import read_windows
 from tests.fixtures.unit.backups.cold_backups import stopped
 from tests.fixtures.unit.owner.owner_maintenance import data, flow, stop_and_backup
 
@@ -26,14 +28,18 @@ def test_clean_window_needs_backup_and_starts_same_id(flow):
     with pytest.raises(AdminError, match="identifier"):
         owner.execute(cfg, op, "start")
     assert "start" not in actions and state["running"] is False
+    assert read_windows(cfg, "dj2", "server_start") is None
     result = owner.execute(cfg, op, "start", backup_operation=backup["operation"])
     assert result["stage"] == "complete" and result["ready_for_players"] is False
     assert actions.count("stop") == actions.count("start") == 1
+    windows = read_windows(cfg, "dj2", "server_start")
+    assert windows and len(windows) == 1
     assert owner.execute(cfg, op, "status") == result
     contents = "".join(p.read_text() for p in (cfg.private / "maintenance").iterdir())
     assert "private-credential" not in contents and '"password"' not in contents
     with pytest.raises(AdminError, match="stage"):
         owner.execute(cfg, op, "start", backup_operation=backup["operation"])
+    assert read_windows(cfg, "dj2", "server_start") == windows
 
 
 def test_existing_window_blocks_plan_and_cancel_does_not_start(flow):
@@ -129,6 +135,16 @@ def test_interrupted_start_reconciles_without_second_start(
     op, backup = stop_and_backup(flow)
     cfg, _, _, actions = flow
     original = backups.docker
+    stamps = iter([100, 108, 700, 716])
+    monkeypatch.setattr(
+        owner,
+        "time",
+        SimpleNamespace(
+            time=lambda: next(stamps),
+            monotonic=owner.time.monotonic,
+            sleep=owner.time.sleep,
+        ),
+    )
 
     def crash(*args, **kwargs):
         value = original(*args, **kwargs)
@@ -140,8 +156,10 @@ def test_interrupted_start_reconciles_without_second_start(
     with pytest.raises(crash_type):
         owner.execute(cfg, op, "start", backup_operation=backup["operation"])
     assert owner.read_record(cfg, op)["stage"] == "start-requested"
+    assert read_windows(cfg, "dj2", "server_start") == [[100, 108]]
     assert owner.execute(cfg, op, "reconcile")["stage"] == "complete"
     assert actions.count("start") == 1
+    assert read_windows(cfg, "dj2", "server_start") == [[100, 108], [700, 716]]
 
 
 @pytest.mark.parametrize("fault", ["readiness", "fatal", "early-boot", "crashed"])
