@@ -235,6 +235,7 @@ def run(path: Path, server: str, window: str) -> dict:
         "by_player_count": [],
         "during_hourly_backup": None,
         "during_world_reset": None,
+        "during_server_start": None,
     }
     try:
         config = load_operator_config(path)
@@ -282,5 +283,8 @@ def run(path: Path, server: str, window: str) -> dict:
         ),
         "during_world_reset": _during_operation(
             config, settings, server, end - duration, end, "world_reset"
+        ),
+        "during_server_start": _during_operation(
+            config, settings, server, end - duration, end, "server_start"
         ),
     }
