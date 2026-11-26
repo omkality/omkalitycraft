@@ -15,7 +15,10 @@ from omk.worlds import (
     enderutilities_reset as ender,
     forge112_regions as anvil,
 )
-from omk.worlds.reset import resource_reset_inventory as audit
+from omk.worlds.reset import (
+    resource_reset_inventory as audit,
+    rftools_reset as rftools,
+)
 from omk.worlds.reset.dimension_reset import omitted
 from omk.worlds.reset.resource_reset_landing import world_path
 
@@ -53,6 +56,7 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
     max_chunks=100000,
     nonportal_patterns=(),
     enderutilities_targets=False,
+    rftools_transport=False,
     reset=None,
 ):
     if type(max_chunks) is not int or not 1 <= max_chunks <= 1000000:
@@ -64,10 +68,11 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
     findings, opaque = [], []
     chunks_read, nodes, nonportal = 0, 0, 0
     eligible, reviewed = set(), 0
+    rftools_eligible, rftools_reviewed = set(), 0
     spawn_receiver = None
 
     def add(file, path, kind):
-        nonlocal reviewed
+        nonlocal reviewed, rftools_reviewed
         if len(findings) >= 2000:
             raise ValueError("Too many dimension references for reviewed reset")
         finding = {"file": file, "nbt_path": path, "kind": kind}
@@ -76,6 +81,13 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
             reviewed += 1
         elif kind == "rftools.spawn-receiver":
             finding["staging_adapter"] = audit.RFTOOLS_SPAWN_ADAPTER
+            reviewed += 1
+        elif path in rftools_eligible and kind in {
+            "dimension-tag",
+            "rftools.receiver-id",
+        }:
+            finding["staging_adapter"] = rftools.ADAPTER
+            rftools_reviewed += 1
             reviewed += 1
         findings.append(finding)
 
@@ -110,35 +122,35 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
         ):
             opaque.append(relative)
 
+    definition = None
+    if reset and "rftools_identity" in reset:
+        _label, _root, definitions = audit._rftools_registry(server, world_name)
+        definition = definitions.get(dimension)
+        if (
+            definition is None
+            or audit.rftools_identity(definition) != reset["rftools_identity"]
+        ):
+            raise ValueError("The selected RFTools dimension changed")
+
     # Receiver numbers are references too. A porter need not contain a dimension.
     registry_name = prefix + audit.RFTOOLS_DESTINATIONS
+    registry_paths = set()
     if registry_name in files:
         raw = nbt(audit._read(server / registry_name, world))
         data = anvil.value(raw, "data", 10)
-        last_id = anvil.value(data, "lastId", 3)
-        if last_id < 0:
-            raise ValueError("Invalid RFTools destination counter")
-        seen = set()
-        rows = anvil.compounds(data, "destinations")
-        if reset and "rftools_identity" in reset:
-            _label, _root, definitions = audit._rftools_registry(server, world_name)
-            definition = definitions.get(dimension)
-            if (
-                definition is None
-                or audit.rftools_identity(definition) != reset["rftools_identity"]
-            ):
-                raise ValueError("The selected RFTools dimension changed")
-            spawn_receiver = audit.rftools_spawn_destination(definition, rows)
-        for row in rows:
-            target = anvil.value(row, "dim", 3)
-            if "id" in row:
-                number = anvil.value(row, "id", 3)
-                if number < 0 or number > last_id or number in seen:
-                    raise ValueError("Ambiguous RFTools destination IDs")
-                seen.add(number)
-                if target == dimension:
-                    receiver_ids.add(number)
-        known_receiver_ids.update(seen)
+        receiver_ids, known_receiver_ids = rftools.destination_ids(data, dimension)
+        if definition is not None:
+            if rftools_transport:
+                registry_paths = {
+                    f"/data/destinations/{index}/dim"
+                    for index in rftools.selected_positions(
+                        data, dimension, registry=True
+                    )
+                }
+            else:
+                spawn_receiver = audit.rftools_spawn_destination(
+                    definition, anvil.compounds(data, "destinations")
+                )
 
     def walk(  # noqa: PLR0912 - bounded serializer cases
         root, file, path="", context="", skip=frozenset(), depth=0
@@ -150,6 +162,10 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
         if isinstance(root, dict):
             if "id" in root and root["id"].kind == 8:
                 context = root["id"].value
+            dialer = context in {
+                "rftools:simple_dialer",
+                "minecraft:rftools_simple_dialer",
+            }
             target = root.get("target")
             if (
                 context.startswith("rftools:")
@@ -169,13 +185,23 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                 # Keep diagnostic paths unambiguous before adapter admission.
                 here = path + "/" + key.replace("~", "~0").replace("/", "~1")
                 normalized = key.replace("_", "").lower()
-                dim_key = normalized in {
-                    "dim",
-                    "dimension",
-                    "dimensionid",
-                    "dimid",
-                } or normalized.endswith(
-                    ("targetdim", "targetdimension", "destdim", "destinationdimension")
+                dim_key = (
+                    normalized
+                    in {
+                        "dim",
+                        "dimension",
+                        "dimensionid",
+                        "dimid",
+                    }
+                    or normalized.endswith(
+                        (
+                            "targetdim",
+                            "targetdimension",
+                            "destdim",
+                            "destinationdimension",
+                        )
+                    )
+                    or (dialer and key == "transDim")
                 )
                 if dim_key and tag.kind in (2, 3, 4) and tag.value == dimension:
                     kind = (
@@ -191,12 +217,13 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                         kind = "rftools.spawn-receiver"
                     add(file, here, kind)
                 if (
-                    context.startswith("rftools:")
+                    (context.startswith("rftools:") or dialer)
                     and tag.kind == 3
-                    # Native receiver/porter -1 is unbound; transmitter destId is not.
-                    and not (tag.value == -1 and key != "destId")
+                    # The native -1 sentinel applies to receivers and porters only.
+                    and not (tag.value == -1 and key not in {"destId", "receiver"})
                     and (
                         key in {"destId", "destinationId"}
+                        or (dialer and key == "receiver")
                         or (
                             "porter" in context
                             and re.fullmatch(r"target(?:[0-7])?", key)
@@ -225,6 +252,7 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
 
     for name, kind in records:
         eligible = set()
+        rftools_eligible = set()
         relative = name.removeprefix(prefix)
         if kind == "region":
             region = anvil.Region(server / name, world)
@@ -245,11 +273,17 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
             skip = (
                 {"Dimension", "SpawnDimension", "Spawns"} if kind == "player" else set()
             )
-            if enderutilities_targets and re.fullmatch(
-                r"playerdata/[a-f0-9-]{36}\.(?:dat|dat_old)", relative
-            ):
-                _candidate, paths = ender.unbind_player_targets(root, dimension)
-                eligible = set(paths)
+            if re.fullmatch(r"playerdata/[a-f0-9-]{36}\.(?:dat|dat_old)", relative):
+                if enderutilities_targets:
+                    _candidate, paths = ender.unbind_player_targets(root, dimension)
+                    eligible = set(paths)
+                if rftools_transport:
+                    _candidate, paths = rftools.unbind_player_targets(
+                        root, dimension, receiver_ids
+                    )
+                    rftools_eligible = set(paths)
+            elif name == registry_name:
+                rftools_eligible = registry_paths
             if Path(relative).name in {"level.dat", "level.dat_old"}:
                 skip.add("FML")  # Registry IDs are not bound teleport destinations.
             if relative == "worldprimer/data_tracker.nbt" and _world_primer_counts(
@@ -271,6 +305,11 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
         "examples": findings[:32],
         "rftools_resource_receiver_ids": len(receiver_ids),
         **({"rftools_spawn_receiver": True} if spawn_receiver is not None else {}),
+        **(
+            {"rftools_transport_references": rftools_reviewed}
+            if rftools_reviewed
+            else {}
+        ),
         "chunks_read": chunks_read,
         "records_read": len(records),
         "opaque_record_count": len(opaque),

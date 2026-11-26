@@ -15,6 +15,7 @@ from omk.worlds.reset import (
     resource_reset_landing as landing,
     resource_reset_links as links,
     resource_reset_preflight as preflight,
+    rftools_reset as rftools,
 )
 from tests.fixtures.unit.worlds.resource_reset_inventory import (
     rftools_destinations,
@@ -86,6 +87,116 @@ def test_generated_rftools_spawn_receiver_only_is_reviewed(
     assert [
         row["kind"] for row in report["examples"] if "staging_adapter" not in row
     ] == expected_pending
+
+
+@pytest.mark.parametrize("unreviewed", [None, "dialer", "nested", "other_version"])
+def test_rftools_preflight_reviews_player_targets_favorites_and_extra_receivers(
+    saved, rftools_registry, monkeypatch, unreviewed
+):
+    server, world, _, chunk = saved
+    _, _, save = rftools_registry
+    save([(6200, "Лаборатория"), (6201, "Соседний мир")])
+    selected_region = world / "RFTOOLS6200/region"
+    selected_region.mkdir(parents=True)
+    (selected_region / "r.0.0.mca").write_bytes(b"omitted old terrain")
+    destinations = world / audit.RFTOOLS_DESTINATIONS
+    rftools_destinations(
+        destinations,
+        (7, 6200, "Лаборатория", 7),
+        (8, 6201, "Соседний мир", 7),
+        (9, 6200, "Площадка", 24),
+    )
+    player = world / "playerdata/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa.dat"
+    encoded(
+        player,
+        {
+            "Inventory": compound_list(
+                [
+                    {
+                        "Slot": Tag(1, 0),
+                        "Count": Tag(1, 1),
+                        "Damage": Tag(2, 0),
+                        "id": Tag(8, "rftools:advanced_charged_porter"),
+                        "tag": Tag(
+                            10,
+                            {
+                                "target": Tag(3, 9),
+                                "target0": Tag(3, 9),
+                                "target1": Tag(3, 8),
+                                "tpTimer": Tag(3, 40),
+                            },
+                        ),
+                    }
+                ]
+            ),
+            "ForgeCaps": Tag(
+                10,
+                {
+                    "rftools:properties": Tag(
+                        10,
+                        {
+                            "destinations": compound_list(
+                                [
+                                    {
+                                        "dim": Tag(3, dim),
+                                        "x": Tag(3, 7),
+                                        "y": Tag(3, 101),
+                                        "z": Tag(3, -12),
+                                    }
+                                    for dim in (6200, 6201)
+                                ]
+                            )
+                        },
+                    )
+                },
+            ),
+        },
+    )
+    _label, _root, rows = audit._rftools_registry(server, "world")
+    reset = dimension_reset.layout(
+        6200, rftools_identity=audit.rftools_identity(rows[6200])
+    )
+    if unreviewed == "dialer":
+        chunk["TileEntities"] = compound_list(
+            [
+                {
+                    "id": Tag(8, "rftools:simple_dialer"),
+                    "x": Tag(3, 14),
+                    "y": Tag(3, 70),
+                    "z": Tag(3, 14),
+                    "receiver": Tag(3, 9),
+                    "transDim": Tag(3, 6200),
+                }
+            ]
+        )
+        region_write(world, chunk)
+    elif unreviewed == "nested":
+        encoded(
+            world / "data/chest.nbt",
+            {
+                "Items": compound_list(
+                    [
+                        {
+                            "id": Tag(8, "rftools:matter_receiver"),
+                            "tag": Tag(10, {"destinationId": Tag(3, 9)}),
+                        }
+                    ]
+                ),
+            },
+        )
+    if unreviewed != "other_version":
+        monkeypatch.setattr(
+            preflight, "artifacts", lambda *_: {rftools.ARTIFACT: rftools.SHA256}
+        )
+    before = inventory(world, world_name="world")
+    report = preflight.preflight(server, "world", 6200, reset=reset)
+    assert report["can_stage_data"] is (unreviewed is None)
+    expected = {None: 0, "dialer": 2, "nested": 1, "other_version": 4}
+    assert report["links"]["unhandled_finding_count"] == expected[unreviewed]
+    assert report["links"]["handled_finding_count"] == (
+        1 if unreviewed == "other_version" else 5
+    )
+    assert inventory(world, world_name="world") == before
 
 
 def test_saved_registry_geometry_and_read_only_proof(saved):
