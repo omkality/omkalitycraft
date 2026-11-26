@@ -1,6 +1,6 @@
 # OmkalityCraft · Forge 1.12.2
 
-Текущие исходники Core 0.3.13, DJ2Fix 0.1.10 и Client 0.1.8.
+Текущие версии Core, DJ2Fix и Client указаны в [versions.json](versions.json).
 
 DJ2Fix 0.1.9 ограничивает размер журнала GroovyScript на сервере.
 DJ2Fix 0.1.10 ограничивает журнал CraftTweaker, который пишет ZenUtils.
@@ -8,7 +8,8 @@ DJ2Fix 0.1.10 ограничивает журнал CraftTweaker, который
 
 DJ2Fix 0.1.8 завершает временные слоты перед disconnect/save. Приняты native-матрица,
 полный Windows GUI-маршрут, чистый restart того же Linux-мира и обычный клиент
-без MCP/server observer. Область #220 принята; общий допуск игроков остаётся в #41.
+без MCP/server observer. Результаты проверки описаны в #220. Приёмка первого
+выпуска закрыта в #38.
 [Контракт и границы](../../docs/DJ2_ITEM_CUSTODY.md).
 
 DJ2Fix 0.1.7 закрывает прежний файловый writer при штатном `cleanLog()`
