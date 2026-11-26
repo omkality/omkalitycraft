@@ -19,6 +19,7 @@ from omk.observability.diagnostic_export import export_bundle
 from omk.observability.diagnostics import BoundedLog, regular
 from omk.observability.report_store import ReportStore
 from omk.owner.client_report_relay import ReportRelay
+from omk.owner.incident_summary import summarize_incident
 from omk.owner.owner_access import require_private
 from omk.shared.fs import resolved
 
@@ -341,6 +342,15 @@ def client_reports(config, args):
     if re.fullmatch(r"[a-f0-9]{32}", report_id) is None:
         raise AdminError("Invalid report identifier")
     report = store.get(report_id)
+    if action == "inspect":
+        return {
+            "ok": True,
+            "report_id": report_id,
+            "player": report["player"],
+            "pack": report["pack"],
+            "kind": report["kind"],
+            "diagnostic": summarize_incident(report),
+        }
     if relay:
         path = relay.publish(report_id, report)
     else:
@@ -365,6 +375,10 @@ def _add_report_commands(actions):
     browsing = report_actions.add_parser(
         "browse", help="Read the latest 20 report summaries"
     )
+    inspecting = report_actions.add_parser(
+        "inspect", help="Summarize the diagnostic evidence in one retained report"
+    )
+    inspecting.add_argument("--id", dest="report_id", required=True)
     exporting = report_actions.add_parser("export")
     exporting.add_argument("--id", dest="report_id", required=True)
     for action in (browsing, exporting):
