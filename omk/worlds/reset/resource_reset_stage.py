@@ -102,7 +102,7 @@ def _request(request):
         resource_reset_preflight.options_checked(request["preflight_options"])
 
 
-def _changes(request, source, files):
+def _changes(request, source, files, region_edits):
     reset = request.get("reset")
     all_worlds = bool(reset and reset.get("all_worlds"))
     if all_worlds:
@@ -137,6 +137,7 @@ def _changes(request, source, files):
             request["dimension"],
             options=request.get("preflight_options"),
             world_max_bytes=request["world_max_bytes"],
+            region_edits=region_edits,
             **({"reset": request["reset"]} if "reset" in request else {}),
         )
         if not preflight["can_stage_data"]:
@@ -194,7 +195,10 @@ def _inputs(request, source, storage, target):
         raise ValueError(
             "Fresh verified backup of the entire current world is required"
         )
-    position, preflight, payloads, inspected = _changes(request, source, files)
+    region_edits = {}
+    position, preflight, payloads, inspected = _changes(
+        request, source, files, region_edits
+    )
     rftools = "rftools_identity" in request.get("reset", {})
     if rftools:
         payloads.update(
@@ -212,6 +216,14 @@ def _inputs(request, source, storage, target):
         request["dimension"],
         reset=request.get("reset"),
     )
+    if not region_edits.keys() <= result.keys() - payloads.keys():
+        raise ValueError("Region edit conflicts with the retained source inventory")
+    result.update(
+        {
+            name: edit.record(source / name, files[name]["bytes"])
+            for name, edit in region_edits.items()
+        }
+    )
     if request.get("reroll_seed") and not rftools:
         fresh = transform.fresh_dimension(
             source, request, inspected["resource_identity"]
@@ -228,6 +240,7 @@ def _inputs(request, source, storage, target):
     after, after_identity = source_summary(source, request)
     if after != files or after_identity != source_identity:
         raise ValueError("Resource source changed while planning edits")
+    edits = payloads | region_edits
     plan = {
         "schema": 1,
         "operation": request["operation"],
@@ -243,13 +256,8 @@ def _inputs(request, source, storage, target):
         "result_inventory_sha256": digest(result),
         "retained_files": len(result),
         "omitted_files": len(files.keys() - result.keys()),
-        "edit_sha256": digest(
-            {
-                name: {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
-                for name, data in payloads.items()
-            }
-        ),
-        "changed_files": len(payloads),
+        "edit_sha256": digest({name: result[name] for name in edits}),
+        "changed_files": len(edits),
         "references_before": inspected["references"],
         "settings_sha256": digest(
             {k: request[k] for k in ("world_max_bytes", "policy")}
@@ -261,7 +269,7 @@ def _inputs(request, source, storage, target):
     if preflight is not None:
         plan["preflight"] = preflight
         plan["landing_geometry_verified"] = True
-    return archive, manifest, payloads, result, plan
+    return archive, manifest, edits, result, plan
 
 
 def _fresh(target):
@@ -351,10 +359,13 @@ def execute(
     (target / request["world"]).mkdir(mode=0o700)
     with zipfile.ZipFile(archive) as original:
         for name in sorted(result):
-            if name in payloads:
-                _write_edit(target, name, payloads[name])
+            edit = payloads.get(name)
+            if isinstance(edit, bytes):
+                _write_edit(target, name, edit)
             else:
                 _copy(original, name, target, manifest["files"][name])
+                if edit is not None:
+                    edit.apply(target / name)
     verified = _verified(request, source, storage, target)
     _json_write(target / DONE, verified)
     _sync_directory(target)

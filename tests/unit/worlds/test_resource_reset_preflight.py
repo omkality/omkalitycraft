@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import shutil
 import zlib
 
 import pytest
@@ -89,11 +90,22 @@ def test_generated_rftools_spawn_receiver_only_is_reviewed(
     ] == expected_pending
 
 
-@pytest.mark.parametrize("unreviewed", [None, "dialer", "nested", "other_version"])
+@pytest.mark.parametrize(
+    "variant",
+    [
+        None,
+        "dialer",
+        "nested",
+        "other_version",
+        "transmitter",
+        "wrong_block",
+        "mixed_destination",
+    ],
+)
 def test_rftools_preflight_reviews_player_targets_favorites_and_extra_receivers(
-    saved, rftools_registry, monkeypatch, unreviewed
+    saved, rftools_registry, monkeypatch, tmp_path, variant
 ):
-    server, world, _, chunk = saved
+    server, world, level, chunk = saved
     _, _, save = rftools_registry
     save([(6200, "Лаборатория"), (6201, "Соседний мир")])
     selected_region = world / "RFTOOLS6200/region"
@@ -156,7 +168,36 @@ def test_rftools_preflight_reviews_player_targets_favorites_and_extra_receivers(
     reset = dimension_reset.layout(
         6200, rftools_identity=audit.rftools_identity(rows[6200])
     )
-    if unreviewed == "dialer":
+    if variant in {"transmitter", "wrong_block", "mixed_destination"}:
+        registry = level["FML"].value["Registries"].value["minecraft:blocks"].value
+        registry["ids"].value[1].append(
+            Tag(10, {"K": Tag(8, "rftools:matter_transmitter"), "V": Tag(3, 44)})
+        )
+        encoded(world / "level.dat", level)
+        section = anvil.sections(chunk)[4]
+        blocks = bytearray(section["Blocks"].value)
+        blocks[6 * 256 + 14 * 16 + 14] = 43 if variant == "wrong_block" else 44
+        section["Blocks"] = Tag(7, bytes(blocks))
+        chunk["TileEntities"] = compound_list(
+            [
+                {
+                    "id": Tag(8, "rftools:matter_transmitter"),
+                    "x": Tag(3, 14),
+                    "y": Tag(3, 70),
+                    "z": Tag(3, 14),
+                    "destId": Tag(3, 9),
+                    "tpPlayer": Tag(8, "SyntheticPlayer"),
+                    "tpTimer": Tag(3, 32),
+                    "Energy": Tag(4, 20000),
+                    "private": Tag(1, 1),
+                }
+            ]
+        )
+        if variant == "mixed_destination":
+            tile = chunk["TileEntities"].value[1][0].value
+            tile.update(dim=Tag(3, 0), dest=Tag(11, [3, 70, 5]))
+        region_file = region_write(world, chunk, data_version=anvil.DATA_VERSION)
+    elif variant == "dialer":
         chunk["TileEntities"] = compound_list(
             [
                 {
@@ -170,7 +211,7 @@ def test_rftools_preflight_reviews_player_targets_favorites_and_extra_receivers(
             ]
         )
         region_write(world, chunk)
-    elif unreviewed == "nested":
+    elif variant == "nested":
         encoded(
             world / "data/chest.nbt",
             {
@@ -184,19 +225,64 @@ def test_rftools_preflight_reviews_player_targets_favorites_and_extra_receivers(
                 ),
             },
         )
-    if unreviewed != "other_version":
+    if variant != "other_version":
         monkeypatch.setattr(
             preflight, "artifacts", lambda *_: {rftools.ARTIFACT: rftools.SHA256}
         )
     before = inventory(world, world_name="world")
-    report = preflight.preflight(server, "world", 6200, reset=reset)
-    assert report["can_stage_data"] is (unreviewed is None)
-    expected = {None: 0, "dialer": 2, "nested": 1, "other_version": 4}
-    assert report["links"]["unhandled_finding_count"] == expected[unreviewed]
+    edits = {}
+    report = preflight.preflight(server, "world", 6200, reset=reset, region_edits=edits)
+    assert report["can_stage_data"] is (variant in (None, "transmitter"))
+    expected = {
+        None: 0,
+        "dialer": 2,
+        "nested": 1,
+        "other_version": 4,
+        "transmitter": 0,
+        "wrong_block": 1,
+        "mixed_destination": 1,
+    }
+    assert report["links"]["unhandled_finding_count"] == expected[variant]
     assert report["links"]["handled_finding_count"] == (
-        1 if unreviewed == "other_version" else 5
+        1 if variant == "other_version" else 5 + (variant == "transmitter")
     )
+    if variant == "transmitter":
+        edit = edits[region_file.relative_to(server).as_posix()]
+        copy_path = tmp_path / region_file.name
+        shutil.copyfile(region_file, copy_path)
+        edit.apply(copy_path)
+        updated = anvil.compounds(
+            anvil.Region(copy_path, tmp_path).chunk(0), "TileEntities"
+        )
+        assert updated == [
+            {
+                key: Tag(3, 0) if key == "tpTimer" else tag
+                for key, tag in anvil.compounds(chunk, "TileEntities")[0].items()
+                if key not in {"destId", "tpPlayer"}
+            }
+        ]
+    else:
+        assert not edits
     assert inventory(world, world_name="world") == before
+
+
+def test_region_edit_hashes_and_overwrites_two_allocations_without_touching_neighbors(
+    tmp_path,
+):
+    sector = anvil.SECTOR
+    file = tmp_path / "r.0.0.mca"
+    before = b"".join(bytes([index]) * sector for index in range(7))
+    file.write_bytes(before)
+    edit = anvil.RegionEdit(((2 * sector, b"A" * sector), (5 * sector, b"B" * sector)))
+    expected = before[: 2 * sector] + b"A" * sector + before[3 * sector : 5 * sector]
+    expected += b"B" * sector + before[6 * sector :]
+    assert edit.record(file, len(before)) == {
+        "bytes": len(before),
+        "sha256": hashlib.sha256(expected).hexdigest(),
+    }
+    assert file.read_bytes() == before
+    edit.apply(file)
+    assert file.read_bytes() == expected
 
 
 def test_saved_registry_geometry_and_read_only_proof(saved):

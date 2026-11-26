@@ -87,6 +87,7 @@ def preflight(
     options=None,
     world_max_bytes=1024**4,
     reset=None,
+    region_edits=None,
 ):
     if type(world_max_bytes) is not int or not 1 <= world_max_bytes <= 1024**4:
         raise ValueError("Invalid preflight world byte budget")
@@ -140,6 +141,7 @@ def preflight(
         nonportal_patterns=profile["nonportal_binary_patterns"],
         enderutilities_targets=ender_enabled,
         rftools_transport=rftools_enabled,
+        region_edits=region_edits,
         reset=reset,
     )
     if (
