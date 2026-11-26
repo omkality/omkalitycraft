@@ -20,6 +20,7 @@ from omk.backups.backup_store import (
 )
 from omk.backups.cold_backup_worker import digest, runtime_files, source_summary
 from omk.worlds import (
+    incident_recovery,
     linux_restore_policy as policy,
     linux_world_restore as raw,
 )
@@ -122,6 +123,8 @@ def _fresh(target, world):
             raw.OWNER,
             raw.PLAN,
             raw.DONE,
+            incident_recovery.PLAN,
+            incident_recovery.DONE,
             *raw.POLICY_MARKERS,
             policy.STAGING,
         )
@@ -201,11 +204,16 @@ def verify(request, storage, target, current):
 
 
 def execute(
-    request, storage=Path("/backup"), target=Path("/restore"), current=Path("/current")
+    request,
+    storage=Path("/backup"),
+    target=Path("/restore"),
+    current=Path("/current"),
 ):
     if sys.platform != "linux":
         raise ValueError("Owner world restore requires Linux")
     functions = {"plan": plan, "apply": apply, "verify": verify}
+    if "incident" in request:
+        return incident_recovery.execute(request, storage, target, current)
     if request.get("action") not in functions:
         raise ValueError("Unknown owner restore action")
     return functions[request["action"]](request, storage, target, current)
@@ -216,7 +224,8 @@ if __name__ == "__main__":
         data = sys.stdin.buffer.read(65537)
         if len(data) > 65536:
             raise ValueError("Owner restore request exceeds limit")
-        print(json.dumps({"ok": True, "result": execute(json.loads(data))}))
+        result = execute(json.loads(data))
+        print(json.dumps({"ok": True, "result": result}))
     except Exception as error:
         print(json.dumps({"ok": False, "error_type": type(error).__name__}))
         raise SystemExit(1) from None
