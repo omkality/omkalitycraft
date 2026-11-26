@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "net.omkality.client.mixin.chestsort",
+  "compatibilityLevel": "JAVA_8",
+  "client": ["ChestSortMixin"],
+  "injectors": {"defaultRequire": 1}
+}
