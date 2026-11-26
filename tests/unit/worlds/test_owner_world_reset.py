@@ -6,9 +6,10 @@ from unittest.mock import Mock
 import pytest
 
 from omk.cli import main
-from omk.owner.admin import AdminError
+from omk.owner.admin import AdminError, _write_private
 from omk.owner.panels import owner_world_reset as wipe
 from omk.owner.panels.owner_volumes import reset_target
+from tests.fixtures.unit.owner.operator_commands import config
 
 
 def test_repeated_resets_use_distinct_destinations_bound_to_the_window():
@@ -33,16 +34,19 @@ def test_managed_wipe_finishes_before_opening_ingress(monkeypatch):
     assert result["stage"] == "complete"
 
 
-def test_one_confirmation_runs_prepare_apply_and_start_in_order(monkeypatch):
-    config = object()
+@pytest.mark.parametrize("invalid_history", [False, True])
+def test_one_confirmation_runs_prepare_apply_and_start_in_order(
+    monkeypatch, tmp_path, capsys, invalid_history
+):
+    settings, path = config(tmp_path)
+    ticks = iter([100.5, 226.25])
+    monkeypatch.setattr(wipe, "time", SimpleNamespace(time=lambda: next(ticks)))
     sequence = [
         wipe.State(dimension=0, stage=stage, managed=True)
         for stage in ("prepare", "apply", "start")
     ]
     performed = []
-    monkeypatch.setattr(wipe, "load_operator_config", lambda _: config)
     monkeypatch.setattr(wipe, "_catalog", lambda *_: {})
-    monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
     monkeypatch.setattr(wipe, "_selected_state", lambda *_: sequence[len(performed)])
     monkeypatch.setattr(
         wipe,
@@ -51,12 +55,22 @@ def test_one_confirmation_runs_prepare_apply_and_start_in_order(monkeypatch):
             performed.append((action, state.stage)) or True
         ),
     )
-    assert not wipe.run("operator.toml", "dj2", "run", "wrong", catalog=True)["ok"]
-    result = wipe.run(
-        "operator.toml", "dj2", "run", sequence[0].confirmation("dj2"), catalog=True
-    )
+    history = settings.private / "world-reset/dj2/capture-windows.json"
+    assert not wipe.run(path, "dj2", "run", "wrong", catalog=True)["ok"]
+    assert not history.exists()
+    if invalid_history:
+        _write_private(history, settings.private, {"schema": 9, "windows": []})
+    result = wipe.run(path, "dj2", "run", sequence[0].confirmation("dj2"), catalog=True)
     assert performed == [(x, x) for x in ("prepare", "apply", "start")]
     assert result["ok"] and result["stage"] == "complete"
+    if invalid_history:
+        assert json.loads(history.read_bytes()) == {"schema": 9, "windows": []}
+        assert "Could not record world reset timing" in capsys.readouterr().err
+    else:
+        assert json.loads(history.read_bytes()) == {
+            "schema": 1,
+            "windows": [[100.5, 226.25]],
+        }
 
 
 def test_wipe_closes_ingress_before_kicking_players(monkeypatch):
@@ -149,9 +163,12 @@ def test_mutations_require_current_server_and_stage_confirmation(monkeypatch):
 
 def test_confirmed_prepare_refuses_open_or_occupied_ingress_before_mutation(
     monkeypatch,
+    tmp_path,
 ):
     state = wipe.State(dimension=-18000, stage="prepare")
-    monkeypatch.setattr(wipe, "load_operator_config", lambda _: object())
+    settings, path = config(tmp_path)
+    ticks = iter([100.5, 103.25])
+    monkeypatch.setattr(wipe, "time", SimpleNamespace(time=lambda: next(ticks)))
     monkeypatch.setattr(wipe, "_state", lambda *_, **__: state)
     monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
     monkeypatch.setattr(wipe.ingress, "capture", lambda *a, **k: ({}, {"sessions": 1}))
@@ -160,22 +177,24 @@ def test_confirmed_prepare_refuses_open_or_occupied_ingress_before_mutation(
         raise AssertionError(args)
 
     monkeypatch.setattr(wipe, "_prepare", unexpected)
-    result = wipe.run("operator.toml", "dj2", "prepare", state.confirmation("dj2"))
+    result = wipe.run(path, "dj2", "prepare", state.confirmation("dj2"))
     assert (result["ok"], result["effect"], result["error"]) == (
         False,
         "none",
         "ingress_not_drained",
     )
+    history = settings.private / "world-reset/dj2/capture-windows.json"
+    assert json.loads(history.read_bytes())["windows"] == [[100.5, 103.25]]
 
 
-def test_prepare_requires_successful_backup_before_staging(monkeypatch):
+def test_prepare_requires_successful_backup_before_staging(monkeypatch, tmp_path):
     state = wipe.State(
         dimension=-18000,
         stage="prepare",
         target={"data_volume": "owned-empty"},
         window={"operation": "a" * 32, "stage": "stopped"},
     )
-    monkeypatch.setattr(wipe, "load_operator_config", lambda _: object())
+    _, path = config(tmp_path)
     monkeypatch.setattr(wipe, "_state", lambda *_, **__: state)
     monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
     monkeypatch.setattr(wipe, "_require_drained", lambda *_: None)
@@ -190,7 +209,7 @@ def test_prepare_requires_successful_backup_before_staging(monkeypatch):
 
     monkeypatch.setattr(wipe.backups, "run", failed_backup)
     monkeypatch.setattr(wipe.staging, "plan", never_stage)
-    result = wipe.run("operator.toml", "dj2", "prepare", state.confirmation("dj2"))
+    result = wipe.run(path, "dj2", "prepare", state.confirmation("dj2"))
     assert result["ok"] is False and result["effect"] == "unknown"
     assert "AdminError: Backup failed" in result["diagnostic"]
     assert "test_owner_world_reset.py:" in result["diagnostic"]
@@ -216,7 +235,7 @@ def test_diagnostic_omits_subprocess_arguments_and_output():
     ],
 )
 def test_only_reviewed_plan_refusals_reach_the_wipe_summary(
-    monkeypatch, reason, summary
+    monkeypatch, tmp_path, reason, summary
 ):
     state = wipe.State(dimension=-18000, stage="prepare", managed=True)
     record = {
@@ -230,7 +249,7 @@ def test_only_reviewed_plan_refusals_reach_the_wipe_summary(
     }
     apply = Mock(side_effect=AssertionError("Plan refusal reached installation"))
     monkeypatch.setattr(wipe, "_apply", apply)
-    monkeypatch.setattr(wipe, "load_operator_config", lambda _: object())
+    _, path = config(tmp_path)
     monkeypatch.setattr(wipe, "_state", lambda *_, **__: state)
     monkeypatch.setattr(wipe.backups, "locked", lambda _: nullcontext())
     monkeypatch.setattr(wipe, "_close_and_drain", lambda *_: None)
@@ -247,7 +266,7 @@ def test_only_reviewed_plan_refusals_reach_the_wipe_summary(
             {"ok": False, "error_type": "PreflightRefused", "reason": reason}
         ),
     )
-    result = wipe.run("operator.toml", "dj2", "run", state.confirmation("dj2"))
+    result = wipe.run(path, "dj2", "run", state.confirmation("dj2"))
     assert not result["ok"] and result["error"] == "operation_rejected"
     assert result["stage"] == "prepare" and result["effect"] == "unknown"
     first_line = result["diagnostic"].splitlines()[0]
