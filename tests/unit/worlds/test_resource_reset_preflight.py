@@ -266,6 +266,155 @@ def test_rftools_preflight_reviews_player_targets_favorites_and_extra_receivers(
     assert inventory(world, world_name="world") == before
 
 
+@pytest.mark.parametrize("selected_receiver", [True, False])
+def test_rftools_dialer_drops_obsolete_links_in_saved_blocks(
+    saved, rftools_registry, monkeypatch, tmp_path, selected_receiver
+):
+    server, world, level, chunk = saved
+    _, _, save = rftools_registry
+    save([(6200, "Лаборатория")])
+    receivers = [(8, 0, "Основной", 7)]
+    if selected_receiver:
+        receivers.append((9, 6200, "Площадка", 24))
+    rftools_destinations(world / audit.RFTOOLS_DESTINATIONS, *receivers)
+    _label, _root, rows = audit._rftools_registry(server, "world")
+    reset = dimension_reset.layout(
+        6200, rftools_identity=audit.rftools_identity(rows[6200])
+    )
+
+    block = "rftools:simple_dialer"
+    registry = level["FML"].value["Registries"].value["minecraft:blocks"].value
+    registry["ids"].value[1].append(Tag(10, {"K": Tag(8, block), "V": Tag(3, 44)}))
+    encoded(world / "level.dat", level)
+    section = anvil.sections(chunk)[4]
+    blocks = bytearray(section["Blocks"].value)
+    tiles = []
+    for x, source, receiver in (
+        (12, 0, 9 if selected_receiver else 8),
+        (13, 6200, 8),
+        (14, 0, 8),
+        (15, 0, None),  # An intentional redstone interrupter.
+    ):
+        blocks[6 * 256 + 14 * 16 + x] = 44
+        tile = {
+            "id": Tag(8, block),
+            "x": Tag(3, x),
+            "y": Tag(3, 70),
+            "z": Tag(3, 14),
+            "transX": Tag(3, 32),
+            "transY": Tag(3, 71),
+            "transZ": Tag(3, -2),
+            "transDim": Tag(3, source),
+            "once": Tag(1, 1),
+            "owner": Tag(8, "SyntheticPlayer"),
+        }
+        if receiver is not None:
+            tile["receiver"] = Tag(3, receiver)
+        tiles.append(tile)
+    section["Blocks"] = Tag(7, bytes(blocks))
+    chunk["TileEntities"] = compound_list(tiles)
+    region_file = region_write(world, chunk, data_version=anvil.DATA_VERSION)
+    monkeypatch.setattr(
+        preflight, "artifacts", lambda *_: {rftools.ARTIFACT: rftools.SHA256}
+    )
+    source_files = inventory(world, world_name="world")
+
+    edits = {}
+    report = preflight.preflight(server, "world", 6200, reset=reset, region_edits=edits)
+    assert report["can_stage_data"]
+    assert report["links"]["unhandled_finding_count"] == 0
+    assert report["links"]["rftools_transport_references"] == (
+        3 if selected_receiver else 1
+    )
+    copy_path = tmp_path / region_file.name
+    shutil.copyfile(region_file, copy_path)
+    edits[region_file.relative_to(server).as_posix()].apply(copy_path)
+    updated = anvil.compounds(
+        anvil.Region(copy_path, tmp_path).chunk(0), "TileEntities"
+    )
+    source_fields = {"transX", "transY", "transZ", "transDim"}
+    assert updated == [
+        {
+            key: tag
+            for key, tag in tiles[0].items()
+            if not selected_receiver or key not in source_fields | {"receiver"}
+        },
+        {key: tag for key, tag in tiles[1].items() if key not in source_fields},
+        *tiles[2:],
+    ]
+    assert inventory(world, world_name="world") == source_files
+
+
+def test_rftools_dialer_updates_only_direct_player_items(saved, rftools_registry):
+    server, world, _, _ = saved
+    _, _, save = rftools_registry
+    registry = save([(6200, "Лаборатория")])
+    destinations = world / audit.RFTOOLS_DESTINATIONS
+    rftools_destinations(destinations, (8, 0, "Основной", 7), (9, 6200, "Площадка", 24))
+    source_fields = {
+        "transX": Tag(3, 32),
+        "transY": Tag(3, 71),
+        "transZ": Tag(3, -2),
+        "transDim": Tag(3, 0),
+    }
+    metadata = {"once": Tag(1, 1), "display": Tag(10, {"Name": Tag(8, "Свой")})}
+    carried = {
+        "Slot": Tag(1, 4),
+        "Count": Tag(3, 2),
+        "Damage": Tag(2, 0),
+        "id": Tag(8, "rftools:simple_dialer"),
+        "tag": Tag(10, {**metadata, **source_fields, "receiver": Tag(3, 9)}),
+    }
+    ender = {
+        **carried,
+        "Count": Tag(1, 1),
+        "tag": Tag(
+            10, {**source_fields, "transDim": Tag(3, 6200), "receiver": Tag(3, 8)}
+        ),
+    }
+    container = {
+        "Slot": Tag(1, 5),
+        "Count": Tag(1, 1),
+        "Damage": Tag(2, 0),
+        "id": Tag(8, "minecraft:shulker_box"),
+        "tag": Tag(
+            10, {"BlockEntityTag": Tag(10, {"Items": compound_list([carried])})}
+        ),
+    }
+    original = {
+        "Inventory": compound_list([carried, container]),
+        "EnderItems": compound_list([ender]),
+    }
+    player = world / "playerdata/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa.dat_old"
+    encoded(player, original)
+    _label, _root, rows = audit._rftools_registry(server, "world")
+    reset = dimension_reset.layout(
+        6200, rftools_identity=audit.rftools_identity(rows[6200])
+    )
+    report = links.inspect_links(
+        server,
+        "world",
+        6200,
+        [p.relative_to(server).as_posix() for p in (player, registry, destinations)],
+        reset=reset,
+        rftools_transport=True,
+    )
+    unresolved = [
+        row["nbt_path"] for row in report["examples"] if "staging_adapter" not in row
+    ]
+    assert unresolved == ["/Inventory/1/tag/BlockEntityTag/Items/0/tag/receiver"]
+
+    saved_player = audit.ftb.nbt(player.read_bytes())
+    updated, _removed = rftools.unbind_player_targets(saved_player, 6200, {9})
+    assert anvil.compounds(updated, "Inventory") == [
+        {**carried, "tag": Tag(10, metadata)},
+        container,
+    ]
+    assert anvil.compounds(updated, "EnderItems") == [
+        {**ender, "tag": Tag(10, {"receiver": Tag(3, 8)})}
+    ]
+
+
 def test_region_edit_hashes_and_overwrites_two_allocations_without_touching_neighbors(
     tmp_path,
 ):

@@ -154,7 +154,7 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                 )
     block_registry = (
         anvil.block_registry(nbt(audit._read(world / "level.dat", world)))
-        if rftools_transport and receiver_ids
+        if rftools_transport
         else None
     )
 
@@ -169,7 +169,7 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
             if "id" in root and root["id"].kind == 8:
                 context = root["id"].value
             dialer = context in {
-                "rftools:simple_dialer",
+                rftools.SIMPLE_DIALER,
                 "minecraft:rftools_simple_dialer",
             }
             target = root.get("target")
@@ -271,16 +271,19 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                 label, root, raw = region.record(index)
                 chunk = anvil.value(root, "Level", 10)
                 edits = (
-                    rftools.transmitter_updates(chunk, receiver_ids, block_registry)
+                    rftools.tile_updates(chunk, dimension, receiver_ids, block_registry)
                     if block_registry is not None
                     else {}
                 )
-                rftools_eligible = {
-                    f"chunk/{index}/TileEntities/{slot}/destId" for slot in edits
-                }
+                rftools_eligible = set()
                 if edits:
                     anvil.check_editable(label, root, raw)
                     tile_kind, tiles = chunk["TileEntities"].value
+                    rftools_eligible = {
+                        f"chunk/{index}/TileEntities/{slot}/{field}"
+                        for slot, edited in edits.items()
+                        for field in tiles[slot].value.keys() - edited.keys()
+                    }
                     updated_tiles = [
                         Tag(10, edits[slot]) if slot in edits else row
                         for slot, row in enumerate(tiles)
