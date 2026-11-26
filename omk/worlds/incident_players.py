@@ -15,7 +15,7 @@ from omk.worlds.reset.resource_reset_landing import (
     select_landing,
 )
 
-DATA_VERSION = 1343
+DATA_VERSION = anvil.DATA_VERSION
 NEID = (
     "NotEnoughIDs-1.5.4.4.jar",
     "f042f90c5623a1f2bbcc1d0bd93cfca40109b9c0659399e1f48aa8ce37b75622",

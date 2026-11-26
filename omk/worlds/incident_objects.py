@@ -1,17 +1,11 @@
 """Sparse Anvil mutation for a selected DJ2 chest or dropped item."""
 
-import hashlib
 import math
-import os
-import struct
-import zlib
-from dataclasses import dataclass
 from uuid import UUID
 
-from omk.shared.nbt import Tag, read_nbt, write_nbt
+from omk.shared.nbt import Tag
 from omk.worlds import forge112_regions as anvil
 from omk.worlds.incident_players import (
-    DATA_VERSION,
     NEID,
     _identity,
     _pin,
@@ -21,42 +15,8 @@ from omk.worlds.incident_players import (
 )
 from omk.worlds.reset.resource_reset_landing import SAFE_FLOORS
 
-SECTOR = 4096
 AIR = "minecraft:air"
 CHESTS = {"minecraft:chest", "minecraft:trapped_chest"}
-
-
-@dataclass(frozen=True)
-class ChunkEdit:
-    """Replace only the selected chunk allocation in a verified candidate copy."""
-
-    offset: int
-    data: bytes
-
-    def record(self, path, size):
-        digest = hashlib.sha256()
-        with path.open("rb") as original:
-            remaining = self.offset
-            while remaining:
-                part = original.read(min(remaining, 1024**2))
-                if not part:
-                    raise ValueError("Region changed before planning")
-                digest.update(part)
-                remaining -= len(part)
-            original.seek(len(self.data), os.SEEK_CUR)
-            digest.update(self.data)
-            while part := original.read(1024**2):
-                digest.update(part)
-            if original.tell() != size:
-                raise ValueError("Region changed before planning")
-        return {"bytes": size, "sha256": digest.hexdigest()}
-
-    def apply(self, path):
-        with path.open("r+b") as target:
-            target.seek(self.offset)
-            target.write(self.data)
-            target.flush()
-            os.fsync(target.fileno())
 
 
 def _open_region(world, dimension, cx, cz):
@@ -198,25 +158,13 @@ def edit(server, world, selected, level, runtime):
         cx, cz = x >> 4, z >> 4
     region, index = _open_region(world, selected["dimension"], cx, cz)
     label, root, original = region.record(index)
-    if (
-        anvil.value(root, "DataVersion", 3) != DATA_VERSION
-        or write_nbt(label, root) != original
-    ):
-        raise ValueError("Unreviewed or non-round-trippable Anvil chunk")
+    anvil.check_editable(label, root, original)
     chunk = anvil.value(root, "Level", 10)
     if selected["kind"] == "dropped":
         evidence, context = _drop(chunk, selected)
     else:
         evidence, context = _chest(world, chunk, selected, anvil.block_registry(level))
 
-    raw = write_nbt(label, root)
-    if read_nbt(raw) != (label, root):
-        raise ValueError("Edited chunk failed typed readback")
-    encoded = zlib.compress(raw)
-    payload = struct.pack(">IB", len(encoded) + 1, 2) + encoded
-    offset, count = region.locations[index]
-    if len(payload) > count * SECTOR:
-        raise ValueError("Edited chunk exceeds its original Anvil allocation")
     name = region.path.relative_to(server).as_posix()
-    patch = ChunkEdit(offset * SECTOR, payload.ljust(count * SECTOR, b"\0"))
+    patch = anvil.RegionEdit((region.replacement(index, label, root),))
     return name, patch, evidence, context

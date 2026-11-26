@@ -1,9 +1,10 @@
 """Bindings reviewed for a stopped DJ2 copy using RFTools 7.73."""
 
 import copy
+from collections import Counter
 
 from omk.shared.nbt import Tag
-from omk.worlds.forge112_regions import compounds, value
+from omk.worlds.forge112_regions import block_id, compounds, sections, value
 
 ARTIFACT = "rftools-1.12-7.73.jar"
 SHA256 = "558c38d0f7852d17a03aef81e4bd6cc2f28e60db8a8749c710c9ee829f2de0a4"
@@ -12,6 +13,16 @@ PROPERTIES = "rftools:properties"
 PORTER = "rftools:charged_porter"
 ADVANCED_PORTER = "rftools:advanced_charged_porter"
 RECEIVER = "rftools:matter_receiver"
+TRANSMITTER = "rftools:matter_transmitter"
+TRANSMITTER_PROGRESS = (
+    "tpTimer",
+    "cooldownTimer",
+    "totalTicks",
+    "goodTicks",
+    "badTicks",
+    "status",
+    "rfPerTick",
+)
 FAVORITES = tuple(f"target{i}" for i in range(8))
 COORDINATES = ("dim", "x", "y", "z")
 
@@ -61,6 +72,50 @@ def remove_positions(data, selected):
     data["destinations"] = Tag(
         9, (kind, [row for index, row in enumerate(rows) if index not in selected])
     )
+
+
+def transmitter_updates(chunk, receiver_ids, registry):
+    """Clear numeric dials in matching installed blocks and cancel pending transit."""
+    tiles = compounds(chunk, "TileEntities")
+    selected = {
+        index: tile
+        for index, tile in enumerate(tiles)
+        if tile.get("id") == Tag(8, TRANSMITTER)
+        and "destId" in tile
+        and value(tile, "destId", 3) in receiver_ids
+        and not {"dim", "dest"} & tile.keys()
+    }
+    if not selected:
+        return {}
+    coordinates = ("x", "y", "z")
+    positions = Counter(
+        tuple(value(tile, key, 3) for key in coordinates)
+        for tile in tiles
+        if all(key in tile and tile[key].kind == 3 for key in coordinates)
+    )
+    section_map = sections(chunk)
+    cx, cz = (value(chunk, key, 3) for key in ("xPos", "zPos"))
+    edits = {}
+    for index, tile in selected.items():
+        x, y, z = (value(tile, key, 3) for key in coordinates)
+        if (
+            positions[x, y, z] != 1
+            or (x >> 4, z >> 4) != (cx, cz)
+            or not 0 <= y <= 255
+            or registry.get(block_id(section_map, x, y, z)) != TRANSMITTER
+        ):
+            continue
+        updated = tile.copy()
+        del updated["destId"]
+        if "tpPlayer" in updated:
+            value(updated, "tpPlayer", 8)
+            del updated["tpPlayer"]
+        for field in TRANSMITTER_PROGRESS:
+            if field in updated:
+                value(updated, field, 3)
+                updated[field] = Tag(3, 0)
+        edits[index] = updated
+    return edits
 
 
 def _inventory(root, inventory, slots, receiver_ids, removed):

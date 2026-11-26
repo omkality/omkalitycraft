@@ -57,6 +57,7 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
     nonportal_patterns=(),
     enderutilities_targets=False,
     rftools_transport=False,
+    region_edits=None,
     reset=None,
 ):
     if type(max_chunks) is not int or not 1 <= max_chunks <= 1000000:
@@ -151,6 +152,11 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                 spawn_receiver = audit.rftools_spawn_destination(
                     definition, anvil.compounds(data, "destinations")
                 )
+    block_registry = (
+        anvil.block_registry(nbt(audit._read(world / "level.dat", world)))
+        if rftools_transport and receiver_ids
+        else None
+    )
 
     def walk(  # noqa: PLR0912 - bounded serializer cases
         root, file, path="", context="", skip=frozenset(), depth=0
@@ -250,20 +256,51 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                 for index, child in enumerate(root.value[1]):
                     walk(child, file, path + "/" + str(index), context, depth=depth + 1)
 
+    patch_bytes = 0
     for name, kind in records:
         eligible = set()
         rftools_eligible = set()
         relative = name.removeprefix(prefix)
         if kind == "region":
             region = anvil.Region(server / name, world)
+            replacements = []
             for index in region.locations:
                 chunks_read += 1
                 if chunks_read > max_chunks:
                     raise ValueError("Mod link scan chunk budget exceeded")
-                chunk = region.chunk(index)
+                label, root, raw = region.record(index)
+                chunk = anvil.value(root, "Level", 10)
+                edits = (
+                    rftools.transmitter_updates(chunk, receiver_ids, block_registry)
+                    if block_registry is not None
+                    else {}
+                )
+                rftools_eligible = {
+                    f"chunk/{index}/TileEntities/{slot}/destId" for slot in edits
+                }
+                if edits:
+                    anvil.check_editable(label, root, raw)
+                    tile_kind, tiles = chunk["TileEntities"].value
+                    updated_tiles = [
+                        Tag(10, edits[slot]) if slot in edits else row
+                        for slot, row in enumerate(tiles)
+                    ]
+                    updated_chunk = {
+                        **chunk,
+                        "TileEntities": Tag(9, (tile_kind, updated_tiles)),
+                    }
+                    replacement = region.replacement(
+                        index, label, {**root, "Level": Tag(10, updated_chunk)}
+                    )
+                    patch_bytes += len(replacement[1])
+                    if patch_bytes > audit.ftb.MAX_TOTAL:
+                        raise ValueError("Region edits exceed reviewed memory budget")
+                    replacements.append(replacement)
                 for key in ("TileEntities", "Entities"):
                     # Block/light arrays do not encode teleport bindings.
                     walk(chunk[key], relative, f"chunk/{index}/{key}")
+            if replacements and region_edits is not None:
+                region_edits[name] = anvil.RegionEdit(tuple(sorted(replacements)))
         else:
             try:
                 root = nbt(audit._read(server / name, world))

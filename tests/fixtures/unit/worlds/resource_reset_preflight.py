@@ -21,11 +21,14 @@ def encoded(path, root):
     path.write_bytes(gzip.compress(write_nbt("", root), mtime=0))
 
 
-def region_write(world, chunk, *, codec=2, coordinates=(0, 0)):
+def region_write(world, chunk, *, codec=2, coordinates=(0, 0), data_version=None):
     cx, cz = coordinates
     path = world / "region" / f"r.{cx // 32}.{cz // 32}.mca"
     path.parent.mkdir(exist_ok=True)
-    packed = zlib.compress(write_nbt("", {"Level": Tag(10, chunk)}))
+    root = {"Level": Tag(10, chunk)}
+    if data_version is not None:
+        root["DataVersion"] = Tag(3, data_version)
+    packed = zlib.compress(write_nbt("", root))
     body = struct.pack(">IB", len(packed) + 1, codec) + packed
     sectors = (len(body) + 4095) // 4096
     header = bytearray(8192)
