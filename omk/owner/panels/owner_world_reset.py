@@ -26,6 +26,7 @@ from omk.owner.admin import (
     load_operator_config,
 )
 from omk.owner.admin_resource_reset import discover_saved_worlds
+from omk.owner.operation_windows import record_window
 from omk.owner.panels import owner_moderation, owner_volumes
 from omk.worlds import world_cutover as cutover
 from omk.worlds.reset.dimension_reset import RESOURCE, layout, validate_layout
@@ -621,6 +622,7 @@ def run(
                 scope = _progress.set(
                     (lambda phase: progress(phase, world_name)) if progress else None
                 )
+                started = time.time()
                 try:
                     if not _run_steps(
                         config, server, action, state, worlds, dimension, world, result
@@ -639,6 +641,7 @@ def run(
                     raise
                 finally:
                     _progress.reset(scope)
+                    record_window(config, server, "world_reset", started, time.time())
             result["ok"] = True
     except backups.OwnerBusy as error:
         result["error"] = "owner_busy"

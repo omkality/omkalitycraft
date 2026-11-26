@@ -6,12 +6,12 @@ from pathlib import Path
 from statistics import quantiles
 
 from omk.owner.admin import AdminError, load_operator_config
-from omk.owner.hourly_backups import capture_windows
+from omk.owner.operation_windows import read_windows
 from omk.owner.panels.owner_metrics import load_settings, query
 
 WINDOWS = {"24h": (24, 60), "7d": (168, 300), "14d": (336, 300)}
 BATCH_POINTS = 96
-BACKUP_STEP = 30
+OPERATION_STEP = 30
 DISK = "project_disk_free_min_bytes"
 
 
@@ -160,7 +160,7 @@ def _summarize(series):
     )
 
 
-def _read_backup_series(settings, server, windows):
+def _read_operation_series(settings, server, windows):
     spans = []
     for first, last in sorted(windows):
         if spans and first <= spans[-1][1]:
@@ -175,19 +175,21 @@ def _read_backup_series(settings, server, windows):
         final = math.ceil(last) - 1
         if final < first:
             continue
-        preceding_points = (final - math.ceil(first)) // BACKUP_STEP
-        beginning = final - preceding_points * BACKUP_STEP
-        end = final + BACKUP_STEP
-        batch = _read_series(settings, server, beginning, end, BACKUP_STEP, since=first)
+        preceding_points = (final - math.ceil(first)) // OPERATION_STEP
+        beginning = final - preceding_points * OPERATION_STEP
+        end = final + OPERATION_STEP
+        batch = _read_series(
+            settings, server, beginning, end, OPERATION_STEP, since=first
+        )
         for key, values in batch.items():
             combined[key].update(values)
-        stamps.extend(range(beginning, end, BACKUP_STEP))
+        stamps.extend(range(beginning, end, OPERATION_STEP))
     return combined, stamps
 
 
-def _during_hourly_backup(config, settings, server, start, end):
+def _during_operation(config, settings, server, start, end, operation):
     try:
-        recorded = capture_windows(config, server)
+        recorded = read_windows(config, server, operation)
         if recorded is None:
             return None
         windows = [
@@ -195,13 +197,13 @@ def _during_hourly_backup(config, settings, server, start, end):
             for first, last in recorded
             if first < end and last > start
         ]
-        series, stamps = _read_backup_series(settings, server, windows)
+        series, stamps = _read_operation_series(settings, server, windows)
     except AdminError, OSError, ValueError, TypeError, KeyError:
         return None
     online = series["players"]
     return {
         "windows": len(windows),
-        "step": BACKUP_STEP,
+        "step": OPERATION_STEP,
         "coverage": {
             "with_players": sum(
                 online[stamp] > 0 for stamp in stamps if stamp in online
@@ -232,6 +234,7 @@ def run(path: Path, server: str, window: str) -> dict:
         "metrics": {},
         "by_player_count": [],
         "during_hourly_backup": None,
+        "during_world_reset": None,
     }
     try:
         config = load_operator_config(path)
@@ -274,7 +277,10 @@ def run(path: Path, server: str, window: str) -> dict:
         },
         "metrics": metrics,
         "by_player_count": by_player_count,
-        "during_hourly_backup": _during_hourly_backup(
-            config, settings, server, end - duration, end
+        "during_hourly_backup": _during_operation(
+            config, settings, server, end - duration, end, "hourly_backup"
+        ),
+        "during_world_reset": _during_operation(
+            config, settings, server, end - duration, end, "world_reset"
         ),
     }

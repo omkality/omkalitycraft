@@ -31,6 +31,7 @@ from omk.owner.hourly_backup_schedule import (
     had_players,
     hour_end,
 )
+from omk.owner.operation_windows import read_windows, record_window
 from omk.shared.fs import resolved
 
 GIB = 1024**3
@@ -40,7 +41,6 @@ WORLD_MAX = 16 * GIB
 OWNER_LOCK_WAIT = 10 * 60
 OWNER_LOCK_POLL = 5
 WORLD_RETRY_DELAYS = (5, 15, 30)
-CAPTURE_WINDOW_LIMIT = 384
 SNAPSHOT = r"snapshot-[a-f0-9]{32}"
 SHA256 = r"[a-f0-9]{64}"
 STAGES = {
@@ -88,41 +88,7 @@ def _write(config, path, stage, **details):
 
 def capture_windows(config, server):
     """Read the retained save-and-copy intervals as Unix seconds."""
-    path = _path(config, server) / "capture-windows.json"
-    if not path.exists() and not path.is_symlink():
-        return None
-    data = _read_json(path, config.private)
-    windows = data.get("windows")
-    if (
-        data.get("schema") != 1
-        or not isinstance(windows, list)
-        or len(windows) > CAPTURE_WINDOW_LIMIT
-    ):
-        raise AdminError("Invalid hourly backup timing history")
-    for window in windows:
-        if (
-            not isinstance(window, list)
-            or len(window) != 2
-            or any(type(stamp) not in {int, float} for stamp in window)
-            or not 0 < window[0] < window[1] < float("inf")
-        ):
-            raise AdminError("Invalid hourly backup timing history")
-    return windows
-
-
-def _save_capture_window(config, server, start, end):
-    if end <= start:
-        return
-    try:
-        windows = capture_windows(config, server) or []
-        windows.append([start, end])
-        _write_private(
-            _path(config, server) / "capture-windows.json",
-            config.private,
-            {"schema": 1, "windows": windows[-CAPTURE_WINDOW_LIMIT:]},
-        )
-    except AdminError, OSError, ValueError:
-        print("Could not record hourly backup timing", file=sys.stderr)
+    return read_windows(config, server, "hourly_backup")
 
 
 def _store(folder, *, create=False):
@@ -341,7 +307,7 @@ def run(config, server):
             try:
                 result = _capture(send, world, folder, stage, verify_source)
             finally:
-                _save_capture_window(config, server, started, time.time())
+                record_window(config, server, "hourly_backup", started, time.time())
             _write(
                 config,
                 last,
