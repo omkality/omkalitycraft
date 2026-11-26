@@ -108,7 +108,7 @@ def _inputs(request, identity, storage, target, current):
         raise ValueError("Incident edit is outside backup inventory")
     changes = {
         name: edit.record(current / name, files[name]["bytes"])
-        if isinstance(edit, incident_objects.ChunkEdit)
+        if isinstance(edit, anvil.RegionEdit)
         else _file(edit)
         for name, edit in edits.items()
     }
