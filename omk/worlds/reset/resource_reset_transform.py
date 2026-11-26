@@ -17,6 +17,7 @@ from omk.worlds.ftb_dimension_references import ftb_record
 from omk.worlds.reset import (
     dimension_reset,
     resource_reset_inventory as audit,
+    rftools_reset as rftools,
 )
 
 
@@ -113,6 +114,7 @@ def changes(
     files,
     *,
     enderutilities_targets=False,
+    rftools_receiver_ids=None,
     landing_dimension=0,
 ):
     """Sparse bytes only; even unchanged NBT compression is preserved verbatim."""
@@ -131,6 +133,10 @@ def changes(
             )
             if enderutilities_targets:
                 result, _removed = ender.unbind_player_targets(result, dimension)
+            if rftools_receiver_ids is not None:
+                result, _removed = rftools.unbind_player_targets(
+                    result, dimension, rftools_receiver_ids
+                )
         elif kind == "jed":
             result = jed_record(root, dimension, landing_dimension=landing_dimension)
         else:
@@ -195,8 +201,18 @@ def _rftools_seed(server, world, row):
     return base
 
 
-def reseed_rftools(server, request):
-    """Prepare the selected generator and retire its obsolete spawn receiver."""
+def rftools_receiver_ids(server, world, dimension):
+    """Resolve the receiver numbers to remove from retained player data."""
+    path = server / world / audit.RFTOOLS_DESTINATIONS
+    if not path.exists() and not path.is_symlink():
+        return set()
+    data = audit._tag(audit.ftb.nbt(audit._read(path, server)), "data", 10)
+    selected, _known = rftools.destination_ids(data, dimension)
+    return selected
+
+
+def reseed_rftools(server, request, *, transport_reviewed=False):
+    """Prepare the selected generator and retire its reviewed obsolete receivers."""
     world = request["world"]
     dimension = request["dimension"]
     label, root, rows = audit._rftools_registry(server, world)
@@ -217,11 +233,15 @@ def reseed_rftools(server, request):
             audit.ftb.unpack(audit._read(destinations, server))
         )
         dest_data = audit._tag(dest_root, "data", 10)
-        rows = audit._list(dest_data, "destinations", 10)
-        receiver = audit.rftools_spawn_destination(row, rows)
-        if receiver is not None:
-            # Keep lastId so no old receiver ID can be reused for the new spawn.
-            del dest_data["destinations"].value[1][receiver]
+        if transport_reviewed:
+            receivers = rftools.selected_positions(dest_data, dimension, registry=True)
+        else:
+            rows = audit._list(dest_data, "destinations", 10)
+            receiver = audit.rftools_spawn_destination(row, rows)
+            receivers = [] if receiver is None else [receiver]
+        if receivers:
+            # Keep lastId so the next receiver cannot reuse a retired ID.
+            rftools.remove_positions(dest_data, set(receivers))
             edits[audit.RFTOOLS_DESTINATIONS] = (dest_label, dest_root)
     row.pop("spawnPoint", None)
     row["forcedSeed"] = Tag(4, seed)

@@ -30,6 +30,7 @@ from omk.worlds.reset import (
     resource_reset_inventory as audit,
     resource_reset_preflight,
     resource_reset_transform as transform,
+    rftools_reset as rftools_links,
 )
 
 PLAN = ".omk-resource-reset-plan.json"
@@ -146,14 +147,20 @@ def _changes(request, source, files):
                 raise PreflightRefused("opaque_records")
             raise PreflightRefused("no_landing")
         position = preflight["landing"]["position"]
+    adapters = preflight.get("adapters", {}) if preflight else {}
     payloads = transform.changes(
         source,
         request["world"],
         request["dimension"],
         position,
         files,
-        enderutilities_targets=bool(
-            preflight and ender.ADAPTER in preflight.get("adapters", {})
+        enderutilities_targets=ender.ADAPTER in adapters,
+        rftools_receiver_ids=(
+            transform.rftools_receiver_ids(
+                source, request["world"], request["dimension"]
+            )
+            if rftools_links.ADAPTER in adapters
+            else None
         ),
         landing_dimension=request.get("reset", {}).get("landing_dimension", 0),
     )
@@ -190,7 +197,14 @@ def _inputs(request, source, storage, target):
     position, preflight, payloads, inspected = _changes(request, source, files)
     rftools = "rftools_identity" in request.get("reset", {})
     if rftools:
-        payloads.update(transform.reseed_rftools(source, request))
+        payloads.update(
+            transform.reseed_rftools(
+                source,
+                request,
+                transport_reviewed=rftools_links.ADAPTER
+                in preflight.get("adapters", {}),
+            )
+        )
     result = transform.result_inventory(
         files,
         payloads,
