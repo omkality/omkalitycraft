@@ -8,7 +8,10 @@ import pytest
 from launcher.nbt import Tag
 from omk.backups.backup_store import BackupStore
 from omk.backups.stopped_world_backup import inventory
-from omk.worlds.reset import resource_reset_stage as stage
+from omk.worlds.reset import (
+    resource_reset_stage as stage,
+    rftools_reset as rftools,
+)
 from tests.fixtures.unit.backups.ftb_restore_authority import records
 from tests.fixtures.unit.worlds.resource_reset_inventory import (
     encoded,
@@ -249,7 +252,11 @@ def test_rftools_candidate_reseeds_only_the_selected_dimension_and_preserves_pro
     monkeypatch.setattr(
         stage.resource_reset_preflight,
         "preflight",
-        lambda *a, **k: {"can_stage_data": True, "landing": {"position": [8, 100, 8]}},
+        lambda *a, **k: {
+            "can_stage_data": True,
+            "landing": {"position": [8, 100, 8]},
+            "adapters": {rftools.ADAPTER: {"artifact_sha256": rftools.SHA256}},
+        },
     )
     plan = stage.execute({**request, "action": "plan"}, source, storage, target)
     sealed = {**request, "expected": plan}
@@ -279,7 +286,7 @@ def test_rftools_candidate_reseeds_only_the_selected_dimension_and_preserves_pro
     assert new_receivers.value["lastId"] == old_receivers.value["lastId"]
     assert (
         new_receivers.value["destinations"].value[1]
-        == old_receivers.value["destinations"].value[1][1:]
+        == old_receivers.value["destinations"].value[1][1:2]
     )
 
     staged_player = stage.audit.ftb.nbt(
@@ -287,7 +294,17 @@ def test_rftools_candidate_reseeds_only_the_selected_dimension_and_preserves_pro
     )
     original_player = stage.audit.ftb.nbt(player.read_bytes())
     assert staged_player["Dimension"] == Tag(3, 0)
-    assert staged_player["Inventory"] == original_player["Inventory"]
+    new_stacks = staged_player["Inventory"].value[1]
+    old_stacks = original_player["Inventory"].value[1]
+    assert new_stacks[0] == old_stacks[0]
+    assert new_stacks[1].value == {
+        **old_stacks[1].value,
+        "tag": Tag(10, {"Energy": Tag(3, 650000), "target1": Tag(3, 8)}),
+    }
+    alt_player = stage.audit.ftb.nbt(
+        (target / player.with_suffix(".dat_old").relative_to(source)).read_bytes()
+    )
+    assert alt_player == staged_player
     assert staged_player["XpTotal"] == original_player["XpTotal"]
     changed = {
         registry_name,

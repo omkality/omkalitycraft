@@ -96,6 +96,7 @@ def rftools_data(data, rftools_registry, tmp_path):
         world / audit.RFTOOLS_DESTINATIONS,
         (7, 6200, "Лаборатория", 7),
         (8, 6201, "Соседний мир", 7),
+        (9, 6200, "Второй приёмник", 11),
     )
     for dimension in (6200, 6201):
         terrain = world / f"RFTOOLS{dimension}/region"
@@ -111,7 +112,33 @@ def rftools_data(data, rftools_registry, tmp_path):
         (
             10,
             [
-                Tag(10, {"id": Tag(8, "minecraft:diamond"), "Count": Tag(1, 7)}),
+                Tag(
+                    10,
+                    {
+                        "id": Tag(8, "minecraft:diamond"),
+                        "Count": Tag(1, 7),
+                        "Slot": Tag(1, 8),
+                    },
+                ),
+                Tag(
+                    10,
+                    {
+                        "id": Tag(8, "rftools:advanced_charged_porter"),
+                        "Count": Tag(1, 1),
+                        "Slot": Tag(1, 1),
+                        "Damage": Tag(2, 0),
+                        "tag": Tag(
+                            10,
+                            {
+                                "Energy": Tag(3, 650000),
+                                "target": Tag(3, 9),
+                                "target0": Tag(3, 9),
+                                "target1": Tag(3, 8),
+                                "tpTimer": Tag(3, 36),
+                            },
+                        ),
+                    },
+                ),
             ],
         ),
     )
@@ -123,6 +150,7 @@ def rftools_data(data, rftools_registry, tmp_path):
         other,
         {
             **player,
+            "Inventory": Tag(9, (10, player["Inventory"].value[1][:1])),
             "Dimension": Tag(3, 0),
             "UUIDMost": Tag(4, half),
             "UUIDLeast": Tag(4, half),

@@ -13,6 +13,7 @@ from omk.backups.stopped_world_backup import inventory
 from omk.shared.fs import regular
 from omk.shared.profiles import PROJECT_ROOT
 from omk.worlds import enderutilities_reset as ender
+from omk.worlds.reset import rftools_reset as rftools
 from omk.worlds.reset.dimension_reset import validate_layout
 from omk.worlds.reset.resource_reset_inventory import (
     RFTOOLS_DIMENSIONS,
@@ -101,6 +102,11 @@ def preflight(
     profile = json.loads(raw)
     pins = artifacts(server, profile)
     ender_enabled = pins.get(ender.ARTIFACT) == ender.SHA256
+    rftools_enabled = bool(
+        reset
+        and "rftools_identity" in reset
+        and pins.get(rftools.ARTIFACT) == rftools.SHA256
+    )
 
     def snapshot():
         return inventory(
@@ -133,6 +139,7 @@ def preflight(
         max_chunks=policy["reference_chunks"],
         nonportal_patterns=profile["nonportal_binary_patterns"],
         enderutilities_targets=ender_enabled,
+        rftools_transport=rftools_enabled,
         reset=reset,
     )
     if (
@@ -142,6 +149,7 @@ def preflight(
     ):
         raise ValueError("Preflight world/runtime changed during inspection")
     spawn_receiver = int(links.get("rftools_spawn_receiver") is True)
+    rftools_references = links.get("rftools_transport_references", 0)
     return {
         "schema": 1,
         "adapter": profile["adapter"],
@@ -160,7 +168,8 @@ def preflight(
                     ender.ADAPTER: {
                         "artifact_sha256": ender.SHA256,
                         "handled_references": links["handled_finding_count"]
-                        - spawn_receiver,
+                        - spawn_receiver
+                        - rftools_references,
                     }
                 }
                 if ender_enabled
@@ -174,6 +183,16 @@ def preflight(
                     }
                 }
                 if spawn_receiver
+                else {}
+            ),
+            **(
+                {
+                    rftools.ADAPTER: {
+                        "artifact_sha256": rftools.SHA256,
+                        "handled_references": rftools_references,
+                    }
+                }
+                if rftools_references
                 else {}
             ),
         },
