@@ -124,7 +124,7 @@ def rftools_data(data, rftools_registry, tmp_path):
                     10,
                     {
                         "id": Tag(8, "rftools:advanced_charged_porter"),
-                        "Count": Tag(1, 1),
+                        "Count": Tag(3, 1),
                         "Slot": Tag(1, 1),
                         "Damage": Tag(2, 0),
                         "tag": Tag(

@@ -90,9 +90,12 @@ def _inventory(root, inventory, slots, receiver_ids, removed):
         ]
         if not targets:
             continue
-        count = value(stack, "Count", 1)
-        if value(stack, "Damage", 2) != 0 or not 1 <= count <= (
-            64 if name.value == RECEIVER else 1
+        count = stack.get("Count")
+        if (
+            not isinstance(count, Tag)
+            or count.kind not in {1, 3}
+            or not 1 <= count.value <= (64 if name.value == RECEIVER else 1)
+            or value(stack, "Damage", 2) != 0
         ):
             raise ValueError("Unreviewed RFTools player item layout")
         if "target" in targets and "tpTimer" in data:
