@@ -1,4 +1,3 @@
-import json
 import os
 import subprocess
 from unittest.mock import Mock
@@ -73,27 +72,10 @@ def test_owner_journal_subfolder_inside_private_root_keeps_existing_workflows(tm
 
 
 def _share_fixture(path):
-    # Fixed script, bounded argv/stdin, disposable test path; no account creation.
-    script = """
-$value = [Console]::In.ReadToEnd() | ConvertFrom-Json
-if ([System.IO.Directory]::Exists($value.path)) {
-    $acl = [System.Security.AccessControl.DirectorySecurity]::new()
-} else {
-    $acl = [System.Security.AccessControl.FileSecurity]::new()
-}
-$rules = 'D:P(A;OICI;FA;;;OW)(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;GR;;;WD)'
-$acl.SetSecurityDescriptorSddlForm($rules, [System.Security.AccessControl.AccessControlSections]::Access)
-if ([System.IO.Directory]::Exists($value.path)) {
-    [System.IO.Directory]::SetAccessControl($value.path, $acl)
-} else {
-    [System.IO.File]::SetAccessControl($value.path, $acl)
-}
-"""
+    # Grant Everyone read access on this disposable path only.
     subprocess.run(
-        ["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", script],
-        input=json.dumps({"path": str(path)}),
+        ["icacls.exe", str(path), "/grant", "*S-1-1-0:R"],
         capture_output=True,
-        text=True,
         check=True,
         timeout=15,
     )
