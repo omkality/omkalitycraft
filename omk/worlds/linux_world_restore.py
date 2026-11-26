@@ -99,6 +99,22 @@ def _copy(archive, name, target, expected):
         parent = parent.parent
 
 
+def _write_edit(target, name, data):
+    path = target / name
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    with path.open("xb") as output:
+        path.chmod(0o600)
+        output.write(data)
+        output.flush()
+        os.fsync(output.fileno())
+    parent = path.parent
+    while parent.is_relative_to(target):
+        _sync_directory(parent)
+        if parent == target:
+            break
+        parent = parent.parent
+
+
 def execute(request, storage=Path("/backup/store"), target=Path("/restore")):
     identity = _request(request, target)
     world = target / identity["world"]

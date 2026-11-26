@@ -70,6 +70,8 @@ def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
     vertical=8,
     max_chunks=32,
     resource_landing=False,
+    center=None,
+    excluded=None,
 ):
     if any(type(v) is not int for v in (radius, vertical, max_chunks)) or not (
         0 <= radius <= 32 and 0 <= vertical <= 32 and 1 <= max_chunks <= 256
@@ -84,7 +86,8 @@ def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
         saved_resource = nbt(_read(terrain / "jed_level.dat", world))
         data = anvil.value(saved_resource, "Data", 10)
     spawn = [anvil.value(data, "Spawn" + axis, 3) for axis in "XYZ"]
-    if not all(abs(spawn[i]) <= 29999000 for i in (0, 2)) or not 1 <= spawn[1] <= 253:
+    origin = spawn if center is None else center
+    if not all(abs(origin[i]) <= 29999000 for i in (0, 2)) or not 1 <= origin[1] <= 253:
         raise ValueError("Invalid saved spawn")
     border = [
         anvil.value(data, key, 6)
@@ -94,21 +97,14 @@ def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
         raise ValueError("Unsupported saved world border")
     if "BorderSizeLerpTime" in data and anvil.value(data, "BorderSizeLerpTime", 4) != 0:
         raise ValueError("Moving border requires native review")
-    registry = anvil.value(
-        anvil.value(anvil.value(root, "FML", 10), "Registries", 10),
-        "minecraft:blocks",
-        10,
-    )
-    ids, names = {}, set()
-    for row in anvil.compounds(registry, "ids"):
-        number, name = anvil.value(row, "V", 3), anvil.value(row, "K", 8)
-        if not 0 <= number <= 65535 or number in ids or name in names:
-            raise ValueError("Ambiguous FML block registry")
-        ids[number] = name
-        names.add(name)
-    if "minecraft:air" not in names:
-        raise ValueError("FML registry has no air")
-    points = None if resource_landing else _protected_spawn_chunks(world)
+    ids = anvil.block_registry(root)
+    claimed = not resource_landing and center is None
+    points = _protected_spawn_chunks(world) if claimed else None
+    kind = "forge112-saved-vanilla-floor-air"
+    if resource_landing:
+        kind = "forge112-resource-floor-air"
+    elif claimed:
+        kind += "-server-claim"
     cache, missing = {}, set()
 
     def saved(cx, cz):
@@ -147,7 +143,7 @@ def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
         return ids[number]
 
     def safe(x, y, z):  # noqa: PLR0912 - reject each independent safety condition
-        if not 2 <= y <= 251:
+        if not 2 <= y <= 251 or (excluded is not None and excluded(x >> 4, z >> 4)):
             return False
         for cx in range((x - 3) >> 4, ((x + 3) >> 4) + 1):
             for cz in range((z - 3) >> 4, ((z + 3) >> 4) + 1):
@@ -192,27 +188,23 @@ def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
                     return False
         return True
 
-    candidates = [(spawn[0], spawn[2])]
+    candidates = [(origin[0], origin[2])]
     for distance in range(1, radius + 1):
         candidates.extend(
-            (spawn[0] + dx, spawn[2] + dz)
+            (origin[0] + dx, origin[2] + dz)
             for dz in range(-distance, distance + 1)
             for dx in range(-distance, distance + 1)
             if max(abs(dx), abs(dz)) == distance
         )
-    heights = [spawn[1]] + [
-        spawn[1] + delta * sign for delta in range(1, vertical + 1) for sign in (1, -1)
+    heights = [origin[1]] + [
+        origin[1] + delta * sign for delta in range(1, vertical + 1) for sign in (1, -1)
     ]
     for x, z in candidates:
         for y in heights:
             if safe(x, y, z):
                 return {
                     "schema": 1,
-                    "kind": (
-                        "forge112-resource-floor-air"
-                        if resource_landing
-                        else "forge112-saved-vanilla-floor-air-server-claim"
-                    ),
+                    "kind": kind,
                     "position": [x, y, z],
                     "saved_spawn": spawn,
                     "chunks_read": len(cache),
@@ -223,4 +215,6 @@ def select_landing(  # noqa: PLR0915 - one bounded saved-world geometry audit
                     "generation": False,
                     "native_revalidation_required": True,
                 }
-    raise NoReviewedLanding("No reviewed landing near protected saved spawn")
+    if center is None:
+        raise NoReviewedLanding("No reviewed landing near protected saved spawn")
+    raise NoReviewedLanding("No reviewed saved landing in the requested area")

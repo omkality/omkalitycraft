@@ -59,6 +59,10 @@ class Region:
 
     def chunk(self, index):
         """Decode the stored chunk at the requested region coordinates."""
+        return value(self.record(index)[1], "Level", 10)
+
+    def record(self, index):
+        """Read the complete chunk record and its original uncompressed bytes."""
         if index not in self.locations:
             raise ValueError("Landing chunk is not saved")
         offset, count = self.locations[index]
@@ -77,11 +81,27 @@ class Region:
         raw = inflater.decompress(compressed, MAX_BYTES + 1)
         if len(raw) > MAX_BYTES or not inflater.eof or inflater.unused_data:
             raise ValueError("Invalid or oversized chunk NBT")
-        level = value(read_nbt(raw)[1], "Level", 10)
+        name, root = read_nbt(raw)
+        level = value(root, "Level", 10)
         expected = self.x * 32 + index % 32, self.z * 32 + index // 32
         if (value(level, "xPos", 3), value(level, "zPos", 3)) != expected:
             raise ValueError("Chunk coordinates differ from region entry")
-        return level
+        return name, root, raw
+
+
+def block_registry(root):
+    registries = value(value(root, "FML", 10), "Registries", 10)
+    registry = value(registries, "minecraft:blocks", 10)
+    ids, names = {}, set()
+    for row in compounds(registry, "ids"):
+        number, name = value(row, "V", 3), value(row, "K", 8)
+        if not 0 <= number <= 65535 or number in ids or name in names:
+            raise ValueError("Ambiguous FML block registry")
+        ids[number] = name
+        names.add(name)
+    if "minecraft:air" not in names:
+        raise ValueError("FML registry has no air")
+    return ids
 
 
 def sections(chunk):
