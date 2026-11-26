@@ -99,6 +99,20 @@ Details:
         ),
         (
             "jvm_crash",
+            "# SIGSEGV (0xb) at pc=0x123\n# V  [libjvm.so+0x00020ddd]\n",
+            "native_crash",
+            "SIGSEGV",
+            "libjvm.so",
+        ),
+        (
+            "jvm_crash",
+            "# SIGSEGV (0xb) at pc=0x123\n# v  [libjvm.dylib+0x20ddd]\n",
+            "native_crash",
+            "SIGSEGV",
+            "libjvm.dylib",
+        ),
+        (
+            "jvm_crash",
             "#  Out of Memory Error (allocation.cpp:44)",
             "native_out_of_memory",
             None,
