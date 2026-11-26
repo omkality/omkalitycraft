@@ -23,7 +23,7 @@ _NATIVE_SIGNAL = re.compile(
     r"EXCEPTION_ACCESS_VIOLATION|EXCEPTION_ILLEGAL_INSTRUCTION)\b"
 )
 _NATIVE_FRAME = re.compile(
-    r"^#\s+C\s+\[([a-zA-Z0-9_.-]{1,100})\+(0x[0-9a-fA-F]{1,16})\]"
+    r"^#\s+[CVv]\s+\[([a-zA-Z0-9_.-]{1,100})\+(0x[0-9a-fA-F]{1,16})\]"
 )
 _NATIVE_OOM = re.compile(r"^#\s+Out of Memory Error\b")
 
