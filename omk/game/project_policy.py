@@ -14,6 +14,7 @@ from pathlib import PurePosixPath
 from omk.backups.backup_store import _directory
 from omk.owner.storage import project_stage as raw
 from omk.shared.fs import resolved
+from omk.shared.java_properties import parse_properties as _properties
 from omk.worlds import linux_restore_policy as shared
 
 ADAPTER = "dj2-ftb54-current-v1"
@@ -39,30 +40,6 @@ FLAGS = {
     "current_policy_reconciled": True,
 }
 write_record = shared._write_record
-
-
-def _properties(data):
-    if not isinstance(data, bytes) or len(data) > shared.MAX_FILE or b"\0" in data:
-        raise ValueError("Invalid canonical server properties")
-    try:
-        lines, values = [], {}
-        for line in data.decode("utf-8").splitlines():
-            if not line.strip() or line.lstrip().startswith(("#", "!")):
-                lines.append((None, line))
-                continue
-            key, separator, value = line.partition("=")
-            if (
-                not separator
-                or not re.fullmatch(r"[A-Za-z0-9_.-]{1,128}", key)
-                or key in values
-                or (len(line) - len(line.rstrip("\\"))) % 2
-            ):
-                raise ValueError("Invalid canonical server properties")
-            values[key] = value
-            lines.append((key, line))
-    except UnicodeError:
-        raise ValueError("Invalid canonical server properties") from None
-    return lines, values
 
 
 def protected_properties(current, historical, world):

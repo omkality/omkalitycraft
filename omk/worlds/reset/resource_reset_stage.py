@@ -7,7 +7,6 @@ this data-only worker to maintenance, a completed backup and a start barrier.
 
 import hashlib
 import json
-import os
 import re
 import shutil
 import sys
@@ -25,7 +24,7 @@ from omk.backups.cold_backup_worker import digest, source_summary
 from omk.backups.stopped_world_backup import inventory
 from omk.worlds import enderutilities_reset as ender
 from omk.worlds.linux_restore_policy import _read as _runtime_file
-from omk.worlds.linux_world_restore import _copy, _read
+from omk.worlds.linux_world_restore import _copy, _read, _write_edit
 from omk.worlds.reset import (
     dimension_reset,
     resource_reset_inventory as audit,
@@ -268,22 +267,6 @@ def _space(request, target, result):
         < required + request["policy"]["reserve_bytes"]
     ):
         raise OSError("Resource staging budget or free-space reserve would be violated")
-
-
-def _write_edit(target, name, data):
-    path = target / name
-    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    with path.open("xb") as output:
-        path.chmod(0o600)
-        output.write(data)
-        output.flush()
-        os.fsync(output.fileno())
-    parent = path.parent
-    while parent.is_relative_to(target):
-        _sync_directory(parent)
-        if parent == target:
-            break
-        parent = parent.parent
 
 
 def _verified(request, source, storage, target, *, extra_roots=()):
