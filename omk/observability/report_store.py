@@ -181,6 +181,8 @@ class ReportStore:
 
     def get(self, report_id):
         """Load the retained report identified by its ID."""
+        if not self.path.exists():
+            raise ValueError("Client incident not found or expired")
         with contextlib.closing(self._connect(readonly=True)) as db:
             row = db.execute(
                 "SELECT body FROM reports WHERE id=? AND received>=?",
