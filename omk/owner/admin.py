@@ -453,6 +453,7 @@ def _add_tui_operation_parsers(actions):
 def add_admin_commands(sub):
     from omk.accounts.account_recovery import add_recovery_parser  # noqa: PLC0415
     from omk.deployment.ingress import add_parser as add_ingress_parser  # noqa: PLC0415
+    from omk.owner.admin_actions import add_action_parser  # noqa: PLC0415
     from omk.owner.admin_backups import add_backup_parser  # noqa: PLC0415
     from omk.owner.admin_chat import add_chat_parser  # noqa: PLC0415
     from omk.owner.admin_maintenance import add_maintenance_parser  # noqa: PLC0415
@@ -508,6 +509,7 @@ def add_admin_commands(sub):
     add_recovery_parser(actions)
     add_backup_parser(actions)
     add_chat_parser(actions)
+    add_action_parser(actions)
     add_maintenance_parser(actions)
     add_restore_parser(actions)
     add_resource_reset_parser(actions)
@@ -571,6 +573,10 @@ def _execute_admin(config, args):
         }[args.admin_action]()
     elif args.admin_action == "reports":
         result = client_reports(config, args)
+    elif args.admin_action == "action-history":
+        from omk.owner.admin_actions import run_actions  # noqa: PLC0415
+
+        result = run_actions(config, args)
     elif args.admin_action == "chat-history":
         from omk.owner.admin_chat import run_chat  # noqa: PLC0415
 

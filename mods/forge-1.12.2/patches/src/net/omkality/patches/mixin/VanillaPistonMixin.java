@@ -1,5 +1,6 @@
 package net.omkality.patches.mixin;
 
+import net.omkality.patches.ActionDispatch;
 import net.omkality.patches.VanillaBoundaryGuard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
@@ -11,6 +12,12 @@ public abstract class VanillaPistonMixin {
     private void omkality$event(@Coerce Object state,@Coerce Object world,@Coerce Object pos,int id,int param,
             CallbackInfoReturnable<Boolean> cir) {
         if(!VanillaBoundaryGuard.event(this,state,world,pos,id)) cir.setReturnValue(false);
+    }
+    @Inject(method="func_189539_a",at=@At("RETURN"),require=1,remap=false)
+    private void omkality$observePiston(@Coerce Object state,@Coerce Object world,@Coerce Object pos,int id,int param,
+            CallbackInfoReturnable<Boolean> cir) {
+        if ((id == 0 || id == 1) && Boolean.TRUE.equals(cir.getReturnValue()))
+            ActionDispatch.piston(world,pos,state);
     }
     @Inject(method="func_176319_a",at=@At("HEAD"),cancellable=true,require=1,remap=false)
     private void omkality$head(@Coerce Object world,@Coerce Object pos,@Coerce Object facing,boolean extending,
