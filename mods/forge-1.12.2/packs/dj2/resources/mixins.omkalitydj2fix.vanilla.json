@@ -6,7 +6,8 @@
   "mixins": [
     "VanillaPistonMixin", "VanillaLiquidMixin", "VanillaMixingMixin", "VanillaBedMixin",
     "VanillaPlayerDisconnectMixin", "VanillaNetherPortalMixin",
-    "VanillaPublicChatMixin", "VanillaChatCommandsMixin"
+    "VanillaPublicChatMixin", "VanillaChatCommandsMixin",
+    "VanillaActionEditsMixin", "VanillaActivationMixin"
   ],
   "injectors": {"defaultRequire": 1}
 }

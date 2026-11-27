@@ -24,7 +24,7 @@ public final class ChatHistory {
     private static final int TEXT_LIMIT = 768;
     private static final ThreadLocal<Dispatch> DISPATCH = new ThreadLocal<>();
     private static volatile ChatHistory active;
-    private final ChatJournal journal;
+    private final PrivateJournal journal;
     private final Object server;
     private final Class<?> playerType, remoteConsole, translationType, chatPacket;
     private final Method profile, profileId, profileName, displayName, formatted, senderName, players, byId;
@@ -114,7 +114,7 @@ public final class ChatHistory {
         loginPlayer = PlayerEvent.class.getField("player");
         sendMessage = actor.getMethod("func_145747_a", component);
         plainText = Class.forName("net.minecraft.util.text.TextComponentString").getConstructor(String.class);
-        journal = new ChatJournal(root, id, profileIdValue, days, mib * 1024 * 1024,
+        journal = new PrivateJournal(PrivateJournal.Stream.CHAT, root, id, profileIdValue, days, mib * 1024 * 1024, 0,
             problem -> log.warn("Omkality chat history unavailable ({})", problem));
     }
 

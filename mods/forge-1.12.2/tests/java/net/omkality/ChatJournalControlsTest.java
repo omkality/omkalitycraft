@@ -31,7 +31,7 @@ public final class ChatJournalControlsTest {
             Files.write(full, new byte[MIB]);
             List<String> warnings = Collections.synchronizedList(new ArrayList<>());
             Map<String, Object> row = Collections.singletonMap("text", "Unicode: ё \"quote\" Ω");
-            try (ChatJournal journal = new ChatJournal(root, "dj2", "fixture", 90, MIB, warnings::add)) {
+            try (PrivateJournal journal = new PrivateJournal(PrivateJournal.Stream.CHAT, root, "dj2", "fixture", 90, MIB, 0, warnings::add)) {
                 refused(root, "dj2", warnings);
                 for (int i = 0; i < 4096; i++) journal.record(row);
                 journal.record(Collections.singletonMap("text", String.join("", Collections.nCopies(8192, "*"))));
@@ -45,7 +45,7 @@ public final class ChatJournalControlsTest {
             check(dropped.find() && Integer.parseInt(dropped.group(1)) > 0, "bounded input loss visible");
             check(first.stream().anyMatch(line -> line.contains("ё \\\"quote\\\" Ω")), "UTF-8 and escaping");
             refused(root, "other", warnings);
-            try (ChatJournal journal = new ChatJournal(root, "dj2", "fixture", 90, MIB, warnings::add)) {
+            try (PrivateJournal journal = new PrivateJournal(PrivateJournal.Stream.CHAT, root, "dj2", "fixture", 90, MIB, 0, warnings::add)) {
                 journal.record(row);
             }
             List<String> restarted = lines(root);
@@ -61,7 +61,7 @@ public final class ChatJournalControlsTest {
     }
 
     private static void refused(Path root, String id, List<String> warnings) throws IOException {
-        try (ChatJournal unexpected = new ChatJournal(root, id, "fixture", 90, MIB, warnings::add)) {
+        try (PrivateJournal unexpected = new PrivateJournal(PrivateJournal.Stream.CHAT, root, id, "fixture", 90, MIB, 0, warnings::add)) {
             throw new AssertionError("Conflicting writer was accepted");
         } catch (IOException expected) { }
     }
