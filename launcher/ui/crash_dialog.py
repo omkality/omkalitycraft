@@ -18,9 +18,11 @@ from omk.shared.fs import resolved
 
 
 class CrashDialog(QDialog):
-    """Show the local log or crash-report directory for the completed run."""
+    """Show the local diagnostic directory and any confirmed receipt for the run."""
 
-    def __init__(self, directory: Path, parent: QWidget) -> None:
+    def __init__(
+        self, directory: Path, parent: QWidget, *, report_received: bool = False
+    ) -> None:
         super().__init__(parent)
         self.setWindowTitle("OmkalityCraft")
         self.setObjectName("gameCrashDialog")
@@ -35,6 +37,10 @@ class CrashDialog(QDialog):
         heading = QLabel("Minecraft вылетел")
         heading.setStyleSheet("font-size: 24px")
         layout.addWidget(heading)
+        if report_received:
+            receipt = QLabel("Мы получили отчёт")
+            receipt.setObjectName("crashReportReceipt")
+            layout.addWidget(receipt)
         self.hint = QLabel("Папка с логами")
         self.hint.setProperty("muted", True)
         layout.addWidget(self.hint)

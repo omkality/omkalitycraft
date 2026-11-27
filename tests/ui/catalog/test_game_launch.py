@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 import pytest
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QLineEdit, QPushButton
+from PySide6.QtWidgets import QLabel, QLineEdit, QPushButton
 
 from launcher.controller import InstallationResult
 from launcher.game import GameProcess
@@ -17,17 +17,26 @@ __all__ = ["game_launch_window"]
 
 
 @pytest.mark.parametrize(
-    ("exit_code", "report"),
+    ("exit_code", "report", "received"),
     [
-        (0, None),
-        (1, None),
-        (0, "crash-reports/crash-client.txt"),
-        (1, "hs_err_pid42.log"),
+        (0, None, False),
+        (1, None, False),
+        (0, "crash-reports/crash-client.txt", False),
+        (1, "hs_err_pid42.log", False),
+        (1, None, True),
+        (1, "crash-reports/crash-client.txt", True),
     ],
-    ids=["normal", "output-only", "minecraft-report", "jvm-report"],
+    ids=[
+        "normal",
+        "output-only",
+        "minecraft-report",
+        "jvm-report",
+        "received-output-only",
+        "received-minecraft-report",
+    ],
 )
 def test_play_locks_memory_and_hides_window_until_game_exits(
-    game_launch_window, tmp_path, monkeypatch, exit_code, report
+    game_launch_window, tmp_path, monkeypatch, exit_code, report, received
 ):
     window = game_launch_window
     card = window.home_page.cards["dj2"]
@@ -54,6 +63,7 @@ def test_play_locks_memory_and_hides_window_until_game_exits(
     assert window.game_timer.isActive()
 
     process.poll.return_value = exit_code
+    game.crash_report_received = received
     if report:
         game.crash_report = tmp_path / "instances/dj2" / report
         game.crash_report.parent.mkdir(parents=True)
@@ -72,6 +82,13 @@ def test_play_locks_memory_and_hides_window_until_game_exits(
         assert not dialogs
     else:
         assert len(dialogs) == 1 and dialogs[0].isVisible()
+        assert (
+            any(
+                label.isVisible() and label.text() == "Мы получили отчёт"
+                for label in dialogs[0].findChildren(QLabel, "crashReportReceipt")
+            )
+            is received
+        )
         directory = game.crash_report.parent if report else log.parent
         assert dialogs[0].findChild(QLineEdit, "crashDirectory").text() == str(
             directory

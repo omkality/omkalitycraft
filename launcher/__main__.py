@@ -160,10 +160,13 @@ def main() -> int:
                 minimum_generations=config.get("minimum_pack_generations"),
             ),
         )
+        report_origin = (
+            config["api_url"] if config.get("send_client_reports") is True else None
+        )
         window = LauncherWindow(
             service,
             installer=installer,
-            runner=GameRunner(root),
+            runner=GameRunner(root, report_origin=report_origin),
             status_origin=config["api_url"],
             update_warning=update_warning,
         )

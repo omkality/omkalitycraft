@@ -25,6 +25,7 @@ from omk.observability.diagnostics import (
     event,
     failure,
 )
+from omk.observability.incident_delivery import submit_pending
 from omk.observability.incidents import (
     RunningCrashWatcher,
     capture_incident,
@@ -90,6 +91,7 @@ class GameProcess:
     )
     logging_failed: threading.Event = field(default_factory=threading.Event, repr=False)
     crash_report: Path | None = None
+    crash_report_received: bool = False
 
     def poll(self) -> int | None:
         """Return the Java exit code when the child has stopped."""
@@ -99,11 +101,14 @@ class GameProcess:
 class GameRunner:
     """Prepare a verified game instance and supervise its Java process."""
 
-    def __init__(self, root: Path, *, memory_mb: int = 6144) -> None:
+    def __init__(
+        self, root: Path, *, memory_mb: int = 6144, report_origin: str | None = None
+    ) -> None:
         if not 1024 <= memory_mb <= 16384:
             raise ValueError("Invalid memory setting")
         self.root = resolved(root)
         self.memory_mb = memory_mb
+        self.report_origin = report_origin
 
     def ensure_stopped(self, release: Release) -> None:
         """Detect a surviving client from any portable copy under the current account."""
@@ -312,7 +317,7 @@ class GameRunner:
                     logging_failed=result.logging_failed.is_set(),
                 )
                 try:
-                    capture_incident(
+                    incident = capture_incident(
                         self.root,
                         folder,
                         release,
@@ -324,6 +329,15 @@ class GameRunner:
                         launcher=VERSION,
                         stdout_current=not result.logging_failed.is_set(),
                         baseline=handled,
+                    )
+                    result.crash_report_received = (
+                        incident is not None
+                        and submit_pending(
+                            self.root,
+                            self.report_origin,
+                            session,
+                            report_id=incident.stem,
+                        )
                     )
                 except (ValueError, TypeError) as error:
                     failure(self.root, "incident_capture", error)

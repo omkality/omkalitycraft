@@ -142,7 +142,7 @@ def test_queue_retries_without_ui_and_deletes_only_acknowledged_report(
     monkeypatch.setattr(
         "omk.observability.incident_delivery.DraslClient.request", request
     )
-    submit_pending(tmp_path, "http://127.0.0.1:1", session)
+    assert not submit_pending(tmp_path, "http://127.0.0.1:1", session)
     assert path.exists()
     assert (
         "private-token-should-not-be-logged"
@@ -150,7 +150,7 @@ def test_queue_retries_without_ui_and_deletes_only_acknowledged_report(
     )
     request.side_effect = None
     request.return_value = {"ok": True, "id": json.loads(path.read_text())["id"]}
-    submit_pending(tmp_path, "http://127.0.0.1:1", session)
+    assert submit_pending(tmp_path, "http://127.0.0.1:1", session)
     assert not path.exists() and request.call_count == 2
 
 

@@ -1,6 +1,5 @@
-"""Explicit report delivery for the operator's isolated test fixtures."""
+"""Deliver a queued client report to the configured incident API."""
 
-import contextlib
 import json
 import re
 from pathlib import Path
@@ -17,38 +16,54 @@ from omk.observability.incidents import (
 )
 
 
-def submit_pending(root: Path, origin: str | None, session: Session) -> None:
-    """One request per attempt, idempotent report ID; never renew or save account tokens here."""
+def submit_pending(
+    root: Path, origin: str | None, session: Session, *, report_id: str | None = None
+) -> bool:
+    """Return whether the API acknowledged the requested report or one pending report."""
     if origin is None:
-        return
+        return False
     try:
         folder = _queue(root)
         _prune(root, folder)
         client = DraslClient(origin, timeout=3)
+        player = UUID(session.player_uuid).hex
         files = _files(
             folder, root, lambda n: bool(re.fullmatch(r"[a-f0-9]{32}\.json", n))
         )
         for path in files:
+            if report_id is not None and path.stem != report_id:
+                continue
             with path.open("rb") as file:
                 raw = file.read(MAX_REPORT_BYTES + 1)
             if len(raw) > MAX_REPORT_BYTES:
                 continue
-            with contextlib.suppress(ValueError, TypeError):
+            try:
                 report = validate_report(json.loads(raw))
-                if report["player"] != UUID(session.player_uuid).hex:
-                    continue
-                response = client.request(
-                    "POST", "/reports/client", report, session.access_token
+            except ValueError, TypeError:
+                continue
+            if report["id"] != path.stem or report["player"] != player:
+                continue
+            response = client.request(
+                "POST", "/reports/client", report, session.access_token
+            )
+            if not (
+                isinstance(response, dict)
+                and response.get("id") == report["id"]
+                and response.get("ok") is True
+            ):
+                return False
+            event(root, "client_incident_delivered", report_id=report["id"])
+            try:
+                path.unlink()
+            except OSError as error:
+                event(
+                    root,
+                    "client_incident_queue_cleanup_failed",
+                    error_type=type(error).__name__,
                 )
-                if (
-                    isinstance(response, dict)
-                    and response.get("id") == report["id"]
-                    and response.get("ok") is True
-                ):
-                    path.unlink()
-                    event(root, "client_incident_delivered", report_id=report["id"])
-                return
+            return True
     except Exception as error:
         event(
             root, "client_incident_delivery_deferred", error_type=type(error).__name__
         )
+    return False
