@@ -186,7 +186,12 @@ def test_locked_analysis_format_preserves_expected_runtime_modules(tmp_path):
         values[fields.index(name)] = []
     entries = [
         (name, "/synthetic/source.py", "PYMODULE")
-        for name in ["launcher.app", "omk.accounts.drasl", "omk.shared.content_policy"]
+        for name in [
+            "launcher.app",
+            "omk.accounts.drasl",
+            "omk.observability.incident_delivery",
+            "omk.shared.content_policy",
+        ]
     ]
     values[fields.index("pure")] = entries
     path = tmp_path / "Analysis-00.toc"

@@ -1,4 +1,5 @@
 import io
+import json
 import os
 import subprocess
 import sys
@@ -6,6 +7,7 @@ import time
 from dataclasses import replace
 from pathlib import Path
 from unittest.mock import Mock, patch
+from uuid import uuid4
 
 import psutil
 import pytest
@@ -13,6 +15,8 @@ import pytest
 from launcher.game import GameRunner
 from launcher.paths import BRAND_ICON
 from launcher.releases import ReleaseError
+from omk.accounts.drasl import DraslError
+from omk.observability.incidents import capture_incident
 from tests.fixtures.unit.launcher.game_runner import fixture
 
 __all__ = ["fixture"]
@@ -162,7 +166,12 @@ def test_selected_heap_reaches_java_arguments(tmp_path: Path):
         GameRunner(tmp_path).command(release, folder, session, memory_mb=100000)
 
 
-def test_abnormal_child_exit_is_captured_automatically_without_ui(tmp_path):
+@pytest.mark.parametrize(
+    "outcome", ["disabled", "accepted", "refused", "offline", "wrong-id"]
+)
+def test_abnormal_child_exit_is_captured_automatically_without_ui(
+    tmp_path, monkeypatch, outcome
+):
     class ControlledRunner(GameRunner):
         def command(self, *args, **kwargs):
             return [
@@ -172,12 +181,60 @@ def test_abnormal_child_exit_is_captured_automatically_without_ui(tmp_path):
             ]
 
     folder, release, session = fixture(tmp_path)
-    result = ControlledRunner(tmp_path).start(release, folder, session)
+    older = capture_incident(
+        tmp_path,
+        folder,
+        release,
+        session,
+        run_id=uuid4().hex,
+        started_at=0,
+        exit_code=1,
+        memory_mb=6144,
+        launcher="test",
+    )
+    future = time.time() + 60
+    os.utime(older, (future, future))
+
+    def respond(method, path, payload, token):
+        if outcome == "refused":
+            raise DraslError(403)
+        if outcome == "offline":
+            raise OSError("test API offline")
+        return {
+            "ok": True,
+            "id": older.stem if outcome == "wrong-id" else payload["id"],
+        }
+
+    request = Mock(side_effect=respond)
+    monkeypatch.setattr(
+        "omk.observability.incident_delivery.DraslClient.request", request
+    )
+    runner = ControlledRunner(
+        tmp_path, report_origin=None if outcome == "disabled" else "http://127.0.0.1:1"
+    )
+    result = runner.start(release, folder, session)
     assert result.diagnostics_done.wait(10)
     assert result.poll() == 1
-    reports = list((tmp_path / "userdata/client-incidents").glob("*.json"))
-    assert len(reports) == 1
-    assert "controlled fixture" in reports[0].read_text()
+    assert result.crash_report_received is (outcome == "accepted")
+    assert older.exists()
+    if outcome == "disabled":
+        request.assert_not_called()
+    else:
+        assert request.call_count == 1
+        method, path, payload, token = request.call_args.args
+        assert (method, path, token) == (
+            "POST",
+            "/reports/client",
+            session.access_token,
+        )
+        assert payload["id"] != older.stem
+        assert "controlled fixture" in payload["detail"]
+    current = sorted(path for path in older.parent.glob("*.json") if path != older)
+    if outcome == "accepted":
+        assert current == []
+    else:
+        assert len(current) == 1
+        assert "controlled fixture" in json.loads(current[0].read_text())["detail"]
 
 
 def test_new_silent_failure_never_uploads_previous_runs_stack(tmp_path):
