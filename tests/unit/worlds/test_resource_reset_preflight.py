@@ -434,6 +434,96 @@ def test_region_edit_hashes_and_overwrites_two_allocations_without_touching_neig
     assert file.read_bytes() == expected
 
 
+def test_rftools_transmitter_unbinds_only_reviewed_direct_player_items(
+    saved, rftools_registry
+):
+    server, world, _, _ = saved
+    _, _, save = rftools_registry
+    registry = save([(6200, "Лаборатория")])
+    destinations = world / audit.RFTOOLS_DESTINATIONS
+    rftools_destinations(destinations, (8, 0, "Основной", 7), (9, 6200, "Площадка", 24))
+    settings = {
+        "Energy": Tag(4, 12345),
+        "tpName": Tag(8, "Устройство"),
+        "private": Tag(1, 1),
+        "hideBeam": Tag(1, 1),
+        "once": Tag(1, 0),
+        "players": Tag(9, (8, [Tag(8, "SyntheticPlayer")])),
+    }
+    selected = {
+        "Slot": Tag(1, 4),
+        "Count": Tag(1, 1),
+        "Damage": Tag(2, 0),
+        "id": Tag(8, rftools.TRANSMITTER),
+        "tag": Tag(10, {**settings, "destId": Tag(3, 9)}),
+    }
+    retained = {
+        **selected,
+        "Slot": Tag(1, 6),
+        "tag": Tag(10, {**settings, "destId": Tag(3, 8)}),
+    }
+    mixed = {
+        **selected,
+        "Slot": Tag(1, 7),
+        "tag": Tag(
+            10,
+            {
+                **settings,
+                "destId": Tag(3, 9),
+                "dim": Tag(3, 0),
+                "dest": Tag(11, [32, 70, -2]),
+            },
+        ),
+    }
+    nested = {
+        **selected,
+        "Slot": Tag(1, 8),
+        "id": Tag(8, "minecraft:shulker_box"),
+        "tag": Tag(
+            10, {"BlockEntityTag": Tag(10, {"Items": compound_list([selected])})}
+        ),
+    }
+    original = {
+        "Inventory": compound_list([selected, retained, mixed, nested]),
+        "EnderItems": compound_list([{**selected, "Count": Tag(1, 2)}]),
+    }
+    player = world / "playerdata/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa.dat_old"
+    encoded(player, original)
+    before = player.read_bytes()
+    _label, _root, rows = audit._rftools_registry(server, "world")
+    reset = dimension_reset.layout(
+        6200, rftools_identity=audit.rftools_identity(rows[6200])
+    )
+    report = links.inspect_links(
+        server,
+        "world",
+        6200,
+        [p.relative_to(server).as_posix() for p in (player, registry, destinations)],
+        reset=reset,
+        rftools_transport=True,
+    )
+    pending = [
+        row["nbt_path"] for row in report["examples"] if "staging_adapter" not in row
+    ]
+    assert pending == [
+        "/Inventory/2/tag/destId",
+        "/Inventory/3/tag/BlockEntityTag/Items/0/tag/destId",
+    ]
+    saved_player = audit.ftb.nbt(before)
+    updated, removed = rftools.unbind_player_targets(saved_player, 6200, {9})
+    assert removed == ["/Inventory/0/tag/destId", "/EnderItems/0/tag/destId"]
+    assert anvil.compounds(updated, "Inventory") == [
+        {**selected, "tag": Tag(10, settings)},
+        retained,
+        mixed,
+        nested,
+    ]
+    assert anvil.compounds(updated, "EnderItems") == [
+        {**selected, "Count": Tag(1, 2), "tag": Tag(10, settings)},
+    ]
+    assert player.read_bytes() == before
+
+
 def test_saved_registry_geometry_and_read_only_proof(saved):
     server, world, _, _ = saved
     before = inventory(world, world_name="world")

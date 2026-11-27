@@ -94,17 +94,22 @@ def _dialer_fields(data, dimension, receiver_ids):
     return ()
 
 
+def _transmitter_fields(data, receiver_ids):
+    if (
+        receiver_ids
+        and "destId" in data
+        and value(data, "destId", 3) in receiver_ids
+        and not {"dim", "dest"} & data.keys()
+    ):
+        return ("destId",)
+    return ()
+
+
 def _tile_fields(tile, dimension, receiver_ids):
     if tile.get("id") == Tag(8, SIMPLE_DIALER):
         return _dialer_fields(tile, dimension, receiver_ids)
-    if (
-        tile.get("id") == Tag(8, TRANSMITTER)
-        and receiver_ids
-        and "destId" in tile
-        and value(tile, "destId", 3) in receiver_ids
-        and not {"dim", "dest"} & tile.keys()
-    ):
-        return ("destId",)
+    if tile.get("id") == Tag(8, TRANSMITTER):
+        return _transmitter_fields(tile, receiver_ids)
     return ()
 
 
@@ -154,6 +159,8 @@ def tile_updates(chunk, dimension, receiver_ids, registry):
 def _item_fields(data, item, dimension, receiver_ids):
     if item == SIMPLE_DIALER:
         return _dialer_fields(data, dimension, receiver_ids)
+    if item == TRANSMITTER:
+        return _transmitter_fields(data, receiver_ids)
     if item == RECEIVER:
         keys = ("destinationId",)
     elif item == ADVANCED_PORTER:
@@ -183,6 +190,7 @@ def _inventory(root, inventory, slots, dimension, receiver_ids):
                 Tag(8, PORTER),
                 Tag(8, ADVANCED_PORTER),
                 Tag(8, RECEIVER),
+                Tag(8, TRANSMITTER),
                 Tag(8, SIMPLE_DIALER),
             )
             or "tag" not in stack
@@ -192,7 +200,7 @@ def _inventory(root, inventory, slots, dimension, receiver_ids):
         targets = _item_fields(data, name.value, dimension, receiver_ids)
         if not targets:
             continue
-        max_count = 64 if name.value in {RECEIVER, SIMPLE_DIALER} else 1
+        max_count = 64 if name.value in {RECEIVER, TRANSMITTER, SIMPLE_DIALER} else 1
         count = stack.get("Count")
         if (
             not isinstance(count, Tag)
