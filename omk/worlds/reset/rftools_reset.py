@@ -27,6 +27,51 @@ TRANSMITTER_PROGRESS = (
 )
 FAVORITES = tuple(f"target{i}" for i in range(8))
 COORDINATES = ("dim", "x", "y", "z")
+SHULKERS = {
+    f"minecraft:{color}_shulker_box"
+    for color in (
+        "white",
+        "orange",
+        "magenta",
+        "light_blue",
+        "yellow",
+        "lime",
+        "pink",
+        "gray",
+        "silver",
+        "cyan",
+        "purple",
+        "blue",
+        "brown",
+        "green",
+        "red",
+        "black",
+    )
+}
+CRATES = {
+    "actuallyadditions:block_giant_chest": ("actuallyadditions:giantchest", 117),
+    "actuallyadditions:block_giant_chest_medium": (
+        "actuallyadditions:giantchestmedium",
+        234,
+    ),
+    "actuallyadditions:block_giant_chest_large": (
+        "actuallyadditions:giantchestlarge",
+        351,
+    ),
+}
+TILE_STORAGE = {
+    "minecraft:chest": ({"minecraft:chest", "minecraft:trapped_chest"}, range(27)),
+    "minecraft:shulker_box": (SHULKERS, range(27)),
+    "minecraft:ironchest.iron": ({"ironchest:iron_chest"}, range(54)),
+    **{tile: ({block}, capacity) for block, (tile, capacity) in CRATES.items()},
+}
+ITEM_LIMITS = {
+    PORTER: 1,
+    ADVANCED_PORTER: 1,
+    RECEIVER: 64,
+    TRANSMITTER: 64,
+    SIMPLE_DIALER: 64,
+}
 
 
 def destination_ids(data, dimension):
@@ -94,13 +139,20 @@ def _dialer_fields(data, dimension, receiver_ids):
     return ()
 
 
-def _transmitter_fields(data, receiver_ids):
-    if (
-        receiver_ids
-        and "destId" in data
-        and value(data, "destId", 3) in receiver_ids
-        and not {"dim", "dest"} & data.keys()
-    ):
+def _transmitter_fields(data, dimension, receiver_ids):
+    if {"dim", "dest"} & data.keys():
+        position = data.get("dest")
+        if (
+            "destId" not in data
+            and isinstance(position, Tag)
+            and position.kind == 11
+            and len(position.value) == 3
+            and 0 <= position.value[1] < 256
+            and data.get("dim") == Tag(3, dimension)
+        ):
+            return ("dest", "dim")
+        return ()
+    if receiver_ids and "destId" in data and value(data, "destId", 3) in receiver_ids:
         return ("destId",)
     return ()
 
@@ -109,18 +161,45 @@ def _tile_fields(tile, dimension, receiver_ids):
     if tile.get("id") == Tag(8, SIMPLE_DIALER):
         return _dialer_fields(tile, dimension, receiver_ids)
     if tile.get("id") == Tag(8, TRANSMITTER):
-        return _transmitter_fields(tile, receiver_ids)
+        return _transmitter_fields(tile, dimension, receiver_ids)
     return ()
 
 
+def _edit_tile(tile, dimension, receiver_ids):
+    fields = _tile_fields(tile, dimension, receiver_ids)
+    if fields:
+        updated = {key: tag for key, tag in tile.items() if key not in fields}
+        if tile["id"] == Tag(8, TRANSMITTER):
+            if "tpPlayer" in updated:
+                value(updated, "tpPlayer", 8)
+                del updated["tpPlayer"]
+            for field in TRANSMITTER_PROGRESS:
+                if field in updated:
+                    value(updated, field, 3)
+                    updated[field] = Tag(3, 0)
+        return updated, [f"/{field}" for field in fields]
+    identifier = tile.get("id")
+    if (
+        identifier is None
+        or identifier.kind != 8
+        or identifier.value not in TILE_STORAGE
+    ):
+        return tile, []
+    _blocks, slots = TILE_STORAGE[identifier.value]
+    if "Items" not in tile or "LootTable" in tile:
+        return tile, []
+    updated = copy.deepcopy(tile)
+    return updated, _inventory(updated, "Items", slots, dimension, receiver_ids)
+
+
 def tile_updates(chunk, dimension, receiver_ids, registry):
-    """Retire obsolete links only in verified installed RFTools blocks."""
+    """Return changed installed blocks and the exact reference paths they resolve."""
     tiles = compounds(chunk, "TileEntities")
-    selected = {
-        index: fields
-        for index, tile in enumerate(tiles)
-        if (fields := _tile_fields(tile, dimension, receiver_ids))
-    }
+    selected = {}
+    for index, tile in enumerate(tiles):
+        edited, removed = _edit_tile(tile, dimension, receiver_ids)
+        if removed:
+            selected[index] = (edited, removed)
     if not selected:
         return {}
     coordinates = ("x", "y", "z")
@@ -132,27 +211,19 @@ def tile_updates(chunk, dimension, receiver_ids, registry):
     section_map = sections(chunk)
     cx, cz = (value(chunk, key, 3) for key in ("xPos", "zPos"))
     edits = {}
-    for index, fields in selected.items():
+    for index, edit in selected.items():
         tile = tiles[index]
         x, y, z = (value(tile, key, 3) for key in coordinates)
         block = value(tile, "id", 8)
+        expected = TILE_STORAGE[block][0] if block in TILE_STORAGE else {block}
         if (
             positions[x, y, z] != 1
             or (x >> 4, z >> 4) != (cx, cz)
             or not 0 <= y <= 255
-            or registry.get(block_id(section_map, x, y, z)) != block
+            or registry.get(block_id(section_map, x, y, z)) not in expected
         ):
             continue
-        updated = {key: tag for key, tag in tile.items() if key not in fields}
-        if block == TRANSMITTER:
-            if "tpPlayer" in updated:
-                value(updated, "tpPlayer", 8)
-                del updated["tpPlayer"]
-            for field in TRANSMITTER_PROGRESS:
-                if field in updated:
-                    value(updated, field, 3)
-                    updated[field] = Tag(3, 0)
-        edits[index] = updated
+        edits[index] = edit
     return edits
 
 
@@ -160,7 +231,7 @@ def _item_fields(data, item, dimension, receiver_ids):
     if item == SIMPLE_DIALER:
         return _dialer_fields(data, dimension, receiver_ids)
     if item == TRANSMITTER:
-        return _transmitter_fields(data, receiver_ids)
+        return _transmitter_fields(data, dimension, receiver_ids)
     if item == RECEIVER:
         keys = ("destinationId",)
     elif item == ADVANCED_PORTER:
@@ -172,49 +243,73 @@ def _item_fields(data, item, dimension, receiver_ids):
     )
 
 
+def _check_count(stack, limit):
+    count = stack.get("Count")
+    if (
+        not isinstance(count, Tag)
+        or count.kind not in {1, 3}
+        or not 1 <= count.value <= limit
+        or value(stack, "Damage", 2) != 0
+    ):
+        raise ValueError("Unreviewed RFTools inventory item layout")
+
+
+def _stack_links(stack, dimension, receiver_ids):
+    identifier = stack.get("id")
+    if identifier is None or identifier.kind != 8 or "tag" not in stack:
+        return []
+    name = identifier.value
+    if name in ITEM_LIMITS:
+        data = value(stack, "tag", 10)
+        targets = _item_fields(data, name, dimension, receiver_ids)
+        if targets:
+            _check_count(stack, ITEM_LIMITS[name])
+            if "target" in targets and "tpTimer" in data:
+                value(data, "tpTimer", 3)
+                del data["tpTimer"]
+            for key in targets:
+                del data[key]
+        return [f"/tag/{key}" for key in targets]
+    if name not in SHULKERS and name not in CRATES:
+        return []
+    data = value(stack, "tag", 10)
+    if name in SHULKERS:
+        if "BlockEntityTag" not in data:
+            return []
+        container = value(data, "BlockEntityTag", 10)
+        slots, prefix, limit = range(27), "/tag/BlockEntityTag", 1
+    else:
+        container = data
+        slots, prefix, limit = CRATES[name][1], "/tag", 64
+    if "LootTable" in container:
+        return []
+    removed = _inventory(container, "Items", slots, dimension, receiver_ids)
+    if removed:
+        _check_count(stack, limit)
+    return [prefix + path for path in removed]
+
+
 def _inventory(root, inventory, slots, dimension, receiver_ids):
     removed = []
     if inventory not in root:
         return removed
     stacks = compounds(root, inventory)
-    occupied = set()
+    if isinstance(slots, int):
+        # Placed crates include empty slots. Dropped crates omit the consumed keeper.
+        if len(stacks) > slots or any("Slot" in stack for stack in stacks):
+            return removed
+    else:
+        occupied = set()
+        for stack in stacks:
+            slot = value(stack, "Slot", 1)
+            if slot not in slots or slot in occupied:
+                raise ValueError("Unreviewed or duplicate RFTools inventory slot")
+            occupied.add(slot)
     for index, stack in enumerate(stacks):
-        slot = value(stack, "Slot", 1)
-        if slot not in slots or slot in occupied:
-            raise ValueError("Unreviewed or duplicate RFTools player item slot")
-        occupied.add(slot)
-        name = stack.get("id")
-        if (
-            name
-            not in (
-                Tag(8, PORTER),
-                Tag(8, ADVANCED_PORTER),
-                Tag(8, RECEIVER),
-                Tag(8, TRANSMITTER),
-                Tag(8, SIMPLE_DIALER),
-            )
-            or "tag" not in stack
-        ):
-            continue
-        data = value(stack, "tag", 10)
-        targets = _item_fields(data, name.value, dimension, receiver_ids)
-        if not targets:
-            continue
-        max_count = 64 if name.value in {RECEIVER, TRANSMITTER, SIMPLE_DIALER} else 1
-        count = stack.get("Count")
-        if (
-            not isinstance(count, Tag)
-            or count.kind not in {1, 3}
-            or not 1 <= count.value <= max_count
-            or value(stack, "Damage", 2) != 0
-        ):
-            raise ValueError("Unreviewed RFTools player item layout")
-        if "target" in targets and "tpTimer" in data:
-            value(data, "tpTimer", 3)
-            del data["tpTimer"]
-        for key in targets:
-            del data[key]
-            removed.append(f"/{inventory}/{index}/tag/{key}")
+        removed.extend(
+            f"/{inventory}/{index}{path}"
+            for path in _stack_links(stack, dimension, receiver_ids)
+        )
     return removed
 
 

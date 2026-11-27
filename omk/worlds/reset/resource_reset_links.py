@@ -280,12 +280,12 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                     anvil.check_editable(label, root, raw)
                     tile_kind, tiles = chunk["TileEntities"].value
                     rftools_eligible = {
-                        f"chunk/{index}/TileEntities/{slot}/{field}"
-                        for slot, edited in edits.items()
-                        for field in tiles[slot].value.keys() - edited.keys()
+                        f"chunk/{index}/TileEntities/{slot}{path}"
+                        for slot, (_, removed) in edits.items()
+                        for path in removed
                     }
                     updated_tiles = [
-                        Tag(10, edits[slot]) if slot in edits else row
+                        Tag(10, edits[slot][0]) if slot in edits else row
                         for slot, row in enumerate(tiles)
                     ]
                     updated_chunk = {
