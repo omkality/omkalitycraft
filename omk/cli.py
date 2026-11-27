@@ -109,7 +109,11 @@ def main(argv: list[str] | None = None) -> int:
             args.auth_url, args.data_dir, api_url=args.api_url, root=args.root
         )
     report = _report(args)
-    print(json.dumps(report, ensure_ascii=False, indent=2))
+    try:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    except UnicodeEncodeError:
+        # Older SSH/Windows consoles still need valid JSON for arbitrary chat text.
+        print(json.dumps(report, ensure_ascii=True, indent=2))
     return 0 if report["ok"] else 1
 
 

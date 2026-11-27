@@ -122,6 +122,7 @@ if args.target in {"all", "core"}:
             str(project / "tests/java/net/omkality/GameMetricsControlsTest.java"),
             str(project / "tests/java/net/omkality/WelcomeControlsTest.java"),
             str(project / "tests/java/net/omkality/ClientModPolicyControlsTest.java"),
+            str(project / "tests/java/net/omkality/ChatJournalControlsTest.java"),
         ],
         check=True,
     )
@@ -130,6 +131,7 @@ if args.target in {"all", "core"}:
         "GameMetricsControlsTest",
         "MaintenanceControlsTest",
         "ClientModPolicyControlsTest",
+        "ChatJournalControlsTest",
     ):
         subprocess.run(
             [

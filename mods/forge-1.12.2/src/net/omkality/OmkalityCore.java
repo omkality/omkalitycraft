@@ -17,11 +17,11 @@ import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 /** Server-side policy over the declared FML mod list; not proof of client integrity. */
-@Mod(modid = "omkalitycore", name = "Omkality Core", version = "0.3.16", dependencies = "after:ftbutilities;after:justenoughdimensions",
+@Mod(modid = "omkalitycore", name = "Omkality Core", version = "0.3.17", dependencies = "after:ftbutilities;after:justenoughdimensions",
      acceptedMinecraftVersions = "[1.12.2]", serverSideOnly = true,
      acceptableRemoteVersions = "*")
 public final class OmkalityCore {
-    public static final String VERSION = "0.3.16";
+    public static final String VERSION = "0.3.17";
     private volatile ClientModPolicy expected;
     private org.apache.logging.log4j.Logger logger;
     private Path configDirectory;
@@ -44,6 +44,7 @@ public final class OmkalityCore {
             MaintenanceBridge.install(logger);
             OwnerModeration.install(configDirectory,logger);
             GameMetrics.install(logger,profile.id);
+            ChatHistory.install(logger,profile);
             WelcomeChat.install(configDirectory,logger);
             CoreServices.requireCapabilities(profile.capabilities);
         } catch(Exception error) { throw new IllegalStateException("Omkality server profile could not initialize",error); }
@@ -54,10 +55,10 @@ public final class OmkalityCore {
     }
 
     @Mod.EventHandler
-    public void stopping(FMLServerStoppingEvent event) { WelcomeChat.stop(); GameMetrics.stop(); }
+    public void stopping(FMLServerStoppingEvent event) { WelcomeChat.stop(); GameMetrics.stop(); ChatHistory.stop(); }
 
     @Mod.EventHandler
-    public void stopped(FMLServerStoppedEvent event) { WelcomeChat.stop(); GameMetrics.stop(); }
+    public void stopped(FMLServerStoppedEvent event) { WelcomeChat.stop(); GameMetrics.stop(); ChatHistory.stop(); }
 
     @Mod.EventHandler
     public void load(FMLPreInitializationEvent event) {
