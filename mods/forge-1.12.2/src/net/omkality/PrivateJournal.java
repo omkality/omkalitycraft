@@ -29,12 +29,23 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /** Bounded private journal. Only the worker scans, rotates and syncs files. */
-final class ChatJournal implements AutoCloseable {
+final class PrivateJournal implements AutoCloseable {
     private static final long DAY = 86_400_000L;
     private static final int SEGMENT_BYTES = 1_048_576;
     private static final int SEGMENTS = 512;
     static final int RECORD_BYTES = 8192;
-    static final Pattern SEGMENT = Pattern.compile("chat-[0-9]{13}-[0-9a-f]{32}-[0-9]{9}\\.jsonl");
+    enum Stream {
+        CHAT("chat", "message"), ACTION("action", "action");
+
+        final String prefix, kind;
+        final Pattern segment;
+
+        Stream(String prefix, String kind) {
+            this.prefix = prefix;
+            this.kind = kind;
+            segment = Pattern.compile(prefix + "-[0-9]{13}-[0-9a-f]{32}-[0-9]{9}\\.jsonl");
+        }
+    }
     private static final Set<Path> OWNED = new HashSet<>();
     private static final Set<PosixFilePermission> DIR_MODE = PosixFilePermissions.fromString("rwx------");
     private static final Set<PosixFilePermission> FILE_MODE = PosixFilePermissions.fromString("rw-------");
@@ -42,6 +53,8 @@ final class ChatJournal implements AutoCloseable {
     private final AtomicLong observed = new AtomicLong(), lost = new AtomicLong();
     private final Path root;
     private final int budget, days;
+    private final Stream stream;
+    private final long reserve;
     private final String server, profile;
     private final String boot = UUID.randomUUID().toString().replace("-", "");
     private final Consumer<String> warning;
@@ -52,8 +65,10 @@ final class ChatJournal implements AutoCloseable {
     private Path current;
     private int part;
 
-    ChatJournal(Path path, String server, String profile, int days, int budget, Consumer<String> warning)
-            throws IOException {
+    PrivateJournal(Stream stream, Path path, String server, String profile, int days, int budget, long reserve,
+            Consumer<String> warning) throws IOException {
+        this.stream = stream;
+        this.reserve = reserve;
         this.root = path.toAbsolutePath().normalize();
         this.profile = profile;
         this.server = server;
@@ -64,7 +79,7 @@ final class ChatJournal implements AutoCloseable {
         owner = acquire(root);
         try {
             FileLock acquired = owner.tryLock();
-            if (acquired == null) throw new IOException("Chat history already has a writer");
+            if (acquired == null) throw new IOException("Private journal already has a writer");
             bindOwner();
             lock = acquired;
         } catch (IOException | RuntimeException error) {
@@ -72,13 +87,13 @@ final class ChatJournal implements AutoCloseable {
             release(root);
             throw error;
         }
-        worker = new Thread(this::writeLoop, "Omkality chat history writer");
+        worker = new Thread(this::writeLoop, "Omkality " + stream.prefix + " journal writer");
         worker.setDaemon(true);
         worker.start();
     }
 
     private static synchronized FileChannel acquire(Path root) throws IOException {
-        if (!OWNED.add(root)) throw new IOException("Chat history already has a writer");
+        if (!OWNED.add(root)) throw new IOException("Private journal already has a writer");
         Path owner = root.resolve(".writer.lock");
         try {
             if (!Files.exists(owner, LinkOption.NOFOLLOW_LINKS))
@@ -96,45 +111,56 @@ final class ChatJournal implements AutoCloseable {
     }
 
     private void bindOwner() throws IOException {
-        byte[] identity = (server + "\n" + profile + "\n").getBytes(StandardCharsets.UTF_8);
+        String identityKey = server + "\n" + profile + "\n";
+        // Keep the existing chat directory identity readable after an upgrade.
+        if (stream != Stream.CHAT) identityKey += stream.prefix + "\n";
+        byte[] identity = identityKey.getBytes(StandardCharsets.UTF_8);
         if (owner.size() == 0) {
             ByteBuffer bytes = ByteBuffer.wrap(identity);
             while (bytes.hasRemaining()) owner.write(bytes);
             owner.force(true);
             return;
         }
-        if (owner.size() != identity.length) throw new IOException("Chat history belongs to another server");
+        if (owner.size() != identity.length) throw new IOException("Private journal belongs to another server");
         ByteBuffer previous = ByteBuffer.allocate(identity.length);
         while (previous.hasRemaining() && owner.read(previous) >= 0) { }
-        if (!Arrays.equals(identity, previous.array())) throw new IOException("Chat history belongs to another server");
+        if (!Arrays.equals(identity, previous.array())) throw new IOException("Private journal belongs to another server");
     }
 
     private void requireDirectory() throws IOException {
         if (!Files.isDirectory(root, LinkOption.NOFOLLOW_LINKS) || !root.toRealPath().equals(root)
                 || !Files.getPosixFilePermissions(root).equals(DIR_MODE))
-            throw new IOException("Chat history needs a dedicated private directory");
+            throw new IOException("Private journal needs a dedicated private directory");
     }
 
     private static long requireFile(Path path) throws IOException {
         if (!Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)
                 || !Files.getPosixFilePermissions(path, LinkOption.NOFOLLOW_LINKS).equals(FILE_MODE)
                 || ((Number)Files.getAttribute(path, "unix:nlink", LinkOption.NOFOLLOW_LINKS)).intValue() != 1)
-            throw new IOException("Chat history file is not private");
+            throw new IOException("Private journal file is not private");
         return Files.size(path);
     }
 
-    synchronized void record(Map<String, Object> message) {
+    void record(Map<String, Object> message) {
+        record(message, System.currentTimeMillis());
+    }
+
+    synchronized void record(Map<String, Object> message, long at) {
         if (closing) return;
-        Map<String, Object> row = row("message", System.currentTimeMillis());
+        Map<String, Object> row = row(stream.kind, at);
         row.put("sequence", observed.incrementAndGet());
         row.putAll(message);
         byte[] bytes = encode(row);
         if (bytes.length > RECORD_BYTES || !queue.offer(bytes)) lost.incrementAndGet();
     }
 
-    synchronized void omitted() {
-        observed.incrementAndGet();
-        lost.incrementAndGet();
+    void omitted() {
+        omitted(1);
+    }
+
+    synchronized void omitted(long count) {
+        observed.addAndGet(count);
+        lost.addAndGet(count);
     }
 
     private Map<String, Object> row(String kind, long at) {
@@ -170,7 +196,7 @@ final class ChatJournal implements AutoCloseable {
                 // Wait between batches, including when the queue is busy.
                 TimeUnit.MILLISECONDS.sleep(250);
                 queue.drainTo(batch, 32);
-                int messages = batch.size();
+                int records = batch.size();
                 boolean end = closing && queue.isEmpty();
                 long now = System.currentTimeMillis(), dropped = lost.get();
                 long tick = System.nanoTime();
@@ -187,7 +213,7 @@ final class ChatJournal implements AutoCloseable {
                     }
                 } catch (IOException | RuntimeException failure) {
                     current = null;
-                    lost.addAndGet(messages);
+                    lost.addAndGet(records);
                     if (lastWarning == 0 || tick - lastWarning >= TimeUnit.MINUTES.toNanos(1)) {
                         lastWarning = tick;
                         warning.accept("write_failed");
@@ -214,8 +240,11 @@ final class ChatJournal implements AutoCloseable {
         boolean rotate = current == null || time(current) / DAY != now / DAY
             || currentBytes + bytes > SEGMENT_BYTES;
         prune(now, bytes, !rotate ? current : null);
+        if (reserve > 0 && Files.getFileStore(root).getUsableSpace() < reserve + bytes)
+            throw new IOException("Private journal has reached its free space reserve");
         if (rotate) {
-            current = root.resolve(String.format(Locale.ROOT, "chat-%013d-%s-%09d.jsonl", now, boot, ++part));
+            current = root.resolve(String.format(Locale.ROOT, "%s-%013d-%s-%09d.jsonl",
+                stream.prefix, now, boot, ++part));
             Files.createFile(current, PosixFilePermissions.asFileAttribute(FILE_MODE));
         }
         try (FileChannel output = FileChannel.open(current, StandardOpenOption.WRITE, StandardOpenOption.APPEND,
@@ -234,12 +263,12 @@ final class ChatJournal implements AutoCloseable {
     private void prune(long now, int bytes, Path keep) throws IOException {
         List<Path> segments = new ArrayList<>();
         long occupied = 0;
-        try (DirectoryStream<Path> entries = Files.newDirectoryStream(root, "chat-*.jsonl")) {
+        try (DirectoryStream<Path> entries = Files.newDirectoryStream(root, stream.prefix + "-*.jsonl")) {
             for (Path path : entries) {
-                if (!SEGMENT.matcher(path.getFileName().toString()).matches() || segments.size() >= SEGMENTS)
-                    throw new IOException("Unexpected chat segment layout");
+                if (!stream.segment.matcher(path.getFileName().toString()).matches() || segments.size() >= SEGMENTS)
+                    throw new IOException("Unexpected journal segment layout");
                 long size = requireFile(path);
-                if (size > SEGMENT_BYTES) throw new IOException("Oversized chat segment");
+                if (size > SEGMENT_BYTES) throw new IOException("Oversized journal segment");
                 if (!path.equals(keep) && time(path) <= now - days * DAY) {
                     Files.delete(path);
                 } else {
@@ -257,11 +286,11 @@ final class ChatJournal implements AutoCloseable {
             Files.delete(path);
             count--;
         }
-        if (occupied + bytes > budget || count > SEGMENTS) throw new IOException("Chat history quota is too small");
+        if (occupied + bytes > budget || count > SEGMENTS) throw new IOException("Private journal quota is too small");
     }
 
-    private static long time(Path path) {
-        return Long.parseLong(path.getFileName().toString().substring(5, 18));
+    private long time(Path path) {
+        return Long.parseLong(path.getFileName().toString().substring(stream.prefix.length() + 1, stream.prefix.length() + 14));
     }
 
     @Override

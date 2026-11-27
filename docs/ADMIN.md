@@ -134,6 +134,10 @@ volume runtime**: пересоздание контейнера сохраняе
 Настройка отдельного приватного архива, фильтры и экспорт описаны в
 [истории чата DJ2](CHAT_HISTORY.md).
 
+`action-history` показывает действия на участке по координатам, времени и UUID.
+Можно сохранить отдельный комплект с журналом, диагностикой и проверенной
+копией мира. [Журнал действий DJ2](ACTION_ATTRIBUTION.md).
+
 ```powershell
 uv run omk admin --config .omk-admin/operator.toml diagnostics dj2
 ```
