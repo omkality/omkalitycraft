@@ -501,7 +501,9 @@ class LauncherWindow(QMainWindow):
             QApplication.instance().quit()
             return
         if crash_directory is not None:
-            CrashDialog(crash_directory, self).open()
+            CrashDialog(
+                crash_directory, self, report_received=game.crash_report_received
+            ).open()
 
     def _show_signup_password(self, visible: bool) -> None:
         mode = QLineEdit.EchoMode.Normal if visible else QLineEdit.EchoMode.Password

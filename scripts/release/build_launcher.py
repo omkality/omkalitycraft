@@ -93,6 +93,7 @@ def build(
     version: str,
     *,
     minimum_pack_generations: dict[str, int] | None = None,
+    send_client_reports: bool = False,
 ) -> Path:
     Version(version)
     floors = generation_floors(minimum_pack_generations or {})
@@ -118,6 +119,7 @@ def build(
             "accounts/drasl.py",
             "observability/__init__.py",
             "observability/diagnostics.py",
+            "observability/incident_delivery.py",
             "observability/incidents.py",
             "shared/__init__.py",
             "shared/content_policy.py",
@@ -167,6 +169,7 @@ def build(
                 "auth_url": auth_url,
                 "api_url": api_url,
                 "minimum_pack_generations": floors,
+                "send_client_reports": send_client_reports,
             }
         ),
         encoding="utf-8",
@@ -278,6 +281,11 @@ def main() -> None:
     parser.add_argument("--root-metadata", type=Path, required=True)
     parser.add_argument("--auth-url", required=True)
     parser.add_argument("--api-url", required=True)
+    parser.add_argument(
+        "--send-client-reports",
+        action="store_true",
+        help="Send a short crash report to the trusted API after a crash",
+    )
     parser.add_argument("--version", default=VERSION)
     parser.add_argument(
         "--minimum-pack-generations",
@@ -294,6 +302,7 @@ def main() -> None:
             args.api_url,
             args.version,
             minimum_pack_generations=args.minimum_pack_generations,
+            send_client_reports=args.send_client_reports,
         )
     )
 

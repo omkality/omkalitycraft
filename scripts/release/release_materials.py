@@ -26,6 +26,7 @@ FIRST_PARTY = {
     "omk.shared.profiles",
     "omk.shared.fs",
     "omk.observability.diagnostics",
+    "omk.observability.incident_delivery",
     "omk.observability.incidents",
     "omk.shared.content_policy",
     "omk.shared.nbt",
