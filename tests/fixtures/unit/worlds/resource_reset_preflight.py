@@ -9,6 +9,7 @@ import zlib
 import pytest
 
 from launcher.nbt import Tag, write_nbt
+from omk.worlds import forge112_regions as anvil
 from omk.worlds.reset import resource_reset_preflight as preflight
 
 
@@ -36,6 +37,20 @@ def region_write(world, chunk, *, codec=2, coordinates=(0, 0), data_version=None
     header[index * 4 : index * 4 + 4] = bytes([0, 0, 2, sectors])
     path.write_bytes(header + body + b"\0" * (4096 * sectors - len(body)))
     return path
+
+
+def region_with_tile(world, level, chunk, tile, *, matching_block=True):
+    registry = level["FML"].value["Registries"].value["minecraft:blocks"].value
+    registry["ids"].value[1].append(Tag(10, {"K": tile["id"], "V": Tag(3, 44)}))
+    encoded(world / "level.dat", level)
+    section = anvil.sections(chunk)[4]
+    blocks = bytearray(section["Blocks"].value)
+    blocks[6 * 256 + 14 * 16 + 14] = 44 if matching_block else 43
+    section["Blocks"] = Tag(7, bytes(blocks))
+    chunk["TileEntities"] = compound_list(
+        [{**tile, "x": Tag(3, 14), "y": Tag(3, 70), "z": Tag(3, 14)}]
+    )
+    return region_write(world, chunk, data_version=anvil.DATA_VERSION)
 
 
 @pytest.fixture

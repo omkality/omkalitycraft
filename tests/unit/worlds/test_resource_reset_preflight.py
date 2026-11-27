@@ -25,6 +25,7 @@ from tests.fixtures.unit.worlds.resource_reset_inventory import (
 from tests.fixtures.unit.worlds.resource_reset_preflight import (
     compound_list,
     encoded,
+    region_with_tile,
     region_write,
     saved,
 )
@@ -98,6 +99,8 @@ def test_generated_rftools_spawn_receiver_only_is_reviewed(
         "nested",
         "other_version",
         "transmitter",
+        "coordinate",
+        "malformed_coordinate",
         "wrong_block",
         "mixed_destination",
     ],
@@ -168,35 +171,31 @@ def test_rftools_preflight_reviews_player_targets_favorites_and_extra_receivers(
     reset = dimension_reset.layout(
         6200, rftools_identity=audit.rftools_identity(rows[6200])
     )
-    if variant in {"transmitter", "wrong_block", "mixed_destination"}:
-        registry = level["FML"].value["Registries"].value["minecraft:blocks"].value
-        registry["ids"].value[1].append(
-            Tag(10, {"K": Tag(8, "rftools:matter_transmitter"), "V": Tag(3, 44)})
-        )
-        encoded(world / "level.dat", level)
-        section = anvil.sections(chunk)[4]
-        blocks = bytearray(section["Blocks"].value)
-        blocks[6 * 256 + 14 * 16 + 14] = 43 if variant == "wrong_block" else 44
-        section["Blocks"] = Tag(7, bytes(blocks))
-        chunk["TileEntities"] = compound_list(
-            [
-                {
-                    "id": Tag(8, "rftools:matter_transmitter"),
-                    "x": Tag(3, 14),
-                    "y": Tag(3, 70),
-                    "z": Tag(3, 14),
-                    "destId": Tag(3, 9),
-                    "tpPlayer": Tag(8, "SyntheticPlayer"),
-                    "tpTimer": Tag(3, 32),
-                    "Energy": Tag(4, 20000),
-                    "private": Tag(1, 1),
-                }
-            ]
-        )
+    edited_route = variant in {"transmitter", "coordinate"}
+    if variant in {
+        "transmitter",
+        "coordinate",
+        "malformed_coordinate",
+        "wrong_block",
+        "mixed_destination",
+    }:
+        tile = {
+            "id": Tag(8, rftools.TRANSMITTER),
+            "destId": Tag(3, 9),
+            "tpPlayer": Tag(8, "SyntheticPlayer"),
+            "tpTimer": Tag(3, 32),
+            "Energy": Tag(4, 20000),
+            "private": Tag(1, 1),
+        }
         if variant == "mixed_destination":
-            tile = chunk["TileEntities"].value[1][0].value
             tile.update(dim=Tag(3, 0), dest=Tag(11, [3, 70, 5]))
-        region_file = region_write(world, chunk, data_version=anvil.DATA_VERSION)
+        if variant in {"coordinate", "malformed_coordinate"}:
+            del tile["destId"]
+            point = [24, 100, 8] if variant == "coordinate" else [24, 100]
+            tile.update(dim=Tag(3, 6200), dest=Tag(11, point))
+        region_file = region_with_tile(
+            world, level, chunk, tile, matching_block=variant != "wrong_block"
+        )
     elif variant == "dialer":
         chunk["TileEntities"] = compound_list(
             [
@@ -232,21 +231,23 @@ def test_rftools_preflight_reviews_player_targets_favorites_and_extra_receivers(
     before = inventory(world, world_name="world")
     edits = {}
     report = preflight.preflight(server, "world", 6200, reset=reset, region_edits=edits)
-    assert report["can_stage_data"] is (variant in (None, "transmitter"))
+    assert report["can_stage_data"] is (variant is None or edited_route)
     expected = {
         None: 0,
         "dialer": 2,
         "nested": 1,
         "other_version": 4,
         "transmitter": 0,
+        "coordinate": 0,
+        "malformed_coordinate": 1,
         "wrong_block": 1,
         "mixed_destination": 1,
     }
     assert report["links"]["unhandled_finding_count"] == expected[variant]
     assert report["links"]["handled_finding_count"] == (
-        1 if variant == "other_version" else 5 + (variant == "transmitter")
+        1 if variant == "other_version" else 5 + edited_route
     )
-    if variant == "transmitter":
+    if edited_route:
         edit = edits[region_file.relative_to(server).as_posix()]
         copy_path = tmp_path / region_file.name
         shutil.copyfile(region_file, copy_path)
@@ -258,7 +259,7 @@ def test_rftools_preflight_reviews_player_targets_favorites_and_extra_receivers(
             {
                 key: Tag(3, 0) if key == "tpTimer" else tag
                 for key, tag in anvil.compounds(chunk, "TileEntities")[0].items()
-                if key not in {"destId", "tpPlayer"}
+                if key not in {"destId", "dest", "dim", "tpPlayer"}
             }
         ]
     else:
@@ -522,6 +523,108 @@ def test_rftools_transmitter_unbinds_only_reviewed_direct_player_items(
         {**selected, "Count": Tag(1, 2), "tag": Tag(10, settings)},
     ]
     assert player.read_bytes() == before
+
+
+def test_rftools_nested_storage_is_prepared_in_player_and_region_data(
+    saved, rftools_registry, tmp_path
+):
+    server, world, level, chunk = saved
+    _, _, save = rftools_registry
+    registry = save([(6200, "Лаборатория")])
+    destinations = world / audit.RFTOOLS_DESTINATIONS
+    rftools_destinations(destinations, (9, 6200, "Площадка", 24))
+    _label, _root, rows = audit._rftools_registry(server, "world")
+    reset = dimension_reset.layout(
+        6200, rftools_identity=audit.rftools_identity(rows[6200])
+    )
+    item = {
+        "Slot": Tag(1, 5),
+        "Count": Tag(1, 1),
+        "Damage": Tag(2, 0),
+        "id": Tag(8, rftools.TRANSMITTER),
+        "tag": Tag(
+            10,
+            {
+                "dest": Tag(11, [24, 100, 8]),
+                "dim": Tag(3, 6200),
+                "Energy": Tag(4, 12345),
+            },
+        ),
+    }
+    box = {
+        **item,
+        "Slot": Tag(1, 3),
+        "id": Tag(8, "minecraft:purple_shulker_box"),
+        "tag": Tag(10, {"BlockEntityTag": Tag(10, {"Items": compound_list([item])})}),
+    }
+    crate = {
+        **item,
+        "Slot": Tag(1, 7),
+        "id": Tag(8, "actuallyadditions:block_giant_chest"),
+        "tag": Tag(
+            10,
+            {
+                "Items": compound_list(
+                    [
+                        {k: v for k, v in box.items() if k != "Slot"},
+                        *({} for _ in range(115)),
+                    ]
+                )
+            },
+        ),
+    }
+    player = world / "playerdata/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa.dat"
+    encoded(player, {"EnderItems": compound_list([crate])})
+    region = region_with_tile(
+        world,
+        level,
+        chunk,
+        {"id": Tag(8, "minecraft:chest"), "Items": compound_list([box])},
+    )
+
+    before = inventory(world, world_name="world")
+    edits = {}
+    report = links.inspect_links(
+        server,
+        "world",
+        6200,
+        [
+            path.relative_to(server).as_posix()
+            for path in (player, registry, destinations, region)
+        ],
+        reset=reset,
+        rftools_transport=True,
+        region_edits=edits,
+    )
+    assert report["unhandled_finding_count"] == 0
+    assert (
+        report["rftools_transport_references"] == 3
+    )  # Registry plus two item targets.
+    changed, removed = rftools.unbind_player_targets(
+        audit.ftb.nbt(player.read_bytes()), 6200, {9}
+    )
+    assert removed == [
+        "/EnderItems/0/tag/Items/0/tag/BlockEntityTag/Items/0/tag/dest",
+        "/EnderItems/0/tag/Items/0/tag/BlockEntityTag/Items/0/tag/dim",
+    ]
+    edited_crate = anvil.compounds(changed, "EnderItems")[0]
+    edited_box, *empties = anvil.compounds(edited_crate["tag"].value, "Items")
+    assert len(empties) == 115 and not any(empties)
+    expected = {**item, "tag": Tag(10, {"Energy": Tag(4, 12345)})}
+    assert anvil.compounds(
+        edited_box["tag"].value["BlockEntityTag"].value, "Items"
+    ) == [expected]
+    copy_path = tmp_path / region.name
+    shutil.copyfile(region, copy_path)
+    edits[region.relative_to(server).as_posix()].apply(copy_path)
+    tile = anvil.compounds(anvil.Region(copy_path, tmp_path).chunk(0), "TileEntities")[
+        0
+    ]
+    placed = anvil.compounds(tile, "Items")[0]
+    assert anvil.compounds(placed["tag"].value["BlockEntityTag"].value, "Items") == [
+        expected
+    ]
+    assert inventory(world, world_name="world") == before
 
 
 def test_saved_registry_geometry_and_read_only_proof(saved):
