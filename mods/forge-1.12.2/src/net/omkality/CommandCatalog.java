@@ -149,7 +149,7 @@ final class CommandCatalog {
         return rows;
     }
 
-    private static String json(Object value) {
+    static String json(Object value) {
         if (value == null) return "null";
         if (value instanceof Number || value instanceof Boolean) return value.toString();
         if (value instanceof Map) {

@@ -2,14 +2,14 @@
   "schema": 1,
   "artifacts": {
     "core": {
-      "version": "0.3.16",
-      "file": "OmkalityCore-0.3.16.jar",
-      "sha256": "7e38a89876a1e8057f2ddbe98e3eb88fd2bfab373cfd8bdb842dae52cd1061c5"
+      "version": "0.3.17",
+      "file": "OmkalityCore-0.3.17.jar",
+      "sha256": "3199a4ba282e1ad344552642900f148f2d49f6cc6aac653672a53ec2a7c34b3b"
     },
     "dj2fix": {
-      "version": "0.1.12",
-      "file": "OmkalityDJ2Fix-0.1.12.jar",
-      "sha256": "44b1dc503fbdc3f357d1acc206aa1eaa928243a97b9a4eef46b50a22bce48e37"
+      "version": "0.1.13",
+      "file": "OmkalityDJ2Fix-0.1.13.jar",
+      "sha256": "805da060e3c2445aed9b51ac810c2deafa1dfe88751223599d7b1cbff9b9bff4"
     },
     "client": {
       "version": "0.1.10",
