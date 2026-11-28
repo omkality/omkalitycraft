@@ -47,6 +47,10 @@ def test_full_runtime_exact_access_and_data_are_preserved_without_start(prepared
         target / "world", world_name="world", path_policy="linux-server"
     )
     assert not (target / "logs").exists()
+    for component in (source / "structures/active").iterdir():
+        assert (target / "structures/active" / component.name).read_bytes() == (
+            component.read_bytes()
+        )
     for name in runtime.files(source, "world"):
         assert (target / name).read_bytes() == (source / name).read_bytes()
     assert json.loads((target / "ops.json").read_bytes()) == []
@@ -82,6 +86,7 @@ def test_full_runtime_exact_access_and_data_are_preserved_without_start(prepared
     "name",
     [
         "mods/ftblib.jar",
+        "structures/active/ae2_atum_meteor_chest_presses.rcig",
         "server.properties",
         "whitelist.json",
         "banned-players.json",
