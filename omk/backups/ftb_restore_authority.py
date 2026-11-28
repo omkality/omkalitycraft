@@ -26,19 +26,20 @@ PINS = {
 }
 
 
-def unpack(raw):
-    if len(raw) > MAX_BYTES:
+def unpack(raw, *, max_bytes=MAX_BYTES):
+    if len(raw) > max_bytes:
         raise ValueError("FTB record exceeds compressed limit")
     if raw.startswith(b"\x1f\x8b"):
         inflater = zlib.decompressobj(31)
-        raw = inflater.decompress(raw, MAX_BYTES + 1)
-        if len(raw) > MAX_BYTES or not inflater.eof or inflater.unused_data:
+        raw = inflater.decompress(raw, max_bytes + 1)
+        if len(raw) > max_bytes or not inflater.eof or inflater.unused_data:
             raise ValueError("Invalid or oversized compressed FTB record")
     return raw
 
 
-def nbt(raw):
-    return read_nbt(unpack(raw))[1]
+def nbt(raw, *, max_bytes=MAX_BYTES):
+    """Decode plain or gzip NBT with a shared compressed and expanded bound."""
+    return read_nbt(unpack(raw, max_bytes=max_bytes), max_bytes=max_bytes)[1]
 
 
 def authority_file(name):

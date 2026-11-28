@@ -35,14 +35,15 @@ def utf_encode(value: str) -> bytes:
 class Reader:
     """Decode bounded binary Java NBT without unbounded allocation."""
 
-    def __init__(self, data: bytes):
-        if len(data) > MAX_BYTES:
+    def __init__(self, data: bytes, *, max_bytes: int = MAX_BYTES):
+        if len(data) > max_bytes:
             raise ValueError("NBT file too large")
         self.stream = io.BytesIO(data)
+        self.max_bytes = max_bytes
 
     def read(self, size: int) -> bytes:
         """Read the requested number of bytes or fail on truncated input."""
-        if not 0 <= size <= MAX_BYTES:
+        if not 0 <= size <= self.max_bytes:
             raise ValueError("NBT length out of bounds")
         data = self.stream.read(size)
         if len(data) != size:
@@ -100,8 +101,9 @@ class Reader:
         raise ValueError("Unknown NBT tag")
 
 
-def read_nbt(data: bytes) -> tuple[str, dict[str, Tag]]:
-    reader = Reader(data)
+def read_nbt(data: bytes, *, max_bytes: int = MAX_BYTES) -> tuple[str, dict[str, Tag]]:
+    """Decode a complete compound using the caller's bounded input budget."""
+    reader = Reader(data, max_bytes=max_bytes)
     if reader.number(">B") != 10:
         raise ValueError("Expected compound NBT root")
     name, root = reader.text(), reader.payload(10)
