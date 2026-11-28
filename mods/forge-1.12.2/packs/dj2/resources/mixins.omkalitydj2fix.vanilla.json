@@ -7,7 +7,7 @@
     "VanillaPistonMixin", "VanillaLiquidMixin", "VanillaMixingMixin", "VanillaBedMixin",
     "VanillaPlayerDisconnectMixin", "VanillaNetherPortalMixin",
     "VanillaPublicChatMixin", "VanillaChatCommandsMixin",
-    "VanillaActionEditsMixin", "VanillaActivationMixin"
+    "VanillaActionEditsMixin", "VanillaActivationMixin", "WorkbenchHotbarMixin"
   ],
   "injectors": {"defaultRequire": 1}
 }
