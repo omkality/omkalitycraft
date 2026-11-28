@@ -9,7 +9,8 @@ import tempfile
 import unittest
 import zipfile
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import Mock, call, patch
+from urllib.error import HTTPError
 
 from archive_format import entry, ordered
 from fetch_inputs import ensure_input
@@ -91,6 +92,76 @@ class BuildSafetyTests(unittest.TestCase):
         )
         self.assertEqual(result.read_bytes(), self.data)
         self.assertEqual([p.name for p in self.root.iterdir()], ["input.jar"])
+
+    def _download_error(self, status, retry_after):
+        headers = {} if retry_after is None else {"Retry-After": retry_after}
+        url = self.pins["compiler"]["download"]
+        return HTTPError(url, status, "test response", headers, io.BytesIO())
+
+    def test_download_recovers_after_rate_limit(self):
+        cases = (
+            (None, 2),
+            ("soon", 2),
+            ("6", 6),
+            ("Fri, 01 Jan 2021 00:00:06 GMT", 6),
+        )
+        for header, delay in cases:
+            with (
+                self.subTest(header=header),
+                tempfile.TemporaryDirectory(dir=self.root) as cache,
+                patch("fetch_inputs.time.time", return_value=1609459200),
+                patch("fetch_inputs.time.sleep") as sleep,
+                patch("sys.stderr", new_callable=io.StringIO) as log,
+            ):
+                limited = self._download_error(429, header)
+                opener = Mock(side_effect=[limited, Response(self.data)])
+                result = ensure_input("compiler", cache, self.pins, opener=opener)
+                self.assertEqual(result.read_bytes(), self.data)
+                self.assertEqual(list(Path(cache).iterdir()), [result])
+                self.assertTrue(limited.closed)
+                sleep.assert_called_once_with(delay)
+                self.assertIn("input.jar: HTTP 429", log.getvalue())
+                self.assertEqual(opener.call_count, 2)
+
+    def test_rate_limit_retries_are_bounded(self):
+        cases = (
+            (429, None, 4, [2, 5, 10]),
+            (429, "25", 2, [25]),
+            (429, "31", 1, []),
+            (404, None, 1, []),
+        )
+        for status, header, attempts, delays in cases:
+            with (
+                self.subTest(status=status, header=header),
+                patch("fetch_inputs.time.sleep") as sleep,
+                patch("sys.stderr", new_callable=io.StringIO),
+            ):
+                opener = Mock(
+                    side_effect=[self._download_error(status, header) for _ in range(5)]
+                )
+                with self.assertRaises(HTTPError) as failure:
+                    ensure_input("compiler", self.root, self.pins, opener=opener)
+                self.assertEqual(failure.exception.code, status)
+                self.assertIn("Dependency: input.jar", failure.exception.__notes__)
+                self.assertEqual(opener.call_count, attempts)
+                self.assertEqual(
+                    sleep.call_args_list, [call(delay) for delay in delays]
+                )
+                self.assertEqual(list(self.root.iterdir()), [])
+
+    def test_download_checks_sha256_after_retry(self):
+        opener = Mock(
+            side_effect=[self._download_error(429, None), Response(b"corrupt")]
+        )
+        with (
+            patch("fetch_inputs.time.sleep") as sleep,
+            patch("sys.stderr", new_callable=io.StringIO),
+            self.assertRaisesRegex(ValueError, "Downloaded dependency hash mismatch"),
+        ):
+            ensure_input("compiler", self.root, self.pins, opener=opener)
+        sleep.assert_called_once_with(2)
+        self.assertEqual(opener.call_count, 2)
+        self.assertEqual(list(self.root.iterdir()), [])
 
     @unittest.skipUnless(os.name == "posix", "POSIX bind-mount permission contract")
     def test_public_compile_input_is_readable_across_container_users(self):
