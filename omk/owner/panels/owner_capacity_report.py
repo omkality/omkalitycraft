@@ -234,6 +234,7 @@ def run(path: Path, server: str, window: str) -> dict:
         "metrics": {},
         "by_player_count": [],
         "during_hourly_backup": None,
+        "during_cold_backup": None,
         "during_world_reset": None,
         "during_server_start": None,
     }
@@ -280,6 +281,9 @@ def run(path: Path, server: str, window: str) -> dict:
         "by_player_count": by_player_count,
         "during_hourly_backup": _during_operation(
             config, settings, server, end - duration, end, "hourly_backup"
+        ),
+        "during_cold_backup": _during_operation(
+            config, settings, server, end - duration, end, "cold_backup"
         ),
         "during_world_reset": _during_operation(
             config, settings, server, end - duration, end, "world_reset"
