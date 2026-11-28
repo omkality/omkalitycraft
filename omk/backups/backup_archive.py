@@ -12,6 +12,10 @@ MAX_EXPANDED_BYTES = 512 * 1024**2
 RESERVED = re.compile(r"^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.|$)", re.I)
 SHA256 = re.compile(r"[a-f0-9]{64}")
 LINUX_SAVED_DATA = {
+    ("DIM17", "data", "atum:girafi_tomb.dat"),
+    ("DIM17", "data", "atum:lighthouse.dat"),
+    ("DIM17", "data", "atum:mineshaft.dat"),
+    ("DIM17", "data", "atum:pyramid.dat"),
     ("DIM17", "data", "atum:ruin.dat"),
     ("DIM17", "data", "atum:tomb.dat"),
     ("Dim-Aether", "data", "aether_legacy:cold_aercloud.dat"),
