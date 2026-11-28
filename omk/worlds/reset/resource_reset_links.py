@@ -10,7 +10,7 @@ import re
 from pathlib import Path
 
 from omk.backups.ftb_restore_authority import nbt
-from omk.shared.nbt import Tag
+from omk.shared.nbt import MAX_BYTES, Tag
 from omk.worlds import (
     enderutilities_reset as ender,
     forge112_regions as anvil,
@@ -21,6 +21,37 @@ from omk.worlds.reset import (
 )
 from omk.worlds.reset.dimension_reset import omitted
 from omk.worlds.reset.resource_reset_landing import world_path
+
+GENERATION_CACHE_BYTES = {
+    "data/Mineshaft.dat": 16 * 1024**2,
+    "data/reccomplex-structuredata.dat": 16 * 1024**2,
+}
+
+
+def _vanilla_filled_map(relative, root):
+    if not re.fullmatch(r"data/map_[0-9]+\.dat", relative) or set(root) != {"data"}:
+        return False
+    data = root["data"]
+    if data.kind != 10:
+        return False
+    fields = data.value
+    expected = {
+        "xCenter": 3,
+        "zCenter": 3,
+        "trackingPosition": 1,
+        "unlimitedTracking": 1,
+        "scale": 1,
+        "width": 2,
+        "height": 2,
+        "colors": 7,
+    }
+    return (
+        fields.keys() == expected.keys() | {"dimension"}
+        and all(fields[key].kind == kind for key, kind in expected.items())
+        and fields["dimension"].kind in {1, 3}
+        and fields["width"].value == fields["height"].value == 128
+        and len(fields["colors"].value) == 128 * 128
+    )
 
 
 def _world_primer_counts(root):
@@ -306,9 +337,17 @@ def inspect_links(  # noqa: PLR0912, PLR0915 - bounded read-only record traversa
                 region_edits[name] = anvil.RegionEdit(tuple(sorted(replacements)))
         else:
             try:
-                root = nbt(audit._read(server / name, world))
+                maximum = GENERATION_CACHE_BYTES.get(relative, MAX_BYTES)
+                root = nbt(
+                    audit._read(server / name, world, maximum=maximum),
+                    max_bytes=maximum,
+                )
             except ValueError, UnicodeError, KeyError:
                 opaque.append(relative)
+                continue
+            # The dimension selects the displayed terrain in a vanilla map.
+            # A map with mod-specific tags still goes through reference scanning.
+            if _vanilla_filled_map(relative, root):
                 continue
             skip = (
                 {"Dimension", "SpawnDimension", "Spawns"} if kind == "player" else set()
