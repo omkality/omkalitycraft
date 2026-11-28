@@ -1,22 +1,41 @@
 package net.omkality.client.crates;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.NetworkManager;
-import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
-import net.minecraftforge.fml.common.versioning.VersionParser;
-import net.minecraftforge.fml.common.versioning.VersionRange;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 
 /** Use the server's full-crate sort when the active connection advertises the feature. */
+@Mod.EventBusSubscriber(modid = "omkalityclient", value = Side.CLIENT)
 public final class ServerCrateSort {
     private static final String AA = "de.ellpeck.actuallyadditions.mod.";
-    private static final VersionRange SERVER = VersionParser.parseRange("[0.1.15,0.2.0)");
+    private static final String CHANNEL = "omk:crate_sort";
+    private static volatile WeakReference<NetworkManager> advertised = new WeakReference<>(null);
     private static boolean bindingsUnavailable;
     private static long nextRequest = System.nanoTime();
+
+    /** Bind Forge's server announcement to this connection only. */
+    @SubscribeEvent
+    public static void register(FMLNetworkEvent.CustomPacketRegistrationEvent<?> event) {
+        if (event.getSide() != Side.CLIENT || !event.getRegistrations().contains(CHANNEL)) {
+            return;
+        }
+        NetworkManager manager = event.getManager();
+        if ("REGISTER".equals(event.getOperation())) {
+            advertised = new WeakReference<>(manager);
+        } else {
+            WeakReference<NetworkManager> current = advertised;
+            if (current.get() == manager) {
+                current.clear();
+            }
+        }
+    }
 
     /** Return true when the standard client sort has been replaced by the crate request. */
     public static boolean request() {
@@ -24,22 +43,16 @@ public final class ServerCrateSort {
         Object screen = game.field_71462_r;
         NetHandlerPlayClient connection = game.func_147114_u();
         if (bindingsUnavailable || screen == null || connection == null
+            || advertised.get() != connection.func_147298_b()
             || !(AA + "inventory.gui.GuiGiantChest").equals(screen.getClass().getName())) {
             return false;
         }
         try {
-            Bindings fields = Bindings.INSTANCE;
-            Object tile = fields.tile.get(screen);
+            Object tile = Bindings.TILE.get(screen);
             String type = tile.getClass().getName();
             if (!type.equals(AA + "tile.TileEntityGiantChest")
                 && !type.equals(AA + "tile.TileEntityGiantChestMedium")
                 && !type.equals(AA + "tile.TileEntityGiantChestLarge")) {
-                return false;
-            }
-            Object fml = fields.dispatcher.invoke(null, connection.func_147298_b());
-            Map<?, ?> mods = fml == null ? null : (Map<?, ?>) fields.mods.invoke(fml);
-            Object version = mods == null ? null : mods.get("omkalitydj2fix");
-            if (!(version instanceof String) || !SERVER.containsVersion(new DefaultArtifactVersion((String) version))) {
                 return false;
             }
             long now = System.nanoTime();
@@ -58,18 +71,12 @@ public final class ServerCrateSort {
     }
 
     private static final class Bindings {
-        static final Bindings INSTANCE = new Bindings();
-        final Field tile;
-        final Method dispatcher;
-        final Method mods;
-
-        Bindings() {
+        static final Field TILE = tileField();
+        private static Field tileField() {
             try {
-                tile = Class.forName(AA + "inventory.gui.GuiGiantChest").getDeclaredField("chest");
+                Field tile = Class.forName(AA + "inventory.gui.GuiGiantChest").getDeclaredField("chest");
                 tile.setAccessible(true);
-                Class<?> handshake = Class.forName("net.minecraftforge.fml.common.network.handshake.NetworkDispatcher");
-                dispatcher = handshake.getMethod("get", NetworkManager.class);
-                mods = handshake.getMethod("getModList");
+                return tile;
             } catch (ReflectiveOperationException error) {
                 throw new ExceptionInInitializerError(error);
             }
