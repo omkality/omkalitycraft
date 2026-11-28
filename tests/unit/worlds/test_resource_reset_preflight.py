@@ -1,8 +1,10 @@
 """Binary-save fault controls; these tests do not claim a native game boot."""
 
+import gzip
 import hashlib
 import json
 import shutil
+import struct
 import zlib
 
 import pytest
@@ -818,6 +820,63 @@ def test_opaque_records_and_version_drift_refuse_auto_gate(saved):
     (server / "mods/reviewed.jar").write_bytes(b"unreviewed version")
     with pytest.raises(ValueError, match="artifact"):
         preflight.preflight(server, "world", -18000)
+
+
+def test_filled_map_is_not_a_teleport_and_unknown_map_tags_are_scanned(saved):
+    server, world, _, _ = saved
+    path = world / "data/map_7.dat"
+    fields = {
+        "dimension": Tag(3, 17),
+        "xCenter": Tag(3, 0),
+        "zCenter": Tag(3, 0),
+        "trackingPosition": Tag(1, 1),
+        "unlimitedTracking": Tag(1, 0),
+        "scale": Tag(1, 2),
+        "width": Tag(2, 128),
+        "height": Tag(2, 128),
+        "colors": Tag(7, bytes(128 * 128)),
+    }
+    encoded(path, {"data": Tag(10, fields)})
+    report = links.inspect_links(
+        server, "world", 17, ["world/data/map_7.dat"], reset=dimension_reset.layout(17)
+    )
+    assert report["unhandled_finding_count"] == 0
+    fields["modData"] = Tag(10, {"targetDimension": Tag(3, 17)})
+    encoded(path, {"data": Tag(10, fields)})
+    report = links.inspect_links(
+        server, "world", 17, ["world/data/map_7.dat"], reset=dimension_reset.layout(17)
+    )
+    assert any(
+        row["nbt_path"] == "/data/modData/targetDimension" for row in report["examples"]
+    )
+
+
+def test_large_generation_caches_are_scanned_with_a_scoped_budget(saved):
+    server, *_ = saved
+    row = struct.pack(">H", 60000) + b"x" * 60000
+    raw = (
+        b"\x0a\x00\x00\x09\x00\x04rows"
+        + struct.pack(">Bi", 8, 40)
+        + row * 40
+        + b"\x03\x00\x0ftargetDimension"
+        + struct.pack(">i", 17)
+        + b"\x00"
+    )
+    names = (
+        "world/data/Mineshaft.dat",
+        "world/data/reccomplex-structuredata.dat",
+        "world/data/unclassified.dat",
+    )
+    for name in names:
+        (server / name).write_bytes(gzip.compress(raw))
+    report = links.inspect_links(
+        server, "world", 17, names, reset=dimension_reset.layout(17)
+    )
+    assert report["opaque_examples"] == ["data/unclassified.dat"]
+    assert {row["file"] for row in report["examples"]} == {
+        "data/Mineshaft.dat",
+        "data/reccomplex-structuredata.dat",
+    }
 
 
 def test_removed_receiver_does_not_hide_still_bound_porter(saved):
