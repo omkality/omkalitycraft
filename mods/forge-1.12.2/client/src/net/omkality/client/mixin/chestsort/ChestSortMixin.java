@@ -3,6 +3,8 @@ package net.omkality.client.mixin.chestsort;
 import invtweaks.api.SortingMethod;
 import invtweaks.container.ContainerSectionManager;
 import net.minecraft.item.ItemStack;
+import net.omkality.client.crates.ServerCrateSort;
+import net.omkality.client.crates.StorageSortInput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,6 +25,13 @@ public abstract class ChestSortMixin {
     @Shadow
     private static boolean canMergeStacks(ItemStack from, ItemStack to) {
         throw new AssertionError();
+    }
+
+    @Inject(method = "sort()V", at = @At("HEAD"), cancellable = true, remap = false)
+    private void omkality$startSort(CallbackInfo callback) {
+        if (!StorageSortInput.cursorIsEmpty() || algorithm == SortingMethod.DEFAULT && ServerCrateSort.request()) {
+            callback.cancel();
+        }
     }
 
     @Inject(method = "defaultSorting()V", at = @At("HEAD"), remap = false)
