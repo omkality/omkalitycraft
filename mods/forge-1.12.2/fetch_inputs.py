@@ -4,14 +4,59 @@ import argparse
 import hashlib
 import json
 import os
+import sys
 import tempfile
+import time
+from datetime import UTC
+from email.utils import parsedate_to_datetime
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parent
+RETRY_DELAYS = (2, 5, 10)
+RETRY_WAIT_BUDGET = 30
+
+
+def _retry_after(value):
+    if value is None:
+        return 0
+    value = value.strip()
+    if value.isascii() and value.isdecimal():
+        return float(value)
+    try:
+        retry_at = parsedate_to_datetime(value)
+        if retry_at.tzinfo is None:
+            retry_at = retry_at.replace(tzinfo=UTC)
+        return max(0, retry_at.timestamp() - time.time())
+    except (ValueError, OverflowError, OSError) as _:
+        return 0
+
+
+def _open_input(request, filename, opener):
+    remaining_wait = RETRY_WAIT_BUDGET
+    for backoff in (*RETRY_DELAYS, None):
+        try:
+            return opener(request, timeout=30)
+        except HTTPError as error:
+            error.add_note(f"Dependency: {filename}")
+            if error.code != 429 or backoff is None:
+                raise
+            retry_after = error.headers.get("Retry-After") if error.headers else None
+            delay = max(backoff, _retry_after(retry_after))
+            if delay > remaining_wait:
+                error.add_note("Dependency retry wait budget exceeded")
+                raise
+            error.close()
+        remaining_wait -= delay
+        print(
+            f"{filename}: HTTP 429, retrying in {delay:g}s", file=sys.stderr, flush=True
+        )
+        time.sleep(delay)
 
 
 def ensure_input(name, cache, pins, *, opener=urlopen, max_bytes=32 * 1024**2):
+    """Return a verified dependency from cache or download it atomically."""
     pin = pins[name]
     filename = pin["filename"]
     if (
@@ -43,7 +88,7 @@ def ensure_input(name, cache, pins, *, opener=urlopen, max_bytes=32 * 1024**2):
             request = Request(
                 pin["download"], headers={"User-Agent": "OmkalityCraft-ModBuilder/1.0"}
             )
-            with opener(request, timeout=30) as response:
+            with _open_input(request, filename, opener) as response:
                 if not response.geturl().startswith("https://"):
                     raise ValueError("Insecure dependency redirect")
                 while block := response.read(64 * 1024):
