@@ -35,6 +35,10 @@ def test_reserved_names_are_explicit_linux_policy_only(name):
 @pytest.mark.parametrize(
     "name",
     [
+        "world/DIM17/data/atum:girafi_tomb.dat",
+        "world/DIM17/data/atum:lighthouse.dat",
+        "world/DIM17/data/atum:mineshaft.dat",
+        "world/DIM17/data/atum:pyramid.dat",
         "world/DIM17/data/atum:ruin.dat",
         "world/DIM17/data/atum:tomb.dat",
         "world/Dim-Aether/data/aether_legacy:cold_aercloud.dat",
