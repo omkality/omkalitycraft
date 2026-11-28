@@ -111,6 +111,65 @@ def test_capacity_summarizes_only_completed_hours(
     assert all(report.DISK not in group["metrics"] for group in groups)
 
 
+def test_capacity_reports_zero_player_load_outside_recorded_operations(
+    tmp_path, monkeypatch
+):
+    settings, path = config(tmp_path)
+    _write_private(
+        settings.private / "tui.json",
+        settings.private,
+        {"schema": 1, "host": "test", "prometheus_origin": "http://127.0.0.1:9000"},
+    )
+    monkeypatch.setattr(report.time, "time", lambda: NOW)
+    first = HOUR - 24 * 3600
+    for folder, start, end in (
+        ("hourly-backups", 40, 130),
+        ("world-reset", 100, 180),
+        ("cold-backups", 270, 330),
+    ):
+        _write_private(
+            settings.private / folder / "dj2/capture-windows.json",
+            settings.private,
+            {"schema": 1, "windows": [[first + start, first + end]]},
+        )
+    samples = {
+        "players": {0: 0, 60: 0, 120: 0, 180: 0, 240: 0, 300: 2},
+        "host_cpu_p95_percent": {0: 8, 60: 99, 120: 92, 180: 12, 300: 70, 360: 88},
+        "game_tps_min": {0: 20, 240: 19},
+    }
+
+    def sample(_settings, _expression, *, start, end, step, **_options):
+        if step != 60:
+            return []
+        return [
+            {
+                "metric": {"host": "test", "stat": metric},
+                "values": [
+                    [first + offset, str(value)] for offset, value in values.items()
+                ],
+            }
+            for metric, values in samples.items()
+            if start <= first and end >= first + 360
+        ]
+
+    monkeypatch.setattr(report, "query", sample)
+    result = report.run(path, "dj2", "24h")
+    assert result["coverage"]["without_players"] == 5
+    assert result["coverage"]["unknown"] == 1434
+    assert result["metrics"]["host_cpu_p95_percent"] == {"value": 70, "samples": 1}
+    assert result["idle"]["samples"] == 3
+    assert result["idle"]["maintenance_samples_excluded"] == 2
+    assert result["idle"]["metrics"]["host_cpu_p95_percent"] == {
+        "value": pytest.approx(11.8),
+        "samples": 2,
+    }
+    assert result["idle"]["metrics"]["game_tps_min"] == {"value": 19, "samples": 2}
+    assert result["idle"]["metrics"]["game_memory_max_bytes"] == {
+        "value": None,
+        "samples": 0,
+    }
+
+
 def test_capacity_samples_short_and_overlapping_backup_windows(tmp_path, monkeypatch):
     settings, path = config(tmp_path)
     _write_private(
