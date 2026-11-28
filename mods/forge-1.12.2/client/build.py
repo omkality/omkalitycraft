@@ -29,11 +29,13 @@ version = json.loads((root / "versions.json").read_text(encoding="utf-8"))["arti
     "client"
 ]
 compiler = root / "tools/ecj-3.26.0.jar"
+jna = root / "tools/jna-4.4.0.jar"
 for path, name in [
     (compiler, "compiler"),
     (args.forge, "forge"),
     (args.mixinbooter, "mixinbooter"),
     (args.log4j_api, "log4j_api"),
+    (jna, "jna"),
 ]:
     if hashlib.sha256(path.read_bytes()).hexdigest() != pins[name]["sha256"]:
         raise ValueError("Unreviewed build input: " + name)
@@ -75,6 +77,7 @@ subprocess.run(
                 str(args.forge.resolve()),
                 str(args.mixinbooter.resolve()),
                 str(args.log4j_api.resolve()),
+                str(jna.resolve()),
             ]
         ),
         "-d",
