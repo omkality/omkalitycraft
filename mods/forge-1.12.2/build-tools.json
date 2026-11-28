@@ -29,6 +29,14 @@
     "filename": "mixinbooter-10.6.jar",
     "download": "https://maven.cleanroommc.com/zone/rong/mixinbooter/10.6/mixinbooter-10.6.jar"
   },
+  "jna": {
+    "version": "4.4.0",
+    "filename": "jna-4.4.0.jar",
+    "source": "https://libraries.minecraft.net/net/java/dev/jna/jna/4.4.0/jna-4.4.0.jar",
+    "download": "https://libraries.minecraft.net/net/java/dev/jna/jna/4.4.0/jna-4.4.0.jar",
+    "sha256": "c4dadeeecaa90c8847902082aee5eb107fcf59c5d0e63a17fcaf273c0e2d2bd1",
+    "scope": "Compile against Minecraft 1.12.2's bundled JNA API; the client mod packages no JNA classes"
+  },
   "log4j_api": {
     "version": "2.15.0",
     "filename": "log4j-api-2.15.0.jar",
