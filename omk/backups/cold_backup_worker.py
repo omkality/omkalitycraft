@@ -36,6 +36,7 @@ def runtime_files(root):
         "config",
         "scripts",
         "groovy",
+        "structures",
         "resources",
         "local",
     ):

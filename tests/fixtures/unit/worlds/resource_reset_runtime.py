@@ -29,6 +29,9 @@ def prepared(data):
         ".omk/log4j2.xml",
         "libraries/logging.jar",
         "local/ftbutilities/ranks.txt",
+        "structures/active/ae2_atum_underground_meteor.rcst",
+        "structures/active/ae2_atum_underground_meteor.rcgp",
+        "structures/active/ae2_atum_meteor_chest_presses.rcig",
     ):
         p = source / name
         p.parent.mkdir(parents=True, exist_ok=True)

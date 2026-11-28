@@ -89,7 +89,7 @@ uv run omk admin --config .omk-admin/operator.toml resource-resets runtime-verif
 ```
 
 План фиксирует SHA и размер всех известных runtime-файлов: корневые JAR,
-`server.properties`, `mods/`, `libraries/`, `config/`, `scripts/`, `groovy/`,
+`server.properties`, `mods/`, `libraries/`, `config/`, `scripts/`, `groovy/`, `structures/`,
 `resources/`, `local/`, `.omk/authlib-injector.jar` и `.omk/log4j2.xml`.
 Дополнительно сохраняются точные текущие `eula.txt`, `ops.json`,
 `banned-players.json`, `banned-ips.json`, `whitelist.json`. Существующее согласие
