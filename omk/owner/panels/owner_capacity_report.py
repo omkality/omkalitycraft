@@ -12,6 +12,7 @@ from omk.owner.panels.owner_metrics import load_settings, query
 WINDOWS = {"24h": (24, 60), "7d": (168, 300), "14d": (336, 300)}
 BATCH_POINTS = 96
 OPERATION_STEP = 30
+OPERATIONS = ("hourly_backup", "cold_backup", "world_reset", "server_start")
 DISK = "project_disk_free_min_bytes"
 
 
@@ -160,17 +161,43 @@ def _summarize(series):
     )
 
 
-def _read_operation_series(settings, server, windows):
+def _merged_windows(windows):
     spans = []
     for first, last in sorted(windows):
         if spans and first <= spans[-1][1]:
             spans[-1] = (spans[-1][0], max(last, spans[-1][1]))
         else:
             spans.append((first, last))
+    return spans
 
+
+def _summarize_idle(series, operation_windows):
+    without_players = sorted(
+        stamp for stamp, count in series["players"].items() if count == 0
+    )
+    spans = iter(
+        _merged_windows(
+            interval for windows in operation_windows for interval in (windows or ())
+        )
+    )
+    span = next(spans, None)
+    idle = []
+    for stamp in without_players:
+        while span is not None and span[1] <= stamp:
+            span = next(spans, None)
+        if span is None or stamp < span[0]:
+            idle.append(stamp)
+    return {
+        "samples": len(idle),
+        "maintenance_samples_excluded": len(without_players) - len(idle),
+        "metrics": _activity_metrics(series, idle),
+    }
+
+
+def _read_operation_series(settings, server, windows):
     combined = {key: {} for key in _selectors(settings["host"], server)}
     stamps = []
-    for first, last in spans:
+    for first, last in _merged_windows(windows):
         # Anchor at the end so a short run still gets a query inside its window.
         final = math.ceil(last) - 1
         if final < first:
@@ -187,16 +214,24 @@ def _read_operation_series(settings, server, windows):
     return combined, stamps
 
 
-def _during_operation(config, settings, server, start, end, operation):
+def _operation_windows(config, server, start, end, operation):
     try:
         recorded = read_windows(config, server, operation)
         if recorded is None:
             return None
-        windows = [
+        return [
             (max(start, first), min(end, last))
             for first, last in recorded
             if first < end and last > start
         ]
+    except AdminError, OSError, ValueError, TypeError, KeyError:
+        return None
+
+
+def _during_operation(settings, server, windows):
+    if windows is None:
+        return None
+    try:
         series, stamps = _read_operation_series(settings, server, windows)
     except AdminError, OSError, ValueError, TypeError, KeyError:
         return None
@@ -233,10 +268,8 @@ def run(path: Path, server: str, window: str) -> dict:
         "coverage": None,
         "metrics": {},
         "by_player_count": [],
-        "during_hourly_backup": None,
-        "during_cold_backup": None,
-        "during_world_reset": None,
-        "during_server_start": None,
+        "idle": None,
+        **dict.fromkeys(f"during_{operation}" for operation in OPERATIONS),
     }
     try:
         config = load_operator_config(path)
@@ -267,6 +300,10 @@ def run(path: Path, server: str, window: str) -> dict:
     state = "missing"
     if known:
         state = "available" if known == expected else "partial"
+    operation_windows = {
+        operation: _operation_windows(config, server, end - duration, end, operation)
+        for operation in OPERATIONS
+    }
     return {
         **result,
         "state": state,
@@ -279,16 +316,9 @@ def run(path: Path, server: str, window: str) -> dict:
         },
         "metrics": metrics,
         "by_player_count": by_player_count,
-        "during_hourly_backup": _during_operation(
-            config, settings, server, end - duration, end, "hourly_backup"
-        ),
-        "during_cold_backup": _during_operation(
-            config, settings, server, end - duration, end, "cold_backup"
-        ),
-        "during_world_reset": _during_operation(
-            config, settings, server, end - duration, end, "world_reset"
-        ),
-        "during_server_start": _during_operation(
-            config, settings, server, end - duration, end, "server_start"
-        ),
+        "idle": _summarize_idle(series, operation_windows.values()),
+        **{
+            f"during_{operation}": _during_operation(settings, server, windows)
+            for operation, windows in operation_windows.items()
+        },
     }
