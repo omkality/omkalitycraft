@@ -11,6 +11,7 @@ from omk.backups.stopped_world_backup import LAB_POLICY
 from omk.cli import main
 from omk.owner import admin_backups as owner
 from omk.owner.admin import AdminError
+from omk.owner.operation_windows import read_windows
 from tests.fixtures.unit.backups.cold_backups import controller, fixture, stopped
 from tests.fixtures.unit.owner.operator_commands import config
 
@@ -207,13 +208,18 @@ def test_controller_never_publishes_if_source_restarts_after_prepare(
 
     monkeypatch.setattr(owner, "worker", work)
     record = owner.plan(cfg, "dj2", {})
+    assert read_windows(cfg, "dj2", "cold_backup") is None
+    times = iter([100, 112])
+    monkeypatch.setattr(owner, "time", lambda: next(times))
     with pytest.raises(AdminError, match="incomplete"):
         owner.run(cfg, record["operation"], environment={})
+    assert read_windows(cfg, "dj2", "cold_backup") == [[100, 112]]
     assert actions == ["plan", "prepare"]
     value = json.loads(owner.journal(cfg, record["operation"]).read_text())
     assert value["stage"] == "incomplete"
     with pytest.raises(AdminError):
         owner.run(cfg, record["operation"], environment={})
+    assert read_windows(cfg, "dj2", "cold_backup") == [[100, 112]]
 
 
 @pytest.mark.parametrize("change", ["expired", "policy", "target"])
@@ -240,6 +246,8 @@ def test_lost_host_journal_write_after_publish_is_reconciled_once(
 ):
     cfg, _, _, storage, _ = controller(fixture, tmp_path, monkeypatch)
     record = owner.plan(cfg, "dj2", {})
+    times = iter([100, 127, 200, 208])
+    monkeypatch.setattr(owner, "time", lambda: next(times))
     original = owner.save
 
     def disk_failure(config, value, stage):
@@ -255,6 +263,7 @@ def test_lost_host_journal_write_after_publish_is_reconciled_once(
     monkeypatch.setattr(owner, "save", original)
     result = owner.run(cfg, record["operation"], finish=True, environment={})
     assert result["snapshot"]["sequence"] == 1
+    assert read_windows(cfg, "dj2", "cold_backup") == [[100, 127], [200, 208]]
     assert (
         len(
             BackupStore(

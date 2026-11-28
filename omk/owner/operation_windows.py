@@ -8,6 +8,7 @@ from omk.owner.admin import AdminError, OperatorConfig, _read_json, _write_priva
 WINDOW_LIMIT = 384
 _FOLDERS = {
     "hourly_backup": "hourly-backups",
+    "cold_backup": "cold-backups",
     "world_reset": "world-reset",
     "server_start": "server-starts",
 }
