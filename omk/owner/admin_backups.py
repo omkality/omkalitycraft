@@ -10,12 +10,14 @@ import threading
 import tomllib
 from collections.abc import Generator
 from datetime import UTC, datetime
+from time import time
 from uuid import uuid4
 
 from omk.backups.cold_backup_worker import digest
 from omk.observability.diagnostics import regular
 from omk.owner.admin import AdminError, _private_path, _read_json, _write_private
 from omk.owner.maintenance import journal_history
+from omk.owner.operation_windows import record_window
 from omk.shared.profiles import PROJECT_ROOT
 
 IMAGE = "python:3.14.2-slim@sha256:1a3c6dbfd2173971abba880c3cc2ec4643690901f6ad6742d0827bae6cefc925"
@@ -499,6 +501,7 @@ def plan(config, server, environment=None, *, _operation=None):
 
 
 def run(config, operation, *, finish=False, environment=None):
+    """Run a planned cold backup or reconcile its prepared publication."""
     from omk.worlds.world_cutover import require_clear  # noqa: PLC0415
 
     with locked(config):
@@ -525,7 +528,6 @@ def run(config, operation, *, finish=False, environment=None):
                 raise AdminError(
                     "No prepared publication to reconcile; inspect retained staging"
                 )
-            record["result"] = worker(target, request_for(record, "recover"))
         else:
             age = (
                 datetime.now(UTC) - datetime.fromisoformat(record["created_at"])
@@ -537,33 +539,44 @@ def run(config, operation, *, finish=False, environment=None):
                 or checkpoint(target) != record["checkpoint"]
             ):
                 raise AdminError("Backup plan is stale, changed or already attempted")
-            save(config, record, "preparing")
-            try:
-                record["prepared"] = worker(target, request_for(record, "prepare"))
-                if checkpoint(target) != record["checkpoint"]:
-                    raise AdminError(
-                        "Source restarted during backup; staged copy will not be published"
-                    )
-                save(config, record, "publishing")
-                record["result"] = worker(target, request_for(record, "publish"))
-            except Exception as error:
-                record["failure_type"] = type(error).__name__
-                if isinstance(error, AdminError):
-                    record["failure_reason"] = str(error)
-                save(config, record, "incomplete")
+        started = time()
+        try:
+            return _copy_backup(config, record, target, finish=finish)
+        finally:
+            record_window(config, record["server"], "cold_backup", started, time())
+
+
+def _copy_backup(config, record, target, *, finish):
+    if finish:
+        record["result"] = worker(target, request_for(record, "recover"))
+    else:
+        save(config, record, "preparing")
+        try:
+            record["prepared"] = worker(target, request_for(record, "prepare"))
+            if checkpoint(target) != record["checkpoint"]:
                 raise AdminError(
-                    "Backup incomplete; inspect journal and retained staging; never repeat run blindly"
-                ) from None
-        save(config, record, "published")
-        save(config, record, "acknowledging")
-        worker(target, request_for(record, "acknowledge"))
-        save(config, record, "complete")
-        return {
-            "ok": True,
-            "operation": operation,
-            "stage": "complete",
-            "snapshot": record["result"],
-        }
+                    "Source restarted during backup; staged copy will not be published"
+                )
+            save(config, record, "publishing")
+            record["result"] = worker(target, request_for(record, "publish"))
+        except Exception as error:
+            record["failure_type"] = type(error).__name__
+            if isinstance(error, AdminError):
+                record["failure_reason"] = str(error)
+            save(config, record, "incomplete")
+            raise AdminError(
+                "Backup incomplete; inspect journal and retained staging; never repeat run blindly"
+            ) from None
+    save(config, record, "published")
+    save(config, record, "acknowledging")
+    worker(target, request_for(record, "acknowledge"))
+    save(config, record, "complete")
+    return {
+        "ok": True,
+        "operation": record["operation"],
+        "stage": "complete",
+        "snapshot": record["result"],
+    }
 
 
 def add_backup_parser(actions):
