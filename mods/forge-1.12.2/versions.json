@@ -7,14 +7,14 @@
       "sha256": "52e6cbcd7449df32ee729924d67408e6bdc26f4cb0c1057cc73cdb962bcec08d"
     },
     "dj2fix": {
-      "version": "0.1.15",
-      "file": "OmkalityDJ2Fix-0.1.15.jar",
-      "sha256": "69d9f1bd671b0cf57da3e0b0fdfaefc4aa87c86e26b1c0bb06533140b84e54e0"
+      "version": "0.1.16",
+      "file": "OmkalityDJ2Fix-0.1.16.jar",
+      "sha256": "0b8158cbc07bea19be4bf9f21c58fc0ab546e3f17c270c0ffecd06da8249f804"
     },
     "client": {
-      "version": "0.1.12",
-      "file": "OmkalityClient-0.1.12.jar",
-      "sha256": "d81d85af3b35800c0aee383b03a7c5fad2fd411e355b72d788f4b36ec6436049"
+      "version": "0.1.13",
+      "file": "OmkalityClient-0.1.13.jar",
+      "sha256": "b951e4e4412718a3003dc0e7522d81ec053e0d5538c057d0b9439526486000af"
     }
   }
 }
